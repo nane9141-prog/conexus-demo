@@ -124,6 +124,7 @@
   .apanel-h{padding:11px 12px;font-size:14px;font-weight:600;color:#0a0a0a;border-bottom:1px solid var(--border)}
   .apanel-ph{padding:24px 12px;font-size:13px;color:#a3a3a3;text-align:center;line-height:1.6}
   .arow{padding:12px;border-top:1px solid #eee;display:flex;flex-direction:column;gap:8px}
+  #agTree{padding:2px 8px 8px}
   #agTree>.arow:first-child{border-top:none}
   .acat{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
   .ano{font-size:12px;font-weight:500;color:#737373}
@@ -138,7 +139,7 @@
   .astbadge .d{width:6px;height:6px;border-radius:50%;background:#525252}
   .astbadge.wait{opacity:.5}
   .astbadge.prog{color:#0066df;background:#eff6ff}.astbadge.prog .d{background:#0071f3}
-  .asub{margin-top:8px;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+  .asub{margin-top:8px;border:1px solid var(--border);border-radius:6px}
   .achild{padding:10px 12px;border-top:1px solid #f0f0f0;display:flex;flex-direction:column;gap:8px}
   .asub>.achild:first-child{border-top:none}
   /* 중앙 제어 패널 */
@@ -217,30 +218,21 @@
 
       <div class="oc-sub">
         <div class="oc-tabs">
-          <button class="oc-tab on" data-tab="now">현황</button>
-          <button class="oc-tab" data-tab="qa">질의응답<span class="cnt" id="qaCnt"></span></button>
-          <button class="oc-tab" data-tab="sp">발언신청<span class="cnt" id="spCnt"></span></button>
+          <button class="oc-tab on" data-tab="op">실시간 운영</button>
+          <button class="oc-tab" data-tab="vote">의결권 행사현황</button>
+          <button class="oc-tab" data-tab="viewer">시청자 관리</button>
         </div>
         <div class="oc-tools">
-          <div class="grp">
-            <button class="ocb"><svg viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>공지</button>
-            <div class="seg">
-              <button class="ocb on" id="segVote"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>표결</button>
-              <button class="ocb" id="segCast"><svg viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4 20-7z"/></svg>송출</button>
-            </div>
-          </div>
+          <button class="ocb"><svg viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>공지</button>
+          <a class="ocb" href="chair-mc.html"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>의장용 뷰</a>
+          <a class="ocb" href="chair-mc.html"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><path d="M12 18v4"/></svg>사회자용 뷰</a>
+          <button class="ocb"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m17 8 5 5M22 8l-5 5"/></svg>출석 미투표 처리</button>
+          <button class="ocb"><svg viewBox="0 0 24 24"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg>비콘 제어</button>
           <span class="tsep"></span>
-          <div class="grp">
-            <button class="ocb"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="12" rx="1"/><path d="M8 20h8M12 16v4"/></svg>발표 화면</button>
-            <button class="ocb"><svg viewBox="0 0 24 24"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg>블루투스</button>
-          </div>
-          <span class="tsep"></span>
-          <div class="grp">
-            <span class="otimer"><span class="dot"></span><span id="ocTimer">00:10:12</span></span>
-            <button class="ocb gray icon" id="btnPause" title="일시정지"><svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg></button>
-            <button class="ocb red"><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z"/><path d="M12 8v4l2 2"/><path d="m16 19 2 2 4-4"/></svg>종료</button>
-            <button class="ocb gray icon" title="더보기"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
-          </div>
+          <span class="otimer"><span class="dot"></span><span id="ocTimer">00:10:12</span></span>
+          <button class="ocb gray" id="btnPause"><svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>정회</button>
+          <button class="ocb red"><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z"/><path d="M12 8v4l2 2"/><path d="m16 19 2 2 4-4"/></svg>폐회</button>
+          <button class="ocb gray icon" title="더보기"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
         </div>
       </div>
 
@@ -254,18 +246,14 @@
 
       <div class="oc-grid">
         <!-- 현황 -->
-        <div class="oc-panel on" data-panel="now">
+        <div class="oc-panel on" data-panel="op">
           <div class="nowgrid3">
             <div class="apanel">
               <div class="apanel-h">의안 진행</div>
               <div id="agTree"></div>
             </div>
             <div class="apanel cpanel">
-              <div class="ctabs">
-                <button class="ctab on" data-ct="op">실시간 운영</button>
-                <button class="ctab" data-ct="vote">의결권 행사현황</button>
-                <button class="ctab" data-ct="viewer">시청자 관리</button>
-              </div>
+              <div class="apanel-h">의안 진행 제어</div>
               <div class="cbody">
                 <div class="cpane on" data-cp="op">
                   <div class="cinfo">
@@ -294,8 +282,6 @@
                     </div>
                   </div>
                 </div>
-                <div class="cpane" data-cp="vote"><div class="apanel-ph">의결권 행사현황 상세는 다음 단계에서 구현됩니다.</div></div>
-                <div class="cpane" data-cp="viewer"><div class="apanel-ph">시청자 관리는 다음 단계에서 구현됩니다.</div></div>
               </div>
               <div class="cfoot">
                 <div class="cfoot-row">
@@ -336,15 +322,13 @@
             </div>
           </div>
         </div>
-        <!-- 질의응답 -->
-        <div class="oc-panel" data-panel="qa">
-          <div class="chips" id="qaChips"></div>
-          <div id="qaList"></div>
+        <!-- 의결권 행사현황 -->
+        <div class="oc-panel" data-panel="vote">
+          <div class="apanel" style="padding:28px"><div class="apanel-ph">의결권 행사현황 상세는 다음 단계에서 구현됩니다.</div></div>
         </div>
-        <!-- 발언신청 -->
-        <div class="oc-panel" data-panel="sp">
-          <div class="chips" id="spChips"></div>
-          <div id="spList"></div>
+        <!-- 시청자 관리 -->
+        <div class="oc-panel" data-panel="viewer">
+          <div class="apanel" style="padding:28px"><div class="apanel-ph">시청자 관리는 다음 단계에서 구현됩니다.</div></div>
         </div>
       </div>
     </div>
@@ -360,8 +344,6 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function agLabel(x){ return '제'+(x.sub||x.ag)+'호'; }
   function tgType(t){ return '<span class="tg '+(t==='기관'?'tg-inst':'tg-ind')+'">'+t+'</span>'; }
 
-  document.getElementById('qaCnt').textContent=QUESTIONS.length;
-  document.getElementById('spCnt').textContent=SPEECHES.length;
 
   // 탭 전환
   document.querySelectorAll('.oc-tab').forEach(function(t){
@@ -415,7 +397,6 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
         +'<div class="qq">'+esc(x.r)+'</div><div class="qact">'+acts+'</div></div>';
     }).join('') || '<div style="color:#a3a3a3;font-size:13px;padding:20px;text-align:center">해당 의안의 발언 신청이 없습니다.</div>';
   }
-  renderQA('all'); renderSP('all');
 
   // 의안 진행 트리 (라이브)
   var AGENDA=[
