@@ -118,6 +118,9 @@
   .chstat{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;margin-top:8px}
   .chstat .cdot{width:6px;height:6px;border-radius:9999px;flex:none}
   .ch-title{font-size:14px;font-weight:600;color:#0a0a0a;margin:4px 0 10px}
+  .badge-exp{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:500;color:#171717}
+  .badge-exp.pass{background:#e8f5ee}
+  .badge-exp.elect{background:#ebf4ff}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">  // 권유대행: 콤보 차트 + 슬라이더
   (function(){
@@ -353,14 +356,23 @@
             <div class="sec-head"><div class="h">의안별 행사 현황</div><div class="d">사전 행사 의결권 262,140,000주 기준 · 찬성률은 확정 개표와 동일한 기준을 적용한 예상치입니다.</div></div>
             <div class="tbl-wrap" style="border:none;border-top:1px solid var(--border);border-radius:0">
               <table class="tbl">
-                <thead><tr><th style="width:96px">의안</th><th>안건명</th><th class="num">찬성</th><th class="num">반대</th><th style="width:170px">찬성률</th><th style="width:96px">예상 결과</th></tr></thead>
+                <thead><tr>
+                  <th style="width:88px">의안번호</th>
+                  <th>의안명</th>
+                  <th class="num">총 행사가능의결권</th>
+                  <th class="num">행사의결권</th>
+                  <th class="num">행사주주</th>
+                  <th class="num">찬성률<br><span style="font-weight:400;color:var(--muted-fg);font-size:11px">(발행주식총수)</span></th>
+                  <th class="num">찬성률<br><span style="font-weight:400;color:var(--muted-fg);font-size:11px">(총 행사 의결권)</span></th>
+                  <th style="width:96px">예상</th>
+                </tr></thead>
                 <tbody>
-                  <tr><td>제1호</td><td>재무제표 승인의 건</td><td class="num">211,284,840</td><td class="num">50,855,160</td><td><span class="cbar blue"><span class="track"><span style="width:80.6%"></span></span><span class="pv">80.6%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
-                  <tr><td>제2-1호</td><td>집중투표제 배제 조항 삭제의 건</td><td class="num">151,779,060</td><td class="num">110,360,940</td><td><span class="cbar blue"><span class="track"><span style="width:57.9%"></span></span><span class="pv">57.9%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
-                  <tr><td>제2-2호</td><td>전자주주총회 도입 관련 변경</td><td class="num">210,236,280</td><td class="num">51,903,720</td><td><span class="cbar blue"><span class="track"><span style="width:80.2%"></span></span><span class="pv">80.2%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
-                  <tr><td>제2-3호</td><td>의결권 대리행사 수단 확대</td><td class="num">210,236,280</td><td class="num">51,903,720</td><td><span class="cbar blue"><span class="track"><span style="width:80.2%"></span></span><span class="pv">80.2%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
-                  <tr><td>제3-1호</td><td>집중투표 후보 4인 중 2인 선임의 건 <span class="ubadge secondary" style="margin-left:4px">집중투표</span></td><td class="num" colspan="2" style="text-align:center;color:var(--muted-fg)">후보별 집계 · 선임예정 2인</td><td><span style="font-size:13px;color:#0a0a0a">예상 선임 김근수·진웅섭</span></td><td><span class="badge blue">집계중</span></td></tr>
-                  <tr><td>제3-2호</td><td>감사위원이 되는 사외이사 선임의 건</td><td class="num">208,663,440</td><td class="num">53,476,560</td><td><span class="cbar blue"><span class="track"><span style="width:79.6%"></span></span><span class="pv">79.6%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
+                  <tr><td>제1호</td><td>재무제표 승인의 건</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">44.4%</td><td class="num">80.6%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
+                  <tr><td>제2-1호</td><td>집중투표제 배제 조항 삭제의 건</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">31.9%</td><td class="num">57.9%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
+                  <tr><td>제2-2호</td><td>전자주주총회 도입 관련 변경</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">44.1%</td><td class="num">80.2%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
+                  <tr><td>제2-3호</td><td>의결권 대리행사 수단 확대</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">44.1%</td><td class="num">80.2%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
+                  <tr><td>제3-1호</td><td>집중투표 후보 4인 중 2인 선임의 건 <span class="ubadge secondary" style="margin-left:4px">집중투표</span></td><td class="num">952,423,928</td><td class="num">524,280,000</td><td class="num">18,450명</td><td class="num" colspan="2" style="text-align:center;color:var(--muted-fg)">후보별 집계 · 선임예정 2인 (김근수·진웅섭)</td><td><span class="badge-exp elect">선임 예상</span></td></tr>
+                  <tr><td>제3-2호</td><td>감사위원이 되는 사외이사 선임의 건</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">43.8%</td><td class="num">79.6%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
                 </tbody>
               </table>
             </div>
