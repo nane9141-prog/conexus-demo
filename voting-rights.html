@@ -97,6 +97,10 @@
   .sim-info .ic-box{width:32px;height:32px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;flex:none}
   .sim-info .ic-box svg{width:16px;height:16px;color:#0071f3;fill:none;stroke:currentColor;stroke-width:1.6}
   .sim-info .t{font-size:14px;font-weight:600;color:#0071f3}
+  .sim-info.miss{background:#fff;border:1px solid var(--border)}
+  .sim-info.miss .ic-box{background:#f5f5f5}
+  .sim-info.miss .ic-box svg{color:#737373}
+  .sim-info.miss .t{color:#0a0a0a}
   .sim-info .d{font-size:12px;color:var(--muted-fg);margin-top:2px}
   .sim-bar{display:flex;height:28px;border-radius:6px;overflow:hidden;background:#82bbff;margin:14px 0}
   .sim-bar span{display:block;height:100%;border-right:1px solid #fff}
@@ -125,7 +129,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
   // 권유대행: 콤보 차트 + 슬라이더
-  (function(){
+  document.addEventListener('DOMContentLoaded', function(){
     var chart=null;
     function initChart(){
       if(chart) return;
@@ -165,9 +169,18 @@
       document.getElementById('simVal').textContent=fmt(add);
       document.getElementById('simTotal').textContent=fmt(total);
       var diff=total-target;
-      var st=document.getElementById('simStatT'), sd=document.getElementById('simStatD'), info=st.closest('.sim-info');
-      if(diff>=0){ st.textContent='기준 달성 · '+fmt(diff)+'주 초과'; sd.textContent='현재 확보로 의결정족수 목표('+fmt(target)+'주)를 충족합니다.'; if(info){info.style.background='#ebf4ff';st.style.color='#0071f3';} }
-      else { st.textContent='기준 미달 · '+fmt(-diff)+'주 부족'; sd.textContent='의결정족수 목표('+fmt(target)+'주) 달성까지 추가 확보가 필요합니다.'; if(info){info.style.background='#fef2f2';st.style.color='#e11d48';} }
+      var st=document.getElementById('simStatT'), sd=document.getElementById('simStatD'), info=st.closest('.sim-info'), box=info?info.querySelector('.ic-box'):null;
+      if(diff>=0){
+        if(info) info.classList.remove('miss');
+        if(box) box.innerHTML='<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';
+        st.textContent='기준 달성 · '+fmt(diff)+'주 초과';
+        sd.textContent='현재 확보로 의결정족수 목표('+fmt(target)+'주)를 충족합니다.';
+      } else {
+        if(info) info.classList.add('miss');
+        if(box) box.innerHTML='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 8 8 8"/></svg>';
+        st.textContent='기준 미달 · '+fmt(-diff)+'주 부족';
+        sd.textContent='회사가 우호 지분을 더 확보하거나, 일 수집 달성을 더 늘려야 합니다.';
+      }
       // stacked bar widths (relative to target*1.8 for headroom)
       var scale=Math.max(total,target)*1.05;
       var seg=[[142800000,'#171717'],[78200000,'#71717a'],[43000000,'#82bbff'],[add,'#d4d4d8']];
@@ -177,7 +190,7 @@
     if(sl){ sl.addEventListener('input',upd); upd(); }
     var rst=document.querySelector('.vr-panel[data-vp="solicit"] .rst');
     if(rst&&sl){ rst.addEventListener('click',function(){ sl.value=0; upd(); }); }
-  })();
+  });
 </script>
 </head>
 <body>
