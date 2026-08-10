@@ -236,7 +236,7 @@
           <div class="page-title">전자투표/위임 내역</div>
           <div class="ev-org"><span>전자투표관리기관</span><b>한국예탁결제원</b></div>
           <span class="spacer"></span>
-          <button class="btn-primary" id="btnConfirm"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>확정하기</button>
+          <button class="btn-primary" id="btnConfirm" style="display:none"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>확정하기</button>
         </div>
 
         <!-- EMPTY 상태 -->
@@ -254,12 +254,6 @@
 
         <!-- FILLED 상태 -->
         <div id="evFilled" style="display:none">
-          <div class="evk">
-            <div class="kc"><div class="lbl">행사 의결권</div><div class="val">262,140,000주</div><div class="sub">발행주식총수 대비 55.0%</div></div>
-            <div class="kc"><div class="lbl">중복 의결권</div><div class="val">6,210,410주</div><div class="sub">자동 병합 대상</div></div>
-            <div class="kc"><div class="lbl">중복 미처리</div><div class="val orange">110,000주</div><div class="sub">수동 확인 필요</div></div>
-            <div class="kc"><div class="lbl">확정 의결권</div><div class="val blue">256,040,000주</div><div class="sub">중복 처리 완료 기준</div></div>
-          </div>
           <div class="evbar">
             <div class="evtabs"><span class="evtab active">국내 주주</span><span class="evtab">해외 주주</span></div>
             <div class="hbtns">
@@ -267,6 +261,12 @@
               <button class="tbtn js-upload"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>파일 등록</button>
               <button class="tbtn"><svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>내역 삭제</button>
             </div>
+          </div>
+          <div class="evk">
+            <div class="kc"><div class="lbl">행사 의결권</div><div class="val">262,140,000주</div><div class="sub">발행주식총수 대비 55.0%</div></div>
+            <div class="kc"><div class="lbl">중복 의결권</div><div class="val">6,210,410주</div><div class="sub">자동 병합 대상</div></div>
+            <div class="kc"><div class="lbl">중복 미처리</div><div class="val orange">110,000주</div><div class="sub">수동 확인 필요</div></div>
+            <div class="kc"><div class="lbl">확정 의결권</div><div class="val blue">256,040,000주</div><div class="sub">중복 처리 완료 기준</div></div>
           </div>
           <div class="toolbar" style="margin-bottom:12px">
             <div class="seg" id="viewSeg">
@@ -423,6 +423,7 @@
       ov.classList.remove('show'); reset();
       document.getElementById('evEmpty').style.display='none';
       document.getElementById('evFilled').style.display='block';
+      document.getElementById('btnConfirm').style.display='inline-flex';
     });
     // 내역 탭 전환
     document.querySelectorAll('.evtabs').forEach(function(g){
