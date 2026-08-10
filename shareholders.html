@@ -245,6 +245,17 @@
         .sonner .undo{height:24px;padding:0 8px;background:#171717;color:#fafafa;border:none;border-radius:4px;font-size:12px;font-weight:500;cursor:pointer;box-shadow:var(--shadow-xs)}
         .ld-col{display:flex;flex-direction:column;gap:24px}
         .hide{display:none!important}
+        /* name tooltip trigger */
+        .tt-name{display:inline-flex;align-items:center;gap:4px;cursor:default}
+        .tt-name .qi{width:13px;height:13px;color:#a3a3a3}
+        /* shadcn tooltip (JS-positioned) */
+        #shTip{position:fixed;z-index:140;background:#171717;color:#fafafa;border-radius:8px;padding:8px 10px;
+          box-shadow:var(--shadow-md);font-size:12px;line-height:16px;pointer-events:none;opacity:0;transition:opacity .12s;max-width:360px}
+        #shTip.show{opacity:1}
+        #shTip .r{display:flex;gap:8px}
+        #shTip .r+.r{margin-top:4px}
+        #shTip .k{color:#a3a3a3;min-width:80px}
+        #shTip .v{color:#fafafa;font-weight:500}
       </style>
 
       <div class="ms-wrap">
@@ -294,7 +305,7 @@
             <div class="tfn">
               <div class="tfn-l">
                 <span class="sw-text">미설정만 보기</span>
-                <span class="sw" data-sw></span>
+                <span class="sw" id="swUnset"></span>
               </div>
               <div class="tfn-r">
                 <button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>다운로드</button>
@@ -307,14 +318,15 @@
                 <colgroup><col style="width:96px"><col style="width:90px"><col style="width:150px"><col style="width:110px"><col style="width:130px"><col style="width:90px"><col style="width:150px"><col style="width:150px"><col style="width:110px"><col style="width:88px"></colgroup>
                 <thead><tr><th class="c">주식종류</th><th class="c">주주구분</th><th>주주명</th><th>주주번호</th><th style="text-align:right">보유주식</th><th style="text-align:right">지분율</th><th>운용기관</th><th>자금제공기관</th><th>투표권자</th><th class="c">설정</th></tr></thead>
                 <tbody>
-                  <tr><td class="c">보통주</td><td class="c">법인</td><td class="name">(주)카카오</td><td class="mut">000001</td><td class="r">129,533,725</td><td class="r sub">27.2%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
-                  <tr><td class="c">보통주</td><td class="c">법인</td><td class="name">한국투자금융지주</td><td class="mut">000002</td><td class="r">129,533,725</td><td class="r sub">27.2%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
-                  <tr><td class="c">보통주</td><td class="c">기관</td><td class="name">국민연금공단</td><td class="mut">000010</td><td class="r">28,120,400</td><td class="r sub">5.9%</td><td class="mut">삼성자산운용</td><td class="mut">국민연금공단</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
-                  <tr><td class="c">보통주</td><td class="c">기관</td><td class="name">국민연금공단</td><td class="mut">000011</td><td class="r">19,480,000</td><td class="r sub">4.1%</td><td class="mut">미래에셋자산운용</td><td class="mut">국민연금공단</td><td><span class="set-none">미설정</span></td><td class="c"><button class="tbtn2">설정</button></td></tr>
-                  <tr><td class="c">보통주</td><td class="c">기관</td><td class="name">BlackRock Fund Advisors</td><td class="mut">000024</td><td class="r">23,810,598</td><td class="r sub">5.0%</td><td class="mut">블랙록자산운용</td><td class="mut">-</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
-                  <tr><td class="c">보통주</td><td class="c">기관</td><td class="name">한화자산운용</td><td class="mut">000037</td><td class="r">9,524,239</td><td class="r sub">2.0%</td><td class="mut">한화자산운용</td><td class="mut">우정사업본부</td><td><span class="set-none">미설정</span></td><td class="c"><button class="tbtn2">설정</button></td></tr>
-                  <tr><td class="c">보통주</td><td class="c">개인</td><td class="name">김민준</td><td class="mut">010321</td><td class="r">12,400</td><td class="r sub">0.0%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
-                  <tr><td class="c">보통주</td><td class="c">개인</td><td class="name">이서연</td><td class="mut">010488</td><td class="r">8,900</td><td class="r sub">0.0%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-none">미설정</span></td><td class="c"><button class="tbtn2">설정</button></td></tr>
+                  <tr class="row-none" data-no="2025119001" data-acct="00000120251104000010000400101" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">일반법인</td><td class="name"><span class="tt-name">KVIDIA<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">2025119001</td><td class="r">19,961,925</td><td class="r sub">4.2%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-none">미설정 (자사주)</span></td><td class="c"><button class="tbtn2">설정</button></td></tr>
+                  <tr data-no="2025119002" data-acct="00000120251104000010000420101" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">일반법인</td><td class="name"><span class="tt-name">K-홀딩스 주식회사<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">2025119002</td><td class="r">19,965,917</td><td class="r sub">4.2%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr class="row-none" data-no="800401-1******" data-acct="00000120251104000010000410101" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">나제한<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">800401-1******</td><td class="r">19,963,921</td><td class="r sub">4.2%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-none">미설정 (제한)</span></td><td class="c"><button class="tbtn2">설정</button></td></tr>
+                  <tr data-no="880411-1******" data-acct="00000120251104000010000000501" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">젠슨박<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">880411-1******</td><td class="r">10,005,912</td><td class="r sub">2.1%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr data-no="600101-1******" data-acct="00000120251104000010000000101" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">이준호<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">600101-1******</td><td class="r">6,017,919</td><td class="r sub">1.3%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr data-no="600101-1******" data-acct="00000120251104000020000000201" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">이종승<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">600101-1******</td><td class="r">6,017,919</td><td class="r sub">1.3%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr data-no="600101-1******" data-acct="00000120251104000020000000301" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">천재민<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">600101-1******</td><td class="r">6,015,923</td><td class="r sub">1.3%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr data-no="600101-1******" data-acct="00000120251104000020000000401" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">박준호<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">600101-1******</td><td class="r">6,015,923</td><td class="r sub">1.3%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr class="row-none" data-no="700201-2******" data-acct="00000120251104000020001420501" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">유은지<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">700201-2******</td><td class="r">2,003,977</td><td class="r sub">0.4%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-none">미설정 (특별이해관계자)</span></td><td class="c"><button class="tbtn2">설정</button></td></tr>
                 </tbody>
               </table>
             </div>
@@ -364,6 +376,8 @@
         <button class="undo" id="snUndo">실행취소</button>
       </div>
 
+      <div id="shTip"></div>
+
       <script>
         (function(){
           function closeOv(ov){ov.classList.add('hidden');}
@@ -402,6 +416,29 @@
           document.getElementById('msNext').addEventListener('click',function(){
             toast('저장 완료','주주명부가 확정되었습니다. 다음 단계로 이동합니다.');
           });
+
+          // shareholder tooltip (주주번호 · 실질 계좌번호 · 주소)
+          var tip=document.getElementById('shTip');
+          document.querySelectorAll('table.mtbl tbody tr').forEach(function(tr){
+            var trigger=tr.querySelector('.tt-name'); if(!trigger) return;
+            trigger.addEventListener('mouseenter',function(){
+              tip.innerHTML='<div class="r"><span class="k">주주번호</span><span class="v">'+(tr.dataset.no||'-')+'</span></div>'
+                +'<div class="r"><span class="k">실질 계좌번호</span><span class="v">'+(tr.dataset.acct||'-')+'</span></div>'
+                +'<div class="r"><span class="k">주소</span><span class="v">'+(tr.dataset.addr||'-')+'</span></div>';
+              var rc=trigger.getBoundingClientRect();
+              tip.style.left=rc.left+'px'; tip.style.top=(rc.bottom+8)+'px'; tip.classList.add('show');
+            });
+            trigger.addEventListener('mouseleave',function(){tip.classList.remove('show');});
+          });
+
+          // 미설정만 보기 토글
+          var swU=document.getElementById('swUnset');
+          if(swU){ swU.addEventListener('click',function(){
+            var on=swU.classList.toggle('on');
+            document.querySelectorAll('table.mtbl tbody tr').forEach(function(tr){
+              tr.style.display=(on && !tr.classList.contains('row-none'))?'none':'';
+            });
+          }); }
         })();
       </script>
     </div>
