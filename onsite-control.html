@@ -214,6 +214,9 @@
   .iarow.ia-voting .ianame{color:#E9081B}
   .iarow.ia-wait{background:#FAFAFA}
   .iarow.ia-fill{background:#F5F5F5;border-color:transparent}
+  .ianame.red{color:#E9081B}
+  .iasel{height:28px;padding:0 8px;border:1px solid #E5E5E5;border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer}
+  .iastat{display:inline-flex;align-items:center;height:20px;padding:2px 8px;border-radius:6px;background:#F5F5F5;font-size:12px;font-weight:500;letter-spacing:-.01em;color:#525252}
   .ghbtn{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;border:none;background:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:500;color:#171717;cursor:pointer}
   .ghbtn:hover{background:#f5f5f5}
   .ghbtn svg{width:15px;height:15px}
@@ -284,17 +287,14 @@
             <div class="apanel cpanel">
               <div class="cbody">
                 <div class="cpane on" data-cp="op">
-                  <div class="iarow ia-active">
-                    <div class="iarow-l"><span class="ianame">주주별 비례 분배 방식</span></div>
-                    <div class="iarow-r"><button class="iabtn dark">다음</button></div>
-                  </div>
+                  <div id="agStage" class="iarow"></div>
                   <div class="cag">
                     <div class="cag-cat"><span>제1호</span><span class="d"></span><span>보통결의</span>
                       <label class="tgl-wrap"><span class="sw" data-sw></span>사전행사 제외</label>
                     </div>
                     <div class="cag-nm">재무제표 승인의 건</div>
                   </div>
-                  <div class="cbadge-row"><span class="rbadge pass"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM10.6 16 6.8 12.2l1.4-1.4 2.4 2.4 5-5 1.4 1.4z"/></svg>가결</span></div>
+                  <div class="cbadge-row"><span class="rbadge pass" id="gBadge"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM10.6 16 6.8 12.2l1.4-1.4 2.4 2.4 5-5 1.4 1.4z"/></svg>가결</span></div>
                   <div class="cvbox">
                     <div class="cvbar">
                       <span class="sg for" style="width:80.6%"></span>
@@ -478,6 +478,43 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       host.querySelectorAll('.cpane').forEach(function(p){p.classList.toggle('on',p.dataset.cp===k);});
     });
   });
+</script>
+<script>
+(function(){
+  var PLAY='<svg viewBox="0 0 24 24" style="fill:#171717;stroke:none"><path d="M8 5v14l11-7z"/></svg>';
+  var DOTS='<svg viewBox="0 0 24 24" style="fill:#0A0A0A;stroke:none"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg>';
+  var CK='<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM10.6 16 6.8 12.2l1.4-1.4 2.4 2.4 5-5 1.4 1.4z"/></svg>';
+  var STAGES=[
+    {cls:'',name:'의안 상정 대기중',right:[{t:'의안 상정',c:'',go:1}],badge:'expect'},
+    {cls:'',name:'의안 상정 중',right:[{t:'투표 시작',c:'dark',go:2}],badge:'expect'},
+    {cls:'ia-voting',name:'투표 진행 중',red:1,sub:'출석·미투표 주주',sel:1,timer:'12:37',right:[{t:'투표 종료',c:'red',go:3}],badge:'expect'},
+    {cls:'ia-fill',name:'표결 집계중',sub:'출석·미투표 주주',sel:1,timer:'12:37',right:[{t:'투표 재개',c:'play',go:2},{t:'표결 마감',c:'dark',go:4}],badge:'counting'},
+    {cls:'ia-wait',name:'표결 마감',sub:'출석 · 미투표',selStatic:'기권 처리',timer:'12:37',right:[{t:'',c:'dots'}],badge:'pass'}
+  ];
+  var stage=0, el=document.getElementById('agStage'); if(!el) return;
+  function render(){
+    var st=STAGES[stage];
+    var l='<div class="iarow-l"><span class="ianame'+(st.red?' red':'')+'">'+st.name+'</span>';
+    if(st.sub) l+='<span class="iasub">'+st.sub+'</span>';
+    if(st.sel) l+='<select class="iasel"><option>기권 처리</option><option>불참 처리</option><option>기권 미처리</option></select>';
+    else if(st.selStatic) l+='<span class="iastat">'+st.selStatic+'</span>';
+    l+='</div>';
+    var r='<div class="iarow-r">';
+    if(st.timer) r+='<span class="iatimer">'+st.timer+'</span>';
+    st.right.forEach(function(b){
+      if(b.c==='dots') r+='<button class="iabtn ic">'+DOTS+'</button>';
+      else if(b.c==='play') r+='<button class="iabtn" data-go="'+b.go+'">'+PLAY+b.t+'</button>';
+      else r+='<button class="iabtn'+(b.c?' '+b.c:'')+'" data-go="'+b.go+'">'+b.t+'</button>';
+    });
+    r+='</div>';
+    el.className='iarow'+(st.cls?' '+st.cls:'');
+    el.innerHTML=l+r;
+    el.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click',function(){ stage=+b.getAttribute('data-go'); render(); }); });
+    var gb=document.getElementById('gBadge');
+    if(gb){ var M={expect:['','가결 예상'],counting:['counting','집계중'],pass:['pass','가결']}, m=M[st.badge]; gb.className='rbadge'+(m[0]?' '+m[0]:''); gb.innerHTML=(st.badge==='pass'?CK:'')+m[1]; }
+  }
+  render();
+})();
 </script>
 </body>
 </html>
