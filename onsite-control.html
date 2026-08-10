@@ -39,7 +39,7 @@
   .oc-tools{display:flex;align-items:center;gap:8px;flex:none}
   .grp{display:flex;align-items:center;gap:8px}
   .tsep{width:1px;height:20px;background:var(--border)}
-  .ocb{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 8px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap}
+  .ocb{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 8px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap;text-decoration:none}
   .ocb svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.6}
   .ocb:hover{background:#fafafa}
   .ocb.gray{background:#f5f5f5;border-color:transparent}
@@ -191,6 +191,24 @@
   .selnode{cursor:pointer;border-radius:8px}
   .selnode.sel{box-shadow:0 0 0 1.5px #0a0a0a;border-radius:8px;position:relative;z-index:1}
   .arow.selnode.sel,.achild.selnode.sel{border-top-color:transparent}
+  .iarow{box-sizing:border-box;display:flex;align-items:center;gap:12px;padding:8px;min-height:44px;background:#fff;border:1px solid #E5E5E5;border-radius:6px;margin-bottom:12px}
+  .iarow-l{display:flex;align-items:center;gap:8px;padding:0 8px;flex:1;min-width:0}
+  .iarow-r{display:flex;align-items:center;gap:8px;flex:none}
+  .ianame{font-size:14px;font-weight:600;letter-spacing:-.01em;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .iasub{font-size:12px;font-weight:500;letter-spacing:-.01em;color:#737373;white-space:nowrap}
+  .iabtn{box-sizing:border-box;display:inline-flex;justify-content:center;align-items:center;gap:4px;padding:8px 10px;height:28px;border:1px solid #E5E5E5;border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer;white-space:nowrap}
+  .iabtn.dark{background:#171717;border-color:#171717;color:#FAFAFA}
+  .iabtn.red{background:rgba(220,38,38,.1);border-color:transparent;color:#E9081B}
+  .iabtn.ic{padding:0;width:28px;height:28px}
+  .iabtn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .iatimer{font-size:14px;color:#171717;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .iacat{box-sizing:border-box;display:inline-flex;align-items:center;gap:4px;padding:2px 6px;height:20px;background:#F5F5F5;border-radius:6px;font-size:12px;font-weight:500;letter-spacing:-.01em;color:#525252}
+  .iacat .d{width:6px;height:6px;border-radius:50%;background:#52525B}
+  .iarow.ia-active{border-color:#171717}
+  .iarow.ia-voting{border-color:#E11D48}
+  .iarow.ia-voting .ianame{color:#E9081B}
+  .iarow.ia-wait{background:#FAFAFA}
+  .iarow.ia-fill{background:#F5F5F5;border-color:transparent}
 </style>
 </head>
 <body>
@@ -225,8 +243,8 @@
         </div>
         <div class="oc-tools">
           <button class="ocb"><svg viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>공지</button>
-          <a class="ocb" href="chair-mc.html"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>의장용 뷰</a>
-          <a class="ocb" href="chair-mc.html"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><path d="M12 18v4"/></svg>사회자용 뷰</a>
+          <a class="ocb" href="chair-mc.html" target="_blank"><svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>의장용 뷰</a>
+          <a class="ocb" href="chair-mc.html" target="_blank"><svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>사회자용 뷰</a>
           <button class="ocb"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m17 8 5 5M22 8l-5 5"/></svg>출석 미투표 처리</button>
           <button class="ocb"><svg viewBox="0 0 24 24"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg>비콘 제어</button>
           <span class="tsep"></span>
@@ -254,12 +272,11 @@
               <div id="agTree"></div>
             </div>
             <div class="apanel cpanel">
-              <div class="apanel-h">의안 진행 제어</div>
               <div class="cbody">
                 <div class="cpane on" data-cp="op">
-                  <div class="cinfo">
-                    <span class="cinfo-t">주주별 비례 분배 방식</span>
-                    <button class="ocb"><svg viewBox="0 0 24 24" style="fill:#0a0a0a;stroke:none"><path d="M8 5v14l11-7z"/></svg>다음</button>
+                  <div class="iarow ia-active">
+                    <div class="iarow-l"><span class="ianame">주주별 비례 분배 방식</span></div>
+                    <div class="iarow-r"><button class="iabtn dark">다음</button></div>
                   </div>
                   <div class="cag">
                     <div class="cag-cat"><span>제1호</span><span class="d"></span><span>보통결의</span>
