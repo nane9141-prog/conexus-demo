@@ -341,6 +341,56 @@
   .pip-actions button:hover{background:rgba(255,255,255,.12);color:#fff}
   .pip video{display:block;width:100%;aspect-ratio:16/9;background:#000;object-fit:cover}
   .pip.min video{display:none}
+  .vsheet{padding:0;overflow:hidden;height:100%}
+  .vtoolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border);flex:none}
+  .vseg{display:inline-flex;background:#F5F5F5;border-radius:8px;padding:3px}
+  .vseg button{height:26px;padding:0 12px;border:none;background:none;border-radius:6px;font-family:inherit;font-size:13px;font-weight:500;color:#737373;cursor:pointer}
+  .vseg button.on{background:#171717;color:#fff}
+  .vtools{display:flex;align-items:center;gap:6px}
+  .vbtn{display:inline-flex;align-items:center;gap:5px;height:32px;padding:0 12px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:13px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap}
+  .vbtn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .vbtn.dark{background:#171717;border-color:#171717;color:#fff}
+  .vbtn.ic{padding:0;width:32px;justify-content:center}
+  .vscroll{flex:1;min-height:0;overflow:auto}
+  .vtbl{width:100%;border-collapse:collapse;font-size:13px}
+  .vtbl thead th{position:sticky;top:0;background:#fff;z-index:1;padding:12px 14px;text-align:right;font-weight:500;color:#737373;font-size:12px;white-space:nowrap;border-bottom:1px solid var(--border)}
+  .vtbl thead th.l{text-align:left}.vtbl thead th.c{text-align:center}
+  .vtbl thead th.l .fic{width:14px;height:14px;fill:none;stroke:#a3a3a3;stroke-width:1.6;vertical-align:-2px;margin-left:4px}
+  .hop{display:inline-flex;align-items:center;gap:3px;justify-content:flex-end}
+  .hop svg{width:13px;height:13px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .hop.for svg{stroke:#0071f3}.hop.ag svg{stroke:#7c3aed}.hop.ab svg{stroke:#a3a3a3}
+  .vtbl tbody td{padding:14px;text-align:right;color:#171717;border-bottom:1px solid #f2f2f2;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .vtbl tbody td.l{text-align:left}.vtbl tbody td.c{text-align:center}
+  .vtbl td.mut{color:#a3a3a3}
+  .vtbl tr.grp td{background:#fafafa;color:#0a0a0a;font-weight:500}
+  .vno{color:#525252}
+  .vnm{font-weight:500;color:#0a0a0a}
+  .vtag{display:inline-flex;align-items:center;height:20px;padding:0 8px;margin-left:6px;background:#F5F5F5;border-radius:6px;font-size:12px;font-weight:500;color:#525252}
+  .vres{display:inline-flex;align-items:center;gap:3px;font-size:13px;font-weight:600}
+  .vres svg{width:13px;height:13px;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .vres.pass{color:#0071f3}.vres.pass svg{stroke:#0071f3}
+  .vres.fail{color:#7c3aed}.vres.fail svg{stroke:#7c3aed}
+  .vpre{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:500}
+  .vpre.exp{background:#EBF4FF;color:#171717}
+  .vpre.rej{background:#F5F5F5;color:#525252}
+  .vst{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500}
+  .vst .d{width:6px;height:6px;border-radius:50%}
+  .vst.done{color:#737373}.vst.done .d{background:#a3a3a3}
+  .vst.live{color:#E11D48}.vst.live .d{background:#E11D48}
+  .vst.wait{color:#a3a3a3}.vst.wait .d{background:#d4d4d4}
+  .fld{border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+  .fld-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .fld .ft{font-size:15px;font-weight:600;color:#171717}
+  .fld .fd{font-size:13px;color:#737373;margin-top:4px}
+  .chk2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .chkc{border:1px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+  .chkc.on{border-color:#0a0a0a;background:#fafafa}
+  .chkbox{width:20px;height:20px;border:1.5px solid #d4d4d4;border-radius:5px;flex:none;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .chkc.on .chkbox{background:#171717;border-color:#171717}
+  .chkbox svg{width:13px;height:13px;fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;display:none}
+  .chkc.on .chkbox svg{display:block}
+  .chkc .ct{font-size:14px;font-weight:600;color:#171717}
+  .chkc .cd{font-size:12px;color:#737373;margin-top:4px}
 </style>
 </head>
 <body>
@@ -450,7 +500,26 @@
         </div>
         <!-- 의결권 행사현황 -->
         <div class="oc-panel" data-panel="vote">
-          <div class="apanel" style="padding:28px"><div class="apanel-ph">의결권 행사현황 상세는 다음 단계에서 구현됩니다.</div></div>
+          <div class="apanel vsheet">
+            <div class="vtoolbar">
+              <div class="vseg"><button class="on" data-vmode="in">내부용</button><button data-vmode="pub">공개용</button></div>
+              <div class="vtools">
+                <button class="vbtn dark" id="vDisclose"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>공개 설정</button>
+                <button class="vbtn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>다운로드</button>
+                <button class="vbtn ic"><svg viewBox="0 0 24 24"><path d="M3 6h18M6 12h12M10 18h4"/></svg></button>
+                <button class="vbtn ic"><svg viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></button>
+              </div>
+            </div>
+            <div class="vscroll"><table class="vtbl"><thead><tr>
+              <th style="width:96px">의안번호</th>
+              <th class="l">의안명 <svg class="fic" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></th>
+              <th class="n">사전투표</th><th class="n">현장투표</th><th class="n">온라인</th>
+              <th class="n"><span class="hop for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></th>
+              <th class="n"><span class="hop ag"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></th>
+              <th class="n"><span class="hop ab"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</span></th>
+              <th class="n">찬성률</th><th class="c">결과</th><th class="c">상태</th>
+            </tr></thead><tbody id="vtBody"></tbody></table></div>
+          </div>
         </div>
         <!-- 시청자 관리 -->
         <div class="oc-panel" data-panel="viewer">
@@ -706,6 +775,66 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   // 초기 선택: 제1호
   (function(){ var nodes=document.querySelectorAll('#agTree .selnode'); for(var i=0;i<nodes.length;i++){ var a=nodes[i].querySelector('.ano'); if(a&&a.textContent.trim()==='제1호'){ nodes[i].classList.add('sel'); break; } } })();
   renderStage(); renderAll();
+})();
+</script>
+<div class="ovl" id="discOvl">
+  <div class="dlg" style="width:520px">
+    <button class="dlg-x" id="discClose"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="dlg-h"><div class="tt">의결권 행사현황 공개 설정</div><div class="ds">전자주총 참여자에게 보여줄 행사현황 범위를 설정합니다.<br>적용 시 참여자 화면에 즉시 반영됩니다.</div></div>
+    <div class="dlg-c">
+      <div class="fld"><div class="fld-row"><div><div class="ft">공개 여부</div><div class="fd">전자주총 페이지에 행사현황 노출</div></div><span class="sw" id="discSw"></span></div></div>
+      <div class="chk2" id="discOpts" style="display:none">
+        <div class="chkc on" data-chk><span class="chkbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="ct">투표채널별 현황 공개</div><div class="cd">사전 · 현장 · 전자주총 채널 분리</div></div></div>
+        <div class="chkc" data-chk><span class="chkbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="ct">표 분배 반영</div><div class="cd">일괄 투표, 단수주 처리 포함 여부</div></div></div>
+      </div>
+    </div>
+    <div class="dlg-f"><button class="dlg-btn" id="discCancel">취소</button><button class="dlg-btn dark" id="discOk">설정</button></div>
+  </div>
+</div>
+<script>
+(function(){
+  var CK='<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';
+  var XK='<svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+  var V=[
+   {no:'제1호',nm:'재무제표 승인의 건',pre:10814519,site:10814519,onl:10814519,fo:20814519,ag:5814519,ab:2814519,rate:'72.76%',res:'가결',st:'종료'},
+   {no:'제2호',nm:'집중투표 후보 수 결정의 건',tag:'양립불가',grp:1},
+   {no:'제2-1호',nm:'집중투표 후보 3인 중 2인 선임의 건',pre:10814519,site:10814519,onl:10814519,fo:20814519,ag:5814519,ab:2814519,rate:'72.76%',res:'가결',st:'종료'},
+   {no:'제2-2호',nm:'집중투표 후보 5인 중 3인 선임의 건(주주제안)',pre:10814519,site:10814519,onl:10814519,fo:5814519,ag:20814519,ab:2814519,rate:'27.24%',res:'부결',st:'종료'},
+   {no:'제3호',nm:'집중투표 후보 수 결정의 건',grp:1},
+   {no:'제3-1호',nm:'집중투표 후보 3인 중 2인 선임의 건',tag:'집중투표',pre:20814519,site:20814519,onl:20814519,fo:62814519,ag:null,ab:null,rate:'100%',res:'가결 예상 : 1, 2',st:'투표중'},
+   {no:'제3-1-1호',nm:'사내이사 자금통 선임의 건',pre:8814519,site:8814519,onl:8814519,fo:20814519,ag:null,ab:null,rate:'70.22%',res:'가결 예상',cand:1},
+   {no:'제3-1-2호',nm:'사내이사 최경영 선임의 건',pre:2114519,site:2114519,onl:2114519,fo:6814519,ag:null,ab:null,rate:'24.14%',res:'가결 예상',cand:1},
+   {no:'제3-1-3호',nm:'사내이사 자금통 선임의 건',pre:100,site:100,onl:100,fo:300,ag:null,ab:null,rate:'4.21%',res:'부결 예상',cand:1},
+   {no:'제3-1-4호',nm:'사내이사 최경영 선임의 건',pre:11,site:11,onl:11,fo:33,ag:null,ab:null,rate:'2.18%',res:'부결 예상',cand:1},
+   {no:'제3-2호',nm:'집중투표 후보 5인 중 3인 선임의 건(주주제안)',pre:20814519,site:20814519,onl:20814519,fo:62814519,ag:null,ab:null,rate:'100%',res:'가결 예상 : 3, 4',st:'대기'},
+   {no:'제3-2-1호',nm:'사내이사 자금통 선임의 건',pre:100,site:100,onl:100,fo:300,ag:null,ab:null,rate:'4.24%',res:'부결 예상',cand:1},
+   {no:'제3-2-2호',nm:'사내이사 자금통 선임의 건',pre:11,site:11,onl:11,fo:33,ag:null,ab:null,rate:'2.18%',res:'부결 예상',cand:1}
+  ];
+  function num(n){ return (n==null)?'<td class="mut">−</td>':'<td>'+n.toLocaleString('en-US')+'</td>'; }
+  function resHTML(r){ if(!r) return ''; if(r==='가결') return '<span class="vres pass">'+CK+'가결</span>'; if(r==='부결') return '<span class="vres fail">'+XK+'부결</span>'; if(r.indexOf('가결 예상')===0) return '<span class="vpre exp">'+r+'</span>'; if(r.indexOf('부결 예상')===0) return '<span class="vpre rej">'+r+'</span>'; return r; }
+  function stHTML(st){ if(!st) return ''; var m={'종료':'done','투표중':'live','대기':'wait'}; return '<span class="vst '+(m[st]||'wait')+'"><span class="d"></span>'+st+'</span>'; }
+  var body=document.getElementById('vtBody');
+  if(body){
+    body.innerHTML=V.map(function(x){
+      var tag=x.tag?'<span class="vtag">'+x.tag+'</span>':'';
+      if(x.grp) return '<tr class="grp"><td class="vno">'+x.no+'</td><td class="l"><span class="vnm">'+x.nm+'</span>'+tag+'</td><td colspan="9"></td></tr>';
+      return '<tr><td class="vno">'+x.no+'</td><td class="l"><span class="vnm">'+x.nm+'</span>'+tag+'</td>'
+        +num(x.pre)+num(x.site)+num(x.onl)+num(x.fo)+num(x.ag)+num(x.ab)
+        +'<td>'+x.rate+'</td><td class="c">'+resHTML(x.res)+'</td><td class="c">'+stHTML(x.st)+'</td></tr>';
+    }).join('');
+  }
+  // 내부용/공개용 seg
+  document.querySelectorAll('.vseg button').forEach(function(b){ b.addEventListener('click',function(){ document.querySelectorAll('.vseg button').forEach(function(x){x.classList.toggle('on',x===b);}); }); });
+  // 공개 설정 팝업
+  var ov=document.getElementById('discOvl'), sw=document.getElementById('discSw'), opts=document.getElementById('discOpts');
+  function open(){ ov.classList.add('on'); } function close(){ ov.classList.remove('on'); }
+  var db=document.getElementById('vDisclose'); if(db) db.addEventListener('click',open);
+  document.getElementById('discClose').addEventListener('click',close);
+  document.getElementById('discCancel').addEventListener('click',close);
+  document.getElementById('discOk').addEventListener('click',close);
+  ov.addEventListener('click',function(e){ if(e.target===ov) close(); });
+  sw.addEventListener('click',function(){ sw.classList.toggle('on'); opts.style.display=sw.classList.contains('on')?'grid':'none'; });
+  opts.querySelectorAll('[data-chk]').forEach(function(c){ c.addEventListener('click',function(){ c.classList.toggle('on'); }); });
 })();
 </script>
 <div class="ovl" id="ansOvl">
