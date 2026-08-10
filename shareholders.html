@@ -433,7 +433,7 @@
           <div class="ic3">
             <div class="icard"><div class="k">총 주식수</div><div class="v">476,211,964</div></div>
             <div class="icard"><div class="k">총 주주수</div><div class="v">650,000</div></div>
-            <div class="icard warn"><div class="k">미설정 투표권자 <svg class="info-i ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><div class="v" id="unsetCount">6</div></div>
+            <div class="icard warn" style="background:#fff"><div class="k">미설정 투표권자 <svg class="info-i ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><div class="v" id="unsetCount">6</div></div>
           </div>
           <div>
             <div class="tfn">
@@ -547,7 +547,7 @@
               <div class="icard cf-card"><div class="k">총 주주수</div>
                 <div class="cf-vals"><div class="cf-col o"><span class="lb">원본</span><span class="num">650,000</span></div><div class="cf-col c"><span class="lb">확정</span><span class="num" id="cfVoters">649,998</span></div></div>
               </div>
-              <div class="icard warn cf-card"><div class="k">미설정 투표권자 <svg class="info-i ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><div class="v" id="cfUnset">3</div></div>
+              <div class="icard warn cf-card"><div class="k">미설정 투표권자 <svg class="info-i ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><div class="v" id="cfUnset">0</div></div>
             </div>
             <div class="cf-sec-h"><span class="t">확정 명세</span><div class="tfn-r"><button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>내보내기</button>
                 <button class="iconbtn2" title="줄 간격"><svg class="ic" viewBox="0 0 24 24"><path d="M8 6 5 3 2 6M5 3v18M8 18l-3 3-3-3M13 6h9M13 12h9M13 18h9"/></svg></button>
@@ -721,7 +721,7 @@
             if(ct){ ct.classList.toggle('hidden', key!=='confirm'); if(key==='confirm' && typeof updateCfBtn==='function') updateCfBtn(); }
             if(lm) lm.classList.toggle('hidden', !(key==='confirm' && cfConfirmed));
             var uc=document.getElementById('unsetCount'); var cu=document.getElementById('cfUnset');
-            if(uc&&cu) cu.textContent=uc.textContent;
+            if(cu) cu.textContent='0';
             if(key==='confirm' && typeof renderConfirm==='function') renderConfirm();
           }
           document.querySelectorAll('#loadedState .utab').forEach(function(t){t.addEventListener('click',function(){activateTab(t.dataset.utab);});});
