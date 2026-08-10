@@ -313,6 +313,10 @@
         .mg-title{font-size:15px;font-weight:600;color:#0a0a0a}
         .mg-desc{font-size:13px;color:#737373;margin-top:4px;line-height:18px;max-width:640px}
         .mg-actions{display:flex;gap:8px;flex:none}
+        .mg-tools{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:12px 0 8px}
+        .mg-tools-l,.mg-tools-r{display:flex;align-items:center;gap:8px}
+        .btn.icon{padding:0;width:34px;height:32px;justify-content:center}
+        .btn.icon svg{width:14px;height:14px}
         .mchk{width:16px;height:16px;border:1px solid #babbbc;border-radius:4px;display:inline-block;vertical-align:middle;cursor:pointer;position:relative;background:#fff}
         .mchk.on{background:#171717;border-color:#171717}
         .mchk.on:after{content:"";position:absolute;left:5px;top:2px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
@@ -471,10 +475,17 @@
             <div class="mg-head">
               <div>
                 <div class="mg-title">통합·해제 설정</div>
-                <div class="mg-desc">동일인이 보유한 복수 계좌가 통합된 내역입니다. 통합 계좌를 펼쳐 확인하고, ‘변경’으로 계좌를 추가·삭제하거나 통합을 해제할 수 있습니다.</div>
+                <div class="mg-desc">동일인이 보유한 복수 계좌를 통합해 하나의 투표권자로 행사합니다. 통합 계좌를 펼쳐 확인하고, ‘변경’으로 계좌를 추가·삭제하거나 통합을 해제할 수 있습니다.</div>
               </div>
-              <div class="mg-actions">
-                <button class="btn primary" id="mgNew"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg>투표권자 통합</button>
+            </div>
+            <div class="mg-tools">
+              <div class="mg-tools-l">
+                <button class="btn" id="mgKind"><svg class="ic" viewBox="0 0 24 24"><path d="M3 6h18M7 12h10M10 18h4"/></svg>의결권 있는 주식 종류 변경</button>
+              </div>
+              <div class="mg-tools-r">
+                <button class="btn icon" title="필터"><svg class="ic" viewBox="0 0 24 24"><path d="M3 5h18M6 12h12M10 19h4"/></svg></button>
+                <button class="btn icon" title="엑셀 내보내기"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button>
+                <button class="btn primary" id="mgNew"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg>통합 주주 추가</button>
               </div>
             </div>
             <div class="mtbl-wrap">
@@ -483,6 +494,19 @@
                 <thead><tr><th>통합방법</th><th class="c">주식종류</th><th>투표권자</th><th>주주명</th><th>주주번호</th><th style="text-align:right">보유주식</th><th style="text-align:right">지분율</th><th class="c">통합내역</th></tr></thead>
                 <tbody id="mgBody"></tbody>
               </table>
+            </div>
+            <div class="mpag">
+              <div class="cnt">총 <span id="mgGrpCnt">2</span>건 · 통합 계좌 <span id="mgAcctCnt">4</span>개</div>
+              <div class="mpag-r">
+                <div class="psize">페이지당 <span class="psel">30 <svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></div>
+                <div class="pctrl">
+                  <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m11 17-5-5 5-5M18 17l-5-5 5-5"/></svg></span>
+                  <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></span>
+                  <span class="pnum">1 / 1</span>
+                  <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
+                  <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m6 17 5-5-5-5M13 17l5-5-5-5"/></svg></span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -723,8 +747,11 @@
             }
             function renderAll(){
               var html=''; Object.keys(groups).forEach(function(gid){html+=groupHTML(gid,groups[gid]);});
-              if(!Object.keys(groups).length){ html='<tr><td colspan="8" style="text-align:center;color:#a3a3a3;height:80px">통합된 투표권자가 없습니다. ‘투표권자 통합’으로 계좌를 통합하세요.</td></tr>'; }
+              if(!Object.keys(groups).length){ html='<tr><td colspan="8" style="text-align:center;color:#a3a3a3;height:80px">통합된 투표권자가 없습니다. ‘통합 주주 추가’로 계좌를 통합하세요.</td></tr>'; }
               mgBody.innerHTML=html;
+              var gk=Object.keys(groups), acct=0; gk.forEach(function(g){acct+=(groups[g].members||[]).length;});
+              var gc=document.getElementById('mgGrpCnt'), ac=document.getElementById('mgAcctCnt');
+              if(gc) gc.textContent=gk.length; if(ac) ac.textContent=acct;
               mgBody.querySelectorAll('tr.mg-grp').forEach(function(tr){
                 tr.addEventListener('click',function(e){
                   if(e.target.closest('.mg-edit')) return;
@@ -788,6 +815,8 @@
               if(editGid){ delete groups[editGid]; renderAll(); mSheet.classList.add('hidden'); toast('통합 해제','통합이 해제되었습니다. 각 계좌가 개별 투표권자로 복원됩니다.'); }
             });
             document.getElementById('mgNew').addEventListener('click',function(){openMergeSheet(null);});
+            var mgKind=document.getElementById('mgKind');
+            if(mgKind){ mgKind.addEventListener('click',function(){ toast('의결권 있는 주식 종류','보통주 · 우선주 중 통합 대상 주식 종류를 선택할 수 있습니다.'); }); }
             renderAll();
           }
 
