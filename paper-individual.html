@@ -309,8 +309,8 @@
       <style>
   .backbtn{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:9px;background:#fff;font-size:13px;font-weight:500;color:#171717;cursor:pointer;font-family:inherit}
   .backbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
-  .chsep{width:1px;height:16px;background:var(--border)}
-  .chch{font-size:14px;font-weight:600;color:#0071f3}
+  .chsep{width:1px;height:18px;background:#d4d4d4}
+  .chch{font-size:18px;font-weight:600;color:#0a0a0a}
   .kbd{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;background:#f5f5f5;border:1px solid #e5e7eb;border-radius:6px;font-size:11px;font-weight:500;color:#737373;line-height:1}
   .hsearch{display:flex;align-items:center;gap:6px;height:32px;padding:0 8px 0 10px;border:1px solid var(--border);border-radius:10px;background:#fff;min-width:230px}
   .hsearch svg{width:16px;height:16px;stroke:#737373;fill:none;stroke-width:1.5}
@@ -360,10 +360,12 @@
   .gnote{font-size:12px;color:#a3a3a3}
   .ind-foot{display:flex;justify-content:space-between;align-items:center;padding:14px 2px 2px;font-size:13px;color:#737373}
   .ind-foot b{color:#0a0a0a}
+  .legendbar{position:sticky;bottom:0;margin:8px -20px -20px;padding:10px 20px;background:#fff;border-top:1px solid var(--border);font-size:12px;color:#737373;display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;z-index:5}
+  .legendbar .kbd{margin:0 2px}
 </style>
       <div class="content" style="width:100%">
         <div class="ev-head">
-          <div class="page-title">개별 등록</div>
+          <div class="page-title">의결권 개별 등록</div>
           <span class="chsep"></span>
           <span class="chch" id="chTitle">서면위임(자사)</span>
           <span class="spacer"></span>
@@ -395,11 +397,7 @@
           <button class="bulkb" data-bulk="abs"><span class="di"></span>기권<span class="kbd">3</span></button>
           <button class="bulkb" data-bulk="neu"><span class="di"></span>중립<span class="kbd">4</span></button>
           <button class="bulkb" data-bulk="none"><span class="di"></span>미행사<span class="kbd">0</span></button>
-          <span class="spacer"></span>
-          <label class="tgl-wrap"><span class="tgl" id="selTgl"></span>선택 의안만 적용</label>
         </div>
-
-        <p class="legend">키보드 · <span class="kbd">↑</span><span class="kbd">↓</span> 의안 이동 · <span class="kbd">1</span>찬성 <span class="kbd">2</span>반대 <span class="kbd">3</span>기권 <span class="kbd">4</span>중립 <span class="kbd">0</span>미행사(입력 후 다음 의안) · <span class="kbd">/</span> 주주 검색 · <span class="kbd">Ctrl</span>+<span class="kbd">S</span> 저장</p>
 
         <div class="tbl-wrap" id="indGrid">
           <table class="tbl">
@@ -425,6 +423,7 @@
           <span>총 <b>9</b>개 의안 · 입력 <b id="indDone">0</b>개</span>
           <div class="hbtns"><button class="btn-out" id="btnCancel">취소</button><button class="btn-dark" id="btnSave2">저장</button></div>
         </div>
+        <div class="legendbar">키보드 · <span class="kbd">↑</span><span class="kbd">↓</span> 의안 이동 · <span class="kbd">1</span>찬성 <span class="kbd">2</span>반대 <span class="kbd">3</span>기권 <span class="kbd">4</span>중립 <span class="kbd">0</span>미행사 (입력 후 다음 의안으로 이동) · <span class="kbd">/</span> 주주 검색</div>
       </div>
     </div>
   </main>
@@ -526,9 +525,7 @@
     document.querySelectorAll('.bulkb[data-bulk]').forEach(function(btn){
       btn.addEventListener('click',function(){
         var op=btn.dataset.bulk;
-        var onlySel=document.getElementById('selTgl').classList.contains('on');
-        if(onlySel){ if(active>=0) setOp(vrows[active],op); }
-        else { vrows.forEach(function(r){ setOp(r,op); }); }
+        vrows.forEach(function(r){ setOp(r,op); });   // 전체 의안 일괄 반영
       });
     });
 
@@ -536,7 +533,6 @@
     var sh=document.getElementById('shInput');
     document.addEventListener('keydown',function(e){
       var typing = document.activeElement && (document.activeElement.tagName==='INPUT'||document.activeElement.tagName==='TEXTAREA');
-      if((e.key==='s'||e.key==='S') && (e.ctrlKey||e.metaKey)){ e.preventDefault(); back(); return; }
       if(e.key==='/' && !typing){ e.preventDefault(); sh.focus(); return; }
       if(typing) return;
       if(e.key==='ArrowDown'){ e.preventDefault(); setActive(active<0?0:active+1,true); return; }
