@@ -418,7 +418,7 @@
 
         <div class="tbl-wrap" id="indGrid">
           <table class="tbl">
-            <thead><tr><th style="width:96px">의안번호</th><th>의안명</th><th class="num" style="width:118px">총행사가능의결권</th><th class="num" style="width:118px">행사가능의결권</th><th class="num" style="width:118px">미행사의결권</th><th class="ophead" style="width:56px"><span class="ophh"><svg class="hicon for" viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:#0071f3;stroke-width:2"><path d="M20 6 9 17l-5-5"/></svg>찬성 <span class="kbd">1</span></span></th><th class="ophead" style="width:56px"><span class="ophh"><svg class="hicon against" viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:#7c3aed;stroke-width:2"><path d="M18 6 6 18M6 6l12 12"/></svg>반대 <span class="kbd">2</span></span></th><th class="ophead" style="width:56px"><span class="ophh">기권 <span class="kbd">3</span></span></th><th class="ophead" style="width:56px"><span class="ophh">중립 <span class="kbd">4</span></span></th></tr></thead>
+            <thead><tr><th style="width:96px">의안번호</th><th>의안명</th><th class="num" style="width:108px">총행사가능의결권</th><th class="num" style="width:108px">행사가능의결권</th><th class="num" style="width:108px">미행사의결권</th><th class="ophead" style="width:84px"><span class="ophh"><svg class="hicon for" viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:#0071f3;stroke-width:2"><path d="M20 6 9 17l-5-5"/></svg>찬성 <span class="kbd">1</span></span></th><th class="ophead" style="width:84px"><span class="ophh"><svg class="hicon against" viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:#7c3aed;stroke-width:2"><path d="M18 6 6 18M6 6l12 12"/></svg>반대 <span class="kbd">2</span></span></th><th class="ophead" style="width:84px"><span class="ophh">기권 <span class="kbd">3</span></span></th><th class="ophead" style="width:84px"><span class="ophh">중립 <span class="kbd">4</span></span></th></tr></thead>
             <tbody>
                   <tr class="vrow"><td>제1호</td><td>재무제표 승인의 건</td><td class="num">12,500,000</td><td class="num">12,500,000</td><td class="num mi" data-mi>12,500,000</td><td class="c"><span class="ovbox for" data-op="for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></td><td class="c"><span class="ovbox against" data-op="against"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></td><td class="c"><span class="ovbox abs" data-op="abs"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></td><td class="c"><span class="ovbox neu" data-op="neu"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></td></tr>
                   <tr class="grow"><td>제2호</td><td>정관 일부 변경의 건</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="c"></td><td class="c"></td><td class="c"></td><td class="c"></td></tr>
@@ -520,11 +520,22 @@
 
     var grid=document.getElementById('indGrid');
     var vrows=Array.prototype.slice.call(grid.querySelectorAll('tbody tr.vrow'));
-    var active=-1; var curHold='12,500,000';
-    function setActive(i,scroll){
-      if(i<0) i=0; if(i>vrows.length-1) i=vrows.length-1;
+    var curHold='12,500,000';
+    // 입력 이동 대상: 일반 의안(행) + 집중투표 후보(표수 입력)
+    var targets=[];
+    grid.querySelectorAll('tbody tr').forEach(function(tr){
+      if(tr.classList.contains('vrow')) targets.push({kind:'row',tr:tr});
+      else if(tr.classList.contains('crow')){ var inp0=tr.querySelector('.vnum'); if(inp0) targets.push({kind:'inp',el:inp0}); }
+    });
+    var at=-1;
+    function rowIndex(tr){ for(var i=0;i<targets.length;i++){ if(targets[i].kind==='row'&&targets[i].tr===tr) return i; } return -1; }
+    function inpIndex(el){ for(var j=0;j<targets.length;j++){ if(targets[j].kind==='inp'&&targets[j].el===el) return j; } return -1; }
+    function focusTarget(i){
+      if(i<0)i=0; if(i>targets.length-1)i=targets.length-1;
+      at=i; var t=targets[at]; if(!t) return;
       vrows.forEach(function(r){r.classList.remove('active');});
-      active=i; var r=vrows[active]; if(r){ r.classList.add('active'); if(scroll) r.scrollIntoView({block:'nearest'}); }
+      if(t.kind==='row'){ var ae=document.activeElement; if(ae&&ae.classList&&ae.classList.contains('vnum')) ae.blur(); t.tr.classList.add('active'); t.tr.scrollIntoView({block:'nearest'}); }
+      else { t.el.focus(); if(t.el.select) t.el.select(); t.el.scrollIntoView({block:'nearest'}); }
     }
     function updateRow(r){
       var mi=r.querySelector('[data-mi]'); if(!mi) return;
@@ -544,10 +555,10 @@
     grid.addEventListener('click',function(e){
       var b=e.target.closest('.ovbox'); if(!b) return;
       var r=b.closest('tr.vrow'); var was=b.classList.contains('on');
-      setActive(vrows.indexOf(r));
+      focusTarget(rowIndex(r));
       setOp(r, was?'none':b.dataset.op);
     });
-    grid.addEventListener('mousedown',function(e){ var r=e.target.closest('tr.vrow'); if(r) setActive(vrows.indexOf(r)); });
+    grid.addEventListener('mousedown',function(e){ var r=e.target.closest('tr.vrow'); if(r) focusTarget(rowIndex(r)); });
 
     // 일괄
     var OPK={'1':'for','2':'against','3':'abs','4':'neu','0':'none'};
@@ -568,10 +579,10 @@
       if(e.key==='/' && !typing){ e.preventDefault(); sh.focus(); return; }
       if(typing) return;
       var k=e.key.toLowerCase();
-      if(e.key==='ArrowDown'){ e.preventDefault(); setActive(active<0?0:active+1,true); return; }
-      if(e.key==='ArrowUp'){ e.preventDefault(); setActive(active<0?0:active-1,true); return; }
+      if(e.key==='ArrowDown'){ e.preventDefault(); focusTarget(at<0?0:at+1); return; }
+      if(e.key==='ArrowUp'){ e.preventDefault(); focusTarget(at<0?0:at-1); return; }
       if(BULK.hasOwnProperty(k)){ e.preventDefault(); vrows.forEach(function(r){ setOp(r,BULK[k]); }); return; }
-      if(ROW.hasOwnProperty(k)){ e.preventDefault(); if(active<0) setActive(0,true); setOp(vrows[active],ROW[k]); if(k!=='r') setActive(active+1,true); return; }
+      if(ROW.hasOwnProperty(k)){ e.preventDefault(); if(at<0) focusTarget(0); var tt=targets[at]; if(tt&&tt.kind==='row'){ setOp(tt.tr,ROW[k]); if(k!=='r') focusTarget(at+1); } return; }
       if(k==='c'){ e.preventDefault(); back(); return; }   // 취소
       if(k==='s'){ e.preventDefault(); toggleSave(); return; }   // 저장/철회
     });
@@ -597,7 +608,11 @@
       cvRecalc();
     }
     cvCands.forEach(function(inp){
-      inp.addEventListener('focus',function(){ cvLast=inp; });
+      inp.addEventListener('focus',function(){ cvLast=inp; at=inpIndex(inp); });
+      inp.addEventListener('keydown',function(e){
+        if(e.key==='Enter'||e.key==='ArrowDown'){ e.preventDefault(); focusTarget(inpIndex(inp)+1); }
+        else if(e.key==='ArrowUp'){ e.preventDefault(); focusTarget(inpIndex(inp)-1); }
+      });
       inp.addEventListener('input',function(){
         var pool=cvPool(), others=0; cvCands.forEach(function(i){ if(i!==inp) others+=cvN(i.value); });
         var v=cvN(inp.value); if(others+v>pool){ v=Math.max(0,pool-others); }
@@ -675,7 +690,7 @@
       document.getElementById('emptyState').style.display='none';
       document.getElementById('detail').style.display='block';
       setSaveEnabled(true);
-      sh.value=''; closePop(); setActive(0,false);
+      sh.value=''; closePop(); focusTarget(0);
     }
     sh.addEventListener('focus',openPop);
     sh.addEventListener('input',function(){ render(sh.value.trim()); pop.classList.add('show'); });
