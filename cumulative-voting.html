@@ -33,6 +33,56 @@
   .stat .v{font-size:24px;font-weight:700;color:#0a0a0a;margin-top:6px}
   .stat .d{font-size:12px;margin-top:4px}
   .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
+  .mchips{display:flex;gap:8px}
+  .mchip{height:34px;padding:0 14px;border:1px solid var(--border);border-radius:9999px;background:#fff;font-family:inherit;font-size:13px;font-weight:500;color:#525252;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .mchip.on{background:#171717;border-color:#171717;color:#fff}
+  .mchip .c{display:inline-flex;align-items:center;height:18px;min-width:18px;padding:0 5px;border-radius:9999px;background:#f0f0f0;color:#525252;font-size:11px;font-weight:600}
+  .mchip.on .c{background:rgba(255,255,255,.25);color:#fff}
+  .mtb{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px}
+  .mtb-r{display:flex;gap:6px;align-items:center}
+  .mbtn{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border:1px solid var(--border);border-radius:9px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap}
+  .mbtn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .mbtn.dark{background:#171717;border-color:#171717;color:#fff}
+  .mbtn.ic{padding:0;width:38px;justify-content:center}
+  .mwrap{margin-top:14px;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
+  .mscroll{overflow:auto;max-height:calc(100vh - 320px)}
+  table.mtbl{width:100%;border-collapse:collapse;font-size:14px}
+  table.mtbl thead th{position:sticky;top:0;background:#fff;z-index:1;padding:14px 16px;text-align:left;font-weight:500;color:#737373;font-size:13px;white-space:nowrap;border-bottom:1px solid var(--border)}
+  table.mtbl thead th.n{text-align:right}table.mtbl thead th.c{text-align:center}
+  table.mtbl tbody td{padding:15px 16px;border-bottom:1px solid #f2f2f2;color:#0a0a0a;white-space:nowrap;font-variant-numeric:tabular-nums}
+  table.mtbl tbody td.n{text-align:right}table.mtbl tbody td.c{text-align:center}
+  table.mtbl tbody tr:hover td{background:#fafafa}
+  .mmut{color:#a3a3a3}
+  .rsn{max-width:300px;overflow:hidden;text-overflow:ellipsis}
+  .mstat-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin-top:14px}
+  .mstat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:18px}
+  .mstat .k{font-size:13px;color:#737373;font-weight:500}
+  .mstat .v{font-size:24px;font-weight:700;color:#0a0a0a;margin-top:6px}
+  .mstat .s{font-size:12px;color:#a3a3a3;margin-top:4px}
+  .mst{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:13px}
+  .mst .d{width:7px;height:7px;border-radius:50%}
+  .mst.recv{color:#ea580c}.mst.recv .d{background:#ea580c}
+  .mst.ok{color:#0071f3}.mst.ok .d{background:#0071f3}
+  .mst.no{color:#737373}.mst.no .d{background:#a3a3a3}
+  .mfoot{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px solid var(--border);font-size:13px;color:#525252}
+  .mpg{display:flex;align-items:center;gap:6px}
+  .mpg .pp{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 6px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;color:#525252}
+  .mpg .pp.cur{background:#171717;color:#fff;border-color:#171717}
+  .viewbtn{height:30px;padding:0 14px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:13px;cursor:pointer}
+  .dsel{display:inline-flex;align-items:center;justify-content:space-between;gap:8px;height:34px;min-width:150px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:13px;color:#0a0a0a;cursor:pointer}
+  .dsel.warn{border-color:#e11d48;color:#e11d48}
+  .dsel svg{width:14px;height:14px;fill:none;stroke:#737373;stroke-width:2}
+  .mtag{display:inline-flex;align-items:center;height:20px;padding:0 8px;margin-left:6px;background:#f0f4ff;border-radius:6px;font-size:12px;color:#4b6bfb}
+  .mcaret{width:20px;height:20px;border-radius:50%;background:#171717;color:#fff;display:inline-flex;align-items:center;justify-content:center;margin-right:8px}
+  .mcaret svg{width:11px;height:11px;fill:none;stroke:#fff;stroke-width:2.4}
+  .ctabs2{display:flex;gap:22px;border-bottom:1px solid var(--border);margin-top:18px}
+  .ct2{position:relative;height:40px;border:none;background:none;font-family:inherit;font-size:15px;font-weight:500;color:#737373;cursor:pointer}
+  .ct2.on{color:#0a0a0a;font-weight:600}.ct2.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#171717}
+  .cbanner{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px;padding:16px 18px;border:1px solid var(--border);border-radius:12px;background:#fafafa}
+  .cb-l{display:flex;align-items:center;gap:12px}
+  .cb-l>svg{width:18px;height:18px;fill:none;stroke:#525252;stroke-width:1.8}
+  .cb-t{font-size:15px;font-weight:700;color:#0a0a0a}
+  .cb-d{font-size:13px;color:#737373;margin-top:2px}
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
 </style>
 </head>
@@ -144,33 +194,10 @@
     </div>
     <div class="scroll">
       <div class="content" style="max-width:1100px;margin:0 auto;width:100%">
-        <div class="st-head"><div><div class="page-title">집중투표 관리</div><div class="page-sub">제3-1호 · 집중투표 후보 4인 중 2인 선임의 건 — 1주당 선임예정 이사 수만큼 의결권을 부여합니다.</div></div><div class="actions"><span class="badge green" style="height:28px">개표 완료</span></div></div>
-
-        <div class="card">
-          <div class="st-section">
-            <div class="fgrid c3">
-              <div class="field"><label>집중투표 청구</label><button class="inp sel val"><span>청구 있음</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
-              <div class="field"><label>선임예정 이사 수<span class="req">*</span></label><input class="inp ro" value="2" readonly></div>
-              <div class="field"><label>1주당 의결권 수</label><input class="inp ro" value="2" readonly></div>
-            </div>
-            <div class="fgrid c2">
-              <div class="field"><label>참석 의결권</label><input class="inp ro" value="300,000,000 주" readonly></div>
-              <div class="field"><label>총 행사 의결권</label><input class="inp ro" value="600,000,000 표 (300,000,000 × 2인)" readonly></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="st-head" style="margin-top:8px"><h2 style="font-size:16px">후보자 및 득표 현황</h2><div class="actions"><span class="page-sub">다득표 상위 2인(김근수 · 진웅섭) 선임</span></div></div>
-        <div class="tbl-wrap"><table class="tbl">
-          <thead><tr><th style="width:80px">순위</th><th>세부의안</th><th>후보</th><th>직위</th><th style="text-align:right">득표수</th><th style="text-align:right">득표율</th><th>결과</th></tr></thead>
-          <tbody>
-            <tr><td>1</td><td>제3-1-1호</td><td style="font-weight:600">김근수</td><td>사외이사 후보</td><td style="text-align:right">410,471,124</td><td style="text-align:right">68.4%</td><td><span class="badge green">가결(선임)</span></td></tr>
-            <tr><td>2</td><td>제3-1-2호</td><td style="font-weight:600">진웅섭</td><td>사외이사 후보</td><td style="text-align:right">121,475,008</td><td style="text-align:right">20.2%</td><td><span class="badge green">가결(선임)</span></td></tr>
-            <tr><td>3</td><td>제3-1-3호</td><td style="font-weight:600">남상일</td><td>사외이사 후보</td><td style="text-align:right">58,810,427</td><td style="text-align:right">9.8%</td><td><span class="badge red">부결</span></td></tr>
-            <tr><td>4</td><td>제3-1-4호</td><td style="font-weight:600">박선화</td><td>사외이사 후보</td><td style="text-align:right">9,243,441</td><td style="text-align:right">1.6%</td><td><span class="badge red">부결</span></td></tr>
-          </tbody>
-        </table></div>
-        <div class="page-sub" style="text-align:right">득표 합계 600,000,000표 (100.0%) · 참석 의결권 300,000,000주 × 2인</div>
+        <div class="st-head"><div><div class="page-title">집중 투표 관리</div><div class="page-sub">중복의결권 확정 후 집중투표에서 동일한 의안에 찬성한 주주 그룹별로 표 분배를 할 수 있습니다.</div></div></div>
+        <div class="ctabs2"><button class="ct2 on">자사 표 분배</button><button class="ct2">타사 표 분배</button></div>
+        <div class="cbanner"><div class="cb-l"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><div><div class="cb-t">분배 방식 설정</div><div class="cb-d">분배 방식 선택 후 집중투표 표 분배 가능</div></div></div><button class="mbtn dark">설정</button></div>
+        <div class="mwrap"><div class="mscroll"><table class="mtbl"><thead><tr><th>의안번호</th><th>의안명</th><th class="n">찬성 의안 번호</th><th class="n">분배 가능 주주</th><th class="n">분배 가능 의결권</th><th class="n">미분배의결권</th><th>분배 여부</th><th>분배 완료 일시</th></tr></thead><tbody><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1</td><td class="n">1,200</td><td class="n">285,041</td><td class="n mmut">-</td><td><span class="mmut">분배완료</span></td><td>2026-07-27 13:40</td></tr><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1, 2</td><td class="n">400</td><td class="n">139,182</td><td class="n">139,182</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1, 2, 4</td><td class="n">100</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1, 3</td><td class="n">80</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1, 4</td><td class="n">60</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">2</td><td class="n">50</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">2, 3</td><td class="n">1,200</td><td class="n">185,041</td><td class="n">185,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">2, 3, 4</td><td class="n">2,000</td><td class="n">285,041</td><td class="n">285,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">3</td><td class="n">100</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">4</td><td class="n">3</td><td class="n">5,041</td><td class="n">5,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr></tbody></table></div></div>
       </div>
     </div>
   </main>

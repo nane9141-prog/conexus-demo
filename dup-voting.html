@@ -33,6 +33,56 @@
   .stat .v{font-size:24px;font-weight:700;color:#0a0a0a;margin-top:6px}
   .stat .d{font-size:12px;margin-top:4px}
   .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
+  .mchips{display:flex;gap:8px}
+  .mchip{height:34px;padding:0 14px;border:1px solid var(--border);border-radius:9999px;background:#fff;font-family:inherit;font-size:13px;font-weight:500;color:#525252;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .mchip.on{background:#171717;border-color:#171717;color:#fff}
+  .mchip .c{display:inline-flex;align-items:center;height:18px;min-width:18px;padding:0 5px;border-radius:9999px;background:#f0f0f0;color:#525252;font-size:11px;font-weight:600}
+  .mchip.on .c{background:rgba(255,255,255,.25);color:#fff}
+  .mtb{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px}
+  .mtb-r{display:flex;gap:6px;align-items:center}
+  .mbtn{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border:1px solid var(--border);border-radius:9px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap}
+  .mbtn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .mbtn.dark{background:#171717;border-color:#171717;color:#fff}
+  .mbtn.ic{padding:0;width:38px;justify-content:center}
+  .mwrap{margin-top:14px;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
+  .mscroll{overflow:auto;max-height:calc(100vh - 320px)}
+  table.mtbl{width:100%;border-collapse:collapse;font-size:14px}
+  table.mtbl thead th{position:sticky;top:0;background:#fff;z-index:1;padding:14px 16px;text-align:left;font-weight:500;color:#737373;font-size:13px;white-space:nowrap;border-bottom:1px solid var(--border)}
+  table.mtbl thead th.n{text-align:right}table.mtbl thead th.c{text-align:center}
+  table.mtbl tbody td{padding:15px 16px;border-bottom:1px solid #f2f2f2;color:#0a0a0a;white-space:nowrap;font-variant-numeric:tabular-nums}
+  table.mtbl tbody td.n{text-align:right}table.mtbl tbody td.c{text-align:center}
+  table.mtbl tbody tr:hover td{background:#fafafa}
+  .mmut{color:#a3a3a3}
+  .rsn{max-width:300px;overflow:hidden;text-overflow:ellipsis}
+  .mstat-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin-top:14px}
+  .mstat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:18px}
+  .mstat .k{font-size:13px;color:#737373;font-weight:500}
+  .mstat .v{font-size:24px;font-weight:700;color:#0a0a0a;margin-top:6px}
+  .mstat .s{font-size:12px;color:#a3a3a3;margin-top:4px}
+  .mst{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:13px}
+  .mst .d{width:7px;height:7px;border-radius:50%}
+  .mst.recv{color:#ea580c}.mst.recv .d{background:#ea580c}
+  .mst.ok{color:#0071f3}.mst.ok .d{background:#0071f3}
+  .mst.no{color:#737373}.mst.no .d{background:#a3a3a3}
+  .mfoot{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px solid var(--border);font-size:13px;color:#525252}
+  .mpg{display:flex;align-items:center;gap:6px}
+  .mpg .pp{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 6px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;color:#525252}
+  .mpg .pp.cur{background:#171717;color:#fff;border-color:#171717}
+  .viewbtn{height:30px;padding:0 14px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:13px;cursor:pointer}
+  .dsel{display:inline-flex;align-items:center;justify-content:space-between;gap:8px;height:34px;min-width:150px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:13px;color:#0a0a0a;cursor:pointer}
+  .dsel.warn{border-color:#e11d48;color:#e11d48}
+  .dsel svg{width:14px;height:14px;fill:none;stroke:#737373;stroke-width:2}
+  .mtag{display:inline-flex;align-items:center;height:20px;padding:0 8px;margin-left:6px;background:#f0f4ff;border-radius:6px;font-size:12px;color:#4b6bfb}
+  .mcaret{width:20px;height:20px;border-radius:50%;background:#171717;color:#fff;display:inline-flex;align-items:center;justify-content:center;margin-right:8px}
+  .mcaret svg{width:11px;height:11px;fill:none;stroke:#fff;stroke-width:2.4}
+  .ctabs2{display:flex;gap:22px;border-bottom:1px solid var(--border);margin-top:18px}
+  .ct2{position:relative;height:40px;border:none;background:none;font-family:inherit;font-size:15px;font-weight:500;color:#737373;cursor:pointer}
+  .ct2.on{color:#0a0a0a;font-weight:600}.ct2.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#171717}
+  .cbanner{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px;padding:16px 18px;border:1px solid var(--border);border-radius:12px;background:#fafafa}
+  .cb-l{display:flex;align-items:center;gap:12px}
+  .cb-l>svg{width:18px;height:18px;fill:none;stroke:#525252;stroke-width:1.8}
+  .cb-t{font-size:15px;font-weight:700;color:#0a0a0a}
+  .cb-d{font-size:13px;color:#737373;margin-top:2px}
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
 </style>
 </head>
@@ -144,12 +194,15 @@
     </div>
     <div class="scroll">
       <div class="content" style="width:100%">
-        <div class="st-head"><div><div class="page-title">중복 의결권 관리</div><div class="page-sub">중복 행사 의결권을 탐지하고 처리합니다.</div></div></div>
-        <div class="ag-empty" style="min-height:440px">
-          <svg viewBox="0 0 24 24" class="ic"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-          <div class="e1">준비 중인 화면입니다.</div>
-          <div class="e2">이 메뉴는 곧 제공될 예정입니다.</div>
+        <div class="st-head"><div><div class="page-title">중복 의결권 관리</div><div class="page-sub">전자투표/위임이 최우선으로 자동 처리되며 그 외에는 선택된 위임장 항목으로 의결권이 행사됩니다.</div></div><div class="actions"><button class="mbtn dark"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>확정하기</button></div></div>
+        <div class="mstat-grid">
+          <div class="mstat" style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="k">중복 의결권</div><div class="v">240,000<span style="font-size:14px;font-weight:600">주</span></div><div class="s">1,240명</div></div><div style="text-align:right;font-size:13px;color:#525252;line-height:1.9"><div>전자투표/위임 <b>40,000주</b></div><div>서면위임(자사) <b>20,000주</b></div><div>서면위임(타사) <b>20,000주</b></div></div></div>
+          <div class="mstat"><div class="k">중복 처리 완료</div><div class="v">90,000<span style="font-size:14px;font-weight:600">주</span></div><div class="s">600명</div></div>
+          <div class="mstat"><div class="k" style="display:flex;justify-content:space-between;align-items:center">중복 미처리 <span style="color:#737373;font-weight:500;font-size:12px">일괄 설정 ⚙</span></div><div class="v" style="color:#ea580c">150,000<span style="font-size:14px;font-weight:600">주</span></div><div class="s">640명</div></div>
         </div>
+        <div class="mtb" style="justify-content:flex-end"><div class="mtb-r"><span class="dsel" style="min-width:90px">전체 <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span><button class="mbtn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>다운로드</button><button class="mbtn ic"><svg viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></button></div></div>
+        <div class="mwrap"><div class="mscroll"><table class="mtbl"><thead><tr><th>주주명</th><th>주주번호</th><th class="n">보유의결권</th><th class="c">전자투표/위임</th><th class="c">서면투표</th><th class="c">서면위임(자사)</th><th class="c">서면위임(타사)</th><th>중복처리</th></tr></thead><tbody><tr><td>CITIGROUP</td><td> 1233478-1154-1548978999</td><td class="n">67,000</td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="viewbtn">보기</span></td><td class="c"><span class="viewbtn">보기</span></td><td><span class="dsel">서면위임(자사) <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></td></tr><tr><td>BARCLAYS CAPITAL</td><td>1233478-1154-1548978999</td><td class="n">345,804</td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td><span class="dsel">서면위임(자사) <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></td></tr><tr><td>우리사주조합장(이유정)</td><td>8807122</td><td class="n">345,804</td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="viewbtn">보기</span></td><td class="c"><span class="viewbtn">보기</span></td><td><span class="dsel">서면위임(자사) <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></td></tr><tr><td><span class="mcaret"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>한국교직원공제회<span class="mtag">통합 3건</span></td><td>1233478-1154-1548978999</td><td class="n">3,345,804</td><td class="c"><span class="viewbtn">보기</span></td><td class="c"><span class="viewbtn">보기</span></td><td class="c"><span class="viewbtn">보기</span></td><td class="c"><span class="viewbtn">보기</span></td><td><span class="dsel">전자투표 <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></td></tr><tr><td><span class="mcaret"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>삼성자산운용<span class="mtag">통합 3건</span></td><td>1233478-1154-1548978999</td><td class="n">800,000</td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="viewbtn">보기</span></td><td class="c"><span class="viewbtn">보기</span></td><td class="c"><span class="mmut">-</span></td><td><span class="dsel warn">미설정 <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></td></tr><tr><td>이미나</td><td>8807122</td><td class="n">800,000</td><td class="c"><span class="viewbtn">보기</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="viewbtn">보기</span></td><td><span class="dsel warn">미설정 <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></td></tr><tr><td>김우진</td><td>8807122</td><td class="n">800,000</td><td class="c"><span class="viewbtn">보기</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="viewbtn">보기</span></td><td class="c"><span class="mmut">-</span></td><td><span class="dsel warn">미설정 <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></td></tr></tbody></table></div>
+        <div class="mfoot"><span>총 82명 · 510,356,025주</span><div class="mpg"><span class="pp">|&lt;</span><span class="pp">&lt;</span><span class="pp cur">1</span><span class="pp">&gt;</span><span class="pp">&gt;|</span></div></div></div>
       </div>
     </div>
   </main>

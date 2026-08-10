@@ -33,6 +33,56 @@
   .stat .v{font-size:24px;font-weight:700;color:#0a0a0a;margin-top:6px}
   .stat .d{font-size:12px;margin-top:4px}
   .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
+  .mchips{display:flex;gap:8px}
+  .mchip{height:34px;padding:0 14px;border:1px solid var(--border);border-radius:9999px;background:#fff;font-family:inherit;font-size:13px;font-weight:500;color:#525252;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .mchip.on{background:#171717;border-color:#171717;color:#fff}
+  .mchip .c{display:inline-flex;align-items:center;height:18px;min-width:18px;padding:0 5px;border-radius:9999px;background:#f0f0f0;color:#525252;font-size:11px;font-weight:600}
+  .mchip.on .c{background:rgba(255,255,255,.25);color:#fff}
+  .mtb{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px}
+  .mtb-r{display:flex;gap:6px;align-items:center}
+  .mbtn{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border:1px solid var(--border);border-radius:9px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap}
+  .mbtn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .mbtn.dark{background:#171717;border-color:#171717;color:#fff}
+  .mbtn.ic{padding:0;width:38px;justify-content:center}
+  .mwrap{margin-top:14px;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
+  .mscroll{overflow:auto;max-height:calc(100vh - 320px)}
+  table.mtbl{width:100%;border-collapse:collapse;font-size:14px}
+  table.mtbl thead th{position:sticky;top:0;background:#fff;z-index:1;padding:14px 16px;text-align:left;font-weight:500;color:#737373;font-size:13px;white-space:nowrap;border-bottom:1px solid var(--border)}
+  table.mtbl thead th.n{text-align:right}table.mtbl thead th.c{text-align:center}
+  table.mtbl tbody td{padding:15px 16px;border-bottom:1px solid #f2f2f2;color:#0a0a0a;white-space:nowrap;font-variant-numeric:tabular-nums}
+  table.mtbl tbody td.n{text-align:right}table.mtbl tbody td.c{text-align:center}
+  table.mtbl tbody tr:hover td{background:#fafafa}
+  .mmut{color:#a3a3a3}
+  .rsn{max-width:300px;overflow:hidden;text-overflow:ellipsis}
+  .mstat-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin-top:14px}
+  .mstat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:18px}
+  .mstat .k{font-size:13px;color:#737373;font-weight:500}
+  .mstat .v{font-size:24px;font-weight:700;color:#0a0a0a;margin-top:6px}
+  .mstat .s{font-size:12px;color:#a3a3a3;margin-top:4px}
+  .mst{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:13px}
+  .mst .d{width:7px;height:7px;border-radius:50%}
+  .mst.recv{color:#ea580c}.mst.recv .d{background:#ea580c}
+  .mst.ok{color:#0071f3}.mst.ok .d{background:#0071f3}
+  .mst.no{color:#737373}.mst.no .d{background:#a3a3a3}
+  .mfoot{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px solid var(--border);font-size:13px;color:#525252}
+  .mpg{display:flex;align-items:center;gap:6px}
+  .mpg .pp{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 6px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;color:#525252}
+  .mpg .pp.cur{background:#171717;color:#fff;border-color:#171717}
+  .viewbtn{height:30px;padding:0 14px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:13px;cursor:pointer}
+  .dsel{display:inline-flex;align-items:center;justify-content:space-between;gap:8px;height:34px;min-width:150px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:13px;color:#0a0a0a;cursor:pointer}
+  .dsel.warn{border-color:#e11d48;color:#e11d48}
+  .dsel svg{width:14px;height:14px;fill:none;stroke:#737373;stroke-width:2}
+  .mtag{display:inline-flex;align-items:center;height:20px;padding:0 8px;margin-left:6px;background:#f0f4ff;border-radius:6px;font-size:12px;color:#4b6bfb}
+  .mcaret{width:20px;height:20px;border-radius:50%;background:#171717;color:#fff;display:inline-flex;align-items:center;justify-content:center;margin-right:8px}
+  .mcaret svg{width:11px;height:11px;fill:none;stroke:#fff;stroke-width:2.4}
+  .ctabs2{display:flex;gap:22px;border-bottom:1px solid var(--border);margin-top:18px}
+  .ct2{position:relative;height:40px;border:none;background:none;font-family:inherit;font-size:15px;font-weight:500;color:#737373;cursor:pointer}
+  .ct2.on{color:#0a0a0a;font-weight:600}.ct2.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#171717}
+  .cbanner{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px;padding:16px 18px;border:1px solid var(--border);border-radius:12px;background:#fafafa}
+  .cb-l{display:flex;align-items:center;gap:12px}
+  .cb-l>svg{width:18px;height:18px;fill:none;stroke:#525252;stroke-width:1.8}
+  .cb-t{font-size:15px;font-weight:700;color:#0a0a0a}
+  .cb-d{font-size:13px;color:#737373;margin-top:2px}
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
 </style>
 </head>
@@ -144,25 +194,13 @@
     </div>
     <div class="scroll">
       <div class="content" style="max-width:1100px;margin:0 auto;width:100%">
-        <div class="st-head"><div><div class="page-title">불통일행사 관리</div><div class="page-sub">주주가 보유 주식의 의결권을 안건별로 찬성·반대·기권으로 나누어 행사하는 불통일행사를 관리합니다.</div></div><div class="actions"><button class="btn">엑셀 내보내기</button><button class="st-save">저장</button></div></div>
-
-        <div class="card">
-          <div class="st-section">
-            <div class="field"><label>불통일행사 허용</label><div class="rad-group" data-radgrp="split"><span class="rad on" data-rad><span class="dotc"></span>허용</span><span class="rad" data-rad><span class="dotc"></span>미허용</span></div></div>
-            <div class="field"><label>사전 통지 요건</label><span class="cbx on" data-cbx><span class="box"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>회일 3일 전까지 서면 통지 필요</span></div>
-          </div>
+        <div class="st-head"><div><div class="page-title">불통일행사 관리</div><div class="page-sub">불통일행사를 신청한 주주를 등록하고 승인 · 미승인을 처리합니다.</div></div></div>
+        <div class="mtb">
+          <div class="mchips"><button class="mchip on">전체 <span class="c">422</span></button><button class="mchip">접수 <span class="c">8</span></button><button class="mchip">승인 <span class="c">8</span></button><button class="mchip">거절 <span class="c">24</span></button></div>
+          <div class="mtb-r"><button class="mbtn"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>개별등록</button><button class="mbtn ic"><svg viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></button><button class="mbtn ic"><svg viewBox="0 0 24 24"><path d="M3 6h18M6 12h12M10 18h4"/></svg></button></div>
         </div>
-
-        <div class="st-head" style="margin-top:8px"><h2 style="font-size:16px">불통일행사 신청 현황</h2></div>
-        <div class="tbl-wrap"><table class="tbl">
-          <thead><tr><th>주주번호</th><th>주주명</th><th>보유주식</th><th>안건</th><th style="text-align:right">찬성</th><th style="text-align:right">반대</th><th style="text-align:right">기권</th><th>상태</th></tr></thead>
-          <tbody>
-            <tr><td>000105</td><td>한국투자신탁</td><td>320,000</td><td>제1호 재무제표 승인</td><td style="text-align:right">200,000</td><td style="text-align:right">120,000</td><td style="text-align:right">0</td><td><span class="badge green">접수</span></td></tr>
-            <tr><td>000105</td><td>한국투자신탁</td><td>320,000</td><td>제2호 이사 선임</td><td style="text-align:right">180,000</td><td style="text-align:right">140,000</td><td style="text-align:right">0</td><td><span class="badge green">접수</span></td></tr>
-            <tr><td>000220</td><td>국민연금공단</td><td>510,000</td><td>제1호 재무제표 승인</td><td style="text-align:right">510,000</td><td style="text-align:right">0</td><td style="text-align:right">0</td><td><span class="badge green">접수</span></td></tr>
-            <tr><td>000377</td><td>미래에셋자산운용</td><td>145,000</td><td>제3호 감사 선임</td><td style="text-align:right">90,000</td><td style="text-align:right">40,000</td><td style="text-align:right">15,000</td><td><span class="badge amber">검토</span></td></tr>
-          </tbody>
-        </table></div>
+        <div class="mwrap"><div class="mscroll"><table class="mtbl"><thead><tr><th>상태</th><th>주주구분</th><th>주주명</th><th class="n">보유주식수</th><th>신청사유</th><th>신청방식</th><th>신청일시</th><th>승인일시</th><th></th></tr></thead><tbody><tr><td><span class="mst recv"><span class="d"></span>접수</span></td><td>개인</td><td>김영수</td><td class="n">67,000</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td>개별등록</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut">⋮</td></tr><tr><td><span class="mst recv"><span class="d"></span>접수</span></td><td>개인</td><td>박선화</td><td class="n">345,804</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td>개별등록</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut">⋮</td></tr><tr><td><span class="mst recv"><span class="d"></span>접수</span></td><td>개인</td><td>천이영</td><td class="n">345,804</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td>개별등록</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td>개인</td><td>박민영</td><td class="n">3,345,804</td><td class="rsn">해외 기관투자자 위임으로 계좌별 상이한 의결권 행사가 필요합니다.</td><td>개별등록</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td>개인</td><td>우리사주조합장(이유정)</td><td class="n">800,000</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td>주주패스</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td>개인</td><td>김이나</td><td class="n">800,000</td><td class="rsn">펀드별 의결권 행사 방침에 따라 불통일행사가 필요합니다.</td><td>주주패스</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td>개인</td><td>김미경</td><td class="n">800,000</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td>주주패스</td><td>2026-07-15 13:40</td><td class="mmut">-</td><td class="c mmut">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td>기관</td><td>삼성자산운용</td><td class="n">800,000</td><td class="rsn">조합원 의사 취합 결과 통일행사로 전환하여 미승인 처리되었습니다.</td><td>주주패스</td><td>2026-07-15 13:40</td><td class="mmut">-</td><td class="c mmut">⋮</td></tr><tr><td><span class="mst no"><span class="d"></span>거절</span></td><td>기관</td><td>현대차증권운용</td><td class="n">800,000</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td>주주패스</td><td>2026-07-15 13:40</td><td class="mmut">-</td><td class="c mmut">⋮</td></tr><tr><td><span class="mst no"><span class="d"></span>거절</span></td><td>외국인</td><td>케이시</td><td class="n">800,000</td><td class="rsn">해외 기관투자자 위임으로 계좌별 상이한 의결권 행사가 필요합니다.</td><td>주주패스</td><td>2026-07-15 13:40</td><td class="mmut">-</td><td class="c mmut">⋮</td></tr></tbody></table></div>
+        <div class="mfoot"><span>총 10건 · 510,356,025주</span><div class="mpg">페이지당 20 <span class="pp">|&lt;</span><span class="pp">&lt;</span><span class="pp cur">1</span><span class="mmut">/ 30</span><span class="pp">&gt;</span><span class="pp">&gt;|</span></div></div></div>
       </div>
     </div>
   </main>
