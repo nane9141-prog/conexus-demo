@@ -319,6 +319,25 @@
         table.mtbl td .mbadge.g{background:#ebf4ff;color:#0066df}
         .cf-note{font-size:13px;color:#737373;line-height:20px;background:#fafafa;border:1px solid var(--border);border-radius:12px;padding:16px}
         .cf-foot{display:flex;justify-content:flex-end}
+        .cf-cmp{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+        .cf-card{min-height:96px}
+        .cf-card .cf-vals{display:flex;justify-content:flex-end;gap:24px;margin-top:auto}
+        .cf-col{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+        .cf-col .lb{font-size:12px;color:#737373}
+        .cf-col.o .num{font-size:18px;font-weight:600;color:#737373}
+        .cf-col.c .num{font-size:18px;font-weight:700;color:#0a0a0a}
+        .cf-sec-h{display:flex;align-items:center;justify-content:space-between;margin:16px 0 8px}
+        .cf-sec-h .t{font-size:14px;font-weight:600;color:#0a0a0a}
+        .cf-tbl-wrap{border:1px solid var(--border);border-radius:10px;overflow:hidden}
+        .cf-tbl-wrap table.mtbl{border:none}
+        .badge-st{display:inline-flex;align-items:center;padding:2px 8px;border-radius:9999px;font-size:12px;font-weight:500;line-height:16px}
+        .badge-st.green{background:#ecfdf3;color:#067647;border:1px solid #abefc6}
+        .badge-st.red{background:#fef3f2;color:#b42318;border:1px solid #fecdca}
+        .cf-note-in{font-size:12px;color:#737373;margin-right:auto}
+        .ad-body{padding:16px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+        .ad-media{width:40px;height:40px;border-radius:8px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;flex:none}
+        .ad-media svg{width:24px;height:24px;color:#171717;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+        .ad-body .dlg-title{line-height:1.4}
         .btn.lg{height:40px;padding:0 20px;font-size:14px}
         #mgList{display:flex;flex-direction:column;gap:6px}
         #mgList .mm{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--border);border-radius:10px;font-size:14px;color:#0a0a0a}
@@ -468,13 +487,24 @@
           </div>
 
           <div class="upanel hide" data-upanel="confirm">
-            <div class="ic3 cf-cards">
-              <div class="icard"><div class="k">총 투표권자</div><div class="v">650,000</div></div>
-              <div class="icard"><div class="k">설정 완료</div><div class="v" id="cfSet">6</div></div>
-              <div class="icard warn"><div class="k">미설정</div><div class="v" id="cfUnset">3</div></div>
+            <div class="cf-cmp">
+              <div class="icard cf-card"><div class="k">총 주식수</div>
+                <div class="cf-vals"><div class="cf-col o"><span class="lb">원본</span><span class="num">476,211,964</span></div><div class="cf-col c"><span class="lb">확정</span><span class="num">476,211,964</span></div></div>
+              </div>
+              <div class="icard cf-card"><div class="k">총 주주수</div>
+                <div class="cf-vals"><div class="cf-col o"><span class="lb">원본</span><span class="num">650,000</span></div><div class="cf-col c"><span class="lb">확정</span><span class="num" id="cfVoters">649,998</span></div></div>
+              </div>
+              <div class="icard warn cf-card"><div class="k">미설정 투표권자 <svg class="info-i ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><div class="v" id="cfUnset">3</div></div>
             </div>
-            <div class="cf-note">투표권자 설정과 통합·해제가 모두 완료되면 주주명부를 확정하세요. 확정 이후에는 투표권자 정보를 수정할 수 없으며, 전자투표·현장 집계의 기준 명부로 사용됩니다.</div>
-            <div class="cf-foot"><button class="btn primary lg" id="cfConfirm"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>주주명부 확정</button></div>
+            <div class="cf-sec-h"><span class="t">확정 명세</span><button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>엑셀 내보내기</button></div>
+            <div class="cf-tbl-wrap">
+              <table class="mtbl">
+                <colgroup><col style="width:90px"><col style="width:90px"><col><col style="width:140px"><col style="width:130px"><col style="width:80px"><col style="width:120px"><col style="width:100px"></colgroup>
+                <thead><tr><th class="c">주식종류</th><th class="c">주주구분</th><th>주주명</th><th>주주번호</th><th style="text-align:right">보유주식</th><th style="text-align:right">지분율</th><th>투표권자</th><th class="c">상태</th></tr></thead>
+                <tbody id="cfBody"></tbody>
+              </table>
+            </div>
+            <div class="cf-foot" style="margin-top:16px"><span class="cf-note-in">확정 이후에는 투표권자 정보를 수정할 수 없으며, 전자투표·현장 집계의 기준 명부로 사용됩니다.</span><button class="btn primary lg" id="cfConfirm"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>주주명부 확정</button></div>
           </div>
         </div>
       </div>
@@ -575,6 +605,18 @@
         </div>
       </div>
 
+      <div class="dlg-ov hidden" id="cfDlg">
+        <div class="dlg" style="width:320px">
+          <div class="ad-body">
+            <div class="ad-media"><svg viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><circle cx="10" cy="8" r="2"/><path d="M14 15a3 3 0 0 0-6 0"/></svg></div>
+            <div>
+              <div class="dlg-title">주주명부를 확정할까요?</div>
+              <div class="dlg-desc" style="margin-top:6px">전자투표·위임 전까지 변경할 수 있으며, 투표가 진행 중인 경우 투표를 완료한 주주의 정보는 변경할 수 없습니다.</div>
+            </div>
+          </div>
+          <div class="dlg-foot"><button class="btn" data-dlg-close>취소</button><button class="btn primary" id="cfConfirmYes">확정</button></div>
+        </div>
+      </div>
       <div id="shTip"></div>
 
       <script>
@@ -622,7 +664,7 @@
             nx.style.display = key==='confirm' ? 'none' : '';
             var uc=document.getElementById('unsetCount'); var cu=document.getElementById('cfUnset');
             if(uc&&cu) cu.textContent=uc.textContent;
-            var cs=document.getElementById('cfSet'); if(cs) cs.textContent=String(9-(parseInt(uc.textContent,10)||0));
+            if(key==='confirm' && typeof renderConfirm==='function') renderConfirm();
           }
           document.querySelectorAll('#loadedState .utab').forEach(function(t){t.addEventListener('click',function(){activateTab(t.dataset.utab);});});
           document.getElementById('msNext').addEventListener('click',function(){
@@ -749,9 +791,36 @@
             renderAll();
           }
 
-          // 설정내역 확인 → 주주명부 확정
-          var cfBtn=document.getElementById('cfConfirm');
-          if(cfBtn){ cfBtn.addEventListener('click',function(){ toast('주주명부 확정','주주명부가 확정되었습니다. 이후 전자투표·현장 집계의 기준 명부로 사용됩니다.'); }); }
+          // 설정내역 확인 — 확정 명세 렌더 + 주주명부 확정
+          function renderConfirm(){
+            var src=document.querySelector('.upanel[data-upanel="set"] table.mtbl tbody');
+            var body=document.getElementById('cfBody');
+            if(!src||!body) return;
+            var html='';
+            src.querySelectorAll('tr').forEach(function(tr){
+              var td=tr.children;
+              var kind=td[0].textContent.trim();
+              var gubun=td[1].textContent.trim();
+              var nmEl=tr.querySelector('.tt-name');
+              var name=nmEl?nmEl.textContent.trim():td[2].textContent.trim();
+              var no=td[3].textContent.trim();
+              var sh=td[4].textContent.trim();
+              var rate=td[5].textContent.trim();
+              var vcell=tr.querySelector('.voter');
+              var none=vcell && vcell.querySelector('.set-none');
+              var voter = none ? '<span class="set-none">미설정</span>' : '<span class="voter-set">'+(vcell?vcell.textContent.trim():'')+'</span>';
+              var status = none ? '<span class="badge-st red">미설정</span>' : '<span class="badge-st green">설정완료</span>';
+              html+='<tr><td class="c">'+kind+'</td><td class="c">'+gubun+'</td><td>'+name+'</td><td class="mut">'+no+'</td><td class="r">'+sh+'</td><td class="r sub">'+rate+'</td><td>'+voter+'</td><td class="c">'+status+'</td></tr>';
+            });
+            body.innerHTML=html;
+            var mgb=document.getElementById('mgBody'), red=0;
+            if(mgb){ red=mgb.querySelectorAll('.mg-child').length - mgb.querySelectorAll('.mg-grp').length; if(red<0) red=0; }
+            var cv=document.getElementById('cfVoters'); if(cv) cv.textContent=(650000-red).toLocaleString();
+          }
+          var cfBtn=document.getElementById('cfConfirm'), cfDlg=document.getElementById('cfDlg');
+          if(cfBtn&&cfDlg){ cfBtn.addEventListener('click',function(){ cfDlg.classList.remove('hidden'); }); }
+          var cfYes=document.getElementById('cfConfirmYes');
+          if(cfYes){ cfYes.addEventListener('click',function(){ cfDlg.classList.add('hidden'); toast('주주명부 확정','주주명부가 확정되었습니다. 이후 전자투표·현장 집계의 기준 명부로 사용됩니다.'); }); }
 
           // shareholder tooltip (주주번호 · 실질 계좌번호 · 주소)
           var tip=document.getElementById('shTip');
