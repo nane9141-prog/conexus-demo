@@ -309,6 +309,22 @@
   .mc-ansview .tx{background:#FAFAFA;border:1px solid var(--border);border-radius:10px;padding:12px;font-size:13px;line-height:18px;color:#171717}
   .mc-viewbtns{display:flex;justify-content:flex-end}
   .mc-editbtn{padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0A0A0A;cursor:pointer}
+  .spsel{width:100%;box-sizing:border-box;height:32px;padding:0 10px;border:1px solid #E5E5E5;border-radius:10px;font-family:inherit;font-size:14px;color:#171717;background:#fff;margin-bottom:10px}
+  .spqueue{background:#FAFAFA;border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:10px}
+  .spq-h{display:flex;align-items:center;gap:8px;cursor:pointer}
+  .spq-h .ui{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:1.6;stroke-linecap:round}
+  .spq-h>span{flex:1;font-size:12px;font-weight:600;color:#737373}
+  .spq-h>span b{color:#171717}
+  .spq-caret{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:1.8;transition:transform .15s}
+  .spq-caret.open{transform:rotate(180deg)}
+  .spq-body{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+  .spq-row{display:flex;align-items:center;gap:8px}
+  .spq-no{width:16px;height:16px;flex:none;display:flex;align-items:center;justify-content:center;background:#e5e5e5;border-radius:6px;font-size:10px;font-weight:600;color:#171717}
+  .spq-nm{flex:1;font-size:12px;font-weight:500;color:#171717;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .spq-meta{font-size:12px;color:#737373;white-space:nowrap}
+  .spq-empty{font-size:12px;color:#a3a3a3;padding:2px 0}
+  .mcard.sp-click{cursor:pointer}
+  .mc-btn.reject{background:rgba(220,38,38,.1);border-color:transparent;color:#E9081B}
 </style>
 </head>
 <body>
@@ -690,7 +706,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 <script>
 (function(){
   var Q=window.QUESTIONS||[], S=window.SPEECHES||[];
-  var qt='q', unread=false, selId=null;
+  var qt='q', unread=false, selId=null, spAgenda='all', spOpen=true;
   var TPL=[
     {l:'배당 정책',t:'당사는 안정적 배당과 성장 투자의 균형을 배당 정책의 원칙으로 하며, 별도재무제표 당기순이익 기준 배당성향 약 27% 수준을 유지하고 있습니다.'},
     {l:'재무 건전성',t:'건전성 지표는 안정적으로 관리되고 있으며, 선제적 리스크관리와 보수적 충당금 적립 기조를 유지하고 있습니다.'},
@@ -731,8 +747,28 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       +extra+'</div>';
   }
   function list(){ var a=(qt==='q'?Q:S); if(unread) a=a.filter(function(x){return qt==='q'?x.st==='미답변':x.st==='대기';}); return a; }
+  function spList(){ var a=S.filter(function(x){return spAgenda==='all'||x.ag===spAgenda;}); if(unread) a=a.filter(function(x){return x.st==='대기';}); return a; }
+  function spControls(){
+    var q=S.filter(function(x){return (spAgenda==='all'||x.ag===spAgenda)&&x.st==='대기';});
+    var rows=q.map(function(x,i){ return '<div class="spq-row"><span class="spq-no">'+(i+1)+'</span><span class="spq-nm">'+x.name+'</span><span class="spq-meta">'+x.tm+' · '+comma(x.sh)+'주</span></div>'; }).join('');
+    var opts=[['all','전체 의안'],['1','제1호'],['2','제2호'],['3','제3호']].map(function(o){return '<option value="'+o[0]+'"'+(spAgenda===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('');
+    var sel='<select class="spsel" id="spAgSel">'+opts+'</select>';
+    var queue='<div class="spqueue"><div class="spq-h" data-qtoggle><svg class="ui" viewBox="0 0 24 24"><path d="M3 6h13M3 12h13M3 18h9"/><circle cx="20" cy="7" r="1"/></svg><span>발언 대기열 <b>'+q.length+'명</b></span><svg class="spq-caret'+(spOpen?' open':'')+'" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>'+(spOpen?('<div class="spq-body">'+(rows||'<div class="spq-empty">대기 중인 발언이 없습니다.</div>')+'</div>'):'')+'</div>';
+    return sel+queue;
+  }
+  function spCardHTML(x){
+    var sel=(x.id===selId);
+    var badges='<span class="cbadge ag">'+agL(x)+'</span>'+(x.kind==='수정동의'?'<span class="cbadge amend">수정동의</span>':'<span class="cbadge gr">발언</span>')+'<span class="cbadge gr">'+sn(x)+'</span>';
+    var reject=(sel&&x.st==='대기')?'<div class="mc-btns"><button class="mc-btn reject" data-reject type="button">반려</button></div>':'';
+    return '<div class="mcard sp-click'+(sel?' sel':'')+'" data-id="'+x.id+'">'
+      +'<div class="mc-h"><span class="mc-nm">'+x.name+'</span><span class="mc-st"><span class="mc-tm">'+x.tm+'</span>'+stBadge(x)+'</span></div>'
+      +'<div class="mc-cat">'+badges+'</div>'
+      +'<div class="mc-q">'+esc(x.r)+'</div>'+reject+'</div>';
+  }
   function render(){
-    document.getElementById('chatList').innerHTML=list().map(cardHTML).join('')||'<div class="mc-q" style="padding:12px;color:#737373">항목이 없습니다.</div>';
+    var host=document.getElementById('chatList');
+    if(qt==='q'){ host.innerHTML=list().map(cardHTML).join('')||'<div class="mc-q" style="padding:12px;color:#737373">항목이 없습니다.</div>'; }
+    else { host.innerHTML=spControls()+(spList().map(spCardHTML).join('')||'<div class="mc-q" style="padding:12px;color:#737373">항목이 없습니다.</div>'); }
     document.getElementById('qCnt').textContent=Q.filter(function(x){return x.st==='미답변';}).length;
     document.getElementById('sCnt').textContent=S.filter(function(x){return x.st==='대기';}).length;
   }
@@ -756,9 +792,11 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       if(act.getAttribute('data-act')==='submit'){ var ta=card.querySelector('.mc-ta'); openDlg(id, ta.value); return; }
       selId=null; render(); return; }
     var ed=e.target.closest('[data-edit]'); if(ed){ selId=ed.closest('.mcard').getAttribute('data-id'); render(); return; }
-    if(qt!=='q') return;
+    var tg=e.target.closest('[data-qtoggle]'); if(tg){ spOpen=!spOpen; render(); return; }
+    var rj=e.target.closest('[data-reject]'); if(rj){ var rid=rj.closest('.mcard').getAttribute('data-id'); var it=S.filter(function(x){return x.id===rid;})[0]; if(it) it.st='반려'; selId=null; render(); return; }
     var mc=e.target.closest('.mcard'); if(!mc) return; var id=mc.getAttribute('data-id'); selId=(selId===id)?null:id; render();
   });
+  cl.addEventListener('change',function(e){ var s2=e.target.closest('#spAgSel'); if(s2){ spAgenda=s2.value; render(); } });
   render();
 })();
 </script>
