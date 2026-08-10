@@ -11,7 +11,7 @@
   .ic{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
   .oc{display:flex;height:100vh;background:#fafafa;padding:8px;gap:8px}
   /* rail */
-  .oc-rail{width:48px;flex:none;display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:8px}
+  .oc-rail{width:48px;flex:none;transition:width .18s,padding .18s;overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:8px}
   .oc-logo{width:32px;height:32px;border-radius:10px;background:#171717;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
   .oc-nav{display:flex;flex-direction:column;gap:4px;margin-top:8px}
   .oc-nav a{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#737373;text-decoration:none}
@@ -329,6 +329,18 @@
   .spq-empty{font-size:12px;color:#a3a3a3;padding:2px 0}
   .mcard.sp-click{cursor:pointer}
   .mc-btn.reject{background:rgba(220,38,38,.1);border-color:transparent;color:#E9081B}
+  .oc.rail-off .oc-rail{width:0;padding-left:0;padding-right:0;border-right:none}
+  .pip{position:fixed;right:16px;bottom:16px;width:340px;background:#000;border-radius:12px;overflow:hidden;box-shadow:0 12px 34px rgba(0,0,0,.4);z-index:2000;font-family:inherit}
+  .pip.min{width:220px}
+  .pip-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;height:32px;padding:0 8px 0 12px;background:#171717;cursor:move;user-select:none}
+  .pip-t{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pip-t .liv{width:7px;height:7px;border-radius:50%;background:#ef4444;flex:none;animation:pipblink 1.4s infinite}
+  @keyframes pipblink{0%,100%{opacity:1}50%{opacity:.3}}
+  .pip-actions{display:flex;gap:2px;flex:none}
+  .pip-actions button{width:24px;height:24px;border:none;background:none;color:#cfcfcf;font-size:13px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .pip-actions button:hover{background:rgba(255,255,255,.12);color:#fff}
+  .pip video{display:block;width:100%;aspect-ratio:16/9;background:#000;object-fit:cover}
+  .pip.min video{display:none}
 </style>
 </head>
 <body>
@@ -348,9 +360,9 @@
     <div class="oc-main">
       <div class="oc-top">
         <div class="l">
-          <button class="oc-ib" title="사이드바"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg></button>
+          <button class="oc-ib" id="lnbToggle" title="사이드바"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg></button>
           <span class="vsep"></span>
-          <span class="crumb">현장 제어</span>
+          <span class="crumb">주총 현장 제어</span>
         </div>
         <button class="oc-ib" title="변경이력"><svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></button>
       </div>
@@ -711,6 +723,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 (function(){
   var Q=window.QUESTIONS||[], S=window.SPEECHES||[];
   var qt='q', unread=false, selId=null, editId=null, spAgenda='all', spOpen=true;
+  function comma(n){return (n||0).toLocaleString('en-US');}
   var TPL=[
     {l:'배당 정책',t:'당사는 안정적 배당과 성장 투자의 균형을 배당 정책의 원칙으로 하며, 별도재무제표 당기순이익 기준 배당성향 약 27% 수준을 유지하고 있습니다.'},
     {l:'재무 건전성',t:'건전성 지표는 안정적으로 관리되고 있으며, 선제적 리스크관리와 보수적 충당금 적립 기조를 유지하고 있습니다.'},
@@ -809,6 +822,24 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   });
   cl.addEventListener('change',function(e){ var s2=e.target.closest('#spAgSel'); if(s2){ spAgenda=s2.value; render(); } });
   render();
+})();
+</script>
+<div class="pip" id="pip">
+  <div class="pip-bar" id="pipBar"><span class="pip-t"><span class="liv"></span>생중계 · 카카오뱅크 주주총회</span><div class="pip-actions"><button id="pipMin" title="최소화">—</button><button id="pipClose" title="닫기">✕</button></div></div>
+  <video id="pipVid" src="kakaobank.mp4" autoplay muted loop playsinline></video>
+</div>
+<script>
+(function(){
+  var lnb=document.getElementById('lnbToggle'), oc=document.querySelector('.oc');
+  if(lnb&&oc) lnb.addEventListener('click',function(){ oc.classList.toggle('rail-off'); });
+  var pip=document.getElementById('pip'), bar=document.getElementById('pipBar'), vid=document.getElementById('pipVid');
+  document.getElementById('pipMin').addEventListener('click',function(e){ e.stopPropagation(); pip.classList.toggle('min'); });
+  document.getElementById('pipClose').addEventListener('click',function(e){ e.stopPropagation(); pip.style.display='none'; });
+  if(vid) vid.addEventListener('click',function(){ if(vid.paused) vid.play(); else vid.pause(); });
+  var dx=0,dy=0,drag=false;
+  bar.addEventListener('mousedown',function(e){ if(e.target.closest('button'))return; drag=true; var r=pip.getBoundingClientRect(); dx=e.clientX-r.left; dy=e.clientY-r.top; pip.style.right='auto'; pip.style.bottom='auto'; pip.style.left=r.left+'px'; pip.style.top=r.top+'px'; e.preventDefault(); });
+  window.addEventListener('mousemove',function(e){ if(!drag)return; var x=Math.max(0,Math.min(window.innerWidth-pip.offsetWidth,e.clientX-dx)); var y=Math.max(0,Math.min(window.innerHeight-40,e.clientY-dy)); pip.style.left=x+'px'; pip.style.top=y+'px'; });
+  window.addEventListener('mouseup',function(){ drag=false; });
 })();
 </script>
 </body>
