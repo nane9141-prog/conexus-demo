@@ -685,3 +685,10 @@ body{font-family:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-s
 [data-subpanel]{display:none!important}
 [data-subpanel].active{display:block!important}
 .subtabs{margin:4px 0 16px}
+
+/* multi-tab LNB panels + link nav-items */
+.lnb-content{display:none}
+.lnb-content.show{display:flex;flex-direction:column}
+.lnb-tabs .t{cursor:pointer}
+a.nav-item{text-decoration:none;color:var(--fg)}
+.nav-item.dis{color:var(--muted-fg);opacity:.55;pointer-events:none}
