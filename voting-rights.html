@@ -147,8 +147,8 @@
           plugins:{legend:{position:'top',labels:{boxWidth:12,font:{size:12}}},
             tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toLocaleString()+'주';}}}},
           scales:{
-            y:{position:'left',ticks:{callback:function(v){return (v/1000000)+'M';},font:{size:11}},grid:{color:'#f0f0f0'}},
-            y1:{position:'right',ticks:{callback:function(v){return (v/1000000)+'M';},font:{size:11}},grid:{drawOnChartArea:false}},
+            y:{position:'left',ticks:{display:false},grid:{color:'#f0f0f0'}},
+            y1:{position:'right',ticks:{display:false},grid:{drawOnChartArea:false}},
             x:{grid:{display:false},ticks:{font:{size:11}}}
           }}
       });
@@ -158,17 +158,17 @@
     });
     if(document.querySelector('.vr-panel[data-vp="solicit"].active')) setTimeout(initChart,120);
     // slider
-    var base=142800000+78200000+43000000; // 264,000,000
-    var target=160000000;
+    var irk=118000000, trend=30000000, target=160000000;
     var sl=document.getElementById('simSlider');
     function fmt(n){return n.toLocaleString('en-US');}
     function upd(){
       var add=parseInt(sl.value,10)||0;
-      var total=base+add;
+      var secured=irk+trend+add;
+      var remain=Math.max(0,target-secured);
       document.getElementById('simCompany').textContent=fmt(add);
       document.getElementById('simVal').textContent=fmt(add);
-      document.getElementById('simTotal').textContent=fmt(total);
-      var diff=total-target;
+      document.getElementById('simRemain').textContent=fmt(remain);
+      var diff=secured-target;
       var st=document.getElementById('simStatT'), sd=document.getElementById('simStatD'), info=st.closest('.sim-info'), box=info?info.querySelector('.ic-box'):null;
       if(diff>=0){
         if(info) info.classList.remove('miss');
@@ -182,8 +182,8 @@
         sd.textContent='회사가 우호 지분을 더 확보하거나, 일 수집 달성을 더 늘려야 합니다.';
       }
       // stacked bar widths (relative to target*1.8 for headroom)
-      var scale=Math.max(total,target)*1.05;
-      var seg=[[142800000,'#171717'],[78200000,'#71717a'],[43000000,'#82bbff'],[add,'#d4d4d8']];
+      var scale=Math.max(secured,target);
+      var seg=[[irk,'#171717'],[trend,'#71717a'],[add,'#82bbff'],[remain,'#d4d4d8']];
       var bar=document.getElementById('simBar'); bar.innerHTML='';
       seg.forEach(function(p){ if(p[0]<=0) return; var e=document.createElement('span'); e.style.width=(p[0]/scale*100)+'%'; e.style.background=p[1]; bar.appendChild(e); });
     }
@@ -417,25 +417,25 @@
             <div class="sim-grid">
               <div>
                 <div class="sim-list">
-                  <div class="sim-row"><span class="sq" style="background:#171717"></span>IR큐더스 위임<span class="rv" id="simIrk">142,800,000</span></div>
-                  <div class="sim-row"><span class="sq" style="background:#71717a"></span>자사 서면위임<span class="rv">78,200,000</span></div>
-                  <div class="sim-row"><span class="sq" style="background:#82bbff"></span>기타 기관<span class="rv">43,000,000</span></div>
-                  <div class="sim-row"><span class="sq" style="background:#d4d4d8"></span>회사 추가 확보<span class="rv" id="simCompany">0</span></div>
+                  <div class="sim-row"><span class="sq" style="background:#171717"></span>현재 누적 확보(IRK)<span class="rv">118,000,000</span></div>
+                  <div class="sim-row"><span class="sq" style="background:#71717a"></span>현재 추세 추가 확보 예상<span class="rv">30,000,000</span></div>
+                  <div class="sim-row"><span class="sq" style="background:#82bbff"></span>회사 직접 확보(시뮬레이션)<span class="rv" id="simCompany">0</span></div>
+                  <div class="sim-row"><span class="sq" style="background:#d4d4d8"></span>잔여<span class="rv" id="simRemain">12,000,000</span></div>
                   <div class="sim-sep"></div>
-                  <div class="sim-row" style="font-weight:600">합계 확보<span class="rv" id="simTotal">264,000,000</span></div>
+                  <div class="sim-row" style="font-weight:600">목표(합계)<span class="rv" id="simTarget">160,000,000</span></div>
                 </div>
-                <div class="sim-note">※ 정확한 데이터 확인을 위해 회사 확보 주식을 입력·조정해 주세요.</div>
+                <div class="sim-note">※ 정확한 데이터 확인을 위해 회사 직접 확보 주식을 입력·조정해 주세요.</div>
               </div>
               <div>
                 <div class="sim-info">
                   <div class="ic-box"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
-                  <div><div class="t" id="simStatT">기준 달성 · 104,000,000주 초과</div><div class="d" id="simStatD">현재 확보로 의결정족수 목표(160,000,000주)를 충족합니다.</div></div>
+                  <div><div class="t" id="simStatT">기준 미달 · 12,000,000주 부족</div><div class="d" id="simStatD">회사가 우호 지분을 더 확보하거나, 일 수집 달성을 더 늘려야 합니다.</div></div>
                 </div>
                 <div class="sim-bar" id="simBar"></div>
                 <div class="sim-box">
-                  <div class="in-row"><span class="lab">회사 추가 확보 주식</span><span class="val" id="simVal">0</span></div>
-                  <input type="range" id="simSlider" min="0" max="20000000" step="100000" value="0">
-                  <div class="scale"><span>0</span><span>20,000,000</span></div>
+                  <div class="in-row"><span class="lab">회사 직접 확보 주식</span><span class="val" id="simVal">0</span></div>
+                  <input type="range" id="simSlider" min="0" max="30000000" step="1000000" value="0">
+                  <div class="scale"><span>0</span><span>30,000,000</span></div>
                 </div>
               </div>
             </div>
