@@ -154,6 +154,27 @@
   .pvsum{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#737373;margin-top:8px}
   .pvok{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#0a8a3c;font-weight:500}
   .pvok svg{width:16px;height:16px;stroke:#0a8a3c;fill:none;stroke-width:2}
+
+  .slabel{font-size:14px;font-weight:600;color:#0a0a0a;margin-top:4px}
+  .ckwrap{display:flex;flex-direction:column;gap:8px}
+  .ckitem{display:flex;gap:8px;padding:10px;border:1px solid #e5e5e5;border-radius:8px;cursor:pointer;align-items:flex-start}
+  .ckitem.on{background:rgba(23,23,23,.05);border-color:#171717}
+  .ckbox{width:16px;height:16px;border:1px solid #e5e5e5;border-radius:4px;flex:none;display:flex;align-items:center;justify-content:center;background:#fff;margin-top:1px}
+  .ckitem.on .ckbox,.fchk.on .ckbox{background:#171717;border-color:#171717}
+  .ckbox svg{width:12px;height:12px;stroke:#fafafa;fill:none;stroke-width:2.5;visibility:hidden}
+  .ckitem.on .ckbox svg,.fchk.on .ckbox svg{visibility:visible}
+  .ckitem .cl{font-size:14px;font-weight:500;color:#171717;line-height:1.3}
+  .ckitem .cd{font-size:12px;color:#737373;margin-top:4px}
+  .cmp{width:100%;border-collapse:collapse;font-size:14px}
+  .cmp th{font-size:13px;font-weight:500;color:#737373;padding:12px 8px;border-bottom:1px solid #f0f0f0;text-align:right}
+  .cmp th:first-child{text-align:left}
+  .cmp td{padding:12px 8px;border-bottom:1px solid #f0f0f0;text-align:right}
+  .cmp tr:last-child td{border-bottom:none}
+  .cmp td:first-child{text-align:left;font-weight:600;color:#0a0a0a}
+  .cmp .old{color:#a3a3a3}
+  .cmp .delta{font-weight:700;color:#0a0a0a}
+  .cmp .delta.mut{color:#a3a3a3;font-weight:400}
+  .fchk{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:#171717;cursor:pointer}
 </style>
 </head>
 <body>
@@ -364,33 +385,100 @@
             <button class="dlg-x" id="dlgX"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
             <div class="dlg-h">
               <div class="t">전자투표/위임 내역 등록</div>
-              <div class="d">엑셀 양식으로 전자투표/위임 내역을 업로드합니다.</div>
+              <div class="d" id="dlgDesc">업로드 전 적용되는 필수 검증 로직을 확인하세요.</div>
+              <div class="stepper">
+                <span class="sd on" data-s="1"><span class="sn">1</span>검증 로직</span><span class="sar">›</span>
+                <span class="sd" data-s="2"><span class="sn">2</span>파일 업로드</span><span class="sar">›</span>
+                <span class="sd" data-s="3"><span class="sn">3</span>내역 확인</span>
+              </div>
             </div>
             <div class="dlg-c">
-              <div class="fld">
-                <div class="lb">전자투표관리기관</div>
-                <div class="sel"><span class="ph">한국예탁결제원</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
+              <!-- STEP 1: 검증 로직 -->
+              <div class="vstep" id="evStep1">
+                <div class="vcard" style="max-height:300px;overflow-y:auto">
+                  <div class="vh">필수 검증 로직*</div>
+                  <ul class="vlist">
+                    <li>주주명부에 없는 주주 검증</li>
+                    <li>파일 내 중복 주주 검증</li>
+                    <li>의안 설정에서 설정하지 않은 의안 검증</li>
+                    <li>행사가능의결권보다 많게 행사한 주주 검증</li>
+                    <li>의결권 없는 주주(자사주/상호주/무효주) 검증</li>
+                    <li>의안별 의결권 제한 주주(특별이해관계자/기타) 검증</li>
+                    <li>일부선임 의안에 선임 이사 수보다 찬성한 의안이 많은지 검증</li>
+                    <li>양립불가 의안에 중복 찬성 여부 검증</li>
+                    <li>개인이지만 중립 투표한 주주</li>
+                    <li>현장 참석자로 등록된 주주</li>
+                  </ul>
+                  <div class="vdiv"></div>
+                  <div class="vh">개별 3% 필수 검증 로직*</div>
+                  <ul class="vlist"><li>보유의결권보다 행사를 많게한 주주 검증</li></ul>
+                  <div class="vdiv"></div>
+                  <div class="vh">합산 3% 필수 검증 로직*</div>
+                  <ul class="vlist"><li>보유의결권보다 행사를 많게한 주주 검증</li></ul>
+                  <div class="vnote"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><div class="vt">합산 3%에 해당하는 주주는 보유의결권 그대로 찬성에 입력해 주세요.</div></div></div>
+                  <div class="vnote"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><div class="vt">합산 3%에 해당하는 주주가 주주총회에 참석한 여부에 따라 합산 3%룰이 적용됩니다.</div></div></div>
+                  <div class="vdiv"></div>
+                  <div class="vh">집중투표 필수 검증 로직*</div>
+                  <ul class="vlist"><li>찬성 외 영역에 특수문자 입력 여부 / 찬·반·기·중 주식수 입력 여부 검증</li></ul>
+                  <div class="vnote"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><div class="vt">집중투표 의향이 있는 후보자의 찬성란에 표시문자 1개를 입력해 주세요.</div><div class="vs">예: V, O, ✓, ★</div></div></div>
+                  <div class="vnote"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><div class="vt">찬성 의안에 숫자를 입력한 경우 집중투표 분배 주주에서 제외됩니다.</div></div></div>
+                  <div class="vdiv"></div>
+                  <div class="vh">양립 불가 필수 검증 로직*</div>
+                  <ul class="vlist"><li>양립불가로 설정된 의안 내 중복 찬성 여부</li></ul>
+                </div>
+                <div class="slabel">선택 검증 로직*</div>
+                <div class="ckwrap">
+                  <div class="ckitem on" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="cl">중복 의결권 자동 병합</div><div class="cd">동일 주주의 중복 행사분을 자동으로 병합합니다.</div></div></div>
+                  <div class="ckitem" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="cl">합산 3% 자동 계산 반영</div><div class="cd">합산 3% 대상 주주를 의결권 계산에 자동 반영합니다.</div></div></div>
+                  <div class="ckitem" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="cl">현장 참석 예정자 사전행사 제외</div><div class="cd">현장 참석 등록 주주의 사전 행사분을 제외합니다.</div></div></div>
+                </div>
               </div>
-              <div class="fld">
-                <div class="upl-lb">엑셀 파일 업로드</div>
-                <div class="upl-row">
-                  <div class="desc">첨부된 양식으로 전자투표/위임 내역 작성 후 업로드<br>엑셀 파일 암호 해제 필수 (미해제 시 업로드 불가)</div>
-                  <button class="lnk">양식 다운로드</button>
+
+              <!-- STEP 2: 파일 업로드 -->
+              <div class="vstep" id="evStep2" style="display:none">
+                <div class="fld">
+                  <div class="lb">전자투표관리기관</div>
+                  <div class="sel"><span class="ph">한국예탁결제원</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
                 </div>
-                <div class="drop" id="dropZone">
-                  <div class="dt">파일을 선택하거나 끌어다 놓으세요.</div>
-                  <button class="pick" id="btnPick">선택</button>
+                <div class="fld" style="margin-top:16px">
+                  <div class="upl-lb">엑셀 파일 업로드</div>
+                  <div class="upl-row">
+                    <div class="desc">첨부된 양식으로 전자투표/위임 내역 작성 후 업로드<br>엑셀 파일 암호 해제 필수 (미해제 시 업로드 불가)</div>
+                    <button class="lnk">양식 다운로드</button>
+                  </div>
+                  <div class="drop" id="dropZone">
+                    <div class="dt">파일을 선택하거나 끌어다 놓으세요.</div>
+                    <button class="pick" id="btnPick">선택</button>
+                  </div>
+                  <div class="attach" id="attachCard" style="display:none">
+                    <div class="fx"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
+                    <div class="meta"><div class="fn">전자투표_위임내역_제10기.xlsx</div><div class="fs">xlsx · 248KB</div></div>
+                    <button class="rm" id="attachRm"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+                  </div>
                 </div>
-                <div class="attach" id="attachCard" style="display:none">
-                  <div class="fx"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
-                  <div class="meta"><div class="fn">전자투표_위임내역_제10기.xlsx</div><div class="fs">xlsx · 248KB</div></div>
-                  <button class="rm" id="attachRm"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-                </div>
+              </div>
+
+              <!-- STEP 3: 내역 확인 (기존/업로드/변동) -->
+              <div class="vstep" id="evStep3" style="display:none">
+                <table class="cmp">
+                  <thead><tr><th>내용</th><th>기존</th><th>업로드</th><th>변동</th></tr></thead>
+                  <tbody>
+                    <tr><td>의안수</td><td class="old">12</td><td>12</td><td class="delta mut">-</td></tr>
+                    <tr><td>주주수</td><td class="old">1,000</td><td>2,000</td><td class="delta">+33</td></tr>
+                    <tr><td>행사가능의결권</td><td class="old">1,444,778</td><td>3,789,441</td><td class="delta">+2,180,000</td></tr>
+                    <tr><td>행사의결권</td><td class="old">1,241,000</td><td>3,247,000</td><td class="delta">+2,180,000</td></tr>
+                  </tbody>
+                </table>
               </div>
             </div>
-            <div class="dlg-f">
-              <button class="btn-out" id="dlgCancel">취소</button>
-              <button class="btn-dark" id="dlgSubmit" disabled>등록</button>
+            <div class="dlg-f" style="justify-content:space-between">
+              <label class="fchk on" id="dlgAgree" style="display:none"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 내용을 확인했으며, 내역을 등록합니다.</label>
+              <div class="fbtns" style="margin-left:auto;display:flex;gap:8px">
+                <button class="btn-out" id="dlgCancel">취소</button>
+                <button class="btn-out" id="dlgPrev" style="display:none">이전</button>
+                <button class="btn-dark" id="dlgNext">다음</button>
+                <button class="btn-dark" id="dlgSubmit" style="display:none">등록하기</button>
+              </div>
             </div>
           </div>
         </div>
@@ -453,19 +541,21 @@
         att=document.getElementById('attachCard'), rm=document.getElementById('attachRm'),
         next=document.getElementById('dlgNext'), prev=document.getElementById('dlgPrev'),
         cancel=document.getElementById('dlgCancel'), submit=document.getElementById('dlgSubmit'),
-        desc=document.getElementById('dlgDesc');
+        agree=document.getElementById('dlgAgree'), desc=document.getElementById('dlgDesc');
     var step=1, attached=false;
-    var descs={1:'업로드 전 적용되는 필수 검증 로직을 확인하세요.',2:'양식에 맞춰 작성한 엑셀 파일을 업로드하세요.',3:'검증 결과와 반영될 내역을 확인 후 등록하세요.'};
+    var descs={1:'업로드 전 적용되는 필수 검증 로직을 확인하세요.',2:'양식에 맞춰 작성한 엑셀 파일을 업로드하세요.',3:'아래 수치를 확인한 뒤 등록을 완료하세요.'};
     function show(id,on){ document.getElementById(id).style.display=on?'block':'none'; }
     function render(){
       show('evStep1',step===1); show('evStep2',step===2); show('evStep3',step===3);
       desc.textContent=descs[step];
       document.querySelectorAll('.stepper .sd').forEach(function(d){ d.classList.toggle('on', +d.dataset.s<=step); });
-      cancel.style.display=(step===1)?'inline-flex':'none';
-      prev.style.display=(step>1)?'inline-flex':'none';
+      cancel.style.display=(step===1||step===3)?'inline-flex':'none';
+      prev.style.display=(step===2)?'inline-flex':'none';
       next.style.display=(step<3)?'inline-flex':'none';
       submit.style.display=(step===3)?'inline-flex':'none';
+      agree.style.display=(step===3)?'inline-flex':'none';
       if(step===2){ next.disabled=!attached; } else { next.disabled=false; }
+      if(step===3){ submit.disabled=!agree.classList.contains('on'); }
     }
     function reset(){ step=1; attached=false; drop.style.display='flex'; att.style.display='none'; render(); }
     function openDlg(){ reset(); ov.classList.add('show'); }
@@ -480,6 +570,8 @@
     rm.addEventListener('click', function(){ attached=false; drop.style.display='flex'; att.style.display='none'; render(); });
     next.addEventListener('click', function(){ if(step<3){ step++; render(); } });
     prev.addEventListener('click', function(){ if(step>1){ step--; render(); } });
+    agree.addEventListener('click', function(){ agree.classList.toggle('on'); render(); });
+    document.querySelectorAll('#evStep1 .ckitem[data-ck]').forEach(function(c){ c.addEventListener('click', function(){ c.classList.toggle('on'); }); });
     submit.addEventListener('click', function(){
       closeDlg();
       document.getElementById('evEmpty').style.display='none';
