@@ -350,7 +350,7 @@
               <button class="segbtn" data-view="holder">주주 기준</button>
             </div>
             <div class="hbtns">
-              <label class="tgl-wrap"><span class="tgl" data-sw></span>중복 수치 포함</label>
+              <label class="tgl-wrap" id="dupLbl"><span class="tgl" id="dupTgl"></span>중복 수치 포함</label>
               <div class="coldd"><button class="colsel" id="colselBtn"><span id="colselLbl">전체</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
                 <div class="colmenu hidden" id="colMenu">
                   <button class="colitem sel" data-opt="전체">전체<svg class="colchk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
@@ -701,15 +701,41 @@
   })();
   // 탭별 데이터 수(SSOT) → KPI · 페이지네이션 · 빈 상태
   (function(){
-    var TOTAL=476211964;
-    function num(x){return parseInt((x||'0').replace(/,/g,''),10)||0;}
+    var TOTAL=476211964, M=300000000, DR=0.021;
+    function num(x){return parseInt((x||'').replace(/[^0-9]/g,''),10)||0;}
     function fmt(n){return n.toLocaleString('en-US');}
     function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+    var SCOLS=[3,4,6,7,8,9];
+    var agBody=document.querySelector('#viewAgenda tbody');
+    if(agBody){ agBody.querySelectorAll('tr').forEach(function(tr){
+      var tds=tr.children;
+      SCOLS.forEach(function(i){ var td=tds[i]; if(td){var t=td.textContent.trim(); if(t!==''&&/[0-9]/.test(t)) td.setAttribute('data-b', num(t)); }});
+      if(tds[2]){var t2=tds[2].textContent.trim(); if(t2!==''&&/[0-9]/.test(t2)) tds[2].setAttribute('data-tot', num(t2));}
+    }); }
+    var hoBody=document.querySelector('#viewHolder tbody');
+    if(hoBody){ hoBody.querySelectorAll('tr').forEach(function(tr){
+      var tds=tr.children;
+      [3,4].forEach(function(i){ var td=tds[i]; if(td&&td.classList&&td.classList.contains('num')){var t=td.textContent.trim(); if(t!==''&&/[0-9]/.test(t)) td.setAttribute('data-b', num(t));}});
+    }); }
+    function dupOn(){ var t=document.getElementById('dupTgl'); return !!(t&&t.classList.contains('on')); }
+    function activeShr(){ var a=document.querySelector('#evFilled .evtab.active[data-cnt]'); return a?num(a.dataset.shr):0; }
+    function applyScale(){
+      var R=activeShr(), on=dupOn();
+      var X = on ? R : Math.round(R*(1-DR));          // 포함=원본(중복포함), 미포함=중복 제거
+      var f = M ? X/M : 0;
+      if(agBody){ agBody.querySelectorAll('tr').forEach(function(tr){
+        var tds=tr.children;
+        SCOLS.forEach(function(i){ var td=tds[i]; if(td&&td.hasAttribute('data-b')) td.textContent=fmt(Math.round((+td.getAttribute('data-b'))*f)); });
+        if(tds[5]&&tds[4]&&tds[4].hasAttribute('data-b')&&tds[2]&&tds[2].hasAttribute('data-tot'))
+          tds[5].textContent=fmt((+tds[2].getAttribute('data-tot')) - Math.round((+tds[4].getAttribute('data-b'))*f));
+      }); }
+      if(hoBody){ var hf = on ? 1/(1-DR) : 1; hoBody.querySelectorAll('td[data-b]').forEach(function(td){ td.textContent=fmt(Math.round((+td.getAttribute('data-b'))*hf)); }); }
+    }
     function setCnt(el){
       if(!el) return;
       var cnt=el.dataset.cnt||'0', shr=num(el.dataset.shr);
       set('pgTotal',cnt); set('pgShares',fmt(shr));
-      var dup=Math.round(shr*0.021), dupUn=Math.round(shr*0.0007), conf=shr-dupUn;
+      var dup=Math.round(shr*DR), dupUn=Math.round(shr*0.0007), conf=shr-dupUn;
       var pct=shr?(shr/TOTAL*100).toFixed(1):'0.0';
       set('kpiEx',fmt(shr)+'주'); set('kpiExSub',cnt+'명 · 발행주식총수 대비 '+pct+'%');
       set('kpiDup',fmt(dup)+'주'); set('kpiDupUn',fmt(dupUn)+'주'); set('kpiConf',fmt(conf)+'주');
@@ -717,8 +743,10 @@
       ['viewAgenda','viewHolder'].forEach(function(id){var w=document.getElementById(id);if(w)w.classList.toggle('novot',empty);});
       if(empty){ set('pgInd','0 / 0'); var p=document.getElementById('pgPrev'),n=document.getElementById('pgNext'); if(p)p.disabled=true; if(n)n.disabled=true; }
       else if(window.pgApply){ window.pgApply(); }
+      applyScale();
     }
     document.querySelectorAll('.evtab[data-cnt]').forEach(function(t){t.addEventListener('click',function(){setCnt(t);});});
+    var dl=document.getElementById('dupLbl'); if(dl){ dl.addEventListener('click',function(){ var t=document.getElementById('dupTgl'); if(t) t.classList.toggle('on'); applyScale(); }); }
     var act=document.querySelector('#evFilled .evtab.active[data-cnt]'); if(act) setCnt(act);
   })();
 
