@@ -256,6 +256,42 @@
         #shTip .r+.r{margin-top:4px}
         #shTip .k{color:#a3a3a3;min-width:80px}
         #shTip .v{color:#fafafa;font-weight:500}
+        /* sortable headers (indicator hidden by default) */
+        table.mtbl th.sortable{cursor:pointer;user-select:none}
+        table.mtbl th.sortable:hover{color:#0a0a0a}
+        table.mtbl th .thl{display:inline-flex;align-items:center;gap:2px}
+        table.mtbl th[style*="right"] .thl{flex-direction:row-reverse}
+        table.mtbl th .sarrow{width:14px;height:14px;opacity:0;transition:opacity .1s,transform .1s;flex:none}
+        table.mtbl th.sorted{color:#0a0a0a}
+        table.mtbl th.sorted .sarrow{opacity:1}
+        table.mtbl th.sorted.desc .sarrow{transform:rotate(180deg)}
+        table.mtbl td .voter-set{color:#0a0a0a;font-weight:500}
+        /* right sheet (투표권자 설정) */
+        .sheet-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:130;display:flex;justify-content:flex-end}
+        .sheet-ov.hidden{display:none}
+        .sheet{position:relative;width:580px;max-width:100%;height:100%;background:#fff;border-left:1px solid var(--border);box-shadow:var(--shadow-lg);display:flex;flex-direction:column;padding:16px;gap:16px;animation:vsIn .2s ease}
+        @keyframes vsIn{from{transform:translateX(28px);opacity:.5}to{transform:none;opacity:1}}
+        .sheet-head{display:flex;flex-direction:column;gap:2px;padding-right:24px}
+        .sheet-title{font-size:16px;font-weight:600;color:#0a0a0a}
+        .sheet-desc{font-size:12px;color:#737373;line-height:16px}
+        .sheet-body{flex:1;display:flex;flex-direction:column;gap:24px;overflow:auto}
+        .vs-field{display:flex;flex-direction:column;gap:12px}
+        .vs-field>label{font-size:14px;font-weight:500;color:#0a0a0a}
+        .rad-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+        .rad{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:#0a0a0a;cursor:pointer}
+        .rad .dotc{width:16px;height:16px;border:1px solid var(--border);border-radius:9999px;position:relative;flex:none}
+        .rad.on .dotc{background:#171717;border-color:#171717}
+        .rad.on .dotc:after{content:"";position:absolute;width:8px;height:8px;background:#fafafa;border-radius:9999px;left:50%;top:50%;transform:translate(-50%,-50%)}
+        .vs-alert{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:#f5f9ff;border:1px solid #d4e8ff;border-radius:10px;font-size:12px;color:#0071f3;line-height:16px}
+        .vs-alert.hide{display:none}
+        .vs-alert svg{width:16px;height:16px;flex:none;color:#0071f3}
+        #vsSel[disabled]{opacity:.5;pointer-events:none;background:var(--muted)}
+        #vsMenu{position:absolute;left:0;right:0;top:36px;z-index:5}
+        .sheet-foot{display:flex;gap:8px}
+        .sheet-foot .btn{flex:1;justify-content:center;height:32px}
+        .sheet-x{position:absolute;top:16px;right:16px;width:16px;height:16px;border:none;background:none;cursor:pointer;color:#000;opacity:.7;display:flex}
+        .sheet-x:hover{opacity:1}
+        .sheet-x svg{width:16px;height:16px}
       </style>
 
       <div class="ms-wrap">
@@ -299,7 +335,7 @@
           <div class="ic3">
             <div class="icard"><div class="k">총 주식수</div><div class="v">476,211,964</div></div>
             <div class="icard"><div class="k">총 주주수</div><div class="v">650,000</div></div>
-            <div class="icard warn"><div class="k">미설정 투표권자 <svg class="info-i ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><div class="v">3</div></div>
+            <div class="icard warn"><div class="k">미설정 투표권자 <svg class="info-i ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><div class="v" id="unsetCount">3</div></div>
           </div>
           <div>
             <div class="tfn">
@@ -316,17 +352,28 @@
             <div class="mtbl-wrap">
               <table class="mtbl">
                 <colgroup><col style="width:96px"><col style="width:90px"><col style="width:150px"><col style="width:110px"><col style="width:130px"><col style="width:90px"><col style="width:150px"><col style="width:150px"><col style="width:110px"><col style="width:88px"></colgroup>
-                <thead><tr><th class="c">주식종류</th><th class="c">주주구분</th><th>주주명</th><th>주주번호</th><th style="text-align:right">보유주식</th><th style="text-align:right">지분율</th><th>운용기관</th><th>자금제공기관</th><th>투표권자</th><th class="c">설정</th></tr></thead>
+                <thead><tr>
+                  <th class="c sortable" data-key="0" data-type="text"><span class="thl">주식종류<svg class="sarrow" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></span></th>
+                  <th class="c sortable" data-key="1" data-type="text"><span class="thl">주주구분<svg class="sarrow" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></span></th>
+                  <th class="sortable" data-key="2" data-type="text"><span class="thl">주주명<svg class="sarrow" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></span></th>
+                  <th class="sortable" data-key="3" data-type="text"><span class="thl">주주번호<svg class="sarrow" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></span></th>
+                  <th class="sortable" style="text-align:right" data-key="4" data-type="num"><span class="thl">보유주식<svg class="sarrow" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></span></th>
+                  <th class="sortable" style="text-align:right" data-key="5" data-type="num"><span class="thl">지분율<svg class="sarrow" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></span></th>
+                  <th class="sortable" data-key="6" data-type="text"><span class="thl">운용기관<svg class="sarrow" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></span></th>
+                  <th class="sortable" data-key="7" data-type="text"><span class="thl">자금제공기관<svg class="sarrow" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></span></th>
+                  <th class="sortable" data-key="8" data-type="text"><span class="thl">투표권자<svg class="sarrow" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></span></th>
+                  <th class="c">설정</th>
+                </tr></thead>
                 <tbody>
-                  <tr class="row-none" data-no="2025119001" data-acct="00000120251104000010000400101" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">일반법인</td><td class="name"><span class="tt-name">KVIDIA<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">2025119001</td><td class="r">19,961,925</td><td class="r sub">4.2%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-none">미설정 (자사주)</span></td><td class="c"><button class="tbtn2">설정</button></td></tr>
-                  <tr data-no="2025119002" data-acct="00000120251104000010000420101" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">일반법인</td><td class="name"><span class="tt-name">K-홀딩스 주식회사<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">2025119002</td><td class="r">19,965,917</td><td class="r sub">4.2%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
-                  <tr class="row-none" data-no="800401-1******" data-acct="00000120251104000010000410101" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">나제한<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">800401-1******</td><td class="r">19,963,921</td><td class="r sub">4.2%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-none">미설정 (제한)</span></td><td class="c"><button class="tbtn2">설정</button></td></tr>
-                  <tr data-no="880411-1******" data-acct="00000120251104000010000000501" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">젠슨박<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">880411-1******</td><td class="r">10,005,912</td><td class="r sub">2.1%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
-                  <tr data-no="600101-1******" data-acct="00000120251104000010000000101" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">이준호<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">600101-1******</td><td class="r">6,017,919</td><td class="r sub">1.3%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
-                  <tr data-no="600101-1******" data-acct="00000120251104000020000000201" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">이종승<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">600101-1******</td><td class="r">6,017,919</td><td class="r sub">1.3%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
-                  <tr data-no="600101-1******" data-acct="00000120251104000020000000301" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">천재민<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">600101-1******</td><td class="r">6,015,923</td><td class="r sub">1.3%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
-                  <tr data-no="600101-1******" data-acct="00000120251104000020000000401" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">박준호<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">600101-1******</td><td class="r">6,015,923</td><td class="r sub">1.3%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-done">설정완료</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
-                  <tr class="row-none" data-no="700201-2******" data-acct="00000120251104000020001420501" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">유은지<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">700201-2******</td><td class="r">2,003,977</td><td class="r sub">0.4%</td><td class="mut">-</td><td class="mut">-</td><td><span class="set-none">미설정 (특별이해관계자)</span></td><td class="c"><button class="tbtn2">설정</button></td></tr>
+                  <tr class="row-none" data-idx="0" data-no="2025119001" data-acct="00000120251104000010000400101" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">일반법인</td><td class="name"><span class="tt-name">KVIDIA<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">2025119001</td><td class="r">19,961,925</td><td class="r sub">4.2%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="set-none">미설정 (자사주)</span></td><td class="c"><button class="tbtn2">설정</button></td></tr>
+                  <tr data-idx="1" data-no="2025119002" data-acct="00000120251104000010000420101" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">일반법인</td><td class="name"><span class="tt-name">K-홀딩스 주식회사<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">2025119002</td><td class="r">19,965,917</td><td class="r sub">4.2%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="voter-set">박상현</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr class="row-none" data-idx="2" data-no="800401-1******" data-acct="00000120251104000010000410101" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">나제한<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">800401-1******</td><td class="r">19,963,921</td><td class="r sub">4.2%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="set-none">미설정 (제한)</span></td><td class="c"><button class="tbtn2">설정</button></td></tr>
+                  <tr data-idx="3" data-no="880411-1******" data-acct="00000120251104000010000000501" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">젠슨박<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">880411-1******</td><td class="r">10,005,912</td><td class="r sub">2.1%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="voter-set">젠슨박</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr data-idx="4" data-no="600101-1******" data-acct="00000120251104000010000000101" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">이준호<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">600101-1******</td><td class="r">6,017,919</td><td class="r sub">1.3%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="voter-set">이준호</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr data-idx="5" data-no="600101-1******" data-acct="00000120251104000020000000201" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">이종승<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">600101-1******</td><td class="r">6,017,919</td><td class="r sub">1.3%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="voter-set">이종승</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr data-idx="6" data-no="600101-1******" data-acct="00000120251104000020000000301" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">천재민<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">600101-1******</td><td class="r">6,015,923</td><td class="r sub">1.3%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="voter-set">천재민</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr data-idx="7" data-no="600101-1******" data-acct="00000120251104000020000000401" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">박준호<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">600101-1******</td><td class="r">6,015,923</td><td class="r sub">1.3%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="voter-set">박준호</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr class="row-none" data-idx="8" data-no="700201-2******" data-acct="00000120251104000020001420501" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">유은지<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">700201-2******</td><td class="r">2,003,977</td><td class="r sub">0.4%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="set-none">미설정 (특별이해관계자)</span></td><td class="c"><button class="tbtn2">설정</button></td></tr>
                 </tbody>
               </table>
             </div>
@@ -374,6 +421,45 @@
       <div class="sonner" id="sonner">
         <div class="st"><div class="t" id="snT">불러오기 완료</div><div class="d" id="snD"></div></div>
         <button class="undo" id="snUndo">실행취소</button>
+      </div>
+
+      <!-- 투표권자 설정 sheet -->
+      <div class="sheet-ov hidden" id="voterSheet">
+        <div class="sheet">
+          <div class="sheet-head">
+            <div class="sheet-title">투표권자 설정</div>
+            <div class="sheet-desc" id="vsSub">미설정 주주의 투표권자를 지정합니다.</div>
+          </div>
+          <div class="sheet-body">
+            <div class="vs-field">
+              <label>투표권자 선택방법</label>
+              <div class="rad-row" id="vsMethod">
+                <span class="rad on" data-m="num"><span class="dotc"></span>주주번호로 설정</span>
+                <span class="rad" data-m="name"><span class="dotc"></span>주주명으로 설정</span>
+                <span class="rad" data-m="oper"><span class="dotc"></span>운용기관으로 설정</span>
+                <span class="rad" data-m="none"><span class="dotc"></span>지정안함</span>
+              </div>
+            </div>
+            <div class="vs-field">
+              <label>투표권자 선택</label>
+              <div style="position:relative">
+                <button class="dlg-select" id="vsSel"><span>투표권자를 선택하세요</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div class="dlg-menu hidden" id="vsMenu">
+                  <button class="dlg-mi" data-v="본인 (주주 직접 행사)">본인 (주주 직접 행사)</button>
+                  <button class="dlg-mi" data-v="삼성자산운용">삼성자산운용 (운용기관)</button>
+                  <button class="dlg-mi" data-v="미래에셋자산운용">미래에셋자산운용 (운용기관)</button>
+                  <button class="dlg-mi" data-v="한국투자신탁운용">한국투자신탁운용 (운용기관)</button>
+                </div>
+              </div>
+            </div>
+            <div class="vs-alert" id="vsAlert"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span id="vsAlertT">‘주주번호로 설정'은 명부상 계좌 기준으로 투표권을 연동·합산합니다.</span></div>
+          </div>
+          <div class="sheet-foot">
+            <button class="btn" data-sheet-close>취소</button>
+            <button class="btn primary" id="vsSave">저장</button>
+          </div>
+          <button class="sheet-x" data-sheet-close aria-label="닫기"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        </div>
       </div>
 
       <div id="shTip"></div>
@@ -433,14 +519,109 @@
 
           // 미설정만 보기 토글
           var swU=document.getElementById('swUnset');
-          if(swU){ swU.addEventListener('click',function(){
-            var on=swU.classList.toggle('on');
+          function applyUnsetFilter(){
+            var on=swU&&swU.classList.contains('on');
             document.querySelectorAll('table.mtbl tbody tr').forEach(function(tr){
               tr.style.display=(on && !tr.classList.contains('row-none'))?'none':'';
             });
-          }); }
+          }
+          if(swU){ swU.addEventListener('click',function(){swU.classList.toggle('on');applyUnsetFilter();}); }
+
+          // 헤더 클릭 정렬 (정렬 표시는 기본 히든)
+          var mtbl=document.querySelector('table.mtbl'), tbody=mtbl.querySelector('tbody');
+          var ths=mtbl.querySelectorAll('thead th.sortable');
+          var sortKey=null, sortDir=0;
+          function cellVal(tr,key,type){
+            var td=tr.children[key];
+            var t=(key===2 && td.querySelector('.tt-name'))?td.querySelector('.tt-name').textContent:td.textContent;
+            t=t.trim();
+            if(type==='num'){return parseFloat(t.replace(/[^0-9.\-]/g,''))||0;}
+            return t;
+          }
+          ths.forEach(function(th){
+            th.addEventListener('click',function(){
+              var key=+th.dataset.key, type=th.dataset.type;
+              if(sortKey===key){ sortDir = sortDir===1?-1:(sortDir===-1?0:1); }
+              else { sortKey=key; sortDir=1; }
+              ths.forEach(function(t){t.classList.remove('sorted','asc','desc');});
+              var rows=[].slice.call(tbody.querySelectorAll('tr'));
+              if(sortDir===0){ sortKey=null; rows.sort(function(a,b){return (+a.dataset.idx)-(+b.dataset.idx);}); }
+              else {
+                th.classList.add('sorted', sortDir===1?'asc':'desc');
+                rows.sort(function(a,b){
+                  var av=cellVal(a,key,type), bv=cellVal(b,key,type);
+                  if(av<bv) return -sortDir; if(av>bv) return sortDir; return (+a.dataset.idx)-(+b.dataset.idx);
+                });
+              }
+              rows.forEach(function(r){tbody.appendChild(r);});
+              applyUnsetFilter();
+            });
+          });
+
+          // 미설정 투표권자 설정 단계 (right sheet)
+          var vSheet=document.getElementById('voterSheet'), vsSub=document.getElementById('vsSub');
+          var vsSel=document.getElementById('vsSel'), vsMenu=document.getElementById('vsMenu');
+          var vsAlert=document.getElementById('vsAlert'), vsAlertT=document.getElementById('vsAlertT');
+          var curRow=null, curMethod='num', curVoter=null;
+          var alertText={
+            num:"‘주주번호로 설정'은 명부상 계좌 기준으로 투표권을 연동·합산합니다.",
+            name:"‘주주명으로 설정'은 단순 이름 매칭 방식으로, 계좌 연동 및 합산이 지원되지 않습니다.",
+            oper:"‘운용기관으로 설정'은 지정한 운용기관이 해당 주식의 의결권을 행사합니다.",
+            none:"‘지정안함' 적용 시 해당 주주는 투표에 참여할 수 없습니다."
+          };
+          function setMethod(m){
+            curMethod=m; curVoter=null;
+            document.querySelectorAll('#vsMethod .rad').forEach(function(r){r.classList.toggle('on', r.dataset.m===m);});
+            vsAlertT.textContent=alertText[m]; vsAlert.classList.remove('hide');
+            vsSel.querySelector('span').textContent = m==='none' ? '해당 없음' : '투표권자를 선택하세요';
+            vsSel.classList.remove('val');
+            if(m==='none'){ vsSel.setAttribute('disabled','disabled'); }
+            else { vsSel.removeAttribute('disabled'); }
+          }
+          document.querySelectorAll('#vsMethod .rad').forEach(function(r){
+            r.addEventListener('click',function(){ setMethod(r.dataset.m); });
+          });
+          vsSel.addEventListener('click',function(e){e.stopPropagation();if(vsSel.hasAttribute('disabled'))return;vsMenu.classList.toggle('hidden');});
+          vsMenu.querySelectorAll('.dlg-mi').forEach(function(mi){
+            mi.addEventListener('click',function(){curVoter=mi.dataset.v;vsSel.querySelector('span').textContent=mi.textContent;vsSel.classList.add('val');vsMenu.classList.add('hidden');});
+          });
+          document.addEventListener('click',function(){vsMenu.classList.add('hidden');});
+          function openVoterSheet(tr){
+            curRow=tr;
+            var nm=tr.querySelector('.tt-name')?tr.querySelector('.tt-name').textContent.trim():'';
+            vsSub.textContent="'"+nm+"' 주주의 투표권자를 지정합니다.";
+            setMethod('num');
+            vSheet.classList.remove('hidden');
+          }
+          vSheet.addEventListener('click',function(e){if(e.target===vSheet)vSheet.classList.add('hidden');});
+          vSheet.querySelectorAll('[data-sheet-close]').forEach(function(b){b.addEventListener('click',function(){vSheet.classList.add('hidden');});});
+          // 테이블 설정/수정 버튼 → 시트 열기
+          tbody.querySelectorAll('.tbtn2').forEach(function(btn){
+            btn.addEventListener('click',function(){var tr=btn.closest('tr'); if(tr) openVoterSheet(tr);});
+          });
+          document.getElementById('vsSave').addEventListener('click',function(){
+            if(!curRow) return;
+            var nm=curRow.querySelector('.tt-name')?curRow.querySelector('.tt-name').textContent.trim():'';
+            var vcell=curRow.querySelector('td.voter');
+            var wasUnset=curRow.classList.contains('row-none');
+            if(curMethod==='none'){
+              vcell.innerHTML='<span class="set-none">지정안함</span>';
+            } else {
+              var voter = (curMethod==='num' || (curVoter&&curVoter.indexOf('본인')===0)) ? nm : (curVoter||nm);
+              vcell.innerHTML='<span class="voter-set">'+voter+'</span>';
+            }
+            curRow.querySelector('.tbtn2').textContent='수정';
+            if(wasUnset){
+              curRow.classList.remove('row-none');
+              var uc=document.getElementById('unsetCount'); var n=Math.max(0,(parseInt(uc.textContent,10)||0)-1); uc.textContent=n;
+            }
+            vSheet.classList.add('hidden');
+            applyUnsetFilter();
+            toast('투표권자 설정 완료', "'"+nm+"' 주주의 투표권자가 설정되었습니다.");
+          });
         })();
       </script>
+
     </div>
   </main>
 </div>
