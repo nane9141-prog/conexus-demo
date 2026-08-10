@@ -200,7 +200,7 @@
   .selnode{cursor:pointer;border-radius:8px}
   .selnode.sel{box-shadow:0 0 0 1.5px #0a0a0a;border-radius:8px;position:relative;z-index:1}
   .arow.selnode.sel,.achild.selnode.sel{border-top-color:transparent}
-  .iarow{box-sizing:border-box;display:flex;align-items:center;gap:12px;padding:8px;min-height:44px;background:#fff;border:1px solid #E5E5E5;border-radius:6px;margin-bottom:12px}
+  .iarow{box-sizing:border-box;display:flex;align-items:center;gap:12px;padding:8px;min-height:44px;background:#fff;border:1px solid #E5E5E5;border-radius:6px}
   .iarow-l{display:flex;align-items:center;gap:8px;padding:0 8px;flex:1;min-width:0}
   .iarow-r{display:flex;align-items:center;gap:8px;flex:none}
   .ianame{font-size:14px;font-weight:600;letter-spacing:-.01em;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -309,6 +309,10 @@
   .mc-ansview .tx{background:#FAFAFA;border:1px solid var(--border);border-radius:10px;padding:12px;font-size:13px;line-height:18px;color:#171717}
   .mc-viewbtns{display:flex;justify-content:flex-end}
   .mc-editbtn{padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0A0A0A;cursor:pointer}
+  .mc-viewbtns.two{justify-content:space-between}
+  .mc-castbtn{display:inline-flex;align-items:center;gap:4px;padding:6px 10px;border:1px solid #171717;border-radius:8px;background:#171717;color:#FAFAFA;font-family:inherit;font-size:12px;font-weight:500;cursor:pointer}
+  .mc-castbtn svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .mc-castbtn.on{background:#0071F3;border-color:#0071F3}
   .spsel{width:100%;box-sizing:border-box;height:32px;padding:0 10px;border:1px solid #E5E5E5;border-radius:10px;font-family:inherit;font-size:14px;color:#171717;background:#fff;margin-bottom:10px}
   .spqueue{background:#FAFAFA;border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:10px}
   .spq-h{display:flex;align-items:center;gap:8px;cursor:pointer}
@@ -706,7 +710,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 <script>
 (function(){
   var Q=window.QUESTIONS||[], S=window.SPEECHES||[];
-  var qt='q', unread=false, selId=null, spAgenda='all', spOpen=true;
+  var qt='q', unread=false, selId=null, editId=null, spAgenda='all', spOpen=true;
   var TPL=[
     {l:'배당 정책',t:'당사는 안정적 배당과 성장 투자의 균형을 배당 정책의 원칙으로 하며, 별도재무제표 당기순이익 기준 배당성향 약 27% 수준을 유지하고 있습니다.'},
     {l:'재무 건전성',t:'건전성 지표는 안정적으로 관리되고 있으며, 선제적 리스크관리와 보수적 충당금 적립 기조를 유지하고 있습니다.'},
@@ -732,11 +736,17 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   }
   function answerView(x){
     return '<div class="mc-ansview"><div class="lb">답변 내용</div><div class="tx">'+esc(x.a)+'</div>'
-      +'<div class="mc-viewbtns"><button class="mc-editbtn" data-edit="1" type="button">수정</button></div></div>';
+      +'<div class="mc-viewbtns two"><button class="mc-editbtn" data-edit="1" type="button">수정</button>'
+      +'<button class="mc-castbtn'+(x.cast?' on':'')+'" data-cast="1" type="button"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>'+(x.cast?'송출 중':'의장 송출')+'</button></div></div>';
   }
   function cardHTML(x){
-    var sel=(qt==='q'&&x.id===selId);
-    var extra=sel?answerHTML(x):((qt==='q'&&x.st==='완료'&&x.a)?answerView(x):'');
+    var on=(qt==='q'&&(x.id===selId||x.id===editId));
+    var extra='';
+    if(qt==='q'){
+      if(x.id===editId) extra=answerHTML(x);
+      else if(x.id===selId) extra=(x.st==='완료'&&x.a)?answerView(x):answerHTML(x);
+    }
+    var sel=on;
     var badges='<span class="cbadge ag">'+agL(x)+'</span><span class="cbadge gr">'+x.t+'</span><span class="cbadge gr">'+sn(x)+'</span>'
       +(qt==='s'&&x.kind==='수정동의'?'<span class="cbadge amend">수정동의</span>':'');
     var priv=x.pub?'':'<span class="mc-tm">비공개</span>';
@@ -781,7 +791,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     document.getElementById('ansClose').addEventListener('click',closeDlg);
     ovl.addEventListener('click',function(e){ if(e.target===ovl) closeDlg(); });
     document.querySelectorAll('#ansVis button').forEach(function(b){ b.addEventListener('click',function(){ setVis(b.getAttribute('data-v')); }); });
-    document.getElementById('ansSubmit').addEventListener('click',function(){ if(!pend) return; var it=Q.filter(function(x){return x.id===pend;})[0]; if(it){ it.a=taD.value; it.st='완료'; it.pub=(vis==='pub'); } closeDlg(); selId=null; render(); });
+    document.getElementById('ansSubmit').addEventListener('click',function(){ if(!pend) return; var it=Q.filter(function(x){return x.id===pend;})[0]; if(it){ it.a=taD.value; it.st='완료'; it.pub=(vis==='pub'); } closeDlg(); selId=null; editId=null; render(); });
   }
   document.querySelectorAll('.seg2 button').forEach(function(b){ b.addEventListener('click',function(){ qt=b.getAttribute('data-qt'); selId=null; document.querySelectorAll('.seg2 button').forEach(function(x){x.classList.toggle('on',x===b);}); render(); }); });
   var usw=document.getElementById('unreadSw'); usw.addEventListener('click',function(){ unread=!unread; usw.classList.toggle('on',unread); render(); });
@@ -790,11 +800,12 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var chip=e.target.closest('.mc-chip'); if(chip){ var ta=chip.closest('.mc-ans').querySelector('.mc-ta'); var tt=TPL[+chip.getAttribute('data-tpl')].t; ta.value=tt; ta.focus(); return; }
     var act=e.target.closest('[data-act]'); if(act){ var card=act.closest('.mcard'); var id=card.getAttribute('data-id');
       if(act.getAttribute('data-act')==='submit'){ var ta=card.querySelector('.mc-ta'); openDlg(id, ta.value); return; }
-      selId=null; render(); return; }
-    var ed=e.target.closest('[data-edit]'); if(ed){ selId=ed.closest('.mcard').getAttribute('data-id'); render(); return; }
+      var ci2=Q.filter(function(x){return x.id===id;})[0]; if(ci2&&ci2.st==='완료'){ editId=null; } else { selId=null; editId=null; } render(); return; }
+    var ed=e.target.closest('[data-edit]'); if(ed){ editId=ed.closest('.mcard').getAttribute('data-id'); render(); return; }
+    var ca=e.target.closest('[data-cast]'); if(ca){ var cid=ca.closest('.mcard').getAttribute('data-id'); var ci=Q.filter(function(x){return x.id===cid;})[0]; if(ci) ci.cast=!ci.cast; render(); return; }
     var tg=e.target.closest('[data-qtoggle]'); if(tg){ spOpen=!spOpen; render(); return; }
     var rj=e.target.closest('[data-reject]'); if(rj){ var rid=rj.closest('.mcard').getAttribute('data-id'); var it=S.filter(function(x){return x.id===rid;})[0]; if(it) it.st='반려'; selId=null; render(); return; }
-    var mc=e.target.closest('.mcard'); if(!mc) return; var id=mc.getAttribute('data-id'); selId=(selId===id)?null:id; render();
+    var mc=e.target.closest('.mcard'); if(!mc) return; var id=mc.getAttribute('data-id'); selId=(selId===id)?null:id; editId=null; render();
   });
   cl.addEventListener('change',function(e){ var s2=e.target.closest('#spAgSel'); if(s2){ spAgenda=s2.value; render(); } });
   render();
