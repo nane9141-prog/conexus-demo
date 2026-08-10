@@ -6,236 +6,306 @@
 <title>CONEXUS · 주주총회 현장 제어</title>
 <link rel="stylesheet" href="conexus.css">
 <style>
-  /* page-local content helpers (LNB styling comes from conexus.css) */
-  .scroll{flex:1;overflow-y:auto}
-  .ic{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .tbl-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
-  table.tbl{width:100%;border-collapse:collapse;font-size:14px}
-  table.tbl th{background:#fafafa;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap}
-  table.tbl td{padding:12px 14px;border-bottom:1px solid #f0f0f0;color:#0a0a0a}
-  table.tbl tr:last-child td{border-bottom:none}
-  table.tbl tr:hover td{background:#fafafa}
-  .badge{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:9999px;font-size:12px;font-weight:600}
-  .badge.green{background:#eafaf0;color:#0a8a3c}
-  .badge.gray{background:var(--muted);color:var(--muted-fg)}
-  .badge.blue{background:var(--blue100);color:var(--blue700)}
-  .badge.red{background:var(--red50);color:var(--red600)}
-  .badge.amber{background:#fef6e7;color:#b45309}
-  .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-  .search{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;min-width:240px}
-  .search input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
-  .search .ic{width:16px;height:16px;color:var(--muted-fg)}
-  .page-title{font-size:20px;font-weight:700;color:#0a0a0a}
-  .page-sub{font-size:13px;color:var(--muted-fg);margin-top:4px}
-  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-  .stat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px}
-  .stat .k{font-size:12px;color:var(--muted-fg);font-weight:500}
-  .stat .v{font-size:24px;font-weight:700;color:#0a0a0a;margin-top:6px}
-  .stat .d{font-size:12px;margin-top:4px}
-  .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
-  @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
+  *{box-sizing:border-box}
+  body{margin:0}
+  .ic{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .oc{display:flex;height:100vh;background:#fafafa;padding:8px;gap:8px}
+  /* rail */
+  .oc-rail{width:48px;flex:none;display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:8px}
+  .oc-logo{width:32px;height:32px;border-radius:10px;background:#171717;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+  .oc-nav{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+  .oc-nav a{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#737373;text-decoration:none}
+  .oc-nav a:hover{background:#f0f0f0;color:#0a0a0a}
+  .oc-nav a.on{background:#ececec;color:#0a0a0a}
+  .oc-nav svg{width:18px;height:18px}
+  .oc-foot{margin-top:auto}
+  .oc-av{width:32px;height:32px;border-radius:10px;background:#EBF4FF;color:#0066DF;font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center}
+  /* main card */
+  .oc-body{flex:1;min-width:0}
+  .oc-main{height:100%;background:#fff;border:1px solid var(--border);border-radius:14px;display:flex;flex-direction:column;overflow:hidden}
+  .oc-top{height:48px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 16px;border-bottom:1px solid var(--border)}
+  .oc-top .l{display:flex;align-items:center;gap:8px}
+  .oc-ib{width:28px;height:28px;border-radius:8px;border:none;background:none;display:flex;align-items:center;justify-content:center;color:#737373;cursor:pointer}
+  .oc-ib:hover{background:#f5f5f5}
+  .oc-ib svg{width:16px;height:16px}
+  .vsep{width:1px;height:15px;background:var(--border)}
+  .crumb{font-size:14px;color:#0a0a0a}
+  /* sub header */
+  .oc-sub{min-height:40px;flex:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:0 12px;border-bottom:1px solid var(--border);overflow-x:auto}
+  .oc-tabs{display:flex;gap:2px;flex:none}
+  .oc-tab{height:40px;padding:0 10px;border:none;background:none;font-family:inherit;font-weight:500;font-size:14px;color:#737373;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
+  .oc-tab.on{color:#0a0a0a;border-bottom-color:#171717}
+  .oc-tab .cnt{color:#a3a3a3;font-weight:500;margin-left:4px}
+  .oc-tools{display:flex;align-items:center;gap:8px;flex:none}
+  .grp{display:flex;align-items:center;gap:8px}
+  .tsep{width:1px;height:20px;background:var(--border)}
+  .ocb{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 8px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap}
+  .ocb svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.6}
+  .ocb:hover{background:#fafafa}
+  .ocb.gray{background:#f5f5f5;border-color:transparent}
+  .ocb.gray:hover{background:#ececec}
+  .ocb.red{background:rgba(220,38,38,.1);border-color:transparent;color:#e9081b}
+  .ocb.icon{padding:0;width:28px;justify-content:center}
+  .seg{display:inline-flex}
+  .seg .ocb{border-radius:0}
+  .seg .ocb:first-child{border-radius:8px 0 0 8px}
+  .seg .ocb:last-child{border-radius:0 8px 8px 0;border-left:none}
+  .seg .ocb.on{background:#171717;border-color:#171717;color:#fff}
+  .otimer{display:inline-flex;align-items:center;gap:6px;padding:0 6px;font-variant-numeric:tabular-nums;font-weight:500;font-size:14px;color:#171717}
+  .otimer .dot{width:9px;height:9px;border-radius:50%;background:#fe3a4b}
+  /* metrics */
+  .oc-metrics{display:flex;flex:none;border-bottom:1px solid var(--border)}
+  .oc-mc{flex:1;min-width:0;padding:12px 16px;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:2px}
+  .oc-mc:last-child{border-right:none}
+  .oc-mc .k{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:500;color:#737373}
+  .oc-mc .v{font-size:16px;font-weight:600;color:#0a0a0a;display:flex;align-items:center;gap:8px}
+  .oc-mc .v .sub{font-size:12px;font-weight:500;color:#737373}
+  .oc-mc .v .sep{width:1px;height:12px;background:var(--border)}
+  .stbadge{display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 6px;border-radius:6px;font-size:12px;font-weight:500}
+  .stbadge .d{width:6px;height:6px;border-radius:50%}
+  .stbadge.gray{color:#525252}.stbadge.gray .d{background:#525252}
+  .stbadge.blue{color:#0066df;background:#eff6ff}.stbadge.blue .d{background:#0071f3}
+  .stbadge.green{color:#0a8a3c;background:#eafaf0}.stbadge.green .d{background:#22c55e}
+  .spark{width:80px;height:22px}
+  /* grid workspace */
+  .oc-grid{flex:1;min-height:0;background:#f5f5f5;overflow:auto;padding:16px}
+  .oc-panel{display:none}
+  .oc-panel.on{display:block}
+  /* filter chips */
+  .chips{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+  .chip{height:30px;padding:0 12px;border-radius:9999px;border:1px solid var(--border);background:#fff;font-family:inherit;font-size:13px;font-weight:500;color:#525252;cursor:pointer}
+  .chip.on{background:#171717;border-color:#171717;color:#fff}
+  /* qa / speech cards */
+  .qcard{background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .qh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .qtime{font-size:12px;color:#737373;font-variant-numeric:tabular-nums}
+  .qnum{width:22px;height:22px;border-radius:6px;background:#f5f5f5;color:#525252;font-size:12px;font-weight:600;display:inline-flex;align-items:center;justify-content:center}
+  .qname{font-size:14px;font-weight:600;color:#0a0a0a}
+  .qsh{font-size:12px;color:#737373}
+  .qag{font-size:12px;color:#525252;background:#f5f5f5;border-radius:6px;padding:1px 6px}
+  .tg{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:9999px;font-size:11px;font-weight:600}
+  .tg-inst{background:#eef2ff;color:#4f46e5}
+  .tg-ind{background:#f1f5f9;color:#475569}
+  .tg-speak{background:#f3e8ff;color:#7c3aed}
+  .tg-amend{background:#fee2e2;color:#dc2626}
+  .tg-lock{background:#fff7ed;color:#c2410c}
+  .qspacer{flex:1}
+  .qst{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:9999px;font-size:12px;font-weight:600}
+  .qst .d{width:6px;height:6px;border-radius:50%}
+  .st-open{background:#fff7ed;color:#c2410c}.st-open .d{background:#ea580c}
+  .st-done{background:#f1f5f9;color:#475569}.st-done .d{background:#94a3b8}
+  .st-wait{background:#eff6ff;color:#0066df}.st-wait .d{background:#0071f3}
+  .st-rej{background:#fef2f2;color:#dc2626}.st-rej .d{background:#ef4444}
+  .qq{margin-top:8px;font-size:14px;color:#0a0a0a;line-height:1.5}
+  .qa{margin-top:4px;font-size:13px;color:#525252;line-height:1.5}
+  .qa.none{color:#ea580c}
+  .qact{display:flex;gap:6px;margin-top:10px}
+  .qbtn{height:28px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0a0a0a;cursor:pointer}
+  .qbtn.dark{background:#171717;border-color:#171717;color:#fff}
+  .qbtn:hover{background:#fafafa}.qbtn.dark:hover{background:#000}
+  /* 현황 */
+  .nowgrid{display:grid;grid-template-columns:1.4fr 1fr;gap:12px}
+  @media(max-width:1100px){.nowgrid{grid-template-columns:1fr}}
+  .ncard{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px}
+  .ncard h3{margin:0 0 12px;font-size:14px;font-weight:600;color:#0a0a0a}
+  .agrow{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #f0f0f0}
+  .agrow:first-of-type{border-top:none}
+  .agno{font-size:13px;font-weight:600;color:#0a0a0a;min-width:64px}
+  .agnm{font-size:13px;color:#0a0a0a;flex:1}
+  .agsub{font-size:12px;color:#737373}
+  .kv{display:flex;justify-content:space-between;padding:9px 0;border-top:1px solid #f0f0f0;font-size:13px}
+  .kv:first-of-type{border-top:none}
+  .kv .kk{color:#737373}.kv .vv{color:#0a0a0a;font-weight:600}
+  .minibars{display:flex;gap:6px;margin-top:6px}
+  .mb{flex:1;text-align:center;background:#fafafa;border:1px solid var(--border);border-radius:8px;padding:8px 4px}
+  .mb .n{font-size:16px;font-weight:700;color:#0a0a0a}
+  .mb .l{font-size:11px;color:#737373;margin-top:2px}
 </style>
 </head>
 <body>
-<div class="app" id="app">
-  <aside class="lnb">
-    <div class="lnb-head">
-      <div class="lnb-brand exp-only">
-        <img src="data:image/png;base64,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" alt="CONEXUS">
-        <div class="lnb-org">카카오뱅크</div>
-        <div class="lnb-quick">
-          <button class="qitem"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><circle cx="12" cy="9" r="2"/><path d="M15 13.5a3 3 0 0 0-6 0"/></svg>명부관리</button>
-          <button class="qitem"><svg class="ic" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg>결의기준</button>
-          <button class="qitem"><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>템플릿</button>
-        </div>
-      </div>
-
-      <div class="lnb-mark col-only"><div class="mark">C</div></div>
-
-      <div class="lnb-select exp-only">
-        <div class="select-box" id="mtrigger">
-          <span class="dot"></span>
-          <span class="lbl" id="mcurrent">제10기 정기주주총회</span>
-          <svg class="ic" viewBox="0 0 24 24"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
-        </div>
-        <div class="mpop hidden" id="mpop">
-          <div class="mpop-search">
-            <svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            <input type="text" id="msearch" placeholder="주주총회 검색" autocomplete="off">
-          </div>
-          <div class="mpop-list" id="mlist"></div>
-          <div class="mpop-foot"><button id="maddbtn">새 주주총회 추가</button></div>
-        </div>
-      </div>
-
-      <div class="lnb-menu exp-only">
-        <button class="nav-item"><svg class="ic" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>대시보드</button>
-      </div>
-
-      <div class="lnb-rail col-only">
-        <button class="railbtn" title="대시보드"><svg class="ic" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg></button>
-        <button class="railbtn" title="명부관리"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><circle cx="12" cy="9" r="2"/><path d="M15 13.5a3 3 0 0 0-6 0"/></svg></button>
-        <button class="railbtn" title="결의기준"><svg class="ic" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg></button>
-        <button class="railbtn" title="템플릿"><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></button>
-      </div>
-      <div class="lnb-tabs exp-only">
-        <div class="tabs">
-          <div class="t " data-tab="set">설정</div>
-          <div class="t " data-tab="pre">사전</div>
-          <div class="t active" data-tab="day">당일</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="lnb-content  exp-only" data-tabpanel="set">
-      <div class="grp"><div class="grp-label">주주총회 설정</div><div class="nav">
-        <a class="nav-item" href="shareholders.html">주주명부 확정</a>
-        <a class="nav-item" href="meeting-settings.html">주주총회 설정</a>
-        <a class="nav-item" href="voting-restriction.html">의결권제한 설정</a>
-      </div></div>
-      <div class="grp"><div class="grp-label">의결권 대행 권유 설정</div><div class="nav">
-        <a class="nav-item" href="proxy-basic.html">기본 설정</a>
-        <a class="nav-item" href="shareholder-faq.html">주주 FAQ</a>
-      </div></div>
-    </div>
-
-    <div class="lnb-content  exp-only" data-tabpanel="pre">
-      <div class="grp"><div class="grp-label">전자주주총회 관리</div><div class="nav">
-        <a class="nav-item" href="electronic-meeting.html">전자주주총회 설정</a>
-        <a class="nav-item" href="e-attendees.html">전자주주총회 참석자 관리</a>
-        <a class="nav-item" href="pre-qna.html">사전 질의 관리</a>
-      </div></div>
-      <div class="grp"><div class="grp-label">사전 의결권 관리</div><div class="nav">
-        <a class="nav-item" href="voting-rights.html">사전 의결권 현황</a>
-        <a class="nav-item" href="evote-records.html">전자투표/위임장 내역</a>
-        <a class="nav-item" href="paper-records.html">서면투표/위임 내역</a>
-        <a class="nav-item" href="dup-voting.html">중복 의결권 관리</a>
-      </div></div>
-      <div class="grp"><div class="grp-label">불통일행사 관리</div><div class="nav">
-        <a class="nav-item" href="split-voting.html">불통일행사 관리</a>
-      </div></div>
-      <div class="grp"><div class="grp-label">집중투표 관리</div><div class="nav">
-        <a class="nav-item" href="cumulative-voting.html">집중투표 관리</a>
-      </div></div>
-    </div>
-
-    <div class="lnb-content show exp-only" data-tabpanel="day">
-      <div class="grp"><div class="grp-label">주주총회</div><div class="nav">
-        <a class="nav-item" href="attendees.html">참석자 관리</a>
-        <a class="nav-item active" href="onsite-control.html">주주총회 현장 제어</a>
-        <a class="nav-item" href="tally.html">주주총회 집계</a>
-      </div></div>
-    </div>
-
-    <div class="lnb-foot">
-      <button class="foot-btn"><span class="avatar">강</span><span class="who exp-only"><span class="n">강하나</span><span class="e">doji@irkudos.co.kr</span></span><svg class="ic cud exp-only" viewBox="0 0 24 24" style="width:16px;height:16px;color:var(--muted-fg)"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></button>
-    </div>
+<div class="oc">
+  <aside class="oc-rail">
+    <div class="oc-logo">C</div>
+    <nav class="oc-nav">
+      <a href="shareholders.html" title="명부관리"><svg class="ic" viewBox="0 0 24 24"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></a>
+      <a href="attendees.html" title="참석자 관리"><svg class="ic" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></a>
+      <a class="on" href="onsite-control.html" title="현장 제어"><svg class="ic" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22V15"/></svg></a>
+      <a href="tally.html" title="집계"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></a>
+    </nav>
+    <div class="oc-foot"><span class="oc-av">강</span></div>
   </aside>
-  <main class="main">
-    <div class="topbar">
-      <div class="left">
-        <button class="iconbtn sm" id="toggleLnb" title="사이드바"><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg></button>
-        <span class="vsep"></span>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="crumb">주주총회 현장 제어</span>
+
+  <div class="oc-body">
+    <div class="oc-main">
+      <div class="oc-top">
+        <div class="l">
+          <button class="oc-ib" title="사이드바"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg></button>
+          <span class="vsep"></span>
+          <span class="crumb">현장 제어</span>
         </div>
+        <button class="oc-ib" title="변경이력"><svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></button>
       </div>
-      <button class="iconbtn md" title="변경이력"><svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></button>
-    </div>
-    <div class="scroll">
-      <div class="content" style="width:100%">
-        <div class="st-head"><div><div class="page-title">주총 현장 제어</div><div class="page-sub">제10기 정기주주총회 · 진행 중인 안건, 표결, 참석 현황을 실시간으로 제어합니다.</div></div><div class="actions"><span class="badge green" style="height:28px">● LIVE 진행중</span></div></div>
 
-        <div class="stat-grid">
-          <div class="stat"><div class="k">참석 의결권</div><div class="v">63.0%</div><div class="d"><span class="badge blue">정족수 충족 · 300,000,000주</span></div></div>
-          <div class="stat"><div class="k">현장 / 온라인 참석</div><div class="v">6,200 / 13,800</div></div>
-          <div class="stat"><div class="k">참석 주주수</div><div class="v">20,000</div><div class="d"><span class="badge gray">전체 650,000명</span></div></div>
-          <div class="stat"><div class="k">표결 상태</div><div class="v" style="color:var(--blue600)">개표중</div></div>
+      <div class="oc-sub">
+        <div class="oc-tabs">
+          <button class="oc-tab on" data-tab="now">현황</button>
+          <button class="oc-tab" data-tab="qa">질의응답<span class="cnt" id="qaCnt"></span></button>
+          <button class="oc-tab" data-tab="sp">발언신청<span class="cnt" id="spCnt"></span></button>
         </div>
-
-        <div class="fgrid c2" style="margin-top:16px">
-          <div class="card">
-            <div class="sub-h" style="margin-bottom:12px">안건 진행</div>
-            <div class="tbl-wrap"><table class="tbl">
-              <thead><tr><th style="width:80px">번호</th><th>안건명</th><th>상태</th><th style="width:150px">제어</th></tr></thead>
-              <tbody>
-                <tr><td>제1호</td><td>재무제표 승인의 건</td><td><span class="badge green">가결</span></td><td><button class="btn">결과보기</button></td></tr>
-                <tr><td>제2호</td><td>정관 일부 변경의 건</td><td><span class="badge green">가결</span></td><td><button class="btn">결과보기</button></td></tr>
-                <tr><td>제3-1호</td><td>이사 선임 (집중투표)</td><td><span class="badge blue">개표중</span></td><td><button class="st-save">표결 마감</button></td></tr>
-                <tr><td>제3-2호</td><td>감사위원 사외이사 선임</td><td><span class="badge gray">대기</span></td><td><button class="btn">표결 개시</button></td></tr>
-              </tbody>
-            </table></div>
+        <div class="oc-tools">
+          <div class="grp">
+            <button class="ocb"><svg viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>공지</button>
+            <div class="seg">
+              <button class="ocb on" id="segVote"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>표결</button>
+              <button class="ocb" id="segCast"><svg viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4 20-7z"/></svg>송출</button>
+            </div>
           </div>
-          <div class="card">
-            <div class="sub-h" style="margin-bottom:12px">제1호 실시간 집계 (분모 300,000,000주)</div>
-            <div class="svc-row" style="justify-content:space-between"><div class="svc-title">찬성</div><div class="svc-title" style="color:#0a8a3c">80.6% · 241,800,000</div></div>
-            <div style="height:8px;background:var(--muted);border-radius:9999px;overflow:hidden;margin:8px 0 14px"><div style="width:80.6%;height:100%;background:#0a8a3c"></div></div>
-            <div class="svc-row" style="justify-content:space-between"><div class="svc-title">반대</div><div class="svc-title" style="color:var(--red600)">19.4% · 58,200,000</div></div>
-            <div style="height:8px;background:var(--muted);border-radius:9999px;overflow:hidden;margin:8px 0 0"><div style="width:19.4%;height:100%;background:var(--red600)"></div></div>
+          <span class="tsep"></span>
+          <div class="grp">
+            <button class="ocb"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="12" rx="1"/><path d="M8 20h8M12 16v4"/></svg>발표 화면</button>
+            <button class="ocb"><svg viewBox="0 0 24 24"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg>블루투스</button>
           </div>
-        </div>
-
-        <div class="card" style="margin-top:16px">
-          <div class="toolbar"><div class="sub-h">현장 제어</div></div>
-          <div class="ag-toolbar" style="margin-top:12px;flex-wrap:wrap;gap:8px">
-            <button class="btn-line">입장 마감</button>
-            <button class="btn-line">발언 신청 열기</button>
-            <button class="btn-line">화면 공지 송출</button>
-            <button class="btn-line">휴회 안내</button>
-            <button class="st-save">다음 안건 진행</button>
+          <span class="tsep"></span>
+          <div class="grp">
+            <span class="otimer"><span class="dot"></span><span id="ocTimer">00:10:12</span></span>
+            <button class="ocb gray icon" id="btnPause" title="일시정지"><svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg></button>
+            <button class="ocb red"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>종료</button>
+            <button class="ocb gray icon" title="더보기"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
           </div>
         </div>
       </div>
+
+      <div class="oc-metrics">
+        <div class="oc-mc"><div class="k">의안 진행 <span class="stbadge blue"><span class="d"></span>진행 중</span></div><div class="v"><span><b>2</b> / 6</span></div></div>
+        <div class="oc-mc"><div class="k">전체 출석 주식수 <span class="stbadge green"><span class="d"></span>정족수 충족</span></div><div class="v">300,000,000<span class="sub">주</span><span class="sep"></span>63.0%</div></div>
+        <div class="oc-mc"><div class="k">전체 출석 주주수</div><div class="v">20,000<span class="sub">명</span></div></div>
+        <div class="oc-mc"><div class="k">현장 참석</div><div class="v">342<span class="sub">명 · 3,120,000주 행사 가능</span></div></div>
+        <div class="oc-mc"><div class="k">온라인 참석</div><div class="v">19,658<span class="sub">명</span><svg class="spark" viewBox="0 0 80 22" preserveAspectRatio="none"><polyline fill="none" stroke="#0071f3" stroke-width="2" points="0,18 12,15 24,16 36,10 48,12 60,6 72,7 80,3"/></svg></div></div>
+      </div>
+
+      <div class="oc-grid">
+        <!-- 현황 -->
+        <div class="oc-panel on" data-panel="now">
+          <div class="nowgrid">
+            <div class="ncard">
+              <h3>의안 진행 현황</h3>
+              <div class="agrow"><span class="agno">제1호</span><span class="agnm">재무제표 승인의 건</span><span class="qst st-done"><span class="d"></span>완료</span></div>
+              <div class="agrow"><span class="agno">제2호</span><span class="agnm">정관 일부 변경의 건 <span class="agsub">· 2-1 / 2-2 / 2-3</span></span><span class="qst st-wait"><span class="d"></span>진행 중</span></div>
+              <div class="agrow"><span class="agno">제3호</span><span class="agnm">이사 선임의 건 <span class="agsub">· 3-1 집중투표 / 3-2 감사위원</span></span><span class="qst st-open"><span class="d"></span>대기</span></div>
+            </div>
+            <div class="ncard">
+              <h3>실시간 현장 요약</h3>
+              <div class="minibars">
+                <div class="mb"><div class="n" id="sumQ">30</div><div class="l">질의 접수</div></div>
+                <div class="mb"><div class="n" id="sumQun" style="color:#ea580c">8</div><div class="l">미답변</div></div>
+                <div class="mb"><div class="n" id="sumS">30</div><div class="l">발언 신청</div></div>
+                <div class="mb"><div class="n" id="sumSwait" style="color:#0071f3">23</div><div class="l">발언 대기</div></div>
+              </div>
+              <div style="margin-top:14px">
+                <div class="kv"><span class="kk">현장 참석</span><span class="vv">342명</span></div>
+                <div class="kv"><span class="kk">온라인 참석</span><span class="vv">19,658명</span></div>
+                <div class="kv"><span class="kk">수정동의</span><span class="vv">4건</span></div>
+                <div class="kv"><span class="kk">발언 반려</span><span class="vv">3건</span></div>
+                <div class="kv"><span class="kk">경과 시간</span><span class="vv" id="ocTimer2">00:10:12</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 질의응답 -->
+        <div class="oc-panel" data-panel="qa">
+          <div class="chips" id="qaChips"></div>
+          <div id="qaList"></div>
+        </div>
+        <!-- 발언신청 -->
+        <div class="oc-panel" data-panel="sp">
+          <div class="chips" id="spChips"></div>
+          <div id="spList"></div>
+        </div>
+      </div>
     </div>
-  </main>
+  </div>
 </div>
+
 <script>
-  // LNB tab switching (설정/사전/당일)
-  document.querySelectorAll('.lnb-tabs .t').forEach(function(t){
+var QUESTIONS=[{"id": "Q1-01", "ag": "1", "sub": "", "name": "김명준", "t": "개인", "sh": 350040, "tm": "09:07", "pub": true, "st": "미답변", "q": "주가가 계속 빠지는데 회사 대책이 뭡니까??", "a": null}, {"id": "Q1-02", "ag": "1", "sub": "", "name": "국민연금공단", "t": "기관", "sh": 42300000, "tm": "09:08", "pub": true, "st": "완료", "q": "당기순이익 대비 배당성향 산정 기준은?", "a": "별도재무제표 당기순이익 기준 배당성향 약 27%로 책정했습니다."}, {"id": "Q1-03", "ag": "1", "sub": "", "name": "이나리", "t": "개인", "sh": 128500, "tm": "09:09", "pub": true, "st": "미답변", "q": "향후 배당 확대 계획이 있습니까?", "a": null}, {"id": "Q1-04", "ag": "1", "sub": "", "name": "미래에셋증권(쿼드자산운용-신한은행)", "t": "기관", "sh": 18750000, "tm": "09:10", "pub": true, "st": "완료", "q": "대손충당금 적립 기준에 변경이 있었습니까?", "a": "보수적 적립 기조를 유지했으며 회계기준 변경은 없습니다."}, {"id": "Q1-05", "ag": "1", "sub": "", "name": "전승현", "t": "개인", "sh": 96700, "tm": "09:11", "pub": false, "st": "완료", "q": "이익잉여금 사내유보 목적은?", "a": "자본적정성(BIS) 관리 및 신사업 투자재원 확보 목적입니다."}, {"id": "Q1-06", "ag": "1", "sub": "", "name": "최길준", "t": "개인", "sh": 74300, "tm": "09:12", "pub": false, "st": "완료", "q": "자기주식 취득·소각 계획이 있습니까?", "a": "이사회에서 검토 중이며 확정 시 공시하겠습니다."}, {"id": "Q1-07", "ag": "1", "sub": "", "name": "삼성자산운용", "t": "기관", "sh": 9870000, "tm": "09:13", "pub": true, "st": "완료", "q": "순이자마진(NIM) 추이와 전망은?", "a": "금리 하락기 소폭 축소가 예상되며 비이자수익 확대로 대응합니다."}, {"id": "Q1-08", "ag": "1", "sub": "", "name": "한국투자증권", "t": "기관", "sh": 15200000, "tm": "09:14", "pub": true, "st": "완료", "q": "연체율 상승에 대한 우려가 있는데 건전성은?", "a": "건전성 지표는 안정적이며 선제적 리스크관리를 시행 중입니다."}, {"id": "Q1-09", "ag": "1", "sub": "", "name": "정하윤", "t": "개인", "sh": 22400, "tm": "09:15", "pub": true, "st": "완료", "q": "재무제표에 대한 외부감사 의견은?", "a": "외부감사인으로부터 적정의견을 받았습니다."}, {"id": "Q1-10", "ag": "1", "sub": "", "name": "오세훈", "t": "개인", "sh": 19900, "tm": "09:16", "pub": true, "st": "미답변", "q": "전체 매출에서 플랫폼 수익 비중은?", "a": null}, {"id": "Q2-01", "ag": "2", "sub": "2-1", "name": "블랙록펀드", "t": "기관", "sh": 12940000, "tm": "09:20", "pub": true, "st": "완료", "q": "집중투표제 배제 조항 삭제 취지는?", "a": "소수주주권 강화와 이사회 다양성 제고를 위한 것입니다."}, {"id": "Q2-02", "ag": "2", "sub": "2-1", "name": "민경선", "t": "개인", "sh": 54900, "tm": "09:21", "pub": true, "st": "미답변", "q": "집중투표 도입 시 경영 안정성 우려는 없습니까?", "a": null}, {"id": "Q2-03", "ag": "2", "sub": "2-2", "name": "KB자산운용", "t": "기관", "sh": 8110000, "tm": "09:22", "pub": true, "st": "완료", "q": "전자주주총회 도입 일정은?", "a": "다음 정기주총부터 현장과 병행 개최를 목표로 합니다."}, {"id": "Q2-04", "ag": "2", "sub": "2-2", "name": "이준기", "t": "개인", "sh": 43600, "tm": "09:23", "pub": true, "st": "완료", "q": "전자주총 참석 시 본인확인 수단은?", "a": "공동인증서·간편인증 등을 지원합니다."}, {"id": "Q2-05", "ag": "2", "sub": "2-2", "name": "신한자산운용", "t": "기관", "sh": 6540000, "tm": "09:24", "pub": true, "st": "완료", "q": "전자투표와 전자주총의 차이는?", "a": "전자투표는 사전 행사, 전자주총은 당일 실시간 참석·발언입니다."}, {"id": "Q2-06", "ag": "2", "sub": "2-3", "name": "한민준", "t": "개인", "sh": 38100, "tm": "09:25", "pub": false, "st": "완료", "q": "의결권 대리행사 수단 확대 범위는?", "a": "전자위임장 및 플랫폼 위임을 포함합니다."}, {"id": "Q2-07", "ag": "2", "sub": "2-3", "name": "교보생명", "t": "기관", "sh": 2980000, "tm": "09:26", "pub": true, "st": "완료", "q": "정관 제31조 개정으로 위임 절차가 간소화됩니까?", "a": "서면·전자 병행 및 본인확인 강화가 함께 적용됩니다."}, {"id": "Q2-08", "ag": "2", "sub": "", "name": "김성준", "t": "개인", "sh": 31500, "tm": "09:27", "pub": true, "st": "완료", "q": "정관 변경은 특별결의 요건을 충족합니까?", "a": "출석 의결권 2/3, 발행주식 1/3 이상 요건이 적용됩니다."}, {"id": "Q2-09", "ag": "2", "sub": "", "name": "우정사업본부", "t": "기관", "sh": 5300000, "tm": "09:28", "pub": true, "st": "완료", "q": "개정 조항의 시행일은?", "a": "주총 승인 즉시 효력이 발생합니다."}, {"id": "Q2-10", "ag": "2", "sub": "", "name": "이남희", "t": "개인", "sh": 27800, "tm": "09:29", "pub": true, "st": "미답변", "q": "소수주주 추천 이사 제도도 함께 검토됩니까?", "a": null}, {"id": "Q3-01", "ag": "3", "sub": "3-1", "name": "국민연금공단", "t": "기관", "sh": 42300000, "tm": "09:33", "pub": true, "st": "완료", "q": "사외이사 후보 독립성은 어떻게 검증했습니까?", "a": "사외이사후보추천위 심사를 거쳤으며 결격사유가 없습니다."}, {"id": "Q3-02", "ag": "3", "sub": "3-1", "name": "이영석", "t": "개인", "sh": 61200, "tm": "09:34", "pub": true, "st": "완료", "q": "집중투표 방식의 표 계산법은?", "a": "1주당 2표(선임 2인 기준)가 부여되며 다득표순으로 선임합니다."}, {"id": "Q3-03", "ag": "3", "sub": "3-1", "name": "한화투자증권", "t": "기관", "sh": 3420000, "tm": "09:35", "pub": true, "st": "완료", "q": "후보별 이력은 어디서 확인합니까?", "a": "소집공고 및 사업보고서에 게재되어 있습니다."}, {"id": "Q3-04", "ag": "3", "sub": "3-2", "name": "강도현", "t": "개인", "sh": 16700, "tm": "09:36", "pub": true, "st": "미답변", "q": "감사위원이 되는 사외이사의 요건은?", "a": null}, {"id": "Q3-05", "ag": "3", "sub": "", "name": "미래에셋증권(쿼드자산운용-신한은행)", "t": "기관", "sh": 18750000, "tm": "09:37", "pub": true, "st": "완료", "q": "이사 보수한도 산정 근거는?", "a": "임원보수 규정과 성과 연동 기준에 따라 산정했습니다."}, {"id": "Q3-06", "ag": "3", "sub": "3-1", "name": "손예진", "t": "개인", "sh": 14300, "tm": "09:38", "pub": false, "st": "완료", "q": "후보 남상일·박선화 부결 시 대응은?", "a": "표결 결과에 따르며 결원은 관련 규정대로 처리합니다."}, {"id": "Q3-07", "ag": "3", "sub": "", "name": "삼성자산운용", "t": "기관", "sh": 9870000, "tm": "09:39", "pub": true, "st": "완료", "q": "ESG 위원회 구성 계획은?", "a": "이사회 산하 위원회로 운영할 계획입니다."}, {"id": "Q3-08", "ag": "3", "sub": "3-1", "name": "윤가은", "t": "개인", "sh": 11800, "tm": "09:40", "pub": true, "st": "미답변", "q": "집중투표 후보 수를 3인으로 축소할 수 있습니까?", "a": null}, {"id": "Q3-09", "ag": "3", "sub": "", "name": "블랙록펀드", "t": "기관", "sh": 12940000, "tm": "09:41", "pub": true, "st": "완료", "q": "이사회 여성 비율 개선 계획은?", "a": "이사회 다양성 정책에 따라 단계적으로 확대합니다."}, {"id": "Q3-10", "ag": "3", "sub": "", "name": "임재민", "t": "개인", "sh": 9600, "tm": "09:42", "pub": true, "st": "미답변", "q": "사외이사 후보의 겸직 현황은?", "a": null}];
+var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "개인", "sh": 61200, "tm": "09:05", "kind": "발언", "st": "대기", "r": "배당성향 상향 필요성에 대해 발언 신청합니다."}, {"id": "S1-02", "ag": "1", "sub": "", "name": "미래에셋증권(쿼드자산운용-신한은행)", "t": "기관", "sh": 18750000, "tm": "09:05", "kind": "발언", "st": "대기", "r": "중장기 배당정책의 명문화를 요청하는 발언입니다."}, {"id": "S1-03", "ag": "1", "sub": "", "name": "김명준", "t": "개인", "sh": 350040, "tm": "09:06", "kind": "발언", "st": "대기", "r": "주가 부양 및 주주환원 대책에 대해 발언하고자 합니다."}, {"id": "S1-04", "ag": "1", "sub": "", "name": "국민연금공단", "t": "기관", "sh": 42300000, "tm": "09:06", "kind": "발언", "st": "완료", "r": "자본적정성과 배당의 균형에 대한 의견을 발언했습니다."}, {"id": "S1-05", "ag": "1", "sub": "", "name": "전승현", "t": "개인", "sh": 96700, "tm": "09:07", "kind": "발언", "st": "대기", "r": "사내유보금 활용 계획의 구체화를 요청합니다."}, {"id": "S1-06", "ag": "1", "sub": "", "name": "삼성자산운용", "t": "기관", "sh": 9870000, "tm": "09:07", "kind": "발언", "st": "대기", "r": "비이자수익 확대 전략에 대해 발언 신청합니다."}, {"id": "S1-07", "ag": "1", "sub": "", "name": "정하윤", "t": "개인", "sh": 22400, "tm": "09:08", "kind": "발언", "st": "반려", "r": "개별 종목 주가 전망 관련 발언으로 안건과 무관하여 반려."}, {"id": "S1-08", "ag": "1", "sub": "", "name": "한국투자증권", "t": "기관", "sh": 15200000, "tm": "09:08", "kind": "발언", "st": "대기", "r": "건전성 지표 공시 주기 확대를 제안하는 발언입니다."}, {"id": "S1-09", "ag": "1", "sub": "", "name": "최길준", "t": "개인", "sh": 74300, "tm": "09:09", "kind": "발언", "st": "완료", "r": "자기주식 소각 계획에 대한 질의성 발언을 마쳤습니다."}, {"id": "S1-10", "ag": "1", "sub": "", "name": "오세훈", "t": "개인", "sh": 19900, "tm": "09:09", "kind": "발언", "st": "대기", "r": "플랫폼 부문 실적 세부 공개를 요청합니다."}, {"id": "S2-01", "ag": "2", "sub": "", "name": "이영석", "t": "개인", "sh": 61200, "tm": "09:05", "kind": "발언", "st": "대기", "r": "이사 보수한도 산정 근거에 대해 발언 신청합니다."}, {"id": "S2-02", "ag": "2", "sub": "", "name": "미래에셋증권(쿼드자산운용-신한은행)", "t": "기관", "sh": 18750000, "tm": "09:05", "kind": "발언", "st": "대기", "r": "이사 보수한도 산정 근거에 대해 발언 신청합니다."}, {"id": "S2-03", "ag": "2", "sub": "2-1", "name": "민경선", "t": "개인", "sh": 54900, "tm": "09:06", "kind": "수정동의", "st": "대기", "r": "집중투표 후보 수 결정의 건을 후보 6인 중 3인 선임으로 의안을 수정하는 것을 요청합니다."}, {"id": "S2-04", "ag": "2", "sub": "2-1", "name": "블랙록펀드", "t": "기관", "sh": 12940000, "tm": "09:06", "kind": "발언", "st": "대기", "r": "집중투표제 배제 조항 삭제의 취지 설명을 요청하는 발언입니다."}, {"id": "S2-05", "ag": "2", "sub": "2-2", "name": "이준기", "t": "개인", "sh": 43600, "tm": "09:07", "kind": "발언", "st": "대기", "r": "전자주주총회 도입 일정에 대한 발언을 신청합니다."}, {"id": "S2-06", "ag": "2", "sub": "2-3", "name": "KB자산운용", "t": "기관", "sh": 8110000, "tm": "09:07", "kind": "발언", "st": "완료", "r": "전자위임 본인확인 절차 강화 의견을 발언했습니다."}, {"id": "S2-07", "ag": "2", "sub": "2-3", "name": "한민준", "t": "개인", "sh": 38100, "tm": "09:08", "kind": "수정동의", "st": "대기", "r": "정관 제31조 개정안에 위임 철회 조항 추가를 제안합니다."}, {"id": "S2-08", "ag": "2", "sub": "2-2", "name": "신한자산운용", "t": "기관", "sh": 6540000, "tm": "09:08", "kind": "발언", "st": "대기", "r": "전자주총과 현장 병행 시 의사정족수 산정 방식을 질의합니다."}, {"id": "S2-09", "ag": "2", "sub": "", "name": "김성준", "t": "개인", "sh": 31500, "tm": "09:09", "kind": "발언", "st": "반려", "r": "특정 주주 비방성 표현이 포함되어 반려."}, {"id": "S2-10", "ag": "2", "sub": "2-3", "name": "교보생명", "t": "기관", "sh": 2980000, "tm": "09:09", "kind": "발언", "st": "대기", "r": "대리행사 수단 확대의 실무 적용 범위를 확인하는 발언입니다."}, {"id": "S3-01", "ag": "3", "sub": "3-1", "name": "이나리", "t": "개인", "sh": 128500, "tm": "09:05", "kind": "발언", "st": "대기", "r": "집중투표 후보자별 자질 검증에 대해 발언 신청합니다."}, {"id": "S3-02", "ag": "3", "sub": "3-1", "name": "국민연금공단", "t": "기관", "sh": 42300000, "tm": "09:05", "kind": "발언", "st": "대기", "r": "사외이사 독립성 강화 방안에 대한 발언입니다."}, {"id": "S3-03", "ag": "3", "sub": "3-2", "name": "이남희", "t": "개인", "sh": 27800, "tm": "09:06", "kind": "수정동의", "st": "대기", "r": "감사위원 사외이사 선임의 건에 후보 추가를 요청합니다."}, {"id": "S3-04", "ag": "3", "sub": "", "name": "한화투자증권", "t": "기관", "sh": 3420000, "tm": "09:06", "kind": "발언", "st": "대기", "r": "이사 보수한도 인상 근거의 소명을 요청하는 발언입니다."}, {"id": "S3-05", "ag": "3", "sub": "3-2", "name": "강도현", "t": "개인", "sh": 16700, "tm": "09:07", "kind": "발언", "st": "대기", "r": "감사위원회 운영 계획에 대해 발언 신청합니다."}, {"id": "S3-06", "ag": "3", "sub": "3-1", "name": "손예진", "t": "개인", "sh": 14300, "tm": "09:07", "kind": "발언", "st": "완료", "r": "집중투표 표 계산 방식에 대한 질의성 발언을 마쳤습니다."}, {"id": "S3-07", "ag": "3", "sub": "", "name": "삼성자산운용", "t": "기관", "sh": 9870000, "tm": "09:08", "kind": "발언", "st": "대기", "r": "ESG·이사회 다양성 정책에 대한 발언입니다."}, {"id": "S3-08", "ag": "3", "sub": "3-1", "name": "윤가은", "t": "개인", "sh": 11800, "tm": "09:08", "kind": "수정동의", "st": "대기", "r": "집중투표 후보 수를 3인 선임으로 축소하는 수정동의를 신청합니다."}, {"id": "S3-09", "ag": "3", "sub": "", "name": "블랙록펀드", "t": "기관", "sh": 12940000, "tm": "09:09", "kind": "발언", "st": "대기", "r": "이사회 여성 비율 목표치 설정을 제안하는 발언입니다."}, {"id": "S3-10", "ag": "3", "sub": "", "name": "임재민", "t": "개인", "sh": 9600, "tm": "09:09", "kind": "발언", "st": "반려", "r": "후보 개인 신상 관련 발언으로 안건과 무관하여 반려."}];
+(function(){
+  function esc(s){ return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function fmt(n){ return Number(n).toLocaleString('en-US'); }
+  function agLabel(x){ return '제'+(x.sub||x.ag)+'호'; }
+  function tgType(t){ return '<span class="tg '+(t==='기관'?'tg-inst':'tg-ind')+'">'+t+'</span>'; }
+
+  document.getElementById('qaCnt').textContent=QUESTIONS.length;
+  document.getElementById('spCnt').textContent=SPEECHES.length;
+
+  // 탭 전환
+  document.querySelectorAll('.oc-tab').forEach(function(t){
     t.addEventListener('click',function(){
-      var tab=t.dataset.tab; if(!tab) return;
-      document.querySelectorAll('.lnb-tabs .t').forEach(function(x){x.classList.toggle('active',x===t);});
-      document.querySelectorAll('.lnb-content[data-tabpanel]').forEach(function(p){p.classList.toggle('show',p.dataset.tabpanel===tab);});
+      document.querySelectorAll('.oc-tab').forEach(function(x){x.classList.toggle('on',x===t);});
+      var k=t.dataset.tab;
+      document.querySelectorAll('.oc-panel').forEach(function(p){p.classList.toggle('on',p.dataset.panel===k);});
     });
   });
-  // sidebar collapse
-  var tg=document.getElementById('toggleLnb');
-  if(tg){tg.addEventListener('click',function(){document.getElementById('app').classList.toggle('collapsed');});}
-  // meeting dropdown (shadcn-style)
-  (function(){
-    var mt=document.getElementById('mtrigger'), mp=document.getElementById('mpop'), ml=document.getElementById('mlist'), mc=document.getElementById('mcurrent');
-    if(!mt||!mp) return;
-    if(ml&&!ml.children.length){
-      ['제10기 정기주주총회','제9기 정기주주총회','제8기 정기주주총회'].forEach(function(t,i){
-        var b=document.createElement('button'); b.className='mitem'+(i===0?' cur':'');
-        b.innerHTML='<span class="dot'+(i===0?'':' gray')+'"></span><span class="mlbl">'+t+'</span>';
-        b.addEventListener('click',function(ev){ev.stopPropagation(); if(mc)mc.textContent=t; ml.querySelectorAll('.mitem').forEach(function(x){x.classList.remove('cur');}); b.classList.add('cur'); mp.classList.add('hidden');});
-        ml.appendChild(b);
-      });
-    }
-    mt.addEventListener('click',function(e){e.stopPropagation(); mp.classList.toggle('hidden');});
-    document.addEventListener('click',function(){mp.classList.add('hidden');});
-    mp.addEventListener('click',function(e){e.stopPropagation();});
-  })();
-  // settings tab switching (in-page st-nav)
-  document.querySelectorAll('.st-nav').forEach(function(nav){
-    nav.querySelectorAll('.st-item').forEach(function(item){
-      item.addEventListener('click',function(){
-        var tab=item.dataset.tab;
-        nav.querySelectorAll('.st-item').forEach(function(i){i.classList.toggle('active',i===item);});
-        var body=nav.parentElement.querySelector('.st-body')||document;
-        body.querySelectorAll('.st-tab').forEach(function(p){p.classList.toggle('active',p.dataset.panel===tab);});
-      });
-    });
-  });
-  // toggles + subtabs
-  document.addEventListener('click',function(e){
-    var sw=e.target.closest('[data-sw]'); if(sw){sw.classList.toggle('on');}
-    var cb=e.target.closest('[data-cbx]'); if(cb){cb.classList.toggle('on');}
-    var rd=e.target.closest('[data-rad]'); if(rd){var g=rd.closest('[data-radgrp]')||rd.parentElement;g.querySelectorAll('[data-rad]').forEach(function(r){r.classList.toggle('on',r===rd);});}
-    var cr=e.target.closest('.chk-row'); if(cr){cr.classList.toggle('on');}
-    var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
-  });
+  // 표결/송출 세그먼트
+  var sv=document.getElementById('segVote'), sc=document.getElementById('segCast');
+  function seg(a){ sv.classList.toggle('on',a); sc.classList.toggle('on',!a); }
+  sv.addEventListener('click',function(){seg(true);}); sc.addEventListener('click',function(){seg(false);});
+
+  // 질의 필터
+  var AG=[['all','전체'],['1','제1호'],['2','제2호'],['3','제3호']];
+  function chips(host,cur,cb){
+    host.innerHTML=AG.map(function(a){return '<button class="chip'+(a[0]===cur?' on':'')+'" data-ag="'+a[0]+'">'+a[1]+'</button>';}).join('');
+    host.querySelectorAll('.chip').forEach(function(c){ c.addEventListener('click',function(){ cb(c.dataset.ag); }); });
+  }
+  function qaStatus(x){ return x.st==='미답변' ? '<span class="qst st-open"><span class="d"></span>미답변</span>' : '<span class="qst st-done"><span class="d"></span>완료</span>'; }
+  function renderQA(ag){
+    chips(document.getElementById('qaChips'),ag,renderQA);
+    var list=QUESTIONS.filter(function(x){return ag==='all'||x.ag===ag;});
+    document.getElementById('qaList').innerHTML=list.map(function(x){
+      var ans = x.a ? '<div class="qa">A. '+esc(x.a)+'</div>' : '<div class="qa none">미답변</div>';
+      var lock = x.pub ? '' : '<span class="tg tg-lock">비공개</span>';
+      var acts = x.st==='미답변'
+        ? '<button class="qbtn dark">답변 등록</button><button class="qbtn">'+(x.pub?'비공개 전환':'공개 전환')+'</button>'
+        : '<button class="qbtn">답변 수정</button><button class="qbtn">'+(x.pub?'비공개 전환':'공개 전환')+'</button>';
+      return '<div class="qcard"><div class="qh"><span class="qtime">'+x.tm+'</span><span class="qname">'+esc(x.name)+'</span>'+tgType(x.t)+'<span class="qsh">'+fmt(x.sh)+'주</span><span class="qag">'+agLabel(x)+'</span>'+lock+'<span class="qspacer"></span>'+qaStatus(x)+'</div>'
+        +'<div class="qq">Q. '+esc(x.q)+'</div>'+ans+'<div class="qact">'+acts+'</div></div>';
+    }).join('') || '<div style="color:#a3a3a3;font-size:13px;padding:20px;text-align:center">해당 의안의 질의가 없습니다.</div>';
+  }
+  function spStatus(st){
+    if(st==='대기') return '<span class="qst st-wait"><span class="d"></span>대기</span>';
+    if(st==='완료') return '<span class="qst st-done"><span class="d"></span>완료</span>';
+    return '<span class="qst st-rej"><span class="d"></span>반려</span>';
+  }
+  function renderSP(ag){
+    chips(document.getElementById('spChips'),ag,renderSP);
+    var list=SPEECHES.filter(function(x){return ag==='all'||x.ag===ag;});
+    var seq=0;
+    document.getElementById('spList').innerHTML=list.map(function(x){
+      seq++;
+      var kind = '<span class="tg '+(x.kind==='수정동의'?'tg-amend':'tg-speak')+'">'+x.kind+'</span>';
+      var acts = x.st==='대기'
+        ? '<button class="qbtn dark">발언 시작</button><button class="qbtn">완료</button><button class="qbtn">반려</button>'
+        : (x.st==='완료' ? '<button class="qbtn">기록 보기</button>' : '<button class="qbtn">반려 사유</button><button class="qbtn">재검토</button>');
+      return '<div class="qcard"><div class="qh"><span class="qnum">'+seq+'</span><span class="qtime">'+x.tm+'</span><span class="qname">'+esc(x.name)+'</span>'+tgType(x.t)+'<span class="qsh">'+fmt(x.sh)+'주</span><span class="qag">'+agLabel(x)+'</span>'+kind+'<span class="qspacer"></span>'+spStatus(x.st)+'</div>'
+        +'<div class="qq">'+esc(x.r)+'</div><div class="qact">'+acts+'</div></div>';
+    }).join('') || '<div style="color:#a3a3a3;font-size:13px;padding:20px;text-align:center">해당 의안의 발언 신청이 없습니다.</div>';
+  }
+  renderQA('all'); renderSP('all');
+
+  // 요약 카운트
+  document.getElementById('sumQ').textContent=QUESTIONS.length;
+  document.getElementById('sumQun').textContent=QUESTIONS.filter(function(x){return x.st==='미답변';}).length;
+  document.getElementById('sumS').textContent=SPEECHES.length;
+  document.getElementById('sumSwait').textContent=SPEECHES.filter(function(x){return x.st==='대기';}).length;
+
+  // 타이머 (경과)
+  var t=0, hh=document.getElementById('ocTimer'), hh2=document.getElementById('ocTimer2'), running=true;
+  function parse(s){var p=s.split(':');return (+p[0])*3600+(+p[1])*60+(+p[2]);}
+  t=parse('00:10:12');
+  function paint(){ var h=Math.floor(t/3600),m=Math.floor(t%3600/60),s=t%60; var v=[h,m,s].map(function(n){return (n<10?'0':'')+n;}).join(':'); hh.textContent=v; if(hh2)hh2.textContent=v; }
+  setInterval(function(){ if(running){ t++; paint(); } },1000); paint();
+  document.getElementById('btnPause').addEventListener('click',function(){ running=!running; this.classList.toggle('gray',true); });
+})();
 </script>
 </body>
 </html>
