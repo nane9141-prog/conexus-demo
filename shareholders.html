@@ -385,6 +385,7 @@
               <button class="btn" id="msRegister"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>주주명부 등록</button>
               <button class="btn primary" id="msLoad"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>주주명부 불러오기</button>
               <button class="btn primary hidden" id="msNext"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>저장하고 다음</button>
+              <button class="btn primary hidden" id="cfTopBtn"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>주주명부 확정</button>
             </div>
           </div>
         </div>
@@ -413,7 +414,7 @@
           <div class="ic3">
             <div class="icard"><div class="k">총 주식수</div><div class="v">476,211,964</div></div>
             <div class="icard"><div class="k">총 주주수</div><div class="v">650,000</div></div>
-            <div class="icard warn"><div class="k">미설정 투표권자 <svg class="info-i ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><div class="v" id="unsetCount">3</div></div>
+            <div class="icard warn"><div class="k">미설정 투표권자 <svg class="info-i ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><div class="v" id="unsetCount">6</div></div>
           </div>
           <div>
             <div class="tfn">
@@ -422,9 +423,9 @@
                 <span class="sw" id="swUnset"></span>
               </div>
               <div class="tfn-r">
-                <button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>다운로드</button>
-                <button class="iconbtn2" title="정렬"><svg class="ic" viewBox="0 0 24 24"><path d="M3 6h18M7 12h10M11 18h2"/></svg></button>
-                <button class="iconbtn2" title="필터"><svg class="ic" viewBox="0 0 24 24"><path d="M4 6h16M6 12h12M9 18h6"/></svg></button>
+                <button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>내보내기</button>
+                <button class="iconbtn2" title="줄 간격"><svg class="ic" viewBox="0 0 24 24"><path d="M8 6 5 3 2 6M5 3v18M8 18l-3 3-3-3M13 6h9M13 12h9M13 18h9"/></svg></button>
+                <button class="iconbtn2" title="필터"><svg class="ic" viewBox="0 0 24 24"><path d="M3 6h9M17 6h4M3 12h4M9 12h12M3 18h9M17 18h4"/><circle cx="14" cy="6" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></svg></button>
               </div>
             </div>
             <div class="mtbl-wrap">
@@ -452,6 +453,14 @@
                   <tr data-idx="6" data-no="600101-1******" data-acct="00000120251104000020000000301" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">천재민<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">600101-1******</td><td class="r">6,015,923</td><td class="r sub">1.3%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="voter-set">천재민</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
                   <tr data-idx="7" data-no="600101-1******" data-acct="00000120251104000020000000401" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">박준호<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">600101-1******</td><td class="r">6,015,923</td><td class="r sub">1.3%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="voter-set">박준호</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
                   <tr class="row-none" data-idx="8" data-no="700201-2******" data-acct="00000120251104000020001420501" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">유은지<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">700201-2******</td><td class="r">2,003,977</td><td class="r sub">0.4%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="set-none">미설정</span></td><td class="c"><button class="tbtn2">설정</button></td></tr>
+                  <tr data-idx="9" data-no="870302-1******" data-acct="0000012025110400003900000000901" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">정현우<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">870302-1******</td><td class="r">5,004,918</td><td class="r sub">1.1%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="voter-set">정현우</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr data-idx="10" data-no="920715-2******" data-acct="00000120251104000040000000001001" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">정유진<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">920715-2******</td><td class="r">3,002,915</td><td class="r sub">0.6%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="voter-set">정유진</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr data-idx="11" data-no="850109-1******" data-acct="00000120251104000041000000001101" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">강민서<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">850109-1******</td><td class="r">4,503,920</td><td class="r sub">0.9%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="voter-set">강민서</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr class="row-none" data-idx="12" data-no="780621-1******" data-acct="00000120251104000042000000001201" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">강태호<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">780621-1******</td><td class="r">2,501,912</td><td class="r sub">0.5%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="set-none">미설정</span></td><td class="c"><button class="tbtn2">설정</button></td></tr>
+                  <tr data-idx="13" data-no="900228-1******" data-acct="00000120251104000043000000001301" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">서지훈<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">900228-1******</td><td class="r">3,504,917</td><td class="r sub">0.7%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="voter-set">서지훈</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr class="row-none" data-idx="14" data-no="950814-2******" data-acct="00000120251104000044000000001401" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">우선주1</td><td class="c">개인</td><td class="name"><span class="tt-name">서은채<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">950814-2******</td><td class="r">1,502,910</td><td class="r sub">0.3%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="set-none">미설정</span></td><td class="c"><button class="tbtn2">설정</button></td></tr>
+                  <tr data-idx="15" data-no="881105-2******" data-acct="00000120251104000045000000001501" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">한소율<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">881105-2******</td><td class="r">2,803,914</td><td class="r sub">0.6%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="voter-set">한소율</span></td><td class="c"><button class="tbtn2">수정</button></td></tr>
+                  <tr class="row-none" data-idx="16" data-no="830417-1******" data-acct="00000120251104000046000000001601" data-addr="서울특별시 영등포구 국제금융로8길 2 (07330)"><td class="c">보통주</td><td class="c">개인</td><td class="name"><span class="tt-name">남주혁<svg class="qi ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></td><td class="mut">830417-1******</td><td class="r">2,001,908</td><td class="r sub">0.4%</td><td class="mut">-</td><td class="mut">-</td><td class="voter"><span class="set-none">미설정</span></td><td class="c"><button class="tbtn2">설정</button></td></tr>
                 </tbody>
               </table>
             </div>
@@ -480,12 +489,13 @@
             </div>
             <div class="mg-tools">
               <div class="mg-tools-l">
-                <button class="btn" id="mgKind"><svg class="ic" viewBox="0 0 24 24"><path d="M3 6h18M7 12h10M10 18h4"/></svg>의결권 있는 주식 종류 변경</button>
+                <button class="btn" id="mgKind">의결권 있는 주식 종류 변경</button>
               </div>
               <div class="mg-tools-r">
-                <button class="btn icon" title="필터"><svg class="ic" viewBox="0 0 24 24"><path d="M3 5h18M6 12h12M10 19h4"/></svg></button>
-                <button class="btn icon" title="엑셀 내보내기"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button>
-                <button class="btn primary" id="mgNew"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg>통합 주주 추가</button>
+                <button class="btn primary" id="mgNew">통합 주주 추가</button>
+                <button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>내보내기</button>
+                <button class="iconbtn2" title="줄 간격"><svg class="ic" viewBox="0 0 24 24"><path d="M8 6 5 3 2 6M5 3v18M8 18l-3 3-3-3M13 6h9M13 12h9M13 18h9"/></svg></button>
+                <button class="iconbtn2" title="필터"><svg class="ic" viewBox="0 0 24 24"><path d="M3 6h9M17 6h4M3 12h4M9 12h12M3 18h9M17 18h4"/><circle cx="14" cy="6" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></svg></button>
               </div>
             </div>
             <div class="mtbl-wrap">
@@ -520,7 +530,9 @@
               </div>
               <div class="icard warn cf-card"><div class="k">미설정 투표권자 <svg class="info-i ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><div class="v" id="cfUnset">3</div></div>
             </div>
-            <div class="cf-sec-h"><span class="t">확정 명세</span><button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>엑셀 내보내기</button></div>
+            <div class="cf-sec-h"><span class="t">확정 명세</span><div class="tfn-r"><button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>내보내기</button>
+                <button class="iconbtn2" title="줄 간격"><svg class="ic" viewBox="0 0 24 24"><path d="M8 6 5 3 2 6M5 3v18M8 18l-3 3-3-3M13 6h9M13 12h9M13 18h9"/></svg></button>
+                <button class="iconbtn2" title="필터"><svg class="ic" viewBox="0 0 24 24"><path d="M3 6h9M17 6h4M3 12h4M9 12h12M3 18h9M17 18h4"/><circle cx="14" cy="6" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></svg></button></div></div>
             <div class="cf-tbl-wrap">
               <table class="mtbl">
                 <colgroup><col style="width:90px"><col style="width:90px"><col><col style="width:140px"><col style="width:130px"><col style="width:80px"><col style="width:120px"><col style="width:100px"></colgroup>
@@ -528,7 +540,7 @@
                 <tbody id="cfBody"></tbody>
               </table>
             </div>
-            <div class="cf-foot" style="margin-top:16px"><span class="cf-note-in">확정 이후에는 투표권자 정보를 수정할 수 없으며, 전자투표·현장 집계의 기준 명부로 사용됩니다.</span><button class="btn primary lg" id="cfConfirm"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>주주명부 확정</button></div>
+            <div class="cf-foot" style="margin-top:16px;justify-content:flex-start"><span class="cf-note-in">확정 이후에는 투표권자 정보를 수정할 수 없으며, 전자투표·현장 집계의 기준 명부로 사용됩니다.</span></div>
           </div>
         </div>
       </div>
@@ -686,6 +698,8 @@
             document.querySelectorAll('#loadedState .upanel').forEach(function(p){p.classList.toggle('hide',p.dataset.upanel!==key);});
             var nx=document.getElementById('msNext');
             nx.style.display = key==='confirm' ? 'none' : '';
+            var ct=document.getElementById('cfTopBtn');
+            if(ct) ct.classList.toggle('hidden', key!=='confirm');
             var uc=document.getElementById('unsetCount'); var cu=document.getElementById('cfUnset');
             if(uc&&cu) cu.textContent=uc.textContent;
             if(key==='confirm' && typeof renderConfirm==='function') renderConfirm();
@@ -709,7 +723,17 @@
               {name:'이종승',no:'600101-1******',sh:6017919,rate:1.3},
               {name:'천재민',no:'600101-1******',sh:6015923,rate:1.3},
               {name:'박준호',no:'600101-1******',sh:6015923,rate:1.3},
-              {name:'유은지',no:'700201-2******',sh:2003977,rate:0.4}
+              {name:'유은지',no:'700201-2******',sh:2003977,rate:0.4},
+              {name:'정현우',no:'870302-1******',sh:5004918,rate:1.1},
+              {name:'정유진',no:'920715-2******',sh:3002915,rate:0.6},
+              {name:'강민서',no:'850109-1******',sh:4503920,rate:0.9},
+              {name:'강태호',no:'780621-1******',sh:2501912,rate:0.5},
+              {name:'강나연',no:'910330-2******',sh:1801909,rate:0.4},
+              {name:'서지훈',no:'900228-1******',sh:3504917,rate:0.7},
+              {name:'서은채',no:'950814-2******',sh:1502910,rate:0.3},
+              {name:'한소율',no:'881105-2******',sh:2803914,rate:0.6},
+              {name:'한지민',no:'930922-2******',sh:1602911,rate:0.3},
+              {name:'남주혁',no:'830417-1******',sh:2001908,rate:0.4}
             ];
             var groups={
               g1:{voter:'이준호',method:'auto',kind:'보통주',members:[
@@ -717,9 +741,22 @@
                 {name:'이종승',no:'600101-1******',sh:6017919,rate:1.3}]},
               g2:{voter:'천재민',method:'manual',kind:'보통주',members:[
                 {name:'천재민',no:'600101-1******',sh:6015923,rate:1.3},
-                {name:'박준호',no:'600101-1******',sh:6015923,rate:1.3}]}
+                {name:'박준호',no:'600101-1******',sh:6015923,rate:1.3}]},
+              g3:{voter:'정현우',method:'auto',kind:'보통주',members:[
+                {name:'정현우',no:'870302-1******',sh:5004918,rate:1.1},
+                {name:'정유진',no:'920715-2******',sh:3002915,rate:0.6}]},
+              g4:{voter:'강민서',method:'manual',kind:'보통주',members:[
+                {name:'강민서',no:'850109-1******',sh:4503920,rate:0.9},
+                {name:'강태호',no:'780621-1******',sh:2501912,rate:0.5},
+                {name:'강나연',no:'910330-2******',sh:1801909,rate:0.4}]},
+              g5:{voter:'서지훈',method:'auto',kind:'우선주1',members:[
+                {name:'서지훈',no:'900228-1******',sh:3504917,rate:0.7},
+                {name:'서은채',no:'950814-2******',sh:1502910,rate:0.3}]},
+              g6:{voter:'한소율',method:'auto',kind:'보통주',members:[
+                {name:'한소율',no:'881105-2******',sh:2803914,rate:0.6},
+                {name:'한지민',no:'930922-2******',sh:1602911,rate:0.3}]}
             };
-            var gseq=3;
+            var gseq=7;
             function fmt(n){return n.toLocaleString('en-US');}
             function groupHTML(gid,g){
               var sumSh=g.members.reduce(function(a,m){return a+m.sh;},0);
@@ -846,7 +883,7 @@
             if(mgb){ red=mgb.querySelectorAll('.mg-child').length - mgb.querySelectorAll('.mg-grp').length; if(red<0) red=0; }
             var cv=document.getElementById('cfVoters'); if(cv) cv.textContent=(650000-red).toLocaleString();
           }
-          var cfBtn=document.getElementById('cfConfirm'), cfDlg=document.getElementById('cfDlg');
+          var cfBtn=document.getElementById('cfTopBtn'), cfDlg=document.getElementById('cfDlg');
           if(cfBtn&&cfDlg){ cfBtn.addEventListener('click',function(){ cfDlg.classList.remove('hidden'); }); }
           var cfYes=document.getElementById('cfConfirmYes');
           if(cfYes){ cfYes.addEventListener('click',function(){ cfDlg.classList.add('hidden'); toast('주주명부 확정','주주명부가 확정되었습니다. 이후 전자투표·현장 집계의 기준 명부로 사용됩니다.'); }); }
