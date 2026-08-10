@@ -110,6 +110,9 @@
   .op.for{background:#ebf4ff}
   .op.against{background:#ffedd5}
   @media(max-width:1000px){.sim-grid{grid-template-columns:1fr}}
+  /* 대시보드: 컨텐츠 감싸는 라운드 박스 제거 */
+  .main{background:transparent;border:none;border-radius:0;box-shadow:none}
+  .topbar{border-bottom:none}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">  // 권유대행: 콤보 차트 + 슬라이더
   (function(){
@@ -279,8 +282,7 @@
 
         <div class="vr-head">
           <div class="vr-tabs">
-            <button class="vr-tab active" data-vt="status">현황</button>
-            <button class="vr-tab" data-vt="detail">채널별 내역</button>
+            <button class="vr-tab active" data-vt="status">사전 의결권 현황</button>
             <button class="vr-tab" data-vt="solicit">의결권 권유대행 현황</button>
           </div>
           <div class="vr-meta"><span class="vr-hint">발행주식총수 476,211,964주 · 주주 650,000명</span><span class="vr-sep"></span><span class="vr-dday">D-10</span></div>
@@ -342,41 +344,20 @@
             <div class="sec-head"><div class="h">의안별 사전 집계 현황</div><div class="d">사전 행사 의결권 262,140,000주 기준 · 찬성률은 확정 개표와 동일한 기준을 적용한 예상치입니다.</div></div>
             <div class="tbl-wrap" style="border:none;border-top:1px solid var(--border);border-radius:0">
               <table class="tbl">
-                <thead><tr><th style="width:96px">의안</th><th>안건명</th><th style="width:84px">유형</th><th class="num">사전 찬성</th><th class="num">사전 반대</th><th style="width:170px">찬성률</th><th style="width:96px">예상 결과</th></tr></thead>
+                <thead><tr><th style="width:96px">의안</th><th>안건명</th><th class="num">사전 찬성</th><th class="num">사전 반대</th><th style="width:170px">찬성률</th><th style="width:96px">예상 결과</th></tr></thead>
                 <tbody>
-                  <tr><td>제1호</td><td>재무제표 승인의 건</td><td><span class="ubadge secondary">보통결의</span></td><td class="num">211,284,840</td><td class="num">50,855,160</td><td><span class="cbar blue"><span class="track"><span style="width:80.6%"></span></span><span class="pv">80.6%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
-                  <tr><td>제2-1호</td><td>집중투표제 배제 조항 삭제의 건</td><td><span class="ubadge secondary">특별결의</span></td><td class="num">151,779,060</td><td class="num">110,360,940</td><td><span class="cbar blue"><span class="track"><span style="width:57.9%"></span></span><span class="pv">57.9%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
-                  <tr><td>제2-2호</td><td>전자주주총회 도입 관련 변경</td><td><span class="ubadge secondary">특별결의</span></td><td class="num">210,236,280</td><td class="num">51,903,720</td><td><span class="cbar blue"><span class="track"><span style="width:80.2%"></span></span><span class="pv">80.2%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
-                  <tr><td>제2-3호</td><td>의결권 대리행사 수단 확대</td><td><span class="ubadge secondary">특별결의</span></td><td class="num">210,236,280</td><td class="num">51,903,720</td><td><span class="cbar blue"><span class="track"><span style="width:80.2%"></span></span><span class="pv">80.2%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
-                  <tr><td>제3-1호</td><td>집중투표 후보 4인 중 2인 선임의 건</td><td><span class="ubadge secondary">집중투표</span></td><td class="num" colspan="2" style="text-align:center;color:var(--muted-fg)">후보별 집계 · 선임예정 2인</td><td><span style="font-size:13px;color:#0a0a0a">예상 선임 김근수·진웅섭</span></td><td><span class="badge blue">집계중</span></td></tr>
-                  <tr><td>제3-2호</td><td>감사위원이 되는 사외이사 선임의 건</td><td><span class="ubadge secondary">보통결의</span></td><td class="num">208,663,440</td><td class="num">53,476,560</td><td><span class="cbar blue"><span class="track"><span style="width:79.6%"></span></span><span class="pv">79.6%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
+                  <tr><td>제1호</td><td>재무제표 승인의 건</td><td class="num">211,284,840</td><td class="num">50,855,160</td><td><span class="cbar blue"><span class="track"><span style="width:80.6%"></span></span><span class="pv">80.6%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
+                  <tr><td>제2-1호</td><td>집중투표제 배제 조항 삭제의 건</td><td class="num">151,779,060</td><td class="num">110,360,940</td><td><span class="cbar blue"><span class="track"><span style="width:57.9%"></span></span><span class="pv">57.9%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
+                  <tr><td>제2-2호</td><td>전자주주총회 도입 관련 변경</td><td class="num">210,236,280</td><td class="num">51,903,720</td><td><span class="cbar blue"><span class="track"><span style="width:80.2%"></span></span><span class="pv">80.2%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
+                  <tr><td>제2-3호</td><td>의결권 대리행사 수단 확대</td><td class="num">210,236,280</td><td class="num">51,903,720</td><td><span class="cbar blue"><span class="track"><span style="width:80.2%"></span></span><span class="pv">80.2%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
+                  <tr><td>제3-1호</td><td>집중투표 후보 4인 중 2인 선임의 건 <span class="ubadge secondary" style="margin-left:4px">집중투표</span></td><td class="num" colspan="2" style="text-align:center;color:var(--muted-fg)">후보별 집계 · 선임예정 2인</td><td><span style="font-size:13px;color:#0a0a0a">예상 선임 김근수·진웅섭</span></td><td><span class="badge blue">집계중</span></td></tr>
+                  <tr><td>제3-2호</td><td>감사위원이 되는 사외이사 선임의 건</td><td class="num">208,663,440</td><td class="num">53,476,560</td><td><span class="cbar blue"><span class="track"><span style="width:79.6%"></span></span><span class="pv">79.6%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
 
-        <!-- ===== 채널별 내역 ===== -->
-        <div class="vr-panel" data-vp="detail">
-          <div class="toolbar" style="margin-bottom:12px">
-            <div class="search"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input placeholder="주주명 또는 주주번호로 검색"></div>
-            <div style="font-size:12px;color:var(--muted-fg)">총 18,450명 · 262,140,000주</div>
-          </div>
-          <div class="tbl-wrap">
-            <table class="tbl">
-              <thead><tr><th>주주번호</th><th>주주명</th><th>구분</th><th>행사 채널</th><th class="num">행사 의결권</th><th>행사 시각</th><th style="width:90px">상태</th></tr></thead>
-              <tbody>
-                <tr><td>2025119002</td><td>K-홀딩스 주식회사</td><td><span class="ubadge secondary">법인</span></td><td>전자위임(국내)</td><td class="num">19,965,917주</td><td>03-22 10:14</td><td><span class="badge blue">집계중</span></td></tr>
-                <tr><td>2025119001</td><td>KVIDIA</td><td><span class="ubadge secondary">법인</span></td><td>서면위임(자사)</td><td class="num">19,961,925주</td><td>03-21 16:40</td><td><span class="badge gray">접수</span></td></tr>
-                <tr><td>800401-1******</td><td>나제한</td><td><span class="ubadge secondary">개인</span></td><td>전자투표(국내)</td><td class="num">19,963,921주</td><td>03-23 09:02</td><td><span class="badge blue">집계중</span></td></tr>
-                <tr><td>880411-1******</td><td>젠슨박</td><td><span class="ubadge secondary">개인</span></td><td>전자투표(국내)</td><td class="num">10,005,912주</td><td>03-23 21:37</td><td><span class="badge blue">집계중</span></td></tr>
-                <tr><td>600101-1******</td><td>이준호</td><td><span class="ubadge secondary">개인</span></td><td>전자위임(해외)</td><td class="num">6,017,919주</td><td>03-24 03:11</td><td><span class="badge blue">집계중</span></td></tr>
-                <tr><td>600101-1******</td><td>천재민</td><td><span class="ubadge secondary">개인</span></td><td>서면위임(타사)</td><td class="num">6,015,923주</td><td>03-20 13:55</td><td><span class="badge gray">접수</span></td></tr>
-                <tr><td>700201-2******</td><td>유은지</td><td><span class="ubadge secondary">개인</span></td><td>전자투표(국내)</td><td class="num">2,003,977주</td><td>03-25 08:48</td><td><span class="badge blue">집계중</span></td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
         <!-- ===== 의결권 권유대행 현황 ===== -->
         <div class="vr-panel" data-vp="solicit">
           <div class="sol-meta"><span>권유대행: IR큐더스</span><span class="vr-sep"></span><span>권유기간 2026-03-06 ~ 2026-03-19</span><span class="vr-sep"></span><span class="vr-dday">D-10</span><span style="flex:1"></span><button class="rst"><svg class="ic" viewBox="0 0 24 24"><path d="M3 2v6h6M3 13a9 9 0 1 0 3-7.7L3 8"/></svg>초기화</button></div>
