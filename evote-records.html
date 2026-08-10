@@ -94,6 +94,31 @@
   .btn-out{height:32px;padding:0 10px;background:#fff;border:1px solid #e5e5e5;border-radius:10px;font-size:14px;font-weight:500;color:#171717;cursor:pointer;font-family:inherit}
   .btn-dark{height:32px;padding:0 12px;background:#171717;border:none;border-radius:10px;font-size:14px;font-weight:500;color:#fafafa;cursor:pointer;font-family:inherit}
   .btn-dark:disabled{opacity:.5;cursor:not-allowed}
+
+  .evbar{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);margin-bottom:16px}
+  .evbar .evtabs{border-bottom:none;margin-bottom:0}
+  .hbtns{display:flex;align-items:center;gap:8px}
+  .tbtn{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:12px;font-weight:500;color:#171717;cursor:pointer;font-family:inherit}
+  .tbtn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+  .seg{display:inline-flex;background:#f5f5f5;border-radius:10px;padding:3px}
+  .segbtn{height:26px;padding:0 12px;border:none;background:none;border-radius:8px;font-size:13px;font-weight:500;color:#737373;cursor:pointer;font-family:inherit}
+  .segbtn.active{background:#fff;color:#0a0a0a;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+  .tgl-wrap{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#171717;cursor:pointer}
+  .tgl{width:28px;height:16px;border-radius:9999px;background:#e5e5e5;position:relative;flex:none;transition:background .15s}
+  .tgl.on{background:#171717}
+  .tgl::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left .15s}
+  .tgl.on::after{left:14px}
+  .ibtn2{width:32px;height:32px;border:1px solid var(--border);border-radius:8px;background:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:#171717}
+  .ibtn2 svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+  .dlbtn{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:12px;font-weight:500;color:#171717;cursor:pointer;font-family:inherit}
+  .dlbtn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+  .cvb{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:6px;background:#f4f4f5;font-size:12px;font-weight:500;color:#3f3f46;margin-left:6px}
+  table.tbl td.exp{cursor:pointer;user-select:none;white-space:nowrap}
+  table.tbl .caret{display:inline-block;width:12px;color:#737373;transition:transform .12s;font-size:11px}
+  table.tbl tr.open .caret{transform:rotate(90deg)}
+  table.tbl tr.child td{background:#fafafa}
+  table.tbl tr.child td.exp{padding-left:34px}
+  .val.blue{color:#0071f3}
 </style>
 </head>
 <body>
@@ -206,17 +231,20 @@
     </div>
     <div class="scroll">
       <div class="content" style="width:100%">
-        <!-- 상단 타이틀 + 파일 등록 -->
+        <!-- 상단 타이틀 + 확정하기 -->
         <div class="ev-head">
           <div class="page-title">전자투표/위임 내역</div>
-          <div class="ev-org"><span>전자투표관리기관</span><b>IR큐더스</b></div>
+          <div class="ev-org"><span>전자투표관리기관</span><b>한국예탁결제원</b></div>
           <span class="spacer"></span>
-          <button class="btn-primary" id="btnUpload"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>파일 등록</button>
+          <button class="btn-primary" id="btnConfirm"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>확정하기</button>
         </div>
 
         <!-- EMPTY 상태 -->
         <div id="evEmpty">
-          <div class="evtabs"><span class="evtab active">전자투표</span><span class="evtab">전자위임장</span></div>
+          <div class="evbar">
+            <div class="evtabs"><span class="evtab active">국내 주주</span><span class="evtab">해외 주주</span></div>
+            <div class="hbtns"><button class="tbtn js-upload"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>파일 등록</button></div>
+          </div>
           <div class="ev-empty">
             <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-dasharray="3 3"/><path d="M14 2v6h6"/></svg>
             <div class="e1">등록된 의안이 없습니다</div>
@@ -227,33 +255,62 @@
         <!-- FILLED 상태 -->
         <div id="evFilled" style="display:none">
           <div class="evk">
-            <div class="kc"><div class="lbl">전자투표 행사</div><div class="val">92,340,000주</div><div class="sub">15,200명 · 실시간 연동 중</div></div>
-            <div class="kc"><div class="lbl">전자위임장 행사</div><div class="val">48,600,000주</div><div class="sub">1,050명 · 확정</div></div>
-            <div class="kc"><div class="lbl">총 행사 의결권</div><div class="val">140,940,000주</div><div class="sub">발행주식총수 대비 29.6%</div></div>
-            <div class="kc"><div class="lbl">미확정(검증 대기)</div><div class="val orange">110,000주</div><div class="sub">필수 검증 로직 통과 대기</div></div>
+            <div class="kc"><div class="lbl">행사 의결권</div><div class="val">262,140,000주</div><div class="sub">발행주식총수 대비 55.0%</div></div>
+            <div class="kc"><div class="lbl">중복 의결권</div><div class="val">6,210,410주</div><div class="sub">자동 병합 대상</div></div>
+            <div class="kc"><div class="lbl">중복 미처리</div><div class="val orange">110,000주</div><div class="sub">수동 확인 필요</div></div>
+            <div class="kc"><div class="lbl">확정 의결권</div><div class="val blue">256,040,000주</div><div class="sub">중복 처리 완료 기준</div></div>
           </div>
-          <div class="evtabs"><span class="evtab active">전자투표</span><span class="evtab">전자위임장</span></div>
+          <div class="evbar">
+            <div class="evtabs"><span class="evtab active">국내 주주</span><span class="evtab">해외 주주</span></div>
+            <div class="hbtns">
+              <button class="tbtn"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>검증 정보</button>
+              <button class="tbtn js-upload"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>파일 등록</button>
+              <button class="tbtn"><svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>내역 삭제</button>
+            </div>
+          </div>
           <div class="toolbar" style="margin-bottom:12px">
-            <div class="search"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input placeholder="주주명 · 주주번호 검색"></div>
-            <button class="btn-soft" style="height:32px"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>다운로드</button>
+            <div class="seg" id="viewSeg">
+              <button class="segbtn active" data-view="agenda">의안 기준</button>
+              <button class="segbtn" data-view="holder">주주 기준</button>
+            </div>
+            <div class="hbtns">
+              <label class="tgl-wrap"><span class="tgl" data-sw></span>중복 수치 포함</label>
+              <button class="dlbtn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>다운로드</button>
+              <button class="ibtn2"><svg viewBox="0 0 24 24"><path d="M22 3H2l8 9.46V19l4 2v-8.54z"/></svg></button>
+              <button class="ibtn2"><svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+            </div>
           </div>
-          <div class="tbl-wrap">
+
+          <!-- 의안 기준 -->
+          <div class="tbl-wrap" id="viewAgenda">
             <table class="tbl">
-              <thead><tr><th>주주명</th><th>주주번호</th><th>주식종류</th><th class="num">보유주식</th><th class="num">찬성</th><th class="num">반대</th><th class="num">기권</th><th>구분</th></tr></thead>
+              <thead><tr><th>의안번호</th><th>의안명</th><th class="num">총행사가능의결권</th><th class="num">행사가능의결권</th><th class="num">행사의결권</th><th class="num">미행사의결권</th><th class="num">찬성</th><th class="num">반대</th><th class="num">기권</th><th class="num">중립</th></tr></thead>
               <tbody>
-                  <tr><td>김민수</td><td class="mut">680511-1******</td><td>보통주</td><td class="num">19,961,925</td><td class="num">19,961,925</td><td class="num" style="color:#a3a3a3">-</td><td class="num" style="color:#a3a3a3">-</td><td><span class="chip">전자투표</span></td></tr>
-                  <tr><td>이서연</td><td class="mut">701203-2******</td><td>보통주</td><td class="num">12,480,300</td><td class="num" style="color:#a3a3a3">-</td><td class="num">12,480,300</td><td class="num" style="color:#a3a3a3">-</td><td><span class="chip">전자위임</span></td></tr>
-                  <tr><td>박준호</td><td class="mut">800401-1******</td><td>보통주</td><td class="num">9,963,921</td><td class="num">9,963,921</td><td class="num" style="color:#a3a3a3">-</td><td class="num" style="color:#a3a3a3">-</td><td><span class="chip">전자투표</span></td></tr>
-                  <tr><td>정하늘</td><td class="mut">880411-1******</td><td>보통주</td><td class="num">8,005,912</td><td class="num">8,005,912</td><td class="num" style="color:#a3a3a3">-</td><td class="num" style="color:#a3a3a3">-</td><td><span class="chip">전자투표</span></td></tr>
-                  <tr><td>최영수</td><td class="mut">600101-1******</td><td>보통주</td><td class="num">6,017,919</td><td class="num" style="color:#a3a3a3">-</td><td class="num" style="color:#a3a3a3">-</td><td class="num">6,017,919</td><td><span class="chip">전자위임</span></td></tr>
-                  <tr><td>한지우</td><td class="mut">640922-1******</td><td>보통주</td><td class="num">6,015,923</td><td class="num">6,015,923</td><td class="num" style="color:#a3a3a3">-</td><td class="num" style="color:#a3a3a3">-</td><td><span class="chip">전자투표</span></td></tr>
-                  <tr><td>오세훈</td><td class="mut">770714-1******</td><td>보통주</td><td class="num">5,240,110</td><td class="num">5,240,110</td><td class="num" style="color:#a3a3a3">-</td><td class="num" style="color:#a3a3a3">-</td><td><span class="chip">전자투표</span></td></tr>
-                  <tr><td>임채원</td><td class="mut">830417-2******</td><td>보통주</td><td class="num">4,120,880</td><td class="num" style="color:#a3a3a3">-</td><td class="num">4,120,880</td><td class="num" style="color:#a3a3a3">-</td><td><span class="chip">전자위임</span></td></tr>
+                  <tr><td>제1호</td><td>재무제표 승인의 건</td><td class="num">476,211,964</td><td class="num">470,001,554</td><td class="num">262,140,000</td><td class="num">207,861,554</td><td class="num">244,900,000</td><td class="num">12,300,000</td><td class="num">3,200,000</td><td class="num">1,740,000</td></tr>
+                  <tr><td>제2-1호</td><td>정관 일부 변경의 건</td><td class="num">476,211,964</td><td class="num">470,001,554</td><td class="num">262,140,000</td><td class="num">207,861,554</td><td class="num">244,900,000</td><td class="num">12,300,000</td><td class="num">3,200,000</td><td class="num">1,740,000</td></tr>
+                  <tr><td>제2-2호</td><td>감사위원 분리선임의 건</td><td class="num">476,211,964</td><td class="num">470,001,554</td><td class="num">262,140,000</td><td class="num">207,861,554</td><td class="num">244,900,000</td><td class="num">12,300,000</td><td class="num">3,200,000</td><td class="num">1,740,000</td></tr>
+                  <tr><td>제2-3호</td><td>이사 보수한도 승인의 건</td><td class="num">476,211,964</td><td class="num">470,001,554</td><td class="num">262,140,000</td><td class="num">207,861,554</td><td class="num">244,900,000</td><td class="num">12,300,000</td><td class="num">3,200,000</td><td class="num">1,740,000</td></tr>
+                  <tr><td>제3-1호</td><td>이사 선임의 건 <span class="cvb">집중투표</span></td><td class="num">952,423,928</td><td class="num">940,003,108</td><td class="num">524,280,000</td><td class="num">415,723,108</td><td class="num" colspan="4" style="text-align:center;color:var(--muted-fg)">후보별 집계 · 선임 2인 (김근수·진웅섭)</td></tr>
+                  <tr><td>제3-2호</td><td>감사위원 선임의 건</td><td class="num">476,211,964</td><td class="num">470,001,554</td><td class="num">262,140,000</td><td class="num">207,861,554</td><td class="num">240,100,000</td><td class="num">15,900,000</td><td class="num">4,300,000</td><td class="num">1,840,000</td></tr>
               </tbody>
             </table>
-            <div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;padding:10px 16px;background:#fafafa;border-top:1px solid var(--border);font-size:12px;color:var(--muted-fg)">
-              <span>Total: 16,250</span><span>1 / 2,032</span>
-            </div>
+          </div>
+
+          <!-- 주주 기준 -->
+          <div class="tbl-wrap" id="viewHolder" style="display:none">
+            <table class="tbl">
+              <thead><tr><th>투표권자</th><th>주주명</th><th>행사방식</th><th class="num">행사가능의결권</th><th class="num">미행사의결권</th><th class="num">찬성</th><th class="num">반대</th><th class="num">집중투표 주식수</th></tr></thead>
+              <tbody>
+                  <tr class="grp" data-grp="nps"><td class="exp"><span class="caret">▶</span> 국민연금공단 <span class="cvb">통합</span></td><td>3개 기관</td><td>전자투표</td><td class="num">45,200,000</td><td class="num">0</td><td class="num">45,200,000</td><td class="num" style="color:#a3a3a3">-</td><td class="num">2,400,000</td></tr>
+                  <tr class="child" data-child="nps" style="display:none"><td></td><td>미래에셋자산운용</td><td>전자투표</td><td class="num">24,000,000</td><td class="num">0</td><td class="num">24,000,000</td><td class="num" style="color:#a3a3a3">-</td><td class="num">1,200,000</td></tr>
+                  <tr class="child" data-child="nps" style="display:none"><td></td><td>삼성자산운용</td><td>전자투표</td><td class="num">21,200,000</td><td class="num">0</td><td class="num">21,200,000</td><td class="num" style="color:#a3a3a3">-</td><td class="num">1,200,000</td></tr>
+                  <tr><td>김민수</td><td>680511-1******</td><td>전자투표</td><td class="num">19,961,925</td><td class="num">0</td><td class="num">19,961,925</td><td class="num" style="color:#a3a3a3">-</td><td class="num">998,096</td></tr>
+                  <tr><td>이서연</td><td>701203-2******</td><td>전자위임장</td><td class="num">12,480,300</td><td class="num">0</td><td class="num" style="color:#a3a3a3">-</td><td class="num">12,480,300</td><td class="num" style="color:#a3a3a3">-</td></tr>
+                  <tr><td>박준호</td><td>800401-1******</td><td>전자투표</td><td class="num">9,963,921</td><td class="num">0</td><td class="num">9,963,921</td><td class="num" style="color:#a3a3a3">-</td><td class="num">498,196</td></tr>
+                  <tr><td>정하늘</td><td>880411-1******</td><td>전자투표</td><td class="num">8,005,912</td><td class="num">8,005,912</td><td class="num" style="color:#a3a3a3">-</td><td class="num" style="color:#a3a3a3">-</td><td class="num" style="color:#a3a3a3">-</td></tr>
+                  <tr><td>최영수</td><td>600101-1******</td><td>전자위임장</td><td class="num">6,017,919</td><td class="num">0</td><td class="num">6,017,919</td><td class="num" style="color:#a3a3a3">-</td><td class="num" style="color:#a3a3a3">-</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -268,7 +325,7 @@
             <div class="dlg-c">
               <div class="fld">
                 <div class="lb">전자투표관리기관</div>
-                <div class="sel"><span class="ph">IR큐더스</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
+                <div class="sel"><span class="ph">한국예탁결제원</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
               </div>
               <div class="fld">
                 <div class="upl-lb">엑셀 파일 업로드</div>
@@ -355,7 +412,7 @@
     function reset(){ drop.style.display='flex'; att.style.display='none'; submit.disabled=true; }
     function closeDlg(){ ov.classList.remove('show'); reset(); }
     function attach(){ drop.style.display='none'; att.style.display='flex'; submit.disabled=false; }
-    document.getElementById('btnUpload').addEventListener('click', openDlg);
+    document.querySelectorAll('.js-upload').forEach(function(b){b.addEventListener('click', openDlg);});
     document.getElementById('dlgX').addEventListener('click', closeDlg);
     document.getElementById('dlgCancel').addEventListener('click', closeDlg);
     ov.addEventListener('click', function(e){ if(e.target===ov) closeDlg(); });
@@ -371,6 +428,26 @@
     document.querySelectorAll('.evtabs').forEach(function(g){
       g.querySelectorAll('.evtab').forEach(function(t){
         t.addEventListener('click', function(){ g.querySelectorAll('.evtab').forEach(function(x){x.classList.toggle('active',x===t);}); });
+      });
+    });
+  })();
+
+  // 의안/주주 기준 뷰 전환 + 통합기관 접기
+  (function(){
+    var seg=document.getElementById('viewSeg'); if(!seg) return;
+    seg.querySelectorAll('.segbtn').forEach(function(b){
+      b.addEventListener('click',function(){
+        seg.querySelectorAll('.segbtn').forEach(function(x){x.classList.toggle('active',x===b);});
+        var v=b.dataset.view;
+        document.getElementById('viewAgenda').style.display=(v==='agenda')?'block':'none';
+        document.getElementById('viewHolder').style.display=(v==='holder')?'block':'none';
+      });
+    });
+    document.querySelectorAll('#viewHolder tr.grp .exp').forEach(function(td){
+      td.addEventListener('click',function(){
+        var tr=td.closest('tr'); var g=tr.dataset.grp; tr.classList.toggle('open');
+        var on=tr.classList.contains('open');
+        document.querySelectorAll('#viewHolder tr.child[data-child="'+g+'"]').forEach(function(c){ c.style.display=on?'table-row':'none'; });
       });
     });
   })();
