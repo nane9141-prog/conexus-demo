@@ -189,7 +189,8 @@
   .rbadge svg{width:12px;height:12px;fill:currentColor}
   .rbadge.pass{background:#DBEAFE;color:#1D4ED8}
   .rbadge.fail{background:#FEE2E2;color:#DC2626}
-  .rbadge.counting{background:#FEF9C3;color:#A16207}
+  .rbadge.counting{background:#FEF5E7;color:#EA580C}
+  .rbadge .cdot{width:6px;height:6px;border-radius:50%;background:currentColor}
   .sbadge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:#737373}
   .sbadge .d{width:6px;height:6px;border-radius:50%;background:#a3a3a3}
   .sbadge.prog{color:#0066df}.sbadge.prog .d{background:#0071f3}
@@ -496,11 +497,12 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   var STAGES=[
     {cls:'',name:'의안 상정 대기중',right:[{t:'의안 상정',c:'',go:1}],badge:'expect'},
     {cls:'',name:'의안 상정 중',right:[{t:'투표 시작',c:'dark',go:2}],badge:'expect'},
-    {cls:'ia-voting',name:'투표 진행 중',red:1,sub:'출석·미투표 주주',sel:1,timer:'12:37',right:[{t:'투표 종료',c:'red',go:3}],badge:'expect'},
-    {cls:'ia-fill',name:'표결 집계중',sub:'출석·미투표 주주',sel:1,timer:'12:37',right:[{t:'투표 재개',c:'play',go:2},{t:'표결 마감',c:'dark',go:4}],badge:'counting'},
-    {cls:'ia-wait',name:'표결 마감',sub:'출석 · 미투표',selStatic:'기권 처리',timer:'12:37',right:[{t:'',c:'dots'}],badge:'pass'}
+    {cls:'ia-voting',name:'투표 진행 중',red:1,sub:'출석·미투표 주주',sel:1,timer:1,right:[{t:'투표 종료',c:'red',go:3}],badge:'expect'},
+    {cls:'ia-fill',name:'표결 집계중',sub:'출석·미투표 주주',sel:1,timer:1,right:[{t:'투표 재개',c:'play',go:2},{t:'표결 마감',c:'dark',go:4}],badge:'counting'},
+    {cls:'ia-wait',name:'표결 마감',sub:'출석 · 미투표',selStatic:'기권 처리',timer:1,right:[{t:'',c:'dots'}],badge:'pass'}
   ];
-  var stage=0, el=document.getElementById('agStage'); if(!el) return;
+  var stage=0, voteSec=0, ticker=null, el=document.getElementById('agStage'); if(!el) return;
+  function fmt(x){var m=Math.floor(x/60),ss=x%60;return (m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;}
   function render(){
     var st=STAGES[stage];
     var l='<div class="iarow-l"><span class="ianame'+(st.red?' red':'')+'">'+st.name+'</span>';
@@ -509,7 +511,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     else if(st.selStatic) l+='<span class="iastat">'+st.selStatic+'</span>';
     l+='</div>';
     var r='<div class="iarow-r">';
-    if(st.timer) r+='<span class="iatimer">'+st.timer+'</span>';
+    if(st.timer) r+='<span class="iatimer" id="vTimer">'+fmt(voteSec)+'</span>';
     st.right.forEach(function(b){
       if(b.c==='dots') r+='<button class="iabtn ic">'+DOTS+'</button>';
       else if(b.c==='play') r+='<button class="iabtn" data-go="'+b.go+'">'+PLAY+b.t+'</button>';
@@ -519,8 +521,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     el.className='iarow'+(st.cls?' '+st.cls:'');
     el.innerHTML=l+r;
     el.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click',function(){ stage=+b.getAttribute('data-go'); render(); }); });
+    if(stage===2){ if(!ticker){ ticker=setInterval(function(){ voteSec++; var t=document.getElementById('vTimer'); if(t) t.textContent=fmt(voteSec); },1000); } }
+    else if(ticker){ clearInterval(ticker); ticker=null; }
     var gr=document.getElementById('gBadgeRow');
-    if(gr){ var B={expect:'<span class="rbadge">가결 예상</span>',counting:'<span class="rbadge counting">집계중</span>',pass:'<span class="passmark">'+CK+'가결</span>'}; gr.innerHTML=B[st.badge]; }
+    if(gr){ var B={expect:'<span class="rbadge">가결 예상</span>',counting:'<span class="rbadge counting"><span class="cdot"></span>집계중</span>',pass:'<span class="passmark">'+CK+'가결</span>'}; gr.innerHTML=B[st.badge]; gr.style.justifyContent=(st.badge==='pass')?'center':'flex-end'; }
   }
   render();
 })();
