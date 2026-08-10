@@ -78,7 +78,92 @@
   .vr-panel{display:none}
   .vr-panel.active{display:block}
   @media(max-width:1000px){.vr-kpi{grid-template-columns:repeat(2,1fr)}.vr-grid2{grid-template-columns:1fr}}
+
+  /* 권유대행 현황 */
+  .sol-meta{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted-fg);margin-bottom:12px}
+  .sol-meta .rst{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border:1px solid var(--border);border-radius:8px;background:#fff;color:#171717;font-weight:500;cursor:pointer}
+  .sol-meta .rst svg{width:12px;height:12px}
+  .card .cardttl{font-size:16px;font-weight:600;color:#0a0a0a}
+  .card .ttl-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+  .chart-box{position:relative;height:300px;width:100%}
+  .sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .sim-list{display:flex;flex-direction:column;gap:12px}
+  .sim-row{display:flex;align-items:center;gap:8px;font-size:14px;color:#0a0a0a}
+  .sim-row .sq{width:12px;height:12px;border-radius:2px;flex:none}
+  .sim-row .rv{margin-left:auto;font-weight:600}
+  .sim-sep{height:1px;background:var(--border);margin:2px 0}
+  .sim-note{font-size:12px;color:var(--muted-fg);margin-top:4px}
+  .sim-info{display:flex;align-items:center;gap:12px;background:#ebf4ff;border-radius:8px;padding:10px}
+  .sim-info .ic-box{width:32px;height:32px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+  .sim-info .ic-box svg{width:16px;height:16px;color:#0071f3;fill:none;stroke:currentColor;stroke-width:1.6}
+  .sim-info .t{font-size:14px;font-weight:600;color:#0071f3}
+  .sim-info .d{font-size:12px;color:var(--muted-fg);margin-top:2px}
+  .sim-bar{display:flex;height:28px;border-radius:6px;overflow:hidden;background:#82bbff;margin:14px 0}
+  .sim-bar span{display:block;height:100%;border-right:1px solid #fff}
+  .sim-box{background:#f5f5f5;border:1px solid var(--border);border-radius:8px;padding:16px;margin-top:6px}
+  .sim-box .in-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+  .sim-box .in-row .lab{font-size:14px;color:#0a0a0a}
+  .sim-box .in-row .val{font-size:14px;font-weight:600;color:#171717;border:1px solid #a3a3a3;border-radius:8px;padding:4px 10px;min-width:150px;text-align:right}
+  .sim-box input[type=range]{width:100%;accent-color:#171717}
+  .sim-box .scale{display:flex;justify-content:space-between;font-size:12px;color:var(--muted-fg);margin-top:4px}
+  .op{display:inline-flex;align-items:center;justify-content:center;height:20px;padding:2px 6px;border-radius:6px;font-size:12px;font-weight:500;color:#171717}
+  .op.for{background:#ebf4ff}
+  .op.against{background:#ffedd5}
+  @media(max-width:1000px){.sim-grid{grid-template-columns:1fr}}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">  // 권유대행: 콤보 차트 + 슬라이더
+  (function(){
+    var chart=null;
+    function initChart(){
+      if(chart || typeof Chart==='undefined') return;
+      var cv=document.getElementById('irkChart'); if(!cv) return;
+      var labels=['3/13','3/14','3/15','3/16','3/17','3/18','3/19'];
+      var daily=[18000000,24000000,20000000,30000000,26000000,12000000,12800000];
+      var cum=[]; var run=0; daily.forEach(function(d){run+=d;cum.push(run);});
+      chart=new Chart(cv.getContext('2d'),{
+        data:{labels:labels,datasets:[
+          {type:'bar',label:'일일 수집',data:daily,backgroundColor:'#d4d4d4',borderRadius:6,yAxisID:'y',order:2},
+          {type:'line',label:'누적 수집',data:cum,borderColor:'#171717',backgroundColor:'#171717',borderWidth:2,tension:.3,pointRadius:3,yAxisID:'y1',order:1}
+        ]},
+        options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+          plugins:{legend:{position:'top',labels:{boxWidth:12,font:{size:12}}},
+            tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toLocaleString()+'주';}}}},
+          scales:{
+            y:{position:'left',ticks:{callback:function(v){return (v/1000000)+'M';},font:{size:11}},grid:{color:'#f0f0f0'}},
+            y1:{position:'right',ticks:{callback:function(v){return (v/1000000)+'M';},font:{size:11}},grid:{drawOnChartArea:false}},
+            x:{grid:{display:false},ticks:{font:{size:11}}}
+          }}
+      });
+    }
+    document.querySelectorAll('.vr-tab').forEach(function(t){
+      if(t.dataset.vt==='solicit') t.addEventListener('click',function(){ setTimeout(initChart,60); });
+    });
+    // slider
+    var base=142800000+78200000+43000000; // 264,000,000
+    var target=160000000;
+    var sl=document.getElementById('simSlider');
+    function fmt(n){return n.toLocaleString('en-US');}
+    function upd(){
+      var add=parseInt(sl.value,10)||0;
+      var total=base+add;
+      document.getElementById('simCompany').textContent=fmt(add);
+      document.getElementById('simVal').textContent=fmt(add);
+      document.getElementById('simTotal').textContent=fmt(total);
+      var diff=total-target;
+      var st=document.getElementById('simStatT'), sd=document.getElementById('simStatD'), info=st.closest('.sim-info');
+      if(diff>=0){ st.textContent='기준 달성 · '+fmt(diff)+'주 초과'; sd.textContent='현재 확보로 의결정족수 목표('+fmt(target)+'주)를 충족합니다.'; if(info){info.style.background='#ebf4ff';st.style.color='#0071f3';} }
+      else { st.textContent='기준 미달 · '+fmt(-diff)+'주 부족'; sd.textContent='의결정족수 목표('+fmt(target)+'주) 달성까지 추가 확보가 필요합니다.'; if(info){info.style.background='#fef2f2';st.style.color='#e11d48';} }
+      // stacked bar widths (relative to target*1.8 for headroom)
+      var scale=Math.max(total,target)*1.05;
+      var seg=[[142800000,'#171717'],[78200000,'#71717a'],[43000000,'#82bbff'],[add,'#d4d4d8']];
+      var bar=document.getElementById('simBar'); bar.innerHTML='';
+      seg.forEach(function(p){ if(p[0]<=0) return; var e=document.createElement('span'); e.style.width=(p[0]/scale*100)+'%'; e.style.background=p[1]; bar.appendChild(e); });
+    }
+    if(sl){ sl.addEventListener('input',upd); upd(); }
+    var rst=document.querySelector('.vr-panel[data-vp="solicit"] .rst');
+    if(rst&&sl){ rst.addEventListener('click',function(){ sl.value=0; upd(); }); }
+  })();
+</script>
 </head>
 <body>
 <div class="app" id="app">
@@ -196,6 +281,7 @@
           <div class="vr-tabs">
             <button class="vr-tab active" data-vt="status">현황</button>
             <button class="vr-tab" data-vt="detail">채널별 내역</button>
+            <button class="vr-tab" data-vt="solicit">의결권 권유대행 현황</button>
           </div>
           <div class="vr-meta"><span class="vr-hint">발행주식총수 476,211,964주 · 주주 650,000명</span><span class="vr-sep"></span><span class="vr-dday">D-10</span></div>
         </div>
@@ -289,6 +375,72 @@
                 <tr><td>700201-2******</td><td>유은지</td><td><span class="ubadge secondary">개인</span></td><td>전자투표(국내)</td><td class="num">2,003,977주</td><td>03-25 08:48</td><td><span class="badge blue">집계중</span></td></tr>
               </tbody>
             </table>
+          </div>
+        </div>
+        <!-- ===== 의결권 권유대행 현황 ===== -->
+        <div class="vr-panel" data-vp="solicit">
+          <div class="sol-meta"><span>권유대행: IR큐더스</span><span class="vr-sep"></span><span>권유기간 2026-03-06 ~ 2026-03-19</span><span class="vr-sep"></span><span class="vr-dday">D-10</span><span style="flex:1"></span><button class="rst"><svg class="ic" viewBox="0 0 24 24"><path d="M3 2v6h6M3 13a9 9 0 1 0 3-7.7L3 8"/></svg>초기화</button></div>
+
+          <div class="vr-kpi" style="margin-bottom:16px">
+            <div class="kcard"><div class="kk">누적 확보 (IR큐더스)</div><div class="kv">142,800,000<span class="unit">주</span></div><div class="kd">기준 목표의 89.3% 달성</div></div>
+            <div class="kcard"><div class="kk">의결정족수 기준 목표</div><div class="kv">160,000,000<span class="unit">주</span></div><div class="kd">2026-03-19 마감</div></div>
+            <div class="kcard"><div class="kk">확보 주주수</div><div class="kv">8,420<span class="unit">명</span></div><div class="kd">전체 650,000명</div></div>
+            <div class="kcard"><div class="kk">일평균 확보</div><div class="kv">20,400,000<span class="unit">주</span></div><div class="kd" style="color:#ea580c">최근 7일 기준</div></div>
+          </div>
+
+          <div class="card" style="margin-bottom:16px">
+            <div class="ttl-row"><span class="cardttl">IR큐더스 수집 현황</span><span style="font-size:12px;color:var(--muted-fg)">2026-03-13 ~ 2026-03-19</span></div>
+            <div class="chart-box"><canvas id="irkChart"></canvas></div>
+          </div>
+
+          <div class="card" style="margin-bottom:16px">
+            <div class="cardttl" style="margin-bottom:14px">목표 시뮬레이션</div>
+            <div class="sim-grid">
+              <div>
+                <div class="sim-list">
+                  <div class="sim-row"><span class="sq" style="background:#171717"></span>IR큐더스 위임<span class="rv" id="simIrk">142,800,000</span></div>
+                  <div class="sim-row"><span class="sq" style="background:#71717a"></span>자사 서면위임<span class="rv">78,200,000</span></div>
+                  <div class="sim-row"><span class="sq" style="background:#82bbff"></span>기타 기관<span class="rv">43,000,000</span></div>
+                  <div class="sim-row"><span class="sq" style="background:#d4d4d8"></span>회사 추가 확보<span class="rv" id="simCompany">0</span></div>
+                  <div class="sim-sep"></div>
+                  <div class="sim-row" style="font-weight:600">합계 확보<span class="rv" id="simTotal">264,000,000</span></div>
+                </div>
+                <div class="sim-note">※ 정확한 데이터 확인을 위해 회사 확보 주식을 입력·조정해 주세요.</div>
+              </div>
+              <div>
+                <div class="sim-info">
+                  <div class="ic-box"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+                  <div><div class="t" id="simStatT">기준 달성 · 104,000,000주 초과</div><div class="d" id="simStatD">현재 확보로 의결정족수 목표(160,000,000주)를 충족합니다.</div></div>
+                </div>
+                <div class="sim-bar" id="simBar"></div>
+                <div class="sim-box">
+                  <div class="in-row"><span class="lab">회사 추가 확보 주식</span><span class="val" id="simVal">0</span></div>
+                  <input type="range" id="simSlider" min="0" max="20000000" step="100000" value="0">
+                  <div class="scale"><span>0</span><span>20,000,000</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:0">
+            <div class="sec-head"><div class="h">실시간 주주 확보 현황</div><div class="d">권유대행으로 확보된 주주별 사전 의결권 행사 방향입니다. 주주명은 개인정보 보호를 위해 마스킹 처리됩니다.</div></div>
+            <div class="tbl-wrap" style="border:none;border-top:1px solid var(--border);border-radius:0">
+              <table class="tbl">
+                <thead><tr><th>주주명</th><th>주주번호</th><th class="num">보유주식</th><th>확보경로</th><th class="c">제1호</th><th class="c">제2-1호</th><th class="c">제2-2호</th><th class="c">제2-3호</th><th class="c">제3-2호</th></tr></thead>
+                <tbody>
+                <tr><td>김*수</td><td class="mut">680511-1******</td><td class="num">19,961,925주</td><td>IR큐더스</td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td></tr>
+                <tr><td>진*섭</td><td class="mut">701203-1******</td><td class="num">12,480,300주</td><td>IR큐더스</td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td></tr>
+                <tr><td>나*한</td><td class="mut">800401-1******</td><td class="num">9,963,921주</td><td>자사 위임</td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op against">반</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td></tr>
+                <tr><td>젠*박</td><td class="mut">880411-1******</td><td class="num">8,005,912주</td><td>IR큐더스</td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op against">반</span></td></tr>
+                <tr><td>이*호</td><td class="mut">600101-1******</td><td class="num">6,017,919주</td><td>자사 위임</td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td></tr>
+                <tr><td>천*민</td><td class="mut">640922-1******</td><td class="num">6,015,923주</td><td>기타 기관</td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op against">반</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td></tr>
+                <tr><td>박*호</td><td class="mut">770714-1******</td><td class="num">5,240,110주</td><td>IR큐더스</td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td></tr>
+                <tr><td>남*일</td><td class="mut">830417-1******</td><td class="num">4,120,880주</td><td>기타 기관</td><td class="c"><span class="op against">반</span></td><td class="c"><span class="op against">반</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td></tr>
+                <tr><td>유*지</td><td class="mut">700201-2******</td><td class="num">3,003,977주</td><td>자사 위임</td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op for">찬</span></td></tr>
+                <tr><td>박*화</td><td class="mut">910330-2******</td><td class="num">2,510,440주</td><td>IR큐더스</td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op against">반</span></td><td class="c"><span class="op against">반</span></td><td class="c"><span class="op for">찬</span></td><td class="c"><span class="op against">반</span></td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
