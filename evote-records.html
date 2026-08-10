@@ -128,6 +128,9 @@
   #viewHolder .tbl-scroll,#viewHolder{overflow-x:auto}
   table.tbl td.num,table.tbl th.num{text-align:right}
   .pgfoot{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-top:1px solid var(--border);background:#fafafa;font-size:12px;color:var(--muted-fg)}
+  .tbl-wrap.novot tbody{display:none}
+  .pg-empty{display:none;padding:48px 16px;text-align:center;color:var(--muted-fg);font-size:14px}
+  .tbl-wrap.novot .pg-empty{display:block}
   .pgtot b{color:#0a0a0a}
   .pgctl{display:flex;align-items:center;gap:8px}
   .pgctl button{width:24px;height:24px;border:1px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;font-size:14px;color:#171717;line-height:1}
@@ -325,10 +328,10 @@
             </div>
           </div>
           <div class="evk">
-            <div class="kc"><div class="lbl">행사 의결권</div><div class="val">262,140,000주</div><div class="sub">발행주식총수 대비 55.0%</div></div>
-            <div class="kc"><div class="lbl">중복 의결권</div><div class="val">6,210,410주</div><div class="sub">자동 병합 대상</div></div>
-            <div class="kc"><div class="lbl">중복 미처리</div><div class="val orange">110,000주</div><div class="sub">수동 확인 필요</div></div>
-            <div class="kc"><div class="lbl">확정 의결권</div><div class="val blue">256,040,000주</div><div class="sub">중복 처리 완료 기준</div></div>
+            <div class="kc"><div class="lbl">행사 의결권</div><div class="val" id="kpiEx">150,000,000주</div><div class="sub" id="kpiExSub">14,000명 · 발행주식총수 대비 31.5%</div></div>
+            <div class="kc"><div class="lbl">중복 의결권</div><div class="val" id="kpiDup">3,150,000주</div><div class="sub">자동 병합 대상</div></div>
+            <div class="kc"><div class="lbl">중복 미처리</div><div class="val orange" id="kpiDupUn">105,000주</div><div class="sub">수동 확인 필요</div></div>
+            <div class="kc"><div class="lbl">확정 의결권</div><div class="val blue" id="kpiConf">149,895,000주</div><div class="sub">중복 처리 완료 기준</div></div>
           </div>
           <div class="toolbar" style="margin-bottom:12px">
             <div class="seg" id="viewSeg">
@@ -362,6 +365,7 @@
                   <tr><td>제3-2호</td><td>감사위원이 되는 사외이사 선임의 건</td><td class="num">476,211,964</td><td class="num">300,000,000</td><td class="num">300,000,000</td><td class="num">176,211,964</td><td class="num">238,800,000</td><td class="num">61,200,000</td><td class="num">0</td><td class="num">0</td></tr>
               </tbody>
             </table>
+            <div class="pg-empty">표시할 데이터가 없습니다</div>
           </div>
 
           <!-- 주주 기준 -->
@@ -412,6 +416,7 @@
                   <tr><td>6805138</td><td>오지환</td><td class="c">전자위임</td><td class="num">115,000</td><td class="num"><span class="mbar"></span>0</td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
               </tbody>
             </table>
+            <div class="pg-empty">표시할 데이터가 없습니다</div>
             <div class="pgfoot">
               <span class="pgtot">총 <b id="pgTotal">0</b>명 · <b id="pgShares">0</b>주</span>
               <div class="pgctl"><button id="pgPrev" aria-label="이전">‹</button><span id="pgInd">1 / 1</span><button id="pgNext" aria-label="다음">›</button></div>
@@ -665,11 +670,28 @@
     prev.addEventListener('click',function(){ if(page>1){page--;apply();} });
     next.addEventListener('click',function(){ if(page<pages){page++;apply();} });
     wrap.querySelectorAll('tr.grp .exp').forEach(function(td){ td.addEventListener('click',function(){ setTimeout(apply,0); }); });
+    window.pgApply=apply;
     apply();
   })();
-  // 탭별 데이터 수(SSOT) → 페이지네이션 합계
+  // 탭별 데이터 수(SSOT) → KPI · 페이지네이션 · 빈 상태
   (function(){
-    function setCnt(el){var t=document.getElementById('pgTotal'),sh=document.getElementById('pgShares');if(!t||!el)return;if(el.dataset.cnt)t.textContent=el.dataset.cnt;if(sh&&el.dataset.shr)sh.textContent=el.dataset.shr;}
+    var TOTAL=476211964;
+    function num(x){return parseInt((x||'0').replace(/,/g,''),10)||0;}
+    function fmt(n){return n.toLocaleString('en-US');}
+    function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+    function setCnt(el){
+      if(!el) return;
+      var cnt=el.dataset.cnt||'0', shr=num(el.dataset.shr);
+      set('pgTotal',cnt); set('pgShares',fmt(shr));
+      var dup=Math.round(shr*0.021), dupUn=Math.round(shr*0.0007), conf=shr-dupUn;
+      var pct=shr?(shr/TOTAL*100).toFixed(1):'0.0';
+      set('kpiEx',fmt(shr)+'주'); set('kpiExSub',cnt+'명 · 발행주식총수 대비 '+pct+'%');
+      set('kpiDup',fmt(dup)+'주'); set('kpiDupUn',fmt(dupUn)+'주'); set('kpiConf',fmt(conf)+'주');
+      var empty=(shr===0);
+      ['viewAgenda','viewHolder'].forEach(function(id){var w=document.getElementById(id);if(w)w.classList.toggle('novot',empty);});
+      if(empty){ set('pgInd','0 / 0'); var p=document.getElementById('pgPrev'),n=document.getElementById('pgNext'); if(p)p.disabled=true; if(n)n.disabled=true; }
+      else if(window.pgApply){ window.pgApply(); }
+    }
     document.querySelectorAll('.evtab[data-cnt]').forEach(function(t){t.addEventListener('click',function(){setCnt(t);});});
     var act=document.querySelector('#evFilled .evtab.active[data-cnt]'); if(act) setCnt(act);
   })();
