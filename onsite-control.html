@@ -104,8 +104,8 @@
   .qbtn.dark{background:#171717;border-color:#171717;color:#fff}
   .qbtn:hover{background:#fafafa}.qbtn.dark:hover{background:#000}
   /* 현황 */
-  .nowgrid{display:grid;grid-template-columns:1.4fr 1fr;gap:12px}
-  @media(max-width:1100px){.nowgrid{grid-template-columns:1fr}}
+  .nowgrid3{display:grid;grid-template-columns:1fr 2fr 1fr;gap:8px;align-items:start}
+  @media(max-width:1100px){.nowgrid3{grid-template-columns:1fr}}
   .ncard{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px}
   .ncard h3{margin:0 0 12px;font-size:14px;font-weight:600;color:#0a0a0a}
   .agrow{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #f0f0f0}
@@ -120,6 +120,27 @@
   .mb{flex:1;text-align:center;background:#fafafa;border:1px solid var(--border);border-radius:8px;padding:8px 4px}
   .mb .n{font-size:16px;font-weight:700;color:#0a0a0a}
   .mb .l{font-size:11px;color:#737373;margin-top:2px}
+  .apanel{display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 1px 2px rgba(0,0,0,.05);overflow:hidden}
+  .apanel-h{padding:11px 12px;font-size:14px;font-weight:600;color:#0a0a0a;border-bottom:1px solid var(--border)}
+  .apanel-ph{padding:24px 12px;font-size:13px;color:#a3a3a3;text-align:center;line-height:1.6}
+  .arow{padding:12px;border-top:1px solid #eee;display:flex;flex-direction:column;gap:8px}
+  #agTree>.arow:first-child{border-top:none}
+  .acat{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .ano{font-size:12px;font-weight:500;color:#737373}
+  .anm{font-size:12px;font-weight:500;color:#0a0a0a}
+  .atag{font-size:11px;font-weight:600;color:#9333ea}
+  .astatus{display:flex;align-items:center;justify-content:space-between;gap:4px}
+  .abadge{display:inline-flex;align-items:center;gap:2px;height:20px;padding:0 6px;border-radius:6px;font-size:12px;font-weight:500}
+  .abadge svg{width:12px;height:12px}
+  .abadge.pass{background:#EBF4FF;color:#0a0a0a}.abadge.pass svg{fill:#0071f3;stroke:none}
+  .abadge.fail{background:#fef2f2;color:#dc2626}.abadge.fail svg{fill:none;stroke:#dc2626;stroke-width:2.4;stroke-linecap:round}
+  .astbadge{display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 6px;border-radius:6px;font-size:12px;font-weight:500;color:#525252}
+  .astbadge .d{width:6px;height:6px;border-radius:50%;background:#525252}
+  .astbadge.wait{opacity:.5}
+  .astbadge.prog{color:#0066df;background:#eff6ff}.astbadge.prog .d{background:#0071f3}
+  .asub{margin-top:8px;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+  .achild{padding:10px 12px;border-top:1px solid #f0f0f0;display:flex;flex-direction:column;gap:8px}
+  .asub>.achild:first-child{border-top:none}
 </style>
 </head>
 <body>
@@ -186,27 +207,31 @@
       <div class="oc-grid">
         <!-- 현황 -->
         <div class="oc-panel on" data-panel="now">
-          <div class="nowgrid">
-            <div class="ncard">
-              <h3>의안 진행 현황</h3>
-              <div class="agrow"><span class="agno">제1호</span><span class="agnm">재무제표 승인의 건</span><span class="qst st-done"><span class="d"></span>완료</span></div>
-              <div class="agrow"><span class="agno">제2호</span><span class="agnm">정관 일부 변경의 건 <span class="agsub">· 2-1 / 2-2 / 2-3</span></span><span class="qst st-wait"><span class="d"></span>진행 중</span></div>
-              <div class="agrow"><span class="agno">제3호</span><span class="agnm">이사 선임의 건 <span class="agsub">· 3-1 집중투표 / 3-2 감사위원</span></span><span class="qst st-open"><span class="d"></span>대기</span></div>
+          <div class="nowgrid3">
+            <div class="apanel">
+              <div class="apanel-h">의안 진행</div>
+              <div id="agTree"></div>
             </div>
-            <div class="ncard">
-              <h3>실시간 현장 요약</h3>
-              <div class="minibars">
-                <div class="mb"><div class="n" id="sumQ">30</div><div class="l">질의 접수</div></div>
-                <div class="mb"><div class="n" id="sumQun" style="color:#ea580c">8</div><div class="l">미답변</div></div>
-                <div class="mb"><div class="n" id="sumS">30</div><div class="l">발언 신청</div></div>
-                <div class="mb"><div class="n" id="sumSwait" style="color:#0071f3">23</div><div class="l">발언 대기</div></div>
-              </div>
-              <div style="margin-top:14px">
-                <div class="kv"><span class="kk">현장 참석</span><span class="vv">342명</span></div>
-                <div class="kv"><span class="kk">온라인 참석</span><span class="vv">19,658명</span></div>
-                <div class="kv"><span class="kk">수정동의</span><span class="vv">4건</span></div>
-                <div class="kv"><span class="kk">발언 반려</span><span class="vv">3건</span></div>
-                <div class="kv"><span class="kk">경과 시간</span><span class="vv" id="ocTimer2">00:10:12</span></div>
+            <div class="apanel">
+              <div class="apanel-h">표결 · 발언 제어</div>
+              <div class="apanel-ph">중앙 제어 패널은 다음 단계에서 구현됩니다.</div>
+            </div>
+            <div class="apanel">
+              <div class="apanel-h">실시간 현장 요약</div>
+              <div style="padding:14px">
+                <div class="minibars">
+                  <div class="mb"><div class="n" id="sumQ">30</div><div class="l">질의 접수</div></div>
+                  <div class="mb"><div class="n" id="sumQun" style="color:#ea580c">8</div><div class="l">미답변</div></div>
+                  <div class="mb"><div class="n" id="sumS">30</div><div class="l">발언 신청</div></div>
+                  <div class="mb"><div class="n" id="sumSwait" style="color:#0071f3">23</div><div class="l">발언 대기</div></div>
+                </div>
+                <div style="margin-top:14px">
+                  <div class="kv"><span class="kk">현장 참석</span><span class="vv">342명</span></div>
+                  <div class="kv"><span class="kk">온라인 참석</span><span class="vv">19,658명</span></div>
+                  <div class="kv"><span class="kk">수정동의</span><span class="vv">4건</span></div>
+                  <div class="kv"><span class="kk">발언 반려</span><span class="vv">3건</span></div>
+                  <div class="kv"><span class="kk">경과 시간</span><span class="vv" id="ocTimer2">00:10:12</span></div>
+                </div>
               </div>
             </div>
           </div>
@@ -291,6 +316,37 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     }).join('') || '<div style="color:#a3a3a3;font-size:13px;padding:20px;text-align:center">해당 의안의 발언 신청이 없습니다.</div>';
   }
   renderQA('all'); renderSP('all');
+
+  // 의안 진행 트리 (라이브)
+  var AGENDA=[
+    {no:'제1호',nm:'재무제표 승인의 건',res:'가결',st:'완료'},
+    {no:'제2호',nm:'정관 일부 변경의 건',st:'진행 중',children:[
+      {no:'제2-1호',nm:'집중투표제 배제 조항 삭제의 건',res:'가결',st:'완료'},
+      {no:'제2-2호',nm:'전자주주총회 도입 관련 변경',st:'진행 중'},
+      {no:'제2-3호',nm:'의결권 대리행사 수단 확대',st:'대기'}
+    ]},
+    {no:'제3호',nm:'이사 선임의 건',st:'대기',children:[
+      {no:'제3-1호',nm:'집중투표 후보 4인 중 2인 선임',tag:'집중투표',st:'대기',children:[
+        {no:'제3-1-1호',nm:'사외이사 김근수 선임'},
+        {no:'제3-1-2호',nm:'사외이사 진웅섭 선임'},
+        {no:'제3-1-3호',nm:'사외이사 남상일 선임'},
+        {no:'제3-1-4호',nm:'사외이사 박선화 선임'}
+      ]},
+      {no:'제3-2호',nm:'감사위원이 되는 사외이사 선임'}
+    ]}
+  ];
+  var CK='<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM10.6 16 6.8 12.2l1.4-1.4 2.4 2.4 5-5 1.4 1.4z"/></svg>';
+  var XK='<svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+  function agRes(res){ if(!res) return '<span></span>'; var fail=res.indexOf('부결')>=0; return '<span class="abadge '+(fail?'fail':'pass')+'">'+(fail?XK:CK)+res+'</span>'; }
+  function agSt(st){ if(!st) return '<span class="astbadge wait"><span class="d"></span>대기</span>'; var c= st==='완료'?'done':(st==='진행 중'?'prog':'wait'); return '<span class="astbadge '+c+'"><span class="d"></span>'+st+'</span>'; }
+  function agNode(x){
+    var cat='<div class="acat"><span class="ano">'+x.no+'</span><span class="anm">'+x.nm+'</span>'+(x.tag?'<span class="atag">'+x.tag+'</span>':'')+'</div>';
+    var stat='<div class="astatus">'+agRes(x.res)+agSt(x.st)+'</div>';
+    var kids = x.children ? '<div class="asub">'+x.children.map(function(c){return '<div class="achild">'+agNode(c)+'</div>';}).join('')+'</div>' : '';
+    return cat+stat+kids;
+  }
+  document.getElementById('agTree').innerHTML=AGENDA.map(function(x){return '<div class="arow">'+agNode(x)+'</div>';}).join('');
+
 
   // 요약 카운트
   document.getElementById('sumQ').textContent=QUESTIONS.length;
