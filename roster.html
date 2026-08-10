@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CONEXUS · 주주명부 확정</title>
+<title>CONEXUS · 명부 관리</title>
 <link rel="stylesheet" href="conexus.css">
 <style>
   /* page-local content helpers (LNB styling comes from conexus.css) */
@@ -89,7 +89,7 @@
 
     <div class="lnb-content show exp-only" data-tabpanel="set">
       <div class="grp"><div class="grp-label">주주총회 설정</div><div class="nav">
-        <a class="nav-item active" href="shareholders.html">주주명부 확정</a>
+        <a class="nav-item" href="shareholders.html">주주명부 확정</a>
         <a class="nav-item" href="meeting-settings.html">주주총회 설정</a>
         <a class="nav-item" href="voting-restriction.html">의결권제한 설정</a>
       </div></div>
@@ -137,271 +137,25 @@
         <button class="iconbtn sm" id="toggleLnb" title="사이드바"><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg></button>
         <span class="vsep"></span>
         <div style="display:flex;align-items:center;gap:8px">
-          <span class="crumb" style="color:var(--muted-fg)">설정</span>
+          <span class="crumb" style="color:var(--muted-fg)">명부 관리</span>
           <svg class="ic" style="width:14px;height:14px;color:var(--muted-fg);opacity:.55" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
-          <span class="crumb">주주명부 확정</span>
+          <span class="crumb">명부 목록</span>
         </div>
       </div>
       <button class="iconbtn md" title="변경이력"><svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></button>
     </div>
     <div class="scroll">
-      <style>
-        .ms-wrap{padding:20px;display:flex;flex-direction:column;gap:24px;width:100%}
-        .ms-sh{display:flex;flex-direction:column;gap:4px}
-        .ms-sh-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
-        .ms-sh-l{display:flex;flex-direction:column;gap:4px;min-width:0}
-        .ms-title-row{display:flex;align-items:center;gap:8px}
-        .ms-title-row h1{font-size:18px;font-weight:600;color:#0a0a0a;line-height:1}
-        .ms-chip{display:inline-flex;align-items:center;gap:4px;height:24px;padding:4px 8px;border:1px solid var(--border);border-radius:6px}
-        .ms-chip .k{font-size:12px;font-weight:500;color:#737373}
-        .ms-chip .v{font-size:12px;font-weight:600;color:#0a0a0a}
-        .ms-desc{font-size:14px;color:#737373;line-height:20px}
-        .ms-sh-actions{display:flex;align-items:center;gap:8px;flex:none}
-        .btn.primary{background:#171717;color:#fafafa;border-color:#171717}
-        .btn.primary:hover{background:#000}
-        .btn.hidden{display:none}
-        /* empty */
-        .ms-empty2{background:#fafafa;border:1px dashed #e5e5e5;border-radius:10px;min-height:360px;display:flex;align-items:center;justify-content:center;padding:24px}
-        .ms-empty2 .inner{display:flex;flex-direction:column;align-items:center;gap:12px;opacity:.7;text-align:center;max-width:360px}
-        .ms-empty2 .inner .bico{width:24px;height:24px;color:#737373}
-        .ms-e-t{font-size:12px;font-weight:600;color:#737373}
-        .ms-e-d{font-size:12px;font-weight:300;color:#737373;line-height:16px}
-        /* underline tabs */
-        .utabs{display:flex;border-bottom:1px solid var(--border)}
-        .utab{height:34px;padding:4px 12px;font-size:14px;font-weight:500;color:#737373;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit;margin-bottom:-1px}
-        .utab.active{color:#0a0a0a;border-bottom-color:#171717}
-        /* cards */
-        .ic3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-        .icard{border:1px solid var(--border);border-radius:14px;background:#fff;padding:16px;display:flex;flex-direction:column;gap:8px;min-height:88px;justify-content:center}
-        .icard .k{font-size:14px;font-weight:600;color:#0a0a0a;display:flex;align-items:center;gap:6px}
-        .icard .v{font-size:18px;font-weight:700;color:#0a0a0a;text-align:right}
-        .icard.warn{background:#fff5f7;border-color:#e5e5e5}
-        .icard.warn .v{color:var(--red600)}
-        .icard .info-i{width:16px;height:16px;color:#a3a3a3}
-        /* toolbar */
-        .tfn{display:flex;justify-content:space-between;align-items:center;gap:24px;padding-bottom:12px}
-        .tfn-l{display:flex;align-items:center;gap:8px}
-        .sw-text{font-size:14px;font-weight:500;color:#0a0a0a}
-        .tfn-r{display:flex;align-items:center;gap:8px}
-        .iconbtn2{width:34px;height:32px;border:1px solid var(--border);border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;color:#171717;cursor:pointer}
-        .iconbtn2:hover{background:var(--muted)}
-        .iconbtn2 svg{width:14px;height:14px}
-        /* table */
-        .mtbl-wrap{border:1px solid var(--border);border-radius:10px 10px 0 0;overflow:hidden;border-bottom:none}
-        table.mtbl{width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed}
-        table.mtbl th{height:48px;background:#f5f5f5;text-align:left;font-weight:500;color:#737373;font-size:14px;padding:0 16px;border-bottom:1px solid var(--border);white-space:nowrap}
-        table.mtbl td{height:46px;padding:0 16px;border-bottom:1px solid var(--border);color:#737373;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        table.mtbl tr:last-child td{border-bottom:none}
-        table.mtbl td.name{color:#0a0a0a;font-weight:500}
-        table.mtbl td.r{text-align:right;color:#0a0a0a}
-        table.mtbl td.r.sub{color:#737373}
-        .mbadge{display:inline-flex;align-items:center;height:20px;padding:2px 8px;border-radius:26px;background:#f5f5f5;color:#737373;font-size:12px;font-weight:500}
-        .set-done{color:#0a0a0a;font-weight:500}
-        .set-none{color:var(--red600);font-weight:500}
-        .tbtn2{height:28px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:12px;font-weight:500;color:#0a0a0a;cursor:pointer}
-        .tbtn2:hover{background:var(--muted)}
-        .chkbox{width:16px;height:16px;border:1.5px solid #a3a3a3;border-radius:4px;display:inline-block;vertical-align:middle}
-        /* pagination */
-        .mpag{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:#fafafa;border:1px solid var(--border);border-radius:0 0 10px 10px}
-        .mpag .cnt{font-size:12px;color:#1f1c18}
-        .mpag-r{display:flex;align-items:center;gap:16px}
-        .mpag .psize{display:flex;align-items:center;gap:8px;font-size:12px;color:#737373}
-        .mpag .psel{display:flex;align-items:center;gap:4px;height:28px;padding:0 8px;border:1px solid var(--border);border-radius:6px;background:#fff;font-size:12px;color:#737373;cursor:pointer}
-        .mpag .psel svg{width:12px;height:12px}
-        .mpag .pctrl{display:flex;align-items:center;gap:8px}
-        .mpag .pb2{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:#737373;cursor:pointer}
-        .mpag .pb2:hover{background:var(--muted)}
-        .mpag .pb2 svg{width:14px;height:14px}
-        .mpag .pnum{font-size:12px;color:#1f1c18}
-        /* dialog */
-        .dlg-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:center;justify-content:center}
-        .dlg-ov.hidden{display:none}
-        .dlg{position:relative;width:384px;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px}
-        .dlg-head{padding:16px;display:flex;flex-direction:column;gap:8px}
-        .dlg-title{font-size:16px;font-weight:600;color:#0a0a0a;line-height:1}
-        .dlg-desc{font-size:14px;color:#737373;line-height:20px}
-        .dlg-content{padding:0 16px 8px;display:flex;flex-direction:column;gap:8px}
-        .dlg-field>label{font-size:14px;font-weight:500;color:#0a0a0a;display:block;margin-bottom:8px}
-        .dlg-select{display:flex;align-items:center;justify-content:space-between;gap:6px;height:32px;padding:8px 8px 8px 10px;border:1px solid var(--border);border-radius:10px;background:#fff;font-size:14px;color:#737373;cursor:pointer;width:100%;font-family:inherit;text-align:left}
-        .dlg-select.val{color:#0a0a0a}
-        .dlg-select svg{width:12px;height:12px;color:#737373;flex:none}
-        .dlg-menu{margin-top:4px;border:1px solid rgba(10,10,10,.1);border-radius:10px;box-shadow:var(--shadow-md);padding:4px;background:#fff}
-        .dlg-menu.hidden{display:none}
-        .dlg-mi{display:flex;align-items:center;height:28px;padding:4px 6px;border-radius:8px;font-size:14px;color:#0a0a0a;cursor:pointer;width:100%;text-align:left;background:none;border:none;font-family:inherit}
-        .dlg-mi:hover{background:var(--muted)}
-        .dlg-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px 16px}
-        .dlg-foot .btn{flex:1;justify-content:center;height:32px}
-        .dlg-x{position:absolute;top:16px;right:16px;width:16px;height:16px;opacity:.7;border:none;background:none;cursor:pointer;color:#000;display:flex}
-        .dlg-x:hover{opacity:1}
-        .dlg-x svg{width:16px;height:16px}
-        /* sonner toast */
-        .sonner{position:fixed;right:20px;bottom:20px;width:405px;max-width:calc(100vw - 40px);display:flex;align-items:center;gap:8px;padding:16px;background:rgba(245,245,245,.85);border:1px solid var(--border);backdrop-filter:blur(12.5px);-webkit-backdrop-filter:blur(12.5px);border-radius:8px;box-shadow:var(--shadow-md);z-index:120;transform:translateY(12px);opacity:0;transition:.2s;pointer-events:none}
-        .sonner.show{transform:translateY(0);opacity:1;pointer-events:auto}
-        .sonner .st{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
-        .sonner .st .t{font-size:14px;font-weight:500;color:#0a0a0a}
-        .sonner .st .d{font-size:14px;color:#737373;line-height:20px}
-        .sonner .undo{height:24px;padding:0 8px;background:#171717;color:#fafafa;border:none;border-radius:4px;font-size:12px;font-weight:500;cursor:pointer;box-shadow:var(--shadow-xs)}
-        .ld-col{display:flex;flex-direction:column;gap:24px}
-        .hide{display:none!important}
-      </style>
-
-      <div class="ms-wrap">
-        <div class="ms-sh">
-          <div class="ms-sh-top">
-            <div class="ms-sh-l">
-              <div class="ms-title-row">
-                <h1>주주명부 확정</h1>
-                <span class="ms-chip hide" id="msChip"><span class="k">주주명부</span><span class="v" id="msChipDate">2026.12.31</span></span>
-              </div>
-              <div class="ms-desc">투표권자 설정, 투표권자 통합·해제 설정 후 주주명부 확정을 진행해 주세요.</div>
-            </div>
-            <div class="ms-sh-actions">
-              <button class="btn" id="msRegister"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>주주명부 등록</button>
-              <button class="btn primary" id="msLoad"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>주주명부 불러오기</button>
-              <button class="btn primary hidden" id="msNext"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>저장하고 다음</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- EMPTY STATE -->
-        <div id="emptyState">
-          <div class="ms-empty2">
-            <div class="inner">
-              <svg class="bico ic" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><circle cx="12" cy="9" r="2"/><path d="M15 13.5a3 3 0 0 0-6 0"/></svg>
-              <div>
-                <div class="ms-e-t">확정된 주주명부가 없습니다</div>
-                <div class="ms-e-d">우측 상단의 &lsquo;주주명부 불러오기&rsquo; 또는 &lsquo;주주명부 등록&rsquo;으로 명부를 준비해 주세요.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- LOADED STATE -->
-        <div id="loadedState" class="ld-col hide">
-          <div class="utabs">
-            <button class="utab active">투표권자 설정</button>
-            <button class="utab">투표권자 통합</button>
-            <button class="utab">투표권자 해제</button>
-          </div>
-          <div class="ic3">
-            <div class="icard"><div class="k">총 주식수</div><div class="v">510,356,025</div></div>
-            <div class="icard"><div class="k">총 주주수</div><div class="v">82</div></div>
-            <div class="icard warn"><div class="k">미설정 투표권자 <svg class="info-i ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><div class="v">3</div></div>
-          </div>
-          <div>
-            <div class="tfn">
-              <div class="tfn-l">
-                <span class="sw-text">미설정만 보기</span>
-                <span class="sw" data-sw></span>
-              </div>
-              <div class="tfn-r">
-                <button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>다운로드</button>
-                <button class="iconbtn2" title="정렬"><svg class="ic" viewBox="0 0 24 24"><path d="M3 6h18M7 12h10M11 18h2"/></svg></button>
-                <button class="iconbtn2" title="필터"><svg class="ic" viewBox="0 0 24 24"><path d="M4 6h16M6 12h12M9 18h6"/></svg></button>
-              </div>
-            </div>
-            <div class="mtbl-wrap">
-              <table class="mtbl">
-                <colgroup><col style="width:52px"><col style="width:88px"><col style="width:90px"><col><col style="width:110px"><col style="width:130px"><col style="width:90px"><col style="width:130px"><col style="width:96px"></colgroup>
-                <thead><tr><th><span class="chkbox"></span></th><th>구분</th><th>유형</th><th>주주명</th><th>주주번호</th><th style="text-align:right">보유주식수</th><th style="text-align:right">지분율</th><th>투표권자 설정</th><th></th></tr></thead>
-                <tbody>
-                  <tr><td><span class="chkbox"></span></td><td><span class="mbadge">전자</span></td><td>법인</td><td class="name">국민연금공단</td><td>000220</td><td class="r">51,000,000</td><td class="r sub">9.99%</td><td><span class="set-done">설정완료</span></td><td><button class="tbtn2">수정</button></td></tr>
-                  <tr><td><span class="chkbox"></span></td><td><span class="mbadge">실물</span></td><td>개인</td><td class="name">김민준</td><td>000103</td><td class="r">12,400</td><td class="r sub">0.24%</td><td><span class="set-done">설정완료</span></td><td><button class="tbtn2">수정</button></td></tr>
-                  <tr><td><span class="chkbox"></span></td><td><span class="mbadge">전자</span></td><td>법인</td><td class="name">미래에셋자산운용</td><td>000377</td><td class="r">1,450,000</td><td class="r sub">2.84%</td><td><span class="set-done">설정완료</span></td><td><button class="tbtn2">수정</button></td></tr>
-                  <tr><td><span class="chkbox"></span></td><td><span class="mbadge">실물</span></td><td>개인</td><td class="name">이서연</td><td>000241</td><td class="r">8,900</td><td class="r sub">0.17%</td><td><span class="set-none">미설정</span></td><td><button class="tbtn2">설정</button></td></tr>
-                  <tr><td><span class="chkbox"></span></td><td><span class="mbadge">전자</span></td><td>개인</td><td class="name">박도윤</td><td>000388</td><td class="r">5,200</td><td class="r sub">0.10%</td><td><span class="set-none">미설정</span></td><td><button class="tbtn2">설정</button></td></tr>
-                  <tr><td><span class="chkbox"></span></td><td><span class="mbadge">전자</span></td><td>개인</td><td class="name">최지우</td><td>000512</td><td class="r">3,100</td><td class="r sub">0.06%</td><td><span class="set-done">설정완료</span></td><td><button class="tbtn2">수정</button></td></tr>
-                  <tr><td><span class="chkbox"></span></td><td><span class="mbadge">실물</span></td><td>개인</td><td class="name">정예은</td><td>000634</td><td class="r">2,050</td><td class="r sub">0.04%</td><td><span class="set-none">미설정</span></td><td><button class="tbtn2">설정</button></td></tr>
-                  <tr><td><span class="chkbox"></span></td><td><span class="mbadge">전자</span></td><td>법인</td><td class="name">한국투자신탁</td><td>000105</td><td class="r">320,000</td><td class="r sub">0.63%</td><td><span class="set-done">설정완료</span></td><td><button class="tbtn2">수정</button></td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="mpag">
-              <div class="cnt">총 82명 · 510,356,025주</div>
-              <div class="mpag-r">
-                <div class="psize">페이지당 <span class="psel">30 <svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></div>
-                <div class="pctrl">
-                  <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m11 17-5-5 5-5M18 17l-5-5 5-5"/></svg></span>
-                  <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></span>
-                  <span class="pnum">1 / 30</span>
-                  <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
-                  <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m6 17 5-5-5-5M13 17l5-5-5-5"/></svg></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="content" style="width:100%">
+        <div class="st-head"><div><div class="page-title">명부 관리</div><div class="page-sub">주주명부 원본을 업로드하고 기준일별로 관리합니다.</div></div><div class="actions"><button class="btn">양식 다운로드</button><button class="st-save">명부 업로드</button></div></div>
+        <div class="tbl-wrap"><table class="tbl">
+          <thead><tr><th>기준일</th><th>구분</th><th style="text-align:right">주주수</th><th style="text-align:right">총 주식수</th><th>등록일</th><th>상태</th><th style="width:90px">관리</th></tr></thead>
+          <tbody>
+            <tr><td>2026-12-31</td><td>제12기 정기</td><td style="text-align:right">82</td><td style="text-align:right">510,356,025</td><td>2026-01-14</td><td><span class="badge green">확정</span></td><td><button class="btn">보기</button></td></tr>
+            <tr><td>2026-09-30</td><td>임시</td><td style="text-align:right">80</td><td style="text-align:right">509,900,000</td><td>2025-10-02</td><td><span class="badge gray">보관</span></td><td><button class="btn">보기</button></td></tr>
+            <tr><td>2026-03-12</td><td>제11기 정기</td><td style="text-align:right">78</td><td style="text-align:right">508,120,400</td><td>2025-01-20</td><td><span class="badge gray">보관</span></td><td><button class="btn">보기</button></td></tr>
+          </tbody>
+        </table></div>
       </div>
-
-      <!-- 불러오기 dialog -->
-      <div class="dlg-ov hidden" id="loadDlg">
-        <div class="dlg">
-          <div class="dlg-head"><div class="dlg-title">주주명부 불러오기</div><div class="dlg-desc">불러올 명부 기준일을 선택해 주세요.</div></div>
-          <div class="dlg-content">
-            <div class="dlg-field">
-              <label>명부 기준일</label>
-              <div style="position:relative">
-                <button class="dlg-select" id="ldSel"><span>명부 기준일을 선택하세요</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
-                <div class="dlg-menu hidden" id="ldMenu">
-                  <button class="dlg-mi" data-date="2026.12.31">2026.12.31 (제12기 정기)</button>
-                  <button class="dlg-mi" data-date="2026.09.30">2026.09.30 (임시)</button>
-                  <button class="dlg-mi" data-date="2026.06.30">2026.06.30 (임시)</button>
-                  <button class="dlg-mi" data-date="2026.03.12">2026.03.12 (제11기 정기)</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="dlg-foot"><button class="btn" data-dlg-close>취소</button><button class="btn primary" id="ldConfirm">불러오기</button></div>
-          <button class="dlg-x" data-dlg-close aria-label="닫기"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-        </div>
-      </div>
-
-      <!-- sonner toast -->
-      <div class="sonner" id="sonner">
-        <div class="st"><div class="t" id="snT">불러오기 완료</div><div class="d" id="snD"></div></div>
-        <button class="undo" id="snUndo">실행취소</button>
-      </div>
-
-      <script>
-        (function(){
-          function closeOv(ov){ov.classList.add('hidden');}
-          document.querySelectorAll('.dlg-ov').forEach(function(ov){
-            ov.addEventListener('click',function(e){if(e.target===ov)closeOv(ov);});
-            ov.querySelectorAll('[data-dlg-close]').forEach(function(b){b.addEventListener('click',function(){closeOv(ov);});});
-          });
-          var sonner=document.getElementById('sonner'),snT=document.getElementById('snT'),snD=document.getElementById('snD'),snTimer;
-          function toast(t,d){snT.textContent=t;snD.textContent=d;sonner.classList.add('show');clearTimeout(snTimer);snTimer=setTimeout(function(){sonner.classList.remove('show');},3800);}
-          document.getElementById('snUndo').addEventListener('click',function(){sonner.classList.remove('show');});
-
-          function showLoaded(date){
-            document.getElementById('emptyState').classList.add('hide');
-            document.getElementById('loadedState').classList.remove('hide');
-            document.getElementById('msLoad').classList.add('hidden');
-            document.getElementById('msNext').classList.remove('hidden');
-            var chip=document.getElementById('msChip'); chip.classList.remove('hide');
-            document.getElementById('msChipDate').textContent=date;
-          }
-
-          document.getElementById('msLoad').addEventListener('click',function(){document.getElementById('loadDlg').classList.remove('hidden');});
-          var ldSel=document.getElementById('ldSel'),ldMenu=document.getElementById('ldMenu'),chosen=null;
-          ldSel.addEventListener('click',function(e){e.stopPropagation();ldMenu.classList.toggle('hidden');});
-          ldMenu.querySelectorAll('.dlg-mi').forEach(function(mi){mi.addEventListener('click',function(){chosen=mi.dataset.date;ldSel.querySelector('span').textContent=mi.textContent;ldSel.classList.add('val');ldMenu.classList.add('hidden');});});
-          document.addEventListener('click',function(){ldMenu.classList.add('hidden');});
-          document.getElementById('ldConfirm').addEventListener('click',function(){
-            var d=chosen||'2026.12.31';
-            document.getElementById('loadDlg').classList.add('hidden');
-            showLoaded(d);
-            toast('불러오기 완료', d+' 기준 주주명부를 불러왔습니다. (82명 · 510,356,025주)');
-          });
-
-          // 주주명부 등록 → 명부관리 화면으로 이동
-          document.getElementById('msRegister').addEventListener('click',function(){location.href='roster.html';});
-
-          document.getElementById('msNext').addEventListener('click',function(){
-            toast('저장 완료','주주명부가 확정되었습니다. 다음 단계로 이동합니다.');
-          });
-        })();
-      </script>
     </div>
   </main>
 </div>
