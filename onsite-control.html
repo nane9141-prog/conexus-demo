@@ -215,6 +215,22 @@
   // sidebar collapse
   var tg=document.getElementById('toggleLnb');
   if(tg){tg.addEventListener('click',function(){document.getElementById('app').classList.toggle('collapsed');});}
+  // meeting dropdown (shadcn-style)
+  (function(){
+    var mt=document.getElementById('mtrigger'), mp=document.getElementById('mpop'), ml=document.getElementById('mlist'), mc=document.getElementById('mcurrent');
+    if(!mt||!mp) return;
+    if(ml&&!ml.children.length){
+      ['제 12기 정기주주총회','제 11기 정기주주총회','제 10기 임시주주총회'].forEach(function(t,i){
+        var b=document.createElement('button'); b.className='mitem'+(i===0?' cur':'');
+        b.innerHTML='<span class="dot'+(i===0?'':' gray')+'"></span><span class="mlbl">'+t+'</span>';
+        b.addEventListener('click',function(ev){ev.stopPropagation(); if(mc)mc.textContent=t; ml.querySelectorAll('.mitem').forEach(function(x){x.classList.remove('cur');}); b.classList.add('cur'); mp.classList.add('hidden');});
+        ml.appendChild(b);
+      });
+    }
+    mt.addEventListener('click',function(e){e.stopPropagation(); mp.classList.toggle('hidden');});
+    document.addEventListener('click',function(){mp.classList.add('hidden');});
+    mp.addEventListener('click',function(e){e.stopPropagation();});
+  })();
   // settings tab switching (in-page st-nav)
   document.querySelectorAll('.st-nav').forEach(function(nav){
     nav.querySelectorAll('.st-item').forEach(function(item){

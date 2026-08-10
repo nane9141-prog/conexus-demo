@@ -697,6 +697,18 @@
 a.nav-item{text-decoration:none;color:var(--fg)}
 .nav-item.dis{color:var(--muted-fg);opacity:.55;pointer-events:none}
 </style>
+<style>
+/* Figma: meeting dropdown (shadcn) + footer avatar */
+.lnb-select .select-box .dot{width:12px;height:12px;border-radius:38px;background:linear-gradient(127.87deg,#0071F3 13.28%,rgba(0,113,243,.6) 94.53%)}
+.lnb-select .select-box .ic{opacity:.5;color:#0A0A0A}
+.lnb-foot .avatar{background:#EBF4FF;color:#0066DF;border-radius:10px}
+.mitem{display:flex;align-items:center;gap:8px;width:100%;height:36px;padding:0 10px;border:none;background:none;border-radius:8px;font-size:14px;color:#0A0A0A;cursor:pointer;font-family:inherit;text-align:left}
+.mitem:hover{background:var(--muted)}
+.mitem .dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(127.87deg,#0071F3 13.28%,rgba(0,113,243,.6) 94.53%);flex:none}
+.mitem .dot.gray{background:#d4d4d4}
+.mitem .mlbl{flex:1}
+.mitem.cur{font-weight:600}
+</style>
 </head>
 <body>
 <div class="app" id="app">
