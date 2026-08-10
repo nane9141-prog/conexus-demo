@@ -202,6 +202,23 @@
   .mbadge.spc{background:#ede9fe;color:#7c3aed}
   .mbadge.cum{background:#fef3c7;color:#b45309}
   .vi-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+  .agent-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .agent-cnt{font-size:13px;font-weight:600;color:#0a0a0a}
+  .btn-line.sm{height:26px;padding:0 8px;font-size:12px}
+  .agent-card{background:#fafafa;border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px}
+  .agent-row{display:flex;align-items:center;gap:4px}
+  .agent-name{flex:1;font-size:14px;font-weight:600;color:#0a0a0a;display:flex;align-items:baseline;gap:6px}
+  .agent-name .agent-sub{font-size:12px;font-weight:400;color:var(--muted-fg)}
+  .agent-del{width:28px;height:28px;border:none;background:none;border-radius:8px;cursor:pointer;color:var(--muted-fg);display:flex;align-items:center;justify-content:center}
+  .agent-del:hover{background:var(--muted)}
+  .agent-del svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5}
+  .agent-tags{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}
+  .atag{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 6px 0 8px;background:#fff;border:1px solid var(--border);border-radius:26px;font-size:12px;font-weight:500;color:#0a0a0a}
+  .atag button{border:none;background:none;cursor:pointer;color:#0a0a0a;display:flex;padding:0;width:12px;height:12px}
+  .atag button svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2}
+  .agent-inp{display:flex;margin-top:8px}
+  .agent-inp input{flex:1;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:10px 0 0 10px;border-right:none;font-size:14px;font-family:inherit;outline:none;background:#fff}
+  .agent-inp button{height:32px;padding:0 12px;border:1px solid var(--border);border-radius:0 10px 10px 0;background:#fff;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit}
 </style>
 <style>
   :root{
@@ -880,8 +897,8 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     <div class="frow" style="align-items:center;gap:22px;flex-wrap:wrap"><div class="rad-group" data-radgrp="disclosure"><span class="rad" data-rad><span class="dotc"></span>즉시 공개</span><span class="rad on" data-rad><span class="dotc"></span>예약 공개</span></div><div class="frow" style="flex:1;min-width:260px"><button class="inp dt" data-date data-value=""><span>날짜 선택</span><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg></button><input class="inp time" value="10:30"></div></div></div>
   <div class="hr"></div>
   <div class="st-section"><div class="sub-h">전자위임장 설정</div>
-    <div class="field"><label>대리행사 권유자 유형</label><div class="rad-group" data-radgrp="solicitor"><span class="rad on" data-rad><span class="dotc"></span>{회사명} 측</span><span class="rad" data-rad><span class="dotc"></span>주주 측</span></div></div>
-    <div class="field"><label>대리행사 권유자</label><div class="frow"><input class="inp ro" value="IR큐더스" readonly><button class="btn-line" data-toast="권유자 대리인 설정은 준비 중이에요">권유자 대리인 설정</button></div></div>
+    <div class="field"><label>대리행사 권유자 유형</label><div class="rad-group" data-radgrp="solicitor"><span class="rad on" data-rad><span class="dotc"></span>카카오뱅크 측</span><span class="rad" data-rad><span class="dotc"></span>주주 측</span></div></div>
+    <div class="field"><label>대리행사 권유자</label><div class="frow"><input class="inp ro" value="IR큐더스" readonly><button class="btn-line" id="agentBtn">권유자 대리인 설정</button></div></div>
     <div class="field"><label>권유자 의견 공개</label><div class="sub-help" style="margin-top:0;margin-bottom:2px">권유자 의견을 공개하시려면, 먼저 DART에 의결권 대리행사 권유 참고서류를 공시해 주세요.</div><div class="rad-group" data-radgrp="opinion"><span class="rad on" data-rad><span class="dotc"></span>공개</span><span class="rad" data-rad><span class="dotc"></span>비공개</span></div></div>
   </div>
   <div class="st-section"><div><div class="sub-h">첨부파일 등록</div><div class="sub-help">파일을 첨부하지 않아도 다음 단계로 진행할 수 있습니다. (파일 업로드: PDF, XLSX, XLS, DOCX (최대 50MB))</div></div>
@@ -959,6 +976,17 @@ a.nav-item{text-decoration:none;color:var(--fg)}
       <button class="iconbtn md" data-close><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
     <div class="sheet-body" id="resoBody"></div>
     <div class="sheet-foot"><button class="primary" data-close style="width:100%">확인</button></div>
+  </aside>
+</div>
+<div class="overlay hidden" id="agentOverlay">
+  <aside class="sheet">
+    <div class="sheet-head"><div><h3>대리행사 권유자 설정</h3><div class="sdesc">회사 측 · 카카오뱅크 · 권유자별 대리인을 등록·관리합니다.</div></div>
+      <button class="iconbtn md" data-close><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+    <div class="sheet-body">
+      <div class="agent-hd"><span class="agent-cnt" id="agentCnt">대리행사 권유자 (0/10)</span><button class="btn-line sm" id="agentAdd"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg>권유자 추가</button></div>
+      <div id="agentList"></div>
+    </div>
+    <div class="sheet-foot"><div style="display:flex;gap:8px"><button class="sheet-cancel" data-close style="flex:1">취소</button><button class="primary" data-close data-toast="대리인 설정이 저장되었습니다" style="flex:1">저장</button></div><div class="meta">마지막 수정 2026-07-17 15:58 · 박지용</div></div>
   </aside>
 </div>
 <!-- 의안 상세 설정 패널 -->
@@ -1121,7 +1149,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
       card.addEventListener('dragleave',()=>card.classList.remove('over'));
       card.addEventListener('drop',e=>{e.preventDefault();card.classList.remove('over');const from=dragIdx,to=idx;if(from===null||from===to)return;const m=AGENDA_DATA.splice(from,1)[0];AGENDA_DATA.splice(to,0,m);dragIdx=null;renumber();renderAgenda();});
     });
-    agendaList.querySelectorAll('.ag-row').forEach(r=>r.addEventListener('click',()=>openAgDetail(r.dataset.no,r.dataset.name)));
+    agendaList.querySelectorAll('.ag-row').forEach(r=>r.addEventListener('click',e=>{if(e.target.closest('.inp')||e.target.closest('input')||e.target.closest('.agtype')||e.target.closest('.agmethod'))return;openAgDetail(r.dataset.no,r.dataset.name);}));
     agendaList.querySelectorAll('.agtype').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();openAgType(b);}));
     agendaList.querySelectorAll('[data-agmore]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();openAgMenu(b);}));
     agendaList.querySelectorAll('.agmethod').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();openAgMethod(b);}));
@@ -1180,6 +1208,34 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     b.innerHTML=h;
   }
   document.getElementById('resoBtn').addEventListener('click',function(){renderReso();resoOverlay.classList.remove('hidden');});
+  // 권유자 대리인 설정 패널
+  (function(){
+    var ov=document.getElementById('agentOverlay'); if(!ov) return;
+    var list=document.getElementById('agentList'), cnt=document.getElementById('agentCnt');
+    var AGENTS=[
+      {name:'김재호', del:['김민수','이서연','박준호','정하늘','최영수']},
+      {name:'이민희', del:['한지우','오세훈']},
+      {name:'정경호', del:['임채원','남상일','유은지']}
+    ];
+    var TR='<svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>', XC='<svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+    function render(){
+      cnt.textContent='대리행사 권유자 ('+AGENTS.length+'/10)';
+      list.innerHTML=AGENTS.map(function(a,i){
+        var tags=a.del.map(function(d,j){return '<span class="atag">'+d+'<button data-rm="'+i+'-'+j+'">'+XC+'</button></span>';}).join('');
+        return '<div class="agent-card" data-card="'+i+'">'
+          +'<div class="agent-row"><div class="agent-name">'+a.name+'<span class="agent-sub">'+a.del.length+'/30</span></div>'
+          +'<button class="agent-del" data-delcard="'+i+'">'+TR+'</button></div>'
+          +'<div class="agent-tags">'+tags+'</div>'
+          +'<div class="agent-inp"><input placeholder="대리인 이름 입력" data-inp="'+i+'"><button data-addd="'+i+'">추가</button></div>'
+          +'</div>';
+      }).join('');
+      list.querySelectorAll('[data-rm]').forEach(function(b){b.addEventListener('click',function(){var p=b.dataset.rm.split('-');AGENTS[+p[0]].del.splice(+p[1],1);render();});});
+      list.querySelectorAll('[data-delcard]').forEach(function(b){b.addEventListener('click',function(){AGENTS.splice(+b.dataset.delcard,1);render();});});
+      list.querySelectorAll('[data-addd]').forEach(function(b){b.addEventListener('click',function(){var inp=list.querySelector('[data-inp="'+b.dataset.addd+'"]');var v=(inp.value||'').trim();if(v){AGENTS[+b.dataset.addd].del.push(v);render();}});});
+    }
+    document.getElementById('agentBtn').addEventListener('click',function(){render();ov.classList.remove('hidden');});
+    document.getElementById('agentAdd').addEventListener('click',function(){if(AGENTS.length<10){AGENTS.push({name:'신규 권유자 '+(AGENTS.length+1),del:[]});render();}});
+  })();
   // 투표 의향 설정: 의안 설정과 동기화
   function flattenAg(){var out=[];AGENDA_DATA.forEach(function(t){out.push(t);(t.sub||[]).forEach(function(s){out.push(s);});});return out;}
   function viIsGroup(no,list){return list.some(function(x){return x.no!==no && x.no.indexOf(no+'-')===0;});}
