@@ -155,7 +155,7 @@
   .pvok{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#0a8a3c;font-weight:500}
   .pvok svg{width:16px;height:16px;stroke:#0a8a3c;fill:none;stroke-width:2}
 
-  .slabel{font-size:14px;font-weight:600;color:#0a0a0a;margin-top:4px}
+  .slabel{font-size:14px;font-weight:600;color:#0a0a0a;margin-block:16px}
   .ckwrap{display:flex;flex-direction:column;gap:8px}
   .ckitem{display:flex;gap:8px;padding:10px;border:1px solid #e5e5e5;border-radius:8px;cursor:pointer;align-items:flex-start}
   .ckitem.on{background:rgba(23,23,23,.05);border-color:#171717}
@@ -471,14 +471,12 @@
                 </table>
               </div>
             </div>
-            <div class="dlg-f" style="justify-content:space-between">
-              <label class="fchk on" id="dlgAgree" style="display:none"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 내용을 확인했으며, 내역을 등록합니다.</label>
-              <div class="fbtns" style="margin-left:auto;display:flex;gap:8px">
-                <button class="btn-out" id="dlgCancel">취소</button>
-                <button class="btn-out" id="dlgPrev" style="display:none">이전</button>
-                <button class="btn-dark" id="dlgNext">다음</button>
-                <button class="btn-dark" id="dlgSubmit" style="display:none">등록하기</button>
-              </div>
+            <div class="dlg-f" style="align-items:center">
+              <label class="fchk" id="dlgAgree" style="display:none;margin-right:auto"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 내용을 확인했으며, 내역을 등록합니다.</label>
+              <button class="btn-out" id="dlgCancel">취소</button>
+              <button class="btn-out" id="dlgPrev" style="display:none">이전</button>
+              <button class="btn-dark" id="dlgNext">다음</button>
+              <button class="btn-dark" id="dlgSubmit" style="display:none">등록하기</button>
             </div>
           </div>
         </div>
@@ -557,7 +555,7 @@
       if(step===2){ next.disabled=!attached; } else { next.disabled=false; }
       if(step===3){ submit.disabled=!agree.classList.contains('on'); }
     }
-    function reset(){ step=1; attached=false; drop.style.display='flex'; att.style.display='none'; render(); }
+    function reset(){ step=1; attached=false; agree.classList.remove('on'); drop.style.display='flex'; att.style.display='none'; render(); }
     function openDlg(){ reset(); ov.classList.add('show'); }
     function closeDlg(){ ov.classList.remove('show'); reset(); }
     function attach(){ attached=true; drop.style.display='none'; att.style.display='flex'; render(); }
