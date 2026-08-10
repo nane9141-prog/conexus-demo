@@ -33,6 +33,31 @@
   .stat .v{font-size:24px;font-weight:700;color:#0a0a0a;margin-top:6px}
   .stat .d{font-size:12px;margin-top:4px}
   .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
+  .elayout{display:grid;grid-template-columns:190px 1fr;gap:28px;margin-top:18px;align-items:start}
+  .esub{display:flex;flex-direction:column;gap:2px;position:sticky;top:0}
+  .esub a{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border-radius:9px;font-size:14px;color:#525252;text-decoration:none;cursor:pointer}
+  .esub a:hover{background:#f5f5f5}
+  .esub a.on{background:#f0f0f0;color:#0a0a0a;font-weight:600}
+  .miss{display:inline-flex;align-items:center;height:18px;padding:0 6px;background:#fff1f2;color:#e11d48;border-radius:6px;font-size:11px;font-weight:600}
+  .emain{display:flex;flex-direction:column;gap:28px}
+  .esec-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .esec-t{font-size:17px;font-weight:700;color:#0a0a0a;display:flex;align-items:center;gap:8px}
+  .esec-d{font-size:13px;color:#737373;margin-top:6px}
+  .etbl{margin-top:14px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  .etr{display:grid;grid-template-columns:90px 1fr 130px 64px;align-items:center;padding:14px 16px;border-bottom:1px solid #f2f2f2;font-size:14px}
+  .etr:last-child{border-bottom:none}
+  .etr.eth{background:#fafafa;color:#737373;font-size:13px;font-weight:500}
+  .etr .rt{text-align:right;color:#737373;font-size:13px}
+  .etr.eth .rt{color:#737373}
+  .ec{color:#525252}
+  .etitle{font-weight:600;color:#0a0a0a;display:flex;align-items:center;gap:8px}
+  .nowbadge{display:inline-flex;align-items:center;height:20px;padding:0 8px;background:var(--blue100);color:var(--blue700);border-radius:6px;font-size:12px;font-weight:600}
+  .eact{display:flex;gap:10px;justify-content:flex-end;color:#a3a3a3}
+  .eact svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;cursor:pointer}
+  .eact svg:hover{color:#525252}
+  .ever{margin-top:12px;border:none;background:none;font-family:inherit;font-size:13px;color:#737373;cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:0}
+  .ever svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2}
+  .esec+.esec{border-top:1px solid var(--border);padding-top:28px}
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
 </style>
 </head>
@@ -137,7 +162,7 @@
         <button class="iconbtn sm" id="toggleLnb" title="사이드바"><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg></button>
         <span class="vsep"></span>
         <div style="display:flex;align-items:center;gap:8px">
-          <span class="crumb">전자주주총회 설정</span>
+          <span class="crumb">전자주주총회 관리</span> <span style="color:#d4d4d4">›</span> <span class="crumb">약관 관리</span>
         </div>
       </div>
       <button class="iconbtn md" title="변경이력"><svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></button>
@@ -156,112 +181,15 @@
 
           <!-- 기본 설정 -->
           <div class="st-tab active" data-panel="basic"><div class="st-form">
-            <div class="st-head"><h2>기본 설정</h2><div class="actions"><button class="btn" data-load>이전 설정 불러오기</button><button class="st-save">저장</button></div></div>
-            <div class="st-section">
-              <div class="fgrid c2">
-                <div class="field"><label>전자주주총회 명칭<span class="req">*</span></label><input class="inp" value="제10기 정기주주총회"></div>
-                <div class="field"><label>개최 방식</label><button class="inp sel val"><span>병행 (현장 + 온라인)</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
-              </div>
-              <div class="fgrid c2">
-                <div class="field"><label>개최 일시<span class="req">*</span></label><div class="frow"><button class="inp dt val"><span>2026-03-27</span><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg></button><input class="inp time" value="10:00"></div></div>
-                <div class="field"><label>입장 가능 시각</label><input class="inp time" value="09:00" style="width:100%"></div>
-              </div>
-            </div>
-            <div class="hr"></div>
-            <div class="st-section">
-              <div><div class="sub-h">공지 팝업 등록</div><div class="sub-help">참석자 입장 시 표시할 공지를 등록합니다. 팝업 또는 한 페이지 방식 중 선택할 수 있습니다.</div></div>
-              <div class="field"><label>노출 방식</label><div class="rad-group" data-radgrp="notice"><span class="rad on" data-rad><span class="dotc"></span>팝업</span><span class="rad" data-rad><span class="dotc"></span>한 페이지</span><span class="rad" data-rad><span class="dotc"></span>노출 안 함</span></div></div>
-              <div class="field"><label>공지 제목</label><input class="inp" placeholder="공지 제목을 입력해 주세요"></div>
-              <div class="field"><label>공지 내용</label><textarea class="inp" style="height:120px;padding:10px 12px;resize:vertical" placeholder="공지 내용을 입력해 주세요"></textarea><div class="fhelp">등록 후 &lsquo;내용 미리보기&rsquo;로 참석자 화면을 확인할 수 있습니다.</div></div>
-              <div class="ag-toolbar"><button class="btn-line">내용 미리보기</button></div>
-            </div>
-            <div class="hr"></div>
-            <div class="st-section">
-              <div><div class="sub-h">이용 서비스</div><div class="sub-help">전자주주총회에서 사용할 기능을 선택해 주세요.</div></div>
-              <div class="svc-row"><div class="sw on" data-sw></div><div class="svc-body"><div class="svc-title">실시간 영상 중계</div><div class="svc-desc">현장 진행 상황을 온라인 참석자에게 실시간으로 중계합니다.</div></div></div>
-              <div class="svc-row"><div class="sw on" data-sw></div><div class="svc-body"><div class="svc-title">현장 전자표결</div><div class="svc-desc">현장 참석 주주가 앱으로 직접 투표하며 결과가 실시간 집계됩니다.</div></div></div>
-              <div class="svc-row"><div class="sw" data-sw></div><div class="svc-body"><div class="svc-title">채팅 질의</div><div class="svc-desc">참석자가 실시간으로 질의를 등록할 수 있습니다.</div></div></div>
-            </div>
-          </div></div>
-
-          <!-- 진행 설정 -->
-          <div class="st-tab" data-panel="progress"><div class="st-form">
-            <div class="st-head"><h2>진행 설정</h2><div class="actions"><button class="btn" data-load>이전 설정 불러오기</button><button class="st-save">저장</button></div></div>
-            <div class="st-section">
-              <div class="field"><label>진행 순서 안내</label><div class="rad-group" data-radgrp="flow"><span class="rad on" data-rad><span class="dotc"></span>자동 진행</span><span class="rad" data-rad><span class="dotc"></span>수동 진행</span></div></div>
-              <div class="fgrid c2">
-                <div class="field"><label>의결 정족수 기준</label><button class="inp sel val"><span>출석 주주 과반</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
-                <div class="field"><label>표결 제한 시간</label><input class="inp" value="3분"></div>
-              </div>
-            </div>
-            <div class="hr"></div>
-            <div class="st-section">
-              <div><div class="sub-h">도글(발언) 케이스 안내</div><div class="sub-help">진행 중 참석자에게 노출할 안내 메시지를 관리합니다.</div></div>
-              <div class="chk-row on" data-chk><span class="chk"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="ct">발언 신청 안내</div><div class="cd">참석자가 발언을 신청할 수 있음을 안내합니다.</div></div></div>
-              <div class="chk-row on" data-chk><span class="chk"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="ct">표결 개시 안내</div><div class="cd">표결이 시작될 때 참석자에게 안내합니다.</div></div></div>
-              <div class="chk-row" data-chk><span class="chk"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="ct">종료 안내</div><div class="cd">주주총회 종료 시 안내 메시지를 노출합니다.</div></div></div>
-            </div>
-          </div></div>
-
-          <!-- 약관 관리 -->
-          <div class="st-tab" data-panel="terms"><div class="st-full">
-            <div class="st-head"><h2>약관 관리</h2><div class="actions"><button class="st-save">약관 추가</button></div></div>
-            <div class="tbl-wrap"><table class="tbl">
-              <thead><tr><th style="width:44px">순번</th><th>약관명</th><th>필수 여부</th><th>버전</th><th>수정일</th><th style="width:120px">관리</th></tr></thead>
-              <tbody>
-                <tr><td>1</td><td>전자주주총회 이용약관</td><td><span class="badge red">필수</span></td><td>v1.3</td><td>2026-02-20</td><td><button class="btn">수정</button></td></tr>
-                <tr><td>2</td><td>개인정보 수집·이용 동의</td><td><span class="badge red">필수</span></td><td>v2.0</td><td>2026-02-18</td><td><button class="btn">수정</button></td></tr>
-                <tr><td>3</td><td>영상정보 처리 동의</td><td><span class="badge gray">선택</span></td><td>v1.0</td><td>2026-01-30</td><td><button class="btn">수정</button></td></tr>
-              </tbody>
-            </table></div>
-          </div></div>
-
-          <!-- 디자인 설정 -->
-          <div class="st-tab" data-panel="design"><div class="st-form">
-            <div class="st-head"><h2>디자인 설정</h2><div class="actions"><button class="st-save">저장</button></div></div>
-            <div class="st-section">
-              <div class="field"><label>대표 색상</label><div class="rad-group"><span class="rad on" data-rad><span class="dotc" style="border-color:#0071f3"></span>CONEXUS Blue</span><span class="rad" data-rad><span class="dotc"></span>Neutral</span><span class="rad" data-rad><span class="dotc"></span>커스텀</span></div></div>
-              <div class="field"><label>배너 이미지</label>
-                <div class="ag-empty" style="min-height:180px"><svg viewBox="0 0 24 24" class="ic"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg><div class="e1">권장 규격 1920 × 480 (JPG, PNG · 최대 5MB)</div><button class="upl" style="margin-top:8px"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M5 21h14"/></svg>이미지 업로드</button></div>
-              </div>
-              <div class="field"><label>로그인 화면 문구</label><input class="inp" value="제10기 정기주주총회에 오신 것을 환영합니다"></div>
-            </div>
-          </div></div>
-
-          <!-- 참석자 관리 -->
-          <div class="st-tab" data-panel="attendee"><div class="st-full">
-            <div class="st-head"><h2>참석자 관리</h2><div class="actions"><button class="btn">엑셀 내보내기</button><button class="st-save">참석자 추가</button></div></div>
-            <div class="stat-grid">
-              <div class="stat"><div class="k">총 대상 주주</div><div class="v">650,000</div></div>
-              <div class="stat"><div class="k">참석 주주</div><div class="v">20,000</div><div class="d"><span class="badge blue">3.1%</span></div></div>
-              <div class="stat"><div class="k">현장 참석</div><div class="v">6,200</div></div>
-              <div class="stat"><div class="k">온라인 참석</div><div class="v">13,800</div></div>
-            </div>
-            <div class="toolbar"><div class="search"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input placeholder="주주명 · 주주번호 검색"></div></div>
-            <div class="tbl-wrap"><table class="tbl">
-              <thead><tr><th>주주번호</th><th>주주명</th><th>보유주식</th><th>참석 유형</th><th>상태</th><th style="width:90px">관리</th></tr></thead>
-              <tbody>
-                <tr><td>000103</td><td>김민준</td><td>12,400</td><td>온라인</td><td><span class="badge green">참석</span></td><td><button class="btn">상세</button></td></tr>
-                <tr><td>000241</td><td>이서연</td><td>8,900</td><td>현장</td><td><span class="badge green">참석</span></td><td><button class="btn">상세</button></td></tr>
-                <tr><td>000388</td><td>박도윤</td><td>5,200</td><td>위임</td><td><span class="badge amber">위임</span></td><td><button class="btn">상세</button></td></tr>
-                <tr><td>000512</td><td>최지우</td><td>3,100</td><td>-</td><td><span class="badge gray">미참석</span></td><td><button class="btn">상세</button></td></tr>
-              </tbody>
-            </table></div>
-          </div></div>
-
-          <!-- 사전 질의 관리 -->
-          <div class="st-tab" data-panel="preq"><div class="st-full">
-            <div class="st-head"><h2>사전 질의 관리</h2><div class="actions"><button class="btn">엑셀 내보내기</button></div></div>
-            <div class="tbl-wrap"><table class="tbl">
-              <thead><tr><th style="width:44px">번호</th><th>주주명</th><th>질의 내용</th><th>등록일</th><th>답변 상태</th><th style="width:90px">관리</th></tr></thead>
-              <tbody>
-                <tr><td>1</td><td>김민준</td><td>배당 정책 관련 향후 계획을 알고 싶습니다.</td><td>2026-03-20</td><td><span class="badge green">답변완료</span></td><td><button class="btn">보기</button></td></tr>
-                <tr><td>2</td><td>이서연</td><td>신규 사업 부문의 투자 규모는 어느 정도인가요?</td><td>2026-03-21</td><td><span class="badge amber">대기</span></td><td><button class="btn">답변</button></td></tr>
-                <tr><td>3</td><td>박도윤</td><td>이사 선임 안건의 후보자 이력을 확인하고 싶습니다.</td><td>2026-03-22</td><td><span class="badge amber">대기</span></td><td><button class="btn">답변</button></td></tr>
-              </tbody>
-            </table></div>
-          </div></div>
-
+            <div class="st-head"><div><div class="page-title">약관 관리</div><div class="page-sub">전자주주총회 운영을 위한 필수 법적 문서입니다. 주총 시작 전 등록을 완료해 주세요.</div></div><div class="actions"><button class="st-save">저장</button></div></div>
+        <div class="elayout">
+          <nav class="esub"><a>사이트 설정</a><a>진행 설정</a><a class="on">약관 관리 <span class="miss">미등록</span></a><a>디자인 설정</a><a>참석자 관리</a><a>사전 질의 관리</a></nav>
+          <div class="emain">
+            <div class="esec"><div class="esec-h"><div><div class="esec-t">개인정보 수집 및 이용 </div><div class="esec-d">온라인 주주총회 진행을 위해 주주들의 필수 개인정보를 수집 및 이용하는 법적 동의 항목입니다.</div></div><button class="mbtn">등록</button></div><div class="etbl"><div class="etr eth"><span>구분</span><span>제목</span><span class="rt">등록일</span><span></span></div><div class="etr"><span class="ec">국문</span><span class="etitle">개인정보 수집 및 이용 동의 <span class="nowbadge">현재시행</span></span><span class="rt">2027-03-05</span><span class="eact"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></span></div><div class="etr"><span class="ec">영문</span><span class="etitle">개인정보 수집 및 이용 동의 <span class="nowbadge">현재시행</span></span><span class="rt">2027-03-05</span><span class="eact"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></span></div></div><button class="ever"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg> 버전 이력 2개</button></div>
+            <div class="esec"><div class="esec-h"><div><div class="esec-t">이용 약관 </div><div class="esec-d">전자주주총회 사이트 이용 시 주주와 회사 간의 권리, 의무 및 책임 사항을 규정하는 약관입니다.</div></div><button class="mbtn">등록</button></div><div class="etbl"><div class="etr eth"><span>구분</span><span>제목</span><span class="rt">등록일</span><span></span></div><div class="etr"><span class="ec">국문</span><span class="etitle">개인정보 수집 및 이용 동의 <span class="nowbadge">현재시행</span></span><span class="rt">2027-03-05</span><span class="eact"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></span></div></div><button class="ever"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg> 버전 이력 3개</button></div>
+            <div class="esec"><div class="esec-h"><div><div class="esec-t">개인정보 처리 방침 </div><div class="esec-d">수집한 주주 개인정보의 처리 목적, 보유 기간 및 제3자 제공 현황 등을 투명하게 공개하는 방침입니다.</div></div><button class="mbtn">등록</button></div><div class="etbl"><div class="etr eth"><span>구분</span><span>제목</span><span class="rt">등록일</span><span></span></div><div class="etr"><span class="ec">국문</span><span class="etitle">개인정보 수집 및 이용 동의 <span class="nowbadge">현재시행</span></span><span class="rt">2027-03-05</span><span class="eact"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></span></div></div><button class="ever"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg> 버전 이력 2개</button></div>
+            <div class="esec"><div class="esec-h"><div><div class="esec-t">만 14세 미만 보호자 동의 <span class="miss">미등록</span></div><div class="esec-d">만 14세 미만 미성년자 주주가 사전 참석을 신청할 경우, 법정대리인의 동의를 받기 위한 양식입니다.</div></div><button class="mbtn">등록</button></div><div class="etbl"><div class="etr eth"><span>구분</span><span>제목</span><span class="rt">등록일</span><span></span></div><div class="etr"><span class="ec">국문</span><span class="etitle">개인정보 수집 및 이용 동의 <span class="nowbadge">현재시행</span></span><span class="rt">2027-03-05</span><span class="eact"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></span></div></div><button class="ever"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg> 버전 이력 2개</button></div>
+          </div>
         </div>
       </div>
     </div>
