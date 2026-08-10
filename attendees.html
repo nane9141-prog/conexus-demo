@@ -33,6 +33,53 @@
   .stat .v{font-size:24px;font-weight:700;color:#0a0a0a;margin-top:6px}
   .stat .d{font-size:12px;margin-top:4px}
   .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
+  .at-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .at-head-r{display:flex;align-items:center;gap:12px}
+  .at-tag{font-size:13px;font-weight:600;color:#0a0a0a;display:inline-flex;align-items:center;gap:8px}
+  .tagid{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}
+  .tagid.unset{background:#fff1f2;color:#e11d48}
+  .tagid.set{background:var(--blue100);color:var(--blue700)}
+  .at-tabs{display:flex;gap:22px;border-bottom:1px solid var(--border);margin-top:18px}
+  .at-tab{position:relative;height:40px;border:none;background:none;font-family:inherit;font-size:15px;font-weight:500;color:#737373;cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:0}
+  .at-tab.on{color:#0a0a0a;font-weight:600}
+  .at-tab.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#171717}
+  .at-tab .cnt{display:inline-flex;align-items:center;height:20px;min-width:20px;padding:0 6px;border-radius:9999px;background:#f0f0f0;color:#525252;font-size:12px;font-weight:600}
+  .at-tab.on .cnt{background:#171717;color:#fff}
+  .at-tb{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px}
+  .at-tb-l{display:flex;align-items:center;gap:8px}
+  .selbox{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;font-size:14px;color:#0a0a0a;cursor:pointer}
+  .selbox svg{width:15px;height:15px;fill:none;stroke:#737373;stroke-width:2}
+  .search2{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;min-width:300px}
+  .search2 svg{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:2}
+  .search2 input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
+  .at-tb-r{display:flex;align-items:center;gap:6px}
+  .abtn{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border:1px solid var(--border);border-radius:9px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap}
+  .abtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .abtn.dark{background:#171717;border-color:#171717;color:#fff}
+  .abtn.ic{padding:0;width:38px;justify-content:center}
+  .atwrap{margin-top:14px;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
+  .atscroll{overflow:auto;max-height:calc(100vh - 340px)}
+  table.attbl{width:100%;border-collapse:collapse;font-size:14px}
+  table.attbl thead th{position:sticky;top:0;background:#fff;z-index:1;padding:14px 16px;text-align:left;font-weight:500;color:#737373;font-size:13px;white-space:nowrap;border-bottom:1px solid var(--border)}
+  table.attbl thead th.n{text-align:right}
+  table.attbl tbody td{padding:15px 16px;border-bottom:1px solid #f2f2f2;color:#0a0a0a;white-space:nowrap;font-variant-numeric:tabular-nums}
+  table.attbl tbody td.n{text-align:right}
+  table.attbl tbody tr:hover td{background:#fafafa}
+  .atmut{color:#a3a3a3}
+  .voter{display:inline-flex;align-items:center;gap:8px}
+  .vcaret{width:20px;height:20px;border-radius:50%;background:#171717;color:#fff;display:inline-flex;align-items:center;justify-content:center;flex:none}
+  .vcaret svg{width:11px;height:11px;fill:none;stroke:#fff;stroke-width:2.4}
+  .atsub{display:inline-flex;align-items:center;height:20px;padding:0 8px;background:#f0f4ff;border-radius:6px;font-size:12px;font-weight:500;color:#4b6bfb}
+  .atb{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:600}
+  .atb.blue{background:var(--blue100);color:var(--blue700)}
+  .atb.gray{background:#f4f4f5;color:#737373}
+  .atb.red{color:#e11d48;background:none;font-weight:600}
+  .atempty{padding:80px 20px;text-align:center;color:#737373;font-size:14px}
+  .at-foot{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px solid var(--border);font-size:13px;color:#525252}
+  .at-pg{display:flex;align-items:center;gap:8px}
+  .at-pg .pp{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;color:#525252}
+  .at-pg .pp.cur{background:#171717;color:#fff;border-color:#171717}
+  .at-pg select{height:30px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;padding:0 6px}
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
 </style>
 </head>
@@ -144,38 +191,35 @@
     </div>
     <div class="scroll">
       <div class="content" style="width:100%">
-        <div class="st-head"><div><div class="page-title">참석자 관리</div><div class="page-sub">사전 등록 및 현장·온라인 참석 현황을 관리하고 상세 정보를 확인합니다.</div></div><div class="actions"><button class="btn">엑셀 내보내기</button><button class="st-save">참석자 추가</button></div></div>
-
-        <div class="stat-grid">
-          <div class="stat"><div class="k">총 대상 주주</div><div class="v">650,000</div></div>
-          <div class="stat"><div class="k">참석 주주</div><div class="v">20,000</div><div class="d"><span class="badge blue">주주 참석률 3.1%</span></div></div>
-          <div class="stat"><div class="k">현장 참석</div><div class="v">6,200</div></div>
-          <div class="stat"><div class="k">온라인 참석</div><div class="v">13,800</div></div>
+        <div class="at-head">
+          <div><div class="page-title">참석자 관리</div><div class="page-sub">현장·전자주총 참석자를 등록하고 관리합니다.</div></div>
+          <div class="at-head-r"><span class="at-tag">현장투표 태그 ID <span class="tagid unset" id="tagId">미설정</span></span><button class="abtn">주총선언문</button></div>
         </div>
-
-        <div class="toolbar" style="margin-top:16px">
-          <div class="chips">
-            <button class="chip active">전체 <span class="c">650,000</span></button>
-            <button class="chip">참석 <span class="c">20,000</span></button>
-            <button class="chip">위임 <span class="c">3,500</span></button>
-            <button class="chip">미참석 <span class="c">626,500</span></button>
+        <div class="at-tabs">
+          <button class="at-tab on" data-at="reg">현장참석자 등록</button>
+          <button class="at-tab" data-at="evote">전자주총 참석자 <span class="cnt">99+</span></button>
+          <button class="at-tab" data-at="code">전자주총 입장코드 <span class="cnt">99+</span></button>
+          <button class="at-tab" data-at="all">현장참석자 전체 <span class="cnt">99+</span></button>
+        </div>
+        <div class="at-tb">
+          <div class="at-tb-l">
+            <div class="selbox"><span>투표권자</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
+            <div class="search2"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="atSearch" placeholder="투표권자를 검색해 주세요"></div>
           </div>
-          <div class="search"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input placeholder="주주명 · 주주번호 검색"></div>
+          <div class="at-tb-r">
+            <button class="abtn regonly"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>대리인 · 위임주주 등록</button>
+            <button class="abtn dark regonly"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M8 4v6"/></svg>참관인 등록</button>
+            <button class="abtn ic"><svg viewBox="0 0 24 24"><path d="M3 6h18M6 12h12M10 18h4"/></svg></button>
+            <button class="abtn ic"><svg viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></button>
+          </div>
         </div>
-
-        <div class="tbl-wrap" style="margin-top:12px"><table class="tbl">
-          <thead><tr><th style="width:36px"><span class="chk"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></th><th>주주번호</th><th>주주명</th><th style="text-align:right">보유주식</th><th>참석 유형</th><th>인증</th><th>상태</th><th style="width:80px">관리</th></tr></thead>
-          <tbody>
-            <tr><td><span class="chk"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></td><td>000103</td><td>김민준</td><td style="text-align:right">12,400</td><td>온라인</td><td><span class="badge green">완료</span></td><td><span class="badge green">참석</span></td><td><button class="btn">상세</button></td></tr>
-            <tr><td><span class="chk"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></td><td>000241</td><td>이서연</td><td style="text-align:right">8,900</td><td>현장</td><td><span class="badge green">완료</span></td><td><span class="badge green">참석</span></td><td><button class="btn">상세</button></td></tr>
-            <tr><td><span class="chk"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></td><td>000388</td><td>박도윤</td><td style="text-align:right">5,200</td><td>위임</td><td><span class="badge amber">대리인</span></td><td><span class="badge amber">위임</span></td><td><button class="btn">상세</button></td></tr>
-            <tr><td><span class="chk"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></td><td>000512</td><td>최지우</td><td style="text-align:right">3,100</td><td>-</td><td><span class="badge gray">-</span></td><td><span class="badge gray">미참석</span></td><td><button class="btn">상세</button></td></tr>
-            <tr><td><span class="chk"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></td><td>000634</td><td>정예은</td><td style="text-align:right">2,050</td><td>온라인</td><td><span class="badge green">완료</span></td><td><span class="badge green">참석</span></td><td><button class="btn">상세</button></td></tr>
-          </tbody>
-        </table></div>
-
-        <div class="toolbar" style="margin-top:14px;justify-content:flex-end">
-          <div class="pager"><span class="pb"><svg class="ic" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></span><span class="cur" style="background:var(--ink);color:#fff;border-radius:8px">1</span><span class="pb">2</span><span class="pb">3</span><span class="pb"><svg class="ic" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span></div>
+        <div class="atwrap">
+          <div class="atscroll"><table class="attbl"><thead id="atHead"></thead><tbody id="atBody"></tbody></table></div>
+          <div class="at-foot"><span id="atCount">총 0건 · 0주</span>
+            <div class="at-pg">페이지당 <select><option>20</option><option>50</option></select>
+              <span class="pp">|&lt;</span><span class="pp">&lt;</span><span class="pp cur">1</span><span id="atTot">/ 0</span><span class="pp">&gt;</span><span class="pp">&gt;|</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -228,6 +272,100 @@
     var cr=e.target.closest('.chk-row'); if(cr){cr.classList.toggle('on');}
     var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
   });
+</script>
+<div class="ovl2" id="tagOvl"><div class="dlg2">
+  <button class="dx" id="tagClose">✕</button>
+  <div class="dh"><div class="dt">현장투표 태그 ID 설정</div><div class="dd">현장투표 앱 사용을 위해 실물 NFC와 동일한 태그 ID를 선택해 주세요.</div></div>
+  <div class="dc">
+    <div class="fl"><div class="fll">태그 ID</div><div class="selfull" id="tagSel"><span id="tagSelTxt" class="ph">실물 태그와 동일한 ID 선택</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div></div>
+    <div class="warn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span>선택한 ID와 소지하신 실물 태그 ID가 일치하지 않을 경우, 타인의 의결권이 잘못 전송됩니다. 설정 전 반드시 동일 여부를 확인해 주세요.</span></div>
+  </div>
+  <div class="df"><label class="cbrow" id="tagChk"><span class="cb"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>실물 태그 ID와 일치합니다.</label><button class="dbtn" id="tagCancel">취소</button><button class="dbtn dark" id="tagOk" disabled>현장투표 태그 ID 설정</button></div>
+</div></div>
+<style>
+  .ovl2{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:3000}
+  .ovl2.on{display:flex}
+  .dlg2{width:560px;max-width:calc(100vw - 32px);background:#fff;border-radius:14px;position:relative;box-shadow:0 12px 34px rgba(0,0,0,.2)}
+  .dlg2 .dx{position:absolute;right:16px;top:16px;border:none;background:none;font-size:15px;color:#737373;cursor:pointer}
+  .dlg2 .dh{padding:20px 20px 8px}
+  .dlg2 .dt{font-size:17px;font-weight:700;color:#0a0a0a}
+  .dlg2 .dd{font-size:14px;color:#737373;margin-top:6px}
+  .dlg2 .dc{padding:8px 20px 4px;display:flex;flex-direction:column;gap:14px}
+  .fll{font-size:14px;font-weight:600;color:#0a0a0a;margin-bottom:8px}
+  .selfull{display:flex;justify-content:space-between;align-items:center;height:42px;padding:0 14px;border:1px solid var(--border);border-radius:10px;cursor:pointer}
+  .selfull .ph{color:#a3a3a3;font-size:14px}.selfull svg{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:2}
+  .warn{display:flex;gap:8px;padding:12px 14px;background:#fff1f2;border-radius:10px;font-size:13px;line-height:19px;color:#e11d48}
+  .warn svg{width:18px;height:18px;flex:none;fill:none;stroke:#e11d48;stroke-width:2;margin-top:1px}
+  .dlg2 .df{display:flex;align-items:center;gap:10px;justify-content:flex-end;padding:16px 20px 20px}
+  .cbrow{display:flex;align-items:center;gap:8px;margin-right:auto;font-size:14px;color:#0a0a0a;cursor:pointer}
+  .cbrow .cb{width:20px;height:20px;border:1.5px solid #d4d4d4;border-radius:5px;display:flex;align-items:center;justify-content:center}
+  .cbrow.on .cb{background:#171717;border-color:#171717}
+  .cbrow .cb svg{width:13px;height:13px;fill:none;stroke:#fff;stroke-width:2.4;display:none}.cbrow.on .cb svg{display:block}
+  .dbtn{height:38px;padding:0 14px;border:1px solid var(--border);border-radius:10px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;color:#0a0a0a;cursor:pointer}
+  .dbtn.dark{background:#171717;border-color:#171717;color:#fff}
+  .dbtn:disabled{opacity:.45;cursor:not-allowed}
+</style>
+<script>
+(function(){
+  var D=[
+   {voter:'-',gubun:'주주',name:'CITIGROUP',no:'1233478115...',pre:'전자투표(국내)',hold:67000,attend:67000,ratio:'0.42%',site:'참석',app:'사용',code:'미발급',evote:'참석',limit:'-',ag:'-'},
+   {voter:'BARCLAYS CAPITAL',sub:'대리인 10명',gubun:'주주',name:'BARCLAYS CAPITAL',no:'1233478115...',pre:'전자투표(국내)',hold:345804,attend:345804,ratio:'0.82%',site:'참석',app:'미사용',code:'미발급',evote:'참석',limit:'자사주',ag:'-'},
+   {voter:'우리사주조합장(이유정)',gubun:'주주',name:'우리사주조합장(이유정)',no:'8807122',pre:'미행사',hold:345804,attend:345804,ratio:'0.82%',site:'등록전',app:'서면투표',code:'미발급',evote:'미참석',limit:'최대주주',ag:'-'},
+   {voter:'한국교직원공제회',sub:'통합 3건',gubun:'주주',name:'이민정',no:'-',pre:'미행사',hold:3345804,attend:1345804,ratio:'5.42%',site:'일부참석',app:'사용',code:'EG-20240302',evote:'일부참석',limit:'-',ag:'-'},
+   {voter:'삼성자산운용',sub:'통합 3건',gubun:'주주',name:'장하은',no:'-',pre:'서면위임(타사)',hold:800000,attend:700000,ratio:'1.22%',site:'참석',app:'서면투표',code:'EG-20240302',evote:'참석',limit:'-',ag:'-'},
+   {voter:'이민정',sub:'대리인 2명',gubun:'주주',name:'구동수',no:'8807122',pre:'중복행사',hold:430000,attend:800000,ratio:'1.22%',site:'일부참석',app:'미사용',code:'EG-20240302',evote:'일부참석',limit:'-',ag:'-'},
+   {voter:'구동수',gubun:'비주주',name:'하은정',no:'8807122',pre:'미행사',hold:270000,attend:800000,ratio:'1.22%',site:'참석',app:'사용',code:'EG-20240302',evote:'참석',limit:'공익법인',ag:'-'},
+   {voter:'하은정',sub:'대리인 : 이수임',gubun:'주주',name:'유동수',no:'8807122',pre:'미행사',hold:120000,attend:800000,ratio:'1.22%',site:'참석',app:'사용',code:'EG-20240302',evote:'참석',limit:'-',ag:'-'},
+   {voter:'유동수',gubun:'주주',name:'윤서연',no:'8807122',pre:'미행사',hold:80000,attend:80000,ratio:'0.02%',site:'참석',app:'사용',code:'EG-20240302',evote:'참석',limit:'-',ag:'-'},
+   {voter:'윤서연',gubun:'비주주',name:'신유진',no:'8807122',pre:'미행사',hold:50000,attend:50000,ratio:'0.02%',site:'참석',app:'사용',code:'EG-20240302',evote:'참석',limit:'-',ag:'-'},
+   {voter:'신유진',gubun:'주주',name:'구동수',no:'8807122',pre:'미행사',hold:30000,attend:30000,ratio:'0.02%',site:'참석',app:'사용',code:'EG-20240302',evote:'참석',limit:'-',ag:'-'}
+  ];
+  function cm(n){return (n||0).toLocaleString('en-US');}
+  function preB(p){ if(p==='미행사') return '<span class="atb gray">미행사</span>'; if(p==='중복행사') return '<span class="atb red">중복행사</span>'; return p; }
+  function siteB(s){ return s==='참석'?'<span class="atb blue">참석</span>':'<span class="atb gray">'+s+'</span>'; }
+  function evoteB(s){ return s==='참석'?'<span class="atb blue">참석</span>':'<span class="atb gray">'+s+'</span>'; }
+  function appB(a){ return a==='사용'?'사용':(a==='미사용'?'<span class="atmut">미사용</span>':a); }
+  function voterCell(x){ var car=x.sub?'<span class="vcaret"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>':''; var sub=x.sub?'<span class="atsub">'+x.sub+'</span>':''; return '<div class="voter">'+car+'<span>'+x.voter+'</span>'+sub+'</div>'; }
+  var COLS={
+    reg:['투표권자','주주명','주주번호','사전투표','보유주식수','참석주식수','지분율','현장 참석','의결권 제한','의안별 제한'],
+    all:['투표권자','주주명','주주번호','사전투표','보유주식수','참석주식수','지분율','현장 참석','앱 사용','의결권 제한'],
+    evote:['투표권자','주주구분','주주명','보유주식수','지분율','입장코드','전자주총 참석'],
+    code:['투표권자','주주명','입장코드','발급 상태','전자주총 참석']
+  };
+  var NCOLS={reg:[4,5,6],all:[4,5,6],evote:[3,4],code:[]};
+  function rowFor(tab,x){
+    if(tab==='evote') return '<td>'+voterCell(x)+'</td><td><span class="atb gray">'+x.gubun+'</span></td><td>'+x.name+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+x.ratio+'</td><td>'+(x.code==='미발급'?'<span class="atmut">미발급</span>':x.code)+'</td><td>'+evoteB(x.evote)+'</td>';
+    if(tab==='code') return '<td>'+voterCell(x)+'</td><td>'+x.name+'</td><td>'+(x.code==='미발급'?'<span class="atmut">미발급</span>':x.code)+'</td><td>'+(x.code==='미발급'?'<span class="atb gray">미발급</span>':'<span class="atb blue">발급완료</span>')+'</td><td>'+evoteB(x.evote)+'</td>';
+    var last = tab==='all' ? ('<td>'+appB(x.app)+'</td><td>'+(x.limit==='-'?'<span class="atmut">-</span>':x.limit)+'</td>') : ('<td>'+(x.limit==='-'?'<span class="atmut">-</span>':x.limit)+'</td><td>'+(x.ag==='-'?'<span class="atmut">-</span>':x.ag)+'</td>');
+    return '<td>'+voterCell(x)+'</td><td>'+x.name+'</td><td>'+x.no+'</td><td>'+preB(x.pre)+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+cm(x.attend)+'</td><td class="n">'+x.ratio+'</td><td>'+siteB(x.site)+'</td>'+last;
+  }
+  var cur='reg';
+  function render(){
+    var head=document.getElementById('atHead'), body=document.getElementById('atBody');
+    var cols=COLS[cur], nc=NCOLS[cur];
+    head.innerHTML='<tr>'+cols.map(function(c,i){return '<th'+(nc.indexOf(i)>=0?' class="n"':'')+'>'+c+'</th>';}).join('')+'</tr>';
+    var q=(document.getElementById('atSearch').value||'').trim();
+    var rows=D;
+    if(cur==='reg'){ if(!q){ body.innerHTML='<tr><td colspan="'+cols.length+'"><div class="atempty">주주명부에서 주주를 검색 후 참석자 등록을 진행해 주세요</div></td></tr>'; setCount(0); return; } rows=D.filter(function(x){return (x.voter+x.name+x.no).indexOf(q)>=0;}); }
+    if(!rows.length){ body.innerHTML='<tr><td colspan="'+cols.length+'"><div class="atempty">검색 결과가 없습니다.</div></td></tr>'; setCount(0); return; }
+    body.innerHTML=rows.map(function(x){return '<tr>'+rowFor(cur,x)+'</tr>';}).join('');
+    setCount(rows.length);
+  }
+  function setCount(n){ var sum=0; (cur==='reg'? (function(){var q=(document.getElementById('atSearch').value||'').trim(); return q?D.filter(function(x){return (x.voter+x.name+x.no).indexOf(q)>=0;}):[];})() : D).forEach(function(x){sum+=x.hold;}); if(cur!=='reg') n=D.length; document.getElementById('atCount').textContent='총 '+n+'건 · '+cm(sum)+'주'; document.getElementById('atTot').textContent='/ '+Math.max(1,Math.ceil(n/20)); }
+  document.querySelectorAll('.at-tab').forEach(function(t){ t.addEventListener('click',function(){ cur=t.dataset.at; document.querySelectorAll('.at-tab').forEach(function(x){x.classList.toggle('on',x===t);}); document.querySelectorAll('.regonly').forEach(function(b){b.style.display=(cur==='reg')?'':'none';}); render(); }); });
+  document.getElementById('atSearch').addEventListener('input',render);
+  // 태그 ID 팝업
+  var to=document.getElementById('tagOvl');
+  document.getElementById('tagId').addEventListener('click',function(){ to.classList.add('on'); });
+  document.getElementById('tagClose').addEventListener('click',function(){to.classList.remove('on');});
+  document.getElementById('tagCancel').addEventListener('click',function(){to.classList.remove('on');});
+  to.addEventListener('click',function(e){ if(e.target===to) to.classList.remove('on'); });
+  var sel=document.getElementById('tagSel'), selT=document.getElementById('tagSelTxt'), chk=document.getElementById('tagChk'), ok=document.getElementById('tagOk');
+  sel.addEventListener('click',function(){ selT.textContent='NFC-1001'; selT.classList.remove('ph'); });
+  chk.addEventListener('click',function(){ chk.classList.toggle('on'); ok.disabled=!(chk.classList.contains('on')&&!selT.classList.contains('ph')); });
+  ok.addEventListener('click',function(){ var t=document.getElementById('tagId'); t.textContent='NFC-1001'; t.className='tagid set'; to.classList.remove('on'); });
+  render();
+})();
 </script>
 </body>
 </html>
