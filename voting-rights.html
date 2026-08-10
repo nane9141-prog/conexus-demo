@@ -113,6 +113,11 @@
   /* 대시보드: 컨텐츠 감싸는 라운드 박스 제거 */
   .main{background:transparent;border:none;border-radius:0;box-shadow:none}
   .topbar{border-bottom:none}
+  .chsub{font-size:13px;font-weight:500;color:#737373}
+  .chsep{height:1px;background:var(--border);margin-top:auto}
+  .chstat{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;margin-top:8px}
+  .chstat .cdot{width:6px;height:6px;border-radius:9999px;flex:none}
+  .ch-title{font-size:14px;font-weight:600;color:#0a0a0a;margin:4px 0 10px}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">  // 권유대행: 콤보 차트 + 슬라이더
   (function(){
@@ -310,6 +315,38 @@
               <div class="kk">미행사 의결권</div>
               <div class="kv">214,071,964<span class="unit">주</span></div>
               <div class="kd">잔여 주주 631,550명</div>
+            </div>
+          </div>
+
+          <div class="ch-title">사전 행사 채널별 현황</div>
+          <div class="vr-kpi">
+            <div class="kcard">
+              <div class="kk">전자투표·위임 (국내)</div>
+              <div class="kv">92,340,000<span class="unit">주</span></div>
+              <div class="chsub">15,200명</div>
+              <div class="chsep"></div>
+              <div class="chstat"><span class="cdot" style="background:#0071f3"></span><span style="color:#0071f3">집계중</span></div>
+            </div>
+            <div class="kcard">
+              <div class="kk">전자투표·위임 (해외)</div>
+              <div class="kv">48,600,000<span class="unit">주</span></div>
+              <div class="chsub">1,050명</div>
+              <div class="chsep"></div>
+              <div class="chstat"><span class="cdot" style="background:#0071f3"></span><span style="color:#0071f3">집계중</span></div>
+            </div>
+            <div class="kcard">
+              <div class="kk">서면위임 (자사)</div>
+              <div class="kv">78,200,000<span class="unit">주</span></div>
+              <div class="chsub">1,900명</div>
+              <div class="chsep"></div>
+              <div class="chstat"><span class="cdot" style="background:#737373"></span><span style="color:#737373">접수</span></div>
+            </div>
+            <div class="kcard">
+              <div class="kk">서면위임 (타사)</div>
+              <div class="kv">43,000,000<span class="unit">주</span></div>
+              <div class="chsub">300명</div>
+              <div class="chsep"></div>
+              <div class="chstat"><span class="cdot" style="background:#171717"></span><span style="color:#171717">접수</span></div>
             </div>
           </div>
 
