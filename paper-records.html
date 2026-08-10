@@ -754,7 +754,7 @@
   (function(){
     function chOf(){ var t=document.querySelector('#evFilled .evtabs .evtab.active, #evEmpty .evtabs .evtab.active, .evtabs .evtab.active');
       var x=t?t.textContent:''; if(x.indexOf('타사')>=0)return '타사'; if(x.indexOf('서면투표')>=0)return '투표'; return '자사'; }
-    document.querySelectorAll('.js-indiv').forEach(function(b){ b.addEventListener('click',function(){ location.href='paper-individual.html?ch='+encodeURIComponent(chOf()); }); });
+    document.querySelectorAll('.js-indiv').forEach(function(b){ b.addEventListener('click',function(){ location.href='paper-individual.html?ch='+encodeURIComponent(chOf())+'&v='+Date.now(); }); });
   })();
 </script>
 </body>
