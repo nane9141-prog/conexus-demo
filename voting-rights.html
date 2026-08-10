@@ -122,11 +122,14 @@
   .badge-exp.pass{background:#e8f5ee}
   .badge-exp.elect{background:#ebf4ff}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">  // 권유대행: 콤보 차트 + 슬라이더
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+  // 권유대행: 콤보 차트 + 슬라이더
   (function(){
     var chart=null;
     function initChart(){
-      if(chart || typeof Chart==='undefined') return;
+      if(chart) return;
+      if(typeof Chart==='undefined'){ setTimeout(initChart,120); return; }
       var cv=document.getElementById('irkChart'); if(!cv) return;
       var labels=['3/13','3/14','3/15','3/16','3/17','3/18','3/19'];
       var daily=[18000000,24000000,20000000,30000000,26000000,12000000,12800000];
@@ -149,6 +152,7 @@
     document.querySelectorAll('.vr-tab').forEach(function(t){
       if(t.dataset.vt==='solicit') t.addEventListener('click',function(){ setTimeout(initChart,60); });
     });
+    if(document.querySelector('.vr-panel[data-vp="solicit"].active')) setTimeout(initChart,120);
     // slider
     var base=142800000+78200000+43000000; // 264,000,000
     var target=160000000;
