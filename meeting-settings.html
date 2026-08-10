@@ -188,6 +188,19 @@
   .dfile{background:#fafafa;border:1px solid var(--border);border-radius:12px;padding:14px 16px}
   .dfile .an{font-size:14px;font-weight:600}
   .dfile .ad{font-size:12px;color:var(--muted-fg);margin:4px 0 10px}
+  .reso-sec-h{font-size:13px;font-weight:600;color:#0a0a0a;margin:14px 0 8px}
+  .reso-sec-h:first-child{margin-top:0}
+  .reso-card{border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+  .reso-card .rt{display:flex;align-items:center;gap:6px}
+  .reso-card .rd{font-size:12px;color:var(--muted-fg);margin-top:6px;line-height:1.6}
+  .reso-item{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid #f0f0f0}
+  .reso-item:last-child{border-bottom:none}
+  .reso-item .rn{width:48px;font-size:12px;color:var(--muted-fg);flex:none}
+  .reso-item .rnm{flex:1;font-size:13px;color:#0a0a0a}
+  .mbadge{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;font-size:11px;font-weight:600;flex:none}
+  .mbadge.ord{background:#ebf4ff;color:#0066df}
+  .mbadge.spc{background:#ede9fe;color:#7c3aed}
+  .mbadge.cum{background:#fef3c7;color:#b45309}
 </style>
 <style>
   :root{
@@ -875,7 +888,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 </div></div><div class="st-tab" data-panel="agenda"><div class="st-full">
   <div class="st-head"><div><h2>의안 설정</h2><div class="sub-help">주주총회에서 결의할 의안을 등록해 주세요. 좌측 아이콘을 드래그하여 순서를 변경하거나 하위 의안을 구성할 수 있습니다.</div></div>
     <div class="actions"><button class="btn" data-load>이전 설정 불러오기</button><button class="st-save" data-save>저장</button></div></div>
-  <div class="ag-toolbar"><button class="btn-line" data-toast="결의조건 안내는 준비 중이에요">결의조건 보기</button>
+  <div class="ag-toolbar"><button class="btn-line" id="resoBtn">결의조건 보기</button>
     <button class="btn-line" id="agendaAdd"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg>의안 추가</button></div>
   <div class="ag-thead"><div>번호</div><div>의안 종류<span class="req">*</span></div><div>결의방법</div><div>의안명<span class="req">*</span></div><div></div></div>
   <div class="ag-list" id="agendaList"></div>
@@ -934,6 +947,14 @@ a.nav-item{text-decoration:none;color:var(--fg)}
       </div></div>
     </div>
     <div class="sheet-foot" style="flex-direction:row;gap:8px"><button class="btn-line" data-close style="flex:1">취소</button><button class="primary" id="loadApply" style="flex:1">적용</button></div>
+  </aside>
+</div>
+<div class="overlay hidden" id="resoOverlay">
+  <aside class="sheet">
+    <div class="sheet-head"><div><h3>결의조건 보기</h3><div class="sdesc">의안별 결의방법과 가결 정족수 기준입니다.</div></div>
+      <button class="iconbtn md" data-close><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+    <div class="sheet-body" id="resoBody"></div>
+    <div class="sheet-foot"><button class="primary" data-close style="width:100%">확인</button></div>
   </aside>
 </div>
 <!-- 의안 상세 설정 패널 -->
@@ -1046,20 +1067,23 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   const AG_TYPES=['재무제표 승인','정관 변경','감사위원회 감사위원 선임(독립)','감사위원회 감사위원 선임(일반)','이사선임','이사 보수한도 승인','배당금 지급 승인','감사 선임'];
   const AG_METHODS=['보통결의','특별결의'];
   const AGENDA_DATA=[
-    {no:'1',type:'재무제표 승인',method:'보통결의',name:'제13기 재무제표 및 연결재무제표 승인의 건',sub:[]},
+    {no:'1',type:'재무제표 승인',method:'보통결의',name:'재무제표 승인의 건',sub:[]},
     {no:'2',type:'정관 변경',method:'특별결의',name:'정관 일부 변경의 건',sub:[
-      {no:'2-1',type:'정관 변경',method:'특별결의',name:'정관 일부 변경의 건 (집중투표제 도입을 위한 배제 조항 삭제)'}]},
-    {no:'3',type:'감사위원회 감사위원 선임(독립)',method:'보통결의',name:'감사위원회 위원 선임의 건',sub:[
-      {no:'3-1',type:'감사위원회 감사위원 선임(독립)',method:'보통결의',name:'사외이사인 감사위원회 위원 선임의 건'},
-      {no:'3-1-1',type:'감사위원회 감사위원 선임(독립)',method:'보통결의',name:'사외이사인 감사위원회 위원 김수지 선임의 건'},
-      {no:'3-2',type:'감사위원회 감사위원 선임(일반)',method:'보통결의',name:'사외이사가 아닌 감사위원회 위원 이영호 선임의 건'}]},
-    {no:'4',type:'이사선임',method:'특별결의',name:'이사 선임의 건',sub:[
-      {no:'4-1',type:'이사선임',method:'보통결의',name:'사외이사 후보 박민수 선임의 건'}]},
-    {no:'5',type:'이사 보수한도 승인',method:'보통결의',name:'이사 보수한도 승인의 건',sub:[]}
+      {no:'2-1',type:'정관 변경',method:'특별결의',name:'집중투표제 배제 조항 삭제의 건 (정관 제37조 제3항)'},
+      {no:'2-2',type:'정관 변경',method:'특별결의',name:'전자주주총회 도입 관련 변경 (정관 제26조 제2항)'},
+      {no:'2-3',type:'정관 변경',method:'특별결의',name:'의결권 대리행사 수단 확대 (정관 제31조 제2항)'}]},
+    {no:'3',type:'이사선임',method:'보통결의',name:'이사 선임의 건',sub:[
+      {no:'3-1',type:'이사선임',method:'보통결의',name:'집중투표 후보 4인 중 2인 선임의 건'},
+      {no:'3-1-1',type:'이사선임',method:'보통결의',name:'사외이사 김근수 선임의 건'},
+      {no:'3-1-2',type:'이사선임',method:'보통결의',name:'사외이사 진웅섭 선임의 건'},
+      {no:'3-1-3',type:'이사선임',method:'보통결의',name:'사외이사 남상일 선임의 건'},
+      {no:'3-1-4',type:'이사선임',method:'보통결의',name:'사외이사 박선화 선임의 건'},
+      {no:'3-2',type:'감사위원회 감사위원 선임(독립)',method:'보통결의',name:'감사위원이 되는 사외이사 선임의 건'}]}
   ];
   const agendaList=document.getElementById('agendaList');
   const agTypePop=document.getElementById('agTypePop'),agMenuPop=document.getElementById('agMenuPop');
   let dragIdx=null;
+  function renumber(){AGENDA_DATA.forEach((top,i)=>{const nn=String(i+1),old=top.no;if(old!==nn&&top.sub)top.sub.forEach(sb=>{sb.no=nn+sb.no.slice(old.length);});top.no=nn;});}
   function esc(s){return (s||'').replace(/"/g,'&quot;');}
   const CHV2='<svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>';
   const DOTS='<svg class="ic" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>';
@@ -1089,7 +1113,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
       }
       card.addEventListener('dragover',e=>{if(dragIdx===null)return;e.preventDefault();e.dataTransfer.dropEffect='move';if(idx!==dragIdx)card.classList.add('over');});
       card.addEventListener('dragleave',()=>card.classList.remove('over'));
-      card.addEventListener('drop',e=>{e.preventDefault();card.classList.remove('over');const from=dragIdx,to=idx;if(from===null||from===to)return;const m=AGENDA_DATA.splice(from,1)[0];AGENDA_DATA.splice(to,0,m);dragIdx=null;renderAgenda();});
+      card.addEventListener('drop',e=>{e.preventDefault();card.classList.remove('over');const from=dragIdx,to=idx;if(from===null||from===to)return;const m=AGENDA_DATA.splice(from,1)[0];AGENDA_DATA.splice(to,0,m);dragIdx=null;renumber();renderAgenda();});
     });
     agendaList.querySelectorAll('.ag-row').forEach(r=>r.addEventListener('click',()=>openAgDetail(r.dataset.no,r.dataset.name)));
     agendaList.querySelectorAll('.agtype').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();openAgType(b);}));
@@ -1114,7 +1138,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     const items=[{label:'상세 설정',icon:IC_EDIT,fn:()=>openAgDetail(no,name)}];
     if(!isSub)items.push({label:'하위 의안 추가',icon:IC_PLUS,fn:()=>{const l=findAg(no);if(l){const t=AGENDA_DATA[l.t];t.sub=t.sub||[];t.sub.push({no:t.no+'-'+(t.sub.length+1),type:t.type,method:'보통결의',name:''});renderAgenda();}}});
     items.push({sep:true});
-    items.push({label:'삭제',danger:true,icon:IC_TRASH,fn:()=>{const l=findAg(no);if(l){if(l.s>=0)AGENDA_DATA[l.t].sub.splice(l.s,1);else AGENDA_DATA.splice(l.t,1);renderAgenda();}}});
+    items.push({label:'삭제',danger:true,icon:IC_TRASH,fn:()=>{const l=findAg(no);if(l){if(l.s>=0)AGENDA_DATA[l.t].sub.splice(l.s,1);else AGENDA_DATA.splice(l.t,1);renumber();renderAgenda();}}});
     agMenuPop.innerHTML='';
     items.forEach(it=>{if(it.sep){const s=document.createElement('div');s.className='menu-sep';agMenuPop.appendChild(s);return;}const b=document.createElement('button');b.className='menuitem'+(it.danger?' danger':'');b.innerHTML=it.icon+it.label;b.addEventListener('click',ev=>{ev.stopPropagation();agMenuPop.classList.add('hidden');it.fn();});agMenuPop.appendChild(b);});
     agTypePop.classList.add('hidden');agMenuPop.classList.remove('hidden');
@@ -1122,9 +1146,23 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   }
   agMenuPop.addEventListener('click',e=>e.stopPropagation());
   let agSeq=6;
-  document.getElementById('agendaAdd').addEventListener('click',()=>{AGENDA_DATA.push({no:String(agSeq++),type:'재무제표 승인',method:'보통결의',name:'',sub:[]});renderAgenda();});
+  document.getElementById('agendaAdd').addEventListener('click',()=>{AGENDA_DATA.push({no:String(agSeq++),type:'재무제표 승인',method:'보통결의',name:'',sub:[]});renumber();renderAgenda();});
   renderAgenda();
   document.addEventListener('click',()=>{agTypePop.classList.add('hidden');agMenuPop.classList.add('hidden');});
+  // 결의조건 보기 패널
+  const resoOverlay=document.getElementById('resoOverlay');
+  function resoItem(it,sub){var cls=it.method==='특별결의'?'spc':'ord';return '<div class="reso-item"><span class="rn"'+(sub?' style="padding-left:12px"':'')+'>'+it.no+'</span><span class="rnm">'+(it.name||'(미입력)')+'</span><span class="mbadge '+cls+'">'+it.method+'</span></div>';}
+  function renderReso(){
+    var b=document.getElementById('resoBody');if(!b)return;
+    var h='<div class="reso-sec-h">가결 정족수 기준</div>';
+    h+='<div class="reso-card"><div class="rt"><span class="mbadge ord">보통결의</span></div><div class="rd">출석한 주주 의결권의 과반수 찬성, 그리고 발행주식총수의 1/4 이상 찬성</div></div>';
+    h+='<div class="reso-card"><div class="rt"><span class="mbadge spc">특별결의</span></div><div class="rd">출석한 주주 의결권의 2/3 이상 찬성, 그리고 발행주식총수의 1/3 이상 찬성</div></div>';
+    h+='<div class="reso-card"><div class="rt"><span class="mbadge cum">집중투표</span></div><div class="rd">1주당 선임할 이사 수만큼 의결권을 부여하여 후보별 득표순 상위 N인을 선임합니다. (개표 분모: 참석 의결권 300,000,000주)</div></div>';
+    h+='<div class="reso-sec-h">의안별 결의방법</div>';
+    AGENDA_DATA.forEach(function(top){h+=resoItem(top,false);(top.sub||[]).forEach(function(sb){h+=resoItem(sb,true);});});
+    b.innerHTML=h;
+  }
+  document.getElementById('resoBtn').addEventListener('click',function(){renderReso();resoOverlay.classList.remove('hidden');});
 
   // 의안 상세 설정 패널
   const agDetailOverlay=document.getElementById('agDetailOverlay');
