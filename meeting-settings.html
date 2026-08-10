@@ -201,6 +201,7 @@
   .mbadge.ord{background:#ebf4ff;color:#0066df}
   .mbadge.spc{background:#ede9fe;color:#7c3aed}
   .mbadge.cum{background:#fef3c7;color:#b45309}
+  .vi-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
 </style>
 <style>
   :root{
@@ -895,11 +896,14 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 </div></div><div class="st-tab" data-panel="voting-intent"><div class="st-full">
   <div class="st-head"><div><h2>투표 의향 설정</h2><div class="sub-help">전자위임 서비스 사용 시 권유자별 투표의향을 설정합니다. 권유자의견 공개를 적용한 경우 주주용 사이트 화면에 권유자 의향이 노출됩니다.</div></div>
     <div class="actions"><button class="st-save" data-save>저장</button></div></div>
-  <div class="seg"><div class="s active">회사 측</div><div class="s">주주 측</div></div>
+  <div class="vi-bar">
+    <div class="seg" id="viSeg"><div class="s active" data-viseg="company">회사 측</div><div class="s" data-viseg="shareholder">주주 측</div></div>
+    <button class="inp sel val" id="viSolBtn" style="display:none;min-width:190px" onclick="event.stopPropagation()"><span>대리행사 권유자 선택</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+  </div>
   <div class="tbl-wrap"><table class="tbl">
     <colgroup><col style="width:110px"><col style="width:140px"><col style="width:100px"><col><col style="width:224px"><col style="width:150px"></colgroup>
     <thead><tr><th>의안번호</th><th>의안종류</th><th>결의방법</th><th>의안명</th><th>의향 설정</th><th>잔여분배</th></tr></thead>
-    <tbody><tr><td class="sub" style="padding-left:12px">1</td><td class="sub">재무제표 승인</td><td class="sub">보통결의</td><td>정관 일부 변경의 건 (집중투표제 도입)<span class="tag" style="margin-left:6px">양립불가</span></td><td class="act"><div class="vgroup"><button class="vbtn on" data-vote>찬성</button><button class="vbtn" data-vote>반대</button><button class="vbtn" data-vote>기권</button></div></td><td class="act"><select class="nsel"><option>미설정</option><option>균등분배</option><option>비례분배</option></select></td></tr><tr><td class="sub" style="padding-left:12px">2</td><td class="sub">이사 보수한도 승인</td><td class="sub">특별결의</td><td>정관 일부 변경의 건<span class="tag" style="margin-left:6px">양립불가</span></td><td class="act"><div class="vgroup"><button class="vbtn on" data-vote>찬성</button><button class="vbtn" data-vote>반대</button><button class="vbtn" data-vote>기권</button></div></td><td class="act"><select class="nsel"><option>미설정</option><option>균등분배</option><option>비례분배</option></select></td></tr><tr><td class="sub" style="padding-left:12px">3</td><td class="sub">재무제표 승인</td><td class="sub">보통결의</td><td>감사위원회 위원 선임의 건<span class="tag" style="margin-left:6px">양립불가</span></td><td></td><td></td></tr><tr><td class="sub" style="padding-left:34px">3-2</td><td class="sub">재무제표 승인</td><td class="sub">보통결의</td><td>사외이사인 감사위원회 위원 선임의 건</td><td class="act"><div class="vgroup"><button class="vbtn on" data-vote>찬성</button><button class="vbtn" data-vote>반대</button><button class="vbtn" data-vote>기권</button></div></td><td class="act"><select class="nsel"><option>미설정</option><option>균등분배</option><option>비례분배</option></select></td></tr><tr><td class="sub" style="padding-left:56px">3-2-1</td><td class="sub">재무제표 승인</td><td class="sub">보통결의</td><td>사외이사인 감사위원회 위원 김수지 선임의 건<span class="tag" style="margin-left:6px">양립불가</span></td><td class="act"><div class="vgroup"><button class="vbtn on" data-vote>찬성</button><button class="vbtn" data-vote>반대</button><button class="vbtn" data-vote>기권</button></div></td><td class="act"><select class="nsel"><option>미설정</option><option>균등분배</option><option>비례분배</option></select></td></tr><tr><td class="sub" style="padding-left:34px">3-2</td><td class="sub">이사 보수한도 승인</td><td class="sub">특별결의</td><td>사외이사가 아닌 감사위원회 위원 이영호 선임의 건</td><td class="act"><div class="vgroup"><button class="vbtn on" data-vote>찬성</button><button class="vbtn" data-vote>반대</button><button class="vbtn" data-vote>기권</button></div></td><td class="act"><select class="nsel"><option>미설정</option><option>균등분배</option><option>비례분배</option></select></td></tr><tr><td class="sub" style="padding-left:12px">4</td><td class="sub">재무제표 승인</td><td class="sub">보통결의</td><td>감사 선임의 건<span class="tag" style="margin-left:6px">양립불가</span></td><td class="act"><div class="vgroup"><button class="vbtn on" data-vote>찬성</button><button class="vbtn" data-vote>반대</button><button class="vbtn" data-vote>기권</button></div></td><td class="act"><select class="nsel"><option>미설정</option><option>균등분배</option><option>비례분배</option></select></td></tr><tr><td class="sub" style="padding-left:12px">5</td><td class="sub">재무제표 승인</td><td class="sub">보통결의</td><td>이사 선임의 건<span class="tag" style="margin-left:6px">양립불가</span></td><td></td><td></td></tr><tr><td class="sub" style="padding-left:34px">5-2</td><td class="sub">이사 보수한도 승인</td><td class="sub">특별결의</td><td>사외이사 후보 박민수 선임의 건</td><td class="act"><div class="vgroup"><button class="vbtn on" data-vote>찬성</button><button class="vbtn" data-vote>반대</button><button class="vbtn" data-vote>기권</button></div></td><td class="act"><select class="nsel"><option>미설정</option><option>균등분배</option><option>비례분배</option></select></td></tr><tr><td class="sub" style="padding-left:12px">6</td><td class="sub">재무제표 승인</td><td class="sub">보통결의</td><td>이사 보수한도 승인의 건<span class="tag" style="margin-left:6px">양립불가</span></td><td class="act"><div class="vgroup"><button class="vbtn on" data-vote>찬성</button><button class="vbtn" data-vote>반대</button><button class="vbtn" data-vote>기권</button></div></td><td class="act"><select class="nsel"><option>미설정</option><option>균등분배</option><option>비례분배</option></select></td></tr></tbody></table></div>
+    <tbody id="viTbody"></tbody></table></div>
 </div></div></div>
       </div>
     </div>
@@ -994,6 +998,8 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 </div>
 <div class="selpop hidden" id="agTypePop"></div>
 <div class="menupop hidden" id="agMenuPop"></div>
+<div class="selpop hidden" id="agMethodPop"></div>
+<div class="selpop hidden" id="viSolPop"></div>
 
 <div class="toast" id="toast"></div>
 <script>
@@ -1081,13 +1087,13 @@ a.nav-item{text-decoration:none;color:var(--fg)}
       {no:'3-2',type:'감사위원회 감사위원 선임(독립)',method:'보통결의',name:'감사위원이 되는 사외이사 선임의 건'}]}
   ];
   const agendaList=document.getElementById('agendaList');
-  const agTypePop=document.getElementById('agTypePop'),agMenuPop=document.getElementById('agMenuPop');
+  const agTypePop=document.getElementById('agTypePop'),agMenuPop=document.getElementById('agMenuPop'),agMethodPop=document.getElementById('agMethodPop'),viSolPop=document.getElementById('viSolPop');
   let dragIdx=null;
   function renumber(){AGENDA_DATA.forEach((top,i)=>{const nn=String(i+1),old=top.no;if(old!==nn&&top.sub)top.sub.forEach(sb=>{sb.no=nn+sb.no.slice(old.length);});top.no=nn;});}
   function esc(s){return (s||'').replace(/"/g,'&quot;');}
   const CHV2='<svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>';
   const DOTS='<svg class="ic" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>';
-  function agMethod(val){return '<select class="nsel" onclick="event.stopPropagation()">'+AG_METHODS.map(o=>'<option'+(o===val?' selected':'')+'>'+o+'</option>').join('')+'</select>';}
+  function agMethod(val){return '<button class="inp sel val agmethod" onclick="event.stopPropagation()"><span>'+val+'</span>'+CHV2+'</button>';}
   function agRow(it,sub){
     const handle=sub
       ? '<span class="ag-arrow"><svg class="ic" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></span>'
@@ -1118,6 +1124,8 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     agendaList.querySelectorAll('.ag-row').forEach(r=>r.addEventListener('click',()=>openAgDetail(r.dataset.no,r.dataset.name)));
     agendaList.querySelectorAll('.agtype').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();openAgType(b);}));
     agendaList.querySelectorAll('[data-agmore]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();openAgMenu(b);}));
+    agendaList.querySelectorAll('.agmethod').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();openAgMethod(b);}));
+    renderVI();
   }
   // 의안 종류 shadcn 드롭다운
   function openAgType(btn){
@@ -1128,6 +1136,15 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     let top=r.bottom+6;if(top+agTypePop.offsetHeight>window.innerHeight-8)top=Math.max(8,r.top-6-agTypePop.offsetHeight);agTypePop.style.top=top+'px';
   }
   agTypePop.addEventListener('click',e=>e.stopPropagation());
+  function openAgMethod(btn){
+    const cur=btn.querySelector('span').textContent;agMethodPop.innerHTML='';
+    AG_METHODS.forEach(t=>{const o=document.createElement('button');o.className='selopt'+(t===cur?' sel':'');o.innerHTML='<span class="sc">'+t+'</span><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';o.addEventListener('click',ev=>{ev.stopPropagation();btn.querySelector('span').textContent=t;agMethodPop.classList.add('hidden');});agMethodPop.appendChild(o);});
+    agTypePop.classList.add('hidden');agMenuPop.classList.add('hidden');viSolPop.classList.add('hidden');agMethodPop.classList.remove('hidden');
+    const r=btn.getBoundingClientRect();agMethodPop.style.left=r.left+'px';agMethodPop.style.minWidth=r.width+'px';
+    let top=r.bottom+6;if(top+agMethodPop.offsetHeight>window.innerHeight-8)top=Math.max(8,r.top-6-agMethodPop.offsetHeight);agMethodPop.style.top=top+'px';
+  }
+  agMethodPop.addEventListener('click',e=>e.stopPropagation());
+  viSolPop.addEventListener('click',e=>e.stopPropagation());
   // ... 메뉴 (shadcn DropdownMenu)
   function findAg(no){for(let i=0;i<AGENDA_DATA.length;i++){if(AGENDA_DATA[i].no===no)return{t:i,s:-1};const sb=AGENDA_DATA[i].sub||[];for(let j=0;j<sb.length;j++)if(sb[j].no===no)return{t:i,s:j};}return null;}
   const IC_EDIT='<svg class="ic" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
@@ -1148,7 +1165,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   let agSeq=6;
   document.getElementById('agendaAdd').addEventListener('click',()=>{AGENDA_DATA.push({no:String(agSeq++),type:'재무제표 승인',method:'보통결의',name:'',sub:[]});renumber();renderAgenda();});
   renderAgenda();
-  document.addEventListener('click',()=>{agTypePop.classList.add('hidden');agMenuPop.classList.add('hidden');});
+  document.addEventListener('click',()=>{agTypePop.classList.add('hidden');agMenuPop.classList.add('hidden');agMethodPop.classList.add('hidden');viSolPop.classList.add('hidden');});
   // 결의조건 보기 패널
   const resoOverlay=document.getElementById('resoOverlay');
   function resoItem(it,sub){var cls=it.method==='특별결의'?'spc':'ord';return '<div class="reso-item"><span class="rn"'+(sub?' style="padding-left:12px"':'')+'>'+it.no+'</span><span class="rnm">'+(it.name||'(미입력)')+'</span><span class="mbadge '+cls+'">'+it.method+'</span></div>';}
@@ -1163,6 +1180,33 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     b.innerHTML=h;
   }
   document.getElementById('resoBtn').addEventListener('click',function(){renderReso();resoOverlay.classList.remove('hidden');});
+  // 투표 의향 설정: 의안 설정과 동기화
+  function flattenAg(){var out=[];AGENDA_DATA.forEach(function(t){out.push(t);(t.sub||[]).forEach(function(s){out.push(s);});});return out;}
+  function viIsGroup(no,list){return list.some(function(x){return x.no!==no && x.no.indexOf(no+'-')===0;});}
+  function renderVI(){
+    var tb=document.getElementById('viTbody'); if(!tb) return;
+    var list=flattenAg(),h='';
+    list.forEach(function(it){
+      var depth=(it.no.match(/-/g)||[]).length,pad=12+depth*22,grp=viIsGroup(it.no,list);
+      var act=grp?'<td></td><td></td>':'<td class="act"><div class="vgroup"><button class="vbtn on" data-vote>찬성</button><button class="vbtn" data-vote>반대</button><button class="vbtn" data-vote>기권</button></div></td><td class="act"><select class="nsel"><option>미설정</option><option>균등분배</option><option>비례분배</option></select></td>';
+      h+='<tr><td class="sub" style="padding-left:'+pad+'px">'+it.no+'</td><td class="sub">'+it.type+'</td><td class="sub">'+it.method+'</td><td>'+(it.name||'(미입력)')+'</td>'+act+'</tr>';
+    });
+    tb.innerHTML=h;
+    tb.querySelectorAll('.vgroup').forEach(function(g){g.querySelectorAll('[data-vote]').forEach(function(v){v.addEventListener('click',function(){g.querySelectorAll('[data-vote]').forEach(function(x){x.classList.remove('on');});v.classList.add('on');});});});
+  }
+  // 회사측/주주측 → 대리행사 권유자 선택 노출
+  (function(){
+    var seg=document.getElementById('viSeg'),sol=document.getElementById('viSolBtn'); if(!seg||!sol) return;
+    seg.querySelectorAll('.s').forEach(function(x){x.addEventListener('click',function(){ sol.style.display=(x.dataset.viseg==='shareholder')?'inline-flex':'none'; });});
+    var SOLS=['안다자산운용 (주주제안)','트러스톤자산운용 (주주제안)','얼라인파트너스 (주주제안)'];
+    sol.addEventListener('click',function(e){e.stopPropagation();
+      viSolPop.innerHTML='';var cur=sol.querySelector('span').textContent;
+      SOLS.forEach(function(t){var o=document.createElement('button');o.className='selopt'+(t===cur?' sel':'');o.innerHTML='<span class="sc">'+t+'</span><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';o.addEventListener('click',function(ev){ev.stopPropagation();sol.querySelector('span').textContent=t;viSolPop.classList.add('hidden');});viSolPop.appendChild(o);});
+      agTypePop.classList.add('hidden');agMenuPop.classList.add('hidden');agMethodPop.classList.add('hidden');viSolPop.classList.remove('hidden');
+      var r=sol.getBoundingClientRect();viSolPop.style.left=r.left+'px';viSolPop.style.minWidth=r.width+'px';viSolPop.style.top=(r.bottom+6)+'px';
+    });
+  })();
+  renderVI();
 
   // 의안 상세 설정 패널
   const agDetailOverlay=document.getElementById('agDetailOverlay');
