@@ -284,7 +284,21 @@
         .rad.on .dotc:after{content:"";position:absolute;width:8px;height:8px;background:#fafafa;border-radius:9999px;left:50%;top:50%;transform:translate(-50%,-50%)}
         .vs-alert{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:#f5f9ff;border:1px solid #d4e8ff;border-radius:10px;font-size:12px;color:#0071f3;line-height:16px}
         .vs-alert.hide{display:none}
-        .vs-alert svg{width:16px;height:16px;flex:none;color:#0071f3}
+        .vs-alert svg{width:16px;height:16px;flex:none;color:#0071f3;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+        .lbl-sub{font-size:12px;font-weight:400;color:#a3a3a3;margin-left:4px}
+        .combo{border:1px solid var(--border);border-radius:10px;overflow:hidden}
+        .combo-input{display:flex;align-items:center;gap:6px;height:36px;padding:0 10px;border-bottom:1px solid var(--border);background:rgba(229,229,229,.25)}
+        .combo-input svg{width:16px;height:16px;color:#737373;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+        .combo-input input{flex:1;border:none;outline:none;background:none;font-family:inherit;font-size:14px;color:#0a0a0a}
+        .combo-list{max-height:220px;overflow:auto;padding:4px}
+        .combo-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;cursor:pointer;font-size:14px;color:#0a0a0a}
+        .combo-item:hover{background:var(--muted)}
+        .combo-item.sel{background:#ebf4ff}
+        .combo-item .no{font-size:12px;color:#737373}
+        .combo-empty{padding:16px;text-align:center;font-size:13px;color:#a3a3a3}
+        .vs-field.hide{display:none!important}
+        .inp-grp{display:flex;align-items:center;height:36px;padding:0 10px;border:1px solid var(--border);border-radius:10px}
+        .inp-grp input{flex:1;border:none;outline:none;background:none;font-family:inherit;font-size:14px;color:#0a0a0a}
         #vsSel[disabled]{opacity:.5;pointer-events:none;background:var(--muted)}
         #vsMenu{position:absolute;left:0;right:0;top:36px;z-index:5}
         .vsh-foot{display:flex;gap:8px}
@@ -496,21 +510,22 @@
               <div class="rad-row" id="vsMethod">
                 <span class="rad on" data-m="num"><span class="dotc"></span>주주번호로 설정</span>
                 <span class="rad" data-m="name"><span class="dotc"></span>주주명으로 설정</span>
-                <span class="rad" data-m="oper"><span class="dotc"></span>운용기관으로 설정</span>
+                <span class="rad" data-m="new"><span class="dotc"></span>신규 투표권자 등록</span>
                 <span class="rad" data-m="none"><span class="dotc"></span>지정안함</span>
               </div>
             </div>
-            <div class="vs-field">
-              <label>투표권자 선택</label>
-              <div style="position:relative">
-                <button class="dlg-select" id="vsSel"><span>투표권자를 선택하세요</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
-                <div class="dlg-menu hidden" id="vsMenu">
-                  <button class="dlg-mi" data-v="본인 (주주 직접 행사)">본인 (주주 직접 행사)</button>
-                  <button class="dlg-mi" data-v="삼성자산운용">삼성자산운용 (운용기관)</button>
-                  <button class="dlg-mi" data-v="미래에셋자산운용">미래에셋자산운용 (운용기관)</button>
-                  <button class="dlg-mi" data-v="한국투자신탁운용">한국투자신탁운용 (운용기관)</button>
-                </div>
+            <div class="vs-field" id="vsPickField">
+              <label>투표권자 선택 <span class="lbl-sub">주주명부에서 검색</span></label>
+              <div class="combo">
+                <div class="combo-input"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="vsSearch" placeholder="주주명 또는 주주번호로 검색"></div>
+                <div class="combo-list" id="vsList"></div>
               </div>
+            </div>
+            <div class="vs-field hide" id="vsNewField">
+              <label>신규 투표권자명</label>
+              <div class="inp-grp"><input id="vsNewName" placeholder="투표권자명을 입력하세요"></div>
+              <label style="margin-top:4px">식별정보 <span class="lbl-sub">선택 입력</span></label>
+              <div class="inp-grp"><input id="vsNewId" placeholder="생년월일 또는 사업자등록번호"></div>
             </div>
             <div class="vs-alert" id="vsAlert"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span id="vsAlertT">‘주주번호로 설정'은 명부상 계좌 기준으로 투표권을 연동·합산합니다.</span></div>
           </div>
@@ -705,32 +720,51 @@
 
           // 미설정 투표권자 설정 단계 (right sheet)
           var vSheet=document.getElementById('voterSheet'), vsSub=document.getElementById('vsSub');
-          var vsSel=document.getElementById('vsSel'), vsMenu=document.getElementById('vsMenu');
-          var vsAlert=document.getElementById('vsAlert'), vsAlertT=document.getElementById('vsAlertT');
-          var curRow=null, curMethod='num', curVoter=null;
+          var vsAlertT=document.getElementById('vsAlertT');
+          var vsPickField=document.getElementById('vsPickField'), vsNewField=document.getElementById('vsNewField');
+          var vsSearch=document.getElementById('vsSearch'), vsList=document.getElementById('vsList');
+          var vsNewName=document.getElementById('vsNewName'), vsNewId=document.getElementById('vsNewId');
+          var curRow=null, curMethod='num', curPick=null;
+          var roster=[
+            {name:'KVIDIA',no:'2025119001'},{name:'K-홀딩스 주식회사',no:'2025119002'},
+            {name:'나제한',no:'800401-1******'},{name:'젠슨박',no:'880411-1******'},
+            {name:'이준호',no:'600101-1******'},{name:'이종승',no:'600101-1******'},
+            {name:'천재민',no:'600101-1******'},{name:'박준호',no:'600101-1******'},
+            {name:'유은지',no:'700201-2******'}
+          ];
           var alertText={
-            num:"‘주주번호로 설정'은 명부상 계좌 기준으로 투표권을 연동·합산합니다.",
-            name:"‘주주명으로 설정'은 단순 이름 매칭 방식으로, 계좌 연동 및 합산이 지원되지 않습니다.",
-            oper:"‘운용기관으로 설정'은 지정한 운용기관이 해당 주식의 의결권을 행사합니다.",
-            none:"‘지정안함' 적용 시 해당 주주는 투표에 참여할 수 없습니다."
+            num:"\u2018주주번호로 설정\u2019은 명부상 계좌(주주번호) 기준으로 투표권을 연동\u00b7합산합니다.",
+            name:"\u2018주주명으로 설정\u2019은 선택한 주주명과 동일하게 지정되며, 계좌 연동\u00b7합산은 지원되지 않습니다.",
+            "new":"\u2018신규 투표권자 등록\u2019은 주주명부에 없는 새로운 투표권자를 등록해 지정합니다.",
+            none:"\u2018지정안함\u2019 적용 시 해당 주주는 투표에 참여할 수 없습니다."
           };
-          function setMethod(m){
-            curMethod=m; curVoter=null;
-            document.querySelectorAll('#vsMethod .rad').forEach(function(r){r.classList.toggle('on', r.dataset.m===m);});
-            vsAlertT.textContent=alertText[m]; vsAlert.classList.remove('hide');
-            vsSel.querySelector('span').textContent = m==='none' ? '해당 없음' : '투표권자를 선택하세요';
-            vsSel.classList.remove('val');
-            if(m==='none'){ vsSel.setAttribute('disabled','disabled'); }
-            else { vsSel.removeAttribute('disabled'); }
+          function renderList(q){
+            q=(q||'').trim();
+            var items=roster.filter(function(r){return !q || r.name.indexOf(q)>=0 || r.no.indexOf(q)>=0;});
+            if(!items.length){ vsList.innerHTML='<div class="combo-empty">검색 결과가 없습니다</div>'; return; }
+            vsList.innerHTML=items.map(function(r){
+              var sel=(curPick&&curPick.name===r.name&&curPick.no===r.no)?' sel':'';
+              return '<div class="combo-item'+sel+'" data-name="'+r.name+'" data-no="'+r.no+'"><span>'+r.name+'</span><span class="no">'+r.no+'</span></div>';
+            }).join('');
+            vsList.querySelectorAll('.combo-item').forEach(function(it){
+              it.addEventListener('click',function(){
+                curPick={name:it.dataset.name,no:it.dataset.no};
+                vsSearch.value=it.dataset.name;
+                vsList.querySelectorAll('.combo-item').forEach(function(x){x.classList.toggle('sel',x===it);});
+              });
+            });
           }
-          document.querySelectorAll('#vsMethod .rad').forEach(function(r){
-            r.addEventListener('click',function(){ setMethod(r.dataset.m); });
-          });
-          vsSel.addEventListener('click',function(e){e.stopPropagation();if(vsSel.hasAttribute('disabled'))return;vsMenu.classList.toggle('hidden');});
-          vsMenu.querySelectorAll('.dlg-mi').forEach(function(mi){
-            mi.addEventListener('click',function(){curVoter=mi.dataset.v;vsSel.querySelector('span').textContent=mi.textContent;vsSel.classList.add('val');vsMenu.classList.add('hidden');});
-          });
-          document.addEventListener('click',function(){vsMenu.classList.add('hidden');});
+          if(vsSearch) vsSearch.addEventListener('input',function(){curPick=null;renderList(vsSearch.value);});
+          function setMethod(m){
+            curMethod=m; curPick=null;
+            document.querySelectorAll('#vsMethod .rad').forEach(function(r){r.classList.toggle('on', r.dataset.m===m);});
+            vsAlertT.textContent=alertText[m];
+            vsPickField.classList.toggle('hide', !(m==='num'||m==='name'));
+            vsNewField.classList.toggle('hide', m!=='new');
+            if(m==='num'||m==='name'){ vsSearch.value=''; renderList(''); }
+            if(m==='new'){ vsNewName.value=''; vsNewId.value=''; }
+          }
+          document.querySelectorAll('#vsMethod .rad').forEach(function(r){ r.addEventListener('click',function(){ setMethod(r.dataset.m); }); });
           function openVoterSheet(tr){
             curRow=tr;
             var nm=tr.querySelector('.tt-name')?tr.querySelector('.tt-name').textContent.trim():'';
@@ -740,19 +774,20 @@
           }
           vSheet.addEventListener('click',function(e){if(e.target===vSheet)vSheet.classList.add('hidden');});
           vSheet.querySelectorAll('[data-vshclose]').forEach(function(b){b.addEventListener('click',function(){vSheet.classList.add('hidden');});});
-          // 테이블 설정/수정 버튼 → 시트 열기
-          tbody.querySelectorAll('.tbtn2').forEach(function(btn){
-            btn.addEventListener('click',function(){var tr=btn.closest('tr'); if(tr) openVoterSheet(tr);});
-          });
+          tbody.querySelectorAll('.tbtn2').forEach(function(btn){ btn.addEventListener('click',function(){var tr=btn.closest('tr'); if(tr) openVoterSheet(tr);}); });
           document.getElementById('vsSave').addEventListener('click',function(){
             if(!curRow) return;
             var nm=curRow.querySelector('.tt-name')?curRow.querySelector('.tt-name').textContent.trim():'';
             var vcell=curRow.querySelector('td.voter');
             var wasUnset=curRow.classList.contains('row-none');
-            if(curMethod==='none'){
-              vcell.innerHTML='<span class="set-none">지정안함</span>';
+            var voter=null;
+            if(curMethod==='none'){ vcell.innerHTML='<span class="set-none">지정안함</span>'; }
+            else if(curMethod==='new'){
+              voter=(vsNewName.value||'').trim();
+              if(!voter){ toast('입력 필요','신규 투표권자명을 입력해 주세요.'); return; }
+              vcell.innerHTML='<span class="voter-set">'+voter+'</span>';
             } else {
-              var voter = (curMethod==='num' || (curVoter&&curVoter.indexOf('본인')===0)) ? nm : (curVoter||nm);
+              voter=curPick?curPick.name:nm;
               vcell.innerHTML='<span class="voter-set">'+voter+'</span>';
             }
             curRow.querySelector('.tbtn2').textContent='수정';
@@ -762,7 +797,7 @@
             }
             vSheet.classList.add('hidden');
             applyUnsetFilter();
-            toast('투표권자 설정 완료', "'"+nm+"' 주주의 투표권자가 설정되었습니다.");
+            toast('투표권자 설정 완료', "'"+nm+"' 주주의 투표권자가 "+(curMethod==='none'?'지정안함으로':("'"+(voter||'')+"'(으)로"))+" 설정되었습니다.");
           });
         })();
       </script>
