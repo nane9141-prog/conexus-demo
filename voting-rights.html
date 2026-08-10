@@ -34,6 +34,50 @@
   .stat .d{font-size:12px;margin-top:4px}
   .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
+
+  /* 사전 의결권 현황 dashboard */
+  .vr-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:16px}
+  .vr-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);width:100%}
+  .vr-tab{appearance:none;background:none;border:none;font-family:inherit;font-size:14px;font-weight:500;color:var(--muted-fg);padding:8px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+  .vr-tab.active{color:#0a0a0a;border-bottom-color:#171717}
+  .vr-meta{display:flex;align-items:center;gap:10px;flex:none;padding-bottom:8px;white-space:nowrap}
+  .vr-hint{font-size:12px;color:var(--muted-fg)}
+  .vr-sep{width:1px;height:10px;background:var(--border)}
+  .vr-dday{font-size:12px;font-weight:600;color:#171717}
+  .ubadge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:500;line-height:16px}
+  .ubadge.secondary{background:#f4f4f5;color:#18181b}
+  .ubadge.blue{background:#eef5ff;color:#0071f3}
+  .ubadge.gray{background:#f5f5f5;color:#525252}
+  .vr-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  .kcard{border:1px solid var(--border);border-radius:12px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05);padding:16px;display:flex;flex-direction:column;gap:8px;min-height:104px}
+  .kcard .kk{font-size:12px;font-weight:500;color:var(--muted-fg)}
+  .kcard .kv{font-size:20px;font-weight:600;color:#0a0a0a;line-height:1}
+  .kcard .kv .unit{font-size:13px;font-weight:500;color:var(--muted-fg);margin-left:2px}
+  .kcard .kd{font-size:12px;color:var(--muted-fg)}
+  .kcard .krow{display:flex;align-items:center;gap:8px;justify-content:space-between}
+  .kbar{height:4px;border-radius:9999px;background:#f0f0f0;overflow:hidden;margin-top:auto}
+  .kbar span{display:block;height:100%;background:#171717;border-radius:9999px}
+  .vr-grid2{display:grid;grid-template-columns:340px 1fr;gap:12px;margin-bottom:16px}
+  .card .ttl{font-size:14px;font-weight:600;color:#0a0a0a;margin-bottom:14px}
+  .donut-wrap{display:flex;align-items:center;gap:18px}
+  .donut{width:132px;height:132px;border-radius:50%;flex:none;background:conic-gradient(#0071f3 0 35.2%,#0d9488 35.2% 53.7%,#ea580c 53.7% 83.5%,#7c3aed 83.5% 100%)}
+  .donut::after{content:"";display:block;width:76px;height:76px;background:#fff;border-radius:50%;position:relative;top:28px;left:28px}
+  .legend{display:flex;flex-direction:column;gap:8px;font-size:13px}
+  .legend .li{display:flex;align-items:center;gap:8px;color:#0a0a0a}
+  .legend .dot{width:8px;height:8px;border-radius:2px;flex:none}
+  .legend .pct{margin-left:auto;color:var(--muted-fg);font-size:12px}
+  table.tbl td.num,table.tbl th.num{text-align:right}
+  .cbar{display:inline-flex;align-items:center;gap:8px;min-width:120px}
+  .cbar .track{flex:1;height:6px;border-radius:9999px;background:#f0f0f0;overflow:hidden}
+  .cbar .track span{display:block;height:100%;background:#171717;border-radius:9999px}
+  .cbar.blue .track span{background:#0071f3}
+  .cbar .pv{font-size:12px;color:#181d1f;width:40px;text-align:right}
+  .sec-head{padding:16px 16px 12px}
+  .sec-head .h{font-size:16px;font-weight:600;color:#171717}
+  .sec-head .d{font-size:13px;color:var(--muted-fg);margin-top:4px}
+  .vr-panel{display:none}
+  .vr-panel.active{display:block}
+  @media(max-width:1000px){.vr-kpi{grid-template-columns:repeat(2,1fr)}.vr-grid2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -145,42 +189,107 @@
       <button class="iconbtn md" title="변경이력"><svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></button>
     </div>
     <div class="scroll">
-      <div class="content" style="max-width:1100px;margin:0 auto;width:100%">
-        <div class="st-head"><div><div class="page-title">사전 / 중복 의결권 관리</div><div class="page-sub">사전 의결권 행사 정책을 설정하고, 중복 행사 건을 탐지·처리합니다.</div></div><div class="actions"><button class="st-save">저장</button></div></div>
+      <div class="content" style="max-width:1200px;margin:0 auto;width:100%">
+        <div class="st-head" style="margin-bottom:4px"><div><div class="page-title">사전 의결권 현황</div><div class="page-sub">전자투표·위임장·서면위임으로 사전 행사된 의결권 현황입니다. (제10기 정기주주총회 · 기준일 2025.12.31)</div></div></div>
 
-        <div class="subtabs tabs" style="max-width:320px">
-          <div class="subtab t active" data-sub="policy">사전 의결권</div>
-          <div class="subtab t" data-sub="dup">중복 의결권</div>
+        <div class="vr-head">
+          <div class="vr-tabs">
+            <button class="vr-tab active" data-vt="status">현황</button>
+            <button class="vr-tab" data-vt="detail">채널별 내역</button>
+          </div>
+          <div class="vr-meta"><span class="vr-hint">발행주식총수 476,211,964주 · 주주 650,000명</span><span class="vr-sep"></span><span class="vr-dday">D-10</span></div>
         </div>
 
-        <div data-subpanel="policy" class="st-tab active" style="display:block">
-          <div class="card">
-            <div class="st-section">
-              <div class="field"><label>사전 의결권 행사 허용</label><div class="rad-group" data-radgrp="allow"><span class="rad on" data-rad><span class="dotc"></span>허용</span><span class="rad" data-rad><span class="dotc"></span>미허용</span></div></div>
-              <div class="fgrid c2">
-                <div class="field"><label>행사 시작일시</label><div class="frow"><button class="inp dt val"><span>2026-03-12</span><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg></button><input class="inp time" value="09:00"></div></div>
-                <div class="field"><label>행사 종료일시</label><div class="frow"><button class="inp dt val"><span>2026-03-26</span><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg></button><input class="inp time" value="17:00"></div></div>
+        <!-- ===== 현황 ===== -->
+        <div class="vr-panel active" data-vp="status">
+          <div class="vr-kpi">
+            <div class="kcard">
+              <div class="kk">확정 의결권 (발행주식총수)</div>
+              <div class="kv">476,211,964<span class="unit">주</span></div>
+              <div class="kd">전체 주주 650,000명 · 보통주</div>
+            </div>
+            <div class="kcard">
+              <div class="kk">사전 행사 의결권</div>
+              <div class="krow"><div class="kv">262,140,000<span class="unit">주</span></div><span class="ubadge secondary">발행 대비 55.0%</span></div>
+              <div class="kbar"><span style="width:55%"></span></div>
+            </div>
+            <div class="kcard">
+              <div class="kk">사전 행사 주주수</div>
+              <div class="krow"><div class="kv">18,450<span class="unit">명</span></div><span class="ubadge secondary">주주 대비 2.8%</span></div>
+              <div class="kbar"><span style="width:2.8%"></span></div>
+            </div>
+            <div class="kcard">
+              <div class="kk">미행사 의결권</div>
+              <div class="kv">214,071,964<span class="unit">주</span></div>
+              <div class="kd">잔여 주주 631,550명</div>
+            </div>
+          </div>
+
+          <div class="vr-grid2">
+            <div class="card vr-donut-card">
+              <div class="ttl">채널별 사전 행사 비중</div>
+              <div class="donut-wrap">
+                <div class="donut"></div>
+                <div class="legend">
+                  <div class="li"><span class="dot" style="background:#0071f3"></span>전자투표·위임(국내)<span class="pct">35.2%</span></div>
+                  <div class="li"><span class="dot" style="background:#0d9488"></span>전자투표·위임(해외)<span class="pct">18.5%</span></div>
+                  <div class="li"><span class="dot" style="background:#ea580c"></span>서면위임(자사)<span class="pct">29.8%</span></div>
+                  <div class="li"><span class="dot" style="background:#7c3aed"></span>서면위임(타사)<span class="pct">16.4%</span></div>
+                </div>
               </div>
-              <div class="field"><label>행사 후 변경</label><div class="rad-group" data-radgrp="change"><span class="rad on" data-rad><span class="dotc"></span>기간 내 변경 허용</span><span class="rad" data-rad><span class="dotc"></span>변경 불가</span></div></div>
+            </div>
+            <div class="tbl-wrap">
+              <table class="tbl">
+                <thead><tr><th>행사 채널</th><th class="num">행사 주주수</th><th class="num">행사 의결권</th><th style="width:180px">행사 비중</th><th style="width:90px">상태</th></tr></thead>
+                <tbody>
+                  <tr><td>전자투표·위임 (국내)</td><td class="num">15,200명</td><td class="num">92,340,000주</td><td><span class="cbar"><span class="track"><span style="width:35.2%"></span></span><span class="pv">35.2%</span></span></td><td><span class="badge blue">집계중</span></td></tr>
+                  <tr><td>전자투표·위임 (해외)</td><td class="num">1,050명</td><td class="num">48,600,000주</td><td><span class="cbar"><span class="track"><span style="width:18.5%"></span></span><span class="pv">18.5%</span></span></td><td><span class="badge blue">집계중</span></td></tr>
+                  <tr><td>서면위임 (자사)</td><td class="num">1,900명</td><td class="num">78,200,000주</td><td><span class="cbar"><span class="track"><span style="width:29.8%"></span></span><span class="pv">29.8%</span></span></td><td><span class="badge gray">접수</span></td></tr>
+                  <tr><td>서면위임 (타사)</td><td class="num">300명</td><td class="num">43,000,000주</td><td><span class="cbar"><span class="track"><span style="width:16.4%"></span></span><span class="pv">16.4%</span></span></td><td><span class="badge gray">접수</span></td></tr>
+                  <tr style="font-weight:600"><td>합계</td><td class="num">18,450명</td><td class="num">262,140,000주</td><td><span class="cbar"><span class="track"><span style="width:100%"></span></span><span class="pv">100%</span></span></td><td></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="padding:0">
+            <div class="sec-head"><div class="h">의안별 사전 집계 현황</div><div class="d">사전 행사 의결권 262,140,000주 기준 · 찬성률은 확정 개표와 동일한 기준을 적용한 예상치입니다.</div></div>
+            <div class="tbl-wrap" style="border:none;border-top:1px solid var(--border);border-radius:0">
+              <table class="tbl">
+                <thead><tr><th style="width:96px">의안</th><th>안건명</th><th style="width:84px">유형</th><th class="num">사전 찬성</th><th class="num">사전 반대</th><th style="width:170px">찬성률</th><th style="width:96px">예상 결과</th></tr></thead>
+                <tbody>
+                  <tr><td>제1호</td><td>재무제표 승인의 건</td><td><span class="ubadge secondary">보통결의</span></td><td class="num">211,284,840</td><td class="num">50,855,160</td><td><span class="cbar blue"><span class="track"><span style="width:80.6%"></span></span><span class="pv">80.6%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
+                  <tr><td>제2-1호</td><td>집중투표제 배제 조항 삭제의 건</td><td><span class="ubadge secondary">특별결의</span></td><td class="num">151,779,060</td><td class="num">110,360,940</td><td><span class="cbar blue"><span class="track"><span style="width:57.9%"></span></span><span class="pv">57.9%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
+                  <tr><td>제2-2호</td><td>전자주주총회 도입 관련 변경</td><td><span class="ubadge secondary">특별결의</span></td><td class="num">210,236,280</td><td class="num">51,903,720</td><td><span class="cbar blue"><span class="track"><span style="width:80.2%"></span></span><span class="pv">80.2%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
+                  <tr><td>제2-3호</td><td>의결권 대리행사 수단 확대</td><td><span class="ubadge secondary">특별결의</span></td><td class="num">210,236,280</td><td class="num">51,903,720</td><td><span class="cbar blue"><span class="track"><span style="width:80.2%"></span></span><span class="pv">80.2%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
+                  <tr><td>제3-1호</td><td>집중투표 후보 4인 중 2인 선임의 건</td><td><span class="ubadge secondary">집중투표</span></td><td class="num" colspan="2" style="text-align:center;color:var(--muted-fg)">후보별 집계 · 선임예정 2인</td><td><span style="font-size:13px;color:#0a0a0a">예상 선임 김근수·진웅섭</span></td><td><span class="badge blue">집계중</span></td></tr>
+                  <tr><td>제3-2호</td><td>감사위원이 되는 사외이사 선임의 건</td><td><span class="ubadge secondary">보통결의</span></td><td class="num">208,663,440</td><td class="num">53,476,560</td><td><span class="cbar blue"><span class="track"><span style="width:79.6%"></span></span><span class="pv">79.6%</span></span></td><td><span class="badge blue">가결 예상</span></td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
 
-        <div data-subpanel="dup" class="st-tab" style="display:none">
-          <div class="stat-grid" style="margin-bottom:16px">
-            <div class="stat"><div class="k">사전 행사 총건</div><div class="v">12,480</div></div>
-            <div class="stat"><div class="k">중복 탐지</div><div class="v" style="color:var(--red600)">3</div></div>
-            <div class="stat"><div class="k">처리 완료</div><div class="v">1</div></div>
-            <div class="stat"><div class="k">처리 대기</div><div class="v">2</div></div>
+        <!-- ===== 채널별 내역 ===== -->
+        <div class="vr-panel" data-vp="detail">
+          <div class="toolbar" style="margin-bottom:12px">
+            <div class="search"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input placeholder="주주명 또는 주주번호로 검색"></div>
+            <div style="font-size:12px;color:var(--muted-fg)">총 18,450명 · 262,140,000주</div>
           </div>
-          <div class="tbl-wrap"><table class="tbl">
-            <thead><tr><th>주주번호</th><th>주주명</th><th>행사 채널</th><th>행사 시각</th><th>중복 사유</th><th>상태</th><th style="width:90px">처리</th></tr></thead>
-            <tbody>
-              <tr><td>800401</td><td>나제한</td><td>온라인 · 현장</td><td>03-24 14:20</td><td>동일 주주 이중 행사</td><td><span class="badge red">중복</span></td><td><button class="btn">처리</button></td></tr>
-              <tr><td>700201</td><td>유은지</td><td>위임 · 온라인</td><td>03-25 09:10</td><td>위임 후 직접 행사</td><td><span class="badge red">중복</span></td><td><button class="btn">처리</button></td></tr>
-              <tr><td>880411</td><td>젠슨박</td><td>온라인 · 온라인</td><td>03-25 11:02</td><td>재행사</td><td><span class="badge green">처리완료</span></td><td><button class="btn">보기</button></td></tr>
-            </tbody>
-          </table></div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>주주번호</th><th>주주명</th><th>구분</th><th>행사 채널</th><th class="num">행사 의결권</th><th>행사 시각</th><th style="width:90px">상태</th></tr></thead>
+              <tbody>
+                <tr><td>2025119002</td><td>K-홀딩스 주식회사</td><td><span class="ubadge secondary">법인</span></td><td>전자위임(국내)</td><td class="num">19,965,917주</td><td>03-22 10:14</td><td><span class="badge blue">집계중</span></td></tr>
+                <tr><td>2025119001</td><td>KVIDIA</td><td><span class="ubadge secondary">법인</span></td><td>서면위임(자사)</td><td class="num">19,961,925주</td><td>03-21 16:40</td><td><span class="badge gray">접수</span></td></tr>
+                <tr><td>800401-1******</td><td>나제한</td><td><span class="ubadge secondary">개인</span></td><td>전자투표(국내)</td><td class="num">19,963,921주</td><td>03-23 09:02</td><td><span class="badge blue">집계중</span></td></tr>
+                <tr><td>880411-1******</td><td>젠슨박</td><td><span class="ubadge secondary">개인</span></td><td>전자투표(국내)</td><td class="num">10,005,912주</td><td>03-23 21:37</td><td><span class="badge blue">집계중</span></td></tr>
+                <tr><td>600101-1******</td><td>이준호</td><td><span class="ubadge secondary">개인</span></td><td>전자위임(해외)</td><td class="num">6,017,919주</td><td>03-24 03:11</td><td><span class="badge blue">집계중</span></td></tr>
+                <tr><td>600101-1******</td><td>천재민</td><td><span class="ubadge secondary">개인</span></td><td>서면위임(타사)</td><td class="num">6,015,923주</td><td>03-20 13:55</td><td><span class="badge gray">접수</span></td></tr>
+                <tr><td>700201-2******</td><td>유은지</td><td><span class="ubadge secondary">개인</span></td><td>전자투표(국내)</td><td class="num">2,003,977주</td><td>03-25 08:48</td><td><span class="badge blue">집계중</span></td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -232,6 +341,14 @@
     var rd=e.target.closest('[data-rad]'); if(rd){var g=rd.closest('[data-radgrp]')||rd.parentElement;g.querySelectorAll('[data-rad]').forEach(function(r){r.classList.toggle('on',r===rd);});}
     var cr=e.target.closest('.chk-row'); if(cr){cr.classList.toggle('on');}
     var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
+  });
+  // 사전 의결권 현황 tabs
+  document.querySelectorAll('.vr-tab').forEach(function(t){
+    t.addEventListener('click',function(){
+      var k=t.dataset.vt;
+      document.querySelectorAll('.vr-tab').forEach(function(x){x.classList.toggle('active',x===t);});
+      document.querySelectorAll('.vr-panel').forEach(function(p){p.classList.toggle('active',p.dataset.vp===k);});
+    });
   });
 </script>
 </body>
