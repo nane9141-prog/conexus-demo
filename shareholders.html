@@ -197,7 +197,18 @@
         table.mtbl td.r.sub{color:#737373}
         table.mtbl td.c,table.mtbl th.c{text-align:center}
         table.mtbl td.mut{color:#737373}
-        .mbadge{display:inline-flex;align-items:center;height:20px;padding:2px 8px;border-radius:26px;background:#f5f5f5;color:#737373;font-size:12px;font-weight:500}
+        /* 공통 배지 (shadcn / Figma Badge_status) */
+        .ubadge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:500;line-height:16px;letter-spacing:-.01em}
+        .ubadge .dot{width:6px;height:6px;border-radius:9999px;background:currentColor;flex:none}
+        .ubadge.secondary{background:#f4f4f5;color:#18181b}
+        .ubadge.info{background:#f5f5f5;color:#525252}
+        .ubadge.success{background:#eef5ff;color:#0071f3}
+        .ubadge.warning{background:#fef5e7;color:#ea580c}
+        .ubadge.critical{background:#fff5f7;color:#e11d48}
+        .ubadge.purple{background:#f5f3ff;color:#7c3aed}
+        .ubadge.accent{background:#171717;color:#fff}
+        /* 카운트 배지: 분류 없음 → shadcn secondary */
+        .mbadge{display:inline-flex;align-items:center;height:20px;padding:2px 8px;border-radius:6px;background:#f4f4f5;color:#18181b;font-size:12px;font-weight:500}
         .set-done{color:#0a0a0a;font-weight:500}
         .set-none{color:var(--red600);font-weight:500}
         .tbtn2{height:28px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:12px;font-weight:500;color:#0a0a0a;cursor:pointer}
@@ -364,8 +375,7 @@
         table.mg-tbl tr.mg-child td{background:#fcfcfc}
         table.mg-tbl tr.mg-child td.cname{color:#0a0a0a;padding-left:30px;position:relative}
         table.mg-tbl tr.mg-child td.cname:before{content:"";position:absolute;left:16px;top:50%;width:8px;height:1px;background:#d4d4d4}
-        .mbadge.auto{background:#eafaf0;color:#0a8a3c}
-        .mbadge.manual{background:#eef1f6;color:#475569}
+        .mbadge.auto,.mbadge.manual{background:#f4f4f5;color:#18181b}
         .mg-tv{color:#0a0a0a;font-weight:600}
         .mg-mflex{display:inline-flex;align-items:center}
         .btn.danger{color:var(--red600);border-color:#f3c0c4;width:100%;justify-content:center;height:32px}
