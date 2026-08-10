@@ -338,6 +338,14 @@
         .badge-st.green{background:#ecfdf3;color:#067647;border:1px solid #abefc6}
         .badge-st.red{background:#fef3f2;color:#b42318;border:1px solid #fecdca}
         .cf-note-in{font-size:12px;color:#737373;margin-right:auto}
+        .last-mod{font-size:12px;color:#737373;display:flex;align-items:center;white-space:nowrap}
+        table.mtbl tr.cf-grp{cursor:pointer}
+        table.mtbl tr.cf-grp .mg-caret{transition:transform .15s}
+        table.mtbl tr.cf-grp.open .mg-caret{transform:rotate(90deg)}
+        table.mtbl tr.cf-grp:hover td{background:#fafafa}
+        table.mtbl tr.cf-child td{background:#fcfcfc}
+        table.mtbl tr.cf-child td.cname{color:#0a0a0a;padding-left:30px;position:relative}
+        table.mtbl tr.cf-child td.cname:before{content:"";position:absolute;left:16px;top:50%;width:8px;height:1px;background:#d4d4d4}
         .ad-body{padding:16px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
         .ad-media{width:40px;height:40px;border-radius:8px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;flex:none}
         .ad-media svg{width:24px;height:24px;color:#171717;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
@@ -385,6 +393,7 @@
               <button class="btn" id="msRegister"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>주주명부 등록</button>
               <button class="btn primary" id="msLoad"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>주주명부 불러오기</button>
               <button class="btn primary hidden" id="msNext"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>저장하고 다음</button>
+              <span class="last-mod hidden" id="cfLastMod">마지막 수정 2026-07-17 15:58 · 박지용</span>
               <button class="btn primary hidden" id="cfTopBtn"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>주주명부 확정</button>
             </div>
           </div>
@@ -535,8 +544,8 @@
                 <button class="iconbtn2" title="필터"><svg class="ic" viewBox="0 0 24 24"><path d="M3 6h9M17 6h4M3 12h4M9 12h12M3 18h9M17 18h4"/><circle cx="14" cy="6" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></svg></button></div></div>
             <div class="cf-tbl-wrap">
               <table class="mtbl">
-                <colgroup><col style="width:90px"><col style="width:90px"><col><col style="width:140px"><col style="width:130px"><col style="width:80px"><col style="width:120px"><col style="width:100px"></colgroup>
-                <thead><tr><th class="c">주식종류</th><th class="c">주주구분</th><th>주주명</th><th>주주번호</th><th style="text-align:right">보유주식</th><th style="text-align:right">지분율</th><th>투표권자</th><th class="c">상태</th></tr></thead>
+                <colgroup><col style="width:150px"><col style="width:200px"><col><col style="width:150px"><col style="width:110px"></colgroup>
+                <thead><tr><th>통합내역</th><th>투표권자명</th><th>주주명</th><th style="text-align:right">보유주식</th><th style="text-align:right">지분율</th></tr></thead>
                 <tbody id="cfBody"></tbody>
               </table>
             </div>
@@ -698,8 +707,9 @@
             document.querySelectorAll('#loadedState .upanel').forEach(function(p){p.classList.toggle('hide',p.dataset.upanel!==key);});
             var nx=document.getElementById('msNext');
             nx.style.display = key==='confirm' ? 'none' : '';
-            var ct=document.getElementById('cfTopBtn');
-            if(ct) ct.classList.toggle('hidden', key!=='confirm');
+            var ct=document.getElementById('cfTopBtn'), lm=document.getElementById('cfLastMod');
+            if(ct){ ct.classList.toggle('hidden', key!=='confirm'); if(key==='confirm' && typeof updateCfBtn==='function') updateCfBtn(); }
+            if(lm) lm.classList.toggle('hidden', !(key==='confirm' && cfConfirmed));
             var uc=document.getElementById('unsetCount'); var cu=document.getElementById('cfUnset');
             if(uc&&cu) cu.textContent=uc.textContent;
             if(key==='confirm' && typeof renderConfirm==='function') renderConfirm();
@@ -858,35 +868,68 @@
           }
 
           // 설정내역 확인 — 확정 명세 렌더 + 주주명부 확정
+          var cfConfirmed=false;
           function renderConfirm(){
-            var src=document.querySelector('.upanel[data-upanel="set"] table.mtbl tbody');
-            var body=document.getElementById('cfBody');
-            if(!src||!body) return;
+            var body=document.getElementById('cfBody'); if(!body) return;
+            function pnum(x){return parseInt(String(x).replace(/[^0-9]/g,''),10)||0;}
+            var mgb=document.getElementById('mgBody'), memberNames={}, cgroups=[];
+            if(mgb){
+              mgb.querySelectorAll('tr.mg-grp').forEach(function(g){
+                var gid=g.dataset.gid;
+                var voter=g.querySelector('.mg-tv')?g.querySelector('.mg-tv').textContent.trim():'';
+                var members=[];
+                mgb.querySelectorAll('tr.mg-child[data-gid="'+gid+'"]').forEach(function(c){
+                  var td=c.children, nm=c.querySelector('.cname')?c.querySelector('.cname').textContent.trim():'';
+                  members.push({name:nm, sh:td[5].textContent.trim(), rate:td[6].textContent.trim()});
+                  memberNames[nm]=true;
+                });
+                if(members.length) cgroups.push({voter:voter, members:members});
+              });
+            }
             var html='';
-            src.querySelectorAll('tr').forEach(function(tr){
-              var td=tr.children;
-              var kind=td[0].textContent.trim();
-              var gubun=td[1].textContent.trim();
-              var nmEl=tr.querySelector('.tt-name');
-              var name=nmEl?nmEl.textContent.trim():td[2].textContent.trim();
-              var no=td[3].textContent.trim();
-              var sh=td[4].textContent.trim();
-              var rate=td[5].textContent.trim();
-              var vcell=tr.querySelector('.voter');
-              var none=vcell && vcell.querySelector('.set-none');
-              var voter = none ? '<span class="set-none">미설정</span>' : '<span class="voter-set">'+(vcell?vcell.textContent.trim():'')+'</span>';
-              var status = none ? '<span class="badge-st red">미설정</span>' : '<span class="badge-st green">설정완료</span>';
-              html+='<tr><td class="c">'+kind+'</td><td class="c">'+gubun+'</td><td>'+name+'</td><td class="mut">'+no+'</td><td class="r">'+sh+'</td><td class="r sub">'+rate+'</td><td>'+voter+'</td><td class="c">'+status+'</td></tr>';
+            cgroups.forEach(function(g,gi){
+              var id='cg'+gi;
+              var sumSh=g.members.reduce(function(a,m){return a+pnum(m.sh);},0);
+              var sumRate=g.members.reduce(function(a,m){return a+(parseFloat(m.rate)||0);},0);
+              var nm=g.members[0].name+(g.members.length>1?' 외 '+(g.members.length-1):'');
+              html+='<tr class="cf-grp" data-cg="'+id+'">'
+                +'<td><span class="mg-mflex"><span class="mg-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span><span class="mbadge auto">통합 '+g.members.length+'건</span></span></td>'
+                +'<td><span class="voter-set">'+g.voter+'</span></td>'
+                +'<td class="name">'+nm+'</td>'
+                +'<td class="r">'+sumSh.toLocaleString()+'</td>'
+                +'<td class="r sub">'+sumRate.toFixed(1)+'%</td></tr>';
+              g.members.forEach(function(m){
+                html+='<tr class="cf-child" data-cg="'+id+'" hidden><td></td><td class="mut">-</td><td class="cname">'+m.name+'</td><td class="r">'+m.sh+'</td><td class="r sub">'+m.rate+'</td></tr>';
+              });
             });
+            var src=document.querySelector('.upanel[data-upanel="set"] table.mtbl tbody');
+            if(src){ src.querySelectorAll('tr').forEach(function(tr){
+              var nmEl=tr.querySelector('.tt-name'), name=nmEl?nmEl.textContent.trim():tr.children[2].textContent.trim();
+              if(memberNames[name]) return;
+              var td=tr.children, sh=td[4].textContent.trim(), rate=td[5].textContent.trim();
+              var vcell=tr.querySelector('.voter'), none=vcell&&vcell.querySelector('.set-none');
+              var voter = none?'<span class="set-none">미설정</span>':'<span class="voter-set">'+(vcell?vcell.textContent.trim():'')+'</span>';
+              html+='<tr><td class="mut">-</td><td>'+voter+'</td><td class="name">'+name+'</td><td class="r">'+sh+'</td><td class="r sub">'+rate+'</td></tr>';
+            }); }
             body.innerHTML=html;
-            var mgb=document.getElementById('mgBody'), red=0;
-            if(mgb){ red=mgb.querySelectorAll('.mg-child').length - mgb.querySelectorAll('.mg-grp').length; if(red<0) red=0; }
+            body.querySelectorAll('tr.cf-grp').forEach(function(g){
+              g.addEventListener('click',function(){var id=g.dataset.cg,open=g.classList.toggle('open');body.querySelectorAll('tr.cf-child[data-cg="'+id+'"]').forEach(function(c){c.hidden=!open;});});
+            });
+            var red=0; if(mgb){ red=mgb.querySelectorAll('.mg-child').length - mgb.querySelectorAll('.mg-grp').length; if(red<0)red=0; }
             var cv=document.getElementById('cfVoters'); if(cv) cv.textContent=(650000-red).toLocaleString();
           }
-          var cfBtn=document.getElementById('cfTopBtn'), cfDlg=document.getElementById('cfDlg');
-          if(cfBtn&&cfDlg){ cfBtn.addEventListener('click',function(){ cfDlg.classList.remove('hidden'); }); }
+          var cfBtn=document.getElementById('cfTopBtn'), cfDlg=document.getElementById('cfDlg'), cfLastMod=document.getElementById('cfLastMod');
+          function updateCfBtn(){ if(!cfBtn) return;
+            cfBtn.innerHTML = cfConfirmed
+              ? '<svg class="ic" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>주주명부 변경'
+              : '<svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>주주명부 확정';
+          }
+          if(cfBtn&&cfDlg){ cfBtn.addEventListener('click',function(){
+            if(cfConfirmed){ cfConfirmed=false; updateCfBtn(); if(cfLastMod) cfLastMod.classList.add('hidden'); toast('주주명부 변경','주주명부를 다시 수정할 수 있습니다. 수정 후 다시 확정해 주세요.'); }
+            else { cfDlg.classList.remove('hidden'); }
+          }); }
           var cfYes=document.getElementById('cfConfirmYes');
-          if(cfYes){ cfYes.addEventListener('click',function(){ cfDlg.classList.add('hidden'); toast('주주명부 확정','주주명부가 확정되었습니다. 이후 전자투표·현장 집계의 기준 명부로 사용됩니다.'); }); }
+          if(cfYes){ cfYes.addEventListener('click',function(){ cfDlg.classList.add('hidden'); cfConfirmed=true; updateCfBtn(); if(cfLastMod) cfLastMod.classList.remove('hidden'); toast('주주명부 확정','주주명부가 확정되었습니다. 이후 전자투표·현장 집계의 기준 명부로 사용됩니다.'); }); }
 
           // shareholder tooltip (주주번호 · 실질 계좌번호 · 주소)
           var tip=document.getElementById('shTip');
