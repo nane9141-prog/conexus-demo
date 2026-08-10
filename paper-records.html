@@ -34,6 +34,165 @@
   .stat .d{font-size:12px;margin-top:4px}
   .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
+
+  /* 전자투표/위임 내역 page */
+  .ev-head{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+  .ev-head .page-title{font-size:18px;font-weight:600}
+  .ev-org{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;margin-left:2px}
+  .ev-org span{color:var(--muted-fg)}.ev-org b{color:#0a0a0a;font-weight:600}
+  .ev-head .spacer{flex:1}
+  .btn-primary{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:none;border-radius:10px;background:#171717;color:#fafafa;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer}
+  .btn-primary svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+  .evtabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:16px}
+  .evtab{height:40px;padding:0 10px;display:inline-flex;align-items:center;font-size:14px;font-weight:500;color:var(--muted-fg);border-bottom:2px solid transparent;cursor:pointer}
+  .evtab.active{color:#0a0a0a;border-bottom-color:#171717}
+  .ev-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:320px;background:#fafafa;border:1px dashed var(--border);border-radius:10px;text-align:center}
+  .ev-empty svg{width:24px;height:24px;color:var(--muted-fg);stroke:currentColor;fill:none;stroke-width:1.5;margin-bottom:10px}
+  .ev-empty .e1{font-size:12px;font-weight:600;color:#737373}
+  .ev-empty .e2{font-size:12px;font-weight:300;color:#737373}
+  .evk{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  .evk .kc{border:1px solid var(--border);border-radius:10px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05);padding:16px;display:flex;flex-direction:column;gap:8px}
+  .evk .kc .lbl{font-size:12px;font-weight:500;color:#737373}
+  .evk .kc .val{font-size:18px;font-weight:600;color:#0a0a0a}
+  .evk .kc .val.orange{color:#ea580c}
+  .evk .kc .sub{font-size:12px;color:#737373}
+  .op{display:inline-flex;align-items:center;gap:2px;height:20px;padding:2px;border-radius:6px;font-size:12px;font-weight:500;color:#171717}
+  .op svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .op.for svg{color:#0071f3}.op.against svg{color:#7c3aed}
+  .chip{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:#f5f5f5;font-size:12px;font-weight:500;color:#171717}
+  /* dialog */
+  .dlg-ov{position:fixed;inset:0;background:rgba(10,10,10,.4);display:none;align-items:center;justify-content:center;z-index:100}
+  .dlg-ov.show{display:flex}
+  .dlg{width:480px;max-width:calc(100vw - 32px);background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;position:relative;display:flex;flex-direction:column}
+  .dlg-h{padding:16px;display:flex;flex-direction:column;gap:8px}
+  .dlg-h .t{font-size:16px;font-weight:600;color:#171717}
+  .dlg-h .d{font-size:14px;color:#737373}
+  .dlg-x{position:absolute;top:16px;right:16px;width:16px;height:16px;border:none;background:none;cursor:pointer;opacity:.7;padding:0}
+  .dlg-x svg{width:16px;height:16px;stroke:#000;fill:none;stroke-width:2;stroke-linecap:round}
+  .dlg-c{padding:0 16px 8px;display:flex;flex-direction:column;gap:16px}
+  .fld{display:flex;flex-direction:column;gap:8px}
+  .fld .lb{font-size:14px;font-weight:500;color:#171717}
+  .sel{display:flex;align-items:center;height:32px;padding:0 8px 0 10px;border:1px solid #e5e5e5;border-radius:10px;font-size:14px;color:#171717}
+  .sel .ph{flex:1}
+  .sel svg{width:12px;height:12px;stroke:#737373;fill:none;stroke-width:1.5}
+  .upl-lb{font-size:14px;font-weight:500;color:#171717}
+  .upl-row{display:flex;align-items:center;gap:8px}
+  .upl-row .desc{flex:1;font-size:12px;color:#171717;line-height:16px}
+  .lnk{background:none;border:none;font-size:12px;font-weight:500;color:#171717;text-decoration:underline;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px 24px;background:#fafafa;border:1px dashed #e5e5e5;border-radius:14px;text-align:center;cursor:pointer}
+  .drop .dt{font-size:12px;color:#737373}
+  .drop .pick{height:28px;padding:0 10px;background:#fff;border:1px solid #e5e5e5;border-radius:8px;font-size:12px;font-weight:500;color:#171717;cursor:pointer;font-family:inherit}
+  .attach{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #e5e5e5;border-radius:14px}
+  .attach .fx{width:32px;height:32px;background:#f5f5f5;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none}
+  .attach .fx svg{width:16px;height:16px;stroke:#171717;fill:none;stroke-width:1.5}
+  .attach .meta{flex:1;min-width:0}
+  .attach .fn{font-size:14px;font-weight:500;color:#171717}
+  .attach .fs{font-size:12px;color:#737373}
+  .attach .rm{border:none;background:none;cursor:pointer;padding:0;width:14px;height:14px}
+  .attach .rm svg{width:14px;height:14px;stroke:#171717;fill:none;stroke-width:2;stroke-linecap:round}
+  .dlg-f{padding:12px 16px 16px;display:flex;justify-content:flex-end;gap:8px}
+  .btn-out{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 10px;background:#fff;border:1px solid #e5e5e5;border-radius:10px;font-size:14px;font-weight:500;color:#171717;cursor:pointer;font-family:inherit}
+  .btn-dark{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 12px;background:#171717;border:none;border-radius:10px;font-size:14px;font-weight:500;color:#fafafa;cursor:pointer;font-family:inherit}
+  .btn-dark:disabled{opacity:.5;cursor:not-allowed}
+
+  .evbar{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);margin-bottom:16px}
+  .evbar .evtabs{border-bottom:none;margin-bottom:0}
+  .hbtns{display:flex;align-items:center;gap:8px}
+  .tbtn{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:12px;font-weight:500;color:#171717;cursor:pointer;font-family:inherit}
+  .tbtn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+  .seg{display:inline-flex;background:#f5f5f5;border-radius:10px;padding:3px}
+  .segbtn{height:26px;padding:0 12px;border:none;background:none;border-radius:8px;font-size:13px;font-weight:500;color:#737373;cursor:pointer;font-family:inherit}
+  .segbtn.active{background:#fff;color:#0a0a0a;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+  .tgl-wrap{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#171717;cursor:pointer}
+  .tgl{width:28px;height:16px;border-radius:9999px;background:#e5e5e5;position:relative;flex:none;transition:background .15s}
+  .tgl.on{background:#171717}
+  .tgl::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left .15s}
+  .tgl.on::after{left:14px}
+  .ibtn2{width:34px;height:32px;border:1px solid var(--border);border-radius:8px;background:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:#171717}
+  .ibtn2 svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+  .ibtn2:hover{background:var(--muted)}
+  .dlbtn{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:12px;font-weight:500;color:#171717;cursor:pointer;font-family:inherit}
+  .dlbtn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+  .cvb{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:6px;background:#f4f4f5;font-size:12px;font-weight:500;color:#3f3f46;margin-left:6px}
+  table.tbl td.exp{cursor:pointer;user-select:none;white-space:nowrap}
+  table.tbl .caret{display:inline-block;width:12px;color:#737373;transition:transform .12s;font-size:11px}
+  table.tbl tr.open .caret{transform:rotate(90deg)}
+  table.tbl tr.child td{background:#fafafa}
+  table.tbl tr.child td.exp{padding-left:34px}
+  .val.blue{color:#0071f3}
+
+  .hh{display:inline-flex;align-items:center;gap:3px}
+  th.num .hh{justify-content:flex-end}
+  .hicon{width:12px;height:12px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .hicon.for{stroke:#0071f3}.hicon.against{stroke:#7c3aed}.hicon.abs{stroke:#a3a3a3}.hicon.neu{stroke:#a3a3a3}
+  #viewHolder .tbl-scroll,#viewHolder{overflow-x:auto}
+  table.tbl td.num,table.tbl th.num{text-align:right}
+  .pgfoot{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-top:1px solid var(--border);background:#fafafa;font-size:12px;color:var(--muted-fg)}
+  .pgtot b{color:#0a0a0a}
+  .pgctl{display:flex;align-items:center;gap:8px}
+  .pgctl button{width:24px;height:24px;border:1px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;font-size:14px;color:#171717;line-height:1}
+  .pgctl button:disabled{opacity:.4;cursor:default}
+  table.tbl td.c,table.tbl th.c{text-align:center}
+  .op.abs svg{color:#a3a3a3}
+  .mbar{display:inline-block;width:28px;height:6px;border-radius:3px;background:linear-gradient(90deg,#737373 45%,#e5e5e5 45%);vertical-align:middle;margin-right:6px}
+
+  .dlg-c{max-height:58vh;overflow-y:auto}
+  .stepper{display:flex;align-items:center;gap:8px;font-size:12px;color:#a3a3a3;margin-top:4px}
+  .stepper .sd{display:inline-flex;align-items:center;gap:4px}
+  .stepper .sn{width:18px;height:18px;border-radius:50%;background:#e5e5e5;color:#737373;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+  .stepper .sd.on .sn{background:#171717;color:#fff}
+  .stepper .sd.on{color:#171717;font-weight:500}
+  .stepper .sar{color:#d4d4d4}
+  .vcard{background:#f5f5f5;border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:8px}
+  .vcard .vh{font-size:14px;font-weight:600;color:#0a0a0a}
+  .vlist{display:flex;flex-direction:column;gap:4px;margin:0;padding:0;list-style:none}
+  .vlist li{font-size:14px;color:#737373;padding-left:14px;position:relative;line-height:20px}
+  .vlist li::before{content:"·";position:absolute;left:3px;color:#a3a3a3}
+  .vdiv{height:1px;background:#e5e5e5;margin:8px 0}
+  .vnote{display:flex;gap:8px;align-items:flex-start;background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:8px 10px}
+  .vnote svg{width:16px;height:16px;flex:none;stroke:#171717;fill:none;stroke-width:1.5;margin-top:1px}
+  .vnote .vt{font-size:12px;font-weight:500;color:#171717;line-height:16px}
+  .vnote .vs{font-size:12px;color:#737373;line-height:16px}
+  .pvtbl{width:100%;border-collapse:collapse;font-size:13px}
+  .pvtbl th{background:#fafafa;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;padding:8px 10px;border-bottom:1px solid var(--border)}
+  .pvtbl td{padding:8px 10px;border-bottom:1px solid #f0f0f0}
+  .pvtbl td.num{text-align:right}
+  .pvsum{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#737373;margin-top:8px}
+  .pvok{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#0a8a3c;font-weight:500}
+  .pvok svg{width:16px;height:16px;stroke:#0a8a3c;fill:none;stroke-width:2}
+
+  .slabel{font-size:14px;font-weight:600;color:#0a0a0a;margin-block:16px}
+  .ckwrap{display:flex;flex-direction:column;gap:8px}
+  .ckitem{display:flex;gap:8px;padding:10px;border:1px solid #e5e5e5;border-radius:8px;cursor:pointer;align-items:flex-start}
+  .ckitem.on{background:rgba(23,23,23,.05);border-color:#171717}
+  .ckbox{width:16px;height:16px;border:1px solid #e5e5e5;border-radius:4px;flex:none;display:flex;align-items:center;justify-content:center;background:#fff;margin-top:1px}
+  .ckitem.on .ckbox,.fchk.on .ckbox{background:#171717;border-color:#171717}
+  .ckbox svg{width:12px;height:12px;stroke:#fafafa;fill:none;stroke-width:2.5;visibility:hidden}
+  .ckitem.on .ckbox svg,.fchk.on .ckbox svg{visibility:visible}
+  .ckitem .cl{font-size:14px;font-weight:500;color:#171717;line-height:1.3}
+  .ckitem .cd{font-size:12px;color:#737373;margin-top:4px}
+  .cmp{width:100%;border-collapse:collapse;font-size:14px}
+  .cmp th{font-size:13px;font-weight:500;color:#737373;padding:12px 8px;border-bottom:1px solid #f0f0f0;text-align:right}
+  .cmp th:first-child{text-align:left}
+  .cmp td{padding:12px 8px;border-bottom:1px solid #f0f0f0;text-align:right}
+  .cmp tr:last-child td{border-bottom:none}
+  .cmp td:first-child{text-align:left;font-weight:600;color:#0a0a0a}
+  .cmp .old{color:#a3a3a3}
+  .cmp .delta{font-weight:700;color:#0a0a0a}
+  .cmp .delta.mut{color:#a3a3a3;font-weight:400}
+  .fchk{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:#171717;cursor:pointer}
+  .coldd{position:relative}
+  .colsel{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 8px 0 12px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:14px;color:#0a0a0a;cursor:pointer;font-family:inherit}
+  .colsel svg{width:16px;height:16px;stroke:#a7aab1;fill:none;stroke-width:2}
+  .colmenu{position:absolute;top:36px;left:0;min-width:160px;background:#fff;border:1px solid rgba(10,10,10,.1);box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);border-radius:10px;padding:4px;z-index:40}
+  .colmenu.hidden{display:none}
+  .colmenu-lb{font-size:12px;font-weight:500;color:#737373;padding:6px 8px}
+  .colitem{display:flex;align-items:center;gap:6px;height:28px;padding:0 6px;border-radius:8px;font-size:14px;color:#0a0a0a;cursor:pointer}
+  .colitem:hover{background:var(--muted)}
+  .colitem .cbx{width:16px;height:16px;border:1px solid #e5e5e5;border-radius:4px;display:flex;align-items:center;justify-content:center;background:#fff;flex:none}
+  .colitem.on .cbx{background:#171717;border-color:#171717}
+  .colitem .cbx svg{width:12px;height:12px;stroke:#fafafa;fill:none;stroke-width:2.5;visibility:hidden}
+  .colitem.on .cbx svg{visibility:visible}
 </style>
 </head>
 <body>
@@ -146,11 +305,221 @@
     </div>
     <div class="scroll">
       <div class="content" style="width:100%">
-        <div class="st-head"><div><div class="page-title">서면투표/위임 내역</div><div class="page-sub">서면투표 및 서면위임 접수 내역을 관리합니다.</div></div></div>
-        <div class="ag-empty" style="min-height:440px">
-          <svg viewBox="0 0 24 24" class="ic"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-          <div class="e1">준비 중인 화면입니다.</div>
-          <div class="e2">이 메뉴는 곧 제공될 예정입니다.</div>
+        <!-- 상단 타이틀 + 확정하기 -->
+        <div class="ev-head">
+          <div class="page-title">서면투표/위임 내역</div>
+          <div class="ev-org"><span>접수 방식</span><b>서면 접수</b></div>
+          <span class="spacer"></span>
+          <button class="btn-primary" id="btnConfirm"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>확정하기</button>
+        </div>
+
+        <!-- EMPTY 상태 -->
+        <div id="evEmpty" style="display:none">
+          <div class="evbar">
+            <div class="evtabs"><span class="evtab active">서면위임(자사)</span><span class="evtab">서면위임(타사)</span><span class="evtab">서면투표</span></div>
+            <div class="hbtns"><button class="tbtn"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>개별 등록</button><button class="tbtn js-upload"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>파일 등록</button></div>
+          </div>
+          <div class="ev-empty">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-dasharray="3 3"/><path d="M14 2v6h6"/></svg>
+            <div class="e1">등록된 의안이 없습니다</div>
+            <div class="e2">의결권 행사 대상 의안을 추가해 주세요</div>
+          </div>
+        </div>
+
+        <!-- FILLED 상태 -->
+        <div id="evFilled">
+          <div class="evbar">
+            <div class="evtabs"><span class="evtab active">서면위임(자사)</span><span class="evtab">서면위임(타사)</span><span class="evtab">서면투표</span></div>
+            <div class="hbtns">
+              <button class="tbtn"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>검증 정보</button>
+              <button class="tbtn"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>개별 등록</button>
+              <button class="tbtn js-upload"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>파일 등록</button>
+              <button class="tbtn"><svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>내역 삭제</button>
+            </div>
+          </div>
+          <div class="evk">
+            <div class="kc"><div class="lbl">행사 의결권</div><div class="val">262,140,000주</div><div class="sub">발행주식총수 대비 55.0%</div></div>
+            <div class="kc"><div class="lbl">중복 의결권</div><div class="val">6,210,410주</div><div class="sub">자동 병합 대상</div></div>
+            <div class="kc"><div class="lbl">중복 미처리</div><div class="val orange">110,000주</div><div class="sub">수동 확인 필요</div></div>
+            <div class="kc"><div class="lbl">확정 의결권</div><div class="val blue">256,040,000주</div><div class="sub">중복 처리 완료 기준</div></div>
+          </div>
+          <div class="toolbar" style="margin-bottom:12px">
+            <div class="seg" id="viewSeg">
+              <button class="segbtn active" data-view="agenda">의안 기준</button>
+              <button class="segbtn" data-view="holder">주주 기준</button>
+            </div>
+            <div class="hbtns">
+              <label class="tgl-wrap"><span class="tgl" data-sw></span>중복 수치 포함</label>
+              <div class="coldd"><button class="colsel" id="colselBtn"><span>표시 열</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div class="colmenu hidden" id="colMenu"><div class="colmenu-lb">표시할 열</div>
+                  <label class="colitem on" data-col><span class="cbx"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>행사가능의결권</label>
+                  <label class="colitem on" data-col><span class="cbx"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>미행사의결권</label>
+                  <label class="colitem on" data-col><span class="cbx"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>집중투표</label>
+                </div></div>
+              <button class="dlbtn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>다운로드</button>
+              <button class="ibtn2" title="줄 간격"><svg viewBox="0 0 24 24"><path d="M8 6 5 3 2 6M5 3v18M8 18l-3 3-3-3M13 6h9M13 12h9M13 18h9"/></svg></button>
+              <button class="ibtn2" title="필터"><svg viewBox="0 0 24 24"><path d="M3 6h9M17 6h4M3 12h4M9 12h12M3 18h9M17 18h4"/><circle cx="14" cy="6" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></svg></button>
+            </div>
+          </div>
+
+          <!-- 의안 기준 -->
+          <div class="tbl-wrap" id="viewAgenda">
+            <table class="tbl">
+              <thead><tr><th>의안번호</th><th>의안명</th><th class="num">총행사가능의결권</th><th class="num">행사가능의결권</th><th class="num">행사의결권</th><th class="num">미행사의결권</th><th class="num"><span class="hh"><svg class="hicon for" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></th><th class="num"><span class="hh"><svg class="hicon against" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></th><th class="num"><span class="hh"><svg class="hicon abs" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</span></th><th class="num"><span class="hh"><svg class="hicon neu" viewBox="0 0 24 24"><path d="M12 5 4 19h16z"/></svg>중립</span></th></tr></thead>
+              <tbody>
+                  <tr><td>제1호</td><td>재무제표 승인의 건</td><td class="num">476,211,964</td><td class="num">300,000,000</td><td class="num">300,000,000</td><td class="num">176,211,964</td><td class="num">241,800,000</td><td class="num">58,200,000</td><td class="num">0</td><td class="num">0</td></tr>
+                  <tr><td>제2호</td><td>정관 일부 변경의 건</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr><td>제2-1호</td><td>집중투표제 배제 조항 삭제의 건(정관 제37조 제3항)</td><td class="num">476,211,964</td><td class="num">300,000,000</td><td class="num">300,000,000</td><td class="num">176,211,964</td><td class="num">173,700,000</td><td class="num">126,300,000</td><td class="num">0</td><td class="num">0</td></tr>
+                  <tr><td>제2-2호</td><td>전자주주총회 도입 관련 변경(정관 제26조 제2항)</td><td class="num">476,211,964</td><td class="num">300,000,000</td><td class="num">300,000,000</td><td class="num">176,211,964</td><td class="num">240,600,000</td><td class="num">59,400,000</td><td class="num">0</td><td class="num">0</td></tr>
+                  <tr><td>제2-3호</td><td>의결권 대리행사 수단 확대(정관 제31조 제2항)</td><td class="num">476,211,964</td><td class="num">300,000,000</td><td class="num">300,000,000</td><td class="num">176,211,964</td><td class="num">240,600,000</td><td class="num">59,400,000</td><td class="num">0</td><td class="num">0</td></tr>
+                  <tr><td>제3호</td><td>이사 선임의 건</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr><td>제3-1호</td><td>집중투표 후보 4인 중 2인 선임의 건 <span class="cvb">집중투표</span></td><td class="num">952,423,928</td><td class="num">600,000,000</td><td class="num">600,000,000</td><td class="num">352,423,928</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr><td>제3-1-1호</td><td>사외이사 김근수 선임의 건</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num">410,471,124</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
+                  <tr><td>제3-1-2호</td><td>사외이사 진웅섭 선임의 건</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num">121,475,008</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
+                  <tr><td>제3-1-3호</td><td>사외이사 남상일 선임의 건</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num">58,810,427</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
+                  <tr><td>제3-1-4호</td><td>사외이사 박선화 선임의 건</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num">9,243,441</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
+                  <tr><td>제3-2호</td><td>감사위원이 되는 사외이사 선임의 건</td><td class="num">476,211,964</td><td class="num">300,000,000</td><td class="num">300,000,000</td><td class="num">176,211,964</td><td class="num">238,800,000</td><td class="num">61,200,000</td><td class="num">0</td><td class="num">0</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 주주 기준 -->
+          <div class="tbl-wrap" id="viewHolder" style="display:none">
+            <table class="tbl">
+              <thead><tr><th>투표권자</th><th>주주명</th><th class="c">행사방식</th><th class="num">행사가능의결권</th><th class="num">미행사의결권</th><th class="c">1</th><th class="c">2-1</th><th class="c">2-2</th><th class="c">2-3</th><th class="num">3-1-1</th><th class="num">3-1-2</th><th class="num">3-1-3</th><th class="c">3-2</th></tr></thead>
+              <tbody>
+                  <tr><td>8100231</td><td>CITIGROUP</td><td class="c">서면투표</td><td class="num">67,000</td><td class="num"><span class="mbar"></span>0</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">12,000</td><td class="num">12</td><td class="num">1</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr><td>8100232</td><td>BARCLAYS CAPITAL</td><td class="c">서면투표</td><td class="num">345,804</td><td class="num"><span class="mbar"></span>0</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">12,000</td><td class="num">12</td><td class="num">1</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr><td>6805111</td><td>우리사주조합장(이유정)</td><td class="c">서면투표</td><td class="num">345,804</td><td class="num"><span class="mbar"></span>0</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">1</td><td class="num">1</td><td class="num">6,000</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr class="grp" data-grp="ktc"><td class="exp"><span class="caret">▶</span> 한국교직원공제회 <span class="cvb">통합 3건</span></td><td>-</td><td class="c">-</td><td class="num">3,345,804</td><td class="num"><span class="mbar"></span>20</td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">1</td><td class="num">40,456</td><td class="num">1</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr class="child" data-child="ktc" style="display:none"><td></td><td>TMF(대신퀀트11호)</td><td class="c">서면위임</td><td class="num">2,400,000</td><td class="num"><span class="mbar"></span>20</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">12,000</td><td class="num">11</td><td class="num">21</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr class="child" data-child="ktc" style="display:none"><td></td><td>트러스톤1 (계좌합산용)</td><td class="c">서면위임</td><td class="num">67,000</td><td class="num"><span class="mbar"></span>20</td><td class="c"><span class="op abs"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</span></td><td class="c"><span class="op abs"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</span></td><td class="c"><span class="op abs"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">12,000</td><td class="num">1</td><td class="num">13</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr class="child" data-child="ktc" style="display:none"><td></td><td>트러스톤2 (계좌합산용)</td><td class="c">서면투표</td><td class="num">67,000</td><td class="num"><span class="mbar"></span>20</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">12,000</td><td class="num">31</td><td class="num">31</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr class="grp" data-grp="sam"><td class="exp"><span class="caret">▶</span> 삼성자산운용 <span class="cvb">통합 3건</span></td><td>-</td><td class="c">-</td><td class="num">800,000</td><td class="num"><span class="mbar"></span>120</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">12</td><td class="num">11</td><td class="num">12,000</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr class="child" data-child="sam" style="display:none"><td></td><td>삼성전자펀드</td><td class="c">서면투표</td><td class="num">400,000</td><td class="num"><span class="mbar"></span>60</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">6</td><td class="num">6</td><td class="num">6,000</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr class="child" data-child="sam" style="display:none"><td></td><td>삼성인덱스</td><td class="c">서면투표</td><td class="num">400,000</td><td class="num"><span class="mbar"></span>60</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">6</td><td class="num">5</td><td class="num">6,000</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr><td>9103302</td><td>이미영</td><td class="c">서면투표</td><td class="num">800,000</td><td class="num"><span class="mbar"></span>120</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">222</td><td class="num">11</td><td class="num">12,000</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr><td>8100240</td><td>BLACKROCK FUND</td><td class="c">서면투표</td><td class="num">1,200,000</td><td class="num"><span class="mbar"></span>0</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">500</td><td class="num">300</td><td class="num">200</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr class="grp" data-grp="mir"><td class="exp"><span class="caret">▶</span> 미래에셋자산운용 <span class="cvb">통합 2건</span></td><td>-</td><td class="c">-</td><td class="num">1,540,000</td><td class="num"><span class="mbar"></span>40</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">7</td><td class="num">9</td><td class="num">5</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr class="child" data-child="mir" style="display:none"><td></td><td>미래에셋인덱스</td><td class="c">서면투표</td><td class="num">770,000</td><td class="num"><span class="mbar"></span>20</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">4</td><td class="num">5</td><td class="num">3</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr class="child" data-child="mir" style="display:none"><td></td><td>미래에셋퇴직연금</td><td class="c">서면위임</td><td class="num">770,000</td><td class="num"><span class="mbar"></span>20</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">3</td><td class="num">4</td><td class="num">2</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr><td>6805113</td><td>김하늘</td><td class="c">서면투표</td><td class="num">980,000</td><td class="num"><span class="mbar"></span>0</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">120</td><td class="num">90</td><td class="num">60</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr><td>6805114</td><td>이도윤</td><td class="c">서면위임</td><td class="num">760,000</td><td class="num"><span class="mbar"></span>0</td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">80</td><td class="num">70</td><td class="num">40</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr><td>6805115</td><td>박서진</td><td class="c">서면투표</td><td class="num">640,000</td><td class="num"><span class="mbar"></span>0</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">60</td><td class="num">50</td><td class="num">30</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr><td>6805116</td><td>최유나</td><td class="c">서면투표</td><td class="num">580,000</td><td class="num"><span class="mbar"></span>0</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op abs"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">40</td><td class="num">35</td><td class="num">25</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr><td>6805117</td><td>정민재</td><td class="c">서면위임</td><td class="num">520,000</td><td class="num"><span class="mbar"></span>0</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">30</td><td class="num">25</td><td class="num">20</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr><td>6805118</td><td>강지후</td><td class="c">서면투표</td><td class="num">460,000</td><td class="num"><span class="mbar"></span>0</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">20</td><td class="num">18</td><td class="num">12</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr><td>6805119</td><td>윤서아</td><td class="c">서면투표</td><td class="num">410,000</td><td class="num"><span class="mbar"></span>0</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">15</td><td class="num">12</td><td class="num">8</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+                  <tr><td>6805120</td><td>임현우</td><td class="c">서면위임</td><td class="num">360,000</td><td class="num"><span class="mbar"></span>0</td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">10</td><td class="num">8</td><td class="num">6</td><td class="c"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
+              </tbody>
+            </table>
+            <div class="pgfoot">
+              <span class="pgtot">총 <b id="pgTotal">0</b>명 · 510,356,025주</span>
+              <div class="pgctl"><button id="pgPrev" aria-label="이전">‹</button><span id="pgInd">1 / 1</span><button id="pgNext" aria-label="다음">›</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 파일 등록 다이얼로그 -->
+        <div class="dlg-ov" id="dlgOv">
+          <div class="dlg" role="dialog" aria-modal="true">
+            <button class="dlg-x" id="dlgX"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+            <div class="dlg-h">
+              <div class="t">서면투표/위임 내역 등록</div>
+              <div class="d" id="dlgDesc">업로드 전 적용되는 필수 검증 로직을 확인하세요.</div>
+              <div class="stepper">
+                <span class="sd on" data-s="1"><span class="sn">1</span>검증 로직</span><span class="sar">›</span>
+                <span class="sd" data-s="2"><span class="sn">2</span>파일 업로드</span><span class="sar">›</span>
+                <span class="sd" data-s="3"><span class="sn">3</span>내역 확인</span>
+              </div>
+            </div>
+            <div class="dlg-c">
+              <!-- STEP 1: 검증 로직 -->
+              <div class="vstep" id="evStep1">
+                <div class="vcard" style="max-height:300px;overflow-y:auto">
+                  <div class="vh">필수 검증 로직*</div>
+                  <ul class="vlist">
+                    <li>주주명부에 없는 주주 검증</li>
+                    <li>파일 내 중복 주주 검증</li>
+                    <li>의안 설정에서 설정하지 않은 의안 검증</li>
+                    <li>행사가능의결권보다 많게 행사한 주주 검증</li>
+                    <li>의결권 없는 주주(자사주/상호주/무효주) 검증</li>
+                    <li>의안별 의결권 제한 주주(특별이해관계자/기타) 검증</li>
+                    <li>일부선임 의안에 선임 이사 수보다 찬성한 의안이 많은지 검증</li>
+                    <li>양립불가 의안에 중복 찬성 여부 검증</li>
+                    <li>개인이지만 중립 투표한 주주</li>
+                    <li>현장 참석자로 등록된 주주</li>
+                  </ul>
+                  <div class="vdiv"></div>
+                  <div class="vh">개별 3% 필수 검증 로직*</div>
+                  <ul class="vlist"><li>보유의결권보다 행사를 많게한 주주 검증</li></ul>
+                  <div class="vdiv"></div>
+                  <div class="vh">합산 3% 필수 검증 로직*</div>
+                  <ul class="vlist"><li>보유의결권보다 행사를 많게한 주주 검증</li></ul>
+                  <div class="vnote"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><div class="vt">합산 3%에 해당하는 주주는 보유의결권 그대로 찬성에 입력해 주세요.</div></div></div>
+                  <div class="vnote"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><div class="vt">합산 3%에 해당하는 주주가 주주총회에 참석한 여부에 따라 합산 3%룰이 적용됩니다.</div></div></div>
+                  <div class="vdiv"></div>
+                  <div class="vh">집중투표 필수 검증 로직*</div>
+                  <ul class="vlist"><li>찬성 외 영역에 특수문자 입력 여부 / 찬·반·기·중 주식수 입력 여부 검증</li></ul>
+                  <div class="vnote"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><div class="vt">집중투표 의향이 있는 후보자의 찬성란에 표시문자 1개를 입력해 주세요.</div><div class="vs">예: V, O, ✓, ★</div></div></div>
+                  <div class="vnote"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><div class="vt">찬성 의안에 숫자를 입력한 경우 집중투표 분배 주주에서 제외됩니다.</div></div></div>
+                  <div class="vdiv"></div>
+                  <div class="vh">양립 불가 필수 검증 로직*</div>
+                  <ul class="vlist"><li>양립불가로 설정된 의안 내 중복 찬성 여부</li></ul>
+                </div>
+                <div class="slabel">선택 검증 로직*</div>
+                <div class="ckwrap">
+                  <div class="ckitem on" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="cl">중복 의결권 자동 병합</div><div class="cd">동일 주주의 중복 행사분을 자동으로 병합합니다.</div></div></div>
+                  <div class="ckitem" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="cl">합산 3% 자동 계산 반영</div><div class="cd">합산 3% 대상 주주를 의결권 계산에 자동 반영합니다.</div></div></div>
+                  <div class="ckitem" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="cl">현장 참석 예정자 사전행사 제외</div><div class="cd">현장 참석 등록 주주의 사전 행사분을 제외합니다.</div></div></div>
+                </div>
+              </div>
+
+              <!-- STEP 2: 파일 업로드 -->
+              <div class="vstep" id="evStep2" style="display:none">
+                <div class="fld">
+                  <div class="lb">전자투표관리기관</div>
+                  <div class="sel"><span class="ph">한국예탁결제원</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
+                </div>
+                <div class="fld" style="margin-top:16px">
+                  <div class="upl-lb">엑셀 파일 업로드</div>
+                  <div class="upl-row">
+                    <div class="desc">첨부된 양식으로 서면투표/위임 내역 작성 후 업로드<br>엑셀 파일 암호 해제 필수 (미해제 시 업로드 불가)</div>
+                    <button class="lnk">양식 다운로드</button>
+                  </div>
+                  <div class="drop" id="dropZone">
+                    <div class="dt">파일을 선택하거나 끌어다 놓으세요.</div>
+                    <button class="pick" id="btnPick">선택</button>
+                  </div>
+                  <div class="attach" id="attachCard" style="display:none">
+                    <div class="fx"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
+                    <div class="meta"><div class="fn">서면투표_위임내역_제10기.xlsx</div><div class="fs">xlsx · 248KB</div></div>
+                    <button class="rm" id="attachRm"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- STEP 3: 내역 확인 (기존/업로드/변동) -->
+              <div class="vstep" id="evStep3" style="display:none">
+                <table class="cmp">
+                  <thead><tr><th>내용</th><th>기존</th><th>업로드</th><th>변동</th></tr></thead>
+                  <tbody>
+                    <tr><td>의안수</td><td class="old">12</td><td>12</td><td class="delta mut">-</td></tr>
+                    <tr><td>주주수</td><td class="old">1,000</td><td>2,000</td><td class="delta">+33</td></tr>
+                    <tr><td>행사가능의결권</td><td class="old">1,444,778</td><td>3,789,441</td><td class="delta">+2,180,000</td></tr>
+                    <tr><td>행사의결권</td><td class="old">1,241,000</td><td>3,247,000</td><td class="delta">+2,180,000</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="dlg-f" style="align-items:center">
+              <label class="fchk" id="dlgAgree" style="display:none;margin-right:auto"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 내용을 확인했으며, 내역을 등록합니다.</label>
+              <button class="btn-out" id="dlgCancel">취소</button>
+              <button class="btn-out" id="dlgPrev" style="display:none">이전</button>
+              <button class="btn-dark" id="dlgNext">다음</button>
+              <button class="btn-dark" id="dlgSubmit" style="display:none">등록하기</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -203,6 +572,111 @@
     var cr=e.target.closest('.chk-row'); if(cr){cr.classList.toggle('on');}
     var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
   });
+
+  // 전자투표/위임 내역: 파일 등록 마법사 (검증 → 업로드 → 확인 → 등록)
+  (function(){
+    var ov=document.getElementById('dlgOv'); if(!ov) return;
+    var drop=document.getElementById('dropZone'), pick=document.getElementById('btnPick'),
+        att=document.getElementById('attachCard'), rm=document.getElementById('attachRm'),
+        next=document.getElementById('dlgNext'), prev=document.getElementById('dlgPrev'),
+        cancel=document.getElementById('dlgCancel'), submit=document.getElementById('dlgSubmit'),
+        agree=document.getElementById('dlgAgree'), desc=document.getElementById('dlgDesc');
+    var step=1, attached=false;
+    var descs={1:'업로드 전 적용되는 필수 검증 로직을 확인하세요.',2:'양식에 맞춰 작성한 엑셀 파일을 업로드하세요.',3:'아래 수치를 확인한 뒤 등록을 완료하세요.'};
+    function show(id,on){ document.getElementById(id).style.display=on?'block':'none'; }
+    function render(){
+      show('evStep1',step===1); show('evStep2',step===2); show('evStep3',step===3);
+      desc.textContent=descs[step];
+      document.querySelectorAll('.stepper .sd').forEach(function(d){ d.classList.toggle('on', +d.dataset.s<=step); });
+      cancel.style.display=(step===1||step===3)?'inline-flex':'none';
+      prev.style.display=(step===2)?'inline-flex':'none';
+      next.style.display=(step<3)?'inline-flex':'none';
+      submit.style.display=(step===3)?'inline-flex':'none';
+      agree.style.display=(step===3)?'inline-flex':'none';
+      if(step===2){ next.disabled=!attached; } else { next.disabled=false; }
+      if(step===3){ submit.disabled=!agree.classList.contains('on'); }
+    }
+    function reset(){ step=1; attached=false; agree.classList.remove('on'); drop.style.display='flex'; att.style.display='none'; render(); }
+    function openDlg(){ reset(); ov.classList.add('show'); }
+    function closeDlg(){ ov.classList.remove('show'); reset(); }
+    function attach(){ attached=true; drop.style.display='none'; att.style.display='flex'; render(); }
+    document.querySelectorAll('.js-upload').forEach(function(b){b.addEventListener('click', openDlg);});
+    document.getElementById('dlgX').addEventListener('click', closeDlg);
+    cancel.addEventListener('click', closeDlg);
+    ov.addEventListener('click', function(e){ if(e.target===ov) closeDlg(); });
+    pick.addEventListener('click', function(e){ e.stopPropagation(); attach(); });
+    drop.addEventListener('click', attach);
+    rm.addEventListener('click', function(){ attached=false; drop.style.display='flex'; att.style.display='none'; render(); });
+    next.addEventListener('click', function(){ if(step<3){ step++; render(); } });
+    prev.addEventListener('click', function(){ if(step>1){ step--; render(); } });
+    agree.addEventListener('click', function(){ agree.classList.toggle('on'); render(); });
+    document.querySelectorAll('#evStep1 .ckitem[data-ck]').forEach(function(c){ c.addEventListener('click', function(){ c.classList.toggle('on'); }); });
+    submit.addEventListener('click', function(){
+      closeDlg();
+      document.getElementById('evEmpty').style.display='none';
+      document.getElementById('evFilled').style.display='block';
+      document.getElementById('btnConfirm').style.display='inline-flex';
+    });
+    // 내역 탭 전환
+    document.querySelectorAll('.evtabs').forEach(function(g){
+      g.querySelectorAll('.evtab').forEach(function(t){
+        t.addEventListener('click', function(){ g.querySelectorAll('.evtab').forEach(function(x){x.classList.toggle('active',x===t);}); });
+      });
+    });
+  })();
+
+  // 의안/주주 기준 뷰 전환 + 통합기관 접기
+  (function(){
+    var seg=document.getElementById('viewSeg'); if(!seg) return;
+    seg.querySelectorAll('.segbtn').forEach(function(b){
+      b.addEventListener('click',function(){
+        seg.querySelectorAll('.segbtn').forEach(function(x){x.classList.toggle('active',x===b);});
+        var v=b.dataset.view;
+        document.getElementById('viewAgenda').style.display=(v==='agenda')?'block':'none';
+        document.getElementById('viewHolder').style.display=(v==='holder')?'block':'none';
+      });
+    });
+    document.querySelectorAll('#viewHolder tr.grp .exp').forEach(function(td){
+      td.addEventListener('click',function(){
+        var tr=td.closest('tr'); var g=tr.dataset.grp; tr.classList.toggle('open');
+        var on=tr.classList.contains('open');
+        document.querySelectorAll('#viewHolder tr.child[data-child="'+g+'"]').forEach(function(c){ c.style.display=on?'table-row':'none'; });
+      });
+    });
+  })();
+  // 주주 기준 페이지네이션
+  (function(){
+    var wrap=document.getElementById('viewHolder'); if(!wrap) return;
+    var rows=[].slice.call(wrap.querySelectorAll('tbody tr'));
+    var units=[]; rows.forEach(function(r){ if(r.classList.contains('child')){ units[units.length-1].rows.push(r);} else { units.push({head:r,rows:[r]});} });
+    var members=rows.filter(function(r){return !r.classList.contains('grp');}).length;
+    var pageSize=6, page=1, pages=Math.max(1,Math.ceil(units.length/pageSize));
+    var prev=document.getElementById('pgPrev'),next=document.getElementById('pgNext'),ind=document.getElementById('pgInd'),tot=document.getElementById('pgTotal');
+    if(tot)tot.textContent=members;
+    function apply(){
+      units.forEach(function(u,i){
+        var on=i>=(page-1)*pageSize && i<page*pageSize;
+        u.rows.forEach(function(r,j){
+          if(j===0){ r.style.display=on?'':'none'; }
+          else { r.style.display=(on && u.head.classList.contains('open'))?'':'none'; }
+        });
+      });
+      ind.textContent=page+' / '+pages;
+      prev.disabled=(page<=1); next.disabled=(page>=pages);
+    }
+    prev.addEventListener('click',function(){ if(page>1){page--;apply();} });
+    next.addEventListener('click',function(){ if(page<pages){page++;apply();} });
+    wrap.querySelectorAll('tr.grp .exp').forEach(function(td){ td.addEventListener('click',function(){ setTimeout(apply,0); }); });
+    apply();
+  })();
+  // 표시 열 드롭다운
+  (function(){
+    var b=document.getElementById('colselBtn'), m=document.getElementById('colMenu'); if(!b||!m) return;
+    b.addEventListener('click',function(e){e.stopPropagation();m.classList.toggle('hidden');});
+    m.addEventListener('click',function(e){e.stopPropagation();});
+    m.querySelectorAll('[data-col]').forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('on');});});
+    document.addEventListener('click',function(){m.classList.add('hidden');});
+  })();
 </script>
 </body>
 </html>
