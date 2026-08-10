@@ -287,6 +287,23 @@
   .mc-btns{display:flex;justify-content:flex-end;gap:8px}
   .mc-btn{padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0A0A0A;cursor:pointer}
   .mc-btn.dark{background:#171717;border-color:#171717;color:#FAFAFA}
+  .ovl{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:1000}
+  .ovl.on{display:flex}
+  .dlg{box-sizing:border-box;width:480px;max-width:calc(100vw - 32px);background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;display:flex;flex-direction:column;position:relative;box-shadow:0 12px 34px rgba(0,0,0,.18)}
+  .dlg-h{display:flex;flex-direction:column;gap:8px;padding:16px}
+  .dlg-h .tt{font-size:16px;font-weight:600;color:#171717}
+  .dlg-h .ds{font-size:14px;color:#737373}
+  .dlg-c{display:flex;flex-direction:column;gap:16px;padding:0 16px 8px}
+  .dlg-c .lb{font-size:14px;font-weight:500;color:#171717;margin-bottom:8px}
+  .dlg-ta{width:100%;box-sizing:border-box;min-height:120px;padding:14px;border:1px solid #E5E5E5;border-radius:10px;font-family:inherit;font-size:14px;color:#171717;resize:vertical}
+  .dlg-tabs{display:flex;padding:3px;background:#F5F5F5;border-radius:10px}
+  .dlg-tabs button{flex:1;height:26px;border:none;background:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:500;color:#737373;cursor:pointer}
+  .dlg-tabs button.on{background:#fff;color:#0A0A0A;box-shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1)}
+  .dlg-f{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px 16px}
+  .dlg-btn{padding:8px 12px;border:1px solid #E5E5E5;border-radius:10px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;color:#171717;cursor:pointer}
+  .dlg-btn.dark{background:#171717;border-color:#171717;color:#FAFAFA}
+  .dlg-x{position:absolute;right:16px;top:16px;width:16px;height:16px;border:none;background:none;cursor:pointer;opacity:.7;padding:0}
+  .dlg-x svg{width:16px;height:16px;fill:none;stroke:#000;stroke-width:2;stroke-linecap:round}
 </style>
 </head>
 <body>
@@ -654,6 +671,17 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   renderStage(); renderAll();
 })();
 </script>
+<div class="ovl" id="ansOvl">
+  <div class="dlg">
+    <button class="dlg-x" id="ansClose"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="dlg-h"><div class="tt">답변 등록</div><div class="ds" id="ansDesc"></div></div>
+    <div class="dlg-c">
+      <div><div class="lb">답변 내용</div><textarea class="dlg-ta" id="ansTa"></textarea></div>
+      <div><div class="lb">공개 설정</div><div class="dlg-tabs" id="ansVis"><button data-v="pub" class="on">공개</button><button data-v="priv">비공개</button></div></div>
+    </div>
+    <div class="dlg-f"><button class="dlg-btn" id="ansCancel">취소</button><button class="dlg-btn dark" id="ansSubmit">등록</button></div>
+  </div>
+</div>
 <script>
 (function(){
   var Q=window.QUESTIONS||[], S=window.SPEECHES||[];
@@ -698,13 +726,24 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     document.getElementById('qCnt').textContent=Q.filter(function(x){return x.st==='미답변';}).length;
     document.getElementById('sCnt').textContent=S.filter(function(x){return x.st==='대기';}).length;
   }
+  var ovl=document.getElementById('ansOvl'), taD=document.getElementById('ansTa'), desc=document.getElementById('ansDesc'), pend=null, vis='pub';
+  function setVis(v){ vis=v; document.querySelectorAll('#ansVis button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-v')===v);}); }
+  function openDlg(id,text){ var it=Q.filter(function(x){return x.id===id;})[0]; if(!it) return; pend=id; taD.value=text||''; desc.textContent=it.name+' · '+(it.q.length>42?it.q.slice(0,42)+'…':it.q); setVis(it.pub?'pub':'priv'); ovl.classList.add('on'); taD.focus(); }
+  function closeDlg(){ ovl.classList.remove('on'); pend=null; }
+  if(ovl){
+    document.getElementById('ansCancel').addEventListener('click',closeDlg);
+    document.getElementById('ansClose').addEventListener('click',closeDlg);
+    ovl.addEventListener('click',function(e){ if(e.target===ovl) closeDlg(); });
+    document.querySelectorAll('#ansVis button').forEach(function(b){ b.addEventListener('click',function(){ setVis(b.getAttribute('data-v')); }); });
+    document.getElementById('ansSubmit').addEventListener('click',function(){ if(!pend) return; var it=Q.filter(function(x){return x.id===pend;})[0]; if(it){ it.a=taD.value; it.st='완료'; it.pub=(vis==='pub'); } closeDlg(); selId=null; render(); });
+  }
   document.querySelectorAll('.seg2 button').forEach(function(b){ b.addEventListener('click',function(){ qt=b.getAttribute('data-qt'); selId=null; document.querySelectorAll('.seg2 button').forEach(function(x){x.classList.toggle('on',x===b);}); render(); }); });
   var usw=document.getElementById('unreadSw'); usw.addEventListener('click',function(){ unread=!unread; usw.classList.toggle('on',unread); render(); });
   var cl=document.getElementById('chatList');
   cl.addEventListener('click',function(e){
-    var chip=e.target.closest('.mc-chip'); if(chip){ var ta=chip.closest('.mc-ans').querySelector('.mc-ta'); var tt=TPL[+chip.getAttribute('data-tpl')].t; ta.value=(ta.value?ta.value+' ':'')+tt; ta.focus(); return; }
+    var chip=e.target.closest('.mc-chip'); if(chip){ var ta=chip.closest('.mc-ans').querySelector('.mc-ta'); var tt=TPL[+chip.getAttribute('data-tpl')].t; ta.value=tt; ta.focus(); return; }
     var act=e.target.closest('[data-act]'); if(act){ var card=act.closest('.mcard'); var id=card.getAttribute('data-id');
-      if(act.getAttribute('data-act')==='submit'){ var ta=card.querySelector('.mc-ta'); var it=Q.filter(function(x){return x.id===id;})[0]; if(it){ it.a=ta.value; it.st='완료'; } }
+      if(act.getAttribute('data-act')==='submit'){ var ta=card.querySelector('.mc-ta'); openDlg(id, ta.value); return; }
       selId=null; render(); return; }
     if(qt!=='q') return;
     var mc=e.target.closest('.mcard'); if(!mc) return; var id=mc.getAttribute('data-id'); selId=(selId===id)?null:id; render();
