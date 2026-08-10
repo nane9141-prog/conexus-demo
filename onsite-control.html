@@ -304,6 +304,11 @@
   .dlg-btn.dark{background:#171717;border-color:#171717;color:#FAFAFA}
   .dlg-x{position:absolute;right:16px;top:16px;width:16px;height:16px;border:none;background:none;cursor:pointer;opacity:.7;padding:0}
   .dlg-x svg{width:16px;height:16px;fill:none;stroke:#000;stroke-width:2;stroke-linecap:round}
+  .mc-ansview{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border);padding-top:12px}
+  .mc-ansview .lb{font-size:12px;font-weight:500;color:#737373}
+  .mc-ansview .tx{background:#FAFAFA;border:1px solid var(--border);border-radius:10px;padding:12px;font-size:13px;line-height:18px;color:#171717}
+  .mc-viewbtns{display:flex;justify-content:flex-end}
+  .mc-editbtn{padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0A0A0A;cursor:pointer}
 </style>
 </head>
 <body>
@@ -709,8 +714,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       +'<textarea class="mc-ta" placeholder="답변을 입력하세요">'+esc(x.a||'')+'</textarea>'
       +'<div class="mc-btns"><button class="mc-btn" data-act="cancel" type="button">취소</button><button class="mc-btn dark" data-act="submit" type="button">등록</button></div></div>';
   }
+  function answerView(x){
+    return '<div class="mc-ansview"><div class="lb">답변 내용</div><div class="tx">'+esc(x.a)+'</div>'
+      +'<div class="mc-viewbtns"><button class="mc-editbtn" data-edit="1" type="button">수정</button></div></div>';
+  }
   function cardHTML(x){
     var sel=(qt==='q'&&x.id===selId);
+    var extra=sel?answerHTML(x):((qt==='q'&&x.st==='완료'&&x.a)?answerView(x):'');
     var badges='<span class="cbadge ag">'+agL(x)+'</span><span class="cbadge gr">'+x.t+'</span><span class="cbadge gr">'+sn(x)+'</span>'
       +(qt==='s'&&x.kind==='수정동의'?'<span class="cbadge amend">수정동의</span>':'');
     var priv=x.pub?'':'<span class="mc-tm">비공개</span>';
@@ -718,7 +728,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       +'<div class="mc-h"><span class="mc-nm">'+x.name+'</span><span class="mc-st">'+priv+'<span class="mc-tm">'+x.tm+'</span>'+stBadge(x)+'</span></div>'
       +'<div class="mc-cat">'+badges+'</div>'
       +'<div class="mc-q">'+esc(qt==='q'?x.q:x.r)+'</div>'
-      +(sel?answerHTML(x):'')+'</div>';
+      +extra+'</div>';
   }
   function list(){ var a=(qt==='q'?Q:S); if(unread) a=a.filter(function(x){return qt==='q'?x.st==='미답변':x.st==='대기';}); return a; }
   function render(){
@@ -745,6 +755,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var act=e.target.closest('[data-act]'); if(act){ var card=act.closest('.mcard'); var id=card.getAttribute('data-id');
       if(act.getAttribute('data-act')==='submit'){ var ta=card.querySelector('.mc-ta'); openDlg(id, ta.value); return; }
       selId=null; render(); return; }
+    var ed=e.target.closest('[data-edit]'); if(ed){ selId=ed.closest('.mcard').getAttribute('data-id'); render(); return; }
     if(qt!=='q') return;
     var mc=e.target.closest('.mcard'); if(!mc) return; var id=mc.getAttribute('data-id'); selId=(selId===id)?null:id; render();
   });
