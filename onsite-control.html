@@ -66,11 +66,11 @@
   .stbadge.gray{color:#525252}.stbadge.gray .d{background:#525252}
   .stbadge.blue{color:#0066df;background:#eff6ff}.stbadge.blue .d{background:#0071f3}
   .stbadge.green{color:#0a8a3c;background:#eafaf0}.stbadge.green .d{background:#22c55e}
-  .spark{width:80px;height:22px}
+  .spark{width:80px;height:22px;margin-left:auto}
   /* grid workspace */
-  .oc-grid{flex:1;min-height:0;background:#f5f5f5;overflow:auto;padding:16px}
+  .oc-grid{flex:1;min-height:0;background:#f5f5f5;overflow:auto;padding:8px}
   .oc-panel{display:none}
-  .oc-panel.on{display:block}
+  .oc-panel.on{display:block;height:100%}
   /* filter chips */
   .chips{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
   .chip{height:30px;padding:0 12px;border-radius:9999px;border:1px solid var(--border);background:#fff;font-family:inherit;font-size:13px;font-weight:500;color:#525252;cursor:pointer}
@@ -104,7 +104,7 @@
   .qbtn.dark{background:#171717;border-color:#171717;color:#fff}
   .qbtn:hover{background:#fafafa}.qbtn.dark:hover{background:#000}
   /* 현황 */
-  .nowgrid3{display:grid;grid-template-columns:1fr 2fr 1fr;gap:8px;align-items:start}
+  .nowgrid3{display:grid;grid-template-columns:1fr 2fr 1fr;gap:8px;align-items:stretch;height:100%}
   @media(max-width:1100px){.nowgrid3{grid-template-columns:1fr}}
   .ncard{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px}
   .ncard h3{margin:0 0 12px;font-size:14px;font-weight:600;color:#0a0a0a}
@@ -124,7 +124,7 @@
   .apanel-h{padding:11px 12px;font-size:14px;font-weight:600;color:#0a0a0a;border-bottom:1px solid var(--border)}
   .apanel-ph{padding:24px 12px;font-size:13px;color:#a3a3a3;text-align:center;line-height:1.6}
   .arow{padding:12px;border-top:1px solid #eee;display:flex;flex-direction:column;gap:8px}
-  #agTree{padding:2px 8px 8px}
+  #agTree{padding:2px 8px 8px;flex:1;min-height:0;overflow:auto}
   #agTree>.arow:first-child{border-top:none}
   .acat{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
   .ano{font-size:12px;font-weight:500;color:#737373}
@@ -154,11 +154,12 @@
   .cag{padding:4px 2px;margin-bottom:8px}
   .cag-cat{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#737373}
   .cag-cat .d{width:1px;height:10px;background:var(--border)}
-  .cag-cat .sw{margin-left:auto}
+  .cag-cat .tgl-wrap{margin-left:auto}
+  .tgl-wrap{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#171717;white-space:nowrap;cursor:pointer}
   .cag-nm{font-size:16px;font-weight:600;color:#0a0a0a;margin-top:8px}
   .cbadge-row{display:flex;justify-content:flex-end;margin-bottom:8px}
   .abadge.neu{background:#f5f5f5;color:#737373}
-  .cvbox{background:#fafafa;border:1px solid var(--border);border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.05);padding:20px 12px 12px;margin-bottom:16px}
+  .cvbox{background:#fafafa;border:1px solid var(--border);border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.05);padding:30px 14px 14px;margin-bottom:16px}
   .cvbar{position:relative;display:flex;height:24px;border-radius:8px;overflow:visible;margin-bottom:8px}
   .cvbar .sg{height:24px}
   .cvbar .sg:first-child{border-radius:8px 0 0 8px}.cvbar .sg:last-child{border-radius:0 8px 8px 0}
@@ -238,7 +239,7 @@
 
       <div class="oc-metrics">
         <div class="oc-mc"><div class="k">의안 진행 <span class="stbadge blue"><span class="d"></span>진행 중</span></div><div class="v"><span><b>2</b> / 6</span></div></div>
-        <div class="oc-mc"><div class="k">전체 출석 주식수 <span class="stbadge green"><span class="d"></span>정족수 충족</span></div><div class="v">300,000,000<span class="sub">주</span><span class="sep"></span>63.0%</div></div>
+        <div class="oc-mc"><div class="k">전체 출석 주식수</div><div class="v">300,000,000<span class="sub">주</span><span class="sep"></span>63.0%</div></div>
         <div class="oc-mc"><div class="k">전체 출석 주주수</div><div class="v">20,000<span class="sub">명</span></div></div>
         <div class="oc-mc"><div class="k">현장 참석</div><div class="v">342<span class="sub">명 · 3,120,000주 행사 가능</span></div></div>
         <div class="oc-mc"><div class="k">온라인 참석</div><div class="v">19,658<span class="sub">명</span><svg class="spark" viewBox="0 0 80 22" preserveAspectRatio="none"><polyline fill="none" stroke="#0071f3" stroke-width="2" points="0,18 12,15 24,16 36,10 48,12 60,6 72,7 80,3"/></svg></div></div>
@@ -262,7 +263,7 @@
                   </div>
                   <div class="cag">
                     <div class="cag-cat"><span>제1호</span><span class="d"></span><span>보통결의</span>
-                      <label class="tgl-wrap sw"><span class="tgl on" data-sw></span>화면 공개</label>
+                      <label class="tgl-wrap"><span class="sw on" data-sw></span>화면 공개</label>
                     </div>
                     <div class="cag-nm">재무제표 승인의 건</div>
                   </div>
@@ -353,11 +354,6 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       document.querySelectorAll('.oc-panel').forEach(function(p){p.classList.toggle('on',p.dataset.panel===k);});
     });
   });
-  // 표결/송출 세그먼트
-  var sv=document.getElementById('segVote'), sc=document.getElementById('segCast');
-  function seg(a){ sv.classList.toggle('on',a); sc.classList.toggle('on',!a); }
-  sv.addEventListener('click',function(){seg(true);}); sc.addEventListener('click',function(){seg(false);});
-
   // 질의 필터
   var AG=[['all','전체'],['1','제1호'],['2','제2호'],['3','제3호']];
   function chips(host,cur,cb){
