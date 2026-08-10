@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CONEXUS · 서면투표/위임 개별 등록</title>
+<link rel="stylesheet" href="conexus.css">
+<style>
+  /* page-local content helpers (LNB styling comes from conexus.css) */
+  .scroll{flex:1;overflow-y:auto}
+  .ic{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .tbl-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
+  table.tbl{width:100%;border-collapse:collapse;font-size:14px}
+  table.tbl th{background:#fafafa;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap}
+  table.tbl td{padding:12px 14px;border-bottom:1px solid #f0f0f0;color:#0a0a0a}
+  table.tbl tr:last-child td{border-bottom:none}
+  table.tbl tr:hover td{background:#fafafa}
+  .badge{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:9999px;font-size:12px;font-weight:600}
+  .badge.green{background:#eafaf0;color:#0a8a3c}
+  .badge.gray{background:var(--muted);color:var(--muted-fg)}
+  .badge.blue{background:var(--blue100);color:var(--blue700)}
+  .badge.red{background:var(--red50);color:var(--red600)}
+  .badge.amber{background:#fef6e7;color:#b45309}
+  .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .search{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;min-width:240px}
+  .search input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
+  .search .ic{width:16px;height:16px;color:var(--muted-fg)}
+  .page-title{font-size:20px;font-weight:700;color:#0a0a0a}
+  .page-sub{font-size:13px;color:var(--muted-fg);margin-top:4px}
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .stat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px}
+  .stat .k{font-size:12px;color:var(--muted-fg);font-weight:500}
+  .stat .v{font-size:24px;font-weight:700;color:#0a0a0a;margin-top:6px}
+  .stat .d{font-size:12px;margin-top:4px}
+  .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
+  @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
+
+  /* 전자투표/위임 내역 page */
+  .ev-head{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .ev-head .page-title{font-size:18px;font-weight:600}
+  .ev-org{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;margin-left:2px}
+  .ev-org span{color:var(--muted-fg)}.ev-org b{color:#0a0a0a;font-weight:600}
+  .ev-head .spacer{flex:1}
+  .btn-primary{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:none;border-radius:10px;background:#171717;color:#fafafa;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer}
+  .btn-primary svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+  .evtabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:16px}
+  .evtab{height:40px;padding:0 10px;display:inline-flex;align-items:center;font-size:14px;font-weight:500;color:var(--muted-fg);border-bottom:2px solid transparent;cursor:pointer}
+  .evtab.active{color:#0a0a0a;border-bottom-color:#171717}
+  .ev-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:320px;background:#fafafa;border:1px dashed var(--border);border-radius:10px;text-align:center}
+  .ev-empty svg{width:24px;height:24px;color:var(--muted-fg);stroke:currentColor;fill:none;stroke-width:1.5;margin-bottom:10px}
+  .ev-empty .e1{font-size:12px;font-weight:600;color:#737373}
+  .ev-empty .e2{font-size:12px;font-weight:300;color:#737373}
+  .evk{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  .evk .kc{border:1px solid var(--border);border-radius:10px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05);padding:16px;display:flex;flex-direction:column;gap:8px}
+  .evk .kc .lbl{font-size:12px;font-weight:500;color:#737373}
+  .evk .kc .val{font-size:18px;font-weight:600;color:#0a0a0a}
+  .evk .kc .val.orange{color:#ea580c}
+  .evk .kc .sub{font-size:12px;color:#737373}
+  .op{display:inline-flex;align-items:center;gap:2px;height:20px;padding:2px;border-radius:6px;font-size:12px;font-weight:500;color:#171717}
+  .op svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .op.for svg{color:#0071f3}.op.against svg{color:#7c3aed}
+  .chip{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:#f5f5f5;font-size:12px;font-weight:500;color:#171717}
+  /* dialog */
+  .dlg-ov{position:fixed;inset:0;background:rgba(10,10,10,.4);display:none;align-items:center;justify-content:center;z-index:100}
+  .dlg-ov.show{display:flex}
+  .dlg{width:480px;max-width:calc(100vw - 32px);background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;position:relative;display:flex;flex-direction:column}
+  .dlg-h{padding:16px;display:flex;flex-direction:column;gap:8px}
+  .dlg-h .t{font-size:16px;font-weight:600;color:#171717}
+  .dlg-h .d{font-size:14px;color:#737373}
+  .dlg-x{position:absolute;top:16px;right:16px;width:16px;height:16px;border:none;background:none;cursor:pointer;opacity:.7;padding:0}
+  .dlg-x svg{width:16px;height:16px;stroke:#000;fill:none;stroke-width:2;stroke-linecap:round}
+  .dlg-c{padding:0 16px 8px;display:flex;flex-direction:column;gap:16px}
+  .fld{display:flex;flex-direction:column;gap:8px}
+  .fld .lb{font-size:14px;font-weight:500;color:#171717}
+  .sel{display:flex;align-items:center;height:32px;padding:0 8px 0 10px;border:1px solid #e5e5e5;border-radius:10px;font-size:14px;color:#171717}
+  .sel .ph{flex:1}
+  .sel svg{width:12px;height:12px;stroke:#737373;fill:none;stroke-width:1.5}
+  .upl-lb{font-size:14px;font-weight:500;color:#171717}
+  .upl-row{display:flex;align-items:center;gap:8px}
+  .upl-row .desc{flex:1;font-size:12px;color:#171717;line-height:16px}
+  .lnk{background:none;border:none;font-size:12px;font-weight:500;color:#171717;text-decoration:underline;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px 24px;background:#fafafa;border:1px dashed #e5e5e5;border-radius:14px;text-align:center;cursor:pointer}
+  .drop .dt{font-size:12px;color:#737373}
+  .drop .pick{height:28px;padding:0 10px;background:#fff;border:1px solid #e5e5e5;border-radius:8px;font-size:12px;font-weight:500;color:#171717;cursor:pointer;font-family:inherit}
+  .attach{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #e5e5e5;border-radius:14px}
+  .attach .fx{width:32px;height:32px;background:#f5f5f5;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none}
+  .attach .fx svg{width:16px;height:16px;stroke:#171717;fill:none;stroke-width:1.5}
+  .attach .meta{flex:1;min-width:0}
+  .attach .fn{font-size:14px;font-weight:500;color:#171717}
+  .attach .fs{font-size:12px;color:#737373}
+  .attach .rm{border:none;background:none;cursor:pointer;padding:0;width:14px;height:14px}
+  .attach .rm svg{width:14px;height:14px;stroke:#171717;fill:none;stroke-width:2;stroke-linecap:round}
+  .dlg-f{padding:12px 16px 16px;display:flex;justify-content:flex-end;gap:8px}
+  .btn-out{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 10px;background:#fff;border:1px solid #e5e5e5;border-radius:10px;font-size:14px;font-weight:500;color:#171717;cursor:pointer;font-family:inherit}
+  .btn-dark{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 12px;background:#171717;border:none;border-radius:10px;font-size:14px;font-weight:500;color:#fafafa;cursor:pointer;font-family:inherit}
+  .btn-dark:disabled{opacity:.5;cursor:not-allowed}
+
+  .evbar{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);margin-bottom:16px}
+  .evbar .evtabs{border-bottom:none;margin-bottom:0}
+  .hbtns{display:flex;align-items:center;gap:8px}
+  .tbtn{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:12px;font-weight:500;color:#171717;cursor:pointer;font-family:inherit}
+  .tbtn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+  .seg{display:inline-flex;background:#f5f5f5;border-radius:10px;padding:3px}
+  .segbtn{height:26px;padding:0 12px;border:none;background:none;border-radius:8px;font-size:13px;font-weight:500;color:#737373;cursor:pointer;font-family:inherit}
+  .segbtn.active{background:#fff;color:#0a0a0a;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+  .tgl-wrap{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#171717;cursor:pointer}
+  .tgl{width:28px;height:16px;border-radius:9999px;background:#e5e5e5;position:relative;flex:none;transition:background .15s}
+  .tgl.on{background:#171717}
+  .tgl::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left .15s}
+  .tgl.on::after{left:14px}
+  .ibtn2{width:34px;height:32px;border:1px solid var(--border);border-radius:8px;background:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:#171717}
+  .ibtn2 svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+  .ibtn2:hover{background:var(--muted)}
+  .dlbtn{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:12px;font-weight:500;color:#171717;cursor:pointer;font-family:inherit}
+  .dlbtn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+  .cvb{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:6px;background:#f4f4f5;font-size:12px;font-weight:500;color:#3f3f46;margin-left:6px}
+  table.tbl td.exp{cursor:pointer;user-select:none;white-space:nowrap}
+  table.tbl .caret{display:inline-block;width:12px;color:#737373;transition:transform .12s;font-size:11px}
+  table.tbl tr.open .caret{transform:rotate(90deg)}
+  table.tbl tr.child td{background:#fafafa}
+  table.tbl tr.child td.exp{padding-left:34px}
+  .val.blue{color:#0071f3}
+
+  .hh{display:inline-flex;align-items:center;gap:3px}
+  th.num .hh{justify-content:flex-end}
+  .hicon{width:12px;height:12px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .hicon.for{stroke:#0071f3}.hicon.against{stroke:#7c3aed}.hicon.abs{stroke:#a3a3a3}.hicon.neu{stroke:#a3a3a3}
+  #viewHolder .tbl-scroll,#viewHolder{overflow-x:auto}
+  table.tbl td.num,table.tbl th.num{text-align:right}
+  .pgfoot{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-top:1px solid var(--border);background:#fafafa;font-size:12px;color:var(--muted-fg)}
+  .tbl-wrap.novot tbody{display:none}
+  .pg-empty{display:none;padding:48px 16px;text-align:center;color:var(--muted-fg);font-size:14px}
+  .tbl-wrap.novot .pg-empty{display:block}
+  .pgtot b{color:#0a0a0a}
+  .pgctl{display:flex;align-items:center;gap:8px}
+  .pgctl button{width:24px;height:24px;border:1px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;font-size:14px;color:#171717;line-height:1}
+  .pgctl button:disabled{opacity:.4;cursor:default}
+  table.tbl td.c,table.tbl th.c{text-align:center}
+  .op.abs svg{color:#a3a3a3}
+  .mbar{display:inline-block;width:28px;height:6px;border-radius:3px;background:linear-gradient(90deg,#737373 45%,#e5e5e5 45%);vertical-align:middle;margin-right:6px}
+
+  .dlg-c{max-height:58vh;overflow-y:auto}
+  .stepper{display:flex;align-items:center;gap:8px;font-size:12px;color:#a3a3a3;margin-top:4px}
+  .stepper .sd{display:inline-flex;align-items:center;gap:4px}
+  .stepper .sn{width:18px;height:18px;border-radius:50%;background:#e5e5e5;color:#737373;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+  .stepper .sd.on .sn{background:#171717;color:#fff}
+  .stepper .sd.on{color:#171717;font-weight:500}
+  .stepper .sar{color:#d4d4d4}
+  .vcard{background:#f5f5f5;border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:8px}
+  .vcard .vh{font-size:14px;font-weight:600;color:#0a0a0a}
+  .vlist{display:flex;flex-direction:column;gap:4px;margin:0;padding:0;list-style:none}
+  .vlist li{font-size:14px;color:#737373;padding-left:14px;position:relative;line-height:20px}
+  .vlist li::before{content:"·";position:absolute;left:3px;color:#a3a3a3}
+  .vdiv{height:1px;background:#e5e5e5;margin:8px 0}
+  .vnote{display:flex;gap:8px;align-items:flex-start;background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:8px 10px}
+  .vnote svg{width:16px;height:16px;flex:none;stroke:#171717;fill:none;stroke-width:1.5;margin-top:1px}
+  .vnote .vt{font-size:12px;font-weight:500;color:#171717;line-height:16px}
+  .vnote .vs{font-size:12px;color:#737373;line-height:16px}
+  .pvtbl{width:100%;border-collapse:collapse;font-size:13px}
+  .pvtbl th{background:#fafafa;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;padding:8px 10px;border-bottom:1px solid var(--border)}
+  .pvtbl td{padding:8px 10px;border-bottom:1px solid #f0f0f0}
+  .pvtbl td.num{text-align:right}
+  .pvsum{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#737373;margin-top:8px}
+  .pvok{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#0a8a3c;font-weight:500}
+  .pvok svg{width:16px;height:16px;stroke:#0a8a3c;fill:none;stroke-width:2}
+
+  .slabel{font-size:14px;font-weight:600;color:#0a0a0a;margin-block:16px}
+  .ckwrap{display:flex;flex-direction:column;gap:8px}
+  .ckitem{display:flex;gap:8px;padding:10px;border:1px solid #e5e5e5;border-radius:8px;cursor:pointer;align-items:flex-start}
+  .ckitem.on{background:rgba(23,23,23,.05);border-color:#171717}
+  .ckbox{width:16px;height:16px;border:1px solid #e5e5e5;border-radius:4px;flex:none;display:flex;align-items:center;justify-content:center;background:#fff;margin-top:1px}
+  .ckitem.on .ckbox,.fchk.on .ckbox{background:#171717;border-color:#171717}
+  .ckbox svg{width:12px;height:12px;stroke:#fafafa;fill:none;stroke-width:2.5;visibility:hidden}
+  .ckitem.on .ckbox svg,.fchk.on .ckbox svg{visibility:visible}
+  .ckitem .cl{font-size:14px;font-weight:500;color:#171717;line-height:1.3}
+  .ckitem .cd{font-size:12px;color:#737373;margin-top:4px}
+  .cmp{width:100%;border-collapse:collapse;font-size:14px}
+  .cmp th{font-size:13px;font-weight:500;color:#737373;padding:12px 8px;border-bottom:1px solid #f0f0f0;text-align:right}
+  .cmp th:first-child{text-align:left}
+  .cmp td{padding:12px 8px;border-bottom:1px solid #f0f0f0;text-align:right}
+  .cmp tr:last-child td{border-bottom:none}
+  .cmp td:first-child{text-align:left;font-weight:600;color:#0a0a0a}
+  .cmp .old{color:#a3a3a3}
+  .cmp .delta{font-weight:700;color:#0a0a0a}
+  .cmp .delta.mut{color:#a3a3a3;font-weight:400}
+  .fchk{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:#171717;cursor:pointer}
+  .coldd{position:relative}
+  .colsel{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 8px 0 12px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:14px;color:#0a0a0a;cursor:pointer;font-family:inherit}
+  .colsel svg{width:16px;height:16px;stroke:#a7aab1;fill:none;stroke-width:2}
+  .colmenu{position:absolute;top:36px;left:0;min-width:160px;background:#fff;border:1px solid rgba(10,10,10,.1);box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);border-radius:10px;padding:4px;z-index:40}
+  .colmenu.hidden{display:none}
+  .colmenu-lb{font-size:12px;font-weight:500;color:#737373;padding:6px 8px}
+  .colitem{display:flex;align-items:center;gap:6px;height:28px;padding:0 6px;border-radius:8px;font-size:14px;color:#0a0a0a;cursor:pointer}
+  .colitem:hover{background:var(--muted)}
+  .colitem{justify-content:space-between}
+  .colitem .colchk{width:15px;height:15px;stroke:#171717;fill:none;stroke-width:2;visibility:hidden;flex:none}
+  .colitem.sel .colchk{visibility:visible}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="lnb">
+    <div class="lnb-head">
+      <div class="lnb-brand exp-only">
+        <img src="data:image/png;base64,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" alt="CONEXUS">
+        <div class="lnb-org">카카오뱅크</div>
+        <div class="lnb-quick">
+          <button class="qitem"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><circle cx="12" cy="9" r="2"/><path d="M15 13.5a3 3 0 0 0-6 0"/></svg>명부관리</button>
+          <button class="qitem"><svg class="ic" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg>결의기준</button>
+          <button class="qitem"><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>템플릿</button>
+        </div>
+      </div>
+
+      <div class="lnb-mark col-only"><div class="mark">C</div></div>
+
+      <div class="lnb-select exp-only">
+        <div class="select-box" id="mtrigger">
+          <span class="dot"></span>
+          <span class="lbl" id="mcurrent">제10기 정기주주총회</span>
+          <svg class="ic" viewBox="0 0 24 24"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+        </div>
+        <div class="mpop hidden" id="mpop">
+          <div class="mpop-search">
+            <svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" id="msearch" placeholder="주주총회 검색" autocomplete="off">
+          </div>
+          <div class="mpop-list" id="mlist"></div>
+          <div class="mpop-foot"><button id="maddbtn">새 주주총회 추가</button></div>
+        </div>
+      </div>
+
+      <div class="lnb-menu exp-only">
+        <button class="nav-item"><svg class="ic" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>대시보드</button>
+      </div>
+
+      <div class="lnb-rail col-only">
+        <button class="railbtn" title="대시보드"><svg class="ic" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg></button>
+        <button class="railbtn" title="명부관리"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><circle cx="12" cy="9" r="2"/><path d="M15 13.5a3 3 0 0 0-6 0"/></svg></button>
+        <button class="railbtn" title="결의기준"><svg class="ic" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg></button>
+        <button class="railbtn" title="템플릿"><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></button>
+      </div>
+      <div class="lnb-tabs exp-only">
+        <div class="tabs">
+          <div class="t " data-tab="set">설정</div>
+          <div class="t active" data-tab="pre">사전</div>
+          <div class="t " data-tab="day">당일</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lnb-content  exp-only" data-tabpanel="set">
+      <div class="grp"><div class="grp-label">주주총회 설정</div><div class="nav">
+        <a class="nav-item" href="shareholders.html">주주명부 확정</a>
+        <a class="nav-item" href="meeting-settings.html">주주총회 설정</a>
+        <a class="nav-item" href="voting-restriction.html">의결권제한 설정</a>
+      </div></div>
+      <div class="grp"><div class="grp-label">의결권 대행 권유 설정</div><div class="nav">
+        <a class="nav-item" href="proxy-basic.html">기본 설정</a>
+        <a class="nav-item" href="shareholder-faq.html">주주 FAQ</a>
+      </div></div>
+    </div>
+
+    <div class="lnb-content show exp-only" data-tabpanel="pre">
+      <div class="grp"><div class="grp-label">전자주주총회 관리</div><div class="nav">
+        <a class="nav-item" href="electronic-meeting.html">전자주주총회 설정</a>
+        <a class="nav-item" href="e-attendees.html">전자주주총회 참석자 관리</a>
+        <a class="nav-item" href="pre-qna.html">사전 질의 관리</a>
+      </div></div>
+      <div class="grp"><div class="grp-label">사전 의결권 관리</div><div class="nav">
+        <a class="nav-item" href="voting-rights.html">사전 의결권 현황</a>
+        <a class="nav-item" href="evote-records.html">전자투표/위임장 내역</a>
+        <a class="nav-item active" href="paper-records.html">서면투표/위임 내역</a>
+        <a class="nav-item" href="dup-voting.html">중복 의결권 관리</a>
+      </div></div>
+      <div class="grp"><div class="grp-label">불통일행사 관리</div><div class="nav">
+        <a class="nav-item" href="split-voting.html">불통일행사 관리</a>
+      </div></div>
+      <div class="grp"><div class="grp-label">집중투표 관리</div><div class="nav">
+        <a class="nav-item" href="cumulative-voting.html">집중투표 관리</a>
+      </div></div>
+    </div>
+
+    <div class="lnb-content  exp-only" data-tabpanel="day">
+      <div class="grp"><div class="grp-label">주주총회</div><div class="nav">
+        <a class="nav-item" href="attendees.html">참석자 관리</a>
+        <a class="nav-item" href="onsite-control.html">주주총회 현장 제어</a>
+        <a class="nav-item" href="tally.html">주주총회 집계</a>
+      </div></div>
+    </div>
+
+    <div class="lnb-foot">
+      <button class="foot-btn"><span class="avatar">강</span><span class="who exp-only"><span class="n">강하나</span><span class="e">doji@irkudos.co.kr</span></span><svg class="ic cud exp-only" viewBox="0 0 24 24" style="width:16px;height:16px;color:var(--muted-fg)"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></button>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="left">
+        <button class="iconbtn sm" id="toggleLnb" title="사이드바"><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg></button>
+        <span class="vsep"></span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="crumb" style="color:var(--muted-fg)">사전</span>
+          <svg class="ic" style="width:14px;height:14px;color:var(--muted-fg);opacity:.55" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+          <span class="crumb" style="color:var(--muted-fg)">서면투표/위임 내역</span>
+          <svg class="ic" style="width:14px;height:14px;color:var(--muted-fg);opacity:.55" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+          <span class="crumb">개별 등록</span>
+        </div>
+      </div>
+      <button class="iconbtn md" title="변경이력"><svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></button>
+    </div>
+    <div class="scroll">
+      <style>
+  .backbtn{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:9px;background:#fff;font-size:13px;font-weight:500;color:#171717;cursor:pointer;font-family:inherit}
+  .backbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+  .chsep{width:1px;height:16px;background:var(--border)}
+  .chch{font-size:14px;font-weight:600;color:#0071f3}
+  .ind-info{border:1px solid var(--border);border-radius:12px;background:#fff;padding:14px 16px;margin-bottom:14px}
+  .ind-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .ind-name{font-size:16px;font-weight:600;color:#0a0a0a}
+  .ind-sel-holder{margin-left:auto}
+  .ind-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:14px;color:#171717}
+  .ind-meta em{font-style:normal;font-size:12px;font-weight:500;color:#737373;margin-right:6px}
+  .ind-meta .d{width:1px;height:12px;background:var(--border)}
+  .ind-meta b.orange{color:#ea580c;font-weight:600}
+  .ind-bulk{display:flex;align-items:center;gap:8px;padding:6px 0;margin-bottom:10px}
+  .ind-bulk .bl{font-size:12px;color:#737373;margin-right:2px}
+  .ind-bulk .spacer{flex:1}
+  .bulkb{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:12px;font-weight:500;color:#171717;cursor:pointer;font-family:inherit}
+  .bulkb svg{width:13px;height:13px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .bulkb[data-bulk=for] svg{stroke:#0071f3}.bulkb[data-bulk=against] svg{stroke:#7c3aed}.bulkb[data-bulk=abs] svg{stroke:#a3a3a3}.bulkb[data-bulk=neu] svg{stroke:#a3a3a3}
+  .bulkb:hover{background:var(--muted)}
+  .vseg{display:inline-flex;gap:4px}
+  .vopt{width:30px;height:26px;border:1px solid var(--border);border-radius:7px;background:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+  .vopt .vi{width:14px;height:14px;fill:none;stroke:#c4c4c4;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .vopt.on.for{background:#eaf3ff;border-color:#0071f3}.vopt.on.for .vi{stroke:#0071f3}
+  .vopt.on.against{background:#f3ecff;border-color:#7c3aed}.vopt.on.against .vi{stroke:#7c3aed}
+  .vopt.on.abs{background:#f5f5f5;border-color:#a3a3a3}.vopt.on.abs .vi{stroke:#737373}
+  .vopt.on.neu{background:#f5f5f5;border-color:#a3a3a3}.vopt.on.neu .vi{stroke:#737373}
+  .vnum{width:130px;height:28px;border:1px solid var(--border);border-radius:8px;padding:0 10px;font-size:13px;font-family:inherit;text-align:right;outline:none;color:#0a0a0a}
+  .vnum:focus{border-color:#0071f3}
+  .rchk{width:16px;height:16px;border:1px solid var(--border);border-radius:4px;display:inline-block;cursor:pointer;position:relative;background:#fff;vertical-align:middle}
+  .rchk.on{background:#171717;border-color:#171717}
+  .rchk.on::after{content:"";position:absolute;left:5px;top:2px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .gnote{font-size:12px;color:#a3a3a3}
+  table.tbl tr.grow td{background:#fafafa;font-weight:600}
+  .ind-foot{display:flex;justify-content:space-between;align-items:center;padding:14px 2px 2px;font-size:13px;color:#737373}
+  .ind-foot b{color:#0a0a0a}
+</style>
+      <div class="content" style="width:100%">
+        <!-- 상단: 목록 + 타이틀(진입 채널) + 등록하기 -->
+        <div class="ev-head">
+          <button class="backbtn" id="btnBack"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>목록</button>
+          <div class="page-title">개별 등록</div>
+          <span class="chsep"></span>
+          <span class="chch" id="chTitle">서면위임(자사)</span>
+          <span class="spacer"></span>
+          <div class="search" style="min-width:220px"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input placeholder="주주명 · 주주번호 검색"></div>
+          <button class="btn-primary" id="btnSaveTop"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>등록하기</button>
+        </div>
+
+        <!-- 주주 정보 -->
+        <div class="ind-info">
+          <div class="ind-top">
+            <div class="ind-name">사립학교교직원연금공단</div>
+            <span class="badge gray">기관</span>
+            <span class="badge blue" id="chBadge">서면위임(자사)</span>
+            <div class="sel ind-sel-holder" style="height:32px;cursor:pointer"><span class="ph" style="color:#171717">주주 변경</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
+          </div>
+          <div class="ind-meta">
+            <span><em>주주번호</em>6805111</span><span class="d"></span>
+            <span><em>실질주주</em>사립학교교직원연금공단</span><span class="d"></span>
+            <span><em>행사방식</em><b class="orange" id="chWay">서면위임(자사)</b></span><span class="d"></span>
+            <span><em>행사가능의결권</em>12,500,000주</span><span class="d"></span>
+            <span><em>미행사</em>12,500,000주</span>
+          </div>
+        </div>
+
+        <!-- 일괄 입력 -->
+        <div class="ind-bulk">
+          <span class="bl">일괄</span>
+          <button class="bulkb" data-bulk="for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</button>
+          <button class="bulkb" data-bulk="against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</button>
+          <button class="bulkb" data-bulk="abs"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</button>
+          <button class="bulkb" data-bulk="neu"><svg viewBox="0 0 24 24"><path d="M12 5 4 19h16z"/></svg>중립</button>
+          <span class="spacer"></span>
+          <label class="tgl-wrap"><span class="tgl" data-sw id="swSel"></span>선택 의안만 적용</label>
+        </div>
+
+        <!-- 의안별 의결권 입력 -->
+        <div class="tbl-wrap" id="indGrid">
+          <table class="tbl">
+            <thead><tr><th class="c" style="width:44px"><span class="rchk" id="chkAll" data-rchk></span></th><th style="width:96px">의안번호</th><th>의안명</th><th class="num" style="width:170px">행사가능의결권</th><th class="c" style="width:180px">의결권 행사</th></tr></thead>
+            <tbody>
+                  <tr><td class="c"><span class="rchk" data-rchk></span></td><td>제1호</td><td>재무제표 승인의 건</td><td class="num">12,500,000</td><td class="c"><div class="vseg" data-vgrp><button class="vopt for" data-v="for" title="찬성"><svg class="vi" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button><button class="vopt against" data-v="against" title="반대"><svg class="vi" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button><button class="vopt abs" data-v="abs" title="기권"><svg class="vi" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button><button class="vopt neu" data-v="neu" title="중립"><svg class="vi" viewBox="0 0 24 24"><path d="M12 5 4 19h16z"/></svg></button></div></td></tr>
+                  <tr class="grow"><td class="c"></td><td>제2호</td><td>정관 일부 변경의 건</td><td class="num"></td><td class="c"></td></tr>
+                  <tr><td class="c"><span class="rchk" data-rchk></span></td><td>제2-1호</td><td>집중투표제 배제 조항 삭제의 건(정관 제37조 제3항)</td><td class="num">12,500,000</td><td class="c"><div class="vseg" data-vgrp><button class="vopt for" data-v="for" title="찬성"><svg class="vi" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button><button class="vopt against" data-v="against" title="반대"><svg class="vi" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button><button class="vopt abs" data-v="abs" title="기권"><svg class="vi" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button><button class="vopt neu" data-v="neu" title="중립"><svg class="vi" viewBox="0 0 24 24"><path d="M12 5 4 19h16z"/></svg></button></div></td></tr>
+                  <tr><td class="c"><span class="rchk" data-rchk></span></td><td>제2-2호</td><td>전자주주총회 도입 관련 변경(정관 제26조 제2항)</td><td class="num">12,500,000</td><td class="c"><div class="vseg" data-vgrp><button class="vopt for" data-v="for" title="찬성"><svg class="vi" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button><button class="vopt against" data-v="against" title="반대"><svg class="vi" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button><button class="vopt abs" data-v="abs" title="기권"><svg class="vi" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button><button class="vopt neu" data-v="neu" title="중립"><svg class="vi" viewBox="0 0 24 24"><path d="M12 5 4 19h16z"/></svg></button></div></td></tr>
+                  <tr><td class="c"><span class="rchk" data-rchk></span></td><td>제2-3호</td><td>의결권 대리행사 수단 확대(정관 제31조 제2항)</td><td class="num">12,500,000</td><td class="c"><div class="vseg" data-vgrp><button class="vopt for" data-v="for" title="찬성"><svg class="vi" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button><button class="vopt against" data-v="against" title="반대"><svg class="vi" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button><button class="vopt abs" data-v="abs" title="기권"><svg class="vi" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button><button class="vopt neu" data-v="neu" title="중립"><svg class="vi" viewBox="0 0 24 24"><path d="M12 5 4 19h16z"/></svg></button></div></td></tr>
+                  <tr class="grow"><td class="c"></td><td>제3호</td><td>이사 선임의 건</td><td class="num"></td><td class="c"></td></tr>
+                  <tr class="grow"><td class="c"></td><td>제3-1호</td><td>집중투표 후보 4인 중 2인 선임의 건 <span class="cvb">집중투표</span></td><td class="num">25,000,000표</td><td class="c"><span class="gnote">후보별 표수를 입력하세요</span></td></tr>
+                  <tr><td class="c"><span class="rchk" data-rchk></span></td><td>제3-1-1호</td><td>사외이사 김근수 선임의 건</td><td class="num"></td><td class="c"><input class="vnum" type="text" inputmode="numeric" placeholder="표수 입력"></td></tr>
+                  <tr><td class="c"><span class="rchk" data-rchk></span></td><td>제3-1-2호</td><td>사외이사 진웅섭 선임의 건</td><td class="num"></td><td class="c"><input class="vnum" type="text" inputmode="numeric" placeholder="표수 입력"></td></tr>
+                  <tr><td class="c"><span class="rchk" data-rchk></span></td><td>제3-1-3호</td><td>사외이사 남상일 선임의 건</td><td class="num"></td><td class="c"><input class="vnum" type="text" inputmode="numeric" placeholder="표수 입력"></td></tr>
+                  <tr><td class="c"><span class="rchk" data-rchk></span></td><td>제3-1-4호</td><td>사외이사 박선화 선임의 건</td><td class="num"></td><td class="c"><input class="vnum" type="text" inputmode="numeric" placeholder="표수 입력"></td></tr>
+                  <tr><td class="c"><span class="rchk" data-rchk></span></td><td>제3-2호</td><td>감사위원이 되는 사외이사 선임의 건</td><td class="num">12,500,000</td><td class="c"><div class="vseg" data-vgrp><button class="vopt for" data-v="for" title="찬성"><svg class="vi" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button><button class="vopt against" data-v="against" title="반대"><svg class="vi" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button><button class="vopt abs" data-v="abs" title="기권"><svg class="vi" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button><button class="vopt neu" data-v="neu" title="중립"><svg class="vi" viewBox="0 0 24 24"><path d="M12 5 4 19h16z"/></svg></button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ind-foot">
+          <span>총 <b>9</b>개 의안 · 선택 <b id="indSel">0</b>개</span>
+          <div class="hbtns"><button class="btn-out" id="btnCancel">취소</button><button class="btn-dark" id="btnSave">등록하기</button></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+  // LNB tab switching (설정/사전/당일)
+  document.querySelectorAll('.lnb-tabs .t').forEach(function(t){
+    t.addEventListener('click',function(){
+      var tab=t.dataset.tab; if(!tab) return;
+      document.querySelectorAll('.lnb-tabs .t').forEach(function(x){x.classList.toggle('active',x===t);});
+      document.querySelectorAll('.lnb-content[data-tabpanel]').forEach(function(p){p.classList.toggle('show',p.dataset.tabpanel===tab);});
+    });
+  });
+  // sidebar collapse
+  var tg=document.getElementById('toggleLnb');
+  if(tg){tg.addEventListener('click',function(){document.getElementById('app').classList.toggle('collapsed');});}
+  // meeting dropdown (shadcn-style)
+  (function(){
+    var mt=document.getElementById('mtrigger'), mp=document.getElementById('mpop'), ml=document.getElementById('mlist'), mc=document.getElementById('mcurrent');
+    if(!mt||!mp) return;
+    if(ml&&!ml.children.length){
+      ['제10기 정기주주총회','제9기 정기주주총회','제8기 정기주주총회'].forEach(function(t,i){
+        var b=document.createElement('button'); b.className='mitem'+(i===0?' cur':'');
+        b.innerHTML='<span class="dot'+(i===0?'':' gray')+'"></span><span class="mlbl">'+t+'</span>';
+        b.addEventListener('click',function(ev){ev.stopPropagation(); if(mc)mc.textContent=t; ml.querySelectorAll('.mitem').forEach(function(x){x.classList.remove('cur');}); b.classList.add('cur'); mp.classList.add('hidden');});
+        ml.appendChild(b);
+      });
+    }
+    mt.addEventListener('click',function(e){e.stopPropagation(); mp.classList.toggle('hidden');});
+    document.addEventListener('click',function(){mp.classList.add('hidden');});
+    mp.addEventListener('click',function(e){e.stopPropagation();});
+  })();
+  // settings tab switching (in-page st-nav)
+  document.querySelectorAll('.st-nav').forEach(function(nav){
+    nav.querySelectorAll('.st-item').forEach(function(item){
+      item.addEventListener('click',function(){
+        var tab=item.dataset.tab;
+        nav.querySelectorAll('.st-item').forEach(function(i){i.classList.toggle('active',i===item);});
+        var body=nav.parentElement.querySelector('.st-body')||document;
+        body.querySelectorAll('.st-tab').forEach(function(p){p.classList.toggle('active',p.dataset.panel===tab);});
+      });
+    });
+  });
+  // toggles + subtabs
+  document.addEventListener('click',function(e){
+    var sw=e.target.closest('[data-sw]'); if(sw){sw.classList.toggle('on');}
+    var cb=e.target.closest('[data-cbx]'); if(cb){cb.classList.toggle('on');}
+    var rd=e.target.closest('[data-rad]'); if(rd){var g=rd.closest('[data-radgrp]')||rd.parentElement;g.querySelectorAll('[data-rad]').forEach(function(r){r.classList.toggle('on',r===rd);});}
+    var cr=e.target.closest('.chk-row'); if(cr){cr.classList.toggle('on');}
+    var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
+  });
+
+  // ── 개별 등록 페이지 ──
+  (function(){
+    // 진입 채널 → 타이틀/배지/행사방식
+    var CH={ '자사':{title:'서면위임(자사)', way:'서면위임(자사)'},
+             '타사':{title:'서면위임(타사)', way:'서면위임(타사)'},
+             '투표':{title:'서면투표',       way:'서면투표'} };
+    var p=new URLSearchParams(location.search); var ch=CH[p.get('ch')]||CH['자사'];
+    ['chTitle','chBadge','chWay'].forEach(function(id){var e=document.getElementById(id); if(e) e.textContent = (id==='chWay'?ch.way:ch.title);});
+
+    // 목록/취소 → 서면투표/위임 내역
+    function back(){ location.href='paper-records.html'; }
+    var bb=document.getElementById('btnBack'); if(bb) bb.addEventListener('click',back);
+    var bc=document.getElementById('btnCancel'); if(bc) bc.addEventListener('click',back);
+    [document.getElementById('btnSave'),document.getElementById('btnSaveTop')].forEach(function(b){ if(b) b.addEventListener('click',back); });
+
+    // 의결권 행사 세그먼트(단일 선택)
+    document.querySelectorAll('.vseg[data-vgrp]').forEach(function(g){
+      g.querySelectorAll('.vopt').forEach(function(o){
+        o.addEventListener('click',function(){
+          var was=o.classList.contains('on');
+          g.querySelectorAll('.vopt').forEach(function(x){x.classList.remove('on');});
+          if(!was) o.classList.add('on');
+        });
+      });
+    });
+
+    // 행 선택 체크박스 + 전체선택 + 선택 카운트
+    var grid=document.getElementById('indGrid');
+    var all=document.getElementById('chkAll');
+    var sel=document.getElementById('indSel');
+    function rowChks(){ return Array.prototype.slice.call(grid.querySelectorAll('tbody .rchk[data-rchk]')); }
+    function updateCount(){ if(sel) sel.textContent=rowChks().filter(function(c){return c.classList.contains('on');}).length; }
+    grid.addEventListener('click',function(e){
+      var c=e.target.closest('.rchk[data-rchk]'); if(!c) return;
+      if(c===all){ var on=!all.classList.contains('on'); all.classList.toggle('on',on); rowChks().forEach(function(x){x.classList.toggle('on',on);}); }
+      else { c.classList.toggle('on'); var rs=rowChks(); if(all) all.classList.toggle('on', rs.length>0 && rs.every(function(x){return x.classList.contains('on');})); }
+      updateCount();
+    });
+
+    // 일괄 입력
+    document.querySelectorAll('.bulkb[data-bulk]').forEach(function(b){
+      b.addEventListener('click',function(){
+        var v=b.dataset.bulk;
+        var onlySel=document.getElementById('swSel').classList.contains('on');
+        grid.querySelectorAll('tbody tr').forEach(function(tr){
+          var seg=tr.querySelector('.vseg[data-vgrp]'); if(!seg) return;
+          if(onlySel){ var rc=tr.querySelector('.rchk[data-rchk]'); if(!rc||!rc.classList.contains('on')) return; }
+          seg.querySelectorAll('.vopt').forEach(function(x){x.classList.toggle('on',x.dataset.v===v);});
+        });
+      });
+    });
+  })();
+
+</script>
+</body>
+</html>
