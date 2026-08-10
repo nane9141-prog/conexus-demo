@@ -324,6 +324,28 @@
         #mgList .mm{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--border);border-radius:10px;font-size:14px;color:#0a0a0a}
         #mgList .mm .s{color:#737373;font-size:12px}
         #mgRepMenu{position:absolute;left:0;right:0;top:36px;z-index:5;max-height:200px;overflow:auto}
+        /* 통합·해제 grouped table */
+        .mg-caret{display:inline-flex;width:16px;height:16px;margin-right:4px;color:#737373;transition:transform .15s;cursor:pointer;vertical-align:middle}
+        .mg-caret svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+        table.mg-tbl tr.mg-grp{cursor:pointer}
+        table.mg-tbl tr.mg-grp.open .mg-caret{transform:rotate(90deg)}
+        table.mg-tbl tr.mg-grp:hover td{background:#fafafa}
+        table.mg-tbl tr.mg-child td{background:#fcfcfc}
+        table.mg-tbl tr.mg-child td.cname{color:#0a0a0a;padding-left:30px;position:relative}
+        table.mg-tbl tr.mg-child td.cname:before{content:"";position:absolute;left:16px;top:50%;width:8px;height:1px;background:#d4d4d4}
+        .mbadge.auto{background:#eafaf0;color:#0a8a3c}
+        .mbadge.manual{background:#eef1f6;color:#475569}
+        .mg-tv{color:#0a0a0a;font-weight:600}
+        .mg-mflex{display:inline-flex;align-items:center}
+        .btn.danger{color:var(--red600);border-color:#f3c0c4;width:100%;justify-content:center;height:32px}
+        .btn.danger:hover{background:#fff5f6}
+        .btn.danger.hide{display:none}
+        #mgList .mm .mm-info{display:flex;flex-direction:column;gap:2px}
+        #mgList .mm .mm-info .no{font-size:12px;color:#737373}
+        #mgList .mm .x{border:none;background:none;cursor:pointer;color:#a3a3a3;display:flex;padding:2px}
+        #mgList .mm .x:hover{color:var(--red600)}
+        #mgList .mm .x svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+        #mgSearchWrap .combo-list{max-height:160px}
       </style>
 
       <div class="ms-wrap">
@@ -430,28 +452,17 @@
             <div class="mg-head">
               <div>
                 <div class="mg-title">통합·해제 설정</div>
-                <div class="mg-desc">동일인이 보유한 복수 계좌를 2건 이상 선택해 하나의 투표권자로 통합하거나, 통합된 투표권자를 해제하세요.</div>
+                <div class="mg-desc">동일인이 보유한 복수 계좌가 통합된 내역입니다. 통합 계좌를 펼쳐 확인하고, ‘변경’으로 계좌를 추가·삭제하거나 통합을 해제할 수 있습니다.</div>
               </div>
               <div class="mg-actions">
-                <button class="btn" id="mgRelease"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>통합 해제</button>
-                <button class="btn primary" id="mgMerge"><svg class="ic" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>투표권자 통합</button>
+                <button class="btn primary" id="mgNew"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg>투표권자 통합</button>
               </div>
             </div>
             <div class="mtbl-wrap">
               <table class="mtbl mg-tbl">
-                <colgroup><col style="width:44px"><col style="width:96px"><col style="width:180px"><col style="width:150px"><col style="width:140px"><col style="width:100px"><col style="width:120px"></colgroup>
-                <thead><tr><th class="c"><span class="mchk" id="mgAll"></span></th><th class="c">주주구분</th><th>주주명</th><th>주주번호</th><th style="text-align:right">보유주식</th><th style="text-align:right">지분율</th><th>통합그룹</th></tr></thead>
-                <tbody>
-                  <tr data-name="KVIDIA"><td class="c"><span class="mchk"></span></td><td class="c">일반법인</td><td class="name">KVIDIA</td><td class="mut">2025119001</td><td class="r">19,961,925</td><td class="r sub">4.2%</td><td class="grp"><span class="mut">-</span></td></tr>
-                  <tr data-name="K-홀딩스 주식회사"><td class="c"><span class="mchk"></span></td><td class="c">일반법인</td><td class="name">K-홀딩스 주식회사</td><td class="mut">2025119002</td><td class="r">19,965,917</td><td class="r sub">4.2%</td><td class="grp"><span class="mut">-</span></td></tr>
-                  <tr data-name="나제한"><td class="c"><span class="mchk"></span></td><td class="c">개인</td><td class="name">나제한</td><td class="mut">800401-1******</td><td class="r">19,963,921</td><td class="r sub">4.2%</td><td class="grp"><span class="mut">-</span></td></tr>
-                  <tr data-name="젠슨박"><td class="c"><span class="mchk"></span></td><td class="c">개인</td><td class="name">젠슨박</td><td class="mut">880411-1******</td><td class="r">10,005,912</td><td class="r sub">2.1%</td><td class="grp"><span class="mut">-</span></td></tr>
-                  <tr data-name="이준호" data-group="통합 A"><td class="c"><span class="mchk on"></span></td><td class="c">개인</td><td class="name">이준호</td><td class="mut">600101-1******</td><td class="r">6,017,919</td><td class="r sub">1.3%</td><td class="grp"><span class="mbadge g">통합 A</span></td></tr>
-                  <tr data-name="이종승" data-group="통합 A"><td class="c"><span class="mchk on"></span></td><td class="c">개인</td><td class="name">이종승</td><td class="mut">600101-1******</td><td class="r">6,017,919</td><td class="r sub">1.3%</td><td class="grp"><span class="mbadge g">통합 A</span></td></tr>
-                  <tr data-name="천재민"><td class="c"><span class="mchk"></span></td><td class="c">개인</td><td class="name">천재민</td><td class="mut">600101-1******</td><td class="r">6,015,923</td><td class="r sub">1.3%</td><td class="grp"><span class="mut">-</span></td></tr>
-                  <tr data-name="박준호"><td class="c"><span class="mchk"></span></td><td class="c">개인</td><td class="name">박준호</td><td class="mut">600101-1******</td><td class="r">6,015,923</td><td class="r sub">1.3%</td><td class="grp"><span class="mut">-</span></td></tr>
-                  <tr data-name="유은지"><td class="c"><span class="mchk"></span></td><td class="c">개인</td><td class="name">유은지</td><td class="mut">700201-2******</td><td class="r">2,003,977</td><td class="r sub">0.4%</td><td class="grp"><span class="mut">-</span></td></tr>
-                </tbody>
+                <colgroup><col style="width:130px"><col style="width:88px"><col style="width:120px"><col style="width:150px"><col style="width:150px"><col style="width:120px"><col style="width:88px"><col style="width:96px"></colgroup>
+                <thead><tr><th>통합방법</th><th class="c">주식종류</th><th>투표권자</th><th>주주명</th><th>주주번호</th><th style="text-align:right">보유주식</th><th style="text-align:right">지분율</th><th class="c">통합내역</th></tr></thead>
+                <tbody id="mgBody"></tbody>
               </table>
             </div>
           </div>
@@ -538,9 +549,10 @@
       </div>
 
       <!-- 투표권자 통합 sheet -->
+      <!-- 투표권자 통합 (통합내역) sheet -->
       <div class="vsh-ov hidden" id="mergeSheet">
         <div class="vsh">
-          <div class="vsh-head"><div class="vsh-title">투표권자 통합</div><div class="vsh-desc">선택한 주주를 하나의 대표 투표권자로 통합합니다.</div></div>
+          <div class="vsh-head"><div class="vsh-title" id="mgSheetTitle">투표권자 통합</div><div class="vsh-desc">통합 계좌를 추가·삭제하고 대표 투표권자를 지정합니다.</div></div>
           <div class="vsh-body">
             <div class="vs-field"><label>대표 투표권자</label>
               <div style="position:relative">
@@ -548,10 +560,17 @@
                 <div class="dlg-menu hidden" id="mgRepMenu"></div>
               </div>
             </div>
-            <div class="vs-field"><label>통합 대상 (<span id="mgCount">0</span>명)</label><div id="mgList"></div></div>
-            <div class="vs-alert"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span>통합 시 선택한 계좌의 의결권이 대표 투표권자 명의로 합산되어 행사됩니다.</span></div>
+            <div class="vs-field" id="mgSearchWrap"><label>통합 계좌 추가 <span class="lbl-sub">주주명부에서 검색</span></label>
+              <div class="combo">
+                <div class="combo-input"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="mgSearch" placeholder="주주명 또는 주주번호로 검색"></div>
+                <div class="combo-list" id="mgSearchList"></div>
+              </div>
+            </div>
+            <div class="vs-field"><label>통합 대상 (<span id="mgCount">0</span>건)</label><div id="mgList"></div></div>
+            <div class="vs-alert"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span>통합 시 선택한 계좌의 의결권이 대표 투표권자 명의로 합산되어 행사됩니다. 통합은 2건 이상일 때 가능합니다.</span></div>
+            <button class="btn danger hide" id="mgDelete"><svg class="ic" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>통합 해제</button>
           </div>
-          <div class="vsh-foot"><button class="btn" data-vshclose>취소</button><button class="btn primary" id="mgConfirm">통합하기</button></div>
+          <div class="vsh-foot"><button class="btn" data-vshclose>취소</button><button class="btn primary" id="mgConfirm">저장</button></div>
           <button class="vsh-x" data-vshclose aria-label="닫기"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
         </div>
       </div>
@@ -612,51 +631,122 @@
             if(i<utabsOrder.length-1){ toast('저장 완료', (cur==='set'?'투표권자 설정':'통합·해제 설정')+'이 저장되었습니다. 다음 단계로 이동합니다.'); activateTab(utabsOrder[i+1]); }
           });
 
-          // 통합·해제 설정
-          var mgTbl=document.querySelector('table.mg-tbl');
-          if(mgTbl){
-            var mgBody=mgTbl.querySelector('tbody'), mgAll=document.getElementById('mgAll');
-            mgBody.querySelectorAll('.mchk').forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('on');});});
-            mgAll.addEventListener('click',function(){var on=mgAll.classList.toggle('on');mgBody.querySelectorAll('.mchk').forEach(function(c){c.classList.toggle('on',on);});});
-            var mSheet=document.getElementById('mergeSheet'), mgList=document.getElementById('mgList'), mgCount=document.getElementById('mgCount');
-            var mgRepSel=document.getElementById('mgRepSel'), mgRepMenu=document.getElementById('mgRepMenu'), mgRep=null;
-            function checkedRows(){return [].slice.call(mgBody.querySelectorAll('tr')).filter(function(tr){return tr.querySelector('.mchk').classList.contains('on');});}
-            document.getElementById('mgMerge').addEventListener('click',function(){
-              var rows=checkedRows();
-              if(rows.length<2){ toast('선택 필요','통합하려면 2명 이상의 주주를 선택해 주세요.'); return; }
-              mgList.innerHTML=''; mgRepMenu.innerHTML=''; mgRep=null;
-              mgRepSel.querySelector('span').textContent='대표 투표권자를 선택하세요'; mgRepSel.classList.remove('val');
-              rows.forEach(function(tr){
-                var nm=tr.dataset.name, sh=tr.children[4].textContent;
-                mgList.insertAdjacentHTML('beforeend','<div class="mm"><span>'+nm+'</span><span class="s">'+sh+'주</span></div>');
-                var b=document.createElement('button'); b.className='dlg-mi'; b.textContent=nm; b.dataset.v=nm;
-                b.addEventListener('click',function(){mgRep=nm;mgRepSel.querySelector('span').textContent=nm;mgRepSel.classList.add('val');mgRepMenu.classList.add('hidden');});
-                mgRepMenu.appendChild(b);
+          // 통합·해제 설정 (그룹형 접기/펼치기 + 변경 시트)
+          var mgBody=document.getElementById('mgBody');
+          if(mgBody){
+            var mgRoster=[
+              {name:'KVIDIA',no:'2025119001',sh:19961925,rate:4.2},
+              {name:'K-홀딩스 주식회사',no:'2025119002',sh:19965917,rate:4.2},
+              {name:'나제한',no:'800401-1******',sh:19963921,rate:4.2},
+              {name:'젠슨박',no:'880411-1******',sh:10005912,rate:2.1},
+              {name:'이준호',no:'600101-1******',sh:6017919,rate:1.3},
+              {name:'이종승',no:'600101-1******',sh:6017919,rate:1.3},
+              {name:'천재민',no:'600101-1******',sh:6015923,rate:1.3},
+              {name:'박준호',no:'600101-1******',sh:6015923,rate:1.3},
+              {name:'유은지',no:'700201-2******',sh:2003977,rate:0.4}
+            ];
+            var groups={
+              g1:{voter:'이준호',method:'auto',kind:'보통주',members:[
+                {name:'이준호',no:'600101-1******',sh:6017919,rate:1.3},
+                {name:'이종승',no:'600101-1******',sh:6017919,rate:1.3}]},
+              g2:{voter:'천재민',method:'manual',kind:'보통주',members:[
+                {name:'천재민',no:'600101-1******',sh:6015923,rate:1.3},
+                {name:'박준호',no:'600101-1******',sh:6015923,rate:1.3}]}
+            };
+            var gseq=3;
+            function fmt(n){return n.toLocaleString('en-US');}
+            function groupHTML(gid,g){
+              var sumSh=g.members.reduce(function(a,m){return a+m.sh;},0);
+              var sumRate=g.members.reduce(function(a,m){return a+m.rate;},0);
+              var rep=g.members[0]||{no:'-'};
+              var repM=g.members.filter(function(m){return m.name===g.voter;})[0]||g.members[0]||{no:'-'};
+              var mb=g.method==='auto'?'<span class="mbadge auto">자동 '+g.members.length+'건</span>':'<span class="mbadge manual">수동 '+g.members.length+'건</span>';
+              var nm=g.voter+(g.members.length>1?' 외 '+(g.members.length-1):'');
+              var html='<tr class="mg-grp" data-gid="'+gid+'">'
+                +'<td><span class="mg-mflex"><span class="mg-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>'+mb+'</span></td>'
+                +'<td class="c">'+g.kind+'</td>'
+                +'<td><span class="mg-tv">'+g.voter+'</span></td>'
+                +'<td class="name">'+nm+'</td>'
+                +'<td class="mut">'+repM.no+'</td>'
+                +'<td class="r">'+fmt(sumSh)+'</td>'
+                +'<td class="r sub">'+sumRate.toFixed(1)+'%</td>'
+                +'<td class="c"><button class="tbtn2 mg-edit" data-gid="'+gid+'">변경</button></td></tr>';
+              g.members.forEach(function(m){
+                html+='<tr class="mg-child" data-gid="'+gid+'" hidden>'
+                  +'<td></td><td class="c">'+g.kind+'</td><td class="mut">-</td>'
+                  +'<td class="cname">'+m.name+'</td><td class="mut">'+m.no+'</td>'
+                  +'<td class="r">'+fmt(m.sh)+'</td><td class="r sub">'+m.rate.toFixed(1)+'%</td><td></td></tr>';
               });
-              mgCount.textContent=rows.length;
-              mSheet.classList.remove('hidden');
-            });
+              return html;
+            }
+            function renderAll(){
+              var html=''; Object.keys(groups).forEach(function(gid){html+=groupHTML(gid,groups[gid]);});
+              if(!Object.keys(groups).length){ html='<tr><td colspan="8" style="text-align:center;color:#a3a3a3;height:80px">통합된 투표권자가 없습니다. ‘투표권자 통합’으로 계좌를 통합하세요.</td></tr>'; }
+              mgBody.innerHTML=html;
+              mgBody.querySelectorAll('tr.mg-grp').forEach(function(tr){
+                tr.addEventListener('click',function(e){
+                  if(e.target.closest('.mg-edit')) return;
+                  var gid=tr.dataset.gid, open=tr.classList.toggle('open');
+                  mgBody.querySelectorAll('tr.mg-child[data-gid="'+gid+'"]').forEach(function(c){c.hidden=!open;});
+                });
+              });
+              mgBody.querySelectorAll('.mg-edit').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();openMergeSheet(b.dataset.gid);});});
+            }
+
+            // ----- 변경/통합 시트 -----
+            var mSheet=document.getElementById('mergeSheet'), mgList=document.getElementById('mgList'), mgCount=document.getElementById('mgCount');
+            var mgRepSel=document.getElementById('mgRepSel'), mgRepMenu=document.getElementById('mgRepMenu');
+            var mgSearch=document.getElementById('mgSearch'), mgSearchList=document.getElementById('mgSearchList');
+            var mgDelete=document.getElementById('mgDelete'), mgSheetTitle=document.getElementById('mgSheetTitle');
+            var editGid=null, editMembers=[], editVoter=null;
+            function renderSheet(){
+              mgCount.textContent=editMembers.length;
+              mgList.innerHTML=editMembers.map(function(m,i){
+                return '<div class="mm"><div class="mm-info"><span>'+m.name+'</span><span class="no">'+m.no+' · '+fmt(m.sh)+'주</span></div>'
+                  +'<button class="x" data-i="'+i+'"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>';
+              }).join('');
+              mgList.querySelectorAll('.x').forEach(function(b){b.addEventListener('click',function(){editMembers.splice(+b.dataset.i,1);if(editVoter&&!editMembers.some(function(m){return m.name===editVoter;}))editVoter=null;renderSheet();});});
+              mgRepMenu.innerHTML='';
+              editMembers.forEach(function(m){var bt=document.createElement('button');bt.className='dlg-mi';bt.textContent=m.name;bt.addEventListener('click',function(){editVoter=m.name;mgRepSel.querySelector('span').textContent=m.name;mgRepSel.classList.add('val');mgRepMenu.classList.add('hidden');});mgRepMenu.appendChild(bt);});
+              if(editVoter){mgRepSel.querySelector('span').textContent=editVoter;mgRepSel.classList.add('val');}
+              else{mgRepSel.querySelector('span').textContent='대표 투표권자를 선택하세요';mgRepSel.classList.remove('val');}
+              renderMgSearch('');
+            }
+            function renderMgSearch(q){
+              q=(q||'').trim();
+              var items=mgRoster.filter(function(r){return (!q||r.name.indexOf(q)>=0||r.no.indexOf(q)>=0) && !editMembers.some(function(m){return m.name===r.name && m.no===r.no;});});
+              if(!items.length){mgSearchList.innerHTML='<div class="combo-empty">추가할 계좌가 없습니다</div>';return;}
+              mgSearchList.innerHTML=items.map(function(r){return '<div class="combo-item" data-name="'+r.name+'" data-no="'+r.no+'"><span>'+r.name+'</span><span class="no">'+r.no+'</span></div>';}).join('');
+              mgSearchList.querySelectorAll('.combo-item').forEach(function(it){it.addEventListener('click',function(){
+                var r=mgRoster.filter(function(x){return x.name===it.dataset.name&&x.no===it.dataset.no;})[0];
+                editMembers.push({name:r.name,no:r.no,sh:r.sh,rate:r.rate}); mgSearch.value=''; renderSheet();
+              });});
+            }
+            if(mgSearch) mgSearch.addEventListener('input',function(){renderMgSearch(mgSearch.value);});
             mgRepSel.addEventListener('click',function(e){e.stopPropagation();mgRepMenu.classList.toggle('hidden');});
             document.addEventListener('click',function(){mgRepMenu.classList.add('hidden');});
+            function openMergeSheet(gid){
+              editGid=gid||null;
+              if(gid){var g=groups[gid];editMembers=g.members.map(function(m){return {name:m.name,no:m.no,sh:m.sh,rate:m.rate};});editVoter=g.voter;mgSheetTitle.textContent='통합내역 변경';mgDelete.classList.remove('hide');}
+              else{editMembers=[];editVoter=null;mgSheetTitle.textContent='투표권자 통합';mgDelete.classList.add('hide');}
+              renderSheet();
+              mSheet.classList.remove('hidden');
+            }
             mSheet.addEventListener('click',function(e){if(e.target===mSheet)mSheet.classList.add('hidden');});
             mSheet.querySelectorAll('[data-vshclose]').forEach(function(b){b.addEventListener('click',function(){mSheet.classList.add('hidden');});});
-            var groupSeq=1;
             document.getElementById('mgConfirm').addEventListener('click',function(){
-              var rows=checkedRows(); if(rows.length<2) return;
-              var label='통합 '+String.fromCharCode(65+groupSeq); groupSeq++;
-              var rep=mgRep||rows[0].dataset.name;
-              rows.forEach(function(tr){ tr.dataset.group=label; tr.querySelector('.grp').innerHTML='<span class="mbadge g">'+label+'</span>'; tr.querySelector('.mchk').classList.remove('on'); });
-              mgAll.classList.remove('on');
-              mSheet.classList.add('hidden');
-              toast('통합 완료', rep+' 외 '+(rows.length-1)+'명이 '+label+' 그룹으로 통합되었습니다.');
+              if(editMembers.length<2){ toast('통합 불가','통합하려면 2건 이상의 계좌가 필요합니다.'); return; }
+              var voter=editVoter||editMembers[0].name;
+              if(editGid){ groups[editGid].members=editMembers.slice(); groups[editGid].voter=voter; }
+              else { var gid='g'+(gseq++); groups[gid]={voter:voter,method:'manual',kind:'보통주',members:editMembers.slice()}; }
+              renderAll(); mSheet.classList.add('hidden');
+              toast(editGid?'통합 변경 완료':'통합 완료', voter+' 외 '+(editMembers.length-1)+'건이 통합되었습니다. (합산 '+fmt(editMembers.reduce(function(a,m){return a+m.sh;},0))+'주)');
             });
-            document.getElementById('mgRelease').addEventListener('click',function(){
-              var rows=checkedRows().filter(function(tr){return tr.dataset.group;});
-              if(!rows.length){ toast('선택 필요','해제할 통합 그룹의 주주를 선택해 주세요.'); return; }
-              rows.forEach(function(tr){ tr.removeAttribute('data-group'); tr.querySelector('.grp').innerHTML='<span class="mut">-</span>'; tr.querySelector('.mchk').classList.remove('on'); });
-              mgAll.classList.remove('on');
-              toast('해제 완료','선택한 투표권자의 통합이 해제되었습니다.');
+            mgDelete.addEventListener('click',function(){
+              if(editGid){ delete groups[editGid]; renderAll(); mSheet.classList.add('hidden'); toast('통합 해제','통합이 해제되었습니다. 각 계좌가 개별 투표권자로 복원됩니다.'); }
             });
+            document.getElementById('mgNew').addEventListener('click',function(){openMergeSheet(null);});
+            renderAll();
           }
 
           // 설정내역 확인 → 주주명부 확정
