@@ -324,7 +324,7 @@
         .mg-title{font-size:15px;font-weight:600;color:#0a0a0a}
         .mg-desc{font-size:13px;color:#737373;margin-top:4px;line-height:18px;max-width:640px}
         .mg-actions{display:flex;gap:8px;flex:none}
-        .mg-tools{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:12px 0 8px}
+        .mg-tools{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0;padding-bottom:12px}
         .mg-tools-l,.mg-tools-r{display:flex;align-items:center;gap:8px}
         .btn.icon{padding:0;width:34px;height:32px;justify-content:center}
         .btn.icon svg{width:14px;height:14px}
@@ -500,12 +500,7 @@
           </div>
 
           <div class="upanel hide" data-upanel="merge">
-            <div class="mg-head">
-              <div>
-                <div class="mg-title">통합·해제 설정</div>
-                <div class="mg-desc">동일인이 보유한 복수 계좌를 통합해 하나의 투표권자로 행사합니다. 통합 계좌를 펼쳐 확인하고, ‘변경’으로 계좌를 추가·삭제하거나 통합을 해제할 수 있습니다.</div>
-              </div>
-            </div>
+            <div>
             <div class="mg-tools">
               <div class="mg-tools-l">
                 <button class="btn" id="mgKind">의결권 있는 주식 종류 변경</button>
@@ -536,6 +531,7 @@
                   <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m6 17 5-5-5-5M13 17l5-5-5-5"/></svg></span>
                 </div>
               </div>
+            </div>
             </div>
           </div>
 
@@ -1030,17 +1026,28 @@
                 curPick={name:it.dataset.name,no:it.dataset.no};
                 vsSearch.value=it.dataset.name;
                 vsList.querySelectorAll('.combo-item').forEach(function(x){x.classList.toggle('sel',x===it);});
+                vsList.hidden=true;
               });
             });
           }
-          if(vsSearch) vsSearch.addEventListener('input',function(){curPick=null;renderList(vsSearch.value);});
+          if(vsSearch){
+            vsSearch.addEventListener('input',function(){curPick=null;renderList(vsSearch.value);vsList.hidden=false;});
+            vsSearch.addEventListener('focus',function(){renderList(vsSearch.value);vsList.hidden=false;});
+          }
+          document.addEventListener('click',function(e){ if(vsList && !(e.target.closest&&e.target.closest('.combo'))) vsList.hidden=true; });
           function setMethod(m){
             curMethod=m; curPick=null;
             document.querySelectorAll('#vsMethod .rad').forEach(function(r){r.classList.toggle('on', r.dataset.m===m);});
             vsAlertT.textContent=alertText[m];
             vsPickField.classList.toggle('hide', !(m==='num'||m==='name'));
             vsNewField.classList.toggle('hide', m!=='new');
-            if(m==='num'||m==='name'){ vsSearch.value=''; renderList(''); }
+            if(m==='num'){ vsSearch.value=''; curPick=null; renderList(''); vsList.hidden=true; }
+            if(m==='name'){
+              var _nm=curRow&&curRow.querySelector('.tt-name')?curRow.querySelector('.tt-name').textContent.trim():'';
+              vsSearch.value=_nm;
+              curPick=roster.filter(function(r){return r.name===_nm;})[0]||(_nm?{name:_nm,no:(curRow&&curRow.dataset.no)||'-'}:null);
+              renderList(_nm); vsList.hidden=true;
+            }
             if(m==='new'){ vsNewName.value=''; vsNewId.value=''; }
           }
           document.querySelectorAll('#vsMethod .rad').forEach(function(r){ r.addEventListener('click',function(){ setMethod(r.dataset.m); }); });
