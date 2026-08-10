@@ -292,6 +292,24 @@
         .vsh-x{position:absolute;top:16px;right:16px;width:16px;height:16px;border:none;background:none;cursor:pointer;color:#000;opacity:.7;display:flex}
         .vsh-x:hover{opacity:1}
         .vsh-x svg{width:16px;height:16px}
+        /* tabs panels + 통합·해제 + 확정 */
+        .upanel{display:flex;flex-direction:column;gap:24px}
+        .upanel.hide{display:none!important}
+        .mg-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+        .mg-title{font-size:15px;font-weight:600;color:#0a0a0a}
+        .mg-desc{font-size:13px;color:#737373;margin-top:4px;line-height:18px;max-width:640px}
+        .mg-actions{display:flex;gap:8px;flex:none}
+        .mchk{width:16px;height:16px;border:1px solid #babbbc;border-radius:4px;display:inline-block;vertical-align:middle;cursor:pointer;position:relative;background:#fff}
+        .mchk.on{background:#171717;border-color:#171717}
+        .mchk.on:after{content:"";position:absolute;left:5px;top:2px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+        table.mtbl td .mbadge.g{background:#ebf4ff;color:#0066df}
+        .cf-note{font-size:13px;color:#737373;line-height:20px;background:#fafafa;border:1px solid var(--border);border-radius:12px;padding:16px}
+        .cf-foot{display:flex;justify-content:flex-end}
+        .btn.lg{height:40px;padding:0 20px;font-size:14px}
+        #mgList{display:flex;flex-direction:column;gap:6px}
+        #mgList .mm{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--border);border-radius:10px;font-size:14px;color:#0a0a0a}
+        #mgList .mm .s{color:#737373;font-size:12px}
+        #mgRepMenu{position:absolute;left:0;right:0;top:36px;z-index:5;max-height:200px;overflow:auto}
       </style>
 
       <div class="ms-wrap">
@@ -328,10 +346,11 @@
         <!-- LOADED STATE -->
         <div id="loadedState" class="ld-col hide">
           <div class="utabs">
-            <button class="utab active">투표권자 설정</button>
-            <button class="utab">투표권자 통합</button>
-            <button class="utab">투표권자 해제</button>
+            <button class="utab active" data-utab="set">투표권자 설정</button>
+            <button class="utab" data-utab="merge">통합·해제 설정</button>
+            <button class="utab" data-utab="confirm">설정내역 확인</button>
           </div>
+          <div class="upanel" data-upanel="set">
           <div class="ic3">
             <div class="icard"><div class="k">총 주식수</div><div class="v">476,211,964</div></div>
             <div class="icard"><div class="k">총 주주수</div><div class="v">650,000</div></div>
@@ -390,6 +409,47 @@
                 </div>
               </div>
             </div>
+          </div>
+          </div>
+
+          <div class="upanel hide" data-upanel="merge">
+            <div class="mg-head">
+              <div>
+                <div class="mg-title">통합·해제 설정</div>
+                <div class="mg-desc">동일인이 보유한 복수 계좌를 2건 이상 선택해 하나의 투표권자로 통합하거나, 통합된 투표권자를 해제하세요.</div>
+              </div>
+              <div class="mg-actions">
+                <button class="btn" id="mgRelease"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>통합 해제</button>
+                <button class="btn primary" id="mgMerge"><svg class="ic" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>투표권자 통합</button>
+              </div>
+            </div>
+            <div class="mtbl-wrap">
+              <table class="mtbl mg-tbl">
+                <colgroup><col style="width:44px"><col style="width:96px"><col style="width:180px"><col style="width:150px"><col style="width:140px"><col style="width:100px"><col style="width:120px"></colgroup>
+                <thead><tr><th class="c"><span class="mchk" id="mgAll"></span></th><th class="c">주주구분</th><th>주주명</th><th>주주번호</th><th style="text-align:right">보유주식</th><th style="text-align:right">지분율</th><th>통합그룹</th></tr></thead>
+                <tbody>
+                  <tr data-name="KVIDIA"><td class="c"><span class="mchk"></span></td><td class="c">일반법인</td><td class="name">KVIDIA</td><td class="mut">2025119001</td><td class="r">19,961,925</td><td class="r sub">4.2%</td><td class="grp"><span class="mut">-</span></td></tr>
+                  <tr data-name="K-홀딩스 주식회사"><td class="c"><span class="mchk"></span></td><td class="c">일반법인</td><td class="name">K-홀딩스 주식회사</td><td class="mut">2025119002</td><td class="r">19,965,917</td><td class="r sub">4.2%</td><td class="grp"><span class="mut">-</span></td></tr>
+                  <tr data-name="나제한"><td class="c"><span class="mchk"></span></td><td class="c">개인</td><td class="name">나제한</td><td class="mut">800401-1******</td><td class="r">19,963,921</td><td class="r sub">4.2%</td><td class="grp"><span class="mut">-</span></td></tr>
+                  <tr data-name="젠슨박"><td class="c"><span class="mchk"></span></td><td class="c">개인</td><td class="name">젠슨박</td><td class="mut">880411-1******</td><td class="r">10,005,912</td><td class="r sub">2.1%</td><td class="grp"><span class="mut">-</span></td></tr>
+                  <tr data-name="이준호" data-group="통합 A"><td class="c"><span class="mchk on"></span></td><td class="c">개인</td><td class="name">이준호</td><td class="mut">600101-1******</td><td class="r">6,017,919</td><td class="r sub">1.3%</td><td class="grp"><span class="mbadge g">통합 A</span></td></tr>
+                  <tr data-name="이종승" data-group="통합 A"><td class="c"><span class="mchk on"></span></td><td class="c">개인</td><td class="name">이종승</td><td class="mut">600101-1******</td><td class="r">6,017,919</td><td class="r sub">1.3%</td><td class="grp"><span class="mbadge g">통합 A</span></td></tr>
+                  <tr data-name="천재민"><td class="c"><span class="mchk"></span></td><td class="c">개인</td><td class="name">천재민</td><td class="mut">600101-1******</td><td class="r">6,015,923</td><td class="r sub">1.3%</td><td class="grp"><span class="mut">-</span></td></tr>
+                  <tr data-name="박준호"><td class="c"><span class="mchk"></span></td><td class="c">개인</td><td class="name">박준호</td><td class="mut">600101-1******</td><td class="r">6,015,923</td><td class="r sub">1.3%</td><td class="grp"><span class="mut">-</span></td></tr>
+                  <tr data-name="유은지"><td class="c"><span class="mchk"></span></td><td class="c">개인</td><td class="name">유은지</td><td class="mut">700201-2******</td><td class="r">2,003,977</td><td class="r sub">0.4%</td><td class="grp"><span class="mut">-</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="upanel hide" data-upanel="confirm">
+            <div class="ic3 cf-cards">
+              <div class="icard"><div class="k">총 투표권자</div><div class="v">650,000</div></div>
+              <div class="icard"><div class="k">설정 완료</div><div class="v" id="cfSet">6</div></div>
+              <div class="icard warn"><div class="k">미설정</div><div class="v" id="cfUnset">3</div></div>
+            </div>
+            <div class="cf-note">투표권자 설정과 통합·해제가 모두 완료되면 주주명부를 확정하세요. 확정 이후에는 투표권자 정보를 수정할 수 없으며, 전자투표·현장 집계의 기준 명부로 사용됩니다.</div>
+            <div class="cf-foot"><button class="btn primary lg" id="cfConfirm"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>주주명부 확정</button></div>
           </div>
         </div>
       </div>
@@ -462,6 +522,25 @@
         </div>
       </div>
 
+      <!-- 투표권자 통합 sheet -->
+      <div class="vsh-ov hidden" id="mergeSheet">
+        <div class="vsh">
+          <div class="vsh-head"><div class="vsh-title">투표권자 통합</div><div class="vsh-desc">선택한 주주를 하나의 대표 투표권자로 통합합니다.</div></div>
+          <div class="vsh-body">
+            <div class="vs-field"><label>대표 투표권자</label>
+              <div style="position:relative">
+                <button class="dlg-select" id="mgRepSel"><span>대표 투표권자를 선택하세요</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div class="dlg-menu hidden" id="mgRepMenu"></div>
+              </div>
+            </div>
+            <div class="vs-field"><label>통합 대상 (<span id="mgCount">0</span>명)</label><div id="mgList"></div></div>
+            <div class="vs-alert"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span>통합 시 선택한 계좌의 의결권이 대표 투표권자 명의로 합산되어 행사됩니다.</span></div>
+          </div>
+          <div class="vsh-foot"><button class="btn" data-vshclose>취소</button><button class="btn primary" id="mgConfirm">통합하기</button></div>
+          <button class="vsh-x" data-vshclose aria-label="닫기"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        </div>
+      </div>
+
       <div id="shTip"></div>
 
       <script>
@@ -479,6 +558,7 @@
             document.getElementById('emptyState').classList.add('hide');
             document.getElementById('loadedState').classList.remove('hide');
             document.getElementById('msLoad').classList.add('hidden');
+            document.getElementById('msRegister').classList.add('hidden');
             document.getElementById('msNext').classList.remove('hidden');
             var chip=document.getElementById('msChip'); chip.classList.remove('hide');
             document.getElementById('msChipDate').textContent=date;
@@ -499,9 +579,74 @@
           // 주주명부 등록 → 명부관리 화면으로 이동
           document.getElementById('msRegister').addEventListener('click',function(){location.href='roster.html';});
 
+          // 탭 전환 + 저장하고 다음
+          var utabsOrder=['set','merge','confirm'];
+          function activateTab(key){
+            document.querySelectorAll('#loadedState .utab').forEach(function(t){t.classList.toggle('active',t.dataset.utab===key);});
+            document.querySelectorAll('#loadedState .upanel').forEach(function(p){p.classList.toggle('hide',p.dataset.upanel!==key);});
+            var nx=document.getElementById('msNext');
+            nx.style.display = key==='confirm' ? 'none' : '';
+            var uc=document.getElementById('unsetCount'); var cu=document.getElementById('cfUnset');
+            if(uc&&cu) cu.textContent=uc.textContent;
+            var cs=document.getElementById('cfSet'); if(cs) cs.textContent=String(9-(parseInt(uc.textContent,10)||0));
+          }
+          document.querySelectorAll('#loadedState .utab').forEach(function(t){t.addEventListener('click',function(){activateTab(t.dataset.utab);});});
           document.getElementById('msNext').addEventListener('click',function(){
-            toast('저장 완료','주주명부가 확정되었습니다. 다음 단계로 이동합니다.');
+            var cur=document.querySelector('#loadedState .utab.active').dataset.utab;
+            var i=utabsOrder.indexOf(cur);
+            if(i<utabsOrder.length-1){ toast('저장 완료', (cur==='set'?'투표권자 설정':'통합·해제 설정')+'이 저장되었습니다. 다음 단계로 이동합니다.'); activateTab(utabsOrder[i+1]); }
           });
+
+          // 통합·해제 설정
+          var mgTbl=document.querySelector('table.mg-tbl');
+          if(mgTbl){
+            var mgBody=mgTbl.querySelector('tbody'), mgAll=document.getElementById('mgAll');
+            mgBody.querySelectorAll('.mchk').forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('on');});});
+            mgAll.addEventListener('click',function(){var on=mgAll.classList.toggle('on');mgBody.querySelectorAll('.mchk').forEach(function(c){c.classList.toggle('on',on);});});
+            var mSheet=document.getElementById('mergeSheet'), mgList=document.getElementById('mgList'), mgCount=document.getElementById('mgCount');
+            var mgRepSel=document.getElementById('mgRepSel'), mgRepMenu=document.getElementById('mgRepMenu'), mgRep=null;
+            function checkedRows(){return [].slice.call(mgBody.querySelectorAll('tr')).filter(function(tr){return tr.querySelector('.mchk').classList.contains('on');});}
+            document.getElementById('mgMerge').addEventListener('click',function(){
+              var rows=checkedRows();
+              if(rows.length<2){ toast('선택 필요','통합하려면 2명 이상의 주주를 선택해 주세요.'); return; }
+              mgList.innerHTML=''; mgRepMenu.innerHTML=''; mgRep=null;
+              mgRepSel.querySelector('span').textContent='대표 투표권자를 선택하세요'; mgRepSel.classList.remove('val');
+              rows.forEach(function(tr){
+                var nm=tr.dataset.name, sh=tr.children[4].textContent;
+                mgList.insertAdjacentHTML('beforeend','<div class="mm"><span>'+nm+'</span><span class="s">'+sh+'주</span></div>');
+                var b=document.createElement('button'); b.className='dlg-mi'; b.textContent=nm; b.dataset.v=nm;
+                b.addEventListener('click',function(){mgRep=nm;mgRepSel.querySelector('span').textContent=nm;mgRepSel.classList.add('val');mgRepMenu.classList.add('hidden');});
+                mgRepMenu.appendChild(b);
+              });
+              mgCount.textContent=rows.length;
+              mSheet.classList.remove('hidden');
+            });
+            mgRepSel.addEventListener('click',function(e){e.stopPropagation();mgRepMenu.classList.toggle('hidden');});
+            document.addEventListener('click',function(){mgRepMenu.classList.add('hidden');});
+            mSheet.addEventListener('click',function(e){if(e.target===mSheet)mSheet.classList.add('hidden');});
+            mSheet.querySelectorAll('[data-vshclose]').forEach(function(b){b.addEventListener('click',function(){mSheet.classList.add('hidden');});});
+            var groupSeq=1;
+            document.getElementById('mgConfirm').addEventListener('click',function(){
+              var rows=checkedRows(); if(rows.length<2) return;
+              var label='통합 '+String.fromCharCode(65+groupSeq); groupSeq++;
+              var rep=mgRep||rows[0].dataset.name;
+              rows.forEach(function(tr){ tr.dataset.group=label; tr.querySelector('.grp').innerHTML='<span class="mbadge g">'+label+'</span>'; tr.querySelector('.mchk').classList.remove('on'); });
+              mgAll.classList.remove('on');
+              mSheet.classList.add('hidden');
+              toast('통합 완료', rep+' 외 '+(rows.length-1)+'명이 '+label+' 그룹으로 통합되었습니다.');
+            });
+            document.getElementById('mgRelease').addEventListener('click',function(){
+              var rows=checkedRows().filter(function(tr){return tr.dataset.group;});
+              if(!rows.length){ toast('선택 필요','해제할 통합 그룹의 주주를 선택해 주세요.'); return; }
+              rows.forEach(function(tr){ tr.removeAttribute('data-group'); tr.querySelector('.grp').innerHTML='<span class="mut">-</span>'; tr.querySelector('.mchk').classList.remove('on'); });
+              mgAll.classList.remove('on');
+              toast('해제 완료','선택한 투표권자의 통합이 해제되었습니다.');
+            });
+          }
+
+          // 설정내역 확인 → 주주명부 확정
+          var cfBtn=document.getElementById('cfConfirm');
+          if(cfBtn){ cfBtn.addEventListener('click',function(){ toast('주주명부 확정','주주명부가 확정되었습니다. 이후 전자투표·현장 집계의 기준 명부로 사용됩니다.'); }); }
 
           // shareholder tooltip (주주번호 · 실질 계좌번호 · 주소)
           var tip=document.getElementById('shTip');
