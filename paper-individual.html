@@ -298,9 +298,7 @@
         <button class="iconbtn sm" id="toggleLnb" title="사이드바"><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg></button>
         <span class="vsep"></span>
         <div style="display:flex;align-items:center;gap:8px">
-          <span class="crumb" style="color:var(--muted-fg)">사전</span>
-          <svg class="ic" style="width:14px;height:14px;color:var(--muted-fg);opacity:.55" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
-          <span class="crumb" style="color:var(--muted-fg)">서면투표/위임 내역</span>
+          <a class="crumb" href="paper-records.html" style="color:var(--muted-fg);text-decoration:none">서면투표/위임 내역</a>
           <svg class="ic" style="width:14px;height:14px;color:var(--muted-fg);opacity:.55" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
           <span class="crumb">개별 등록</span>
         </div>
@@ -318,11 +316,16 @@
   .hsearch svg{width:16px;height:16px;stroke:#737373;fill:none;stroke-width:1.5}
   .hsearch input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none;color:#171717}
   .hsearch input::placeholder{color:#737373}
-  .shpop{position:absolute;z-index:60;margin-top:4px;min-width:280px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);padding:4px;display:none}
+  .shpop{position:absolute;z-index:60;margin-top:4px;width:340px;max-height:340px;overflow:auto;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);padding:4px;display:none}
   .shpop.show{display:block}
-  .shitem{display:flex;justify-content:space-between;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:14px;color:#171717}
-  .shitem:hover,.shitem.hi{background:var(--muted)}
-  .shitem .no{color:#737373;font-size:12px}
+  .shitem{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:8px 10px;border-radius:8px;cursor:pointer}
+  .shitem .shname{font-size:15px;font-weight:600;color:#0a0a0a}
+  .shitem .shmeta{font-size:13px;color:#737373}
+  .shitem .shmeta .st{color:#737373}
+  .shitem:not(.off):hover,.shitem.hi:not(.off){background:var(--muted)}
+  .shitem.off{cursor:not-allowed;opacity:.5}
+  .shitem.off .shmeta .st{font-weight:700;color:#374151}
+  .shempty{padding:10px;color:#a3a3a3;font-size:13px}
   .ind-info{border:1px solid var(--border);border-radius:12px;background:#fff;padding:14px 16px;margin-bottom:14px}
   .ind-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
   .ind-name{font-size:16px;font-weight:600;color:#0a0a0a}
@@ -360,7 +363,6 @@
 </style>
       <div class="content" style="width:100%">
         <div class="ev-head">
-          <button class="backbtn" id="btnBack"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>목록</button>
           <div class="page-title">개별 등록</div>
           <span class="chsep"></span>
           <span class="chch" id="chTitle">서면위임(자사)</span>
@@ -485,12 +487,12 @@
     document.getElementById('chWay').textContent=ch.way;
 
     function back(){ location.href='paper-records.html'; }
-    ['btnBack','btnCancel'].forEach(function(id){var e=document.getElementById(id); if(e) e.addEventListener('click',back);});
+    ['btnCancel'].forEach(function(id){var e=document.getElementById(id); if(e) e.addEventListener('click',back);});
     ['btnSave','btnSave2'].forEach(function(id){var e=document.getElementById(id); if(e) e.addEventListener('click',back);});
 
     var grid=document.getElementById('indGrid');
     var vrows=Array.prototype.slice.call(grid.querySelectorAll('tbody tr.vrow'));
-    var active=-1;
+    var active=-1; var curHold='12,500,000';
     function setActive(i,scroll){
       if(i<0) i=0; if(i>vrows.length-1) i=vrows.length-1;
       vrows.forEach(function(r){r.classList.remove('active');});
@@ -499,12 +501,12 @@
     function updateRow(r){
       var mi=r.querySelector('[data-mi]'); if(!mi) return;
       var any=r.querySelector('.ovbox.on');
-      mi.textContent = any ? '0' : '12,500,000';
+      mi.textContent = any ? '0' : curHold;
     }
     function updateDone(){
       var n=vrows.filter(function(r){return r.querySelector('.ovbox.on');}).length;
       var e=document.getElementById('indDone'); if(e) e.textContent=n;
-      var un=document.getElementById('indUn'); if(un) un.textContent = (vrows.length-n>0)?'12,500,000':'0';
+      var un=document.getElementById('indUn'); if(un) un.textContent = (vrows.length-n>0)?curHold:'0';
     }
     function setOp(r,op){
       r.querySelectorAll('.ovbox').forEach(function(b){ b.classList.toggle('on', op!=='none' && b.dataset.op===op); });
@@ -547,36 +549,71 @@
       }
     });
 
-    // 주주 검색 선택
+    // 주주 검색 — 주주명부 리스트 검색 · 사전행사(전자/서면 등)한 주주는 비활성화, 미행사 주주만 선택
     var HOLDERS={
-      '자사':[{n:'사립학교교직원연금공단',no:'6805111',h:'12,500,000'},{n:'국민연금공단',no:'6805090',h:'9,800,000'},{n:'우리사주조합(자사)',no:'6805250',h:'4,200,000'},{n:'미래에셋자산운용',no:'6805318',h:'3,150,000'}],
-      '타사':[{n:'삼성증권 위탁',no:'7100121',h:'2,600,000'},{n:'키움증권 위탁',no:'7100155',h:'1,900,000'},{n:'NH투자증권 위탁',no:'7100207',h:'1,450,000'}],
-      '투표':[{n:'CITIGROUP',no:'8100231',h:'670,000'},{n:'BARCLAYS CAPITAL',no:'8100232',h:'345,804'},{n:'BLACKROCK FUND',no:'8100240',h:'1,200,000'}]
+      '자사':[
+        {n:'김범수',no:'8904121',h:'3,085',p:'1.05%',st:'미행사'},
+        {n:'이수정',no:'8811203',h:'2,940',p:'1.00%',st:'미행사'},
+        {n:'박현우',no:'8720455',h:'2,610',p:'0.89%',st:'전자위임'},
+        {n:'정다은',no:'9002118',h:'2,480',p:'0.84%',st:'미행사'},
+        {n:'최지훈',no:'8615902',h:'2,150',p:'0.73%',st:'미행사'},
+        {n:'한소영',no:'8933471',h:'1,980',p:'0.67%',st:'서면투표'},
+        {n:'오세훈',no:'8744120',h:'1,720',p:'0.58%',st:'미행사'},
+        {n:'윤가람',no:'9011255',h:'1,540',p:'0.52%',st:'미행사'},
+        {n:'배준호',no:'8622019',h:'1,330',p:'0.45%',st:'전자투표'},
+        {n:'서예린',no:'8955302',h:'1,120',p:'0.38%',st:'미행사'}
+      ],
+      '타사':[
+        {n:'삼성증권 위탁',no:'7100121',h:'2,600',p:'0.88%',st:'미행사'},
+        {n:'키움증권 위탁',no:'7100155',h:'1,900',p:'0.64%',st:'미행사'},
+        {n:'NH투자증권 위탁',no:'7100207',h:'1,450',p:'0.49%',st:'서면위임'},
+        {n:'미래에셋증권 위탁',no:'7100260',h:'1,210',p:'0.41%',st:'미행사'},
+        {n:'한국투자증권 위탁',no:'7100288',h:'980',p:'0.33%',st:'미행사'},
+        {n:'KB증권 위탁',no:'7100319',h:'760',p:'0.26%',st:'전자위임'},
+        {n:'신한투자증권 위탁',no:'7100344',h:'540',p:'0.18%',st:'미행사'}
+      ],
+      '투표':[
+        {n:'CITIGROUP',no:'8100231',h:'670',p:'0.23%',st:'미행사'},
+        {n:'BARCLAYS CAPITAL',no:'8100232',h:'345',p:'0.12%',st:'미행사'},
+        {n:'BLACKROCK FUND',no:'8100240',h:'1,200',p:'0.41%',st:'전자투표'},
+        {n:'VANGUARD GROUP',no:'8100255',h:'910',p:'0.31%',st:'미행사'},
+        {n:'JP MORGAN',no:'8100261',h:'620',p:'0.21%',st:'미행사'},
+        {n:'GOLDMAN SACHS',no:'8100277',h:'430',p:'0.15%',st:'서면투표'}
+      ]
     };
     var list=HOLDERS[chk]||HOLDERS['자사'];
     var pop=document.getElementById('shPop'); var hi=-1;
     function render(q){
       var f=list.filter(function(x){return !q || x.n.indexOf(q)>=0 || x.no.indexOf(q)>=0;});
-      pop.innerHTML=f.map(function(x,i){return '<div class="shitem" data-no="'+x.no+'"><span>'+x.n+'</span><span class="no">'+x.no+' · '+x.h+'주</span></div>';}).join('') || '<div class="shitem" style="color:#a3a3a3;cursor:default">검색 결과 없음</div>';
+      pop.innerHTML = f.length ? f.map(function(x){
+        var off = x.st!=='미행사';
+        return '<div class="shitem'+(off?' off':'')+'" data-no="'+x.no+'">'
+          +'<div class="shname">'+x.n+'</div>'
+          +'<div class="shmeta">'+x.no+' · '+x.h+'주 · '+x.p+' · <span class="st">'+x.st+'</span></div>'
+          +'</div>';
+      }).join('') : '<div class="shempty">검색 결과가 없습니다</div>';
       hi=-1;
     }
+    function selItems(){ return Array.prototype.slice.call(pop.querySelectorAll('.shitem[data-no]:not(.off)')); }
     function openPop(){ render(sh.value.trim()); pop.classList.add('show'); }
     function closePop(){ pop.classList.remove('show'); }
     function pick(el){
+      if(!el || el.classList.contains('off')) return;
       var no=el.dataset.no; var x=list.filter(function(y){return y.no===no;})[0]; if(!x) return;
+      curHold=x.h;
       document.getElementById('indName').textContent=x.n;
       document.getElementById('indReal').textContent=x.n;
       document.getElementById('indNo').textContent=x.no;
       document.getElementById('indHold').textContent=x.h;
-      vrows.forEach(function(r){ setOp(r,'none'); });
-      sh.value=''; closePop();
+      vrows.forEach(function(r){ var t=r.children; if(t[2])t[2].textContent=x.h; if(t[3])t[3].textContent=x.h; setOp(r,'none'); });
+      sh.value=''; closePop(); setActive(0,false);
     }
     sh.addEventListener('focus',openPop);
     sh.addEventListener('input',function(){ render(sh.value.trim()); pop.classList.add('show'); });
     sh.addEventListener('keydown',function(e){
-      var items=Array.prototype.slice.call(pop.querySelectorAll('.shitem[data-no]'));
-      if(e.key==='ArrowDown'){ e.preventDefault(); hi=Math.min(hi+1,items.length-1); items.forEach(function(x,i){x.classList.toggle('hi',i===hi);}); }
-      else if(e.key==='ArrowUp'){ e.preventDefault(); hi=Math.max(hi-1,0); items.forEach(function(x,i){x.classList.toggle('hi',i===hi);}); }
+      var items=selItems();
+      if(e.key==='ArrowDown'){ e.preventDefault(); hi=Math.min(hi+1,items.length-1); items.forEach(function(x,i){x.classList.toggle('hi',i===hi);}); if(items[hi])items[hi].scrollIntoView({block:'nearest'}); }
+      else if(e.key==='ArrowUp'){ e.preventDefault(); hi=Math.max(hi-1,0); items.forEach(function(x,i){x.classList.toggle('hi',i===hi);}); if(items[hi])items[hi].scrollIntoView({block:'nearest'}); }
       else if(e.key==='Enter'){ e.preventDefault(); if(items[hi]) pick(items[hi]); }
       else if(e.key==='Escape'){ closePop(); sh.blur(); }
     });
