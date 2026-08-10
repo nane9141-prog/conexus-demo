@@ -219,6 +219,18 @@
   .agent-inp{display:flex;margin-top:8px}
   .agent-inp input{flex:1;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:10px 0 0 10px;border-right:none;font-size:14px;font-family:inherit;outline:none;background:#fff}
   .agent-inp button{height:32px;padding:0 12px;border:1px solid var(--border);border-radius:0 10px 10px 0;background:#fff;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit}
+  .rc-card{border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;background:#fafafa}
+  .rc-card.wait{background:#fff;border-style:dashed}
+  .rc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .rc-badge{display:inline-flex;align-items:center;height:22px;padding:0 10px;border-radius:9999px;font-size:12px;font-weight:600}
+  .rc-badge.use{background:#ebf4ff;color:#0066df}
+  .rc-badge.wait{background:#f5f5f5;color:#737373}
+  .rc-date{font-size:12px;color:var(--muted-fg)}
+  .rc-row{display:flex;gap:12px;padding:4px 0;font-size:14px;line-height:1.5}
+  .rc-row .rl{width:76px;flex:none;color:var(--muted-fg)}
+  .rc-row .rv{flex:1;color:#0a0a0a}
+  .rc-row .rv.b{font-weight:600}
+  .rc-row .rv.blue{color:#0071f3;font-weight:600}
 </style>
 <style>
   :root{
@@ -972,10 +984,10 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 </div>
 <div class="overlay hidden" id="resoOverlay">
   <aside class="sheet">
-    <div class="sheet-head"><div><h3>결의조건 보기</h3><div class="sdesc">의안별 결의방법과 가결 정족수 기준입니다.</div></div>
+    <div class="sheet-head"><div><h3>결의조건</h3><div class="sdesc">결의기준설정에 의해 자동 등록된 조건입니다.</div></div>
       <button class="iconbtn md" data-close><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
     <div class="sheet-body" id="resoBody"></div>
-    <div class="sheet-foot"><button class="primary" data-close style="width:100%">확인</button></div>
+    <div class="sheet-foot"><div style="display:flex;gap:8px"><button class="sheet-cancel" data-close style="flex:1">취소</button><button class="primary" data-toast="결의 조건 추가는 준비 중이에요" style="flex:1">결의 조건 추가</button></div></div>
   </aside>
 </div>
 <div class="overlay hidden" id="agentOverlay">
@@ -1196,18 +1208,21 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   document.addEventListener('click',()=>{agTypePop.classList.add('hidden');agMenuPop.classList.add('hidden');agMethodPop.classList.add('hidden');viSolPop.classList.add('hidden');});
   // 결의조건 보기 패널
   const resoOverlay=document.getElementById('resoOverlay');
-  function resoItem(it,sub){var cls=it.method==='특별결의'?'spc':'ord';return '<div class="reso-item"><span class="rn"'+(sub?' style="padding-left:12px"':'')+'>'+it.no+'</span><span class="rnm">'+(it.name||'(미입력)')+'</span><span class="mbadge '+cls+'">'+it.method+'</span></div>';}
   function renderReso(){
     var b=document.getElementById('resoBody');if(!b)return;
-    var h='<div class="reso-sec-h">가결 정족수 기준</div>';
-    h+='<div class="reso-card"><div class="rt"><span class="mbadge ord">보통결의</span></div><div class="rd">출석한 주주 의결권의 과반수 찬성, 그리고 발행주식총수의 1/4 이상 찬성</div></div>';
-    h+='<div class="reso-card"><div class="rt"><span class="mbadge spc">특별결의</span></div><div class="rd">출석한 주주 의결권의 2/3 이상 찬성, 그리고 발행주식총수의 1/3 이상 찬성</div></div>';
-    h+='<div class="reso-card"><div class="rt"><span class="mbadge cum">집중투표</span></div><div class="rd">1주당 선임할 이사 수만큼 의결권을 부여하여 후보별 득표순 상위 N인을 선임합니다. (개표 분모: 참석 의결권 300,000,000주)</div></div>';
-    h+='<div class="reso-sec-h">의안별 결의방법</div>';
-    AGENDA_DATA.forEach(function(top){h+=resoItem(top,false);(top.sub||[]).forEach(function(sb){h+=resoItem(sb,true);});});
-    b.innerHTML=h;
+    var cards=[
+      {badge:'use',date:'2026-12-30 적용',rows:[['대상 의안','이사 선임','b'],['적용 방식','결의조건 강화','blue'],['출석 정족수','발행주식총수의 4분의 1 이상',''],['가결 기준','출석주주 의결권의 2/3 초과','']]},
+      {badge:'use',date:'2026-12-30 적용',rows:[['대상 의안','감사 선임','b'],['적용 방식','3%룰 강화','blue'],['허용 비율','1%로 강화 (상법 기본 3% → 1%)','']]},
+      {badge:'use',date:'2026-12-30 적용',rows:[['대상 의안','감사선임','b'],['적용 방식','정족수 완화','blue'],['가결 기준','출석주주 의결권의 2분의 1 초과만 충족 시 가결',''],['비고','출석 정족수 요건 미적용','']]},
+      {badge:'wait',date:'이번 주총/다음주총',rows:[['기준','3호 감사 선임 의안 가결시 다음 주총부터 적용',''],['대상 의안','감사선임','b'],['적용 방식','정족수 완화','blue'],['허용 비율','0.5% (기존 1% → 0.5%로 추가 강화)','']]}
+    ];
+    b.innerHTML=cards.map(function(c){
+      var lbl=c.badge==='use'?'사용':'대기중';
+      var rows=c.rows.map(function(r){return '<div class="rc-row"><span class="rl">'+r[0]+'</span><span class="rv '+r[2]+'">'+r[1]+'</span></div>';}).join('');
+      return '<div class="rc-card'+(c.badge==='wait'?' wait':'')+'"><div class="rc-top"><span class="rc-badge '+c.badge+'">'+lbl+'</span><span class="rc-date">'+c.date+'</span></div>'+rows+'</div>';
+    }).join('');
   }
-  document.getElementById('resoBtn').addEventListener('click',function(){renderReso();resoOverlay.classList.remove('hidden');});
+    document.getElementById('resoBtn').addEventListener('click',function(){renderReso();resoOverlay.classList.remove('hidden');});
   // 권유자 대리인 설정 패널
   (function(){
     var ov=document.getElementById('agentOverlay'); if(!ov) return;
