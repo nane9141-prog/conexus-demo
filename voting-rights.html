@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CONEXUS · 사전/중복 의결권 관리</title>
+<link rel="stylesheet" href="conexus.css">
+<style>
+  /* page-local helpers */
+  .scroll{flex:1;overflow-y:auto}
+  .grp{padding:8px 8px 4px}
+  .grp-label{font-size:11px;font-weight:600;color:var(--muted-fg);padding:4px 8px;text-transform:uppercase;letter-spacing:.04em}
+  .lnb-brand .mark{width:26px;height:26px;border-radius:7px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  .lnb-brand .wordmark{font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-left:8px}
+  .lnb-brand{flex-direction:row;align-items:center}
+  .qitem{display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 8px;border:1px solid var(--border);background:#fff;border-radius:8px;font-size:12px;color:#0a0a0a;cursor:pointer;font-family:inherit}
+  .qitem:hover{background:var(--muted)}
+  .qitem .ic{width:13px;height:13px}
+  .ic{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .select-box{display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;border:1px solid var(--border);border-radius:10px;background:#fff;cursor:pointer}
+  .select-box .dot{width:8px;height:8px;border-radius:50%;background:#22c55e;flex:none}
+  .select-box .lbl{flex:1;font-size:14px;font-weight:500;color:#0a0a0a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .select-box .ic{width:15px;height:15px;color:var(--muted-fg)}
+  .tabs{display:flex;gap:4px;background:var(--muted);border-radius:9px;padding:3px}
+  .tabs .t{flex:1;text-align:center;font-size:13px;font-weight:500;padding:6px 0;border-radius:7px;color:var(--muted-fg);cursor:pointer}
+  .tabs .t.active{background:#fff;color:#0a0a0a;box-shadow:var(--shadow-xs)}
+  .tabs .t.dis{opacity:.5;cursor:default}
+  .foot-btn{display:flex;align-items:center;gap:8px;width:100%;padding:8px;border-radius:10px;border:none;background:none;cursor:pointer;font-family:inherit}
+  .foot-btn:hover{background:var(--muted)}
+  .avatar{width:28px;height:28px;border-radius:50%;background:#e5e5e5;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#0a0a0a;flex:none}
+  .who{flex:1;display:flex;flex-direction:column;text-align:left;min-width:0}
+  .who .n{font-size:13px;font-weight:600;color:#0a0a0a}
+  .who .e{font-size:11px;color:var(--muted-fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .iconbtn{width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;border:none;background:none;color:#0a0a0a;cursor:pointer}
+  .iconbtn:hover{background:var(--muted)}
+  .iconbtn .ic{width:17px;height:17px}
+  .vsep{width:1px;height:18px;background:var(--border)}
+  .btn{height:36px;padding:0 14px;border:1px solid var(--border);background:#fff;border-radius:8px;font-size:13px;font-weight:500;color:#0a0a0a;cursor:pointer;font-family:inherit}
+  .btn:hover{background:var(--muted)}
+  .lnb-brand{padding:14px 16px 0}
+  .tbl-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
+  table.tbl{width:100%;border-collapse:collapse;font-size:14px}
+  table.tbl th{background:#fafafa;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap}
+  table.tbl td{padding:12px 14px;border-bottom:1px solid #f0f0f0;color:#0a0a0a}
+  table.tbl tr:last-child td{border-bottom:none}
+  table.tbl tr:hover td{background:#fafafa}
+  .badge{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:9999px;font-size:12px;font-weight:600}
+  .badge.green{background:#eafaf0;color:#0a8a3c}
+  .badge.gray{background:var(--muted);color:var(--muted-fg)}
+  .badge.blue{background:var(--blue100);color:var(--blue700)}
+  .badge.red{background:var(--red50);color:var(--red600)}
+  .badge.amber{background:#fef6e7;color:#b45309}
+  .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .search{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;min-width:240px}
+  .search input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
+  .search .ic{width:16px;height:16px;color:var(--muted-fg)}
+  .page-title{font-size:20px;font-weight:700;color:#0a0a0a}
+  .page-sub{font-size:13px;color:var(--muted-fg);margin-top:4px}
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .stat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px}
+  .stat .k{font-size:12px;color:var(--muted-fg);font-weight:500}
+  .stat .v{font-size:24px;font-weight:700;color:#0a0a0a;margin-top:6px}
+  .stat .d{font-size:12px;margin-top:4px}
+  .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
+  @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="lnb">
+    <div class="lnb-head">
+      <div class="lnb-brand exp-only"><div class="mark">C</div><div class="wordmark">CONEXUS</div></div>
+      <div class="lnb-org" style="padding:0 16px">IR큐더스</div>
+      <div class="lnb-quick" style="padding:0 16px">
+        <button class="qitem"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>명부관리</button>
+        <button class="qitem"><svg class="ic" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/></svg>결의기준</button>
+      </div>
+      <div class="lnb-select exp-only" style="margin-top:12px">
+        <div class="select-box"><span class="dot"></span><span class="lbl">제 12기 정기주주총회</span><svg class="ic" viewBox="0 0 24 24"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></div>
+      </div>
+      <div class="lnb-tabs exp-only" style="margin-top:12px">
+        <div class="tabs"><div class="t">설정</div><div class="t">사전</div><div class="t active">당일</div></div>
+      </div>
+    </div>
+    <div class="scroll">
+      <div class="grp">
+        <div class="grp-label">데모</div>
+        <div class="nav">
+          <a class="nav-item" href="index.html"><svg class="ic" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>홈</a>
+        </div>
+      </div>
+      <div class="grp">
+        <div class="grp-label">주주총회 설정</div>
+        <div class="nav">
+          <a class="nav-item" href="meeting-settings.html"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>주주총회 설정</a>
+          <a class="nav-item" href="voting-restriction.html"><svg class="ic" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1 1 0 0 1 1.6 0C15.5 3.8 18 5 20 5a1 1 0 0 1 1 1z"/></svg>의결권제한 설정</a>
+        </div>
+      </div>
+      <div class="grp">
+        <div class="grp-label">전자주총 관리</div>
+        <div class="nav">
+          <a class="nav-item" href="electronic-meeting.html"><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>전자주총 설정</a>
+          <a class="nav-item" href="onsite-control.html"><svg class="ic" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4"/></svg>주총 현장 제어</a>
+          <a class="nav-item" href="chair-mc.html"><svg class="ic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></svg>의장용 / 사회자용</a>
+          <a class="nav-item" href="attendees.html"><svg class="ic" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>참석자 관리</a>
+        </div>
+      </div>
+      <div class="grp">
+        <div class="grp-label">의결권 관리</div>
+        <div class="nav">
+          <a class="nav-item active" href="voting-rights.html"><svg class="ic" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>사전 / 중복 의결권</a>
+          <a class="nav-item" href="split-voting.html"><svg class="ic" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l3-3 3 3 5-6"/></svg>불통일행사</a>
+          <a class="nav-item" href="cumulative-voting.html"><svg class="ic" viewBox="0 0 24 24"><path d="M8 3v18M3 8h5M16 3v18M13 16h5"/></svg>집중투표 관리</a>
+        </div>
+      </div>
+    </div>
+    <div class="lnb-foot">
+      <button class="foot-btn"><span class="avatar">강</span><span class="who exp-only"><span class="n">강하나</span><span class="e">doji@irkudos.co.kr</span></span><svg class="ic cud exp-only" viewBox="0 0 24 24" style="width:16px;height:16px;color:var(--muted-fg)"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></button>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="left">
+        <button class="iconbtn sm" title="사이드바"><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg></button>
+        <span class="vsep"></span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="crumb" style="color:var(--muted-fg)">의결권 관리</span>
+          <svg class="ic" style="width:14px;height:14px;color:var(--muted-fg);opacity:.55" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+          <span class="crumb">사전 / 중복 의결권</span>
+        </div>
+      </div>
+      <button class="iconbtn md" title="변경이력"><svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></button>
+    </div>
+    <div class="scroll">
+      <div class="content" style="max-width:1100px;margin:0 auto;width:100%">
+        <div class="st-head"><div><div class="page-title">사전 / 중복 의결권 관리</div><div class="page-sub">사전 의결권 행사 정책을 설정하고, 중복 행사 건을 탐지·처리합니다.</div></div><div class="actions"><button class="st-save">저장</button></div></div>
+
+        <div class="subtabs tabs" style="max-width:320px">
+          <div class="subtab t active" data-sub="policy">사전 의결권</div>
+          <div class="subtab t" data-sub="dup">중복 의결권</div>
+        </div>
+
+        <div data-subpanel="policy" class="st-tab active" style="display:block">
+          <div class="card">
+            <div class="st-section">
+              <div class="field"><label>사전 의결권 행사 허용</label><div class="rad-group" data-radgrp="allow"><span class="rad on" data-rad><span class="dotc"></span>허용</span><span class="rad" data-rad><span class="dotc"></span>미허용</span></div></div>
+              <div class="fgrid c2">
+                <div class="field"><label>행사 시작일시</label><div class="frow"><button class="inp dt val"><span>2026-03-12</span><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg></button><input class="inp time" value="09:00"></div></div>
+                <div class="field"><label>행사 종료일시</label><div class="frow"><button class="inp dt val"><span>2026-03-26</span><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg></button><input class="inp time" value="17:00"></div></div>
+              </div>
+              <div class="field"><label>행사 후 변경</label><div class="rad-group" data-radgrp="change"><span class="rad on" data-rad><span class="dotc"></span>기간 내 변경 허용</span><span class="rad" data-rad><span class="dotc"></span>변경 불가</span></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div data-subpanel="dup" class="st-tab" style="display:none">
+          <div class="stat-grid" style="margin-bottom:16px">
+            <div class="stat"><div class="k">사전 행사 총건</div><div class="v">842</div></div>
+            <div class="stat"><div class="k">중복 탐지</div><div class="v" style="color:var(--red600)">7</div></div>
+            <div class="stat"><div class="k">처리 완료</div><div class="v">5</div></div>
+            <div class="stat"><div class="k">처리 대기</div><div class="v">2</div></div>
+          </div>
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr><th>주주번호</th><th>주주명</th><th>행사 채널</th><th>행사 시각</th><th>중복 사유</th><th>상태</th><th style="width:90px">처리</th></tr></thead>
+            <tbody>
+              <tr><td>000241</td><td>이서연</td><td>온라인 · 현장</td><td>03-24 14:20</td><td>동일 주주 이중 행사</td><td><span class="badge red">중복</span></td><td><button class="btn">처리</button></td></tr>
+              <tr><td>000388</td><td>박도윤</td><td>위임 · 온라인</td><td>03-25 09:10</td><td>위임 후 직접 행사</td><td><span class="badge red">중복</span></td><td><button class="btn">처리</button></td></tr>
+              <tr><td>000512</td><td>최지우</td><td>온라인 · 온라인</td><td>03-25 11:02</td><td>재행사</td><td><span class="badge green">처리완료</span></td><td><button class="btn">보기</button></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+  // settings tab switching
+  document.querySelectorAll('.st-nav').forEach(nav=>{
+    nav.querySelectorAll('.st-item').forEach(item=>{
+      item.addEventListener('click',()=>{
+        const tab=item.dataset.tab;
+        nav.querySelectorAll('.st-item').forEach(i=>i.classList.toggle('active',i===item));
+        const body=nav.parentElement.querySelector('.st-body')||document;
+        body.querySelectorAll('.st-tab').forEach(p=>p.classList.toggle('active',p.dataset.panel===tab));
+      });
+    });
+  });
+  // toggles
+  document.addEventListener('click',e=>{
+    const sw=e.target.closest('[data-sw]'); if(sw){sw.classList.toggle('on');}
+    const cb=e.target.closest('[data-cbx]'); if(cb){cb.classList.toggle('on');}
+    const rd=e.target.closest('[data-rad]'); if(rd){const g=rd.closest('[data-radgrp]')||rd.parentElement;g.querySelectorAll('[data-rad]').forEach(r=>r.classList.toggle('on',r===rd));}
+    const cr=e.target.closest('.chk-row'); if(cr){cr.classList.toggle('on');}
+    const t=e.target.closest('.subtab'); if(t){const wrap=t.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(x=>x.classList.toggle('active',x===t));const key=t.dataset.sub;const host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(p=>p.classList.toggle('active',p.dataset.subpanel===key));}
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CONEXUS · 전자주총 관리</title>
+<link rel="stylesheet" href="conexus.css">
+<style>
+  /* page-local helpers */
+  .scroll{flex:1;overflow-y:auto}
+  .grp{padding:8px 8px 4px}
+  .grp-label{font-size:11px;font-weight:600;color:var(--muted-fg);padding:4px 8px;text-transform:uppercase;letter-spacing:.04em}
+  .lnb-brand .mark{width:26px;height:26px;border-radius:7px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  .lnb-brand .wordmark{font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-left:8px}
+  .lnb-brand{flex-direction:row;align-items:center}
+  .qitem{display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 8px;border:1px solid var(--border);background:#fff;border-radius:8px;font-size:12px;color:#0a0a0a;cursor:pointer;font-family:inherit}
+  .qitem:hover{background:var(--muted)}
+  .qitem .ic{width:13px;height:13px}
+  .ic{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .select-box{display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;border:1px solid var(--border);border-radius:10px;background:#fff;cursor:pointer}
+  .select-box .dot{width:8px;height:8px;border-radius:50%;background:#22c55e;flex:none}
+  .select-box .lbl{flex:1;font-size:14px;font-weight:500;color:#0a0a0a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .select-box .ic{width:15px;height:15px;color:var(--muted-fg)}
+  .tabs{display:flex;gap:4px;background:var(--muted);border-radius:9px;padding:3px}
+  .tabs .t{flex:1;text-align:center;font-size:13px;font-weight:500;padding:6px 0;border-radius:7px;color:var(--muted-fg);cursor:pointer}
+  .tabs .t.active{background:#fff;color:#0a0a0a;box-shadow:var(--shadow-xs)}
+  .tabs .t.dis{opacity:.5;cursor:default}
+  .foot-btn{display:flex;align-items:center;gap:8px;width:100%;padding:8px;border-radius:10px;border:none;background:none;cursor:pointer;font-family:inherit}
+  .foot-btn:hover{background:var(--muted)}
+  .avatar{width:28px;height:28px;border-radius:50%;background:#e5e5e5;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#0a0a0a;flex:none}
+  .who{flex:1;display:flex;flex-direction:column;text-align:left;min-width:0}
+  .who .n{font-size:13px;font-weight:600;color:#0a0a0a}
+  .who .e{font-size:11px;color:var(--muted-fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .iconbtn{width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;border:none;background:none;color:#0a0a0a;cursor:pointer}
+  .iconbtn:hover{background:var(--muted)}
+  .iconbtn .ic{width:17px;height:17px}
+  .vsep{width:1px;height:18px;background:var(--border)}
+  .btn{height:36px;padding:0 14px;border:1px solid var(--border);background:#fff;border-radius:8px;font-size:13px;font-weight:500;color:#0a0a0a;cursor:pointer;font-family:inherit}
+  .btn:hover{background:var(--muted)}
+  .lnb-brand{padding:14px 16px 0}
+  .tbl-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
+  table.tbl{width:100%;border-collapse:collapse;font-size:14px}
+  table.tbl th{background:#fafafa;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap}
+  table.tbl td{padding:12px 14px;border-bottom:1px solid #f0f0f0;color:#0a0a0a}
+  table.tbl tr:last-child td{border-bottom:none}
+  table.tbl tr:hover td{background:#fafafa}
+  .badge{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:9999px;font-size:12px;font-weight:600}
+  .badge.green{background:#eafaf0;color:#0a8a3c}
+  .badge.gray{background:var(--muted);color:var(--muted-fg)}
+  .badge.blue{background:var(--blue100);color:var(--blue700)}
+  .badge.red{background:var(--red50);color:var(--red600)}
+  .badge.amber{background:#fef6e7;color:#b45309}
+  .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .search{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;min-width:240px}
+  .search input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
+  .search .ic{width:16px;height:16px;color:var(--muted-fg)}
+  .page-title{font-size:20px;font-weight:700;color:#0a0a0a}
+  .page-sub{font-size:13px;color:var(--muted-fg);margin-top:4px}
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .stat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px}
+  .stat .k{font-size:12px;color:var(--muted-fg);font-weight:500}
+  .stat .v{font-size:24px;font-weight:700;color:#0a0a0a;margin-top:6px}
+  .stat .d{font-size:12px;margin-top:4px}
+  .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
+  @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="lnb">
+    <div class="lnb-head">
+      <div class="lnb-brand exp-only"><div class="mark">C</div><div class="wordmark">CONEXUS</div></div>
+      <div class="lnb-org" style="padding:0 16px">IR큐더스</div>
+      <div class="lnb-quick" style="padding:0 16px">
+        <button class="qitem"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>명부관리</button>
+        <button class="qitem"><svg class="ic" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/></svg>결의기준</button>
+      </div>
+      <div class="lnb-select exp-only" style="margin-top:12px">
+        <div class="select-box"><span class="dot"></span><span class="lbl">제 12기 정기주주총회</span><svg class="ic" viewBox="0 0 24 24"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></div>
+      </div>
+      <div class="lnb-tabs exp-only" style="margin-top:12px">
+        <div class="tabs"><div class="t">설정</div><div class="t">사전</div><div class="t active">당일</div></div>
+      </div>
+    </div>
+    <div class="scroll">
+      <div class="grp">
+        <div class="grp-label">데모</div>
+        <div class="nav">
+          <a class="nav-item" href="index.html"><svg class="ic" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>홈</a>
+        </div>
+      </div>
+      <div class="grp">
+        <div class="grp-label">주주총회 설정</div>
+        <div class="nav">
+          <a class="nav-item" href="meeting-settings.html"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>주주총회 설정</a>
+          <a class="nav-item" href="voting-restriction.html"><svg class="ic" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1 1 0 0 1 1.6 0C15.5 3.8 18 5 20 5a1 1 0 0 1 1 1z"/></svg>의결권제한 설정</a>
+        </div>
+      </div>
+      <div class="grp">
+        <div class="grp-label">전자주총 관리</div>
+        <div class="nav">
+          <a class="nav-item active" href="electronic-meeting.html"><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>전자주총 설정</a>
+          <a class="nav-item" href="onsite-control.html"><svg class="ic" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4"/></svg>주총 현장 제어</a>
+          <a class="nav-item" href="chair-mc.html"><svg class="ic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></svg>의장용 / 사회자용</a>
+          <a class="nav-item" href="attendees.html"><svg class="ic" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>참석자 관리</a>
+        </div>
+      </div>
+      <div class="grp">
+        <div class="grp-label">의결권 관리</div>
+        <div class="nav">
+          <a class="nav-item" href="voting-rights.html"><svg class="ic" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>사전 / 중복 의결권</a>
+          <a class="nav-item" href="split-voting.html"><svg class="ic" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l3-3 3 3 5-6"/></svg>불통일행사</a>
+          <a class="nav-item" href="cumulative-voting.html"><svg class="ic" viewBox="0 0 24 24"><path d="M8 3v18M3 8h5M16 3v18M13 16h5"/></svg>집중투표 관리</a>
+        </div>
+      </div>
+    </div>
+    <div class="lnb-foot">
+      <button class="foot-btn"><span class="avatar">강</span><span class="who exp-only"><span class="n">강하나</span><span class="e">doji@irkudos.co.kr</span></span><svg class="ic cud exp-only" viewBox="0 0 24 24" style="width:16px;height:16px;color:var(--muted-fg)"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></button>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="left">
+        <button class="iconbtn sm" title="사이드바"><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg></button>
+        <span class="vsep"></span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="crumb" style="color:var(--muted-fg)">당일 운영</span>
+          <svg class="ic" style="width:14px;height:14px;color:var(--muted-fg);opacity:.55" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+          <span class="crumb">전자주총 설정</span>
+        </div>
+      </div>
+      <button class="iconbtn md" title="변경이력"><svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></button>
+    </div>
+    <div class="scroll">
+      <div class="settings">
+        <nav class="st-nav" id="stNav">
+          <button class="st-item active" data-tab="basic"><span class="st-lbl">기본 설정</span><svg class="ic st-chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
+          <button class="st-item" data-tab="progress"><span class="st-lbl">진행 설정</span><svg class="ic st-chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
+          <button class="st-item" data-tab="terms"><span class="st-lbl">약관 관리</span><svg class="ic st-chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
+          <button class="st-item" data-tab="design"><span class="st-lbl">디자인 설정</span><svg class="ic st-chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
+          <button class="st-item" data-tab="attendee"><span class="st-lbl">참석자 관리</span><svg class="ic st-chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
+          <button class="st-item" data-tab="preq"><span class="st-lbl">사전 질의 관리</span><svg class="ic st-chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
+        </nav>
+        <div class="st-body">
+
+          <!-- 기본 설정 -->
+          <div class="st-tab active" data-panel="basic"><div class="st-form">
+            <div class="st-head"><h2>기본 설정</h2><div class="actions"><button class="btn" data-load>이전 설정 불러오기</button><button class="st-save">저장</button></div></div>
+            <div class="st-section">
+              <div class="fgrid c2">
+                <div class="field"><label>전자주주총회 명칭<span class="req">*</span></label><input class="inp" value="제 12기 정기주주총회"></div>
+                <div class="field"><label>개최 방식</label><button class="inp sel val"><span>병행 (현장 + 온라인)</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
+              </div>
+              <div class="fgrid c2">
+                <div class="field"><label>개최 일시<span class="req">*</span></label><div class="frow"><button class="inp dt val"><span>2026-03-27</span><svg class="ic" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg></button><input class="inp time" value="10:00"></div></div>
+                <div class="field"><label>입장 가능 시각</label><input class="inp time" value="09:00" style="width:100%"></div>
+              </div>
+            </div>
+            <div class="hr"></div>
+            <div class="st-section">
+              <div><div class="sub-h">공지 팝업 등록</div><div class="sub-help">참석자 입장 시 표시할 공지를 등록합니다. 팝업 또는 한 페이지 방식 중 선택할 수 있습니다.</div></div>
+              <div class="field"><label>노출 방식</label><div class="rad-group" data-radgrp="notice"><span class="rad on" data-rad><span class="dotc"></span>팝업</span><span class="rad" data-rad><span class="dotc"></span>한 페이지</span><span class="rad" data-rad><span class="dotc"></span>노출 안 함</span></div></div>
+              <div class="field"><label>공지 제목</label><input class="inp" placeholder="공지 제목을 입력해 주세요"></div>
+              <div class="field"><label>공지 내용</label><textarea class="inp" style="height:120px;padding:10px 12px;resize:vertical" placeholder="공지 내용을 입력해 주세요"></textarea><div class="fhelp">등록 후 &lsquo;내용 미리보기&rsquo;로 참석자 화면을 확인할 수 있습니다.</div></div>
+              <div class="ag-toolbar"><button class="btn-line">내용 미리보기</button></div>
+            </div>
+            <div class="hr"></div>
+            <div class="st-section">
+              <div><div class="sub-h">이용 서비스</div><div class="sub-help">전자주주총회에서 사용할 기능을 선택해 주세요.</div></div>
+              <div class="svc-row"><div class="sw on" data-sw></div><div class="svc-body"><div class="svc-title">실시간 영상 중계</div><div class="svc-desc">현장 진행 상황을 온라인 참석자에게 실시간으로 중계합니다.</div></div></div>
+              <div class="svc-row"><div class="sw on" data-sw></div><div class="svc-body"><div class="svc-title">현장 전자표결</div><div class="svc-desc">현장 참석 주주가 앱으로 직접 투표하며 결과가 실시간 집계됩니다.</div></div></div>
+              <div class="svc-row"><div class="sw" data-sw></div><div class="svc-body"><div class="svc-title">채팅 질의</div><div class="svc-desc">참석자가 실시간으로 질의를 등록할 수 있습니다.</div></div></div>
+            </div>
+          </div></div>
+
+          <!-- 진행 설정 -->
+          <div class="st-tab" data-panel="progress"><div class="st-form">
+            <div class="st-head"><h2>진행 설정</h2><div class="actions"><button class="btn" data-load>이전 설정 불러오기</button><button class="st-save">저장</button></div></div>
+            <div class="st-section">
+              <div class="field"><label>진행 순서 안내</label><div class="rad-group" data-radgrp="flow"><span class="rad on" data-rad><span class="dotc"></span>자동 진행</span><span class="rad" data-rad><span class="dotc"></span>수동 진행</span></div></div>
+              <div class="fgrid c2">
+                <div class="field"><label>의결 정족수 기준</label><button class="inp sel val"><span>출석 주주 과반</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
+                <div class="field"><label>표결 제한 시간</label><input class="inp" value="3분"></div>
+              </div>
+            </div>
+            <div class="hr"></div>
+            <div class="st-section">
+              <div><div class="sub-h">도글(발언) 케이스 안내</div><div class="sub-help">진행 중 참석자에게 노출할 안내 메시지를 관리합니다.</div></div>
+              <div class="chk-row on" data-chk><span class="chk"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="ct">발언 신청 안내</div><div class="cd">참석자가 발언을 신청할 수 있음을 안내합니다.</div></div></div>
+              <div class="chk-row on" data-chk><span class="chk"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="ct">표결 개시 안내</div><div class="cd">표결이 시작될 때 참석자에게 안내합니다.</div></div></div>
+              <div class="chk-row" data-chk><span class="chk"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="ct">종료 안내</div><div class="cd">주주총회 종료 시 안내 메시지를 노출합니다.</div></div></div>
+            </div>
+          </div></div>
+
+          <!-- 약관 관리 -->
+          <div class="st-tab" data-panel="terms"><div class="st-full">
+            <div class="st-head"><h2>약관 관리</h2><div class="actions"><button class="st-save">약관 추가</button></div></div>
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr><th style="width:44px">순번</th><th>약관명</th><th>필수 여부</th><th>버전</th><th>수정일</th><th style="width:120px">관리</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>전자주주총회 이용약관</td><td><span class="badge red">필수</span></td><td>v1.3</td><td>2026-02-20</td><td><button class="btn">수정</button></td></tr>
+                <tr><td>2</td><td>개인정보 수집·이용 동의</td><td><span class="badge red">필수</span></td><td>v2.0</td><td>2026-02-18</td><td><button class="btn">수정</button></td></tr>
+                <tr><td>3</td><td>영상정보 처리 동의</td><td><span class="badge gray">선택</span></td><td>v1.0</td><td>2026-01-30</td><td><button class="btn">수정</button></td></tr>
+              </tbody>
+            </table></div>
+          </div></div>
+
+          <!-- 디자인 설정 -->
+          <div class="st-tab" data-panel="design"><div class="st-form">
+            <div class="st-head"><h2>디자인 설정</h2><div class="actions"><button class="st-save">저장</button></div></div>
+            <div class="st-section">
+              <div class="field"><label>대표 색상</label><div class="rad-group"><span class="rad on" data-rad><span class="dotc" style="border-color:#0071f3"></span>CONEXUS Blue</span><span class="rad" data-rad><span class="dotc"></span>Neutral</span><span class="rad" data-rad><span class="dotc"></span>커스텀</span></div></div>
+              <div class="field"><label>배너 이미지</label>
+                <div class="ag-empty" style="min-height:180px"><svg viewBox="0 0 24 24" class="ic"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg><div class="e1">권장 규격 1920 × 480 (JPG, PNG · 최대 5MB)</div><button class="upl" style="margin-top:8px"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M5 21h14"/></svg>이미지 업로드</button></div>
+              </div>
+              <div class="field"><label>로그인 화면 문구</label><input class="inp" value="제 12기 정기주주총회에 오신 것을 환영합니다"></div>
+            </div>
+          </div></div>
+
+          <!-- 참석자 관리 -->
+          <div class="st-tab" data-panel="attendee"><div class="st-full">
+            <div class="st-head"><h2>참석자 관리</h2><div class="actions"><button class="btn">엑셀 내보내기</button><button class="st-save">참석자 추가</button></div></div>
+            <div class="stat-grid">
+              <div class="stat"><div class="k">총 대상 주주</div><div class="v">1,284</div></div>
+              <div class="stat"><div class="k">사전 등록</div><div class="v">842</div><div class="d"><span class="badge blue">65.6%</span></div></div>
+              <div class="stat"><div class="k">현장 참석</div><div class="v">126</div></div>
+              <div class="stat"><div class="k">온라인 참석</div><div class="v">318</div></div>
+            </div>
+            <div class="toolbar"><div class="search"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input placeholder="주주명 · 주주번호 검색"></div></div>
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr><th>주주번호</th><th>주주명</th><th>보유주식</th><th>참석 유형</th><th>상태</th><th style="width:90px">관리</th></tr></thead>
+              <tbody>
+                <tr><td>000103</td><td>김민준</td><td>12,400</td><td>온라인</td><td><span class="badge green">참석</span></td><td><button class="btn">상세</button></td></tr>
+                <tr><td>000241</td><td>이서연</td><td>8,900</td><td>현장</td><td><span class="badge green">참석</span></td><td><button class="btn">상세</button></td></tr>
+                <tr><td>000388</td><td>박도윤</td><td>5,200</td><td>위임</td><td><span class="badge amber">위임</span></td><td><button class="btn">상세</button></td></tr>
+                <tr><td>000512</td><td>최지우</td><td>3,100</td><td>-</td><td><span class="badge gray">미참석</span></td><td><button class="btn">상세</button></td></tr>
+              </tbody>
+            </table></div>
+          </div></div>
+
+          <!-- 사전 질의 관리 -->
+          <div class="st-tab" data-panel="preq"><div class="st-full">
+            <div class="st-head"><h2>사전 질의 관리</h2><div class="actions"><button class="btn">엑셀 내보내기</button></div></div>
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr><th style="width:44px">번호</th><th>주주명</th><th>질의 내용</th><th>등록일</th><th>답변 상태</th><th style="width:90px">관리</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>김민준</td><td>배당 정책 관련 향후 계획을 알고 싶습니다.</td><td>2026-03-20</td><td><span class="badge green">답변완료</span></td><td><button class="btn">보기</button></td></tr>
+                <tr><td>2</td><td>이서연</td><td>신규 사업 부문의 투자 규모는 어느 정도인가요?</td><td>2026-03-21</td><td><span class="badge amber">대기</span></td><td><button class="btn">답변</button></td></tr>
+                <tr><td>3</td><td>박도윤</td><td>이사 선임 안건의 후보자 이력을 확인하고 싶습니다.</td><td>2026-03-22</td><td><span class="badge amber">대기</span></td><td><button class="btn">답변</button></td></tr>
+              </tbody>
+            </table></div>
+          </div></div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+  // settings tab switching
+  document.querySelectorAll('.st-nav').forEach(nav=>{
+    nav.querySelectorAll('.st-item').forEach(item=>{
+      item.addEventListener('click',()=>{
+        const tab=item.dataset.tab;
+        nav.querySelectorAll('.st-item').forEach(i=>i.classList.toggle('active',i===item));
+        const body=nav.parentElement.querySelector('.st-body')||document;
+        body.querySelectorAll('.st-tab').forEach(p=>p.classList.toggle('active',p.dataset.panel===tab));
+      });
+    });
+  });
+  // toggles
+  document.addEventListener('click',e=>{
+    const sw=e.target.closest('[data-sw]'); if(sw){sw.classList.toggle('on');}
+    const cb=e.target.closest('[data-cbx]'); if(cb){cb.classList.toggle('on');}
+    const rd=e.target.closest('[data-rad]'); if(rd){const g=rd.closest('[data-radgrp]')||rd.parentElement;g.querySelectorAll('[data-rad]').forEach(r=>r.classList.toggle('on',r===rd));}
+    const cr=e.target.closest('.chk-row'); if(cr){cr.classList.toggle('on');}
+    const t=e.target.closest('.subtab'); if(t){const wrap=t.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(x=>x.classList.toggle('active',x===t));const key=t.dataset.sub;const host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(p=>p.classList.toggle('active',p.dataset.subpanel===key));}
+  });
+</script>
+</body>
+</html>
