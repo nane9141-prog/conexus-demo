@@ -339,6 +339,7 @@
   .ind-meta em{font-style:normal;font-size:12px;font-weight:500;color:#737373;margin-right:6px}
   .ind-meta .d{width:1px;height:12px;background:var(--border)}
   .ind-meta b.orange{color:#ea580c;font-weight:600}
+  .ind-meta b.unfilled{color:var(--muted-fg);font-weight:500}
   .ind-bulk{display:flex;align-items:center;gap:8px;padding:6px 0;margin-bottom:8px}
   .ind-bulk .bl{font-size:12px;color:#737373;margin-right:2px}
   .ind-bulk .spacer{flex:1}
@@ -353,10 +354,12 @@
   .ovbox{width:18px;height:18px;border:1px solid var(--border);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;vertical-align:middle}
   .ovbox svg{width:12px;height:12px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;opacity:0}
   .ovbox.on svg{opacity:1}
-  .ovbox.on.for{background:#0071f3;border-color:#0071f3}
-  .ovbox.on.against{background:#7c3aed;border-color:#7c3aed}
-  .ovbox.on.abs{background:#a3a3a3;border-color:#a3a3a3}
-  .ovbox.on.neu{background:#a3a3a3;border-color:#a3a3a3}
+  .ovbox.on{background:#171717;border-color:#171717}
+  .btn-primary:disabled{opacity:.5;cursor:not-allowed}
+  .ind-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:360px;border:1px dashed var(--border);border-radius:12px;background:#fafafa;text-align:center}
+  .ind-empty svg{width:26px;height:26px;stroke:#a3a3a3;fill:none;stroke-width:1.5;margin-bottom:6px}
+  .ind-empty .e1{font-size:14px;font-weight:600;color:#737373}
+  .ind-empty .e2{font-size:13px;color:#a3a3a3;max-width:380px;line-height:1.5}
   table.tbl tr.grow td{background:#fafafa;font-weight:600}
   table.tbl tr.vrow.active td{background:#eaf3ff}
   table.tbl td.mi{color:#ea580c}
@@ -383,6 +386,13 @@
           <button class="btn-primary" id="btnSave"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>저장</button>
         </div>
 
+        <div id="emptyState" class="ind-empty">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <div class="e1">주주를 선택해 주세요</div>
+          <div class="e2">상단 검색창에서 주주명 또는 주주번호로 검색해 선택하면 개별 행사내역을 입력할 수 있습니다.</div>
+        </div>
+        <div id="detail" style="display:none">
+
         <div class="ind-info">
           <div class="ind-top">
             <div class="ind-name" id="indName">사립학교교직원연금공단</div>
@@ -391,7 +401,7 @@
           <div class="ind-meta">
             <span><em>주주번호</em><b id="indNo">6805111</b></span><span class="d"></span>
             <span><em>실질주주</em><span id="indReal">사립학교교직원연금공단</span></span><span class="d"></span>
-            <span><em>행사방식</em><b class="orange" id="chWay">서면위임(자사)</b></span><span class="d"></span>
+            <span><em>행사방식</em><b class="unfilled" id="chWay">미입력</b></span><span class="d"></span>
             <span><em>행사가능의결권</em><b id="indHold">12,500,000</b>주</span><span class="d"></span>
             <span><em>미행사</em><b id="indUn">12,500,000</b>주</span>
           </div>
@@ -408,7 +418,7 @@
 
         <div class="tbl-wrap" id="indGrid">
           <table class="tbl">
-            <thead><tr><th style="width:96px">의안번호</th><th>의안명</th><th class="num">총행사가능의결권</th><th class="num">행사가능의결권</th><th class="num">미행사의결권</th><th class="ophead"><span class="ophh"><svg class="hicon for" viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:#0071f3;stroke-width:2"><path d="M20 6 9 17l-5-5"/></svg>찬성 <span class="kbd">1</span></span></th><th class="ophead"><span class="ophh"><svg class="hicon against" viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:#7c3aed;stroke-width:2"><path d="M18 6 6 18M6 6l12 12"/></svg>반대 <span class="kbd">2</span></span></th><th class="ophead"><span class="ophh">기권 <span class="kbd">3</span></span></th><th class="ophead"><span class="ophh">중립 <span class="kbd">4</span></span></th></tr></thead>
+            <thead><tr><th style="width:96px">의안번호</th><th>의안명</th><th class="num" style="width:118px">총행사가능의결권</th><th class="num" style="width:118px">행사가능의결권</th><th class="num" style="width:118px">미행사의결권</th><th class="ophead" style="width:56px"><span class="ophh"><svg class="hicon for" viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:#0071f3;stroke-width:2"><path d="M20 6 9 17l-5-5"/></svg>찬성 <span class="kbd">1</span></span></th><th class="ophead" style="width:56px"><span class="ophh"><svg class="hicon against" viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:#7c3aed;stroke-width:2"><path d="M18 6 6 18M6 6l12 12"/></svg>반대 <span class="kbd">2</span></span></th><th class="ophead" style="width:56px"><span class="ophh">기권 <span class="kbd">3</span></span></th><th class="ophead" style="width:56px"><span class="ophh">중립 <span class="kbd">4</span></span></th></tr></thead>
             <tbody>
                   <tr class="vrow"><td>제1호</td><td>재무제표 승인의 건</td><td class="num">12,500,000</td><td class="num">12,500,000</td><td class="num mi" data-mi>12,500,000</td><td class="c"><span class="ovbox for" data-op="for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></td><td class="c"><span class="ovbox against" data-op="against"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></td><td class="c"><span class="ovbox abs" data-op="abs"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></td><td class="c"><span class="ovbox neu" data-op="neu"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span></td></tr>
                   <tr class="grow"><td>제2호</td><td>정관 일부 변경의 건</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="c"></td><td class="c"></td><td class="c"></td><td class="c"></td></tr>
@@ -429,6 +439,7 @@
         <div class="ind-foot">
           <span>총 <b>9</b>개 의안 · 입력 <b id="indDone">0</b>개</span>
           <div class="hbtns"><button class="btn-out" id="btnCancel">취소</button><button class="btn-dark" id="btnSave2">저장</button></div>
+        </div>
         </div>
         <div class="legendbar">단축키<span class="sep"></span>일괄 <span class="kbd">A</span>찬성 <span class="kbd">D</span>반대 <span class="kbd">F</span>기권 <span class="kbd">N</span>중립<span class="sep"></span>선택 행 <span class="kbd">1</span>찬성 <span class="kbd">2</span>반대 <span class="kbd">3</span>기권 <span class="kbd">4</span>중립 <span class="kbd">R</span>미행사<span class="sep"></span><span class="kbd">C</span> 취소 <span class="kbd">S</span> 저장 <span class="kbd">/</span> 주주 검색</div>
       </div>
@@ -490,11 +501,15 @@
              '투표':{title:'서면투표',       way:'서면투표'} };
     var p=new URLSearchParams(location.search); var chk=p.get('ch'); var ch=CH[chk]||CH['자사'];
     document.getElementById('chTitle').textContent=ch.title;
-    document.getElementById('chWay').textContent=ch.way;
 
+    var chWayEl=document.getElementById('chWay');
+    var saveBtns=['btnSave','btnSave2'].map(function(id){return document.getElementById(id);});
+    function setSaveEnabled(on){ saveBtns.forEach(function(b){ if(b) b.disabled=!on; }); }
     function back(){ location.href='paper-records.html'; }
-    ['btnCancel'].forEach(function(id){var e=document.getElementById(id); if(e) e.addEventListener('click',back);});
-    ['btnSave','btnSave2'].forEach(function(id){var e=document.getElementById(id); if(e) e.addEventListener('click',back);});
+    function save(){ if(document.getElementById('detail').style.display==='none') return; chWayEl.textContent=ch.way; chWayEl.classList.remove('unfilled'); }
+    var cb=document.getElementById('btnCancel'); if(cb) cb.addEventListener('click',back);
+    saveBtns.forEach(function(b){ if(b) b.addEventListener('click',save); });
+    setSaveEnabled(false);
 
     var grid=document.getElementById('indGrid');
     var vrows=Array.prototype.slice.call(grid.querySelectorAll('tbody tr.vrow'));
@@ -551,7 +566,7 @@
       if(BULK.hasOwnProperty(k)){ e.preventDefault(); vrows.forEach(function(r){ setOp(r,BULK[k]); }); return; }
       if(ROW.hasOwnProperty(k)){ e.preventDefault(); if(active<0) setActive(0,true); setOp(vrows[active],ROW[k]); if(k!=='r') setActive(active+1,true); return; }
       if(k==='c'){ e.preventDefault(); back(); return; }   // 취소
-      if(k==='s'){ e.preventDefault(); back(); return; }   // 저장
+      if(k==='s'){ e.preventDefault(); save(); return; }   // 저장
     });
 
     // 집중투표: 표수 입력 → 남은 표수 감소 · 남은 표수 클릭 시 배정
@@ -643,6 +658,10 @@
       document.getElementById('indNo').textContent=x.no;
       document.getElementById('indHold').textContent=x.h;
       vrows.forEach(function(r){ var t=r.children; if(t[2])t[2].textContent=x.h; if(t[3])t[3].textContent=x.h; setOp(r,'none'); });
+      chWayEl.textContent='미입력'; chWayEl.classList.add('unfilled');
+      document.getElementById('emptyState').style.display='none';
+      document.getElementById('detail').style.display='block';
+      setSaveEnabled(true);
       sh.value=''; closePop(); setActive(0,false);
     }
     sh.addEventListener('focus',openPop);
