@@ -199,18 +199,18 @@
   .sheet-hd{display:flex;flex-direction:column;gap:2px;padding-right:64px}
   .sheet-t{font-size:16px;font-weight:600;color:#0a0a0a}
   .sheet-d{font-size:12px;color:#737373}
-  .sheet-body{flex:1;overflow:auto;display:flex;flex-direction:column;gap:24px}
+  .sheet-body{flex:1;overflow:auto;display:flex;flex-direction:column;gap:20px}
   .sh-namerow{display:flex;align-items:center;gap:8px}
   .sh-name{flex:1;font-size:14px;font-weight:600;color:#0a0a0a}
   .sh-card{background:#F5F5F5;border-radius:10px;padding:12px}
   .sh-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   .sh-field .k{font-size:12px;font-weight:600;color:#737373;margin-bottom:4px}
   .sh-field .v{font-size:14px;color:#0a0a0a}
-  .sh-tlh{font-size:14px;font-weight:600;color:#0a0a0a;margin-bottom:-16px}
+  .sh-sec{display:flex;flex-direction:column;gap:12px}
+  .sh-tlh{font-size:14px;font-weight:600;color:#0a0a0a}
   .sh-tl{display:flex;flex-direction:column;gap:8px}
-  .sh-tl .row{display:flex;gap:12px;padding:2px 0}
-  .sh-tl .dot{width:14px;height:14px;border-radius:50%;background:#E3E7E8;flex:none;margin-top:1px}
-  .sh-tl .dot.on{background:#0071F3}
+  .sh-tl .row{display:flex;gap:12px}
+  .sh-tl .dot{width:12px;height:12px;border-radius:50%;background:#D4D4D4;flex:none;margin-top:3px}
   .sh-tl .t1{font-size:14px;color:#0a0a0a}
   .sh-tl .t2{font-size:12px;color:#737373;margin-top:4px}
   .sheet-ft{display:flex;gap:8px}
@@ -434,7 +434,7 @@
             <div class="adlg-ov" id="apDlg"><div class="adlg"><div class="ah"><div class="amedia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5.5"/></svg></div><div style="width:100%"><div class="atitle">승인 처리하시겠습니까?</div><div class="adesc">선택한 신청 건을 참석 승인 처리합니다.</div></div></div><div class="af"><button class="btn" data-adlg-close>취소</button><button class="btn dark" id="apOk">승인</button></div></div></div>
             <div class="adlg-ov" id="rjDlg"><div class="rdlg"><div class="rh"><div class="rtitle">반려 처리하시겠습니까?</div><div class="rdesc">반려 사유를 입력해 주세요. 신청자에게 사유가 전달됩니다.</div></div><div class="rc"><label>반려 사유</label><textarea placeholder="반려 사유를 입력하세요"></textarea></div><div class="rf"><button class="btn" data-adlg-close>취소</button><button class="btn danger" id="rjOk">반려</button></div></div></div>
 
-            <div class="sheet-ov" id="atSheet"><div class="sheet"><button class="sheet-x" data-sheet-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button><button class="sheet-more" id="shMore" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button><div class="sheet-hd"><div class="sheet-t">참석자 상세</div><div class="sheet-d" id="shSub">신청 정보를 확인하고 승인 여부를 처리합니다.</div></div><div class="sheet-body"><div class="sh-namerow"><span class="sh-name" id="shName">-</span><span class="badge" id="shBadge">-</span></div><div class="sh-card"><div class="sh-grid"><div class="sh-field"><div class="k">유형</div><div class="v" id="shType">-</div></div><div class="sh-field"><div class="k">보유주식</div><div class="v" id="shHold">-</div></div><div class="sh-field"><div class="k">연락처</div><div class="v">010-2344-0900</div></div><div class="sh-field"><div class="k">이메일</div><div class="v">doji@irkudos.co.kr</div></div><div class="sh-field"><div class="k">신청일</div><div class="v">2026-07-12</div></div><div class="sh-field"><div class="k">입장코드</div><div class="v" style="color:#0071F3">EEGH-23498</div></div></div></div><div><div class="sh-tlh">처리 이력</div><div class="sh-tl" id="shTL" style="margin-top:16px"></div></div></div><div class="sheet-ft" id="shFoot"></div></div></div>
+            <div class="sheet-ov" id="atSheet"><div class="sheet"><button class="sheet-x" data-sheet-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button><button class="sheet-more" id="shMore" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button><div class="sheet-hd"><div class="sheet-t">참석자 상세</div><div class="sheet-d" id="shSub">신청 정보를 확인하고 승인 여부를 처리합니다.</div></div><div class="sheet-body"><div class="sh-namerow"><span class="sh-name" id="shName">-</span><span class="badge" id="shBadge">-</span></div><div class="sh-card"><div class="sh-grid"><div class="sh-field"><div class="k">유형</div><div class="v" id="shType">-</div></div><div class="sh-field"><div class="k">보유주식</div><div class="v" id="shHold">-</div></div><div class="sh-field"><div class="k">연락처</div><div class="v">010-2344-0900</div></div><div class="sh-field"><div class="k">이메일</div><div class="v">doji@irkudos.co.kr</div></div><div class="sh-field"><div class="k">신청일</div><div class="v">2026-07-12</div></div><div class="sh-field"><div class="k">입장코드</div><div class="v" style="color:#0071F3">EEGH-23498</div></div></div></div><div class="sh-sec"><div class="sh-tlh">처리 이력</div><div class="sh-tl" id="shTL"></div></div></div><div class="sheet-ft" id="shFoot"></div></div></div>
           </div></div>
 
 
@@ -679,7 +679,7 @@
     else if(st==='반려') log.push(['반려 처리','2026-07-17 15:58 · 박지용']);
     else if(st==='보완요청') log.push(['보완 요청','2026-07-17 15:58 · 박지용']);
     log.push(['신청 접수','2026-07-12 09:20']);
-    document.getElementById('shTL').innerHTML=log.map(function(r,i){return '<div class="row"><span class="dot'+(i===0&&st!=='승인대기'?' on':'')+'"></span><div><div class="t1">'+r[0]+'</div><div class="t2">'+r[1]+'</div></div></div>';}).join('');
+    document.getElementById('shTL').innerHTML=log.map(function(r,i){return '<div class="row"><span class="dot"></span><div><div class="t1">'+r[0]+'</div><div class="t2">'+r[1]+'</div></div></div>';}).join('');
     var ft=document.getElementById('shFoot'), mo=document.getElementById('shMore'), sub=document.getElementById('shSub');
     if(st==='승인대기'||st==='보완요청'){
       sub.textContent='신청 정보를 확인하고 승인 여부를 처리합니다.';
