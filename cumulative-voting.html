@@ -27,7 +27,7 @@
   .search input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
   .search .ic{width:16px;height:16px;color:var(--muted-fg)}
   .page-title{font-size:18px;font-weight:600;color:#0a0a0a}
-  .content{gap:8px}
+  .content{gap:16px}
   .page-sub{font-size:13px;color:var(--muted-fg);margin-top:4px}
   .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
   .stat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px}
@@ -42,16 +42,16 @@
   .mchip.on .c{background:rgba(255,255,255,.25);color:#fff}
   .mtb{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px}
   .mtb-r{display:flex;gap:6px;align-items:center}
-  .mbtn{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border:1px solid var(--border);border-radius:9px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap}
+  .mbtn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:1px solid var(--border);border-radius:10px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap}
   .mbtn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
   .mbtn.dark{background:#171717;border-color:#171717;color:#fff}
-  .mbtn.ic{padding:0;width:38px;justify-content:center}
+  .mbtn.ic{padding:0;width:36px;justify-content:center}
   .mwrap{margin-top:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
-  .mscroll{overflow:auto;max-height:calc(100vh - 320px)}
+  .mscroll{overflow:visible;max-height:none}
   table.mtbl{width:100%;border-collapse:collapse;font-size:14px}
-  table.mtbl thead th{position:sticky;top:0;background:#fff;z-index:1;padding:14px 16px;text-align:left;font-weight:500;color:#737373;font-size:13px;white-space:nowrap;border-bottom:1px solid var(--border)}
+  table.mtbl thead th{position:sticky;top:0;background:#fafafa;z-index:1;padding:10px 14px;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;white-space:nowrap;border-bottom:1px solid var(--border)}
   table.mtbl thead th.n{text-align:right}table.mtbl thead th.c{text-align:center}
-  table.mtbl tbody td{padding:15px 16px;border-bottom:1px solid #f2f2f2;color:#0a0a0a;white-space:nowrap;font-variant-numeric:tabular-nums}
+  table.mtbl tbody td{padding:12px 14px;border-bottom:1px solid #f0f0f0;color:#0a0a0a;white-space:nowrap;font-variant-numeric:tabular-nums}
   table.mtbl tbody td.n{text-align:right}table.mtbl tbody td.c{text-align:center}
   table.mtbl tbody tr:hover td{background:#fafafa}
   .mmut{color:#a3a3a3}
@@ -83,7 +83,7 @@
   .cbanner{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:0;padding:16px 18px;border:1px solid var(--border);border-radius:12px;background:#fafafa}
   .cb-l{display:flex;align-items:center;gap:12px}
   .cb-l>svg{width:18px;height:18px;fill:none;stroke:#525252;stroke-width:1.8}
-  .cb-t{font-size:15px;font-weight:600;color:#0a0a0a}
+  .cb-t{font-size:14px;font-weight:600;color:#0a0a0a}
   .cb-d{font-size:13px;color:#737373;margin-top:2px}
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
 </style>
@@ -193,10 +193,10 @@
       <button class="iconbtn md" title="변경이력"><i class="ph ph-clock-counter-clockwise" style="font-size:16px"></i></button>
     </div>
     <div class="scroll">
-      <div class="content" style="max-width:1100px;margin:0 auto;width:100%">
+      <div class="content" style="width:100%">
         <div class="st-head"><div><div class="page-title">집중 투표 관리</div><div class="page-sub">중복의결권 확정 후 집중투표에서 동일한 의안에 찬성한 주주 그룹별로 표 분배를 할 수 있습니다.</div></div></div>
         <div class="ctabs2"><button class="ct2 on">자사 표 분배</button><button class="ct2">타사 표 분배</button></div>
-        <div class="cbanner"><div class="cb-l"><i class="ph ph-gear" style="font-size:16px"></i><div><div class="cb-t">분배 방식 설정</div><div class="cb-d">분배 방식 선택 후 집중투표 표 분배 가능</div></div></div><button class="mbtn dark">설정</button></div>
+        <div class="cbanner"><div class="cb-l"><i class="ph ph-gear" style="font-size:16px"></i><div><div class="cb-t">주주별 비례 분배 방식</div><div class="cb-d">분배 방식 선택 후 집중투표 표 분배 가능</div></div></div><button class="mbtn dark">설정</button></div>
         <div class="mwrap"><div class="mscroll"><table class="mtbl"><thead><tr><th>의안번호</th><th>의안명</th><th class="n">찬성 의안 번호</th><th class="n">분배 가능 주주</th><th class="n">분배 가능 의결권</th><th class="n">미분배의결권</th><th>분배 여부</th><th>분배 완료 일시</th></tr></thead><tbody><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1</td><td class="n">1,200</td><td class="n">285,041</td><td class="n mmut">-</td><td><span class="mmut">분배완료</span></td><td>2026-07-27 13:40</td></tr><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1, 2</td><td class="n">400</td><td class="n">139,182</td><td class="n">139,182</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1, 2, 4</td><td class="n">100</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1, 3</td><td class="n">80</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1, 4</td><td class="n">60</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">2</td><td class="n">50</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">2, 3</td><td class="n">1,200</td><td class="n">185,041</td><td class="n">185,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">2, 3, 4</td><td class="n">2,000</td><td class="n">285,041</td><td class="n">285,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">3</td><td class="n">100</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">4</td><td class="n">3</td><td class="n">5,041</td><td class="n">5,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr></tbody></table></div></div>
       </div>
     </div>
