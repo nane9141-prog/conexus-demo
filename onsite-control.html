@@ -52,7 +52,8 @@
   .seg .ocb:last-child{border-radius:0 8px 8px 0;border-left:none}
   .seg .ocb.on{background:#171717;border-color:#171717;color:#fff}
   .otimer{display:inline-flex;align-items:center;gap:6px;padding:0 6px;font-variant-numeric:tabular-nums;font-weight:500;font-size:14px;color:#171717}
-  .otimer .dot{width:9px;height:9px;border-radius:50%;background:#fe3a4b}
+  .otimer .dot{width:9px;height:9px;border-radius:50%;background:#fe3a4b;animation:otblink 1.3s ease-in-out infinite}
+  @keyframes otblink{0%,70%,100%{opacity:1}35%{opacity:.15}}
   /* metrics */
   .oc-metrics{display:flex;flex:none;border-bottom:1px solid var(--border)}
   .oc-mc{flex:1;min-width:0;padding:12px 16px;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:2px}
@@ -123,7 +124,9 @@
   .mb .n{font-size:16px;font-weight:600;color:#0a0a0a}
   .mb .l{font-size:11px;color:#737373;margin-top:2px}
   /* 시청자 관리 */
-  .vkpi{display:flex;gap:10px;padding:12px;border-bottom:1px solid var(--border);flex:none}
+  .vwwrap{display:flex;flex-direction:column;gap:12px;height:100%}
+  .vwwrap .apanel{flex:1;min-height:0}
+  .vkpi{display:flex;gap:10px;flex:none}
   .vkpi .k{flex:1;min-width:0;border:1px solid var(--border);border-radius:8px;padding:10px 12px;background:#fafafa}
   .vkpi .k .kl{font-size:12px;color:#737373}
   .vkpi .k .kv{margin-top:4px;font-size:18px;font-weight:700;color:#0a0a0a;font-variant-numeric:tabular-nums}
@@ -644,26 +647,28 @@
         </div>
         <!-- 시청자 관리 -->
         <div class="oc-panel" data-panel="viewer">
-          <div class="apanel vsheet">
+          <div class="vwwrap">
             <div class="vkpi">
               <div class="k live"><div class="kl">현재 온라인 접속</div><div class="kv" id="vwOnline">0<small> 명</small></div></div>
               <div class="k"><div class="kl">누적 접속</div><div class="kv">18,204<small> 명</small></div></div>
               <div class="k"><div class="kl">온라인 참석 의결권</div><div class="kv">63,120,000<small> 주</small></div></div>
               <div class="k"><div class="kl">평균 시청 시간</div><div class="kv">42<small> 분</small></div></div>
             </div>
-            <div class="vtoolbar">
-              <div class="vseg"><button class="on" data-vw="all">전체</button><button data-vw="on">온라인</button><button data-vw="off">이탈</button></div>
-              <div class="vtools">
-                <button class="vbtn"><i class="ph ph-megaphone-simple" style="font-size:16px"></i>전체 안내 전송</button>
-                <button class="vbtn"><i class="ph ph-download-simple" style="font-size:16px"></i>내보내기</button>
-                <button class="vbtn ic"><i class="ph ph-funnel" style="font-size:16px"></i></button>
+            <div class="apanel vsheet">
+              <div class="vtoolbar">
+                <div class="vseg"><button class="on" data-vw="all">전체</button><button data-vw="on">온라인</button><button data-vw="off">이탈</button></div>
+                <div class="vtools">
+                  <button class="vbtn"><i class="ph ph-megaphone-simple" style="font-size:16px"></i>전체 안내 전송</button>
+                  <button class="vbtn"><i class="ph ph-download-simple" style="font-size:16px"></i>다운로드</button>
+                  <button class="vbtn ic"><i class="ph ph-funnel" style="font-size:16px"></i></button>
+                </div>
               </div>
+              <div class="vscroll"><table class="vtbl"><thead><tr>
+                <th class="l">주주명</th><th class="c">주주구분</th><th>보유주식수</th>
+                <th class="c">접속상태</th><th class="c">접속시각</th><th class="l">시청 기기</th>
+                <th class="c">전자투표</th><th class="c">관리</th>
+              </tr></thead><tbody id="vwBody"></tbody></table></div>
             </div>
-            <div class="vscroll"><table class="vtbl"><thead><tr>
-              <th class="l">주주명</th><th class="c">주주구분</th><th>보유주식수</th>
-              <th class="c">접속상태</th><th class="c">접속시각</th><th class="l">시청 기기</th>
-              <th class="c">전자투표</th><th class="c">관리</th>
-            </tr></thead><tbody id="vwBody"></tbody></table></div>
           </div>
         </div>
       </div>
@@ -1208,7 +1213,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       var ev=x.ev==='완료'?'<span class="stbadge blue"><span class="d"></span>완료</span>':'<span class="stbadge gray"><span class="d"></span>미투표</span>';
       var dev='<span class="vdev">'+(DEVICE[x.dev]||'')+x.dev+'</span>';
       var mng=x.on?'<button class="vlink danger" type="button">접속 종료</button>':'<button class="vlink" type="button" disabled>-</button>';
-      return '<tr><td class="l">'+x.nm+'</td><td class="c">'+tg(x.t)+'</td><td>'+cm(x.sh)+'</td>'
+      return '<tr><td class="l">'+x.nm+'</td><td class="c">'+x.t+'</td><td>'+cm(x.sh)+'</td>'
         +'<td class="c">'+stat+'</td><td class="c mut">'+x.tm+'</td><td class="l">'+dev+'</td>'
         +'<td class="c">'+ev+'</td><td class="c">'+mng+'</td></tr>';
     }).join('');
