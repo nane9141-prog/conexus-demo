@@ -126,6 +126,10 @@
   .badge-exp{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:500;color:#171717}
   .badge-exp.pass{background:#ebf4ff}
   .badge-exp.elect{background:#ebf4ff}
+  .badge-exp.rej{background:#f5f5f5;color:#737373}
+  .vr-sub td{background:#fafafb}
+  .vr-sub td:first-child{padding-left:24px;color:var(--muted-fg)}
+  .vr-mut{color:var(--muted-fg)}
   .opb{display:inline-flex;align-items:center;gap:2px;height:20px;padding:2px;border-radius:6px;font-size:12px;font-weight:500;color:#171717;background:transparent}
   .opb svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .opb.for svg{color:#0071f3}
@@ -328,7 +332,7 @@
       <button class="iconbtn md" title="변경이력"><svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></button>
     </div>
     <div class="scroll">
-      <div class="content" style="max-width:1200px;margin:0 auto;width:100%">
+      <div class="content" style="width:100%">
         <div class="vr-head">
           <div class="vr-tabs">
             <button class="vr-tab active" data-vt="status">사전 의결권 현황</button>
@@ -413,6 +417,10 @@
                   <tr><td>제2-2호</td><td>전자주주총회 도입 관련 변경</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">44.1%</td><td class="num">80.2%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
                   <tr><td>제2-3호</td><td>의결권 대리행사 수단 확대</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">44.1%</td><td class="num">80.2%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
                   <tr><td>제3-1호</td><td>집중투표 후보 4인 중 2인 선임의 건 <span class="ubadge secondary" style="margin-left:4px">집중투표</span></td><td class="num">952,423,928</td><td class="num">524,280,000</td><td class="num">18,450명</td><td class="num" colspan="2" style="text-align:center;color:var(--muted-fg)">후보별 집계 · 선임예정 2인 (김근수·진웅섭)</td><td><span class="badge-exp elect">선임 예상</span></td></tr>
+                  <tr class="vr-sub"><td>제3-1-1호</td><td>김근수 · 사외이사 후보</td><td class="num vr-mut">—</td><td class="num">410,471,124</td><td class="num vr-mut">—</td><td class="num" colspan="2" style="text-align:center">득표율 68.4%</td><td><span class="badge-exp elect">선임 예상</span></td></tr>
+                  <tr class="vr-sub"><td>제3-1-2호</td><td>진웅섭 · 사외이사 후보</td><td class="num vr-mut">—</td><td class="num">121,475,008</td><td class="num vr-mut">—</td><td class="num" colspan="2" style="text-align:center">득표율 20.2%</td><td><span class="badge-exp elect">선임 예상</span></td></tr>
+                  <tr class="vr-sub"><td>제3-1-3호</td><td>남상일 · 사외이사 후보</td><td class="num vr-mut">—</td><td class="num">58,810,427</td><td class="num vr-mut">—</td><td class="num" colspan="2" style="text-align:center">득표율 9.8%</td><td><span class="badge-exp rej">부결 예상</span></td></tr>
+                  <tr class="vr-sub"><td>제3-1-4호</td><td>박선화 · 사외이사 후보</td><td class="num vr-mut">—</td><td class="num">9,243,441</td><td class="num vr-mut">—</td><td class="num" colspan="2" style="text-align:center">득표율 1.6%</td><td><span class="badge-exp rej">부결 예상</span></td></tr>
                   <tr><td>제3-2호</td><td>감사위원이 되는 사외이사 선임의 건</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">43.8%</td><td class="num">79.6%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
                 </tbody>
               </table>
