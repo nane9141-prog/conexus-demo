@@ -49,6 +49,7 @@
   .pb-dt{display:flex;gap:4px}
   .pb-inp{box-sizing:border-box;height:32px;border:1px solid var(--border);border-radius:10px;padding:0 10px;background:#fff;font-family:inherit;font-size:14px;color:#0a0a0a;display:flex;align-items:center;gap:8px}
   .pb-inp.date{flex:1}.pb-inp.time{width:96px;justify-content:center}
+  .pb-cal{display:inline-flex;align-items:center;color:#737373;margin-left:auto}
   .pb-inp .val{flex:1}.pb-inp .cal{color:#737373;display:inline-flex}
   .pb-imgblk{display:flex;flex-direction:column;gap:8px}
   .pb-ib-t{font-size:12px;font-weight:600;color:#0a0a0a}
@@ -226,8 +227,8 @@
               <div class="pb-sec-t">권유기간 설정</div>
               <div class="pb-box">
                 <div class="pb-row">
-                  <div class="pb-fld"><label>시작 일시</label><div class="pb-dt"><div class="pb-inp date"><span class="val">2026-08-15</span><span class="cal"><i class="ph ph-calendar-blank" style="font-size:14px"></i></span></div><div class="pb-inp time"><span class="val">09:00</span></div></div></div>
-                  <div class="pb-fld"><label>행사 종료일</label><div class="pb-dt"><div class="pb-inp date"><span class="val">2026-08-30</span><span class="cal"><i class="ph ph-calendar-blank" style="font-size:14px"></i></span></div><div class="pb-inp time"><span class="val">17:00</span></div></div></div>
+                  <div class="pb-fld"><label>시작 일시</label><div class="pb-dt"><div class="pb-inp date"><span class="val">2026-08-15</span><span class="pb-cal"><i class="ph ph-calendar-blank" style="font-size:14px"></i></span></div><div class="pb-inp time"><span class="val">09:00</span></div></div></div>
+                  <div class="pb-fld"><label>행사 종료일</label><div class="pb-dt"><div class="pb-inp date"><span class="val">2026-08-30</span><span class="pb-cal"><i class="ph ph-calendar-blank" style="font-size:14px"></i></span></div><div class="pb-inp time"><span class="val">17:00</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -309,6 +310,26 @@
         var body=nav.parentElement.querySelector('.st-body')||document;
         body.querySelectorAll('.st-tab').forEach(function(p){p.classList.toggle('active',p.dataset.panel===tab);});
       });
+    });
+  });
+
+  // 저장 -> 현재 단계 완료 체크 + 다음 단계 이동 (전자주주총회 관리와 동일 구성)
+  var PB_TABS=['basic','faq'];
+  function pbSwitch(id){
+    var nav=document.querySelector('.st-nav'); if(!nav) return;
+    nav.querySelectorAll('.st-item').forEach(function(i){i.classList.toggle('active',i.dataset.tab===id);});
+    var body=nav.parentElement.querySelector('.st-body')||document;
+    body.querySelectorAll('.st-tab').forEach(function(p){p.classList.toggle('active',p.dataset.panel===id);});
+    var sc=document.querySelector('.scroll'); if(sc) sc.scrollTop=0;
+  }
+  document.querySelectorAll('.pb-save').forEach(function(b){
+    if(b.textContent.trim()!=='저장') return;
+    b.addEventListener('click',function(){
+      var nav=document.querySelector('.st-nav'); if(!nav) return;
+      var cur=nav.querySelector('.st-item.active'); if(cur) cur.classList.add('done');
+      if(window.cxToast)cxToast('저장되었습니다.');
+      var idx=cur?PB_TABS.indexOf(cur.dataset.tab):-1;
+      if(idx>=0&&idx<PB_TABS.length-1){ pbSwitch(PB_TABS[idx+1]); }
     });
   });
   // toggles + subtabs
