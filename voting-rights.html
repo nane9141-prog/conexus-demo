@@ -68,6 +68,7 @@
   .legend .dot{width:8px;height:8px;border-radius:2px;flex:none}
   .legend .pct{margin-left:auto;color:var(--muted-fg);font-size:12px}
   table.tbl td.num,table.tbl th.num{text-align:right}
+  table.tbl.agex td:first-child{white-space:nowrap}
   table.tbl td.c,table.tbl th.c{text-align:center}
   .cbar{display:inline-flex;align-items:center;gap:8px;min-width:120px}
   .cbar .track{flex:1;height:6px;border-radius:9999px;background:#f0f0f0;overflow:hidden}
@@ -420,9 +421,9 @@
           <div class="card tblcard" style="padding:0">
             <div class="sec-head"><div class="h">의안별 행사 현황</div><div class="d">사전 행사 의결권 262,140,000주 기준 · 찬성률은 확정 개표와 동일한 기준을 적용한 예상치입니다.</div></div>
             <div class="tbl-wrap" style="border:none;border-top:1px solid var(--border);border-radius:0">
-              <table class="tbl">
+              <table class="tbl agex">
                 <thead><tr>
-                  <th style="width:88px">의안번호</th>
+                  <th style="width:96px">의안번호</th>
                   <th>의안명</th>
                   <th class="num">총 행사가능의결권</th>
                   <th class="num">행사의결권</th>
@@ -437,10 +438,10 @@
                   <tr><td>제2-2호</td><td>전자주주총회 도입 관련 변경</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">44.1%</td><td class="num">80.2%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
                   <tr><td>제2-3호</td><td>의결권 대리행사 수단 확대</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">44.1%</td><td class="num">80.2%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
                   <tr><td>제3-1호</td><td>집중투표 후보 4인 중 2인 선임의 건 <span class="ubadge secondary" style="margin-left:4px">집중투표</span></td><td class="num">952,423,928</td><td class="num">524,280,000</td><td class="num">18,450명</td><td class="num"></td><td class="num"></td><td></td></tr>
-                  <tr><td>제3-1-1호</td><td>사외이사 김근수 선임의 건</td><td class="num vr-mut">—</td><td class="num">410,471,124</td><td class="num vr-mut">—</td><td class="num" colspan="2" style="text-align:center">68.4%</td><td><span class="badge-exp elect">선임 예상</span></td></tr>
-                  <tr><td>제3-1-2호</td><td>사외이사 진웅섭 선임의 건</td><td class="num vr-mut">—</td><td class="num">121,475,008</td><td class="num vr-mut">—</td><td class="num" colspan="2" style="text-align:center">20.2%</td><td><span class="badge-exp elect">선임 예상</span></td></tr>
-                  <tr><td>제3-1-3호</td><td>사외이사 남상일 선임의 건</td><td class="num vr-mut">—</td><td class="num">58,810,427</td><td class="num vr-mut">—</td><td class="num" colspan="2" style="text-align:center">9.8%</td><td><span class="badge-exp rej">부결 예상</span></td></tr>
-                  <tr><td>제3-1-4호</td><td>사외이사 박선화 선임의 건</td><td class="num vr-mut">—</td><td class="num">9,243,441</td><td class="num vr-mut">—</td><td class="num" colspan="2" style="text-align:center">1.6%</td><td><span class="badge-exp rej">부결 예상</span></td></tr>
+                  <tr><td>제3-1-1호</td><td>사외이사 김근수 선임의 건</td><td class="num vr-mut">-</td><td class="num">410,471,124</td><td class="num vr-mut">-</td><td class="num" colspan="2">68.4%</td><td><span class="badge-exp elect">선임 예상</span></td></tr>
+                  <tr><td>제3-1-2호</td><td>사외이사 진웅섭 선임의 건</td><td class="num vr-mut">-</td><td class="num">121,475,008</td><td class="num vr-mut">-</td><td class="num" colspan="2">20.2%</td><td><span class="badge-exp elect">선임 예상</span></td></tr>
+                  <tr><td>제3-1-3호</td><td>사외이사 남상일 선임의 건</td><td class="num vr-mut">-</td><td class="num">58,810,427</td><td class="num vr-mut">-</td><td class="num" colspan="2">9.8%</td><td><span class="badge-exp rej">부결 예상</span></td></tr>
+                  <tr><td>제3-1-4호</td><td>사외이사 박선화 선임의 건</td><td class="num vr-mut">-</td><td class="num">9,243,441</td><td class="num vr-mut">-</td><td class="num" colspan="2">1.6%</td><td><span class="badge-exp rej">부결 예상</span></td></tr>
                   <tr><td>제3-2호</td><td>감사위원이 되는 사외이사 선임의 건</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">43.8%</td><td class="num">79.6%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
                 </tbody>
               </table>
@@ -494,7 +495,7 @@
           <div class="card tblcard" style="padding:0">
             <div class="sec-head"><div class="h">실시간 주주 확보 현황</div></div>
             <div class="tbl-wrap" style="border:none;border-top:1px solid var(--border);border-radius:0">
-              <table class="tbl">
+              <table class="tbl agex">
                 <thead><tr><th>수집일시</th><th>주주명</th><th class="num">보유주식수</th><th class="c">생년월일</th><th class="num">나이</th><th class="c">1</th><th class="c">2-1</th><th class="c">2-2</th><th class="c">2-3</th><th class="c">3-1</th><th class="c">3-2</th></tr></thead>
                 <tbody>
                 <tr><td class="mut">03-22 10:14</td><td>김*수</td><td class="num">19,961,925주</td><td class="mut c">19680511</td><td class="num">58</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
