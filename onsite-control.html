@@ -423,10 +423,10 @@
   <aside class="oc-rail">
     <div class="oc-logo-row"><div class="oc-logo">C</div><span class="oc-wm">CONEXUS</span></div>
     <nav class="oc-nav">
-      <a href="shareholders.html" title="명부관리"><svg class="ic" viewBox="0 0 24 24"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span class="oc-lb">명부관리</span></a>
+      <a href="roster.html" title="대시보드"><svg class="ic" viewBox="0 0 24 24"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span class="oc-lb">대시보드</span></a>
       <a href="attendees.html" title="참석자 관리"><svg class="ic" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg><span class="oc-lb">참석자 관리</span></a>
-      <a class="on" href="onsite-control.html" title="현장 제어"><svg class="ic" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22V15"/></svg><span class="oc-lb">현장 제어</span></a>
-      <a href="tally.html" title="집계"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span class="oc-lb">집계</span></a>
+      <a class="on" href="onsite-control.html" title="주주총회 현장 제어"><svg class="ic" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22V15"/></svg><span class="oc-lb">주주총회 현장 제어</span></a>
+      <a href="tally.html" title="주주총회 집계"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span class="oc-lb">주주총회 집계</span></a>
     </nav>
     <div class="oc-foot"><span class="oc-av">강</span><span class="oc-lb">강도현</span></div>
   </aside>
@@ -457,7 +457,7 @@
           <span class="tsep"></span>
           <span class="otimer"><span class="dot"></span><span id="ocTimer">00:10:12</span></span>
           <button class="ocb gray" id="btnPause"><svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>정회</button>
-          <button class="ocb red" id="btnClose"><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z"/><path d="M12 8v4l2 2"/><path d="m16 19 2 2 4-4"/></svg>폐회</button>
+          <button class="ocb red" id="btnClose"><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z"/><path d="M12 8v4l2 2"/><path d="m16 19 2 2 4-4"/></svg>폐회문</button>
           <button class="ocb gray icon" title="더보기"><i class="ph ph-dots-three-vertical" style="font-size:16px"></i></button>
         </div>
       </div>
@@ -1032,7 +1032,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   var ov=document.getElementById("closeOvl"), bt=document.getElementById("btnClose");
   var cc=document.getElementById("closeCancel"), cf=document.getElementById("closeConfirm");
   function close(){ ov.classList.remove("on"); }
-  if(bt) bt.addEventListener("click",function(){ ov.classList.add("on"); });
+  if(bt) bt.addEventListener("click",function(){ window.location.href="closing.html"; });
   if(cc) cc.addEventListener("click",close);
   if(cf) cf.addEventListener("click",close);
   ov.addEventListener("click",function(e){ if(e.target===ov) close(); });
