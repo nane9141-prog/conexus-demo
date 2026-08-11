@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CONEXUS · 대시보드</title>
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="conexus.css">
+<style>
+  .content{display:flex;flex-direction:column;gap:16px;padding-bottom:40px}
+  /* title */
+  .db-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+  .db-name{font-size:22px;font-weight:700;color:#0a0a0a;letter-spacing:-.01em}
+  .db-sub{font-size:13px;color:#737373;margin-top:6px}
+  .db-top-r{display:flex;align-items:center;gap:10px;flex:none}
+  .db-dday{height:32px;display:inline-flex;align-items:center;padding:0 14px;border-radius:9999px;background:#0a0a0a;color:#fff;font-weight:700;font-size:14px}
+  .db-memo-btn{height:32px;display:inline-flex;align-items:center;gap:6px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;font-family:inherit;font-size:13px;color:#0a0a0a;cursor:pointer}
+  .db-memo-btn:hover{background:var(--muted)}
+  /* tabs */
+  .db-tabs{display:inline-flex;gap:2px;background:#f1f1f2;border-radius:10px;padding:3px;align-self:flex-start}
+  .db-tab{height:34px;padding:0 22px;border:none;background:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:600;color:#737373;cursor:pointer}
+  .db-tab.active{background:#fff;color:#0a0a0a;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+  .db-panel{display:none;flex-direction:column;gap:16px}
+  .db-panel.active{display:flex}
+  /* section card */
+  .db-card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
+  .db-card-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .db-card-t{font-size:15px;font-weight:600;color:#0a0a0a}
+  .db-card-d{font-size:12px;color:#a3a3a3;margin-top:2px;font-weight:400}
+  .db-lnk{color:#0071f3;font-size:12px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:3px;text-decoration:none}
+  .db-grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .db-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  /* summary cards */
+  .db-sum{display:grid;gap:16px}
+  .db-sum.n2{grid-template-columns:1fr 1fr}
+  .db-sum.n3{grid-template-columns:repeat(3,1fr)}
+  .db-sc{border:1px solid var(--border);border-radius:14px;background:#fff;padding:18px 20px}
+  .db-sc .k{font-size:13px;color:#525252;font-weight:500}
+  .db-sc .v{font-size:26px;font-weight:700;color:#0a0a0a;margin-top:8px;font-variant-numeric:tabular-nums}
+  .db-sc .v .u{font-size:15px;font-weight:600;margin-left:2px}
+  .db-sc .s{font-size:12px;color:#a3a3a3;margin-top:6px}
+  .db-sc.hl{background:#0a0a0a;border-color:#0a0a0a}
+  .db-sc.hl .k{color:#d4d4d4}.db-sc.hl .v{color:#fff}.db-sc.hl .s{color:#a3a3a3}
+  /* law banner */
+  .db-law{border:1px solid var(--border);border-radius:14px;background:#fff;overflow:hidden}
+  .db-law-h{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer}
+  .db-law-ic{width:32px;height:32px;flex:none;border-radius:8px;background:#eff4ff;color:#0071f3;display:flex;align-items:center;justify-content:center;font-size:18px}
+  .db-law-tt{font-size:14px;font-weight:600;color:#0a0a0a}
+  .db-law-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+  .db-ltag{font-size:11px;color:#525252;background:#f4f4f5;border-radius:6px;padding:2px 8px}
+  .db-law-cnt{margin-left:auto;flex:none;font-size:12px;color:#737373;display:flex;align-items:center;gap:8px}
+  .db-law-cnt .ph{transition:transform .18s}
+  .db-law.open .db-law-cnt .ph{transform:rotate(180deg)}
+  .db-law-body{display:none;border-top:1px solid #f0f0f0;padding:6px 18px 14px}
+  .db-law.open .db-law-body{display:block}
+  .db-law-item{padding:14px 0;border-bottom:1px solid #f4f4f5}
+  .db-law-item:last-child{border-bottom:none}
+  .db-law-date{font-size:12px;color:#0071f3;font-weight:600}
+  .db-law-name{font-size:14px;font-weight:600;color:#0a0a0a;margin:4px 0 6px}
+  .db-law-desc{font-size:13px;color:#525252;line-height:1.6}
+  .db-law-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+  .db-chip{font-size:12px;color:#0a0a0a;background:#f4f4f5;border:1px solid var(--border);border-radius:9999px;padding:3px 10px}
+  /* info list */
+  .db-info{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px}
+  .db-info .row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #f4f4f5;font-size:13px}
+  .db-info .row .lb{color:#737373}.db-info .row .vl{color:#0a0a0a;font-weight:500;text-align:right}
+  /* service status */
+  .db-svc{display:flex;flex-direction:column;gap:10px}
+  .db-svc .row{display:flex;align-items:center;justify-content:space-between;font-size:13px}
+  .db-svc .row .lb{color:#404040}
+  .db-svc .tag{font-size:12px;font-weight:600;padding:3px 10px;border-radius:9999px}
+  .db-svc .tag.on{background:#eff4ff;color:#0071f3}
+  .db-svc .tag.off{background:#f4f4f5;color:#a3a3a3}
+  .db-svc .tag.prov{background:#f0fdf4;color:#16a34a}
+  /* prep steps */
+  .db-prep-h{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .db-prep-rate{font-size:13px;color:#737373}
+  .db-prep-rate b{color:#0a0a0a}
+  .db-steps{display:flex;flex-direction:column}
+  .db-step{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #f4f4f5;font-size:13px}
+  .db-step:last-child{border-bottom:none}
+  .db-step .ic{width:20px;height:20px;flex:none;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+  .db-step .ic.ok{background:#0a0a0a;color:#fff}
+  .db-step .ic.wait{background:#f4f4f5;color:#a3a3a3}
+  .db-step .ic.no{background:#fff3e0;color:#ea580c;border:1px solid #fdba74}
+  .db-step .nm{flex:1;color:#404040}
+  .db-step .st{font-size:12px;color:#a3a3a3}
+  .db-step.todo .nm{color:#0a0a0a;font-weight:600}
+  .db-step.todo .st{color:#ea580c;font-weight:600}
+  /* quorum */
+  .db-q{border:1px solid var(--border);border-radius:12px;padding:16px;background:#fafafa}
+  .db-q .qt{font-size:13px;font-weight:600;color:#0a0a0a;display:flex;align-items:center;gap:6px}
+  .db-q .qt .bd{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:#eef2ff;color:#4f46e5}
+  .db-q .qt .bd.sp{background:#faf5ff;color:#9333ea}
+  .db-q .cond{font-size:12px;color:#525252;margin-top:10px;line-height:1.7}
+  .db-q .need{margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);font-size:12px;color:#737373}
+  .db-q .need b{font-size:16px;color:#0a0a0a;font-variant-numeric:tabular-nums}
+  /* channel cards */
+  .db-ch{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .db-chc{border:1px solid var(--border);border-radius:12px;padding:14px}
+  .db-chc .cn{font-size:12px;color:#737373;font-weight:500}
+  .db-chc .cv{font-size:19px;font-weight:700;color:#0a0a0a;margin-top:6px;font-variant-numeric:tabular-nums}
+  .db-chc .cs{font-size:12px;color:#a3a3a3;margin-top:3px}
+  .db-note{font-size:12px;color:#a3a3a3;margin-top:12px}
+  /* mini status cards (dup / cumul) */
+  .db-mini .mrow{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f4f4f5;font-size:13px}
+  .db-mini .mrow:last-child{border-bottom:none}
+  .db-mini .mrow .lb{color:#525252}
+  .db-mini .mrow .vl{font-weight:600;color:#0a0a0a}
+  .db-warn{display:flex;align-items:center;gap:8px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:10px 12px;font-size:12px;color:#c2410c;margin-bottom:12px}
+  .db-warn a{margin-left:auto;color:#c2410c;font-weight:600;text-decoration:none;white-space:nowrap}
+  /* agenda table */
+  .db-legend{display:flex;align-items:center;gap:16px;font-size:12px;color:#525252;flex-wrap:wrap}
+  .db-legend .lg{display:inline-flex;align-items:center;gap:5px}
+  .db-legend .sw{width:11px;height:11px;border-radius:3px}
+  .db-est{display:flex;gap:10px}
+  .db-estc{border:1px solid var(--border);border-radius:12px;padding:12px 16px;flex:1;text-align:center}
+  .db-estc .en{font-size:12px;color:#737373}
+  .db-estc .ev{font-size:22px;font-weight:700;margin-top:4px}
+  .db-estc.pass .ev{color:#0071f3}.db-estc.fail .ev{color:#ef4444}
+  .db-estc.wait2 .ev{color:#ca8a04}.db-estc.count .ev{color:#7c3aed}.db-estc.done .ev{color:#16a34a}
+  table.db-atbl{width:100%;border-collapse:collapse;font-size:13px}
+  table.db-atbl thead th{position:sticky;top:0;background:#fafafa;padding:10px 12px;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;white-space:nowrap;border-bottom:1px solid var(--border)}
+  table.db-atbl td{padding:12px;border-bottom:1px solid #f0f0f0;vertical-align:middle}
+  table.db-atbl td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  table.db-atbl td.c{text-align:center}
+  table.db-atbl tr.grp td{background:#fbfbfc;font-weight:600;color:#0a0a0a}
+  .db-atag{font-size:11px;font-weight:600;padding:2px 7px;border-radius:6px;background:#f1f5f9;color:#475569;margin-left:6px}
+  .db-bar{position:relative;height:20px;background:#f1f3f5;border-radius:5px;overflow:hidden;min-width:120px}
+  .db-bar .fill{position:absolute;left:0;top:0;bottom:0;background:#0071f3;border-radius:5px}
+  .db-bar .fill.rej{background:#ef4444}
+  .db-barwrap{position:relative;min-width:150px}
+  .db-line{position:absolute;top:-3px;bottom:-3px;width:0;border-left:2px dashed #0a0a0a}
+  .db-line b{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:9px;color:#525252;white-space:nowrap}
+  .db-pct{font-size:12px;font-weight:600;color:#0a0a0a;margin-top:3px;font-variant-numeric:tabular-nums}
+  .db-res{font-size:12px;font-weight:600;padding:3px 10px;border-radius:9999px;display:inline-block}
+  .db-res.pass{background:#eff4ff;color:#0071f3}
+  .db-res.fail{background:#fef2f2;color:#ef4444}
+  .db-res.wait{background:#f4f4f5;color:#737373}
+  .db-res.count{background:#f5f3ff;color:#7c3aed}
+  /* attendee cards + ratio */
+  .db-att{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .db-attc{border:1px solid var(--border);border-radius:12px;padding:14px}
+  .db-attc .an{font-size:12px;color:#737373;font-weight:500}
+  .db-attc .av{font-size:18px;font-weight:700;color:#0a0a0a;margin-top:6px;font-variant-numeric:tabular-nums}
+  .db-attc .as{font-size:12px;color:#a3a3a3;margin-top:3px}
+  .db-ratio{display:flex;height:30px;border-radius:8px;overflow:hidden;margin-top:4px}
+  .db-ratio .seg{display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:600;min-width:0}
+  .db-rlegend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:#525252}
+  .db-rlegend .lg{display:inline-flex;align-items:center;gap:5px}
+  .db-rlegend .sw{width:11px;height:11px;border-radius:3px}
+  /* memo panel */
+  .memo-ov{position:fixed;inset:0;background:rgba(255,255,255,.5);z-index:200;display:none}
+  .memo-ov.show{display:block}
+  .memo-p{position:fixed;top:0;right:0;bottom:0;width:400px;max-width:92vw;background:#fff;box-shadow:-2px 0 12px rgba(0,0,0,.06);border-left:1px solid var(--border);transform:translateX(100%);transition:transform .25s ease;display:flex;flex-direction:column}
+  .memo-ov.show .memo-p{transform:translateX(0)}
+  .memo-h{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border)}
+  .memo-h .t{font-size:16px;font-weight:600}
+  .memo-x{width:28px;height:28px;border:none;background:none;cursor:pointer;color:#0a0a0a;border-radius:7px;display:flex;align-items:center;justify-content:center}
+  .memo-x:hover{background:var(--muted)}
+  .memo-b{flex:1;overflow:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+  .memo-guide{font-size:12px;color:#a3a3a3}
+  .memo-cnt{font-size:12px;color:#737373;display:flex;align-items:center;justify-content:space-between}
+  .memo-cnt button{border:1px solid var(--border);background:#fff;border-radius:8px;height:28px;padding:0 12px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer}
+  .memo-item{border:1px solid var(--border);border-radius:12px;padding:14px;background:#fafafa}
+  .memo-item .mt{font-size:13px;color:#0a0a0a;line-height:1.6;white-space:pre-wrap}
+  .memo-item .mm{font-size:11px;color:#a3a3a3;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="lnb">
+    <div class="lnb-head">
+      <div class="lnb-brand exp-only">
+        <img src="data:image/png;base64,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" alt="CONEXUS">
+        <div class="lnb-org">카카오뱅크</div>
+        <div class="lnb-quick">
+          <button class="qitem"><i class="ph ph-address-book" style="font-size:18px"></i>명부관리</button>
+          <button class="qitem"><i class="ph ph-flag" style="font-size:18px"></i>결의기준</button>
+          <button class="qitem"><i class="ph ph-grid-four" style="font-size:18px"></i>템플릿</button>
+        </div>
+      </div>
+
+      <div class="lnb-mark col-only"><div class="mark">C</div></div>
+
+      <div class="lnb-select exp-only">
+        <div class="select-box" id="mtrigger">
+          <span class="dot"></span>
+          <span class="lbl" id="mcurrent">제10기 정기주주총회</span>
+          <i class="ph ph-caret-up-down" style="font-size:16px"></i>
+        </div>
+        <div class="mpop hidden" id="mpop">
+          <div class="mpop-search">
+            <i class="ph ph-magnifying-glass" style="font-size:16px"></i>
+            <input type="text" id="msearch" placeholder="주주총회 검색" autocomplete="off">
+          </div>
+          <div class="mpop-list" id="mlist"></div>
+          <div class="mpop-foot"><button id="maddbtn">새 주주총회 추가</button></div>
+        </div>
+      </div>
+
+      <div class="lnb-menu exp-only">
+        <a class="nav-item active" href="dashboard.html"><i class="ph ph-house" style="font-size:18px"></i>대시보드</a>
+      </div>
+
+      <div class="lnb-rail col-only">
+        <button class="railbtn active" title="대시보드"><i class="ph ph-house" style="font-size:18px"></i></button>
+        <button class="railbtn" title="명부관리"><i class="ph ph-address-book" style="font-size:18px"></i></button>
+        <button class="railbtn" title="결의기준"><i class="ph ph-flag" style="font-size:18px"></i></button>
+        <button class="railbtn" title="템플릿"><i class="ph ph-grid-four" style="font-size:18px"></i></button>
+      </div>
+      <div class="lnb-tabs exp-only">
+        <div class="tabs">
+          <div class="t " data-tab="set">설정</div>
+          <div class="t active" data-tab="pre">사전</div>
+          <div class="t " data-tab="day">당일</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lnb-content  exp-only" data-tabpanel="set">
+      <div class="grp"><div class="grp-label">주주총회 설정</div><div class="nav">
+        <a class="nav-item" href="shareholders.html">주주명부 확정</a>
+        <a class="nav-item" href="meeting-settings.html">주주총회 설정</a>
+        <a class="nav-item" href="voting-restriction.html">의결권제한 설정</a>
+      </div></div>
+      <div class="grp"><div class="nav">
+        <a class="nav-item" href="proxy-basic.html">의결권 대행 권유 설정</a>
+      </div></div>
+    </div>
+
+    <div class="lnb-content show exp-only" data-tabpanel="pre">
+      <div class="grp"><div class="grp-label">전자주주총회 관리</div><div class="nav">
+        <a class="nav-item" href="electronic-meeting.html">전자주주총회 관리</a>
+      </div></div>
+      <div class="grp"><div class="grp-label">사전 의결권 관리</div><div class="nav">
+        <a class="nav-item" href="voting-rights.html">사전 의결권 현황</a>
+        <a class="nav-item" href="evote-records.html">전자투표/위임 내역</a>
+        <a class="nav-item" href="paper-records.html">서면투표/위임 내역</a>
+        <a class="nav-item" href="dup-voting.html">중복 의결권 관리</a>
+      </div></div>
+      <div class="grp"><div class="grp-label">불통일행사 관리</div><div class="nav">
+        <a class="nav-item" href="split-voting.html">불통일행사 관리</a>
+      </div></div>
+      <div class="grp"><div class="grp-label">집중투표 관리</div><div class="nav">
+        <a class="nav-item" href="cumulative-voting.html">집중투표 관리</a>
+      </div></div>
+    </div>
+
+    <div class="lnb-content  exp-only" data-tabpanel="day">
+      <div class="grp"><div class="grp-label">주주총회</div><div class="nav">
+        <a class="nav-item" href="attendees.html">참석자 관리</a>
+        <a class="nav-item" href="onsite-control.html">주주총회 현장 제어</a>
+        <a class="nav-item" href="tally.html">주주총회 집계</a>
+      </div></div>
+    </div>
+
+    <div class="lnb-foot">
+      <button class="foot-btn"><span class="avatar">강</span><span class="who exp-only"><span class="n">강하나</span><span class="e">doji@irkudos.co.kr</span></span><svg class="ic cud exp-only" viewBox="0 0 24 24" style="width:16px;height:16px;color:var(--muted-fg)"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></button>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="left">
+        <button class="iconbtn sm" id="toggleLnb" title="사이드바"><i class="ph ph-sidebar-simple" style="font-size:16px"></i></button>
+        <span class="vsep"></span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="crumb">대시보드</span>
+        </div>
+      </div>
+      <button class="iconbtn md" title="변경이력"><i class="ph ph-clock-counter-clockwise" style="font-size:16px"></i></button>
+    </div>
+    <div class="scroll">
+      <div class="content" style="width:100%">
+        <div class="db-top">
+          <div class="db-title-wrap">
+            <div class="db-name">제10기 정기주주총회</div>
+            <div class="db-sub">2026-08-28 (금) 10:00 · 서울 영등포구 국제금융로8길 카카오뱅크 본사 대강당</div>
+          </div>
+          <div class="db-top-r">
+            <span class="db-dday">D-17</span>
+            <button class="db-memo-btn" id="memoOpen"><i class="ph ph-note" style="font-size:15px"></i>메모</button>
+          </div>
+        </div>
+        <div class="db-tabs">
+          <button class="db-tab active" data-dt="set">설정</button>
+          <button class="db-tab" data-dt="pre">사전</button>
+          <button class="db-tab" data-dt="day">현장</button>
+        </div>
+
+        <div class="db-panel active" data-dp="set">
+          <div class="db-law open" id="lawBanner">
+            <div class="db-law-h" id="lawTrig">
+              <div class="db-law-ic"><i class="ph ph-megaphone"></i></div>
+              <div>
+                <div class="db-law-tt">시행 예정·시행 법안 변경 사항</div>
+                <div class="db-law-tags">
+                  <span class="db-ltag">2026.7.23 독립이사 합산 3%룰</span>
+                  <span class="db-ltag">2026.9.10 집중투표 의무화</span>
+                  <span class="db-ltag">2027.1.1 전자주주총회 의무화</span>
+                </div>
+              </div>
+              <div class="db-law-cnt">3건<i class="ph ph-caret-down" style="font-size:16px"></i></div>
+            </div>
+            <div class="db-law-body">
+              <div class="db-law-item">
+                <div class="db-law-date">2026.7.23 시행</div>
+                <div class="db-law-name">독립이사 의무 선임 비율 확대 · 합산 3%룰 전면 확대</div>
+                <div class="db-law-desc">감사위원 분리선출 시 최대주주와 특수관계인의 의결권을 합산하여 3%로 제한합니다. 사외이사 중 독립이사를 1명 이상 반드시 선임해야 합니다.</div>
+                <div class="db-law-chips"><span class="db-chip">독립이사 1명 이상</span><span class="db-chip">합산 3%룰 적용</span></div>
+              </div>
+              <div class="db-law-item">
+                <div class="db-law-date">2026.9.10 시행</div>
+                <div class="db-law-name">자산 2조원 이상 상장사 집중투표제 단계적 의무화</div>
+                <div class="db-law-desc">2인 이상 이사 선임 시 집중투표 청구가 있으면 집중투표 방식으로 표결해야 하며, 정관으로 배제할 수 없습니다.</div>
+                <div class="db-law-chips"><span class="db-chip">2인 이상 이사 선임</span><span class="db-chip">정관 배제 불가</span></div>
+              </div>
+              <div class="db-law-item">
+                <div class="db-law-date">2027.1.1 시행</div>
+                <div class="db-law-name">일정 규모 이상 상장사 전자주주총회 병행 개최 의무화</div>
+                <div class="db-law-desc">현장 총회와 함께 전자적 방법의 출석·의결권 행사를 병행 제공해야 합니다.</div>
+                <div class="db-law-chips"><span class="db-chip">전자출석 병행</span><span class="db-chip">실시간 의결권 행사</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="db-sum n2">
+            <div class="db-sc"><div class="k">총발행주식수</div><div class="v">476,821,940<span class="u">주</span></div><div class="s">의결권 있는 총주식수 기준</div></div>
+            <div class="db-sc"><div class="k">총행사가능의결권</div><div class="v">461,090,220<span class="u">주</span></div><div class="s">자사주·상호주·무효주 제외</div></div>
+          </div>
+
+          <div class="db-grid2">
+            <div class="db-card">
+              <div class="db-card-h"><div><div class="db-card-t">주주총회 기본 정보</div></div></div>
+              <div class="db-info">
+                <div class="row"><span class="lb">행사명</span><span class="vl">제10기 정기주주총회</span></div>
+                <div class="row"><span class="lb">자산총액</span><span class="vl">54조 8,210억 원</span></div>
+                <div class="row"><span class="lb">주주총회 일시</span><span class="vl">2026-08-28 10:00</span></div>
+                <div class="row"><span class="lb">주주명부 기준일</span><span class="vl">2026-06-30</span></div>
+                <div class="row" style="grid-column:1 / -1"><span class="lb">주주총회 장소</span><span class="vl">서울 영등포구 국제금융로8길 카카오뱅크 본사 대강당</span></div>
+              </div>
+            </div>
+            <div class="db-card">
+              <div class="db-card-h"><div><div class="db-card-t">서비스 현황</div><div class="db-card-d">서비스 설정에서 선택한 값과 연동됩니다</div></div></div>
+              <div class="db-svc">
+                <div class="row"><span class="lb">전자투표/위임장</span><span class="tag prov">IR큐더스</span></div>
+                <div class="row"><span class="lb">의결권 권유</span><span class="tag on">사용</span></div>
+                <div class="row"><span class="lb">집중 투표 관리</span><span class="tag on">사용</span></div>
+                <div class="row"><span class="lb">현장 APP</span><span class="tag on">사용</span></div>
+                <div class="row"><span class="lb">전자주주총회</span><span class="tag on">사용</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="db-card">
+            <div class="db-card-h">
+              <div class="db-prep-h"><div class="db-card-t">준비 단계</div></div>
+              <div class="db-prep-rate"><b>5</b>/6 완료</div>
+            </div>
+            <div class="db-steps">
+              <div class="db-step"><span class="ic ok"><i class="ph ph-check"></i></span><span class="nm">주주명부 확정</span><span class="st">확정 완료</span></div>
+              <div class="db-step"><span class="ic ok"><i class="ph ph-check"></i></span><span class="nm">서비스 설정</span><span class="st">설정 완료</span></div>
+              <div class="db-step todo"><span class="ic no">!</span><span class="nm">의결권 제한 설정</span><span class="st">미완료 · 설정 필요</span></div>
+              <div class="db-step"><span class="ic ok"><i class="ph ph-check"></i></span><span class="nm">전자투표/위임장</span><span class="st">IR큐더스 수집 중</span></div>
+              <div class="db-step"><span class="ic ok"><i class="ph ph-check"></i></span><span class="nm">서면투표</span><span class="st">업로드 완료</span></div>
+              <div class="db-step"><span class="ic ok"><i class="ph ph-check"></i></span><span class="nm">서면위임장</span><span class="st">업로드 완료</span></div>
+            </div>
+          </div>
+
+          <div class="db-card">
+            <div class="db-card-h"><div><div class="db-card-t">의결권 수집 목표</div><div class="db-card-d">정관 조건 설정에 따라 수치가 변동될 수 있습니다</div></div></div>
+            <div class="db-grid2">
+              <div class="db-q">
+                <div class="qt"><span class="bd">보통결의</span> 가결 기준</div>
+                <div class="cond">① 전체 행사가능 기준 : 총행사가능의결권의 <b>1/4(25%)</b> 이상 찬성<br>② 출석 의결권 기준 : 출석 의결권 <b>과반수(&gt;50%)</b> 찬성</div>
+                <div class="need">최소 필요 의결권 <b>115,272,555</b> 주</div>
+              </div>
+              <div class="db-q">
+                <div class="qt"><span class="bd sp">특별결의</span> 가결 기준</div>
+                <div class="cond">① 전체 행사가능 기준 : 총행사가능의결권의 <b>1/3(33.33%)</b> 이상 찬성<br>② 출석 의결권 기준 : 출석 의결권 <b>2/3(66.67%)</b> 이상 찬성</div>
+                <div class="need">최소 필요 의결권 <b>153,696,740</b> 주</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="db-panel" data-dp="pre">
+          <div class="db-sum n3">
+            <div class="db-sc"><div class="k">총발행주식수</div><div class="v">476,821,940<span class="u">주</span></div><div class="s">의결권 있는 총주식수 기준</div></div>
+            <div class="db-sc"><div class="k">총행사가능의결권</div><div class="v">461,090,220<span class="u">주</span></div><div class="s">자사주·상호주·무효주 제외</div></div>
+            <div class="db-sc hl"><div class="k">참석 의결권</div><div class="v">305,412,880<span class="u">주</span></div><div class="s">총행사가능의결권 대비 66.2% · 중복 제외</div></div>
+          </div>
+
+          <div class="db-card">
+            <div class="db-card-h"><div><div class="db-card-t">사전투표 현황 (채널별)</div><div class="db-card-d">행사의결권 기준이며, 중복 투표한 주주는 집계에서 제외됩니다</div></div></div>
+            <div class="db-ch">
+              <div class="db-chc"><div class="cn">전자투표/위임</div><div class="cv">152,300,000</div><div class="cs">41,220명 · 주</div></div>
+              <div class="db-chc"><div class="cn">서면투표</div><div class="cv">9,800,000</div><div class="cs">1,240명 · 주</div></div>
+              <div class="db-chc"><div class="cn">서면위임 (자사)</div><div class="cv">68,400,000</div><div class="cs">512명 · 주</div></div>
+              <div class="db-chc"><div class="cn">서면위임 (타사)</div><div class="cv">22,100,000</div><div class="cs">138명 · 주</div></div>
+            </div>
+          </div>
+
+          <div class="db-grid2">
+            <div class="db-card db-mini">
+              <div class="db-card-h"><div class="db-card-t">중복 의결권 현황</div><a class="db-lnk" href="dup-voting.html">중복 의결권 관리<i class="ph ph-arrow-right" style="font-size:13px"></i></a></div>
+              <div class="db-warn">미처리 그룹은 [중복 의결권 관리]에서 처리해 주세요<a href="dup-voting.html">처리하기</a></div>
+              <div class="mrow"><span class="lb">처리 필요 건수</span><span class="vl">3건</span></div>
+              <div class="mrow"><span class="lb">미처리 주주</span><span class="vl">2명</span></div>
+              <div class="mrow"><span class="lb">미처리 주식수 (보유 기준)</span><span class="vl">80,000주</span></div>
+            </div>
+            <div class="db-card db-mini">
+              <div class="db-card-h"><div class="db-card-t">집중투표 분배 현황</div><a class="db-lnk" href="cumulative-voting.html">집중투표 관리<i class="ph ph-arrow-right" style="font-size:13px"></i></a></div>
+              <div class="db-warn">미분배 그룹은 [집중투표 관리]에서 처리해 주세요<a href="cumulative-voting.html">처리하기</a></div>
+              <div class="mrow"><span class="lb">분배 그룹 (자사 / 타사)</span><span class="vl">2 / 1</span></div>
+              <div class="mrow"><span class="lb">미분배 그룹 (자사 / 타사)</span><span class="vl">1 / 0</span></div>
+            </div>
+          </div>
+
+          <div class="db-card">
+            <div class="db-card-h">
+              <div><div class="db-card-t">의안별 행사 현황</div><div class="db-card-d">현장 참석 주주 수에 따라 최종 결과가 달라질 수 있습니다</div></div>
+              <div class="db-est">
+                <div class="db-estc pass"><div class="en">가결 예상</div><div class="ev">5</div></div>
+                <div class="db-estc fail"><div class="en">부결 예상</div><div class="ev">1</div></div>
+              </div>
+            </div>
+            <div class="db-legend" style="margin-bottom:14px">
+              <span class="lg"><span class="sw" style="background:#0071f3"></span>찬성</span>
+              <span class="lg"><span class="sw" style="background:#ef4444"></span>반대</span>
+              <span class="lg"><span class="sw" style="background:#d4d4d8"></span>기권/기타</span>
+              <span class="lg"><span style="border-left:2px dashed #0a0a0a;height:12px;display:inline-block"></span> 가결 기준선</span>
+              <span class="lg" style="margin-left:auto;color:#a3a3a3">보통결의 25% · 특별결의 33.33% 기준</span>
+            </div>
+            <div style="overflow:auto">
+            <table class="db-atbl">
+              <thead><tr>
+                <th>의안번호</th><th>의안명 (투표유형)</th><th class="n">총 행사가능의결권</th><th class="n">행사주주</th><th class="n">행사의결권</th>
+                <th style="min-width:170px">찬성률 (총행사가능 기준)</th><th class="n">찬성률 (총행사 기준)</th><th class="c">예상</th>
+              </tr></thead>
+              <tbody>
+                <tr><td class="c">제1호</td><td>재무제표 승인의 건<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">124,411</td><td class="n">292,800,110</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:63.5%"></div><div class="db-line" style="left:25.00%"><b>25%</b></div></div><div class="db-pct">63.5%</div></div></td><td class="n">95.9%</td><td class="c"><span class="db-res pass">가결 예상</span></td></tr>
+                <tr class="grp"><td class="c">제2호</td><td>이사 선임의 건<span class="db-atag">일부선임</span></td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td>—</td><td class="n">—</td><td class="c">—</td></tr>
+                <tr><td class="c">제2-1호</td><td>사내이사 홍준표 선임<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">123,880</td><td class="n">267,900,300</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:58.1%"></div><div class="db-line" style="left:25.00%"><b>25%</b></div></div><div class="db-pct">58.1%</div></div></td><td class="n">89.4%</td><td class="c"><span class="db-res pass">가결 예상</span></td></tr>
+                <tr><td class="c">제2-2호</td><td>사외이사 김서연 선임<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">123,120</td><td class="n">255,400,880</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:55.4%"></div><div class="db-line" style="left:25.00%"><b>25%</b></div></div><div class="db-pct">55.4%</div></div></td><td class="n">86.1%</td><td class="c"><span class="db-res pass">가결 예상</span></td></tr>
+                <tr><td class="c">제3호</td><td>감사위원 사외이사 선임의 건<span class="db-atag">보통·합산3%룰</span></td><td class="n">461,090,220</td><td class="n">118,240</td><td class="n">100,520,140</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill rej" style="width:21.8%"></div><div class="db-line" style="left:25.00%"><b>25%</b></div></div><div class="db-pct">21.8%</div></div></td><td class="n">71.2%</td><td class="c"><span class="db-res fail">부결 예상</span></td></tr>
+                <tr><td class="c">제4호</td><td>정관 일부 변경의 건<span class="db-atag">특별</span></td><td class="n">461,090,220</td><td class="n">124,010</td><td class="n">277,600,410</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:60.2%"></div><div class="db-line" style="left:33.33%"><b>33.33%</b></div></div><div class="db-pct">60.2%</div></div></td><td class="n">90.9%</td><td class="c"><span class="db-res pass">가결 예상</span></td></tr>
+                <tr><td class="c">제5호</td><td>이사 보수한도 승인의 건<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">124,290</td><td class="n">284,500,220</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:61.7%"></div><div class="db-line" style="left:25.00%"><b>25%</b></div></div><div class="db-pct">61.7%</div></div></td><td class="n">93.2%</td><td class="c"><span class="db-res pass">가결 예상</span></td></tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="db-panel" data-dp="day">
+          <div class="db-sum n3">
+            <div class="db-sc"><div class="k">총발행주식수</div><div class="v">476,821,940<span class="u">주</span></div><div class="s">의결권 있는 총주식수 기준</div></div>
+            <div class="db-sc"><div class="k">총행사가능의결권</div><div class="v">461,090,220<span class="u">주</span></div><div class="s">자사주·상호주·무효주 제외</div></div>
+            <div class="db-sc hl"><div class="k">참석 의결권</div><div class="v">354,312,880<span class="u">주</span></div><div class="s">총행사가능의결권 대비 76.8% · 중복 제외</div></div>
+          </div>
+
+          <div class="db-card">
+            <div class="db-card-h"><div><div class="db-card-t">참석자 현황</div><div class="db-card-d">현장은 투표 전이므로 참석주식수 기준, 주주수는 계좌 수 기준</div></div></div>
+            <div class="db-att">
+              <div class="db-attc"><div class="an">전자투표/위임장</div><div class="av">152,300,000<span style="font-size:12px;font-weight:600">주</span></div><div class="as">행사 · 41,220명</div></div>
+              <div class="db-attc"><div class="an">서면위임 (자사)</div><div class="av">68,400,000<span style="font-size:12px;font-weight:600">주</span></div><div class="as">행사 · 512명</div></div>
+              <div class="db-attc"><div class="an">서면위임 (타사)</div><div class="av">22,100,000<span style="font-size:12px;font-weight:600">주</span></div><div class="as">행사 · 138명</div></div>
+              <div class="db-attc"><div class="an">서면투표</div><div class="av">9,800,000<span style="font-size:12px;font-weight:600">주</span></div><div class="as">행사 · 1,240명</div></div>
+              <div class="db-attc"><div class="an">현장</div><div class="av">48,900,000<span style="font-size:12px;font-weight:600">주</span></div><div class="as">참석 · 86명</div></div>
+              <div class="db-attc"><div class="an">전자주주총회</div><div class="av">52,812,880<span style="font-size:12px;font-weight:600">주</span></div><div class="as">참석 · 5,410명</div></div>
+            </div>
+            <div class="db-ratio" style="margin-top:16px">
+              <div class="seg" style="width:43.0%;background:#0071f3">43%</div>
+              <div class="seg" style="width:19.3%;background:#3b9dff">19%</div>
+              <div class="seg" style="width:6.2%;background:#7cc0ff;color:#0a0a0a">6%</div>
+              <div class="seg" style="width:2.8%;background:#b9dcff;color:#0a0a0a"></div>
+              <div class="seg" style="width:13.8%;background:#16a34a">14%</div>
+              <div class="seg" style="width:14.9%;background:#22c55e">15%</div>
+            </div>
+            <div class="db-rlegend">
+              <span class="lg"><span class="sw" style="background:#0071f3"></span>전자투표/위임장</span>
+              <span class="lg"><span class="sw" style="background:#3b9dff"></span>서면위임(자사)</span>
+              <span class="lg"><span class="sw" style="background:#7cc0ff"></span>서면위임(타사)</span>
+              <span class="lg"><span class="sw" style="background:#b9dcff"></span>서면투표</span>
+              <span class="lg"><span class="sw" style="background:#16a34a"></span>현장</span>
+              <span class="lg"><span class="sw" style="background:#22c55e"></span>전자주주총회</span>
+            </div>
+          </div>
+
+          <div class="db-card">
+            <div class="db-card-h">
+              <div><div class="db-card-t">의안별 행사 현황</div><div class="db-card-d">새로고침 시 현장 참석 주주 표가 집계에 반영되어 실시간으로 확인 가능합니다</div></div>
+              <button class="db-memo-btn" id="dayRefresh"><i class="ph ph-arrows-clockwise" style="font-size:15px"></i>새로고침</button>
+            </div>
+            <div class="db-est" style="margin-bottom:14px">
+              <div class="db-estc wait2"><div class="en">대기</div><div class="ev">2</div></div>
+              <div class="db-estc count"><div class="en">집계중</div><div class="ev">1</div></div>
+              <div class="db-estc done"><div class="en">종료</div><div class="ev">3</div><div class="en" style="margin-top:2px">가결 2 · 부결 1</div></div>
+            </div>
+            <div class="db-legend" style="margin-bottom:14px">
+              <span class="lg"><span class="sw" style="background:#0071f3"></span>찬성</span>
+              <span class="lg"><span class="sw" style="background:#ef4444"></span>반대</span>
+              <span class="lg"><span class="sw" style="background:#d4d4d8"></span>기권/기타</span>
+              <span class="lg"><span style="border-left:2px dashed #0a0a0a;height:12px;display:inline-block"></span> 가결 기준선</span>
+            </div>
+            <div style="overflow:auto">
+            <table class="db-atbl">
+              <thead><tr>
+                <th>의안번호</th><th>의안명 (투표유형)</th><th class="n">총 행사가능의결권</th><th class="n">행사주주</th><th class="n">행사의결권</th>
+                <th style="min-width:170px">찬성률 (총행사가능 기준)</th><th class="n">찬성률 (총행사 기준)</th><th class="c">결과</th>
+              </tr></thead>
+              <tbody>
+                <tr><td class="c">제1호</td><td>재무제표 승인의 건<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">156,880</td><td class="n">341,200,110</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:74.0%"></div><div class="db-line" style="left:25.00%"><b>25%</b></div></div><div class="db-pct">74.0%</div></div></td><td class="n">96.4%</td><td class="c"><span class="db-res pass">가결</span></td></tr>
+                <tr class="grp"><td class="c">제2호</td><td>이사 선임의 건<span class="db-atag">일부선임</span></td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td>—</td><td class="n">—</td><td class="c">—</td></tr>
+                <tr><td class="c">제2-1호</td><td>사내이사 홍준표 선임<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">—</td><td class="n">—</td><td><div style="color:#a3a3a3;font-size:12px">집계 전</div></td><td class="n">—</td><td class="c"><span class="db-res wait">대기</span></td></tr>
+                <tr><td class="c">제2-2호</td><td>사외이사 김서연 선임<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">—</td><td class="n">—</td><td><div style="color:#a3a3a3;font-size:12px">집계 전</div></td><td class="n">—</td><td class="c"><span class="db-res wait">대기</span></td></tr>
+                <tr><td class="c">제3호</td><td>감사위원 사외이사 선임의 건<span class="db-atag">보통·합산3%룰</span></td><td class="n">461,090,220</td><td class="n">120,110</td><td class="n">98,700,220</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill rej" style="width:21.4%"></div><div class="db-line" style="left:25.00%"><b>25%</b></div></div><div class="db-pct">21.4%</div></div></td><td class="n">70.1%</td><td class="c"><span class="db-res fail">종료 · 부결</span></td></tr>
+                <tr><td class="c">제4호</td><td>정관 일부 변경의 건<span class="db-atag">특별</span></td><td class="n">461,090,220</td><td class="n">—</td><td class="n">—</td><td><div style="color:#7c3aed;font-size:12px">집계 중…</div></td><td class="n">—</td><td class="c"><span class="db-res count">집계중</span></td></tr>
+                <tr><td class="c">제5호</td><td>이사 보수한도 승인의 건<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">157,020</td><td class="n">332,900,540</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:72.2%"></div><div class="db-line" style="left:25.00%"><b>25%</b></div></div><div class="db-pct">72.2%</div></div></td><td class="n">94.8%</td><td class="c"><span class="db-res pass">가결</span></td></tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="memo-ov" id="memoOv">
+  <div class="memo-p">
+    <div class="memo-h"><div class="t">메모</div><button class="memo-x" id="memoClose"><i class="ph ph-x" style="font-size:18px"></i></button></div>
+    <div class="memo-b">
+      <div class="memo-guide">제10기 정기주주총회에 대한 메모를 등록해 주세요.</div>
+      <div class="memo-cnt"><span>전체 <b>2</b>건</span><button id="memoAdd">등록</button></div>
+      <div class="memo-item"><div class="mt">의결권 제한 설정 아직 미완료 — 감사위원 분리선출 건 합산 3%룰 반영 후 재확인 필요.</div><div class="mm">마지막 변경 2026-08-11 14:20 · 박선화</div></div>
+      <div class="memo-item"><div class="mt">현장 리허설 8/26 15:00, 전자주총 접속 테스트 병행 예정.</div><div class="mm">마지막 변경 2026-08-10 09:42 · 강하나</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // LNB tab switching (설정/사전/당일)
+  document.querySelectorAll('.lnb-tabs .t').forEach(function(t){
+    t.addEventListener('click',function(){
+      var tab=t.dataset.tab; if(!tab) return;
+      document.querySelectorAll('.lnb-tabs .t').forEach(function(x){x.classList.toggle('active',x===t);});
+      document.querySelectorAll('.lnb-content[data-tabpanel]').forEach(function(p){p.classList.toggle('show',p.dataset.tabpanel===tab);});
+    });
+  });
+  // sidebar collapse
+  var tg=document.getElementById('toggleLnb');
+  if(tg){tg.addEventListener('click',function(){document.getElementById('app').classList.toggle('collapsed');});}
+  // meeting dropdown
+  (function(){
+    var mt=document.getElementById('mtrigger'), mp=document.getElementById('mpop'), ml=document.getElementById('mlist'), mc=document.getElementById('mcurrent');
+    if(!mt||!mp) return;
+    if(ml&&!ml.children.length){
+      ['제10기 정기주주총회','제9기 정기주주총회','제8기 정기주주총회'].forEach(function(t,i){
+        var b=document.createElement('button'); b.className='mitem'+(i===0?' cur':'');
+        b.innerHTML='<span class="dot'+(i===0?'':' gray')+'"></span><span class="mlbl">'+t+'</span>';
+        b.addEventListener('click',function(ev){ev.stopPropagation(); if(mc)mc.textContent=t; ml.querySelectorAll('.mitem').forEach(function(x){x.classList.remove('cur');}); b.classList.add('cur'); mp.classList.add('hidden');});
+        ml.appendChild(b);
+      });
+    }
+    mt.addEventListener('click',function(e){e.stopPropagation(); mp.classList.toggle('hidden');});
+    document.addEventListener('click',function(){mp.classList.add('hidden');});
+    mp.addEventListener('click',function(e){e.stopPropagation();});
+  })();
+  // dashboard tabs (설정/사전/현장)
+  document.querySelectorAll('.db-tab').forEach(function(t){
+    t.addEventListener('click',function(){
+      var k=t.dataset.dt;
+      document.querySelectorAll('.db-tab').forEach(function(x){x.classList.toggle('active',x===t);});
+      document.querySelectorAll('.db-panel').forEach(function(p){p.classList.toggle('active',p.dataset.dp===k);});
+      var sc=document.querySelector('.scroll'); if(sc) sc.scrollTop=0;
+    });
+  });
+  // 변경 법안 알림 배너 펼침/접힘
+  (function(){ var b=document.getElementById('lawBanner'), h=document.getElementById('lawTrig'); if(h){h.addEventListener('click',function(){b.classList.toggle('open');});} })();
+  // 메모 패널
+  (function(){
+    var ov=document.getElementById('memoOv'), op=document.getElementById('memoOpen'), cl=document.getElementById('memoClose');
+    if(op)op.addEventListener('click',function(){ov.classList.add('show');});
+    if(cl)cl.addEventListener('click',function(){ov.classList.remove('show');});
+    if(ov)ov.addEventListener('click',function(e){ if(e.target===ov) ov.classList.remove('show'); });
+  })();
+  // 현장 새로고침
+  (function(){ var r=document.getElementById('dayRefresh'); if(r)r.addEventListener('click',function(){ if(window.cxToast)cxToast('의안별 행사 현황을 업데이트했습니다.'); }); })();
+</script>
+<script src="conexus.js"></script>
+</body>
+</html>
