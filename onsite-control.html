@@ -129,8 +129,8 @@
   .vkpi{display:flex;gap:10px;flex:none}
   .vkpi .k{flex:1;min-width:0;border:1px solid var(--border);border-radius:8px;padding:12px 14px;background:#fff}
   .vkpi .k .kl{font-size:12px;color:#737373}
-  .vkpi .k .kv{margin-top:6px;font-size:18px;font-weight:700;color:#0a0a0a;font-variant-numeric:tabular-nums}
-  .vkpi .k .kv small{font-size:12px;font-weight:500;color:#737373}
+  .vkpi .k .kv{display:block;padding:0;border-top:none;margin-top:6px;font-size:18px;font-weight:700;color:#0a0a0a;font-variant-numeric:tabular-nums}
+  .vkpi .k .kv small{font-size:18px;font-weight:700;color:#737373;margin-left:1px}
   .vkpi .k.live .kv{color:#0071f3}
   .vdev{display:inline-flex;align-items:center;gap:5px;color:#525252;font-size:13px}
   .vdev svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -145,6 +145,7 @@
   .vsearch{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;min-width:200px}
   .vsearch svg{width:15px;height:15px;fill:none;stroke:#a3a3a3;stroke-width:1.8}
   .vsearch input{border:none;outline:none;font-family:inherit;font-size:13px;flex:1;background:none;color:#0a0a0a}
+  .vdrop{font-size:13px;color:#a3a3a3;font-variant-numeric:tabular-nums}
   .pxbadge{display:inline-flex;align-items:center;height:20px;padding:0 7px;margin-left:6px;border-radius:9999px;background:#EEF5FF;color:#0071F3;font-size:11px;font-weight:600;cursor:pointer;vertical-align:middle}
   .pxdlg-ov{position:fixed;inset:0;background:rgba(10,10,10,.4);display:none;align-items:center;justify-content:center;z-index:300;padding:24px}
   .pxdlg-ov.show{display:flex}
@@ -1214,15 +1215,15 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     {nm:'삼성자산운용',t:'기관',sh:9870000,on:true,tm:'09:04',dev:'태블릿',ev:'완료',px:{nm:'정하은',rel:'위임 대리인',sh:9870000,tel:'010-8842-3096',doc:'전자위임장'}},
     {nm:'전승현',t:'개인',sh:96700,on:true,tm:'09:05',dev:'모바일',ev:'참관'},
     {nm:'한국투자증권',t:'기관',sh:15200000,on:true,tm:'09:05',dev:'PC',ev:'완료'},
-    {nm:'정하윤',t:'개인',sh:22400,on:false,tm:'09:06',dev:'모바일',ev:'완료'},
+    {nm:'정하윤',t:'개인',sh:22400,on:false,tm:'09:06',dev:'모바일',ev:'완료',offtm:'10:14'},
     {nm:'교보생명',t:'기관',sh:2980000,on:true,tm:'09:06',dev:'PC',ev:'완료',px:{nm:'박서준',rel:'임직원 대리',sh:2980000,tel:'010-2277-6710',doc:'전자위임장'}},
     {nm:'오세훈',t:'개인',sh:19900,on:true,tm:'09:07',dev:'모바일',ev:'미투표'},
     {nm:'KB자산운용',t:'기관',sh:8110000,on:true,tm:'09:07',dev:'PC',ev:'완료'},
-    {nm:'민경선',t:'개인',sh:54900,on:false,tm:'09:08',dev:'태블릿',ev:'미투표'},
+    {nm:'민경선',t:'개인',sh:54900,on:false,tm:'09:08',dev:'태블릿',ev:'미투표',offtm:'10:22'},
     {nm:'신한자산운용',t:'기관',sh:6540000,on:true,tm:'09:08',dev:'PC',ev:'완료'},
     {nm:'강도현',t:'개인',sh:16700,on:true,tm:'09:09',dev:'모바일',ev:'미투표'},
     {nm:'우정사업본부',t:'기관',sh:5300000,on:true,tm:'09:09',dev:'PC',ev:'완료'},
-    {nm:'임재민',t:'개인',sh:9600,on:false,tm:'09:10',dev:'모바일',ev:'참관'},
+    {nm:'임재민',t:'개인',sh:9600,on:false,tm:'09:10',dev:'모바일',ev:'참관',offtm:'10:31'},
     {nm:'한화투자증권',t:'기관',sh:3420000,on:true,tm:'09:10',dev:'PC',ev:'완료'}
   ];
   function cm(n){return Number(n).toLocaleString('en-US');}
@@ -1234,7 +1235,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       var stat=x.on?'<span class="vtag blue">온라인</span>':'<span class="vtag neutral">이탈</span>';
       var ev=x.ev==='완료'?'<span class="vtag ok">완료</span>':(x.ev==='참관'?'<span class="vtag obs">참관</span>':'<span class="vtag soft">미투표</span>');
       var dev='<span class="vdev">'+(DEVICE[x.dev]||'')+x.dev+'</span>';
-      var mng=x.on?'<button class="vlink danger" type="button">접속 종료</button>':'<button class="vlink" type="button" disabled>-</button>';
+      var mng=x.on?'<button class="vlink danger" type="button">접속 종료</button>':'<span class="vdrop">이탈 '+(x.offtm||'-')+'</span>';
       var pxb=x.px?'<span class="pxbadge" data-px="'+i+'">대리인</span>':'';
       return '<tr data-i="'+i+'"><td class="l">'+x.nm+pxb+'</td><td class="c">'+x.t+'</td><td>'+cm(x.sh)+'</td>'
         +'<td class="c">'+stat+'</td><td class="c mut">'+x.tm+'</td><td class="l">'+dev+'</td>'
@@ -1246,7 +1247,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   });
   body.addEventListener('click',function(e){
     var pb=e.target.closest('.pxbadge'); if(pb){ e.stopPropagation(); openPx(V[+pb.dataset.px]); return; }
-    var btn=e.target.closest('.vlink.danger'); if(btn){ var tr=btn.closest('tr'); var i=+tr.dataset.i; if(!isNaN(i)&&V[i]){V[i].on=false; onlineN=Math.max(0,onlineN-1); render(); document.getElementById('vwOnline').innerHTML=cm(onlineN)+'<small> 명</small>'; } }
+    var btn=e.target.closest('.vlink.danger'); if(btn){ var tr=btn.closest('tr'); var i=+tr.dataset.i; if(!isNaN(i)&&V[i]){V[i].on=false; V[i].offtm=new Date().toTimeString().slice(0,5); onlineN=Math.max(0,onlineN-1); render(); document.getElementById('vwOnline').innerHTML=cm(onlineN)+'<small> 명</small>'; } }
   });
   var srch=document.getElementById('vwSearch'); if(srch) srch.addEventListener('input',function(){ q=this.value.trim(); render(); });
   var pxOv=document.getElementById('pxDlg');
