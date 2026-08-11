@@ -12,15 +12,16 @@
   body{font-family:'Pretendard',system-ui,sans-serif;background:#0A0A0A;color:#E5E5E5;display:flex;overflow:hidden}
   .contents{flex:1;display:flex;flex-direction:column;padding:48px;gap:16px;min-width:0}
   .cv-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .cv-title{flex:1;text-align:center;font-size:24px;font-weight:700;color:#E5E5E5;letter-spacing:-.01em}
+  .cv-title{flex:1;text-align:left;font-size:24px;font-weight:700;color:#E5E5E5;letter-spacing:-.01em}
   .cv-tools{display:flex;align-items:center;gap:8px}
   .cv-ib{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.15);cursor:pointer;color:#FAFAFA}
   .cv-ib.plain{background:none;border:none}
   .cv-ib:hover{background:rgba(255,255,255,.1)}
   .cv-ib svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
   .cv-script{flex:1;display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;overflow:auto;padding:8px 0}
-  .cv-script p{margin:auto 0;font-size:32px;font-weight:700;line-height:1.55;letter-spacing:-.01em;color:#E5E5E5;text-align:left;max-width:100%}
+  .cv-script p{margin:0;font-size:32px;font-weight:700;line-height:1.55;letter-spacing:-.01em;color:#E5E5E5;text-align:left;max-width:100%}
   .cv-script .blue{color:#0071F3}
+  .cv-script .green{color:#4ADE80}
   .cv-script.big{justify-content:center;align-items:center}
   .cv-script.big p{text-align:center;font-size:72px;color:#0071F3}
   /* 발언 대기열 */
@@ -43,7 +44,6 @@
 <body>
   <div class="contents">
     <div class="cv-top">
-      <span style="width:96px"></span>
       <div class="cv-title" id="cvTitle">개회 선언</div>
       <div class="cv-tools">
         <button class="cv-ib" id="cvMinus" title="글자 작게"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
@@ -80,7 +80,7 @@
       '표결에 앞서 본 안건에 대해 질문이나 의견이 있으신 주주께서는<br>발언 신청 버튼을 눌러 주시기 바랍니다.<br><br>'+
       '신청해 주신 주주님께 순서대로 발언권을 부여해 드리겠으며,<br>발언이 끝난 후 표결을 진행하겠습니다.'},
     {t:'제 1호 의안 · 발언 진행', queue:'live', s:
-      B('쿼드자산운용')+'  ·  대리인 : 박선화  ·  20,000주<br><br>'+
+      '<span class="green">쿼드자산운용  ·  대리인 : 박선화  ·  20,000주</span><br><br>'+
       '<span style="color:#A3A3A3;font-size:.7em">담당자 입력 내용</span><br>'+
       '지난해 손익 변동은 [글로벌 경기 둔화 / 원자재 가격 상승 / 주요 원가 요소 변화] 등 대외적인 환경 변화가 주요 요인으로 작용했습니다. 회사는 이를 극복하기 위해 올해 [고부가가치 제품 및 서비스 비중 확대 / 공정 효율화를 통한 비용 절감 / 신규 판로 개척] 등을 중점적으로 추진하고 있습니다.<br><br>'+
       '견고한 실적 반등을 통해 주주 여러분의 기대에 부응할 수 있도록 전 임직원이 최선을 다하겠습니다.'},
