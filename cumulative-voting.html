@@ -127,12 +127,58 @@
   .csheet-f .frow button{flex:1;height:32px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;border:1px solid #E5E5E5;background:#fff;color:#0a0a0a}
   .csheet-f .frow button.dark{background:#171717;color:#fafafa;border-color:#171717}
   .csheet-f .modi{font-size:12px;color:#737373;text-align:center}
-  /* 분배 방식 드롭다운 */
-  .dm-pop{position:absolute;top:calc(100% + 6px);right:18px;z-index:1000;min-width:248px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 10px 15px -3px rgba(0,0,0,.1);padding:6px;display:none}
-  .dm-pop.show{display:block}
-  .dm-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;font-size:14px;color:#0a0a0a;cursor:pointer}
-  .dm-item:hover{background:#fafafa}
-  .dm-item .ck{width:16px;flex:none;color:#0071F3;display:inline-flex;justify-content:center}
+  /* 분배 방식 선택 다이얼로그 */
+  .dmdlg-ov{position:fixed;inset:0;background:rgba(10,10,10,.4);display:none;align-items:center;justify-content:center;z-index:220;padding:24px}
+  .dmdlg-ov.show{display:flex}
+  .dmdlg{width:800px;max-width:100%;max-height:92vh;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;display:flex;flex-direction:column;position:relative}
+  .dmdlg-h{padding:16px;display:flex;flex-direction:column;gap:8px}
+  .dmdlg-h .t{font-size:16px;font-weight:600;color:#171717;letter-spacing:-.01em}
+  .dmdlg-h .d{font-size:14px;color:#737373;letter-spacing:-.01em}
+  .dmdlg-x{position:absolute;top:16px;right:16px;width:24px;height:24px;border:none;background:none;cursor:pointer;color:#000;opacity:.7;display:flex;align-items:center;justify-content:center;padding:0}
+  .dmdlg-x i{font-size:16px}
+  .dmdlg-c{padding:0 16px 8px;display:flex;flex-direction:column;gap:16px;overflow:auto}
+  .dmr-grid{display:flex;gap:10px}
+  .dmr{position:relative;flex:1;box-sizing:border-box;display:flex;align-items:flex-start;gap:8px;padding:12px;border:1px solid #E5E5E5;border-radius:8px;cursor:pointer;background:#fff}
+  .dmr.on{background:rgba(23,23,23,.05);border-color:rgba(23,23,23,.05)}
+  .dmr .rd{flex:none;width:16px;height:16px;border-radius:9999px;border:1px solid #E5E5E5;background:#fff;display:inline-flex;align-items:center;justify-content:center;margin-top:1px}
+  .dmr.on .rd{background:#171717;border-color:#171717}
+  .dmr.on .rd::after{content:"";width:8px;height:8px;border-radius:9999px;background:#fafafa}
+  .dmr .fc{display:flex;flex-direction:column;gap:8px;min-width:0}
+  .dmr .rt{font-size:14px;font-weight:600;color:#000;letter-spacing:-.01em}
+  .dmr .rd2{font-size:12px;line-height:16px;color:#737373;letter-spacing:-.01em}
+  .dmr .cat{position:absolute;top:9px;right:9px;padding:2px 6px;border-radius:6px;font-size:12px;font-weight:500;line-height:16px;letter-spacing:-.01em}
+  .dm-info{background:#FAFAFA;box-shadow:0 1px 2px rgba(0,0,0,.05);border-radius:8px;padding:10px 12px}
+  .dm-info .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .dm-info .it{font-size:12px;font-weight:600;color:#0A0A0A;letter-spacing:-.01em}
+  .dm-info .id{font-size:12px;color:#737373;letter-spacing:-.01em;margin-top:2px}
+  .dm-info .exp{flex:none;display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border:1px solid #E5E5E5;border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0A0A0A;cursor:pointer}
+  .dm-prev{border:1px solid rgba(10,10,10,.1);box-shadow:0 1px 2px rgba(0,0,0,.05);border-radius:8px;overflow:hidden;display:none}
+  .dm-prev.show{display:block}
+  .dm-prev .ph2{display:flex;gap:8px;align-items:center;padding:10px}
+  .dm-prev .pbadge{padding:2px 8px;border:1px solid #E5E5E5;border-radius:26px;font-size:12px;font-weight:500;color:#737373;white-space:nowrap}
+  table.dmt{width:100%;border-collapse:collapse;font-size:12px}
+  table.dmt th{background:#FAFAFA;height:32px;padding:0 8px;text-align:left;font-weight:500;color:#0A0A0A;border-bottom:1px solid #E5E5E5;white-space:nowrap}
+  table.dmt th.n{text-align:right}
+  table.dmt td{height:32px;padding:0 8px;border-bottom:1px solid #E5E5E5;color:#171717;white-space:nowrap;font-variant-numeric:tabular-nums}
+  table.dmt td.n{text-align:right}
+  table.dmt tr:last-child td{border-bottom:none}
+  table.dmt td.warn{color:#EA580C}
+  .dm-alert{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:#FFF1F2;border:1px solid #FECDD3;border-radius:10px;display:none}
+  .dm-alert.show{display:flex}
+  .dm-alert i{color:#E9081B;font-size:16px;margin-top:1px;flex:none}
+  .dm-alert .t{font-size:14px;font-weight:500;color:#E9081B;letter-spacing:-.01em}
+  .dm-alert .d{font-size:14px;color:#E9081B;letter-spacing:-.01em}
+  .dmdlg-f{display:flex;align-items:center;gap:8px;padding:12px 16px 16px}
+  .dmdlg-f .chk{flex:1;display:flex;align-items:center;gap:8px;cursor:pointer;min-width:0}
+  .dmdlg-f .cbx{flex:none;width:16px;height:16px;border-radius:4px;border:1px solid #E5E5E5;background:#fff;display:inline-flex;align-items:center;justify-content:center}
+  .dmdlg-f .chk.on .cbx{background:#171717;border-color:#171717}
+  .dmdlg-f .chk.on .cbx i{color:#fafafa;font-size:12px}
+  .dmdlg-f .chk .cbx i{display:none}
+  .dmdlg-f .chk.on .cbx i{display:inline-flex}
+  .dmdlg-f .lab{font-size:14px;color:#0A0A0A;letter-spacing:-.01em}
+  .dmdlg-f button{height:32px;padding:0 12px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;border:1px solid #E5E5E5;background:#fff;color:#171717}
+  .dmdlg-f button.dark{background:#171717;color:#fafafa;border-color:#171717}
+  .dmdlg-f button:disabled{opacity:.5;cursor:not-allowed}
   /* 저장 토스트 */
   .cs-toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(8px);background:#171717;color:#fff;font-size:14px;padding:10px 16px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:400}
   .cs-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -246,7 +292,7 @@
       <div class="content" style="width:100%">
         <div class="st-head"><div><div class="page-title">집중 투표 관리</div><div class="page-sub">중복의결권 확정 후 집중투표에서 동일한 의안에 찬성한 주주 그룹별로 표 분배를 할 수 있습니다.</div></div></div>
         <div class="ctabs2"><button class="ct2 on">자사 표 분배</button><button class="ct2">타사 표 분배</button></div>
-        <div class="cbanner"><div class="cb-l"><i class="ph ph-gear" style="font-size:16px"></i><div><div class="cb-t" id="dmName">주주별 비례 분배 방식</div><div class="cb-d">분배 방식 선택 후 집중투표 표 분배 가능</div></div></div><button class="mbtn dark" id="dmBtn">설정</button><div class="dm-pop" id="dmPop"><div class="dm-item" data-m="prop"><span class="ck"><i class="ph ph-check" style="font-size:14px"></i></span>주주별 비례 분배 방식</div><div class="dm-item" data-m="rep"><span class="ck"></span>대표 주주 지정 방식</div></div></div>
+        <div class="cbanner"><div class="cb-l"><i class="ph ph-gear" style="font-size:16px"></i><div><div class="cb-t" id="dmName">주주별 비례 분배 방식</div><div class="cb-d">분배 방식 선택 후 집중투표 표 분배 가능</div></div></div><button class="mbtn dark" id="dmBtn">설정</button></div>
         <div class="mwrap"><div class="mscroll"><table class="mtbl"><thead><tr><th>의안번호</th><th>의안명</th><th class="n">찬성 의안 번호</th><th class="n">분배 가능 주주</th><th class="n">분배 가능 의결권</th><th class="n">미분배의결권</th><th>분배 여부</th><th>분배 완료 일시</th></tr></thead><tbody><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1</td><td class="n">1,200</td><td class="n">285,041</td><td class="n mmut">-</td><td><span class="mmut">분배완료</span></td><td>2026-07-27 13:40</td></tr><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1, 2</td><td class="n">400</td><td class="n">139,182</td><td class="n">139,182</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1, 2, 4</td><td class="n">100</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1, 3</td><td class="n">80</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1, 4</td><td class="n">60</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">2</td><td class="n">50</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">2, 3</td><td class="n">1,200</td><td class="n">185,041</td><td class="n">185,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">2, 3, 4</td><td class="n">2,000</td><td class="n">285,041</td><td class="n">285,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">3</td><td class="n">100</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">4</td><td class="n">3</td><td class="n">5,041</td><td class="n">5,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr></tbody></table></div></div>
       </div>
     </div>
@@ -279,6 +325,34 @@
       <div class="modi">마지막 수정 2026-07-17 15:58 · 박지용</div>
     </div>
   </aside>
+</div>
+<div class="dmdlg-ov" id="dmDlg">
+  <div class="dmdlg" role="dialog" aria-label="분배 방식 선택">
+    <button class="dmdlg-x" id="dmX" aria-label="닫기"><i class="ph ph-x"></i></button>
+    <div class="dmdlg-h">
+      <div class="t">분배 방식 선택</div>
+      <div class="d">집중투표 표 분배 방식을 선택하세요. 방식에 따라 후보별 분배 결과가 달라집니다.</div>
+    </div>
+    <div class="dmdlg-c">
+      <div class="dmr-grid" id="dmrGrid"></div>
+      <div class="dm-info">
+        <div class="row">
+          <div><div class="it" id="dmInfoT"></div><div class="id" id="dmInfoD"></div></div>
+          <button class="exp" id="dmExp"><span id="dmExpTxt">펼치기</span><i class="ph ph-caret-down" style="font-size:12px"></i></button>
+        </div>
+      </div>
+      <div class="dm-prev" id="dmPrev">
+        <div class="ph2"><span class="pbadge">제3-1-1호</span><span class="pbadge">후보 3인</span><span class="pbadge">미리보기</span></div>
+        <table class="dmt"><thead id="dmPh"></thead><tbody id="dmPb"></tbody></table>
+      </div>
+      <div class="dm-alert" id="dmAlert"><i class="ph ph-warning-circle"></i><div><div class="t">방식을 변경하면 기존 분배가 초기화됩니다.</div><div class="d">이미 분배 완료한 의결권이 모두 지워지고 처음부터 다시 분배해야 합니다.</div></div></div>
+    </div>
+    <div class="dmdlg-f">
+      <div class="chk" id="dmChk"><span class="cbx"><i class="ph ph-check"></i></span><span class="lab">선택한 분배 방식을 적용하겠습니다.</span></div>
+      <button id="dmCancel">취소</button>
+      <button class="dark" id="dmApply">적용</button>
+    </div>
+  </div>
 </div>
 <div class="cs-toast" id="csToast">분배 방식이 저장되었습니다.</div>
 <script>
@@ -331,8 +405,23 @@
 </script>
 <script>
 (function(){
-  var curMethod='prop';
-  var METHODS={prop:{name:'주주별 비례 분배 방식',mode:'prop'},rep:{name:'대표 주주 지정 방식',mode:'rep'}};
+  var METHODS=[
+    {id:'prop',name:'주주별 비례 분배 방식',cat:{t:'비례',c:'#0071F3',bg:'#EEF5FF'},
+      desc:'보유 의결권 비율에 따라 후보별로 자동 배분합니다.',
+      infoT:'관리자 입력값 미사용',infoD:'시스템이 그룹별 보유 의결권 비율대로 후보에게 자동으로 분배합니다.',
+      prev:{head:['그룹','후보 1','후보 2','후보 3'],rows:[['A그룹','5,760','3,840','1,920'],['B그룹','2,400','1,600','800'],['C그룹','960','640','320']]}},
+    {id:'seq',name:'그룹 순차 채우기 방식',cat:{t:'순차',c:'#EA580C',bg:'#FEF5E7'},
+      desc:'관리자가 후보별 목표치를 입력하고 큰 주주부터 순서대로 채웁니다.',
+      infoT:'관리자 입력값 사용',infoD:'관리자가 후보별 분배 의결권을 직접 입력하고, 주식 많은 주주(그룹)부터 순서대로 목표치를 채웁니다. 큰 주주의 표가 한 후보에 집중되며, 최소 1표 보장으로 완전 0표는 방지합니다.',
+      prev:{head:['그룹','후보 1','후보 2','후보 3'],rows:[['A그룹','11,520','0','0'],['B그룹','0','4,800','1'],['C그룹','1','0','1,919'],['warn','미분배','-','-']]}},
+    {id:'eq',name:'최소 보장 균등 방식',cat:{t:'균등',c:'#7C3AED',bg:'#F5F3FF'},
+      desc:'후보별 최소 1표를 보장하며 잔여 의결권을 균등 배분합니다.',
+      infoT:'관리자 입력값 미사용',infoD:'각 후보에게 최소 1표를 보장한 뒤 잔여 의결권을 후보 수로 균등하게 나눠 배분합니다.',
+      prev:{head:['그룹','후보 1','후보 2','후보 3'],rows:[['A그룹','3,840','3,840','3,840'],['B그룹','1,600','1,600','1,600'],['C그룹','640','640','640']]}}
+  ];
+  function byId(id){return METHODS.filter(function(m){return m.id===id;})[0];}
+  var appliedMethod='prop';   // 현재 적용된 방식
+  var selMethod='prop';       // 다이얼로그에서 선택 중
   var SH=[
     {no:'0001',nm:'김민준',rn:'820314-1******',qty:5200},
     {no:'0002',nm:'이서연',rn:'751122-2******',qty:3100},
@@ -342,27 +431,77 @@
   ];
   function n(x){return (x||'').toString().replace(/[^0-9]/g,'');}
   function fmt(v){return (v||0).toLocaleString('en-US');}
-  var repSel=0;
-
-  // --- 분배 방식 드롭다운 ---
-  var dmBtn=document.getElementById('dmBtn'),dmPop=document.getElementById('dmPop'),dmName=document.getElementById('dmName');
-  if(dmBtn&&dmPop){
-    dmBtn.addEventListener('click',function(e){e.stopPropagation();dmPop.classList.toggle('show');});
-    document.addEventListener('click',function(){dmPop.classList.remove('show');});
-    dmPop.addEventListener('click',function(e){e.stopPropagation();});
-    dmPop.querySelectorAll('.dm-item').forEach(function(it){
-      it.addEventListener('click',function(){
-        curMethod=it.dataset.m; dmName.textContent=METHODS[curMethod].name;
-        dmPop.querySelectorAll('.dm-item .ck').forEach(function(c){c.innerHTML='';});
-        it.querySelector('.ck').innerHTML='<i class="ph ph-check" style="font-size:14px"></i>';
-        dmPop.classList.remove('show');
-        if(document.getElementById('csOv').classList.contains('show')) renderGrid();
-      });
-    });
+  function distribute(cap){
+    var m=appliedMethod, sum=SH.reduce(function(a,r){return a+r.qty;},0), out=[];
+    if(m==='eq'){ var each=Math.floor(cap/SH.length); SH.forEach(function(r){out.push(Math.max(1,each));}); }
+    else if(m==='seq'){ var rem=cap; var ord=SH.slice().sort(function(a,b){return b.qty-a.qty;}); var map={}; ord.forEach(function(r){var give=Math.min(rem,r.qty); map[r.no]=Math.max(rem>0?1:0,give); rem-=give;}); SH.forEach(function(r){out.push(map[r.no]||0);}); }
+    else { SH.forEach(function(r){out.push(Math.round(cap*r.qty/sum));}); }
+    return out;
   }
 
-  // --- 시트 ---
-  var ov=document.getElementById('csOv');
+  // ---------- 분배 방식 선택 다이얼로그 ----------
+  var dmBtn=document.getElementById('dmBtn'), dlg=document.getElementById('dmDlg'), dmName=document.getElementById('dmName');
+  var grid=document.getElementById('dmrGrid'), infoT=document.getElementById('dmInfoT'), infoD=document.getElementById('dmInfoD');
+  var prev=document.getElementById('dmPrev'), ph=document.getElementById('dmPh'), pb=document.getElementById('dmPb');
+  var alert=document.getElementById('dmAlert'), chk=document.getElementById('dmChk'), apply=document.getElementById('dmApply');
+  var expBtn=document.getElementById('dmExp'), expTxt=document.getElementById('dmExpTxt');
+
+  function renderCards(){
+    grid.innerHTML=METHODS.map(function(m){
+      return '<div class="dmr'+(m.id===selMethod?' on':'')+'" data-id="'+m.id+'">'
+        +'<span class="rd"></span>'
+        +'<div class="fc"><div class="rt">'+m.name+'</div><div class="rd2">'+m.desc+'</div></div>'
+        +'<span class="cat" style="background:'+m.cat.bg+';color:'+m.cat.c+'">'+m.cat.t+'</span></div>';
+    }).join('');
+    grid.querySelectorAll('.dmr').forEach(function(el){
+      el.addEventListener('click',function(){ selMethod=el.dataset.id; syncDlg(); });
+    });
+  }
+  function renderPrev(){
+    var m=byId(selMethod), t=m.prev;
+    ph.innerHTML='<tr>'+t.head.map(function(h,i){return '<th'+(i?' class="n"':'')+'>'+h+'</th>';}).join('')+'</tr>';
+    pb.innerHTML=t.rows.map(function(r){
+      var warn=r[0]==='warn'; var cells=warn?r.slice(1):r;
+      var lead=warn?'미분배 잔여':cells[0];
+      return '<tr>'+'<td'+(warn?' class="warn"':'')+'>'+(warn?'미분배 잔여':cells[0])+'</td>'
+        +cells.slice(1).map(function(c){return '<td class="n'+(warn?' warn':'')+'">'+c+'</td>';}).join('')+'</tr>';
+    }).join('');
+  }
+  function syncDlg(){
+    renderCards();
+    var m=byId(selMethod);
+    infoT.textContent=m.infoT; infoD.textContent=m.infoD;
+    renderPrev();
+    var changed=(selMethod!==appliedMethod);
+    alert.classList.toggle('show',changed);
+    // 방식 변경 시에만 확인 체크 필요
+    chk.style.display=changed?'flex':'none';
+    if(!changed){chk.classList.remove('on');}
+    apply.disabled = changed && !chk.classList.contains('on');
+  }
+  function openDlg(){ selMethod=appliedMethod; chk.classList.remove('on'); prev.classList.remove('show'); expTxt.textContent='펼치기'; expBtn.querySelector('i').className='ph ph-caret-down'; syncDlg(); dlg.classList.add('show'); }
+  function closeDlg(){ dlg.classList.remove('show'); }
+  dmBtn.addEventListener('click',openDlg);
+  document.getElementById('dmX').addEventListener('click',closeDlg);
+  document.getElementById('dmCancel').addEventListener('click',closeDlg);
+  dlg.addEventListener('click',function(e){if(e.target===dlg)closeDlg();});
+  expBtn.addEventListener('click',function(){
+    var open=prev.classList.toggle('show');
+    expTxt.textContent=open?'접기':'펼치기';
+    expBtn.querySelector('i').className=open?'ph ph-caret-up':'ph ph-caret-down';
+  });
+  chk.addEventListener('click',function(){ chk.classList.toggle('on'); apply.disabled=(selMethod!==appliedMethod)&&!chk.classList.contains('on'); });
+  apply.addEventListener('click',function(){
+    appliedMethod=selMethod;
+    if(dmName) dmName.textContent=byId(appliedMethod).name;
+    closeDlg();
+    if(csOv.classList.contains('show')) renderGrid();
+    toast.textContent='분배 방식이 적용되었습니다.';
+    toast.classList.add('show'); setTimeout(function(){toast.classList.remove('show');},1800);
+  });
+
+  // ---------- 표 분배 시트 ----------
+  var csOv=document.getElementById('csOv');
   function openSheet(td){
     var no=td[0],nm=td[1],grp=td[2],cnt=td[3],cap=td[4],und=td[5];
     document.getElementById('csTitle').textContent=nm;
@@ -375,41 +514,27 @@
     var s3=document.getElementById('csS3'), s3w=document.getElementById('csS3wrap');
     s3.textContent=und; s3w.classList.toggle('warn', n(und)!=='' && n(und)!=='0');
     document.getElementById('csS2').__cap=parseInt(n(cap)||'0',10);
-    repSel=0;
     renderGrid();
-    ov.classList.add('show');
+    csOv.classList.add('show');
   }
   function renderGrid(){
-    document.getElementById('csMethod').textContent=METHODS[curMethod].name;
+    document.getElementById('csMethod').textContent=byId(appliedMethod).name;
     var gh=document.getElementById('csGh'), gb=document.getElementById('csGb');
     var cap=document.getElementById('csS2').__cap||0;
-    var sum=SH.reduce(function(a,r){return a+r.qty;},0);
-    if(curMethod==='prop'){
-      gh.innerHTML='<tr><th>주주번호</th><th>주주명</th><th>실명확인번호</th><th class="n">보유의결권</th><th class="n">배분의결권</th></tr>';
-      gb.innerHTML=SH.map(function(r){
-        var al=Math.round(cap*r.qty/sum);
-        return '<tr><td>'+r.no+'</td><td>'+r.nm+'</td><td>'+r.rn+'</td><td class="n">'+fmt(r.qty)+'</td><td class="n">'+fmt(al)+'</td></tr>';
-      }).join('');
-    }else{
-      gh.innerHTML='<tr><th>주주번호</th><th>주주명</th><th>실명확인번호</th><th class="n">보유의결권</th><th class="c">선택</th></tr>';
-      gb.innerHTML=SH.map(function(r,i){
-        return '<tr class="'+(i===repSel?'sel':'')+'" data-i="'+i+'"><td>'+r.no+'</td><td>'+r.nm+'</td><td>'+r.rn+'</td><td class="n">'+fmt(r.qty)+'</td><td class="c"><span class="cs-rd'+(i===repSel?' on':'')+'"></span></td></tr>';
-      }).join('');
-      gb.querySelectorAll('tr').forEach(function(tr){
-        tr.style.cursor='pointer';
-        tr.addEventListener('click',function(){repSel=parseInt(tr.dataset.i,10);renderGrid();});
-      });
-    }
+    var al=distribute(cap);
+    gh.innerHTML='<tr><th>주주번호</th><th>주주명</th><th>실명확인번호</th><th class="n">보유의결권</th><th class="n">배분의결권</th></tr>';
+    gb.innerHTML=SH.map(function(r,i){
+      return '<tr><td>'+r.no+'</td><td>'+r.nm+'</td><td>'+r.rn+'</td><td class="n">'+fmt(r.qty)+'</td><td class="n">'+fmt(al[i])+'</td></tr>';
+    }).join('');
   }
-  function closeSheet(){ov.classList.remove('show');}
+  function closeSheet(){csOv.classList.remove('show');}
   document.getElementById('csX').addEventListener('click',closeSheet);
   document.getElementById('csCancel').addEventListener('click',closeSheet);
-  ov.addEventListener('click',function(e){if(e.target===ov)closeSheet();});
+  csOv.addEventListener('click',function(e){if(e.target===csOv)closeSheet();});
   var toast=document.getElementById('csToast');
   document.getElementById('csSave').addEventListener('click',function(){
-    closeSheet();
-    toast.classList.add('show');
-    setTimeout(function(){toast.classList.remove('show');},1800);
+    closeSheet(); toast.textContent='집중투표 표 분배가 저장되었습니다.';
+    toast.classList.add('show'); setTimeout(function(){toast.classList.remove('show');},1800);
   });
 
   // 행 클릭 → 시트
