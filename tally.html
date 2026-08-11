@@ -35,6 +35,57 @@
   .stat .d{font-size:12px;margin-top:4px}
   .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
+
+  /* ===== 집계 결과 (artifact) ===== */
+  .content{display:flex;flex-direction:column;gap:16px;padding-bottom:40px}
+  .ty-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+  .ty-hd .page-sub{margin-top:6px}
+  .ty-hd-actions{display:flex;align-items:center;gap:8px;flex:none}
+  .ty-seg{display:inline-flex;background:#f1f1f2;border-radius:9px;padding:3px}
+  .ty-sg{height:30px;padding:0 12px;border:none;background:none;border-radius:7px;font-family:inherit;font-size:13px;font-weight:600;color:#737373;cursor:pointer}
+  .ty-sg.active{background:#fff;color:#0a0a0a;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+  .ty-btn2{height:36px;padding:0 14px;border:1px solid var(--border);border-radius:9px;background:#fff;font-family:inherit;font-size:13px;font-weight:600;color:#0a0a0a;cursor:pointer}
+  .ty-btn2 .v{color:#737373;font-weight:500;margin-left:2px}
+  .ty-btn-pri{height:36px;padding:0 16px;border:none;border-radius:9px;background:#0071f3;color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer}
+  .ty-info{display:flex;align-items:center;gap:8px;background:#eff4ff;border:1px solid #d6e4ff;border-radius:10px;padding:11px 14px;font-size:13px;color:#1d4ed8}
+  .ty-tabs{display:flex;gap:22px;border-bottom:1px solid var(--border)}
+  .ty-tab{height:40px;border:none;background:none;font-family:inherit;font-size:14px;font-weight:600;color:#737373;cursor:pointer;border-bottom:2px solid transparent;padding:0 2px}
+  .ty-tab.active{color:#0a0a0a;border-bottom-color:#0a0a0a}
+  .ty-panel{display:none;flex-direction:column;gap:14px}
+  .ty-panel.active{display:flex}
+  .ty-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .ty-chips{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .ty-chip-lb{font-size:13px;color:#737373;margin-right:4px}
+  .ty-chip{height:32px;padding:0 14px;border:1px solid var(--border);border-radius:9999px;background:#fff;font-family:inherit;font-size:13px;color:#525252;cursor:pointer}
+  .ty-chip:hover{background:var(--muted)}
+  .ty-chip.active{background:#0071f3;border-color:#0071f3;color:#fff;font-weight:600}
+  .ty-tools{display:flex;align-items:center;gap:16px}
+  .ty-toggle{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#404040;cursor:pointer;user-select:none}
+  .ty-sw{width:36px;height:20px;border-radius:9999px;background:#d4d4d8;position:relative;transition:background .15s;flex:none}
+  .ty-sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .15s}
+  .ty-toggle.on .ty-sw{background:#0071f3}
+  .ty-toggle.on .ty-sw::after{transform:translateX(16px)}
+  .ty-dl{display:inline-flex;align-items:center;gap:5px;font-size:13px;color:#525252;cursor:pointer;background:none;border:none;font-family:inherit}
+  .ty-dl:hover{color:#0a0a0a}
+  .ty-tblwrap{border:1px solid var(--border);border-radius:12px;overflow:auto;background:#fff}
+  table.ty-tbl{width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap}
+  .ty-tbl thead th{background:#fafafa;text-align:right;font-weight:600;color:var(--muted-fg);font-size:12px;padding:11px 12px;border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0}
+  .ty-tbl thead th.l{text-align:left}.ty-tbl thead th.c{text-align:center}
+  .ty-tbl td{padding:13px 12px;border-bottom:1px solid #f0f0f0;text-align:right;font-variant-numeric:tabular-nums;color:#0a0a0a}
+  .ty-tbl td.l{text-align:left}.ty-tbl td.c{text-align:center}
+  .ty-tbl td.muted{color:#c4c4c4}
+  .ty-tbl tbody tr:last-child td{border-bottom:none}
+  .ty-tbl tbody tr:hover td{background:#fafafa}
+  .ty-tbl .nm{color:#0a0a0a}
+  .ty-tbl .sub{color:#737373}
+  .pos{color:#0a8a3c;font-weight:600}
+  .neg{color:#dc2626;font-weight:600}
+  .strong{font-weight:700;color:#0a0a0a}
+  .vb{display:inline-flex;align-items:center;height:22px;padding:0 10px;border-radius:9999px;font-size:12px;font-weight:600}
+  .vb.green{background:#eafaf0;color:#0a8a3c}
+  .vb.red{background:#fdecec;color:#dc2626}
+  .vb.gray{background:#f1f1f2;color:#737373}
+  .vb.amber{background:#fef6e7;color:#b45309}
 </style>
 </head>
 <body>
@@ -142,28 +193,112 @@
     </div>
     <div class="scroll">
       <div class="content" style="width:100%">
-        <div class="st-head"><div><div class="page-title">주주총회 집계</div><div class="page-sub">제10기 정기주주총회 · 개표 결과 (기준일 2025.12.31)</div></div><div class="actions"><span class="badge green" style="height:28px">개표 완료</span></div></div>
-
-        <div class="stat-grid">
-          <div class="stat"><div class="k">발행주식총수</div><div class="v">476,211,964</div><div class="d"><span class="badge gray">약 4.76억 주</span></div></div>
-          <div class="stat"><div class="k">참석 의결권</div><div class="v">300,000,000</div><div class="d"><span class="badge blue">의결권 참석률 63.0%</span></div></div>
-          <div class="stat"><div class="k">참석 주주수</div><div class="v">20,000</div><div class="d"><span class="badge blue">주주 참석률 3.1%</span></div></div>
-          <div class="stat"><div class="k">전체 주주수</div><div class="v">650,000</div></div>
+        <div class="ty-hd">
+          <div>
+            <div class="page-title">주주총회 결과 집계</div>
+            <div class="page-sub">제10기 정기주주총회 · 2026-08-28</div>
+          </div>
+          <div class="ty-hd-actions">
+            <div class="ty-seg">
+              <button class="ty-sg active" data-seg="live">표결 진행중</button>
+              <button class="ty-sg" data-seg="closed">표결 마감</button>
+            </div>
+            <button class="ty-btn2" id="tyFrac">단수주 분배 설정 <span class="v">· 찬성</span></button>
+            <button class="ty-btn-pri" id="tyCert">결과확인증</button>
+          </div>
         </div>
 
-        <div class="st-head" style="margin-top:8px"><h2 style="font-size:16px">안건별 개표 결과</h2><div class="actions"><button class="btn">결과 내보내기</button></div></div>
-        <div class="tbl-wrap"><table class="tbl">
-          <thead><tr><th style="width:110px">의안번호</th><th style="width:96px">결의유형</th><th>의안명</th><th style="text-align:right">찬성 수</th><th style="text-align:right">반대 수</th><th style="text-align:right">찬성률</th><th style="width:110px">결과</th></tr></thead>
-          <tbody>
-            <tr><td>제1호</td><td>보통결의</td><td class="name">재무제표 승인의 건</td><td style="text-align:right">241,800,000</td><td style="text-align:right">58,200,000</td><td style="text-align:right">80.6%</td><td><span class="badge green">가결</span></td></tr>
-            <tr><td>제2-1호</td><td>특별결의</td><td>집중투표제 배제 조항 삭제의 건 (정관 제37조 제3항)</td><td style="text-align:right">173,700,000</td><td style="text-align:right">126,300,000</td><td style="text-align:right">57.9%</td><td><span class="badge green">가결</span></td></tr>
-            <tr><td>제2-2호</td><td>특별결의</td><td>전자주주총회 도입 관련 변경 (정관 제26조 제2항)</td><td style="text-align:right">240,600,000</td><td style="text-align:right">59,400,000</td><td style="text-align:right">80.2%</td><td><span class="badge green">가결</span></td></tr>
-            <tr><td>제2-3호</td><td>특별결의</td><td>의결권 대리행사 수단 확대 (정관 제31조 제2항)</td><td style="text-align:right">240,600,000</td><td style="text-align:right">59,400,000</td><td style="text-align:right">80.2%</td><td><span class="badge green">가결</span></td></tr>
-            <tr><td>제3-1호</td><td>집중투표</td><td>집중투표 후보 4인 중 2인 선임의 건 (김근수·진웅섭 선임)</td><td style="text-align:right" colspan="2">600,000,000표 행사</td><td style="text-align:right">-</td><td><span class="badge green">가결(2인)</span></td></tr>
-            <tr><td>제3-2호</td><td>보통결의</td><td class="name">감사위원이 되는 사외이사 선임의 건</td><td style="text-align:right">238,800,000</td><td style="text-align:right">61,200,000</td><td style="text-align:right">79.6%</td><td><span class="badge green">가결</span></td></tr>
-          </tbody>
-        </table></div>
-        <div class="page-sub" style="margin-top:4px">* 일반 의안 분모 = 참석 의결권 300,000,000주 (기권 0 가정). 집중투표는 후보별 득표순 상위 2인 선임.</div>
+        <div class="ty-info"><i class="ph ph-info" style="font-size:16px"></i>중복 투표한 주주의 의결권은 집계에서 제외된 수치입니다.</div>
+
+        <div class="ty-tabs">
+          <button class="ty-tab active" data-tt="agenda">의안별 결과</button>
+          <button class="ty-tab" data-tt="holder">주주별 결과</button>
+        </div>
+
+        <!-- ===== 의안별 결과 ===== -->
+        <div class="ty-panel active" data-tp="agenda">
+          <div class="ty-toolbar">
+            <div class="ty-chips">
+              <button class="ty-chip active" data-ch="all">전체</button>
+              <button class="ty-chip" data-ch="evk">전자투표(국내)</button>
+              <button class="ty-chip" data-ch="eww">전자위임(해외)</button>
+              <button class="ty-chip" data-ch="pv">서면투표</button>
+              <button class="ty-chip" data-ch="pwo">서면위임(자사)</button>
+              <button class="ty-chip" data-ch="pwt">서면위임(타사)</button>
+            </div>
+            <div class="ty-tools">
+              <label class="ty-toggle on" data-toggle><span class="ty-sw"></span>중립투표적용</label>
+              <button class="ty-dl"><i class="ph ph-download-simple" style="font-size:15px"></i>다운로드</button>
+            </div>
+          </div>
+          <div class="ty-tblwrap">
+            <table class="ty-tbl">
+              <thead><tr>
+                <th class="l">의안 번호</th><th class="l">의안명</th><th class="l">결의방법</th><th class="c">가결 여부</th>
+                <th>의결권 있는 발행주식 총수 ①</th><th>총 행사 의결권 ②</th>
+                <th>① 찬성률</th><th>② 찬성률</th><th>② 반대, 기권 등 비율</th>
+                <th>찬성</th><th>반대</th><th>기권</th><th>중립</th><th>단수주</th>
+              </tr></thead>
+              <tbody>
+                <tr>
+                  <td class="l">제1호</td><td class="l nm">사내이사 박길윤 선임</td><td class="l sub">보통결의</td><td class="c"><span class="vb green">가결</span></td>
+                  <td>20,000,000</td><td>13,100,000</td><td>58.6%</td><td class="strong">89.4%</td><td>10.6%</td>
+                  <td class="pos">11,717,889</td><td class="neg">1,031,574</td><td>350,535</td><td>0</td><td>2</td>
+                </tr>
+                <tr>
+                  <td class="l">제2호</td><td class="l nm">제3차 배정 신주발행 근거 조항 신설</td><td class="l sub">특별결의</td><td class="c"><span class="vb red">부결</span></td>
+                  <td>20,000,000</td><td>13,100,000</td><td>39.9%</td><td class="strong">60.9%</td><td>39.1%</td>
+                  <td class="pos">7,980,000</td><td class="neg">4,380,000</td><td>740,000</td><td>0</td><td>0</td>
+                </tr>
+                <tr>
+                  <td class="l">제3호</td><td class="l nm">이사 보수한도 승인의 건</td><td class="l sub">보통결의</td><td class="c"><span class="vb gray">폐기</span></td>
+                  <td>20,000,000</td><td>13,100,000</td><td>63.1%</td><td class="strong">96.4%</td><td>3.6%</td>
+                  <td class="pos">12,630,000</td><td class="neg">325,000</td><td>145,000</td><td>0</td><td>0</td>
+                </tr>
+                <tr>
+                  <td class="l">제4호</td><td class="l nm">감사위원이 되는 사외이사 선임의 건</td><td class="l sub">보통결의</td><td class="c"><span class="vb amber">철회</span></td>
+                  <td>20,000,000</td><td class="muted">-</td><td class="muted">-</td><td class="muted">-</td><td class="muted">-</td>
+                  <td class="muted">-</td><td class="muted">-</td><td class="muted">-</td><td class="muted">-</td><td class="muted">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ===== 주주별 결과 ===== -->
+        <div class="ty-panel" data-tp="holder">
+          <div class="ty-toolbar">
+            <div class="ty-chips" data-target="#holderTbl">
+              <span class="ty-chip-lb">행사방식</span>
+              <button class="ty-chip active" data-ch="all">전체</button>
+              <button class="ty-chip" data-ch="evk">전자투표(국내)</button>
+              <button class="ty-chip" data-ch="eww">전자위임(해외)</button>
+              <button class="ty-chip" data-ch="pv">서면투표</button>
+              <button class="ty-chip" data-ch="pwo">서면위임(자사)</button>
+              <button class="ty-chip" data-ch="pwt">서면위임(타사)</button>
+            </div>
+            <button class="ty-dl"><i class="ph ph-download-simple" style="font-size:15px"></i>다운로드</button>
+          </div>
+          <div class="ty-tblwrap">
+            <table class="ty-tbl" id="holderTbl">
+              <thead><tr>
+                <th class="l">투표권자</th><th class="l">주주명</th><th class="l">행사방식</th>
+                <th>보유주식</th><th>제한의결권</th><th>행사가능의결권</th>
+                <th class="c">주주제한</th><th class="c">의안별제한</th>
+                <th class="c">제1호 의안</th><th class="c">제2호 의안</th><th class="c">제3호 의안</th>
+              </tr></thead>
+              <tbody>
+                <tr data-ch="evk"><td class="l nm">CITIGROUP</td><td class="l sub">CITIGROUP</td><td class="l sub">전자투표(국내)</td><td>67,000</td><td>0</td><td>67,000</td><td class="c muted">-</td><td class="c muted">-</td><td class="c"><span class="vb green">찬성</span></td><td class="c"><span class="vb green">찬성</span></td><td class="c"><span class="vb red">반대</span></td></tr>
+                <tr data-ch="evk"><td class="l nm">BARCLAYS CAPITAL</td><td class="l sub">BARCLAYS CAPITAL</td><td class="l sub">전자투표(국내)</td><td>345,804</td><td>0</td><td>345,804</td><td class="c muted">-</td><td class="c muted">-</td><td class="c"><span class="vb green">찬성</span></td><td class="c"><span class="vb green">찬성</span></td><td class="c"><span class="vb red">반대</span></td></tr>
+                <tr data-ch="evk"><td class="l nm">우리사주조합장(이유정)</td><td class="l sub">우리사주조합장(이유정)</td><td class="l sub">전자투표(국내)</td><td>345,804</td><td>0</td><td>345,804</td><td class="c muted">-</td><td class="c muted">-</td><td class="c"><span class="vb green">찬성</span></td><td class="c"><span class="vb green">찬성</span></td><td class="c"><span class="vb red">반대</span></td></tr>
+                <tr data-ch="eww"><td class="l nm">한국교직원공제회</td><td class="l sub">한국교직원공제회(통합계좌3)</td><td class="l sub">전자위임(해외)</td><td>3,345,804</td><td>20</td><td>3,345,784</td><td class="c sub">최대주주</td><td class="c sub">제한 2건</td><td class="c"><span class="vb red">반대</span></td><td class="c"><span class="vb red">반대</span></td><td class="c"><span class="vb green">찬성</span></td></tr>
+                <tr data-ch="eww"><td class="l nm">TMF(대신인베스트11호)</td><td class="l sub">TMF(대신인베스트11호)</td><td class="l sub">전자위임(해외)</td><td>2,400,000</td><td>20</td><td>2,399,980</td><td class="c muted">-</td><td class="c muted">-</td><td class="c"><span class="vb green">찬성</span></td><td class="c"><span class="vb green">찬성</span></td><td class="c"><span class="vb green">찬성</span></td></tr>
+                <tr data-ch="eww"><td class="l nm">국민연금공단</td><td class="l sub">국민연금공단</td><td class="l sub">전자위임(해외)</td><td>1,850,000</td><td>0</td><td>1,850,000</td><td class="c muted">-</td><td class="c muted">-</td><td class="c"><span class="vb gray">중립</span></td><td class="c"><span class="vb gray">중립</span></td><td class="c"><span class="vb green">찬성</span></td></tr>
+                <tr data-ch="pv"><td class="l nm">홍*동</td><td class="l sub">홍*동</td><td class="l sub">서면투표</td><td>1,200</td><td>0</td><td>1,200</td><td class="c muted">-</td><td class="c muted">-</td><td class="c"><span class="vb green">찬성</span></td><td class="c"><span class="vb amber">기권</span></td><td class="c"><span class="vb green">찬성</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </main>
@@ -215,6 +350,39 @@
     var cr=e.target.closest('.chk-row'); if(cr){cr.classList.toggle('on');}
     var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
   });
+  // ===== 집계 결과 상호작용 =====
+  // 탭 (의안별/주주별)
+  document.querySelectorAll('.ty-tab').forEach(function(t){
+    t.addEventListener('click',function(){
+      var k=t.dataset.tt;
+      document.querySelectorAll('.ty-tab').forEach(function(x){x.classList.toggle('active',x===t);});
+      document.querySelectorAll('.ty-panel').forEach(function(p){p.classList.toggle('active',p.dataset.tp===k);});
+    });
+  });
+  // 표결 진행중/마감 세그
+  document.querySelectorAll('.ty-seg').forEach(function(sg){
+    sg.querySelectorAll('.ty-sg').forEach(function(b){
+      b.addEventListener('click',function(){ sg.querySelectorAll('.ty-sg').forEach(function(x){x.classList.toggle('active',x===b);}); });
+    });
+  });
+  // 칩 필터
+  document.querySelectorAll('.ty-chips').forEach(function(wrap){
+    wrap.querySelectorAll('.ty-chip').forEach(function(c){
+      c.addEventListener('click',function(){
+        wrap.querySelectorAll('.ty-chip').forEach(function(x){x.classList.toggle('active',x===c);});
+        var tgt=wrap.getAttribute('data-target'); if(!tgt) return;
+        var ch=c.dataset.ch, tb=document.querySelector(tgt);
+        if(tb) tb.querySelectorAll('tbody tr').forEach(function(r){ r.style.display=(ch==='all'||r.dataset.ch===ch)?'':'none'; });
+      });
+    });
+  });
+  // 중립투표적용 토글
+  document.querySelectorAll('.ty-toggle[data-toggle]').forEach(function(t){
+    t.addEventListener('click',function(){ t.classList.toggle('on'); });
+  });
+  // 다운로드 / 결과확인증 / 단수주 -> 토스트
+  document.querySelectorAll('.ty-dl').forEach(function(b){ b.addEventListener('click',function(){ if(window.cxToast)cxToast('다운로드를 시작합니다.'); }); });
+  (function(){ var c=document.getElementById('tyCert'); if(c)c.addEventListener('click',function(){ if(window.cxToast)cxToast('결과확인증을 발급했습니다.'); }); })();
 </script>
 <script src="conexus.js"></script>
 </body>
