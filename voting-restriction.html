@@ -253,7 +253,10 @@
   .tsec-head h2{font-size:16px;font-weight:600}
   .pill-red{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;
     background:var(--red50);color:var(--red600);font-size:12px;font-weight:600}
+  .pill-green{display:inline-flex;align-items:center;gap:3px;height:20px;padding:0 8px;border-radius:9999px;background:#eafaf0;color:#0a8a3c;font-size:12px;font-weight:600}
+  .pill-green svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.4}
   .tsec-head .desc{margin-top:4px;font-size:14px;color:var(--muted-fg)}
+  table.tbl tr.filtered-out{display:none}
 
   .chips{display:flex;flex-wrap:wrap;gap:6px}
   .chip{display:inline-flex;align-items:center;gap:4px;height:28px;padding:4px 6px 4px 10px;border-radius:9999px;
@@ -491,10 +494,9 @@ a.nav-item{text-decoration:none;color:var(--fg)}
         <div class="tsec">
           <div class="tsec-head">
             <div>
-              <div class="htitle"><h2>주주명부 (2026-01-31)</h2><span class="pill-red">명부 미확정</span></div>
+              <div class="htitle"><h2>주주명부 (2026-01-31)</h2><span class="pill-green"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>명부확정</span></div>
               <div class="desc">제한 유형을 지정하면 해당 주주의 전체 주식이 모든 의안에서 의결권 제외됩니다.</div>
             </div>
-            <button class="btn" id="confirmBtn">주주명부 확정하기</button>
           </div>
 
           <div class="chips">
@@ -705,8 +707,20 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   // segmented toggles (visual)
   document.querySelectorAll('.seg').forEach(seg=>seg.querySelectorAll('.s').forEach(s=>s.addEventListener('click',()=>{
     seg.querySelectorAll('.s').forEach(x=>x.classList.remove('active'));s.classList.add('active');})));
+  function filterRestrict(label){
+    var tbody=document.querySelector('table.tbl tbody'); if(!tbody) return;
+    tbody.querySelectorAll('tr').forEach(function(tr){
+      if(tr.classList.contains('child')) return;
+      var show = (label==='전체');
+      if(!show){ var b=tr.querySelector('[data-restrict]'); var t=b?(b.dataset.type||''):''; show=(t===label); }
+      tr.classList.toggle('filtered-out', !show);
+      if(tr.classList.contains('grp')){ var gid=tr.dataset.grp; tbody.querySelectorAll('tr.child[data-child="'+gid+'"]').forEach(function(cr){ cr.classList.toggle('filtered-out', !show); }); }
+    });
+  }
   document.querySelectorAll('.chips').forEach(c=>c.querySelectorAll('.chip').forEach(ch=>ch.addEventListener('click',()=>{
-    c.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));ch.classList.add('active');})));
+    c.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));ch.classList.add('active');
+    var label=ch.textContent.replace(/\s*[0-9,]+\s*$/,'').trim();
+    filterRestrict(label);})));
 
   // toast helper
   let toastT;
@@ -877,7 +891,6 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   // ===== 이전 설정 불러오기 패널 =====
   const loadOverlay=document.getElementById('loadOverlay');
   document.getElementById('loadBtn').addEventListener('click',()=>loadOverlay.classList.remove('hidden'));
-  document.getElementById('confirmBtn').addEventListener('click',()=>showToast('주주명부가 확정되었습니다'));
 
   // overlay close (backdrop + data-close)
   document.querySelectorAll('.overlay').forEach(ov=>{
