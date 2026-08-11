@@ -43,6 +43,27 @@
   .ev-head .spacer{flex:1}
   .btn-primary{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:none;border-radius:10px;background:#171717;color:#fafafa;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer}
   .btn-primary svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+  .cfm{width:640px;max-width:calc(100vw - 32px)}
+  .cfm-tbl{width:100%;border-collapse:collapse;font-size:14px;margin-top:2px}
+  .cfm-tbl th{text-align:right;font-weight:500;color:#737373;font-size:13px;padding:10px 8px;border-bottom:1px solid #eee;white-space:nowrap}
+  .cfm-tbl th.l{text-align:left}
+  .cfm-tbl td{text-align:right;padding:13px 8px;border-bottom:1px solid #f2f2f2;font-variant-numeric:tabular-nums;color:#171717}
+  .cfm-tbl tr:last-child td{border-bottom:none}
+  .cfm-tbl td.l{text-align:left;font-weight:600}
+  .cfm-note{display:flex;align-items:center;gap:8px;padding:12px 14px;background:#F1F6FF;border:1px solid #DCEAFF;border-radius:10px;font-size:13px;color:#0071F3;line-height:1.5}
+  .cfm-note svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2}
+  .cfm-foot{display:flex;align-items:center;gap:12px;padding:16px}
+  .cfm-chk{display:flex;align-items:center;gap:10px;flex:1;font-size:14px;color:#0a0a0a;cursor:pointer;user-select:none}
+  .cfm-chk .cb{width:20px;height:20px;border:1.5px solid #a3a3a3;border-radius:6px;display:flex;align-items:center;justify-content:center;flex:none;background:#fff}
+  .cfm-chk .cb svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:3;opacity:0}
+  .cfm-chk.on .cb{background:#171717;border-color:#171717}
+  .cfm-chk.on .cb svg{opacity:1}
+  .cfm-cancel{height:40px;padding:0 16px;border:1px solid #e5e5e5;border-radius:10px;background:#fff;font-family:inherit;font-size:14px;font-weight:600;color:#171717;cursor:pointer}
+  .cfm-ok{height:40px;padding:0 18px;border:none;border-radius:10px;background:#171717;color:#fff;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer}
+  .cfm-ok:disabled{opacity:.4;cursor:not-allowed}
+  .btn-confirmed{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border:1px solid #FBD0D8;border-radius:10px;background:#FEE2E2;color:#E11D48;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer}
+  .btn-confirmed svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+
   .evtabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:16px}
   .evtab{height:40px;padding:0 10px;display:inline-flex;align-items:center;font-size:14px;font-weight:500;color:var(--muted-fg);border-bottom:2px solid transparent;cursor:pointer}
   .evtab.active{color:#0a0a0a;border-bottom-color:#171717}
@@ -752,6 +773,36 @@
       var x=t?t.textContent:''; if(x.indexOf('타사')>=0)return '타사'; if(x.indexOf('서면투표')>=0)return '투표'; return '자사'; }
     document.querySelectorAll('.js-indiv').forEach(function(b){ b.addEventListener('click',function(){ location.href='paper-individual.html?ch='+encodeURIComponent(chOf())+'&v='+Date.now(); }); });
   })();
+</script>
+<div class="dlg-ov" id="cfmOv">
+  <div class="dlg cfm">
+    <div class="dlg-h"><div class="t">서면투표 · 서면위임장 내역을 확정 하시겠습니까?</div><div class="d">아래 수치를 확인한 뒤 확정을 완료하세요.</div><button class="dlg-x" data-cfm-close><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="dlg-c">
+      <table class="cfm-tbl"><thead><tr><th class="l">내용</th><th>서면투표</th><th>서면위임(자사)</th><th>서면위임(자사 외)</th></tr></thead><tbody><tr><td class="l">의안수</td><td>-</td><td>12</td><td>12</td></tr><tr><td class="l">주주수</td><td>-</td><td>100</td><td>50</td></tr><tr><td class="l">행사가능의결권</td><td>-</td><td>43,789,441</td><td>13,789,441</td></tr><tr><td class="l">행사의결권</td><td>-</td><td>41,247,000</td><td>11,247,000</td></tr></tbody></table>
+      <div class="cfm-note"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>중복 행사한 주주가 8명 있습니다. 확정 후 '중복 의결권 관리' 화면에서 처리해주세요.</div>
+    </div>
+    <div class="cfm-foot">
+      <label class="cfm-chk on" id="cfmChk"><span class="cb"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 내용을 확인했으며, 내역을 확정합니다.</label>
+      <button class="cfm-cancel" data-cfm-close>취소</button>
+      <button class="cfm-ok" id="cfmOk">확정하기</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var btn=document.getElementById("btnConfirm"); if(!btn) return;
+  var ov=document.getElementById("cfmOv"), chk=document.getElementById("cfmChk"), ok=document.getElementById("cfmOk");
+  var confirmed=false;
+  function closeCfm(){ ov.classList.remove("show"); }
+  function setConfirmed(v){ confirmed=v;
+    if(v){ btn.className="btn-confirmed"; btn.innerHTML='<svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-1"/></svg>확정 취소'; }
+    else { btn.className="btn-primary"; btn.innerHTML='<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>확정하기'; } }
+  btn.addEventListener("click",function(){ if(confirmed){ setConfirmed(false); } else { ov.classList.add("show"); } });
+  chk.addEventListener("click",function(){ chk.classList.toggle("on"); ok.disabled=!chk.classList.contains("on"); });
+  ok.addEventListener("click",function(){ if(!chk.classList.contains("on")) return; closeCfm(); setConfirmed(true); });
+  ov.addEventListener("click",function(e){ if(e.target===ov) closeCfm(); });
+  ov.querySelectorAll("[data-cfm-close]").forEach(function(b){ b.addEventListener("click",closeCfm); });
+})();
 </script>
 </body>
 </html>
