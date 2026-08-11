@@ -42,6 +42,20 @@
   .mc-v .sub{font-size:18px;font-weight:400;color:#A3A3A3;margin-left:2px}
   .mc-vsep{width:1px;height:14px;background:rgba(255,255,255,.15)}
   .mc-spark{width:80px;height:24px}
+  /* 사회자 탭 편집 보드 */
+  .mc-tabs.editing{gap:8px}
+  .mc-etab{display:inline-flex;align-items:center;gap:6px;height:32px;padding:4px 8px;border-radius:8px;color:#FAFAFA;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.15);box-shadow:0 1px 3px rgba(0,0,0,.1);font-size:16px;font-weight:500;cursor:grab}
+  .mc-etab.drag-over{border-color:#0071F3;box-shadow:0 0 0 2px rgba(0,113,243,.4)}
+  .mc-etab .drag{display:inline-flex;align-items:center;color:#A3A3A3}
+  .mc-etab .lbl{outline:none;min-width:16px;color:#FAFAFA;cursor:text}
+  .mc-etab .rm{border:none;background:none;color:#A3A3A3;cursor:pointer;display:inline-flex;align-items:center;padding:0}
+  .mc-etab .rm:hover{color:#fff}
+  .mc-eadd{display:inline-flex;align-items:center;gap:4px;height:32px;padding:4px 10px;border-radius:8px;border:1px dashed rgba(255,255,255,.3);background:none;color:#A3A3A3;cursor:pointer;font-family:inherit;font-size:14px;font-weight:500}
+  .mc-eadd:hover{color:#FAFAFA;border-color:rgba(255,255,255,.5)}
+  .mc-ebtns{display:flex;gap:8px}
+  .mc-ebtn{height:40px;padding:0 16px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer}
+  .mc-ebtn.cancel{background:none;border:1px solid #737373;color:#FAFAFA}
+  .mc-ebtn.save{background:#003A7F;border:1px solid rgba(255,255,255,.15);color:#FAFAFA}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 </head>
@@ -71,7 +85,7 @@
     <div class="mc-card"><div class="mc-ch"><span class="mc-k">전체 출석 주식수</span><span class="mc-bd"><span class="dot"></span>정족수 충족</span></div><div class="mc-vrow"><span class="mc-v">300,000,000주</span><span class="mc-vsep"></span><span class="mc-v" style="font-weight:400">63.0%</span></div></div>
     <div class="mc-card"><div class="mc-ch"><span class="mc-k">전체 출석 주주수</span></div><div class="mc-v">300,000명</div></div>
     <div class="mc-card"><div class="mc-ch"><span class="mc-k">현장 참석</span></div><div class="mc-vrow"><span class="mc-v">93,000명</span><span class="mc-v" style="font-weight:400;color:#A3A3A3">3,120,000주</span></div></div>
-    <div class="mc-card"><div class="mc-ch"><span class="mc-k">온라인 참석</span></div><div class="mc-vrow"><span class="mc-v">207,000명</span><svg class="mc-spark" viewBox="0 0 80 24" preserveAspectRatio="none"><polyline points="0,20 14,16 28,17 42,10 56,12 70,5 80,4" fill="none" stroke="#0071F3" stroke-width="2"/></svg></div></div>
+    <div class="mc-card"><div class="mc-ch"><span class="mc-k">온라인 참석</span></div><div class="mc-vrow"><span class="mc-v">207,000명</span><svg class="mc-spark" style="margin-left:auto" viewBox="0 0 80 24" preserveAspectRatio="none"><polyline points="0,20 14,16 28,17 42,10 56,12 70,5 80,4" fill="none" stroke="#0071F3" stroke-width="2"/></svg></div></div>
   </div>
 
 <script>
@@ -87,7 +101,46 @@
   var idx=2, fs=32;
   var tabsEl=document.getElementById('mcTabs'), scriptEl=document.getElementById('mcScript'), titleEl=document.getElementById('mcTitle'),
       curEl=document.getElementById('mcCur'), nextEl=document.getElementById('mcNextTxt');
-  tabsEl.innerHTML=STAGES.map(function(st,i){return '<button class="mc-tab" data-i="'+i+'">'+st.tab+'</button>';}).join('');
+  var editing=false, EDIT=null, dragFrom=null;
+  var toolsEl=document.querySelector('.mc-tools');
+  var ebar=document.createElement('div'); ebar.className='mc-ebtns'; ebar.style.display='none';
+  ebar.innerHTML='<button class="mc-ebtn cancel" id="mcEcancel">취소</button><button class="mc-ebtn save" id="mcEsave">저장</button>';
+  document.querySelector('.mc-top').appendChild(ebar);
+
+  function normalTabs(){
+    tabsEl.classList.remove('editing');
+    tabsEl.innerHTML=STAGES.map(function(st,i){return '<button class="mc-tab" data-i="'+i+'">'+st.tab+'</button>';}).join('');
+  }
+  function editTabs(){
+    tabsEl.classList.add('editing');
+    tabsEl.innerHTML=EDIT.map(function(st,i){
+      return '<div class="mc-etab" draggable="true" data-i="'+i+'">'
+        +'<span class="drag"><i class="ph ph-dots-six-vertical" style="font-size:16px"></i></span>'
+        +'<span class="lbl" contenteditable="true">'+st.tab+'</span>'
+        +'<button class="rm" title="삭제"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'
+        +'</div>';
+    }).join('')+'<button class="mc-eadd" id="mcEadd"><i class="ph ph-plus" style="font-size:14px"></i>탭 추가</button>';
+    bindEdit();
+  }
+  function bindEdit(){
+    tabsEl.querySelectorAll('.mc-etab').forEach(function(el){
+      el.addEventListener('dragstart',function(){dragFrom=+el.dataset.i; el.style.opacity='.5';});
+      el.addEventListener('dragend',function(){el.style.opacity=''; dragFrom=null; tabsEl.querySelectorAll('.mc-etab').forEach(function(x){x.classList.remove('drag-over');});});
+      el.addEventListener('dragover',function(e){e.preventDefault(); el.classList.add('drag-over');});
+      el.addEventListener('dragleave',function(){el.classList.remove('drag-over');});
+      el.addEventListener('drop',function(e){e.preventDefault(); var to=+el.dataset.i; if(dragFrom===null||dragFrom===to)return; var m=EDIT.splice(dragFrom,1)[0]; EDIT.splice(to,0,m); editTabs();});
+      var lbl=el.querySelector('.lbl');
+      lbl.addEventListener('input',function(){ EDIT[+el.dataset.i].tab=lbl.textContent.trim()||'새 단계'; });
+      lbl.addEventListener('mousedown',function(e){e.stopPropagation();});
+      lbl.addEventListener('keydown',function(e){ if(e.key==='Enter'){e.preventDefault(); lbl.blur();} });
+      el.querySelector('.rm').addEventListener('click',function(ev){ev.stopPropagation(); if(EDIT.length<=1)return; EDIT.splice(+el.dataset.i,1); editTabs();});
+    });
+    var add=document.getElementById('mcEadd');
+    if(add) add.addEventListener('click',function(){ EDIT.push({tab:'새 단계',cur:'새 단계',s:'대본을 입력해 주세요.'}); editTabs(); });
+  }
+  function enterEdit(){ editing=true; EDIT=STAGES.map(function(s){return {tab:s.tab,cur:s.cur,s:s.s};}); editTabs(); toolsEl.style.display='none'; ebar.style.display='flex'; }
+  function exitEdit(save){ editing=false; if(save){ STAGES=EDIT; if(idx>STAGES.length-1) idx=STAGES.length-1; } EDIT=null; toolsEl.style.display=''; ebar.style.display='none'; normalTabs(); render(); }
+
   function render(){
     titleEl.textContent=STAGES[idx].cur;
     scriptEl.innerHTML=STAGES[idx].s.replace(/([.!?])\s+/g,"$1<br>");
@@ -96,12 +149,16 @@
     nextEl.textContent=(idx<STAGES.length-1)?STAGES[idx+1].cur:'—';
     tabsEl.querySelectorAll('.mc-tab').forEach(function(b){b.classList.toggle('on',+b.dataset.i===idx);});
   }
-  tabsEl.addEventListener('click',function(e){var b=e.target.closest('.mc-tab'); if(b){idx=+b.dataset.i; render();}});
+  normalTabs();
+  tabsEl.addEventListener('click',function(e){ if(editing) return; var b=e.target.closest('.mc-tab'); if(b){idx=+b.dataset.i; render();}});
   document.getElementById('mcMinus').addEventListener('click',function(){fs=Math.max(20,fs-2);render();});
   document.getElementById('mcPlus').addEventListener('click',function(){fs=Math.min(56,fs+2);render();});
   document.getElementById('mcPrev').addEventListener('click',function(){idx=Math.max(0,idx-1);render();});
   document.getElementById('mcNext').addEventListener('click',function(){idx=Math.min(STAGES.length-1,idx+1);render();});
-  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight')document.getElementById('mcNext').click();if(e.key==='ArrowLeft')document.getElementById('mcPrev').click();});
+  document.getElementById('mcCfg').addEventListener('click',function(){ editing?exitEdit(false):enterEdit(); });
+  ebar.querySelector('#mcEcancel').addEventListener('click',function(){exitEdit(false);});
+  ebar.querySelector('#mcEsave').addEventListener('click',function(){exitEdit(true);});
+  document.addEventListener('keydown',function(e){ if(editing) return; if(e.key==='ArrowRight')document.getElementById('mcNext').click();if(e.key==='ArrowLeft')document.getElementById('mcPrev').click();});
   render();
 })();
 </script>
