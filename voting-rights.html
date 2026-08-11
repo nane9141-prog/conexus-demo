@@ -127,7 +127,11 @@
   .badge-exp.pass{background:#ebf4ff}
   .badge-exp.elect{background:#ebf4ff}
   .badge-exp.rej{background:#f5f5f5;color:#737373}
-  .kpc{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .kpc{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:12px}
+  .kpc>div:first-child{flex:1;min-width:0}
+  .kpc .kdonut{margin-left:auto}
+  /* 권유 KPI 카드 여백 정리 */
+  .vr-panel[data-vp="solicit"] .vr-kpi .kcard{min-height:0}
   .kdonut{width:58px;height:58px;flex:none}
   .tblcard{overflow:hidden}
   .tblcard .tbl td{font-weight:400}
@@ -444,8 +448,6 @@
 
         <!-- ===== 의결권 권유대행 현황 ===== -->
         <div class="vr-panel" data-vp="solicit">
-          <div class="sol-meta"><span>권유대행: IR큐더스</span><span class="vr-sep"></span><span>권유기간 2026-03-06 ~ 2026-03-19</span><span class="vr-sep"></span><span class="vr-dday">D-10</span><span style="flex:1"></span><button class="rst"><svg class="ic" viewBox="0 0 24 24"><path d="M3 2v6h6M3 13a9 9 0 1 0 3-7.7L3 8"/></svg>초기화</button></div>
-
           <div class="vr-kpi" style="margin-bottom:16px">
             <div class="kcard"><div class="kk">누적 확보 (IR큐더스)</div><div class="kv">142,800,000<span class="unit">주</span></div><div class="kd">기준 목표의 89.3% 달성</div></div>
             <div class="kcard"><div class="kk">의결정족수 기준 목표</div><div class="kv">160,000,000<span class="unit">주</span></div><div class="kd">2026-03-19 마감</div></div>
