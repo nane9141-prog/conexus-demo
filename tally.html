@@ -180,6 +180,12 @@
   .ty-tbl td.ind{padding-left:26px}
   .ty-tbl td.ind2{padding-left:42px}
   .ty-tbl .atag{font-size:11px;font-weight:600;padding:2px 7px;border-radius:6px;background:#f1f5f9;color:#475569;margin-left:6px}
+  .ty-tbl .atag.neutral{background:#F4F4F5;color:#525252}
+  .badge.pass{background:#EBF4FF;color:#0071F3}
+  .badge.rej{background:#F3E8FF;color:#7C3AED}
+  .badge.disc{background:#F4F4F5;color:#737373}
+  .badge.wd{background:#FEECEC;color:#DC2626}
+  .badge svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.6;margin-right:3px}
   .ty-tbl .subnote{font-size:11px;color:#a3a3a3;margin-left:6px;font-weight:400}
 </style>
 </head>
@@ -507,31 +513,32 @@
   var chShare={evk:.50,eww:.30,pwo:.17,pwt:.03};
   var ISSUE=476211964, ATT=300000000;
   var ROWS=[
-    {t:'leaf',no:'제1호',name:'재무제표 승인의 건',type:'보통결의',res:'가결',bd:'green',fo:241800000,ag:58200000,ab:0,frac:2},
+    {t:'leaf',no:'제1호',name:'재무제표 승인의 건',type:'보통결의',res:'가결',bd:'pass',fo:241800000,ag:58200000,ab:0,frac:2},
     {t:'grp',no:'제2호',name:'정관 일부 변경의 건',type:'특별결의'},
-    {t:'leaf',ind:1,no:'제2-1호',name:'집중투표제 배제 조항 삭제의 건 (정관 제37조 제3항)',type:'특별결의',res:'가결',bd:'green',fo:173700000,ag:126300000,ab:0,frac:0},
-    {t:'leaf',ind:1,no:'제2-2호',name:'전자주주총회 도입 관련 변경 (정관 제26조 제2항)',type:'특별결의',res:'가결',bd:'green',fo:240600000,ag:59400000,ab:0,frac:0},
-    {t:'leaf',ind:1,no:'제2-3호',name:'의결권 대리행사 수단 확대 (정관 제31조 제2항)',type:'특별결의',res:'가결',bd:'green',fo:240600000,ag:59400000,ab:0,frac:0},
+    {t:'leaf',ind:1,no:'제2-1호',name:'집중투표제 배제 조항 삭제의 건 (정관 제37조 제3항)',type:'특별결의',res:'가결',bd:'pass',fo:173700000,ag:126300000,ab:0,frac:0},
+    {t:'leaf',ind:1,no:'제2-2호',name:'전자주주총회 도입 관련 변경 (정관 제26조 제2항)',type:'특별결의',res:'가결',bd:'pass',fo:240600000,ag:59400000,ab:0,frac:0},
+    {t:'leaf',ind:1,no:'제2-3호',name:'의결권 대리행사 수단 확대 (정관 제31조 제2항)',type:'특별결의',res:'가결',bd:'pass',fo:240600000,ag:59400000,ab:0,frac:0},
     {t:'grp',no:'제3호',name:'이사 선임의 건',type:'보통결의'},
     {t:'subg',no:'제3-1호',name:'집중투표 후보 4인 중 2인 선임의 건',type:'집중투표',note:'선임 2인 · 총 600,000,000표'},
-    {t:'cand',no:'제3-1-1호',name:'김근수 (사외이사 후보)',res:'가결(선임)',bd:'green',votes:410471124,rate:.684},
-    {t:'cand',no:'제3-1-2호',name:'진웅섭 (사외이사 후보)',res:'가결(선임)',bd:'green',votes:121475008,rate:.202},
-    {t:'cand',no:'제3-1-3호',name:'남상일 (사외이사 후보)',res:'부결',bd:'red',votes:58810427,rate:.098},
-    {t:'cand',no:'제3-1-4호',name:'박선화 (사외이사 후보)',res:'부결',bd:'red',votes:9243441,rate:.016},
-    {t:'leaf',ind:1,no:'제3-2호',name:'감사위원이 되는 사외이사 선임의 건',type:'보통결의',res:'가결',bd:'green',fo:238800000,ag:61200000,ab:0,frac:0}
+    {t:'cand',no:'제3-1-1호',name:'김근수 (사외이사 후보)',res:'가결',bd:'pass',votes:410471124,rate:.684},
+    {t:'cand',no:'제3-1-2호',name:'진웅섭 (사외이사 후보)',res:'가결',bd:'pass',votes:121475008,rate:.202},
+    {t:'cand',no:'제3-1-3호',name:'남상일 (사외이사 후보)',res:'부결',bd:'rej',votes:58810427,rate:.098},
+    {t:'cand',no:'제3-1-4호',name:'박선화 (사외이사 후보)',res:'부결',bd:'rej',votes:9243441,rate:.016},
+    {t:'leaf',ind:1,no:'제3-2호',name:'감사위원이 되는 사외이사 선임의 건',type:'보통결의',res:'가결',bd:'pass',fo:238800000,ag:61200000,ab:0,frac:0}
   ];
   var curChip='all', neuOn=true, fracAlloc='yes';
   var D14='<td class="muted">-</td>';
   function agRender(){
     var body=document.getElementById('agBody'); if(!body) return; body.innerHTML='';
     ROWS.forEach(function(r){
-      var badge=r.res?'<span class="badge '+r.bd+'">'+r.res+'</span>':'';
+      var bic=r.bd==='pass'?'<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>':(r.bd==='rej'?'<svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>':'');
+      var badge=r.res?'<span class="badge '+r.bd+'">'+bic+r.res+'</span>':'';
       if(r.t==='grp'){
-        body.insertAdjacentHTML('beforeend','<tr class="grp"><td class="l">'+r.no+'</td><td class="l">'+r.name+'<span class="atag">'+r.type+'</span></td><td class="l"></td><td class="c"></td>'+D14+D14+D14+D14+D14+D14+D14+D14+D14+D14+'</tr>');
+        body.insertAdjacentHTML('beforeend','<tr class="grp"><td class="l">'+r.no+'</td><td class="l">'+r.name+'</td><td class="l"></td><td class="c"></td>'+D14+D14+D14+D14+D14+D14+D14+D14+D14+D14+'</tr>');
         return;
       }
       if(r.t==='subg'){
-        body.insertAdjacentHTML('beforeend','<tr class="subg"><td class="l ind">'+r.no+'</td><td class="l ind">'+r.name+'<span class="atag">'+r.type+'</span><span class="subnote">'+r.note+'</span></td><td class="l"></td><td class="c"></td>'+D14+D14+D14+D14+D14+D14+D14+D14+D14+D14+'</tr>');
+        body.insertAdjacentHTML('beforeend','<tr class="subg"><td class="l ind">'+r.no+'</td><td class="l ind">'+r.name+'<span class="atag neutral">'+r.type+'</span><span class="subnote">'+r.note+'</span></td><td class="l"></td><td class="c"></td><td>'+fmt(ISSUE)+'</td><td>'+fmt(600000000)+'</td>'+D14+D14+D14+D14+D14+D14+D14+D14+'</tr>');
         return;
       }
       if(r.t==='cand'){
