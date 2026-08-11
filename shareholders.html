@@ -243,6 +243,18 @@
         .dlg-x{position:absolute;top:16px;right:16px;width:16px;height:16px;opacity:.7;border:none;background:none;cursor:pointer;color:#000;display:flex}
         .dlg-x:hover{opacity:1}
         .dlg-x svg{width:16px;height:16px}
+        .dlg-cbg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+        .dlg-cbx{display:flex;align-items:flex-start;gap:8px;padding:10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;user-select:none}
+        .dlg-cbx.on{background:rgba(23,23,23,.05);border-color:transparent}
+        .dlg-cbx .cb{width:16px;height:16px;border:1px solid #d4d4d4;border-radius:4px;display:flex;align-items:center;justify-content:center;flex:none;background:#fff}
+        .dlg-cbx.on .cb{background:#171717;border-color:#171717}
+        .dlg-cbx .cb svg{width:12px;height:12px;color:#fafafa;display:none}
+        .dlg-cbx.on .cb svg{display:block}
+        .dlg-cbx .fc{display:flex;flex-direction:column;gap:6px;min-width:0}
+        .dlg-cbx .fc .l{font-size:14px;font-weight:500;color:#0a0a0a;line-height:1}
+        .dlg-cbx .fc .d{font-size:12px;color:#737373;line-height:16px}
+        .dlg-foot.right .btn{flex:none}
+        .dlg-foot.right .btn.primary{min-width:96px;justify-content:center}
         /* sonner toast */
         .sonner{position:fixed;right:20px;bottom:20px;width:405px;max-width:calc(100vw - 40px);display:flex;align-items:center;gap:8px;padding:16px;background:rgba(245,245,245,.85);border:1px solid var(--border);backdrop-filter:blur(12.5px);-webkit-backdrop-filter:blur(12.5px);border-radius:8px;box-shadow:var(--shadow-md);z-index:120;transform:translateY(12px);opacity:0;transition:.2s;pointer-events:none}
         .sonner.show{transform:translateY(0);opacity:1;pointer-events:auto}
@@ -666,6 +678,24 @@
       </div>
       <div id="shTip"></div>
 
+
+      <!-- 통합·해제 설정 이동 dialog -->
+      <div class="dlg-ov hidden" id="mergeDlg">
+        <div class="dlg" style="max-width:480px">
+          <button class="dlg-x" data-dlg-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          <div class="dlg-head"><div class="dlg-title">통합·해제 설정으로 이동할까요?</div><div class="dlg-desc">투표권자 설정이 저장되었습니다. 통합·해제 설정에 적용할 기준을 선택한 뒤 다음 단계로 이동합니다.</div></div>
+          <div class="dlg-content">
+            <div class="dlg-cbg">
+              <label class="dlg-cbx on"><span class="cb"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6 9 17l-5-5"/></svg></span><span class="fc"><span class="l">자사 계좌 통합</span><span class="d">동일 명의 자사 계좌 자동 통합</span></span></label>
+              <label class="dlg-cbx"><span class="cb"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6 9 17l-5-5"/></svg></span><span class="fc"><span class="l">타사 계좌 통합</span><span class="d">타사 보유분 합산 처리</span></span></label>
+              <label class="dlg-cbx"><span class="cb"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6 9 17l-5-5"/></svg></span><span class="fc"><span class="l">실질주주 통합</span><span class="d">실질주주 기준 병합</span></span></label>
+              <label class="dlg-cbx"><span class="cb"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6 9 17l-5-5"/></svg></span><span class="fc"><span class="l">미해당 계좌 제외</span><span class="d">대상 외 계좌 제외</span></span></label>
+            </div>
+          </div>
+          <div class="dlg-foot right"><button class="btn" data-dlg-close>취소</button><button class="btn primary" id="mgProceed">저장하고 다음</button></div>
+        </div>
+      </div>
+
       <script>
         (function(){
           function closeOv(ov){ov.classList.add('hidden');}
@@ -720,8 +750,14 @@
           document.getElementById('msNext').addEventListener('click',function(){
             var cur=document.querySelector('#loadedState .utab.active').dataset.utab;
             var i=utabsOrder.indexOf(cur);
-            if(i<utabsOrder.length-1){ toast('저장 완료', (cur==='set'?'투표권자 설정':'통합·해제 설정')+'이 저장되었습니다. 다음 단계로 이동합니다.'); activateTab(utabsOrder[i+1]); }
+            if(cur==='set'){ document.getElementById('mergeDlg').classList.remove('hidden'); return; }
+            if(i<utabsOrder.length-1){ toast('저장 완료', '통합·해제 설정이 저장되었습니다. 다음 단계로 이동합니다.'); activateTab(utabsOrder[i+1]); }
           });
+          (function(){
+            var mp=document.getElementById('mgProceed');
+            if(mp){ mp.addEventListener('click',function(){ document.getElementById('mergeDlg').classList.add('hidden'); toast('저장 완료','투표권자 설정이 저장되었습니다. 통합·해제 설정으로 이동합니다.'); activateTab('merge'); }); }
+            document.querySelectorAll('#mergeDlg .dlg-cbx').forEach(function(c){ c.addEventListener('click',function(e){ e.preventDefault(); c.classList.toggle('on'); }); });
+          })();
 
           // 통합·해제 설정 (그룹형 접기/펼치기 + 변경 시트)
           var mgBody=document.getElementById('mgBody');
