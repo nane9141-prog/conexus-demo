@@ -21,8 +21,9 @@
   .mc-ib.box{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.15)}
   .mc-ib:hover{background:rgba(255,255,255,.1)}
   .mc-ib svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-  .mc-script{flex:1;display:flex;align-items:center;justify-content:center;padding:12px 0;overflow:auto}
-  .mc-script p{font-size:32px;font-weight:600;line-height:1.62;letter-spacing:-.01em;color:#E5E5E5}
+  .mc-title{font-size:24px;font-weight:600;color:#FAFAFA;letter-spacing:-.01em;text-align:left;padding:4px 0 2px}
+  .mc-script{flex:1;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;padding:12px 0;overflow:auto}
+  .mc-script p{margin:0;font-size:32px;font-weight:600;line-height:1.62;letter-spacing:-.01em;color:#E5E5E5;text-align:left;max-width:100%}
   /* 현재/다음 상태바 */
   .mc-status{display:flex;align-items:center;gap:16px;background:#262626;padding:10px 16px}
   .mc-status .cell{flex:1;display:flex;align-items:center;gap:10px;min-width:0}
@@ -53,6 +54,7 @@
         <button class="mc-ib box" id="mcCfg" title="설정"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
       </div>
     </div>
+    <div class="mc-title" id="mcTitle"></div>
     <div class="mc-script"><p id="mcScript"></p></div>
   </div>
 
@@ -80,10 +82,11 @@
     {tab:'폐회선언', cur:'폐회 선언', s:'모든 의안에 대한 표결이 종료되었습니다. 주주 여러분의 협조에 감사드리며, 제10기 정기주주총회의 폐회를 선언합니다.'}
   ];
   var idx=2;
-  var tabsEl=document.getElementById('mcTabs'), scriptEl=document.getElementById('mcScript'),
+  var tabsEl=document.getElementById('mcTabs'), scriptEl=document.getElementById('mcScript'), titleEl=document.getElementById('mcTitle'),
       curEl=document.getElementById('mcCur'), nextEl=document.getElementById('mcNextTxt');
   tabsEl.innerHTML=STAGES.map(function(st,i){return '<button class="mc-tab" data-i="'+i+'">'+st.tab+'</button>';}).join('');
   function render(){
+    titleEl.textContent=STAGES[idx].cur;
     scriptEl.textContent=STAGES[idx].s;
     curEl.textContent=STAGES[idx].cur;
     nextEl.textContent=(idx<STAGES.length-1)?STAGES[idx+1].cur:'—';

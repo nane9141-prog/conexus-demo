@@ -18,7 +18,7 @@
   .oc-nav a:hover{background:#f0f0f0;color:#0a0a0a}
   .oc-nav a.on{background:#ececec;color:#0a0a0a}
   .oc-nav svg{width:18px;height:18px}
-  .oc-foot{margin-top:auto}
+  .oc-foot{margin-top:auto;display:flex;align-items:center;gap:10px}
   .oc-av{width:32px;height:32px;border-radius:10px;background:#EBF4FF;color:#0066DF;font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center}
   /* main card */
   .oc-body{flex:1;min-width:0}
@@ -344,7 +344,15 @@
   .spq-empty{font-size:12px;color:#a3a3a3;padding:2px 0}
   .mcard.sp-click{cursor:pointer}
   .mc-btn.reject{background:rgba(220,38,38,.1);border-color:transparent;color:#E9081B}
-  .oc.rail-off .oc-rail{width:0;padding-left:0;padding-right:0;border-right:none}
+  .oc-logo-row{display:flex;align-items:center;gap:10px}
+  .oc-wm{display:none;font-size:15px;font-weight:600;color:#0a0a0a;white-space:nowrap;letter-spacing:.02em}
+  .oc-lb{display:none;font-size:13px;font-weight:500;white-space:nowrap}
+  .oc.rail-on .oc-rail{width:212px;align-items:stretch;padding:12px}
+  .oc.rail-on .oc-logo-row{align-self:stretch}
+  .oc.rail-on .oc-nav{gap:2px}
+  .oc.rail-on .oc-nav a{width:auto;justify-content:flex-start;gap:10px;padding:0 10px;height:38px}
+  .oc.rail-on .oc-foot{align-self:stretch}
+  .oc.rail-on .oc-lb,.oc.rail-on .oc-wm{display:inline}
   .pip{position:fixed;right:16px;bottom:16px;width:340px;background:#000;border-radius:12px;overflow:hidden;box-shadow:0 12px 34px rgba(0,0,0,.4);z-index:2000;font-family:inherit}
   .pip.min{width:220px}
   .pip-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;height:32px;padding:0 8px 0 12px;background:#171717;cursor:move;user-select:none}
@@ -367,14 +375,14 @@
   .vbtn.dark{background:#171717;border-color:#171717;color:#fff}
   .vbtn.ic{padding:0;width:32px;justify-content:center}
   .vscroll{flex:1;min-height:0;overflow:auto}
-  .vtbl{width:100%;border-collapse:collapse;font-size:13px}
-  .vtbl thead th{position:sticky;top:0;background:#fff;z-index:1;padding:12px 14px;text-align:right;font-weight:500;color:#737373;font-size:12px;white-space:nowrap;border-bottom:1px solid var(--border)}
+  .vtbl{width:100%;border-collapse:collapse;font-size:14px}
+  .vtbl thead th{position:sticky;top:0;background:#fafafa;z-index:1;padding:10px 14px;text-align:right;font-weight:600;color:var(--muted-fg);font-size:12px;white-space:nowrap;border-bottom:1px solid var(--border)}
   .vtbl thead th.l{text-align:left}.vtbl thead th.c{text-align:center}
   .vtbl thead th.l .fic{width:14px;height:14px;fill:none;stroke:#a3a3a3;stroke-width:1.6;vertical-align:-2px;margin-left:4px}
   .hop{display:inline-flex;align-items:center;gap:3px;justify-content:flex-end}
   .hop svg{width:13px;height:13px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .hop.for svg{stroke:#0071f3}.hop.ag svg{stroke:#7c3aed}.hop.ab svg{stroke:#a3a3a3}
-  .vtbl tbody td{padding:14px;text-align:right;color:#171717;border-bottom:1px solid #f2f2f2;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .vtbl tbody td{padding:12px 14px;text-align:right;color:#0a0a0a;border-bottom:1px solid #f0f0f0;white-space:nowrap;font-variant-numeric:tabular-nums}
   .vtbl tbody td.l{text-align:left}.vtbl tbody td.c{text-align:center}
   .vtbl td.mut{color:#a3a3a3}
   .vtbl tr.grp td{background:#fafafa;color:#0a0a0a;font-weight:500}
@@ -411,14 +419,14 @@
 <body>
 <div class="oc">
   <aside class="oc-rail">
-    <div class="oc-logo">C</div>
+    <div class="oc-logo-row"><div class="oc-logo">C</div><span class="oc-wm">CONEXUS</span></div>
     <nav class="oc-nav">
-      <a href="shareholders.html" title="명부관리"><svg class="ic" viewBox="0 0 24 24"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></a>
-      <a href="attendees.html" title="참석자 관리"><svg class="ic" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></a>
-      <a class="on" href="onsite-control.html" title="현장 제어"><svg class="ic" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22V15"/></svg></a>
-      <a href="tally.html" title="집계"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></a>
+      <a href="shareholders.html" title="명부관리"><svg class="ic" viewBox="0 0 24 24"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span class="oc-lb">명부관리</span></a>
+      <a href="attendees.html" title="참석자 관리"><svg class="ic" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg><span class="oc-lb">참석자 관리</span></a>
+      <a class="on" href="onsite-control.html" title="현장 제어"><svg class="ic" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22V15"/></svg><span class="oc-lb">현장 제어</span></a>
+      <a href="tally.html" title="집계"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span class="oc-lb">집계</span></a>
     </nav>
-    <div class="oc-foot"><span class="oc-av">강</span></div>
+    <div class="oc-foot"><span class="oc-av">강</span><span class="oc-lb">강도현</span></div>
   </aside>
 
   <div class="oc-body">
@@ -870,6 +878,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 <script>
 (function(){
   var Q=window.QUESTIONS||[], S=window.SPEECHES||[];
+  S.forEach(function(x){ x._iw=(x.st==='대기'); });
   var qt='q', unread=false, selId=null, editId=null, spAgenda='1', spOpen=true, speakingId=null;
   function comma(n){return (n||0).toLocaleString('en-US');}
   var TPL=[
@@ -920,12 +929,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function list(){ var a=(qt==='q'?Q:S); if(unread) a=a.filter(function(x){return qt==='q'?x.st==='미답변':x.st==='대기';}); return a; }
   function spList(){ var a=S.filter(function(x){return spAgenda==='all'||x.ag===spAgenda;}); if(unread) a=a.filter(function(x){return x.st==='대기';}); return a; }
   function spControls(){
-    var q=S.filter(function(x){return (spAgenda==='all'||x.ag===spAgenda)&&x.st==='대기';});
+    var base=S.filter(function(x){return (spAgenda==='all'||x.ag===spAgenda)&&x._iw;});
+    var q=base.filter(function(x){return x.st==='대기';});
     var rows=q.map(function(x,i){
       var sk=(x.id===speakingId), btn='';
       if(sk) btn='<button class="spq-btn end" type="button" data-spend="'+x.id+'">종료</button>';
       else if(!speakingId && i===0) btn='<button class="spq-btn start" type="button" data-spstart="'+x.id+'">시작</button>';
-      return '<div class="spq-row'+(sk?' speaking':'')+'"><span class="spq-no">'+(i+1)+'</span><span class="spq-nm">'+x.name+'</span>'+btn+'</div>';
+      return '<div class="spq-row'+(sk?' speaking':'')+'"><span class="spq-no">'+(base.indexOf(x)+1)+'</span><span class="spq-nm">'+x.name+'</span>'+btn+'</div>';
     }).join('');
     var opts=[['all','전체 의안'],['1','제1호'],['2','제2호'],['3','제3호']].map(function(o){return '<option value="'+o[0]+'"'+(spAgenda===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('');
     var sel='<select class="spsel" id="spAgSel">'+opts+'</select>';
@@ -986,7 +996,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 <script>
 (function(){
   var lnb=document.getElementById('lnbToggle'), oc=document.querySelector('.oc');
-  if(lnb&&oc) lnb.addEventListener('click',function(){ oc.classList.toggle('rail-off'); });
+  if(lnb&&oc) lnb.addEventListener('click',function(){ oc.classList.toggle('rail-on'); });
   var pip=document.getElementById('pip'), bar=document.getElementById('pipBar'), vid=document.getElementById('pipVid');
   document.getElementById('pipMin').addEventListener('click',function(e){ e.stopPropagation(); pip.classList.toggle('min'); });
   document.getElementById('pipClose').addEventListener('click',function(e){ e.stopPropagation(); pip.style.display='none'; });
