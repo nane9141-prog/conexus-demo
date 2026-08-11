@@ -114,6 +114,13 @@
   .sdlg-btn.cancel{background:#fff;border:1px solid #e5e5e5;color:#171717}
   .sdlg-btn.ok{background:#171717;border:1px solid #171717;color:#fff}
   .sdlg-btn.ok:disabled{opacity:.5;cursor:not-allowed}
+  /* 불통일행사 더보기 드롭다운 */
+  .splmenu{position:fixed;z-index:1000;width:144px;min-width:144px;background:#fff;border:1px solid rgba(10,10,10,.1);box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);border-radius:10px;padding:4px;display:none}
+  .splmenu.show{display:block}
+  .splmenu-label{padding:4px 6px;font-size:12px;font-weight:500;color:#737373;line-height:16px}
+  .splmenu-item{display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:8px;font-size:14px;color:#0A0A0A;cursor:pointer}
+  .splmenu-item:hover{background:#fafafa}
+  .splmenu-item i{font-size:16px;color:#0A0A0A;flex:none}
 </style>
 </head>
 <body>
@@ -227,7 +234,7 @@
           <div class="mchips"><button class="mchip on">전체 <span class="c">422</span></button><button class="mchip">접수 <span class="c">8</span></button><button class="mchip">승인 <span class="c">8</span></button><button class="mchip">거절 <span class="c">24</span></button></div>
           <div class="mtb-r"><button class="mbtn"><i class="ph ph-pencil-simple" style="font-size:16px"></i>개별등록</button><button class="mbtn ic"><i class="ph ph-sliders" style="font-size:16px"></i></button><button class="mbtn ic"><i class="ph ph-funnel" style="font-size:16px"></i></button></div>
         </div>
-        <div class="mwrap"><div class="mscroll"><table class="mtbl"><thead><tr><th>상태</th><th>주주구분</th><th>주주명</th><th class="n">보유주식수</th><th>신청사유</th><th>신청방식</th><th>신청일시</th><th>승인일시</th><th></th></tr></thead><tbody><tr><td><span class="mst recv"><span class="d"></span>접수</span></td><td>개인</td><td>김영수</td><td class="n">67,000</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td>개별등록</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst recv"><span class="d"></span>접수</span></td><td>개인</td><td>박선화</td><td class="n">345,804</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td>개별등록</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst recv"><span class="d"></span>접수</span></td><td>개인</td><td>천이영</td><td class="n">345,804</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td>개별등록</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td>개인</td><td>박민영</td><td class="n">3,345,804</td><td class="rsn">해외 기관투자자 위임으로 계좌별 상이한 의결권 행사가 필요합니다.</td><td>개별등록</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td>개인</td><td>우리사주조합장(이유정)</td><td class="n">800,000</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td>주주패스</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td>개인</td><td>김이나</td><td class="n">800,000</td><td class="rsn">펀드별 의결권 행사 방침에 따라 불통일행사가 필요합니다.</td><td>주주패스</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td>개인</td><td>김미경</td><td class="n">800,000</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td>주주패스</td><td>2026-07-15 13:40</td><td class="mmut">-</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td>기관</td><td>삼성자산운용</td><td class="n">800,000</td><td class="rsn">조합원 의사 취합 결과 통일행사로 전환하여 미승인 처리되었습니다.</td><td>주주패스</td><td>2026-07-15 13:40</td><td class="mmut">-</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst no"><span class="d"></span>거절</span></td><td>기관</td><td>현대차증권운용</td><td class="n">800,000</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td>주주패스</td><td>2026-07-15 13:40</td><td class="mmut">-</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst no"><span class="d"></span>거절</span></td><td>외국인</td><td>케이시</td><td class="n">800,000</td><td class="rsn">해외 기관투자자 위임으로 계좌별 상이한 의결권 행사가 필요합니다.</td><td>주주패스</td><td>2026-07-15 13:40</td><td class="mmut">-</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr></tbody></table></div>
+        <div class="mwrap"><div class="mscroll"><table class="mtbl"><thead><tr><th>상태</th><th class="c">주주구분</th><th>주주명</th><th class="n">보유주식수</th><th>신청사유</th><th class="c">신청방식</th><th>신청일시</th><th>승인일시</th><th></th></tr></thead><tbody><tr><td><span class="mst recv"><span class="d"></span>접수</span></td><td class="c">개인</td><td>김영수</td><td class="n">67,000</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td class="c">개별등록</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst recv"><span class="d"></span>접수</span></td><td class="c">개인</td><td>박선화</td><td class="n">345,804</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td class="c">개별등록</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst recv"><span class="d"></span>접수</span></td><td class="c">개인</td><td>천이영</td><td class="n">345,804</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td class="c">개별등록</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td class="c">개인</td><td>박민영</td><td class="n">3,345,804</td><td class="rsn">해외 기관투자자 위임으로 계좌별 상이한 의결권 행사가 필요합니다.</td><td class="c">개별등록</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td class="c">개인</td><td>우리사주조합장(이유정)</td><td class="n">800,000</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td class="c">주주패스</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td class="c">개인</td><td>김이나</td><td class="n">800,000</td><td class="rsn">펀드별 의결권 행사 방침에 따라 불통일행사가 필요합니다.</td><td class="c">주주패스</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td class="c">개인</td><td>김미경</td><td class="n">800,000</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td class="c">주주패스</td><td>2026-07-15 13:40</td><td class="mmut">-</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td class="c">기관</td><td>삼성자산운용</td><td class="n">800,000</td><td class="rsn">조합원 의사 취합 결과 통일행사로 전환하여 미승인 처리되었습니다.</td><td class="c">주주패스</td><td>2026-07-15 13:40</td><td class="mmut">-</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst no"><span class="d"></span>거절</span></td><td class="c">기관</td><td>현대차증권운용</td><td class="n">800,000</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td class="c">주주패스</td><td>2026-07-15 13:40</td><td class="mmut">-</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst no"><span class="d"></span>거절</span></td><td class="c">외국인</td><td>케이시</td><td class="n">800,000</td><td class="rsn">해외 기관투자자 위임으로 계좌별 상이한 의결권 행사가 필요합니다.</td><td class="c">주주패스</td><td>2026-07-15 13:40</td><td class="mmut">-</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr></tbody></table></div>
         <div class="mfoot"><span>총 10건 · 510,356,025주</span><div class="mpg">페이지당 20 <span class="pp">|&lt;</span><span class="pp">&lt;</span><span class="pp cur">1</span><span class="mmut">/ 30</span><span class="pp">&gt;</span><span class="pp">&gt;|</span></div></div></div>
       </div>
     </div>
@@ -281,6 +288,11 @@
     var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
   });
 </script>
+<div class="splmenu" id="splMenu">
+  <div class="splmenu-label">상태 변경</div>
+  <div class="splmenu-item" data-act="ok"><i class="ph ph-check-circle"></i>승인</div>
+  <div class="splmenu-item" data-act="no"><i class="ph ph-x-circle"></i>거절</div>
+</div>
 <div class="sdlg-ov" id="splDlg">
   <div class="sdlg">
     <div class="sdlg-h"><div class="t">불통일행사 처리</div><div class="d">선택한 주주의 불통일행사 신청 내용을 확인하고 처리합니다.</div><button class="sdlg-x" data-spl-close type="button"><i class="ph ph-x"></i></button></div>
@@ -295,19 +307,32 @@
 </div>
 <script>
 (function(){
-  var ov=document.getElementById("splDlg"); if(!ov) return;
-  var chk=document.getElementById("splChk"), ok=document.getElementById("splOk");
+  var menu=document.getElementById("splMenu");
   var body=document.querySelector(".mtbl tbody");
-  if(body) body.addEventListener("click",function(e){ var h=e.target.closest("td[data-splh]"); if(!h) return; var tds=h.closest("tr").querySelectorAll("td");
-    document.getElementById("splNm").textContent=(tds[2].textContent||"").trim();
-    document.getElementById("splGubun").textContent=(tds[1].textContent||"").trim();
-    document.getElementById("splHold").textContent=(tds[3].textContent||"").trim()+"주";
-    document.getElementById("splWay").textContent=(tds[5].textContent||"").trim();
-    document.getElementById("splRsn").textContent=(tds[4].textContent||"").trim();
-    chk.classList.remove("on"); ok.disabled=true; ov.classList.add("show"); });
-  chk.addEventListener("click",function(){ chk.classList.toggle("on"); ok.disabled=!chk.classList.contains("on"); });
-  ov.addEventListener("click",function(e){ if(e.target===ov||e.target.closest("[data-spl-close]")) ov.classList.remove("show"); });
-  ok.addEventListener("click",function(){ ov.classList.remove("show"); });
+  if(!menu||!body) return;
+  var curRow=null;
+  function close(){ menu.classList.remove("show"); }
+  body.addEventListener("click",function(e){
+    var h=e.target.closest("td[data-splh]"); if(!h) return;
+    e.stopPropagation();
+    curRow=h.closest("tr");
+    var r=h.getBoundingClientRect();
+    var left=r.right-144; if(left<8) left=8;
+    var top=r.bottom+4; if(top+96>window.innerHeight) top=r.top-96-4;
+    menu.style.left=left+"px"; menu.style.top=top+"px";
+    menu.classList.add("show");
+  });
+  menu.addEventListener("click",function(e){
+    e.stopPropagation();
+    var it=e.target.closest(".splmenu-item"); if(!it||!curRow) return;
+    var td0=curRow.querySelector("td");
+    if(it.dataset.act==="ok"){ td0.innerHTML='<span class="mst ok"><span class="d"></span>승인</span>'; }
+    else { td0.innerHTML='<span class="mst no"><span class="d"></span>거절</span>'; }
+    close();
+  });
+  document.addEventListener("click",close);
+  window.addEventListener("scroll",close,true);
+  window.addEventListener("resize",close);
 })();
 </script>
 <script src="conexus.js"></script>
