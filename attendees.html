@@ -361,17 +361,17 @@
   function appB(a){ return a==='사용'?'사용':(a==='미사용'?'<span class="atmut">미사용</span>':a); }
   function voterCell(x){ var car=x.sub?'<span class="vcaret"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>':''; var sub=x.sub?'<span class="atsub">'+x.sub+'</span>':''; return '<div class="voter">'+car+'<span>'+x.voter+'</span>'+sub+'</div>'; }
   var COLS={
-    reg:['투표권자','주주명','주주번호','사전투표','보유주식수','참석주식수','지분율','현장 참석','의결권 제한','의안별 제한'],
-    all:['투표권자','주주명','주주번호','사전투표','보유주식수','참석주식수','지분율','현장 참석','앱 사용','의결권 제한'],
+    reg:['투표권자','주주명','주주번호','사전투표','보유주식수','지분율','현장 참석','앱 사용','의결권 제한','의안별 제한'],
+    all:['투표권자','주주명','주주번호','사전투표','보유주식수','지분율','현장 참석','앱 사용','의결권 제한'],
     evote:['투표권자','주주구분','주주명','보유주식수','지분율','입장코드','전자주총 참석'],
     code:['투표권자','주주명','입장코드','발급 상태','전자주총 참석']
   };
-  var NCOLS={reg:[4,5,6],all:[4,5,6],evote:[3,4],code:[]};
+  var NCOLS={reg:[4,5],all:[4,5],evote:[3,4],code:[]};
   function rowFor(tab,x){
     if(tab==='evote') return '<td>'+voterCell(x)+'</td><td><span class="atb gray">'+x.gubun+'</span></td><td>'+x.name+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+x.ratio+'</td><td>'+(x.code==='미발급'?'<span class="atmut">미발급</span>':x.code)+'</td><td>'+evoteB(x.evote)+'</td>';
     if(tab==='code') return '<td>'+voterCell(x)+'</td><td>'+x.name+'</td><td>'+(x.code==='미발급'?'<span class="atmut">미발급</span>':x.code)+'</td><td>'+(x.code==='미발급'?'<span class="atb gray">미발급</span>':'<span class="atb blue">발급완료</span>')+'</td><td>'+evoteB(x.evote)+'</td>';
-    var last = tab==='all' ? ('<td>'+appB(x.app)+'</td><td>'+(x.limit==='-'?'<span class="atmut">-</span>':x.limit)+'</td>') : ('<td>'+(x.limit==='-'?'<span class="atmut">-</span>':x.limit)+'</td><td>'+(x.ag==='-'?'<span class="atmut">-</span>':x.ag)+'</td>');
-    return '<td>'+voterCell(x)+'</td><td>'+x.name+'</td><td>'+x.no+'</td><td>'+preB(x.pre)+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+cm(x.attend)+'</td><td class="n">'+x.ratio+'</td><td>'+siteB(x.site)+'</td>'+last;
+    var last = tab==='all' ? ('<td>'+(x.limit==='-'?'<span class="atmut">-</span>':x.limit)+'</td>') : ('<td>'+(x.limit==='-'?'<span class="atmut">-</span>':x.limit)+'</td><td>'+(x.ag==='-'?'<span class="atmut">-</span>':x.ag)+'</td>');
+    return '<td>'+voterCell(x)+'</td><td>'+x.name+'</td><td>'+x.no+'</td><td>'+preB(x.pre)+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+x.ratio+'</td><td>'+siteB(x.site)+'</td><td>'+appB(x.app)+'</td>'+last;
   }
   var cur='reg';
   function render(){
@@ -409,20 +409,21 @@
       document.getElementById('asName').textContent=(tds[1].textContent||'').trim();
       document.getElementById('asNo').textContent=(tds[2].textContent||'').trim();
       var s=document.getElementById('asSec'); if(s) s.classList.remove('collapsed');
+      var pq=document.getElementById('asPartQty'); if(pq){ pq.style.display='none'; } ov.querySelectorAll('.as-radio[data-rg="shares"]').forEach(function(r,i){r.classList.toggle('on',i===0);});
       ov.classList.add('show');
     });
     ov.addEventListener('click',function(e){
       if(e.target===ov || e.target.closest('[data-as-close]')){ ov.classList.remove('show'); return; }
       if(e.target.closest('[data-as-toggle]')){ document.getElementById('asSec').classList.toggle('collapsed'); return; }
       var rd=e.target.closest('.as-radio[data-rg]');
-      if(rd){ var g=rd.dataset.rg; ov.querySelectorAll('.as-radio[data-rg="'+g+'"]').forEach(function(r){r.classList.toggle('on',r===rd);}); }
+      if(rd){ var g=rd.dataset.rg; ov.querySelectorAll('.as-radio[data-rg="'+g+'"]').forEach(function(r){r.classList.toggle('on',r===rd);}); if(g==='shares'){ var pq=document.getElementById('asPartQty'); if(pq) pq.style.display=(rd.dataset.v==='part')?'':'none'; } }
     });
   })();
   render();
 })();
 </script>
 
-<div class="assheet-ov" id="asSheet"><div class="assheet"><button class="as-x" data-as-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button><div class="as-hd"><div class="as-t">현장 참석자 등록</div><div class="as-d">현장 참석 정보를 입력해 등록합니다.</div></div><div class="as-body"><div class="as-card"><div class="as-f"><div class="k">투표권자</div><div class="v" id="asVoter">-</div></div><div class="as-f"><div class="k">주주명</div><div class="v" id="asName">-</div></div><div class="as-f"><div class="k">주주번호</div><div class="v" id="asNo">-</div></div><div class="as-f"><div class="k">실질계좌번호</div><div class="v">1230123456789</div></div></div><div class="as-sec" id="asSec"><div class="as-sec-h" data-as-toggle>참석자 정보 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div><div class="as-box"><div class="as-row2"><div class="as-field"><label>이름</label><input class="as-inp" id="asIn1" placeholder="참석자 이름"></div><div class="as-field"><label>연락처</label><input class="as-inp" id="asIn2" placeholder="010-0000-0000"></div></div><div><div class="as-rlbl">참석 주식수</div><div class="as-radios"><label class="as-radio on" data-rg="shares"><span class="rd"></span>전체 참석</label><label class="as-radio" data-rg="shares"><span class="rd"></span>일부 참석</label></div></div><div><div class="as-rlbl">참석 구분</div><div class="as-radios"><label class="as-radio on" data-rg="kind"><span class="rd"></span>본인 참석</label><label class="as-radio" data-rg="kind"><span class="rd"></span>대리 참석</label></div></div><div><div class="as-rlbl">신분 확인 방식</div><div class="as-radios"><label class="as-radio on" data-rg="id"><span class="rd"></span>모바일 신분증</label><label class="as-radio" data-rg="id"><span class="rd"></span>실물 신분증</label></div></div></div></div></div><div><div class="as-ft"><button class="as-cancel" data-as-close>취소</button><button class="as-ok" data-as-close>등록</button></div><div class="as-mod" style="margin-top:12px">마지막 수정 2026-07-17 15:58 · 박지용</div></div></div></div>
+<div class="assheet-ov" id="asSheet"><div class="assheet"><button class="as-x" data-as-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button><div class="as-hd"><div class="as-t">현장 참석자 등록</div><div class="as-d">현장 참석 정보를 입력해 등록합니다.</div></div><div class="as-body"><div class="as-card"><div class="as-f"><div class="k">투표권자</div><div class="v" id="asVoter">-</div></div><div class="as-f"><div class="k">주주명</div><div class="v" id="asName">-</div></div><div class="as-f"><div class="k">주주번호</div><div class="v" id="asNo">-</div></div><div class="as-f"><div class="k">실질계좌번호</div><div class="v">1230123456789</div></div></div><div class="as-sec" id="asSec"><div class="as-sec-h" data-as-toggle>참석자 정보 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div><div class="as-box"><div class="as-row2"><div class="as-field"><label>성명</label><input class="as-inp" placeholder="참석자 성명"></div><div class="as-field"><label>생년월일</label><input class="as-inp" placeholder="YYYY-MM-DD"></div></div><div><div class="as-rlbl">참석 주식수</div><div class="as-radios"><label class="as-radio on" data-rg="shares" data-v="all"><span class="rd"></span>전체 참석</label><label class="as-radio" data-rg="shares" data-v="part"><span class="rd"></span>일부 참석</label></div><input class="as-inp" id="asPartQty" placeholder="참석 주식수를 입력해 주세요" style="margin-top:8px;display:none"></div><div><div class="as-rlbl">참석 방식</div><div class="as-radios"><label class="as-radio on" data-rg="method"><span class="rd"></span>현장 참석</label><label class="as-radio" data-rg="method"><span class="rd"></span>앱 사용</label></div></div></div></div></div><div><div class="as-ft"><button class="as-cancel" data-as-close>취소</button><button class="as-ok" data-as-close>등록</button></div><div class="as-mod" style="margin-top:12px">마지막 수정 2026-07-17 15:58 · 박지용</div></div></div></div>
 <script src="conexus.js"></script>
 </body>
 </html>
