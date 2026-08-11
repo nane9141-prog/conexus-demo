@@ -127,8 +127,10 @@
   .badge-exp.pass{background:#ebf4ff}
   .badge-exp.elect{background:#ebf4ff}
   .badge-exp.rej{background:#f5f5f5;color:#737373}
-  .vr-sub td{background:#fafafb}
-  .vr-sub td:first-child{padding-left:24px;color:var(--muted-fg)}
+  .kpc{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .kpie{width:56px;height:56px;border-radius:50%;background:conic-gradient(#0071f3 0 75%,#e5e5e5 75% 100%);flex:none;display:flex;align-items:center;justify-content:center;position:relative}
+  .kpie::before{content:"";position:absolute;inset:9px;background:#fff;border-radius:50%}
+  .kpie-c{position:relative;font-size:12px;font-weight:600;color:#0a0a0a}
   .vr-mut{color:var(--muted-fg)}
   .opb{display:inline-flex;align-items:center;gap:2px;height:20px;padding:2px;border-radius:6px;font-size:12px;font-weight:500;color:#171717;background:transparent}
   .opb svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -345,11 +347,6 @@
         <div class="vr-panel active" data-vp="status">
           <div class="vr-kpi">
             <div class="kcard">
-              <div class="kk">확정 의결권</div>
-              <div class="kv">476,211,964<span class="unit">주</span></div>
-              <div class="kd">전체 주주 650,000명 · 보통주</div>
-            </div>
-            <div class="kcard">
               <div class="kk">행사 의결권</div>
               <div class="krow"><div class="kv">262,140,000<span class="unit">주</span></div><span class="ubadge secondary">발행 대비 55.0%</span></div>
               <div class="kbar"><span style="width:55%"></span></div>
@@ -360,9 +357,13 @@
               <div class="kbar"><span style="width:2.8%"></span></div>
             </div>
             <div class="kcard">
-              <div class="kk">미행사 의결권</div>
-              <div class="kv">214,071,964<span class="unit">주</span></div>
-              <div class="kd">잔여 주주 631,550명</div>
+              <div class="kk">중복 의결권</div>
+              <div class="kv">240,000<span class="unit">주</span></div>
+              <div class="kd">중복 신청 주주 1,240명</div>
+            </div>
+            <div class="kcard kpc">
+              <div><div class="kk">중복 확정 의결권</div><div class="kv">180,000<span class="unit">주</span></div><div class="kd">확정률 75.0% · 미확정 60,000주</div></div>
+              <div class="kpie"><span class="kpie-c">75%</span></div>
             </div>
           </div>
 
@@ -416,11 +417,11 @@
                   <tr><td>제2-1호</td><td>집중투표제 배제 조항 삭제의 건</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">31.9%</td><td class="num">57.9%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
                   <tr><td>제2-2호</td><td>전자주주총회 도입 관련 변경</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">44.1%</td><td class="num">80.2%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
                   <tr><td>제2-3호</td><td>의결권 대리행사 수단 확대</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">44.1%</td><td class="num">80.2%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
-                  <tr><td>제3-1호</td><td>집중투표 후보 4인 중 2인 선임의 건 <span class="ubadge secondary" style="margin-left:4px">집중투표</span></td><td class="num">952,423,928</td><td class="num">524,280,000</td><td class="num">18,450명</td><td class="num" colspan="2" style="text-align:center;color:var(--muted-fg)">후보별 집계 · 선임예정 2인 (김근수·진웅섭)</td><td><span class="badge-exp elect">선임 예상</span></td></tr>
-                  <tr class="vr-sub"><td>제3-1-1호</td><td>김근수 · 사외이사 후보</td><td class="num vr-mut">—</td><td class="num">410,471,124</td><td class="num vr-mut">—</td><td class="num" colspan="2" style="text-align:center">득표율 68.4%</td><td><span class="badge-exp elect">선임 예상</span></td></tr>
-                  <tr class="vr-sub"><td>제3-1-2호</td><td>진웅섭 · 사외이사 후보</td><td class="num vr-mut">—</td><td class="num">121,475,008</td><td class="num vr-mut">—</td><td class="num" colspan="2" style="text-align:center">득표율 20.2%</td><td><span class="badge-exp elect">선임 예상</span></td></tr>
-                  <tr class="vr-sub"><td>제3-1-3호</td><td>남상일 · 사외이사 후보</td><td class="num vr-mut">—</td><td class="num">58,810,427</td><td class="num vr-mut">—</td><td class="num" colspan="2" style="text-align:center">득표율 9.8%</td><td><span class="badge-exp rej">부결 예상</span></td></tr>
-                  <tr class="vr-sub"><td>제3-1-4호</td><td>박선화 · 사외이사 후보</td><td class="num vr-mut">—</td><td class="num">9,243,441</td><td class="num vr-mut">—</td><td class="num" colspan="2" style="text-align:center">득표율 1.6%</td><td><span class="badge-exp rej">부결 예상</span></td></tr>
+                  <tr><td>제3-1호</td><td>집중투표 후보 4인 중 2인 선임의 건 <span class="ubadge secondary" style="margin-left:4px">집중투표</span></td><td class="num">952,423,928</td><td class="num">524,280,000</td><td class="num">18,450명</td><td class="num"></td><td class="num"></td><td></td></tr>
+                  <tr><td>제3-1-1호</td><td>사외이사 김근수 선임의 건</td><td class="num vr-mut">—</td><td class="num">410,471,124</td><td class="num vr-mut">—</td><td class="num" colspan="2" style="text-align:center">68.4%</td><td><span class="badge-exp elect">선임 예상</span></td></tr>
+                  <tr><td>제3-1-2호</td><td>사외이사 진웅섭 선임의 건</td><td class="num vr-mut">—</td><td class="num">121,475,008</td><td class="num vr-mut">—</td><td class="num" colspan="2" style="text-align:center">20.2%</td><td><span class="badge-exp elect">선임 예상</span></td></tr>
+                  <tr><td>제3-1-3호</td><td>사외이사 남상일 선임의 건</td><td class="num vr-mut">—</td><td class="num">58,810,427</td><td class="num vr-mut">—</td><td class="num" colspan="2" style="text-align:center">9.8%</td><td><span class="badge-exp rej">부결 예상</span></td></tr>
+                  <tr><td>제3-1-4호</td><td>사외이사 박선화 선임의 건</td><td class="num vr-mut">—</td><td class="num">9,243,441</td><td class="num vr-mut">—</td><td class="num" colspan="2" style="text-align:center">1.6%</td><td><span class="badge-exp rej">부결 예상</span></td></tr>
                   <tr><td>제3-2호</td><td>감사위원이 되는 사외이사 선임의 건</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">43.8%</td><td class="num">79.6%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
                 </tbody>
               </table>
