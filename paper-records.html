@@ -38,7 +38,8 @@
 
   /* 전자투표/위임 내역 page */
   .ev-head{display:flex;align-items:flex-start;gap:8px;margin-bottom:4px;min-height:32px}
-  .ev-head .btn-primary,.ev-head .ev-org{align-self:center}
+  .ev-head .ev-title{display:flex;align-items:center;gap:8px}
+  .ev-head .btn-primary{align-self:center}
   .ev-head .page-title{font-size:18px;font-weight:600}
   .ev-org{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;margin-left:2px}
   .ev-org span{color:var(--muted-fg)}.ev-org b{color:#0a0a0a;font-weight:600}
@@ -328,7 +329,7 @@
       <div class="content" style="width:100%">
         <!-- 상단 타이틀 + 확정하기 -->
         <div class="ev-head">
-          <div class="page-title">서면투표/위임 내역</div>
+          <div class="ev-title"><div class="page-title">서면투표/위임 내역</div></div>
           <span class="spacer"></span>
           <button class="btn-primary" id="btnConfirm"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>확정하기</button>
         </div>
