@@ -111,6 +111,16 @@
   .atb.blue{background:var(--blue100);color:var(--blue700)}
   .atb.gray{background:#f4f4f5;color:#737373}
   .atb.red{color:#e11d48;background:none;font-weight:600}
+  .atb.purple{background:#F5F3FF;color:#7C3AED}
+  table.attbl thead th.c{text-align:center}
+  table.attbl tbody td.c{text-align:center}
+  .tw-chevron{width:24px;height:24px;flex:none;border:1px solid var(--border);border-radius:9999px;background:#fff;display:flex;align-items:center;justify-content:center;color:#171717;cursor:pointer;padding:0}
+  .tw-chevron svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;transition:transform .15s}
+  .tw-chevron.collapsed svg{transform:rotate(180deg)}
+  .tag{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:#f4f4f5;color:#737373;font-size:12px;font-weight:500;flex:none}
+  tr.atchild.hidden{display:none}
+  tr.atchild td{color:#737373}
+  .atsubname{color:#525252}
   .atempty{padding:80px 20px;text-align:center;color:#737373;font-size:14px}
   .at-foot{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px solid var(--border);font-size:13px;color:#525252}
   .at-pg{display:flex;align-items:center;gap:8px}
@@ -397,11 +407,27 @@
    {voter:'고은채',gubun:'주주',name:'정하준',no:'8810410',pre:'전자투표(국내)',hold:120000,attend:72000,ratio:'0.02%',site:'참석',app:'서면투표',code:'미발급',evote:'참석',limit:'자사주',ag:'-'}
   ];
   function cm(n){return (n||0).toLocaleString('en-US');}
-  function preB(p){ if(p==='미행사') return '<span class="atb gray">미행사</span>'; if(p==='중복행사') return '<span class="atb red">중복행사</span>'; return p; }
+  function preB(p){ if(p==='미행사') return '<span class="atb gray" style="opacity:.5">미행사</span>'; if(p==='중복행사') return '<span class="atb purple">중복행사</span>'; return '<span class="atb gray">'+p+'</span>'; }
   function siteB(s){ return s==='참석'?'<span class="atb blue">참석</span>':'<span class="atb gray">'+s+'</span>'; }
   function evoteB(s){ return s==='참석'?'<span class="atb blue">참석</span>':'<span class="atb gray">'+s+'</span>'; }
   function appB(a){ return a==='사용'?'사용':(a==='미사용'?'<span class="atmut">미사용</span>':a); }
-  function voterCell(x){ var car=x.sub?'<span class="vcaret"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>':''; var sub=x.sub?'<span class="atsub">'+x.sub+'</span>':''; return '<div class="voter">'+car+'<span>'+x.voter+'</span>'+sub+'</div>'; }
+  function voterCell(x,gid){
+    if(x.sub && /통합/.test(x.sub)){
+      return '<div class="voter"><button class="tw-chevron collapsed" data-toggle="'+gid+'"><svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button><span>'+x.voter+'</span><span class="tag">'+x.sub+'</span></div>';
+    }
+    var sub=x.sub?'<span class="tag">'+x.sub+'</span>':'';
+    return '<div class="voter"><span>'+x.voter+'</span>'+sub+'</div>';
+  }
+  function childRows(gid,x,ncols){
+    var m=/통합\s*(\d+)건/.exec(x.sub||''); if(!m) return '';
+    var n=+m[1], out='';
+    for(var i=1;i<=n;i++){
+      out+='<tr class="atchild hidden" data-child="'+gid+'"><td><div class="voter" style="padding-left:34px"><span class="atsubname">'+x.voter+' 제 '+i+'호</span></div></td>';
+      for(var j=1;j<ncols;j++){ out+='<td></td>'; }
+      out+='</tr>';
+    }
+    return out;
+  }
   var COLS={
     reg:['투표권자','주주명','주주번호','사전투표','보유주식수','지분율','현장 참석','앱 사용','의결권 제한','의안별 제한'],
     all:['투표권자','주주명','주주번호','사전투표','보유주식수','지분율','현장 참석','앱 사용','의결권 제한'],
@@ -409,27 +435,35 @@
     code:['투표권자','주주명','입장코드','발급 상태','전자주총 참석']
   };
   var NCOLS={reg:[4,5],all:[4,5],evote:[3,4],code:[]};
-  function rowFor(tab,x){
-    if(tab==='evote') return '<td>'+voterCell(x)+'</td><td><span class="atb gray">'+x.gubun+'</span></td><td>'+x.name+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+x.ratio+'</td><td>'+(x.code==='미발급'?'<span class="atmut">미발급</span>':x.code)+'</td><td>'+evoteB(x.evote)+'</td>';
-    if(tab==='code') return '<td>'+voterCell(x)+'</td><td>'+x.name+'</td><td>'+(x.code==='미발급'?'<span class="atmut">미발급</span>':x.code)+'</td><td>'+(x.code==='미발급'?'<span class="atb gray">미발급</span>':'<span class="atb blue">발급완료</span>')+'</td><td>'+evoteB(x.evote)+'</td>';
+  var CCOLS={reg:[3,6,7],all:[3,6,7],evote:[],code:[]};
+  function rowFor(tab,x,gid){
+    if(tab==='evote') return '<td>'+voterCell(x,gid)+'</td><td><span class="atb gray">'+x.gubun+'</span></td><td>'+x.name+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+x.ratio+'</td><td>'+(x.code==='미발급'?'<span class="atmut">미발급</span>':x.code)+'</td><td>'+evoteB(x.evote)+'</td>';
+    if(tab==='code') return '<td>'+voterCell(x,gid)+'</td><td>'+x.name+'</td><td>'+(x.code==='미발급'?'<span class="atmut">미발급</span>':x.code)+'</td><td>'+(x.code==='미발급'?'<span class="atb gray">미발급</span>':'<span class="atb blue">발급완료</span>')+'</td><td>'+evoteB(x.evote)+'</td>';
     var last = tab==='all' ? ('<td>'+(x.limit==='-'?'<span class="atmut">-</span>':x.limit)+'</td>') : ('<td>'+(x.limit==='-'?'<span class="atmut">-</span>':x.limit)+'</td><td>'+(x.ag==='-'?'<span class="atmut">-</span>':x.ag)+'</td>');
-    return '<td>'+voterCell(x)+'</td><td>'+x.name+'</td><td>'+x.no+'</td><td>'+preB(x.pre)+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+x.ratio+'</td><td>'+siteB(x.site)+'</td><td>'+appB(x.app)+'</td>'+last;
+    return '<td>'+voterCell(x,gid)+'</td><td>'+x.name+'</td><td>'+x.no+'</td><td class="c">'+preB(x.pre)+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+x.ratio+'</td><td class="c">'+siteB(x.site)+'</td><td class="c">'+appB(x.app)+'</td>'+last;
   }
   var cur='reg';
   function render(){
     var head=document.getElementById('atHead'), body=document.getElementById('atBody');
     var cols=COLS[cur], nc=NCOLS[cur];
-    head.innerHTML='<tr>'+cols.map(function(c,i){return '<th'+(nc.indexOf(i)>=0?' class="n"':'')+'>'+c+'</th>';}).join('')+'</tr>';
+    var cc=CCOLS[cur]||[];
+    head.innerHTML='<tr>'+cols.map(function(c,i){var cl=nc.indexOf(i)>=0?' class="n"':(cc.indexOf(i)>=0?' class="c"':'');return '<th'+cl+'>'+c+'</th>';}).join('')+'</tr>';
     var q=(document.getElementById('atSearch').value||'').trim();
     var rows=D;
     if(cur==='reg'){ if(!q){ body.innerHTML='<tr><td colspan="'+cols.length+'"><div class="atempty">주주명부에서 주주를 검색 후 참석자 등록을 진행해 주세요</div></td></tr>'; setCount(0); return; } rows=D.filter(function(x){return (x.voter+x.name+x.no).indexOf(q)>=0;}); }
     if(!rows.length){ body.innerHTML='<tr><td colspan="'+cols.length+'"><div class="atempty">검색 결과가 없습니다.</div></td></tr>'; setCount(0); return; }
-    body.innerHTML=rows.map(function(x){return '<tr>'+rowFor(cur,x)+'</tr>';}).join('');
+    body.innerHTML=rows.map(function(x,i){var gid='g'+i;return '<tr>'+rowFor(cur,x,gid)+'</tr>'+childRows(gid,x,cols.length);}).join('');
     setCount(rows.length);
   }
   function setCount(n){ var sum=0; (cur==='reg'? (function(){var q=(document.getElementById('atSearch').value||'').trim(); return q?D.filter(function(x){return (x.voter+x.name+x.no).indexOf(q)>=0;}):[];})() : D).forEach(function(x){sum+=x.hold;}); if(cur!=='reg') n=D.length; document.getElementById('atCount').textContent='총 '+n+'건 · '+cm(sum)+'주'; document.getElementById('atTot').textContent='/ '+Math.max(1,Math.ceil(n/20)); }
   document.querySelectorAll('.at-tab').forEach(function(t){ t.addEventListener('click',function(){ cur=t.dataset.at; document.querySelectorAll('.at-tab').forEach(function(x){x.classList.toggle('on',x===t);}); document.querySelectorAll('.regonly').forEach(function(b){b.style.display=(cur==='reg')?'':'none';}); render(); }); });
   document.getElementById('atSearch').addEventListener('input',render);
+  // 통합 계좌 접기/펼치기
+  document.getElementById('atBody').addEventListener('click',function(e){
+    var ch=e.target.closest('.tw-chevron'); if(!ch) return;
+    var gid=ch.dataset.toggle; ch.classList.toggle('collapsed');
+    this.querySelectorAll('tr.atchild[data-child="'+gid+'"]').forEach(function(r){ r.classList.toggle('hidden'); });
+  });
   // 태그 ID 팝업
   var to=document.getElementById('tagOvl');
   document.getElementById('tagId').addEventListener('click',function(){ to.classList.add('on'); });
