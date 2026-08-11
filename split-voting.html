@@ -412,11 +412,13 @@
 (function(){
   function setTips(){
     document.querySelectorAll(".mtbl td.rsn").forEach(function(td){
-      if(td.scrollWidth>td.clientWidth+1){ td.setAttribute("title", td.textContent.trim()); }
-      else { td.removeAttribute("title"); }
+      var t=td.textContent.trim();
+      if(t) td.setAttribute("title", t); else td.removeAttribute("title");
+      td.style.cursor="help";
     });
   }
   setTips();
+  setTimeout(setTips,300);
   window.addEventListener("resize",setTips);
 })();
 </script>
