@@ -168,15 +168,14 @@
   .dm-alert i{color:#E9081B;font-size:16px;margin-top:1px;flex:none}
   .dm-alert .t{font-size:14px;font-weight:500;color:#E9081B;letter-spacing:-.01em}
   .dm-alert .d{font-size:14px;color:#E9081B;letter-spacing:-.01em}
-  .dmdlg-f{display:flex;align-items:center;gap:8px;padding:12px 16px 16px}
-  .dmdlg-f .chk{flex:1;display:flex;align-items:center;gap:8px;cursor:pointer;min-width:0}
-  .dmdlg-f .cbx{flex:none;width:16px;height:16px;border-radius:4px;border:1px solid #E5E5E5;background:#fff;display:inline-flex;align-items:center;justify-content:center}
+  .dmdlg-f{display:flex;align-items:center;gap:8px;padding:12px 16px 16px;border-top:1px solid #f0f0f0}
+  .dmdlg-f .chk{flex:1;display:inline-flex;align-items:center;gap:8px;cursor:pointer;min-width:0;user-select:none}
+  .dmdlg-f .cbx{flex:none;width:18px;height:18px;border-radius:5px;border:1.5px solid #a3a3a3;background:#fff;display:inline-flex;align-items:center;justify-content:center}
+  .dmdlg-f .cbx i{font-size:12px;color:#fff;opacity:0}
   .dmdlg-f .chk.on .cbx{background:#171717;border-color:#171717}
-  .dmdlg-f .chk.on .cbx i{color:#fafafa;font-size:12px}
-  .dmdlg-f .chk .cbx i{display:none}
-  .dmdlg-f .chk.on .cbx i{display:inline-flex}
-  .dmdlg-f .lab{font-size:14px;color:#0A0A0A;letter-spacing:-.01em}
-  .dmdlg-f button{height:32px;padding:0 12px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;border:1px solid #E5E5E5;background:#fff;color:#171717}
+  .dmdlg-f .chk.on .cbx i{opacity:1}
+  .dmdlg-f .lab{font-size:14px;color:#0A0A0A;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dmdlg-f button{flex:none;height:32px;padding:0 14px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;border:1px solid #E5E5E5;background:#fff;color:#171717}
   .dmdlg-f button.dark{background:#171717;color:#fafafa;border-color:#171717}
   .dmdlg-f button:disabled{opacity:.5;cursor:not-allowed}
   /* 저장 토스트 */
@@ -336,7 +335,7 @@
       <div class="dm-info">
         <div class="row">
           <div><div class="it" id="dmInfoT"></div><div class="id" id="dmInfoD"></div></div>
-          <button class="exp" id="dmExp"><span id="dmExpTxt">펼치기</span><i class="ph ph-caret-down" style="font-size:12px"></i></button>
+          <button class="exp" id="dmExp"><span id="dmExpTxt">예시 보기</span><i class="ph ph-caret-down" style="font-size:12px"></i></button>
         </div>
       </div>
       <div class="dm-prev" id="dmPrev">
@@ -404,22 +403,23 @@
 <script>
 (function(){
   var METHODS=[
-    {id:'prop',name:'주주별 비례 분배 방식',cat:{t:'비례',c:'#0071F3',bg:'#EEF5FF'},
-      desc:'보유 의결권 비율에 따라 후보별로 자동 배분합니다.',
-      infoT:'관리자 입력값 미사용',infoD:'시스템이 그룹별 보유 의결권 비율대로 후보에게 자동으로 분배합니다.',
-      prev:{head:['그룹','후보 1','후보 2','후보 3'],rows:[['A그룹','5,760','3,840','1,920'],['B그룹','2,400','1,600','800'],['C그룹','960','640','320']]}},
-    {id:'seq',name:'그룹 순차 채우기 방식',cat:{t:'순차',c:'#EA580C',bg:'#FEF5E7'},
-      desc:'관리자가 후보별 목표치를 입력하고 큰 주주부터 순서대로 채웁니다.',
-      infoT:'관리자 입력값 사용',infoD:'관리자가 후보별 분배 의결권을 직접 입력하고, 주식 많은 주주(그룹)부터 순서대로 목표치를 채웁니다. 큰 주주의 표가 한 후보에 집중되며, 최소 1표 보장으로 완전 0표는 방지합니다.',
+    {id:'equal',name:'주주별 비례 분배 방식',cat:{t:'자동',c:'#0071F3',bg:'#EEF5FF'},
+      infoT:'자동 계산, 관리자 미입력',
+      infoD:'행사의결권을 선택 후보 수로 균등하게 나눕니다. 소수점(단주)은 지정 후보 선택하여 분배합니다.',
+      prev:{head:['그룹','후보 1','후보 2','후보 3'],rows:[['A그룹','3,840','3,840','3,840'],['B그룹','1,600','1,600','1,600'],['C그룹','640','640','640']]}},
+    {id:'fill',name:'주식수 분배 방식',cat:{t:'수동',c:'#EA580C',bg:'#FEF5E7'},
+      infoT:'관리자 입력 · 후보별 분배 의결권',
+      infoD:'관리자가 후보별 분배 의결권을 직접 입력하고, 주식 많은 주주(그룹)부터 순서대로 목표치를 채웁니다.',
       prev:{head:['그룹','후보 1','후보 2','후보 3'],rows:[['A그룹','11,520','0','0'],['B그룹','0','4,800','1'],['C그룹','1','0','1,919'],['warn','미분배','-','-']]}},
-    {id:'eq',name:'최소 보장 균등 방식',cat:{t:'균등',c:'#7C3AED',bg:'#F5F3FF'},
-      desc:'후보별 최소 1표를 보장하며 잔여 의결권을 균등 배분합니다.',
-      infoT:'관리자 입력값 미사용',infoD:'각 후보에게 최소 1표를 보장한 뒤 잔여 의결권을 후보 수로 균등하게 나눠 배분합니다.',
-      prev:{head:['그룹','후보 1','후보 2','후보 3'],rows:[['A그룹','3,840','3,840','3,840'],['B그룹','1,600','1,600','1,600'],['C그룹','640','640','640']]}}
+    {id:'prop',name:'비례 분배 방식',cat:{t:'수동',c:'#7C3AED',bg:'#F5F3FF'},
+      infoT:'관리자 입력 · 후보별 분배 의결권',
+      infoD:'주식수 분배와 후보 합계는 비슷하지만, 개별 주주가 여러 후보에 고르게 나뉜다는 점이 다릅니다.',
+      prev:{head:['그룹','후보 1','후보 2','후보 3'],rows:[['A그룹','5,760','3,840','1,920'],['B그룹','2,400','1,600','800'],['C그룹','960','640','320']]}}
   ];
   function byId(id){return METHODS.filter(function(m){return m.id===id;})[0];}
-  var appliedMethod='prop';   // 현재 적용된 방식
-  var selMethod='prop';       // 다이얼로그에서 선택 중
+  var appliedMethod='equal'; // 현재 적용된 방식
+  var hasApplied=false;      // 최초 적용 이력 여부
+  var selMethod='equal';     // 다이얼로그에서 선택 중
   var SH=[
     {no:'0001',nm:'김민준',rn:'820314-1******',qty:5200},
     {no:'0002',nm:'이서연',rn:'751122-2******',qty:3100},
@@ -431,8 +431,8 @@
   function fmt(v){return (v||0).toLocaleString('en-US');}
   function distribute(cap){
     var m=appliedMethod, sum=SH.reduce(function(a,r){return a+r.qty;},0), out=[];
-    if(m==='eq'){ var each=Math.floor(cap/SH.length); SH.forEach(function(r){out.push(Math.max(1,each));}); }
-    else if(m==='seq'){ var rem=cap; var ord=SH.slice().sort(function(a,b){return b.qty-a.qty;}); var map={}; ord.forEach(function(r){var give=Math.min(rem,r.qty); map[r.no]=Math.max(rem>0?1:0,give); rem-=give;}); SH.forEach(function(r){out.push(map[r.no]||0);}); }
+    if(m==='equal'){ var each=Math.floor(cap/SH.length); SH.forEach(function(r){out.push(Math.max(1,each));}); }
+    else if(m==='fill'){ var rem=cap; var ord=SH.slice().sort(function(a,b){return b.qty-a.qty;}); var map={}; ord.forEach(function(r){var give=Math.min(rem,r.qty); map[r.no]=Math.max(rem>0?1:0,give); rem-=give;}); SH.forEach(function(r){out.push(map[r.no]||0);}); }
     else { SH.forEach(function(r){out.push(Math.round(cap*r.qty/sum));}); }
     return out;
   }
@@ -448,7 +448,7 @@
     grid.innerHTML=METHODS.map(function(m){
       return '<div class="dmr'+(m.id===selMethod?' on':'')+'" data-id="'+m.id+'">'
         +'<span class="rd"></span>'
-        +'<div class="fc"><div class="rt">'+m.name+'</div><div class="rd2">'+m.desc+'</div></div>'
+        +'<div class="fc"><div class="rt">'+m.name+'</div><div class="rd2">'+m.infoT+'</div></div>'
         +'<span class="cat" style="background:'+m.cat.bg+';color:'+m.cat.c+'">'+m.cat.t+'</span></div>';
     }).join('');
     grid.querySelectorAll('.dmr').forEach(function(el){
@@ -471,13 +471,14 @@
     infoT.textContent=m.infoT; infoD.textContent=m.infoD;
     renderPrev();
     var changed=(selMethod!==appliedMethod);
-    alert.classList.toggle('show',changed);
-    // 방식 변경 시에만 확인 체크 필요
-    chk.style.display=changed?'flex':'none';
-    if(!changed){chk.classList.remove('on');}
-    apply.disabled = changed && !chk.classList.contains('on');
+    // 경고 Alert: 이미 적용된 방식이 있고 방식을 변경할 때만
+    alert.classList.toggle('show', hasApplied && changed);
+    // 인라인 확인 메시지: 최초 진입 시 미노출, 한번 적용한 뒤 재진입 시 노출
+    chk.style.display = hasApplied ? 'flex' : 'none';
+    if(!hasApplied){ chk.classList.remove('on'); }
+    apply.disabled = hasApplied && !chk.classList.contains('on');
   }
-  function openDlg(){ selMethod=appliedMethod; chk.classList.remove('on'); prev.classList.remove('show'); expTxt.textContent='펼치기'; expBtn.querySelector('i').className='ph ph-caret-down'; syncDlg(); dlg.classList.add('show'); }
+  function openDlg(){ selMethod=appliedMethod; chk.classList.remove('on'); prev.classList.remove('show'); expTxt.textContent='예시 보기'; expBtn.querySelector('i').className='ph ph-caret-down'; syncDlg(); dlg.classList.add('show'); }
   function closeDlg(){ dlg.classList.remove('show'); }
   dmBtn.addEventListener('click',openDlg);
   document.getElementById('dmX').addEventListener('click',closeDlg);
@@ -485,12 +486,12 @@
   dlg.addEventListener('click',function(e){if(e.target===dlg)closeDlg();});
   expBtn.addEventListener('click',function(){
     var open=prev.classList.toggle('show');
-    expTxt.textContent=open?'접기':'펼치기';
+    expTxt.textContent=open?'예시 닫기':'예시 보기';
     expBtn.querySelector('i').className=open?'ph ph-caret-up':'ph ph-caret-down';
   });
-  chk.addEventListener('click',function(){ chk.classList.toggle('on'); apply.disabled=(selMethod!==appliedMethod)&&!chk.classList.contains('on'); });
+  chk.addEventListener('click',function(){ chk.classList.toggle('on'); apply.disabled = hasApplied && !chk.classList.contains('on'); });
   apply.addEventListener('click',function(){
-    appliedMethod=selMethod;
+    appliedMethod=selMethod; hasApplied=true;
     if(dmName) dmName.textContent=byId(appliedMethod).name;
     closeDlg();
     if(csOv.classList.contains('show')) renderGrid();
