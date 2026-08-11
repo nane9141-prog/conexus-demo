@@ -295,44 +295,101 @@
 </div>
 <div class="sdlg-ov" id="splDlg">
   <div class="sdlg">
-    <div class="sdlg-h"><div class="t">불통일행사 처리</div><div class="d">선택한 주주의 불통일행사 신청 내용을 확인하고 처리합니다.</div><button class="sdlg-x" data-spl-close type="button"><i class="ph ph-x"></i></button></div>
+    <div class="sdlg-h"><div class="t" id="splTitle">불통일행사 처리</div><div class="d" id="splDesc">선택한 주주의 불통일행사 신청 내용을 확인하고 처리합니다.</div><button class="sdlg-x" data-spl-close type="button"><i class="ph ph-x"></i></button></div>
     <div class="sdlg-c">
       <div class="sdlg-info"><div class="sdlg-nm" id="splNm">-</div><div class="sdlg-meta"><span><span class="k">주주구분</span><b id="splGubun">-</b></span><span><span class="k">보유주식수</span><b id="splHold">-</b></span><span><span class="k">신청방식</span><b id="splWay">-</b></span></div></div>
-      <div class="sdlg-fld"><label>신청 사유</label><div class="sdlg-ta" id="splRsn" style="min-height:auto;background:#fafafa"></div></div>
-      <div class="sdlg-fld"><label>처리 메모 (선택)</label><textarea class="sdlg-ta" placeholder="처리 관련 메모를 입력해 주세요"></textarea></div>
-      <div class="sdlg-alert"><i class="ph ph-warning-circle"></i>통합 제외 주주는 모든 보유 계좌에 불통일행사가 일괄 처리 및 즉시 반영됩니다.</div>
+      <div class="sdlg-fld"><label id="splRsnLbl">신청 사유</label><textarea class="sdlg-ta" id="splRsn" readonly style="background:#fafafa"></textarea></div>
+      <div class="sdlg-fld" id="splMemoFld"><label>처리 메모 (선택)</label><textarea class="sdlg-ta" placeholder="처리 관련 메모를 입력해 주세요"></textarea></div>
+      <div class="sdlg-alert" id="splAlert"><i class="ph ph-warning-circle"></i>통합 제외 주주는 모든 보유 계좌에 불통일행사가 일괄 처리 및 즉시 반영됩니다.</div>
     </div>
-    <div class="sdlg-f"><label class="sdlg-chk" id="splChk"><span class="cb"><i class="ph ph-check"></i></span>위 내용을 확인했으며, 불통일행사를 처리합니다.</label><button class="sdlg-btn cancel" data-spl-close type="button">취소</button><button class="sdlg-btn ok" id="splOk" type="button" disabled>처리</button></div>
+    <div class="sdlg-f"><label class="sdlg-chk" id="splChk"><span class="cb"><i class="ph ph-check"></i></span><span id="splChkTxt">위 내용을 확인했으며, 불통일행사를 처리합니다.</span></label><button class="sdlg-btn cancel" data-spl-close type="button">취소</button><button class="sdlg-btn ok" id="splOk" type="button" disabled>처리</button></div>
   </div>
 </div>
 <script>
 (function(){
   var menu=document.getElementById("splMenu");
   var body=document.querySelector(".mtbl tbody");
-  if(!menu||!body) return;
-  var curRow=null;
+  var ov=document.getElementById("splDlg");
+  if(!menu||!body||!ov) return;
+  var chk=document.getElementById("splChk"), ok=document.getElementById("splOk");
+  var title=document.getElementById("splTitle"), desc=document.getElementById("splDesc");
+  var rsn=document.getElementById("splRsn"), memoFld=document.getElementById("splMemoFld");
+  var alertEl=document.getElementById("splAlert"), chkTxt=document.getElementById("splChkTxt");
+  var mode=null, targetRow=null, curRow=null;
+
+  // ----- 더보기 드롭다운 -----
   function close(){ menu.classList.remove("show"); }
+  function buildMenu(row){
+    var tds=row.querySelectorAll("td");
+    var way=tds[5].textContent.trim();
+    var status=tds[0].textContent.trim();
+    if(way==="개별등록" || status==="승인"){
+      menu.innerHTML='<div class="splmenu-label">사유 관리</div>'
+        +'<div class="splmenu-item" data-act="edit"><i class="ph ph-note-pencil"></i>사유 수정</div>';
+    } else {
+      menu.innerHTML='<div class="splmenu-label">상태 변경</div>'
+        +'<div class="splmenu-item" data-act="approve"><i class="ph ph-check-circle"></i>불통일 승인</div>'
+        +'<div class="splmenu-item" data-act="reject"><i class="ph ph-x-circle"></i>불통일 거절</div>';
+    }
+  }
   body.addEventListener("click",function(e){
     var h=e.target.closest("td[data-splh]"); if(!h) return;
     e.stopPropagation();
     curRow=h.closest("tr");
-    var r=h.getBoundingClientRect();
-    var left=r.right-144; if(left<8) left=8;
-    var top=r.bottom+4; if(top+96>window.innerHeight) top=r.top-96-4;
-    menu.style.left=left+"px"; menu.style.top=top+"px";
+    buildMenu(curRow);
     menu.classList.add("show");
+    var r=h.getBoundingClientRect(), mh=menu.offsetHeight, mw=menu.offsetWidth||144;
+    var left=r.right-mw; if(left<8) left=8;
+    var top=r.bottom+4; if(top+mh>window.innerHeight) top=r.top-mh-4;
+    menu.style.left=left+"px"; menu.style.top=top+"px";
   });
   menu.addEventListener("click",function(e){
     e.stopPropagation();
     var it=e.target.closest(".splmenu-item"); if(!it||!curRow) return;
-    var td0=curRow.querySelector("td");
-    if(it.dataset.act==="ok"){ td0.innerHTML='<span class="mst ok"><span class="d"></span>승인</span>'; }
-    else { td0.innerHTML='<span class="mst no"><span class="d"></span>거절</span>'; }
     close();
+    openDialog(it.dataset.act, curRow);
   });
   document.addEventListener("click",close);
   window.addEventListener("scroll",close,true);
   window.addEventListener("resize",close);
+
+  // ----- 처리/사유수정 팝업 -----
+  function openDialog(m,row){
+    mode=m; targetRow=row;
+    var tds=row.querySelectorAll("td");
+    document.getElementById("splNm").textContent=tds[2].textContent.trim();
+    document.getElementById("splGubun").textContent=tds[1].textContent.trim();
+    document.getElementById("splHold").textContent=tds[3].textContent.trim()+"주";
+    document.getElementById("splWay").textContent=tds[5].textContent.trim();
+    rsn.value=tds[4].textContent.trim();
+    if(m==="edit"){
+      title.textContent="신청 사유 수정";
+      desc.textContent="선택한 주주의 불통일행사 신청 사유를 수정합니다.";
+      rsn.removeAttribute("readonly"); rsn.style.background="#fff";
+      memoFld.style.display="none"; alertEl.style.display="none"; chk.style.display="none";
+      ok.textContent="저장"; ok.disabled=false;
+    } else {
+      var isA=(m==="approve");
+      title.textContent=isA?"불통일 승인 처리":"불통일 거절 처리";
+      desc.textContent="선택한 주주의 불통일행사 신청 내용을 확인하고 처리합니다.";
+      rsn.setAttribute("readonly","readonly"); rsn.style.background="#fafafa";
+      memoFld.style.display=""; alertEl.style.display=""; chk.style.display="";
+      chkTxt.textContent="위 내용을 확인했으며, "+(isA?"불통일 승인":"불통일 거절")+" 처리합니다.";
+      chk.classList.remove("on"); ok.textContent="처리"; ok.disabled=true;
+    }
+    ov.classList.add("show");
+  }
+  chk.addEventListener("click",function(){ if(mode==="edit")return; chk.classList.toggle("on"); ok.disabled=!chk.classList.contains("on"); });
+  ov.addEventListener("click",function(e){ if(e.target===ov||e.target.closest("[data-spl-close]")) ov.classList.remove("show"); });
+  ok.addEventListener("click",function(){
+    if(targetRow){
+      var td0=targetRow.querySelector("td");
+      if(mode==="approve"){ td0.innerHTML='<span class="mst ok"><span class="d"></span>승인</span>'; }
+      else if(mode==="reject"){ td0.innerHTML='<span class="mst no"><span class="d"></span>거절</span>'; }
+      else if(mode==="edit"){ targetRow.querySelectorAll("td")[4].textContent=rsn.value.trim(); }
+    }
+    ov.classList.remove("show");
+  });
 })();
 </script>
 <script>
