@@ -129,6 +129,7 @@
   .dsel{position:relative}
   .dmenu{position:absolute;top:38px;left:0;z-index:40;min-width:160px;background:#fff;border:1px solid rgba(10,10,10,.1);box-shadow:0 4px 6px -1px rgba(0,0,0,.1);border-radius:10px;padding:4px;display:none}
   .dsel.open .dmenu{display:block}
+  .dmenu-pop{position:fixed;z-index:1000;min-width:160px;background:#fff;border:1px solid rgba(10,10,10,.1);box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);border-radius:10px;padding:4px}
   .dmi{display:block;width:100%;text-align:left;padding:6px 8px;border:none;background:none;border-radius:8px;font-family:inherit;font-size:13px;color:#0a0a0a;cursor:pointer}
   .dmi:hover{background:#f5f5f5}.dmi.cur{background:#f5f5f5;font-weight:600}
   /* 일괄 설정 모달 */
@@ -335,6 +336,9 @@
   var CH=['전자투표/위임','서면투표','서면위임(자사)','서면위임(타사)','미설정'];
   var CARET='<svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>';
   function setDsel(el,txt){ el.classList.toggle('warn', txt==='미설정'); el.innerHTML=txt+' '+CARET; el.setAttribute('data-dsel',''); }
+  var dqOpenMenu=null,dqOpenHost=null;
+  function dqClose(){ if(dqOpenMenu){dqOpenMenu.remove();dqOpenMenu=null;} if(dqOpenHost){dqOpenHost.classList.remove('open');dqOpenHost=null;} }
+  window.addEventListener('scroll',dqClose,true); window.addEventListener('resize',dqClose);
   var modal=document.getElementById('dupModal'), bulk=document.getElementById('bulkModal');
   function nameOf(tr){ var td=tr.querySelector('td'); var v=td.querySelector('.vname'); if(v) return v.textContent.trim(); var c=td.cloneNode(true); c.querySelectorAll('.tag,.mtag,.tw-chevron,svg').forEach(function(e){e.remove();}); return (c.textContent||'').trim(); }
 
@@ -343,18 +347,24 @@
     var cr=e.target.closest('.tw-chevron[data-toggle]');
     if(cr){ e.stopPropagation(); var g=cr.dataset.toggle; cr.classList.toggle('collapsed'); var col=cr.classList.contains('collapsed'); document.querySelectorAll('tr.child[data-child="'+g+'"]').forEach(function(r){r.classList.toggle('hidden',col);}); return; }
 
-    // 중복처리 드롭다운
+    // 중복처리 드롭다운 (body-level 고정 메뉴로 렌더링해 테이블 overflow 클리핑 방지)
     var ds=e.target.closest('.dsel[data-dsel]');
     if(ds){ e.stopPropagation();
-      var wasOpen=ds.classList.contains('open');
-      document.querySelectorAll('.dsel.open').forEach(function(d){d.classList.remove('open'); var m=d.querySelector('.dmenu'); if(m)m.remove();});
-      if(!wasOpen){ var cur=ds.textContent.trim(); var menu=document.createElement('div'); menu.className='dmenu';
-        menu.innerHTML=CH.map(function(o){return '<button class="dmi'+(o===cur?' cur':'')+'" data-opt="'+o+'">'+o+'</button>';}).join('');
-        ds.appendChild(menu); ds.classList.add('open'); }
+      if(dqOpenHost===ds){ dqClose(); return; }
+      dqClose();
+      var cur=ds.textContent.replace(/\s+/g,' ').trim().replace(/\s*$/,'');
+      var menu=document.createElement('div'); menu.className='dmenu-pop';
+      menu.innerHTML=CH.map(function(o){return '<button class="dmi'+(o===cur?' cur':'')+'" data-opt="'+o+'">'+o+'</button>';}).join('');
+      document.body.appendChild(menu);
+      var r=ds.getBoundingClientRect(); var mh=menu.offsetHeight, top=r.bottom+4;
+      if(top+mh>window.innerHeight-8) top=Math.max(8, r.top-4-mh);
+      menu.style.minWidth=r.width+'px';
+      menu.style.left=Math.max(8, Math.min(r.left, window.innerWidth-8-menu.offsetWidth))+'px';
+      menu.style.top=top+'px';
+      menu.addEventListener('click',function(ev){ var o=ev.target.closest('.dmi[data-opt]'); if(o){ ev.stopPropagation(); setDsel(ds,o.dataset.opt); dqClose(); } });
+      dqOpenMenu=menu; dqOpenHost=ds; ds.classList.add('open');
       return; }
-    var opt=e.target.closest('.dmi[data-opt]');
-    if(opt){ e.stopPropagation(); var host=opt.closest('.dsel'); setDsel(host,opt.dataset.opt); return; }
-    document.querySelectorAll('.dsel.open').forEach(function(d){d.classList.remove('open'); var m=d.querySelector('.dmenu'); if(m)m.remove();});
+    dqClose();
 
     // 상세 보기 모달
     var v=e.target.closest('.viewbtn[data-view]');
