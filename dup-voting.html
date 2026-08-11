@@ -90,7 +90,7 @@
   .opv.for{color:#171717}.opv.for svg{stroke:#0071F3}
   .opv.against{color:#171717}.opv.against svg{stroke:#7C3AED}
   .opv.abs{color:#737373}.opv.abs svg{stroke:#737373}
-  .dmodal-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+  .dmodal-ov{position:fixed;inset:0;background:rgba(255,255,255,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
   .dmodal-ov.show{display:flex}
   .dmodal{width:946px;max-width:100%;max-height:90vh;overflow:auto;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;display:flex;flex-direction:column}
   .dm-hd{display:flex;align-items:center;justify-content:space-between;padding:16px}
@@ -106,7 +106,7 @@
   .dm-badge{display:inline-flex;align-items:center;height:20px;padding:2px 6px;background:#FEF5E7;color:#EA580C;border-radius:6px;font-size:12px;font-weight:500}
   .dm-tools{display:flex;align-items:center;gap:8px}
   .dm-tools .k{font-size:12px;color:#737373}
-  .dm-sel{height:28px;min-width:220px;padding:0 10px;border:1px solid var(--border);border-radius:10px;background:#fff;font-family:inherit;font-size:14px;color:#737373}
+  .dm-sel{height:28px;min-width:220px;padding:0 28px 0 10px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px;color:#737373;cursor:pointer;-webkit-appearance:none;appearance:none;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2'><path d='m6 9 6 6 6-6'/></svg>") no-repeat right 8px center/14px}
   .dm-reg{height:28px;padding:0 12px;background:#171717;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer}
   .dmtbl{width:100%;border-collapse:collapse;font-size:14px}
   .dmtbl th{background:#fafafa;border-bottom:1px solid var(--border);padding:0 8px;height:40px;font-size:14px;font-weight:500;color:#737373;text-align:right;white-space:nowrap}
@@ -144,7 +144,7 @@
   .bm-t{font-size:18px;font-weight:600;color:#0a0a0a}
   .bm-body{padding:8px 20px 0;display:flex;flex-direction:column;gap:8px}
   .bm-body label.l{font-size:14px;font-weight:600;color:#0a0a0a}
-  .bm-sel{height:44px;padding:0 14px;border:1px solid var(--border);border-radius:10px;background:#fff;font-family:inherit;font-size:15px;color:#0a0a0a}
+  .bm-sel{height:44px;padding:0 30px 0 14px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:15px;color:#0a0a0a;cursor:pointer;-webkit-appearance:none;appearance:none;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2'><path d='m6 9 6 6 6-6'/></svg>") no-repeat right 12px center/14px}
   .bm-note{margin-top:8px;background:#F1F6FF;border:1px solid #DCEAFF;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
   .bm-note .r{display:flex;align-items:flex-start;gap:8px;font-size:14px;color:#0071F3}
   .bm-note svg{width:16px;height:16px;flex:none;margin-top:1px}
@@ -168,7 +168,7 @@
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
   .cdlg-ov{position:fixed;inset:0;background:rgba(10,10,10,.4);display:none;align-items:center;justify-content:center;z-index:1200}
   .cdlg-ov.show{display:flex}
-  .cdlg{width:400px;max-width:calc(100vw - 32px);background:#fff;border:1px solid rgba(10,10,10,.08);border-radius:16px;padding:24px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 16px 40px rgba(0,0,0,.18)}
+  .cdlg{width:400px;max-width:calc(100vw - 32px);background:#fff;border:1px solid rgba(10,10,10,.08);border-radius:16px;padding:24px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.08)}
   .cdlg-ic{width:48px;height:48px;border-radius:12px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
   .cdlg-ic svg{width:26px;height:26px;fill:none;stroke:#171717;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .cdlg-tt{font-size:18px;font-weight:600;color:#171717;margin-bottom:12px}

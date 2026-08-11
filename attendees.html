@@ -30,7 +30,7 @@
   .content{gap:16px}
   h1.page-title{margin:0}
   /* 현장 참석자 등록 시트 */
-  .assheet-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none}
+  .assheet-ov{position:fixed;inset:0;background:rgba(255,255,255,.5);z-index:200;display:none}
   .assheet-ov.show{display:block}
   .assheet{position:absolute;top:0;right:0;height:100%;width:500px;max-width:94vw;background:#fff;border-left:1px solid var(--border);box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);display:flex;flex-direction:column;padding:16px;gap:16px;box-sizing:border-box;transform:translateX(100%);transition:transform .25s}
   .assheet-ov.show .assheet{transform:translateX(0)}
@@ -129,9 +129,9 @@
   .at-pg{display:flex;align-items:center;gap:8px}
   .at-pg .pp{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;color:#525252}
   .at-pg .pp.cur{background:#171717;color:#fff;border-color:#171717}
-  .at-pg select{height:30px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;padding:0 6px}
+  .at-pg select{height:30px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;color:#0a0a0a;cursor:pointer;padding:0 28px 0 10px;-webkit-appearance:none;appearance:none;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2'><path d='m6 9 6 6 6-6'/></svg>") no-repeat right 8px center/14px}
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
-  .decl-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:300;display:none;align-items:center;justify-content:center;padding:24px}
+  .decl-ov{position:fixed;inset:0;background:rgba(255,255,255,.5);z-index:300;display:none;align-items:center;justify-content:center;padding:24px}
   .decl-ov.show{display:flex}
   .decl{width:960px;max-width:100%;max-height:88vh;background:#fff;border:1px solid var(--border);border-radius:16px;display:flex;flex-direction:column;overflow:hidden}
   .decl-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:20px 20px 0}
@@ -347,9 +347,9 @@
   <div class="df"><label class="cbrow" id="tagChk"><span class="cb"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>실물 태그 ID와 일치합니다.</label><button class="dbtn" id="tagCancel">취소</button><button class="dbtn dark" id="tagOk" disabled>현장투표 태그 ID 설정</button></div>
 </div></div>
 <style>
-  .ovl2{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:3000}
+  .ovl2{position:fixed;inset:0;background:rgba(255,255,255,.5);display:none;align-items:center;justify-content:center;z-index:3000}
   .ovl2.on{display:flex}
-  .dlg2{width:560px;max-width:calc(100vw - 32px);background:#fff;border-radius:14px;position:relative;box-shadow:0 12px 34px rgba(0,0,0,.2)}
+  .dlg2{width:560px;max-width:calc(100vw - 32px);background:#fff;border-radius:14px;position:relative;box-shadow:0 8px 24px rgba(0,0,0,.08)}
   .dlg2 .dx{position:absolute;right:16px;top:16px;border:none;background:none;font-size:15px;color:#737373;cursor:pointer}
   .dlg2 .dh{padding:20px 20px 8px}
   .dlg2 .dt{font-size:17px;font-weight:600;color:#0a0a0a}
