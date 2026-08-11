@@ -48,6 +48,32 @@
   .sub-flex{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
   .ep-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:160px;background:#fafafa;border:1px dashed var(--border);border-radius:10px;color:var(--muted-fg);font-size:12px;font-weight:600}
   .ep-empty svg{width:24px;height:24px;fill:none;stroke:#737373;stroke-width:1.5}
+  /* 공지·팝업 목록 테이블 */
+  .ntbl{border:1px solid var(--border);border-radius:14px}
+  .ntr{display:grid;grid-template-columns:1fr 220px 28px;align-items:center;gap:8px;padding:0 16px;height:46px;border-top:1px solid var(--border);font-size:14px}
+  .ntr:first-child{border-top:none}
+  .ntr.nth{height:48px;background:#fafafa;border-radius:14px 14px 0 0;color:#737373;font-weight:500}
+  .ntt{display:flex;align-items:center;gap:8px;min-width:0}
+  .ntt .tx{color:#0a0a0a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nsub{color:#737373;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nbadge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:9999px;font-size:12px;font-weight:500;flex:none}
+  .nbadge.blue{background:#EBF4FF;color:#0071F3}
+  .nbadge.gray{background:#F1F5F9;color:#475569}
+  .npin{width:16px;height:16px;color:#737373;flex:none}
+  .npin svg{width:16px;height:16px;display:block}
+  .ndrop{position:relative;justify-self:end}
+  .nmore{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:none;background:none;border-radius:8px;cursor:pointer;color:#737373}
+  .nmore:hover{background:#f5f5f5}
+  .nmore svg{width:16px;height:16px}
+  .ndrop-menu{position:absolute;right:0;top:32px;z-index:30;width:128px;background:#fff;border:1px solid rgba(10,10,10,.1);box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);border-radius:10px;padding:4px;display:none}
+  .ndrop.open .ndrop-menu{display:block}
+  .ndrop-item{display:flex;align-items:center;gap:6px;width:100%;padding:4px 6px;height:28px;border:none;background:none;border-radius:8px;font-family:inherit;font-size:14px;color:#0a0a0a;cursor:pointer;text-align:left}
+  .ndrop-item:hover{background:#f5f5f5}
+  .ndrop-item svg{width:16px;height:16px}
+  .ndrop-item.del{color:#E9081B}
+  .ndrop-sep{height:1px;background:var(--border);margin:4px 0}
+  .toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(8px);background:#171717;color:#fff;font-size:13px;padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:200}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .emain2{display:flex;flex-direction:column;gap:28px}
   .esec-h{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
   .esec-t{font-size:16px;font-weight:700;color:#0a0a0a;display:flex;align-items:center;gap:8px}
@@ -194,12 +220,12 @@
             <div class="hr"></div>
             <div class="st-section">
               <div class="sub-flex"><div><div class="sub-h">공지사항 설정</div><div class="sub-help">전자주주총회 사이트 상단에 노출되는 공지 문구를 관리합니다. 고정 설정 및 게시 일정설정이 가능합니다.</div></div><button class="btn">추가</button></div>
-              <div class="ep-empty"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-dasharray="3 3"/><path d="M14 2v6h6"/></svg><div>등록된 공지가 없습니다</div></div>
+              <div class="ntbl" data-list="notice"><div class="ntr nth"><span>구분 · 제목</span><span>게시 상태</span><span></span></div><div class="ntr" data-row data-pinned><div class="ntt"><span class="nbadge blue">공지</span><span class="tx">정기주주총회 개최 안내</span><span class="npin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17v5M9 3h6l-1 7 3 3H7l3-3-1-7z"/></svg></span></div><span class="nsub">상시 게시 · 고정</span><div class="ndrop"><button class="nmore" data-more><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button><div class="ndrop-menu"><button class="ndrop-item" data-act="edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>수정</button><button class="ndrop-item" data-act="pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17v5M9 3h6l-1 7 3 3H7l3-3-1-7z"/></svg><span class="pinlbl">고정</span></button><button class="ndrop-item" data-act="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>공유</button><div class="ndrop-sep"></div><button class="ndrop-item del" data-act="del"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>삭제</button></div></div></div><div class="ntr" data-row><div class="ntt"><span class="nbadge gray">일반</span><span class="tx">전자투표 참여 방법 안내</span></div><span class="nsub">2027-03-05 ~ 03-19</span><div class="ndrop"><button class="nmore" data-more><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button><div class="ndrop-menu"><button class="ndrop-item" data-act="edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>수정</button><button class="ndrop-item" data-act="pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17v5M9 3h6l-1 7 3 3H7l3-3-1-7z"/></svg><span class="pinlbl">고정</span></button><button class="ndrop-item" data-act="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>공유</button><div class="ndrop-sep"></div><button class="ndrop-item del" data-act="del"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>삭제</button></div></div></div><div class="ntr" data-row><div class="ntt"><span class="nbadge gray">일반</span><span class="tx">배당금 지급 일정 안내</span></div><span class="nsub">게시 예약 2027-03-10 09:00</span><div class="ndrop"><button class="nmore" data-more><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button><div class="ndrop-menu"><button class="ndrop-item" data-act="edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>수정</button><button class="ndrop-item" data-act="pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17v5M9 3h6l-1 7 3 3H7l3-3-1-7z"/></svg><span class="pinlbl">고정</span></button><button class="ndrop-item" data-act="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>공유</button><div class="ndrop-sep"></div><button class="ndrop-item del" data-act="del"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>삭제</button></div></div></div></div>
             </div>
             <div class="hr"></div>
             <div class="st-section">
               <div class="sub-flex"><div><div class="sub-h">팝업 설정</div><div class="sub-help">사이트 접속 시 노출될 팝업을 등록합니다.</div></div><button class="btn">추가</button></div>
-              <div class="ep-empty"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-dasharray="3 3"/><path d="M14 2v6h6"/></svg><div>등록된 팝업이 없습니다</div></div>
+              <div class="ntbl" data-list="popup"><div class="ntr nth"><span>구분 · 제목</span><span>노출 상태</span><span></span></div><div class="ntr" data-row><div class="ntt"><span class="nbadge blue">공지</span><span class="tx">전자주주총회 참여 안내 팝업</span></div><span class="nsub">노출중 · 세션당 1회</span><div class="ndrop"><button class="nmore" data-more><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button><div class="ndrop-menu"><button class="ndrop-item" data-act="edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>수정</button><button class="ndrop-item" data-act="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>공유</button><div class="ndrop-sep"></div><button class="ndrop-item del" data-act="del"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>삭제</button></div></div></div></div>
             </div>
           </div></div>
 
@@ -328,5 +354,46 @@
   });
 </script>
 <script>document.addEventListener("click",function(e){var c=e.target.closest(".cbx[data-cbx]");if(c)c.classList.toggle("on");});</script>
+<script>
+(function(){
+  function toast(msg){var t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);requestAnimationFrame(function(){t.classList.add('show');});setTimeout(function(){t.classList.remove('show');setTimeout(function(){t.remove();},250);},1600);}
+  // URL 복사
+  document.addEventListener('click',function(e){
+    var cp=e.target.closest('.urlcopy'); if(cp){var box=cp.closest('.urlbox');var url=box.querySelector('.urltxt').textContent.trim();try{navigator.clipboard.writeText(url);}catch(_){}toast('사이트 URL이 복사되었습니다');return;}
+  });
+  // ⋯ 드롭다운 열기/닫기
+  document.addEventListener('click',function(e){
+    var mo=e.target.closest('[data-more]');
+    document.querySelectorAll('.ndrop.open').forEach(function(d){if(!mo||d!==mo.closest('.ndrop'))d.classList.remove('open');});
+    if(mo){e.stopPropagation();mo.closest('.ndrop').classList.toggle('open');}
+  });
+  // 드롭다운 액션
+  document.addEventListener('click',function(e){
+    var it=e.target.closest('.ndrop-item'); if(!it)return;
+    e.stopPropagation();
+    var drop=it.closest('.ndrop'),row=it.closest('.ntr'),act=it.dataset.act;
+    drop.classList.remove('open');
+    if(act==='del'){row.remove();toast('삭제되었습니다');}
+    else if(act==='pin'){var on=row.hasAttribute('data-pinned');var ntt=row.querySelector('.ntt');var pin=ntt.querySelector('.npin');var lbl=it.querySelector('.pinlbl');
+      if(on){row.removeAttribute('data-pinned');if(pin)pin.remove();if(lbl)lbl.textContent='고정';toast('고정이 해제되었습니다');}
+      else{row.setAttribute('data-pinned','');if(!pin){var p=document.createElement('span');p.className='npin';p.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17v5M9 3h6l-1 7 3 3H7l3-3-1-7z"/></svg>';ntt.appendChild(p);}if(lbl)lbl.textContent='고정 해제';toast('상단에 고정되었습니다');}}
+    else if(act==='edit'){toast('편집 화면으로 이동합니다');}
+    else if(act==='share'){toast('공유 링크가 복사되었습니다');}
+  });
+  // 추가 버튼
+  document.addEventListener('click',function(e){
+    var btn=e.target.closest('.st-tab[data-panel=basic] .sub-flex .btn'); if(!btn)return;
+    var sec=btn.closest('.st-section');var tbl=sec.querySelector('.ntbl');if(!tbl)return;
+    var isPopup=tbl.dataset.list==='popup';
+    var row=document.createElement('div');row.className='ntr';row.setAttribute('data-row','');
+    var menu=isPopup
+      ? '<div class="ndrop-menu"><button class="ndrop-item" data-act="edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>수정</button><button class="ndrop-item" data-act="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>공유</button><div class="ndrop-sep"></div><button class="ndrop-item del" data-act="del"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>삭제</button></div>'
+      : '<div class="ndrop-menu"><button class="ndrop-item" data-act="edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>수정</button><button class="ndrop-item" data-act="pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17v5M9 3h6l-1 7 3 3H7l3-3-1-7z"/></svg><span class="pinlbl">고정</span></button><button class="ndrop-item" data-act="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>공유</button><div class="ndrop-sep"></div><button class="ndrop-item del" data-act="del"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>삭제</button></div>';
+    row.innerHTML='<div class="ntt"><span class="nbadge gray">일반</span><span class="tx">'+(isPopup?'새 팝업':'새 공지')+'</span></div><span class="nsub">임시저장</span><div class="ndrop"><button class="nmore" data-more><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button>'+menu+'</div>';
+    tbl.appendChild(row);toast(isPopup?'팝업이 추가되었습니다':'공지가 추가되었습니다');
+  });
+})();
+</script>
+
 </body>
 </html>
