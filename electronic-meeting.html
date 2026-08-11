@@ -146,6 +146,20 @@
   .og-t{font-size:16px;font-weight:600;color:#0a0a0a}
   .og-d{font-size:12px;color:#0a0a0a;margin-top:4px}
   @media(max-width:900px){.dz-2col{grid-template-columns:1fr}.dcard-row{flex-direction:column;align-items:stretch}.og-wrap{flex-direction:column}.og-card{width:100%}}
+  /* 참석자(신청자) 관리 */
+  .atbar{display:flex;align-items:center;gap:8px}
+  .btn.sel{display:inline-flex;align-items:center;gap:6px}
+  .btn.sel svg{width:14px;height:14px;opacity:.6}
+  .vdiv{width:1px;height:16px;background:var(--border);flex:none}
+  .atbar .chips{flex:1}
+  .atbar-r{display:flex;gap:8px;margin-left:auto}
+  .ib{width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;color:#0a0a0a}
+  .ib:hover{background:#f5f5f5}
+  .ib svg{width:16px;height:16px}
+  .rowbtns{display:inline-flex;align-items:center;gap:4px;justify-content:flex-end}
+  .btn.sm{height:28px;padding:0 10px;font-size:12px}
+  .tfoot{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:#fafafa;border-top:1px solid var(--border)}
+  .tfoot-l{font-size:12px;color:#1f1c18}
   .emain2{display:flex;flex-direction:column;gap:28px}
   .esec-h{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
   .esec-t{font-size:16px;font-weight:700;color:#0a0a0a;display:flex;align-items:center;gap:8px}
@@ -334,24 +348,38 @@
 
           <!-- 참석자 관리 -->
           <div class="st-tab" data-panel="attendee"><div class="st-full">
-            <div class="st-head"><h2>참석자 관리</h2><div class="actions"><button class="btn">엑셀 내보내기</button><button class="st-save">참석자 추가</button></div></div>
-            <div class="stat-grid">
-              <div class="stat"><div class="k">총 대상 주주</div><div class="v">650,000</div></div>
-              <div class="stat"><div class="k">참석 주주</div><div class="v">20,000</div><div class="d"><span class="badge blue">3.1%</span></div></div>
-              <div class="stat"><div class="k">현장 참석</div><div class="v">6,200</div></div>
-              <div class="stat"><div class="k">온라인 참석</div><div class="v">13,800</div></div>
+            <div class="st-head"><div><h2>참석자 관리</h2><div class="sub-help">전자주총 참석·대리 신청 현황을 확인하고 승인 처리합니다.</div></div><div class="actions"><button class="btn">엑셀 내보내기</button><button class="st-save">참석자 추가</button></div></div>
+            <div class="atbar">
+              <button class="btn sel" data-gubun><span>전체 구분</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+              <span class="vdiv"></span>
+              <div class="chips" id="atChips">
+                <button class="chip active" data-fs="all">전체 <span class="c">82</span></button>
+                <button class="chip" data-fs="접수">접수 <span class="c">8</span></button>
+                <button class="chip" data-fs="승인">승인 <span class="c">29</span></button>
+                <button class="chip" data-fs="반려">반려 <span class="c">13</span></button>
+                <button class="chip" data-fs="대기">대기 <span class="c">8</span></button>
+              </div>
+              <div class="atbar-r"><button class="ib" title="필터"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M7 12h10M10 18h4"/></svg></button><button class="ib" title="정렬"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M6 12h12M9 18h6"/></svg></button></div>
             </div>
-            <div class="toolbar"><div class="search"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input placeholder="주주명 · 주주번호 검색"></div></div>
             <div class="tbl-wrap"><table class="tbl">
-              <thead><tr><th>주주번호</th><th>주주명</th><th>보유주식</th><th>참석 유형</th><th>상태</th><th style="width:90px">관리</th></tr></thead>
-              <tbody>
-                <tr><td>000103</td><td>김민준</td><td>12,400</td><td>온라인</td><td><span class="badge green">참석</span></td><td><button class="btn">상세</button></td></tr>
-                <tr><td>000241</td><td>이서연</td><td>8,900</td><td>현장</td><td><span class="badge green">참석</span></td><td><button class="btn">상세</button></td></tr>
-                <tr><td>000388</td><td>박도윤</td><td>5,200</td><td>위임</td><td><span class="badge amber">위임</span></td><td><button class="btn">상세</button></td></tr>
-                <tr><td>000512</td><td>최지우</td><td>3,100</td><td>-</td><td><span class="badge gray">미참석</span></td><td><button class="btn">상세</button></td></tr>
+              <thead><tr><th style="width:96px;text-align:center">신청 상태</th><th style="width:120px">신청 유형</th><th style="width:80px;text-align:center">구분</th><th>주주명</th><th style="width:150px;text-align:right">보유주식수</th><th style="width:150px;text-align:right">참석주식수</th><th style="width:200px;text-align:right">관리</th></tr></thead>
+              <tbody id="atBody">
+                <tr data-status="접수"><td style="width:96px;text-align:center"><span class="badge blue">접수</span></td><td style="width:120px;color:#737373">현장 참석</td><td style="width:80px;text-align:center;color:#737373">개인</td><td><span style="font-weight:500;color:#0a0a0a">나제한</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" style="width:12px;height:12px;color:#737373;flex:none"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></td><td style="width:150px;text-align:right">19,963,921</td><td style="width:150px;text-align:right;color:#737373">19,963,921</td><td class="act" style="width:200px;text-align:right"><div class="rowbtns"><button class="btn sm" data-approve>승인</button><button class="btn sm" data-reject>반려</button><button class="ib" data-more title="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td></tr>
+                <tr data-status="접수"><td style="width:96px;text-align:center"><span class="badge blue">접수</span></td><td style="width:120px;color:#737373">대리 참석</td><td style="width:80px;text-align:center;color:#737373">법인</td><td><span style="font-weight:500;color:#0a0a0a">K-홀딩스 주식회사</span></td><td style="width:150px;text-align:right">19,965,917</td><td style="width:150px;text-align:right;color:#737373">19,965,917</td><td class="act" style="width:200px;text-align:right"><div class="rowbtns"><button class="btn sm" data-approve>승인</button><button class="btn sm" data-reject>반려</button><button class="ib" data-more title="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td></tr>
+                <tr data-status="접수"><td style="width:96px;text-align:center"><span class="badge blue">접수</span></td><td style="width:120px;color:#737373">현장 참석</td><td style="width:80px;text-align:center;color:#737373">개인</td><td><span style="font-weight:500;color:#0a0a0a">젠슨박</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" style="width:12px;height:12px;color:#737373;flex:none"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></td><td style="width:150px;text-align:right">10,005,912</td><td style="width:150px;text-align:right;color:#737373">10,005,912</td><td class="act" style="width:200px;text-align:right"><div class="rowbtns"><button class="btn sm" data-approve>승인</button><button class="btn sm" data-reject>반려</button><button class="ib" data-more title="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td></tr>
+                <tr data-status="승인"><td style="width:96px;text-align:center"><span class="badge green">승인</span></td><td style="width:120px;color:#737373">현장 참석</td><td style="width:80px;text-align:center;color:#737373">개인</td><td><span style="font-weight:500;color:#0a0a0a">이준호</span></td><td style="width:150px;text-align:right">6,017,919</td><td style="width:150px;text-align:right;color:#737373">6,017,919</td><td class="act" style="width:200px;text-align:right"><div class="rowbtns"><button class="btn sm" data-detail>상세보기</button><button class="ib" data-more title="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td></tr>
+                <tr data-status="승인"><td style="width:96px;text-align:center"><span class="badge green">승인</span></td><td style="width:120px;color:#737373">대리 참석</td><td style="width:80px;text-align:center;color:#737373">법인</td><td><span style="font-weight:500;color:#0a0a0a">KVIDIA</span></td><td style="width:150px;text-align:right">19,961,925</td><td style="width:150px;text-align:right;color:#737373">19,961,925</td><td class="act" style="width:200px;text-align:right"><div class="rowbtns"><button class="btn sm" data-detail>상세보기</button><button class="ib" data-more title="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td></tr>
+                <tr data-status="승인"><td style="width:96px;text-align:center"><span class="badge green">승인</span></td><td style="width:120px;color:#737373">온라인</td><td style="width:80px;text-align:center;color:#737373">개인</td><td><span style="font-weight:500;color:#0a0a0a">이종승</span></td><td style="width:150px;text-align:right">6,017,919</td><td style="width:150px;text-align:right;color:#737373">6,017,919</td><td class="act" style="width:200px;text-align:right"><div class="rowbtns"><button class="btn sm" data-detail>상세보기</button><button class="ib" data-more title="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td></tr>
+                <tr data-status="대기"><td style="width:96px;text-align:center"><span class="badge amber">대기</span></td><td style="width:120px;color:#737373">현장 참석</td><td style="width:80px;text-align:center;color:#737373">개인</td><td><span style="font-weight:500;color:#0a0a0a">김민준</span></td><td style="width:150px;text-align:right">1,240,000</td><td style="width:150px;text-align:right;color:#737373">0</td><td class="act" style="width:200px;text-align:right"><div class="rowbtns"><button class="btn sm" data-approve>승인</button><button class="btn sm" data-reject>반려</button><button class="ib" data-more title="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td></tr>
+                <tr data-status="반려"><td style="width:96px;text-align:center"><span class="badge red">반려</span></td><td style="width:120px;color:#737373">대리 참석</td><td style="width:80px;text-align:center;color:#737373">개인</td><td><span style="font-weight:500;color:#0a0a0a">최지우</span></td><td style="width:150px;text-align:right">310,000</td><td style="width:150px;text-align:right;color:#737373">0</td><td class="act" style="width:200px;text-align:right"><div class="rowbtns"><button class="btn sm" data-detail>상세보기</button><button class="ib" data-more title="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td></tr>
+                <tr data-status="대기"><td style="width:96px;text-align:center"><span class="badge amber">대기</span></td><td style="width:120px;color:#737373">온라인</td><td style="width:80px;text-align:center;color:#737373">법인</td><td><span style="font-weight:500;color:#0a0a0a">미래에셋</span></td><td style="width:150px;text-align:right">3,200,000</td><td style="width:150px;text-align:right;color:#737373">0</td><td class="act" style="width:200px;text-align:right"><div class="rowbtns"><button class="btn sm" data-approve>승인</button><button class="btn sm" data-reject>반려</button><button class="ib" data-more title="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td></tr>
+                <tr data-status="반려"><td style="width:96px;text-align:center"><span class="badge red">반려</span></td><td style="width:120px;color:#737373">현장 참석</td><td style="width:80px;text-align:center;color:#737373">개인</td><td><span style="font-weight:500;color:#0a0a0a">박도윤</span></td><td style="width:150px;text-align:right">520,000</td><td style="width:150px;text-align:right;color:#737373">0</td><td class="act" style="width:200px;text-align:right"><div class="rowbtns"><button class="btn sm" data-detail>상세보기</button><button class="ib" data-more title="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td></tr>
               </tbody>
-            </table></div>
+            </table>
+              <div class="tfoot"><div class="tfoot-l">총 82명 · 510,356,025주</div><div class="pager"><button class="pb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m11 17-5-5 5-5M18 17l-5-5 5-5"/></svg></button><button class="pb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m15 18-6-6 6-6"/></svg></button><span class="cur">1</span><span style="color:#737373;font-size:13px">/ 30</span><button class="pb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m9 18 6-6-6-6"/></svg></button><button class="pb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m13 17 5-5-5-5M6 17l5-5-5-5"/></svg></button></div></div>
+            </div>
           </div></div>
+
 
           <!-- 사전 질의 관리 -->
           <div class="st-tab" data-panel="preq"><div class="st-full">
@@ -529,6 +557,30 @@
   });
   dp.addEventListener('click',function(e){
     var x=e.target.closest('[data-atx]'); if(x){ var blk=x.closest('.imgblk')||x.closest('.og-left'); var at=x.closest('.attach'); if(at) at.remove(); }
+  });
+})();
+</script>
+<script>
+(function(){
+  var panel=document.querySelector('.st-tab[data-panel="attendee"]'); if(!panel) return;
+  var chips=panel.querySelector('#atChips'), body=panel.querySelector('#atBody');
+  chips.addEventListener('click',function(e){
+    var c=e.target.closest('.chip'); if(!c)return;
+    chips.querySelectorAll('.chip').forEach(function(x){x.classList.toggle('active',x===c);});
+    var fs=c.dataset.fs;
+    body.querySelectorAll('tr').forEach(function(tr){ tr.style.display=(fs==='all'||tr.dataset.status===fs)?'':'none'; });
+  });
+  var BADGE={'접수':'blue','승인':'green','반려':'red','대기':'amber'};
+  function setStatus(tr,st){
+    tr.dataset.status=st;
+    var b=tr.querySelector('.badge'); b.className='badge '+BADGE[st]; b.textContent=st;
+    var act=tr.querySelector('.act .rowbtns');
+    act.innerHTML='<button class="btn sm" data-detail>상세보기</button><button class="ib" data-more><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button>';
+  }
+  body.addEventListener('click',function(e){
+    var tr=e.target.closest('tr'); if(!tr)return;
+    if(e.target.closest('[data-approve]')) setStatus(tr,'승인');
+    else if(e.target.closest('[data-reject]')) setStatus(tr,'반려');
   });
 })();
 </script>
