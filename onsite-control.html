@@ -127,15 +127,28 @@
   .vwwrap{display:flex;flex-direction:column;gap:12px;height:100%}
   .vwwrap .apanel{flex:1;min-height:0}
   .vkpi{display:flex;gap:10px;flex:none}
-  .vkpi .k{flex:1;min-width:0;border:1px solid var(--border);border-radius:8px;padding:10px 12px;background:#fafafa}
+  .vkpi .k{flex:1;min-width:0;border:1px solid var(--border);border-radius:8px;padding:12px 14px;background:#fff}
   .vkpi .k .kl{font-size:12px;color:#737373}
-  .vkpi .k .kv{margin-top:4px;font-size:18px;font-weight:700;color:#0a0a0a;font-variant-numeric:tabular-nums}
+  .vkpi .k .kv{margin-top:6px;font-size:18px;font-weight:700;color:#0a0a0a;font-variant-numeric:tabular-nums}
   .vkpi .k .kv small{font-size:12px;font-weight:500;color:#737373}
   .vkpi .k.live .kv{color:#0071f3}
   .vdev{display:inline-flex;align-items:center;gap:5px;color:#525252;font-size:13px}
   .vdev svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
   .vlink{display:inline-flex;align-items:center;justify-content:center;height:28px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:12px;font-weight:500;color:#0a0a0a;cursor:pointer;font-family:inherit;white-space:nowrap}
   .vlink.danger{color:#e11d48;border-color:#FBD0D8;background:#FEE2E2}
+  .pxbadge{display:inline-flex;align-items:center;height:20px;padding:0 7px;margin-left:6px;border-radius:9999px;background:#EEF5FF;color:#0071F3;font-size:11px;font-weight:600;cursor:pointer;vertical-align:middle}
+  .pxdlg-ov{position:fixed;inset:0;background:rgba(10,10,10,.4);display:none;align-items:center;justify-content:center;z-index:300;padding:24px}
+  .pxdlg-ov.show{display:flex}
+  .pxdlg{width:380px;max-width:100%;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;position:relative}
+  .pxdlg-h{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 8px}
+  .pxdlg-h .t{font-size:16px;font-weight:600;color:#0a0a0a}
+  .pxdlg-x{width:24px;height:24px;border:none;background:none;cursor:pointer;color:#0a0a0a;display:flex;align-items:center;justify-content:center;padding:0}.pxdlg-x i{font-size:16px}
+  .pxdlg-b{padding:4px 16px 8px;display:flex;flex-direction:column}
+  .pxrow{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0}
+  .pxrow:last-child{border-bottom:none}
+  .pxrow .k{font-size:13px;color:#737373}.pxrow .v{font-size:14px;font-weight:500;color:#0a0a0a;text-align:right}
+  .pxdlg-f{display:flex;justify-content:flex-end;padding:8px 16px 16px}
+  .pxdlg-f .vlink{background:#171717;color:#fff;border-color:#171717;height:32px;padding:0 16px}
   .vlink[disabled]{opacity:.45;cursor:not-allowed}
   .apanel{display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 1px 2px rgba(0,0,0,.05);overflow:hidden}
   .apanel-h{padding:11px 12px;font-size:14px;font-weight:600;color:#0a0a0a}
@@ -649,22 +662,21 @@
         <div class="oc-panel" data-panel="viewer">
           <div class="vwwrap">
             <div class="vkpi">
-              <div class="k live"><div class="kl">현재 온라인 접속</div><div class="kv" id="vwOnline">0<small> 명</small></div></div>
-              <div class="k"><div class="kl">누적 접속</div><div class="kv">18,204<small> 명</small></div></div>
-              <div class="k"><div class="kl">온라인 참석 의결권</div><div class="kv">63,120,000<small> 주</small></div></div>
+              <div class="k live"><div class="kl">현재 온라인 접속</div><div class="kv" id="vwOnline">206,142<small> 명</small></div></div>
+              <div class="k"><div class="kl">누적 접속</div><div class="kv">231,480<small> 명</small></div></div>
+              <div class="k"><div class="kl">온라인 참석 의결권</div><div class="kv">296,880,000<small> 주</small></div></div>
               <div class="k"><div class="kl">평균 시청 시간</div><div class="kv">42<small> 분</small></div></div>
             </div>
             <div class="apanel vsheet">
               <div class="vtoolbar">
                 <div class="vseg"><button class="on" data-vw="all">전체</button><button data-vw="on">온라인</button><button data-vw="off">이탈</button></div>
                 <div class="vtools">
-                  <button class="vbtn"><i class="ph ph-megaphone-simple" style="font-size:16px"></i>전체 안내 전송</button>
                   <button class="vbtn"><i class="ph ph-download-simple" style="font-size:16px"></i>다운로드</button>
                   <button class="vbtn ic"><i class="ph ph-funnel" style="font-size:16px"></i></button>
                 </div>
               </div>
               <div class="vscroll"><table class="vtbl"><thead><tr>
-                <th class="l">주주명</th><th class="c">주주구분</th><th>보유주식수</th>
+                <th class="l">투표권자</th><th class="c">주주구분</th><th>보유주식수</th>
                 <th class="c">접속상태</th><th class="c">접속시각</th><th class="l">시청 기기</th>
                 <th class="c">전자투표</th><th class="c">관리</th>
               </tr></thead><tbody id="vwBody"></tbody></table></div>
@@ -1184,16 +1196,16 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   var body=document.getElementById('vwBody'); if(!body) return;
   var DEVICE={'모바일':'<svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>','PC':'<svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>','태블릿':'<svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M12 18h.01"/></svg>'};
   var V=[
-    {nm:'국민연금공단',t:'기관',sh:42300000,on:true,tm:'09:01',dev:'PC',ev:'완료'},
-    {nm:'블랙록펀드',t:'기관',sh:12940000,on:true,tm:'09:02',dev:'PC',ev:'완료'},
+    {nm:'국민연금공단',t:'기관',sh:42300000,on:true,tm:'09:01',dev:'PC',ev:'완료',px:{nm:'김수현',rel:'위임 대리인',sh:42300000,tel:'010-3921-4477',doc:'전자위임장'}},
+    {nm:'블랙록펀드',t:'기관',sh:12940000,on:true,tm:'09:02',dev:'PC',ev:'완료',px:{nm:'이정우',rel:'법무법인 대리',sh:12940000,tel:'010-5540-1188',doc:'서면위임장'}},
     {nm:'김명준',t:'개인',sh:350040,on:true,tm:'09:03',dev:'모바일',ev:'미투표'},
     {nm:'미래에셋증권(쿼드자산운용)',t:'기관',sh:18750000,on:true,tm:'09:03',dev:'PC',ev:'완료'},
     {nm:'이나리',t:'개인',sh:128500,on:true,tm:'09:04',dev:'모바일',ev:'완료'},
-    {nm:'삼성자산운용',t:'기관',sh:9870000,on:true,tm:'09:04',dev:'태블릿',ev:'완료'},
+    {nm:'삼성자산운용',t:'기관',sh:9870000,on:true,tm:'09:04',dev:'태블릿',ev:'완료',px:{nm:'정하은',rel:'위임 대리인',sh:9870000,tel:'010-8842-3096',doc:'전자위임장'}},
     {nm:'전승현',t:'개인',sh:96700,on:true,tm:'09:05',dev:'모바일',ev:'미투표'},
     {nm:'한국투자증권',t:'기관',sh:15200000,on:true,tm:'09:05',dev:'PC',ev:'완료'},
     {nm:'정하윤',t:'개인',sh:22400,on:false,tm:'09:06',dev:'모바일',ev:'완료'},
-    {nm:'교보생명',t:'기관',sh:2980000,on:true,tm:'09:06',dev:'PC',ev:'완료'},
+    {nm:'교보생명',t:'기관',sh:2980000,on:true,tm:'09:06',dev:'PC',ev:'완료',px:{nm:'박서준',rel:'임직원 대리',sh:2980000,tel:'010-2277-6710',doc:'전자위임장'}},
     {nm:'오세훈',t:'개인',sh:19900,on:true,tm:'09:07',dev:'모바일',ev:'미투표'},
     {nm:'KB자산운용',t:'기관',sh:8110000,on:true,tm:'09:07',dev:'PC',ev:'완료'},
     {nm:'민경선',t:'개인',sh:54900,on:false,tm:'09:08',dev:'태블릿',ev:'미투표'},
@@ -1205,27 +1217,46 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   ];
   function cm(n){return Number(n).toLocaleString('en-US');}
   function tg(t){return '<span class="tg '+(t==='기관'?'tg-inst':'tg-ind')+'">'+t+'</span>';}
-  var vw='all';
+  var vw='all', onlineN=206142;
   function render(){
-    var rows=V.filter(function(x){return vw==='all'||(vw==='on'?x.on:!x.on);});
-    body.innerHTML=rows.map(function(x){
+    body.innerHTML=V.map(function(x,i){return [x,i];}).filter(function(p){var x=p[0];return vw==='all'||(vw==='on'?x.on:!x.on);}).map(function(p){
+      var x=p[0], i=p[1];
       var stat=x.on?'<span class="stbadge green"><span class="d"></span>온라인</span>':'<span class="stbadge gray"><span class="d"></span>이탈</span>';
       var ev=x.ev==='완료'?'<span class="stbadge blue"><span class="d"></span>완료</span>':'<span class="stbadge gray"><span class="d"></span>미투표</span>';
       var dev='<span class="vdev">'+(DEVICE[x.dev]||'')+x.dev+'</span>';
       var mng=x.on?'<button class="vlink danger" type="button">접속 종료</button>':'<button class="vlink" type="button" disabled>-</button>';
-      return '<tr><td class="l">'+x.nm+'</td><td class="c">'+x.t+'</td><td>'+cm(x.sh)+'</td>'
+      var pxb=x.px?'<span class="pxbadge" data-px="'+i+'">대리인</span>':'';
+      return '<tr data-i="'+i+'"><td class="l">'+x.nm+pxb+'</td><td class="c">'+x.t+'</td><td>'+cm(x.sh)+'</td>'
         +'<td class="c">'+stat+'</td><td class="c mut">'+x.tm+'</td><td class="l">'+dev+'</td>'
         +'<td class="c">'+ev+'</td><td class="c">'+mng+'</td></tr>';
     }).join('');
-    document.getElementById('vwOnline').innerHTML=V.filter(function(x){return x.on;}).length+'<small> 명</small>';
   }
   document.querySelectorAll('.vseg button[data-vw]').forEach(function(b){
     b.addEventListener('click',function(){ document.querySelectorAll('.vseg button[data-vw]').forEach(function(x){x.classList.toggle('on',x===b);}); vw=b.dataset.vw; render(); });
   });
-  body.addEventListener('click',function(e){ var btn=e.target.closest('.vlink.danger'); if(btn){ var tr=btn.closest('tr'); var nm=tr.cells[0].textContent; var i=V.map(function(v){return v.nm;}).indexOf(nm); if(i>=0){V[i].on=false; render();} } });
+  body.addEventListener('click',function(e){
+    var pb=e.target.closest('.pxbadge'); if(pb){ e.stopPropagation(); openPx(V[+pb.dataset.px]); return; }
+    var btn=e.target.closest('.vlink.danger'); if(btn){ var tr=btn.closest('tr'); var i=+tr.dataset.i; if(!isNaN(i)&&V[i]){V[i].on=false; onlineN=Math.max(0,onlineN-1); render(); document.getElementById('vwOnline').innerHTML=cm(onlineN)+'<small> 명</small>'; } }
+  });
+  var pxOv=document.getElementById('pxDlg');
+  function openPx(x){ if(!x||!x.px)return; document.getElementById('pxNm').textContent=x.px.nm; document.getElementById('pxRel').textContent=x.px.rel; document.getElementById('pxSh').textContent=cm(x.px.sh)+'주'; document.getElementById('pxTel').textContent=x.px.tel; document.getElementById('pxDoc').textContent=x.px.doc+' 완료'; pxOv.classList.add('show'); }
+  if(pxOv){ pxOv.addEventListener('click',function(e){ if(e.target===pxOv||e.target.closest('[data-px-close]')) pxOv.classList.remove('show'); }); }
   render();
 })();
 </script>
+<div class="pxdlg-ov" id="pxDlg">
+  <div class="pxdlg" role="dialog" aria-label="대리인 정보">
+    <div class="pxdlg-h"><div class="t">대리인 정보</div><button class="pxdlg-x" data-px-close type="button"><i class="ph ph-x"></i></button></div>
+    <div class="pxdlg-b">
+      <div class="pxrow"><span class="k">대리인 성명</span><span class="v" id="pxNm">-</span></div>
+      <div class="pxrow"><span class="k">주주와의 관계</span><span class="v" id="pxRel">-</span></div>
+      <div class="pxrow"><span class="k">위임 주식수</span><span class="v" id="pxSh">-</span></div>
+      <div class="pxrow"><span class="k">연락처</span><span class="v" id="pxTel">-</span></div>
+      <div class="pxrow"><span class="k">위임장</span><span class="v" id="pxDoc">-</span></div>
+    </div>
+    <div class="pxdlg-f"><button class="vlink" data-px-close type="button">확인</button></div>
+  </div>
+</div>
 <script src="conexus.js"></script>
 </body>
 </html>
