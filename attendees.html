@@ -26,6 +26,39 @@
   .search input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
   .search .ic{width:16px;height:16px;color:var(--muted-fg)}
   .page-title{font-size:20px;font-weight:700;color:#0a0a0a}
+  h1.page-title{margin:0}
+  /* 현장 참석자 등록 시트 */
+  .assheet-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none}
+  .assheet-ov.show{display:block}
+  .assheet{position:absolute;top:0;right:0;height:100%;width:500px;max-width:94vw;background:#fff;border-left:1px solid var(--border);box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);display:flex;flex-direction:column;padding:16px;gap:16px;box-sizing:border-box;transform:translateX(100%);transition:transform .25s}
+  .assheet-ov.show .assheet{transform:translateX(0)}
+  .as-x{position:absolute;top:16px;right:16px;width:24px;height:24px;border:none;background:none;cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#0a0a0a}
+  .as-x:hover{background:#f5f5f5}.as-x svg{width:16px;height:16px}
+  .as-hd{padding-right:40px}.as-t{font-size:16px;font-weight:600;color:#0a0a0a}.as-d{font-size:12px;color:#737373;margin-top:2px}
+  .as-body{flex:1;overflow:auto;display:flex;flex-direction:column;gap:24px}
+  .as-card{background:#F5F5F5;border-radius:10px;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .as-f .k{font-size:12px;font-weight:600;color:#737373;margin-bottom:4px}.as-f .v{font-size:14px;color:#0a0a0a}
+  .as-f.full{grid-column:1/-1}
+  .as-sec-h{display:flex;align-items:center;gap:4px;font-size:14px;font-weight:500;color:#0a0a0a;cursor:pointer;user-select:none}
+  .as-sec-h svg{width:14px;height:14px;transition:transform .15s}
+  .as-sec.collapsed .as-sec-h svg{transform:rotate(-90deg)}
+  .as-box{background:#FAFAFA;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:20px;margin-top:8px}
+  .as-sec.collapsed .as-box{display:none}
+  .as-row2{display:flex;gap:12px}
+  .as-field{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0}
+  .as-field>label{font-size:14px;font-weight:500;color:#737373}
+  .as-inp{height:32px;padding:0 10px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px;outline:none;background:#fff;width:100%;box-sizing:border-box}
+  .as-rlbl{font-size:14px;font-weight:500;color:#0a0a0a;margin-bottom:12px}
+  .as-radios{display:flex;gap:20px;flex-wrap:wrap}
+  .as-radio{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:#0a0a0a;cursor:pointer}
+  .as-radio .rd{width:16px;height:16px;border:1px solid #d4d4d4;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
+  .as-radio.on .rd{border-color:#171717}
+  .as-radio.on .rd::after{content:"";width:8px;height:8px;border-radius:50%;background:#171717}
+  .as-ft{display:flex;gap:8px}
+  .as-ft button{flex:1;height:32px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer}
+  .as-cancel{background:#fff;border:1px solid var(--border);color:#0a0a0a}
+  .as-ok{background:#171717;border:none;color:#fafafa}
+  .as-mod{text-align:center;font-size:12px;color:#737373}
   .page-sub{font-size:13px;color:var(--muted-fg);margin-top:4px}
   .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
   .stat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px}
@@ -60,11 +93,13 @@
   .atwrap{margin-top:14px;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
   .atscroll{overflow:auto;max-height:calc(100vh - 340px)}
   table.attbl{width:100%;border-collapse:collapse;font-size:14px}
-  table.attbl thead th{position:sticky;top:0;background:#fff;z-index:1;padding:14px 16px;text-align:left;font-weight:500;color:#737373;font-size:13px;white-space:nowrap;border-bottom:1px solid var(--border)}
+  table.attbl thead th{position:sticky;top:0;background:#fafafa;z-index:1;padding:10px 14px;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;white-space:nowrap;border-bottom:1px solid var(--border)}
   table.attbl thead th.n{text-align:right}
-  table.attbl tbody td{padding:15px 16px;border-bottom:1px solid #f2f2f2;color:#0a0a0a;white-space:nowrap;font-variant-numeric:tabular-nums}
+  table.attbl tbody td{padding:12px 14px;border-bottom:1px solid #f0f0f0;color:#0a0a0a;white-space:nowrap}
   table.attbl tbody td.n{text-align:right}
+  table.attbl tbody tr:last-child td{border-bottom:none}
   table.attbl tbody tr:hover td{background:#fafafa}
+  table.attbl[data-clickable] tbody tr{cursor:pointer}
   .atmut{color:#a3a3a3}
   .voter{display:inline-flex;align-items:center;gap:8px}
   .vcaret{width:20px;height:20px;border-radius:50%;background:#171717;color:#fff;display:inline-flex;align-items:center;justify-content:center;flex:none}
@@ -190,7 +225,7 @@
     <div class="scroll">
       <div class="content" style="width:100%">
         <div class="at-head">
-          <div><div class="page-title">참석자 관리</div><div class="page-sub">현장·전자주총 참석자를 등록하고 관리합니다.</div></div>
+          <div><h1 class="page-title">참석자 관리</h1><div class="page-sub">현장·전자주총 참석자를 등록하고 관리합니다.</div></div>
           <div class="at-head-r"><span class="at-tag">현장투표 태그 ID <span class="tagid unset" id="tagId">미설정</span></span><button class="abtn">주총선언문</button></div>
         </div>
         <div class="at-tabs">
@@ -212,7 +247,7 @@
           </div>
         </div>
         <div class="atwrap">
-          <div class="atscroll"><table class="attbl"><thead id="atHead"></thead><tbody id="atBody"></tbody></table></div>
+          <div class="atscroll"><table class="attbl" data-clickable><thead id="atHead"></thead><tbody id="atBody"></tbody></table></div>
           <div class="at-foot"><span id="atCount">총 0건 · 0주</span>
             <div class="at-pg">페이지당 <select><option>20</option><option>50</option></select>
               <span class="pp">|&lt;</span><span class="pp">&lt;</span><span class="pp cur">1</span><span id="atTot">/ 0</span><span class="pp">&gt;</span><span class="pp">&gt;|</span>
@@ -362,8 +397,30 @@
   sel.addEventListener('click',function(){ selT.textContent='NFC-1001'; selT.classList.remove('ph'); });
   chk.addEventListener('click',function(){ chk.classList.toggle('on'); ok.disabled=!(chk.classList.contains('on')&&!selT.classList.contains('ph')); });
   ok.addEventListener('click',function(){ var t=document.getElementById('tagId'); t.textContent='NFC-1001'; t.className='tagid set'; to.classList.remove('on'); });
+  // 현장 참석자 등록 시트
+  (function(){
+    var ov=document.getElementById('asSheet'); if(!ov) return;
+    var body=document.getElementById('atBody');
+    body.addEventListener('click',function(e){
+      if(cur!=='reg') return; var tr=e.target.closest('tr'); if(!tr) return;
+      var tds=tr.querySelectorAll('td'); if(tds.length<3) return;
+      document.getElementById('asVoter').textContent=(tds[0].textContent||'').trim();
+      document.getElementById('asName').textContent=(tds[1].textContent||'').trim();
+      document.getElementById('asNo').textContent=(tds[2].textContent||'').trim();
+      var s=document.getElementById('asSec'); if(s) s.classList.remove('collapsed');
+      ov.classList.add('show');
+    });
+    ov.addEventListener('click',function(e){
+      if(e.target===ov || e.target.closest('[data-as-close]')){ ov.classList.remove('show'); return; }
+      if(e.target.closest('[data-as-toggle]')){ document.getElementById('asSec').classList.toggle('collapsed'); return; }
+      var rd=e.target.closest('.as-radio[data-rg]');
+      if(rd){ var g=rd.dataset.rg; ov.querySelectorAll('.as-radio[data-rg="'+g+'"]').forEach(function(r){r.classList.toggle('on',r===rd);}); }
+    });
+  })();
   render();
 })();
 </script>
+
+<div class="assheet-ov" id="asSheet"><div class="assheet"><button class="as-x" data-as-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button><div class="as-hd"><div class="as-t">현장 참석자 등록</div><div class="as-d">현장 참석 정보를 입력해 등록합니다.</div></div><div class="as-body"><div class="as-card"><div class="as-f"><div class="k">투표권자</div><div class="v" id="asVoter">-</div></div><div class="as-f"><div class="k">주주명</div><div class="v" id="asName">-</div></div><div class="as-f"><div class="k">주주번호</div><div class="v" id="asNo">-</div></div><div class="as-f"><div class="k">실질계좌번호</div><div class="v">1230123456789</div></div></div><div class="as-sec" id="asSec"><div class="as-sec-h" data-as-toggle>참석자 정보 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div><div class="as-box"><div class="as-row2"><div class="as-field"><label>이름</label><input class="as-inp" id="asIn1" placeholder="참석자 이름"></div><div class="as-field"><label>연락처</label><input class="as-inp" id="asIn2" placeholder="010-0000-0000"></div></div><div><div class="as-rlbl">참석 주식수</div><div class="as-radios"><label class="as-radio on" data-rg="shares"><span class="rd"></span>전체 참석</label><label class="as-radio" data-rg="shares"><span class="rd"></span>일부 참석</label></div></div><div><div class="as-rlbl">참석 구분</div><div class="as-radios"><label class="as-radio on" data-rg="kind"><span class="rd"></span>본인 참석</label><label class="as-radio" data-rg="kind"><span class="rd"></span>대리 참석</label></div></div><div><div class="as-rlbl">신분 확인 방식</div><div class="as-radios"><label class="as-radio on" data-rg="id"><span class="rd"></span>모바일 신분증</label><label class="as-radio" data-rg="id"><span class="rd"></span>실물 신분증</label></div></div></div></div></div><div><div class="as-ft"><button class="as-cancel" data-as-close>취소</button><button class="as-ok" data-as-close>등록</button></div><div class="as-mod" style="margin-top:12px">마지막 수정 2026-07-17 15:58 · 박지용</div></div></div></div>
 </body>
 </html>
