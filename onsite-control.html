@@ -1146,7 +1146,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 </script>
 <div class="pip" id="pip">
   <div class="pip-bar" id="pipBar"><span class="pip-t"><span class="liv"></span>생중계 · 카카오뱅크 주주총회</span><div class="pip-actions"><button id="pipMin" title="최소화">—</button><button id="pipClose" title="닫기">✕</button></div></div>
-  <video id="pipVid" src="kakaobank.mp4" autoplay muted loop playsinline></video>
+  <video id="pipVid" src="kakaobank.mp4" autoplay loop playsinline></video>
   <button class="pip-mute" id="pipMute" title="음소거 해제"><i class="ph ph-speaker-simple-x"></i></button>
 </div>
 <script>
@@ -1198,7 +1198,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 <script>
 (function(){ var v=document.getElementById("pipVid"), b=document.getElementById("pipMute"); if(!v||!b) return;
   function upd(){ b.innerHTML="<i class=\"ph "+(v.muted?"ph-speaker-simple-x":"ph-speaker-simple-high")+"\"></i>"; b.title=v.muted?"음소거 해제":"음소거"; }
-  upd();
+  function tryPlay(){ v.muted=false; var p=v.play(); if(p&&p.catch){ p.catch(function(){}); } upd(); }
+  v.muted=false; tryPlay();
+  function once(){ tryPlay(); document.removeEventListener("pointerdown",once); document.removeEventListener("keydown",once); }
+  document.addEventListener("pointerdown",once); document.addEventListener("keydown",once);
   b.addEventListener("click",function(){ v.muted=!v.muted; if(!v.muted){ try{v.play();}catch(_){} } upd(); });
 })();
 </script>

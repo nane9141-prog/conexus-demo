@@ -37,7 +37,8 @@
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
 
   /* 전자투표/위임 내역 page */
-  .ev-head{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .ev-head{display:flex;align-items:flex-start;gap:8px;margin-bottom:4px;min-height:32px}
+  .ev-head .btn-primary,.ev-head .ev-org{align-self:center}
   .ev-head .page-title{font-size:18px;font-weight:600}
   .ev-org{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;margin-left:2px}
   .ev-org span{color:var(--muted-fg)}.ev-org b{color:#0a0a0a;font-weight:600}
