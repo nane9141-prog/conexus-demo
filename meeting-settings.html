@@ -978,7 +978,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
         <div class="chk-row" data-chk><div class="chk"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div><div><div class="ct">현장전자표결 설정</div><div class="cd">현장전자표결 사용 여부를 불러옵니다.</div></div></div>
       </div></div>
     </div>
-    <div class="sheet-foot" style="flex-direction:row;gap:8px"><button class="btn-line" data-close style="flex:1">취소</button><button class="primary" id="loadApply" style="flex:1">적용</button></div>
+    <div class="sheet-foot" style="flex-direction:row;gap:8px"><button class="btn-line" data-close style="flex:1">취소</button><button class="primary" id="loadApply" style="flex:1">불러오기</button></div>
   </aside>
 </div>
 <div class="overlay hidden" id="resoOverlay">
@@ -1072,7 +1072,8 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   document.querySelectorAll('.st-item').forEach(it=>it.addEventListener('click',()=>switchTab(it.dataset.tab)));
 
   // 저장 -> 현재 탭 체크
-  document.querySelectorAll('[data-save]').forEach(b=>b.addEventListener('click',()=>{document.querySelector('.st-item.active').classList.add('done');showToast('저장되었습니다');}));
+  const TAB_ORDER=['basic','e-voting','agenda','voting-intent'];
+  document.querySelectorAll('[data-save]').forEach(b=>b.addEventListener('click',()=>{var cur=document.querySelector('.st-item.active');cur.classList.add('done');var idx=TAB_ORDER.indexOf(cur.dataset.tab);showToast('저장되었습니다');if(idx>=0&&idx<TAB_ORDER.length-1){switchTab(TAB_ORDER[idx+1]);}}));
   // 서비스/일반 토글, 라디오, 체크박스, 투표버튼
   document.querySelectorAll('[data-sw]').forEach(s=>s.addEventListener('click',()=>s.classList.toggle('on')));
   document.querySelectorAll('[data-cbx]').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('on')));
@@ -1109,7 +1110,8 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   fileInput.addEventListener('change',()=>{if(!uplBtn||!fileInput.files.length)return;const f=fileInput.files[0].name;const ad=uplBtn.closest('.attach-row').querySelector('.ad');ad.textContent=f;ad.classList.add('file');showToast('첨부되었습니다: '+f);});
 
   // ===== 의안 설정 =====
-  const AG_TYPES=['재무제표 승인','정관 변경','감사위원회 감사위원 선임(독립)','감사위원회 감사위원 선임(일반)','이사선임','이사 보수한도 승인','배당금 지급 승인','감사 선임'];
+  const AG_METHOD_MAP={'재무제표 승인':'보통결의','정관변경':'특별결의','정관변경(집중투표 배제 및 해지)':'특별결의','이익배당':'보통결의','이사선임':'보통결의','이사해임':'특별결의','감사선임':'보통결의','감사해임':'특별결의','감사위원회 감사위원 선임(사외이사)':'보통결의','감사위원회 감사위원 선임(독립이사)':'보통결의','감사위원회 감사위원 해임(사외이사)':'특별결의','감사위원회 감사위원 해임(독립이사)':'보통결의','감사위원회 감사위원 선임(일반)':'보통결의','감사위원회 감사위원 해임(일반)':'특별결의','이사 보수한도 승인':'보통결의','감사 보수한도 승인':'보통결의','합병계약서의 승인':'특별결의','분할계획서의 승인':'특별결의','분할합병계약서의 승인':'특별결의','영업의 양도/양수 및 포괄적 계약 체결 승인':'특별결의','기타':'보통결의'};
+  const AG_TYPES=Object.keys(AG_METHOD_MAP);
   const AG_METHODS=['보통결의','특별결의'];
   const AGENDA_DATA=[
     {no:'1',type:'재무제표 승인',method:'보통결의',name:'재무제표 승인의 건',sub:[]},
@@ -1169,7 +1171,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   // 의안 종류 shadcn 드롭다운
   function openAgType(btn){
     const cur=btn.querySelector('span').textContent;agTypePop.innerHTML='';
-    AG_TYPES.forEach(t=>{const o=document.createElement('button');o.className='selopt'+(t===cur?' sel':'');o.innerHTML='<span class="sc">'+t+'</span><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';o.addEventListener('click',ev=>{ev.stopPropagation();btn.querySelector('span').textContent=t;agTypePop.classList.add('hidden');});agTypePop.appendChild(o);});
+    AG_TYPES.forEach(t=>{const o=document.createElement('button');o.className='selopt'+(t===cur?' sel':'');o.innerHTML='<span class="sc">'+t+'</span><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';o.addEventListener('click',ev=>{ev.stopPropagation();btn.querySelector('span').textContent=t;var row=btn.closest('.ag-row');var mb=row&&row.querySelector('.agmethod span');var mm=AG_METHOD_MAP[t];if(mb&&mm)mb.textContent=mm;agTypePop.classList.add('hidden');});agTypePop.appendChild(o);});
     agMenuPop.classList.add('hidden');agTypePop.classList.remove('hidden');
     const r=btn.getBoundingClientRect();agTypePop.style.left=r.left+'px';agTypePop.style.minWidth=r.width+'px';agTypePop.style.maxHeight='280px';agTypePop.style.overflowY='auto';
     let top=r.bottom+6;if(top+agTypePop.offsetHeight>window.innerHeight-8)top=Math.max(8,r.top-6-agTypePop.offsetHeight);agTypePop.style.top=top+'px';
