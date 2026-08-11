@@ -191,7 +191,7 @@
       var cum=[]; var run=0; daily.forEach(function(d){run+=d;cum.push(run);});
       chart=new Chart(cv.getContext('2d'),{
         data:{labels:labels,datasets:[
-          {type:'bar',label:'일일 수집',data:daily,backgroundColor:'#d4d4d4',borderRadius:6,yAxisID:'y',order:2},
+          {type:'bar',label:'일일 수집',data:daily,backgroundColor:'#d4d4d4',borderRadius:6,yAxisID:'y',order:2,maxBarThickness:22,categoryPercentage:0.6},
           {type:'line',label:'누적 수집',data:cum,borderColor:'#171717',backgroundColor:'#171717',borderWidth:2,tension:.3,pointRadius:3,yAxisID:'y1',order:1}
         ]},
         options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
@@ -313,7 +313,7 @@
       </div></div>
       <div class="grp"><div class="grp-label">사전 의결권 관리</div><div class="nav">
         <a class="nav-item active" href="voting-rights.html">사전 의결권 현황</a>
-        <a class="nav-item" href="evote-records.html">전자투표/위임장 내역</a>
+        <a class="nav-item" href="evote-records.html">전자투표/위임 내역</a>
         <a class="nav-item" href="paper-records.html">서면투표/위임 내역</a>
         <a class="nav-item" href="dup-voting.html">중복 의결권 관리</a>
       </div></div>
