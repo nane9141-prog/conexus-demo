@@ -329,9 +329,9 @@
   .spq-meta{font-size:12px;color:#737373;white-space:nowrap}
   .spq-btn{margin-left:4px;height:24px;padding:0 10px;border-radius:6px;border:none;font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;flex:none}
   .spq-btn.start{background:#171717;color:#fff}
-  .spq-btn.end{background:#e11d48;color:#fff}
-  .spq-row.speaking .spq-nm{color:#e11d48;font-weight:600}
-  .spq-row.speaking .spq-no{background:#e11d48;color:#fff}
+  .spq-btn.end{background:#fff;color:#e11d48;border:1px solid #e11d48}
+  .spq-row.speaking .spq-nm{color:#171717;font-weight:600}
+  .spq-row.speaking .spq-no{background:#171717;color:#fff}
   .spq-empty{font-size:12px;color:#a3a3a3;padding:2px 0}
   .mcard.sp-click{cursor:pointer}
   .mc-btn.reject{background:rgba(220,38,38,.1);border-color:transparent;color:#E9081B}
@@ -676,10 +676,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     {cls:'ia-wait',name:'표결 마감',sub:'출석 · 미투표',selStatic:'기권 처리',timer:1,right:[{t:'',c:'dots'}]}
   ];
   var OC={agenda:'제1호',stage:0,preEx:false};
-  var voteSec=0, ticker=null, el=document.getElementById('agStage');
+  var voteSec=0, ticker=null, autoAdv=null, el=document.getElementById('agStage');
+  function selectNextAgenda(){ var tree=document.getElementById('agTree'); if(!tree) return; var nodes=Array.prototype.slice.call(tree.querySelectorAll('.selnode')); var ci=-1; for(var i=0;i<nodes.length;i++){ if(nodes[i].classList.contains('sel')){ci=i;break;} } if(ci>=0 && ci<nodes.length-1){ nodes[ci+1].click(); } }
   function fmt(x){var m=Math.floor(x/60),ss=x%60;return (m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;}
   function renderStage(){
     if(!el) return;
+    if(autoAdv){ clearTimeout(autoAdv); autoAdv=null; }
+    if(OC.stage===4){ autoAdv=setTimeout(selectNextAgenda,1600); }
     var st=STAGES[OC.stage];
     var l='<div class="iarow-l"><span class="ianame'+(st.red?' red':'')+'">'+st.name+'</span>';
     if(st.sub) l+='<span class="iasub">'+st.sub+'</span>';
@@ -913,7 +916,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       var sk=(x.id===speakingId), btn='';
       if(sk) btn='<button class="spq-btn end" type="button" data-spend="'+x.id+'">종료</button>';
       else if(!speakingId && i===0) btn='<button class="spq-btn start" type="button" data-spstart="'+x.id+'">시작</button>';
-      return '<div class="spq-row'+(sk?' speaking':'')+'"><span class="spq-no">'+(i+1)+'</span><span class="spq-nm">'+x.name+'</span><span class="spq-meta">'+x.tm+' · '+comma(x.sh)+'주</span>'+btn+'</div>';
+      return '<div class="spq-row'+(sk?' speaking':'')+'"><span class="spq-no">'+(i+1)+'</span><span class="spq-nm">'+x.name+'</span>'+btn+'</div>';
     }).join('');
     var opts=[['all','전체 의안'],['1','제1호'],['2','제2호'],['3','제3호']].map(function(o){return '<option value="'+o[0]+'"'+(spAgenda===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('');
     var sel='<select class="spsel" id="spAgSel">'+opts+'</select>';
