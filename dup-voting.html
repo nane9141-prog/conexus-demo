@@ -25,12 +25,12 @@
   .search{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;min-width:240px}
   .search input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
   .search .ic{width:16px;height:16px;color:var(--muted-fg)}
-  .page-title{font-size:18px;font-weight:700;color:#0a0a0a}
+  .page-title{font-size:18px;font-weight:600;color:#0a0a0a}
   .page-sub{font-size:13px;color:var(--muted-fg);margin-top:4px}
   .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
   .stat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px}
   .stat .k{font-size:12px;color:var(--muted-fg);font-weight:500}
-  .stat .v{font-size:24px;font-weight:700;color:#0a0a0a;margin-top:6px}
+  .stat .v{font-size:24px;font-weight:600;color:#0a0a0a;margin-top:6px}
   .stat .d{font-size:12px;margin-top:4px}
   .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
   .mchips{display:flex;gap:8px}
@@ -56,9 +56,9 @@
   .mmut{color:#a3a3a3}
   .rsn{max-width:300px;overflow:hidden;text-overflow:ellipsis}
   .mstat-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin-top:14px}
-  .mstat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:18px}
-  .mstat .k{font-size:13px;color:#737373;font-weight:500}
-  .mstat .v{font-size:24px;font-weight:700;color:#0a0a0a;margin-top:6px}
+  .mstat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px}
+  .mstat .k{font-size:12px;color:var(--muted-fg);font-weight:500}
+  .mstat .v{font-size:24px;font-weight:600;color:#0a0a0a;margin-top:6px;font-variant-numeric:tabular-nums}
   .mstat .s{font-size:12px;color:#a3a3a3;margin-top:4px}
   .mst{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:13px}
   .mst .d{width:7px;height:7px;border-radius:50%}
@@ -69,6 +69,11 @@
   .mpg{display:flex;align-items:center;gap:6px}
   .mpg .pp{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 6px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;color:#525252}
   .mpg .pp.cur{background:#171717;color:#fff;border-color:#171717}
+  .pgfoot{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px solid var(--border);font-size:13px;color:#525252}
+  .pgtot b{color:#0a0a0a;font-weight:600}
+  .pgctl{display:flex;align-items:center;gap:8px;font-size:13px;color:#0a0a0a}
+  .pgctl button{width:28px;height:28px;border:1px solid var(--border);border-radius:8px;background:#fff;color:#525252;cursor:pointer;font-size:15px;display:inline-flex;align-items:center;justify-content:center}
+  .pgctl button:hover{background:#fafafa}
   .viewbtn{display:inline-flex;align-items:center;justify-content:center;height:28px;padding:0 12px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:13px;color:#0a0a0a;cursor:pointer}
   .viewbtn:hover{background:#f5f5f5}
   .dsel{display:inline-flex;align-items:center;justify-content:space-between;gap:8px;height:34px;min-width:150px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:13px;color:#0a0a0a;cursor:pointer}
@@ -124,7 +129,7 @@
   /* 일괄 설정 모달 */
   .bmodal{width:500px;max-width:100%;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;display:flex;flex-direction:column}
   .bm-hd{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 8px}
-  .bm-t{font-size:18px;font-weight:700;color:#0a0a0a}
+  .bm-t{font-size:18px;font-weight:600;color:#0a0a0a}
   .bm-body{padding:8px 20px 0;display:flex;flex-direction:column;gap:8px}
   .bm-body label.l{font-size:14px;font-weight:600;color:#0a0a0a}
   .bm-sel{height:44px;padding:0 14px;border:1px solid var(--border);border-radius:10px;background:#fff;font-family:inherit;font-size:15px;color:#0a0a0a}
@@ -146,7 +151,7 @@
   .cbanner{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px;padding:16px 18px;border:1px solid var(--border);border-radius:12px;background:#fafafa}
   .cb-l{display:flex;align-items:center;gap:12px}
   .cb-l>svg{width:18px;height:18px;fill:none;stroke:#525252;stroke-width:1.8}
-  .cb-t{font-size:15px;font-weight:700;color:#0a0a0a}
+  .cb-t{font-size:15px;font-weight:600;color:#0a0a0a}
   .cb-d{font-size:13px;color:#737373;margin-top:2px}
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
 </style>
@@ -265,7 +270,7 @@
         </div>
         <div class="mtb" style="justify-content:flex-end"><div class="mtb-r"><span class="dsel" style="min-width:90px">전체 <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span><button class="mbtn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>다운로드</button><button class="mbtn ic"><svg viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></button></div></div>
         <div class="mwrap"><div class="mscroll"><table class="mtbl"><thead><tr><th>주주명</th><th>주주번호</th><th class="n">보유의결권</th><th class="c">전자투표/위임</th><th class="c">서면투표</th><th class="c">서면위임(자사)</th><th class="c">서면위임(타사)</th><th>중복처리</th></tr></thead><tbody><tr><td>CITIGROUP</td><td> 1233478-1154-1548978999</td><td class="n">67,000</td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="viewbtn" data-view>보기</span></td><td class="c"><span class="viewbtn" data-view>보기</span></td><td><span class="dsel" data-dsel>서면위임(자사) <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></td></tr><tr><td>BARCLAYS CAPITAL</td><td>1233478-1154-1548978999</td><td class="n">345,804</td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td><span class="dsel" data-dsel>서면위임(자사) <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></td></tr><tr><td>우리사주조합장(이유정)</td><td>8807122</td><td class="n">345,804</td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="viewbtn" data-view>보기</span></td><td class="c"><span class="viewbtn" data-view>보기</span></td><td><span class="dsel" data-dsel>서면위임(자사) <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></td></tr><tr data-grp="k1"><td><span class="mcaret" data-caret="k1"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>한국교직원공제회<span class="mtag">통합 3건</span></td><td>1233478-1154-1548978999</td><td class="n">3,345,804</td><td class="c"><span class="viewbtn" data-view>보기</span></td><td class="c"><span class="viewbtn" data-view>보기</span></td><td class="c"><span class="viewbtn" data-view>보기</span></td><td class="c"><span class="viewbtn" data-view>보기</span></td><td><span class="dsel" data-dsel>전자투표 <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></td></tr><tr class="mrow-sub" data-sub="k1" style="display:none"><td>위탁계좌 A</td><td>1233478-1154-0000001</td><td class="n">1,200,000</td><td class="c"><span class="viewbtn" data-view>보기</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td><span class="mmut">-</span></td></tr><tr class="mrow-sub" data-sub="k1" style="display:none"><td>위탁계좌 B</td><td>1233478-1154-0000002</td><td class="n">1,145,804</td><td class="c"><span class="viewbtn" data-view>보기</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td><span class="mmut">-</span></td></tr><tr class="mrow-sub" data-sub="k1" style="display:none"><td>위탁계좌 C</td><td>1233478-1154-0000003</td><td class="n">1,000,000</td><td class="c"><span class="viewbtn" data-view>보기</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td><span class="mmut">-</span></td></tr><tr data-grp="k2"><td><span class="mcaret" data-caret="k2"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>삼성자산운용<span class="mtag">통합 3건</span></td><td>1233478-1154-1548978999</td><td class="n">800,000</td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="viewbtn" data-view>보기</span></td><td class="c"><span class="viewbtn" data-view>보기</span></td><td class="c"><span class="mmut">-</span></td><td><span class="dsel warn" data-dsel>미설정 <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></td></tr><tr class="mrow-sub" data-sub="k2" style="display:none"><td>펀드계좌 1</td><td>1233478-1154-0000011</td><td class="n">300,000</td><td class="c"><span class="viewbtn" data-view>보기</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td><span class="mmut">-</span></td></tr><tr class="mrow-sub" data-sub="k2" style="display:none"><td>펀드계좌 2</td><td>1233478-1154-0000012</td><td class="n">300,000</td><td class="c"><span class="viewbtn" data-view>보기</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td><span class="mmut">-</span></td></tr><tr class="mrow-sub" data-sub="k2" style="display:none"><td>펀드계좌 3</td><td>1233478-1154-0000013</td><td class="n">200,000</td><td class="c"><span class="viewbtn" data-view>보기</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td><span class="mmut">-</span></td></tr><tr><td>이미나</td><td>8807122</td><td class="n">800,000</td><td class="c"><span class="viewbtn" data-view>보기</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="viewbtn" data-view>보기</span></td><td><span class="dsel warn" data-dsel>미설정 <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></td></tr><tr><td>김우진</td><td>8807122</td><td class="n">800,000</td><td class="c"><span class="viewbtn" data-view>보기</span></td><td class="c"><span class="mmut">-</span></td><td class="c"><span class="viewbtn" data-view>보기</span></td><td class="c"><span class="mmut">-</span></td><td><span class="dsel warn" data-dsel>미설정 <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></td></tr></tbody></table></div>
-        <div class="mfoot"><span>총 82명 · 510,356,025주</span><div class="mpg"><span class="pp">|&lt;</span><span class="pp">&lt;</span><span class="pp cur">1</span><span class="pp">&gt;</span><span class="pp">&gt;|</span></div></div></div>
+        <div class="pgfoot"><span class="pgtot">총 <b>82</b>명 · <b>510,356,025</b>주</span><div class="pgctl"><button aria-label="이전">‹</button><span>1 / 5</span><button aria-label="다음">›</button></div></div></div>
       </div>
     </div>
   </main>
