@@ -23,17 +23,21 @@
   .cv-script .blue{color:#0071F3}
   .cv-script.big{justify-content:center;align-items:center}
   .cv-script.big p{text-align:center;font-size:72px;color:#0071F3}
-  /* 우측 대기열 */
-  .cv-side{width:400px;flex:none;background:#171717;border-left:1px solid rgba(255,255,255,.1);padding:16px;display:flex;flex-direction:column;gap:16px}
-  .cv-qh{display:flex;align-items:center;gap:10px;padding-left:2px;color:#A3A3A3;font-size:16px;font-weight:500}
-  .cv-qh svg{width:22px;height:22px;fill:none;stroke:#A3A3A3;stroke-width:1.6}
+  /* 발언 대기열 */
+  .cv-side{width:400px;flex:none;background:#171717;border-left:1px solid rgba(255,255,255,.1);padding:16px;display:none;flex-direction:column;gap:16px}
+  .cv-side.show{display:flex}
+  .cv-qh{display:flex;align-items:center;gap:10px;padding-left:2px}
+  .cv-qh .ico{width:22px;height:22px;flex:none;fill:none;stroke:#A3A3A3;stroke-width:1.6}
+  .cv-qh .lbl{font-size:16px;font-weight:500;color:#A3A3A3}
+  .cv-timer{margin-left:auto;font-size:18px;font-weight:600;color:#E5E5E5;font-variant-numeric:tabular-nums;display:none}
+  .cv-side.live .cv-timer{display:block}
   .cv-agenda{display:flex;flex-direction:column;gap:8px;overflow:auto}
-  .cv-arow{display:flex;align-items:center;gap:12px;padding:8px;background:#171717;border:1px solid rgba(255,255,255,.1);border-radius:10px;cursor:pointer;transition:.15s}
-  .cv-arow:hover{background:rgba(255,255,255,.04)}
-  .cv-arow.on{border-color:#0071F3;background:rgba(0,113,243,.12)}
+  .cv-arow{display:flex;align-items:center;gap:12px;padding:10px;background:#171717;border:1px solid rgba(255,255,255,.1);border-radius:10px;transition:.15s}
   .cv-no{width:24px;height:24px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:6px;background:linear-gradient(0deg,rgba(10,10,10,.7),rgba(10,10,10,.7)),#A3A3A3;font-size:14px;font-weight:500;color:#E5E5E5}
-  .cv-arow.on .cv-no{background:#0071F3;color:#fff}
   .cv-atitle{flex:1;font-size:16px;font-weight:500;color:#E5E5E5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cv-arow.cur{border-color:#F87171;background:rgba(248,113,113,.1)}
+  .cv-arow.cur .cv-no{background:#F87171;color:#fff}
+  .cv-arow.done{opacity:.45}
 </style>
 </head>
 <body>
@@ -50,16 +54,16 @@
     </div>
     <div class="cv-script" id="cvBox"><p id="cvScript"></p></div>
   </div>
-  <div class="cv-side">
-    <div class="cv-qh"><svg viewBox="0 0 24 24"><path d="M16 4h5M16 9h5M16 14h5"/><circle cx="7" cy="8" r="3"/><path d="M2 19a5 5 0 0 1 10 0"/></svg><span>발언 대기열 8명</span></div>
-    <div class="cv-agenda" id="cvAgenda"></div>
+  <div class="cv-side" id="cvSide">
+    <div class="cv-qh"><svg class="ico" viewBox="0 0 24 24"><path d="M16 4h5M16 9h5M16 14h5"/><circle cx="7" cy="8" r="3"/><path d="M2 19a5 5 0 0 1 10 0"/></svg><span class="lbl" id="cvQCount">발언 대기열</span><span class="cv-timer" id="cvTimer">00:00</span></div>
+    <div class="cv-agenda" id="cvQueue"></div>
   </div>
 
 <script>
 (function(){
   var B=function(x){return '<span class="blue">'+x+'</span>';};
   var SLIDES=[
-    {t:'개회 선언', slide:0, s:
+    {t:'개회 선언', s:
       '2026년 3월 30일 기준일 현재<br>'+
       '당사의 총 발행 주식수는 칠천 팔백 구십 구만 삼천 팔십 오 '+B('(78,993,085)')+' 주 이며,<br>'+
       '총 주주수는 팔만 이천 육십 구 '+B('(82,069)')+' 명입니다.<br>'+
@@ -70,18 +74,18 @@
       '당사의 의결권 있는 주식의 총수인<br>'+
       '칠천 육십 육만 팔천 사백 삼십 '+B('(70,688,430)')+' 주의<br>'+
       B('30 %')+' 가 출석하였음을 보고 드립니다.'},
-    {t:'제 1호 의안 상정 · 발언권 접수', slide:1, s:
+    {t:'제 1호 의안 상정 · 발언권 접수', queue:'wait', s:
       B('제1호')+'<br>'+B('재무제표 승인의 건')+' 을 상정합니다.<br><br>'+
       '본 의안은 지난 한 해 동안의 경영 실적을 정리한 재무상태표 및 손익계산서를 승인받고자 하는 것입니다.<br><br>'+
       '표결에 앞서 본 안건에 대해 질문이나 의견이 있으신 주주께서는<br>발언 신청 버튼을 눌러 주시기 바랍니다.<br><br>'+
       '신청해 주신 주주님께 순서대로 발언권을 부여해 드리겠으며,<br>발언이 끝난 후 표결을 진행하겠습니다.'},
-    {t:'제 1호 의안 · 발언 진행', slide:1, s:
+    {t:'제 1호 의안 · 발언 진행', queue:'live', s:
       B('쿼드자산운용')+'  ·  대리인 : 박선화  ·  20,000주<br><br>'+
       '<span style="color:#A3A3A3;font-size:.7em">담당자 입력 내용</span><br>'+
       '지난해 손익 변동은 [글로벌 경기 둔화 / 원자재 가격 상승 / 주요 원가 요소 변화] 등 대외적인 환경 변화가 주요 요인으로 작용했습니다. 회사는 이를 극복하기 위해 올해 [고부가가치 제품 및 서비스 비중 확대 / 공정 효율화를 통한 비용 절감 / 신규 판로 개척] 등을 중점적으로 추진하고 있습니다.<br><br>'+
       '견고한 실적 반등을 통해 주주 여러분의 기대에 부응할 수 있도록 전 임직원이 최선을 다하겠습니다.'},
-    {t:'제 1호 의안 · 집계중', slide:1, big:true, s:'표결 집계중'},
-    {t:'제 1호 의안 · 표결 마감', slide:1, s:
+    {t:'제 1호 의안 · 집계중', big:true, s:'표결 집계중'},
+    {t:'제 1호 의안 · 표결 마감', s:
       '제 6호 의안에 대한 표결 결과를 말씀드리겠습니다.<br>'+
       '본 의안은 보통 결의요건이 적용되는 의안으로,<br>'+
       '의결권 있는 발행주식 총수의 4분의 1 이상, 출석한 주주의 의결권의 과반수의 찬성이 필요합니다.<br><br>'+
@@ -93,18 +97,33 @@
       '의결권 있는 발행주식 총수 대비 '+B('8.27%')+' 로 집계되었습니다.<br><br>'+
       '이에 제 1호 의안 은 '+B('가결')+' 되었음을 선포합니다.'}
   ];
-  var AGENDA=[{i:1,t:'재무제표 승인의 건'},{i:2,t:'정관 일부 변경의 건'},{i:3,t:'이사 선임의 건'}];
-  var idx=0, fs=32;
+  // 제1호 발언 신청 명단(현장운영_질의발언_데이터.md · S1)
+  var QUEUE=[
+    {n:'이영석'},{n:'쿼드자산운용',cur:true},{n:'김명준'},{n:'전승현'},
+    {n:'삼성자산운용'},{n:'한국투자증권'},{n:'오세훈'}
+  ];
+  var idx=0, fs=32, timer=null, sec=192;
   var title=document.getElementById('cvTitle'), box=document.getElementById('cvBox'), script=document.getElementById('cvScript');
+  var side=document.getElementById('cvSide'), qcount=document.getElementById('cvQCount'), qList=document.getElementById('cvQueue'), timerEl=document.getElementById('cvTimer');
+  function fmt(s){var m=Math.floor(s/60),x=s%60;return (m<10?'0':'')+m+':'+(x<10?'0':'')+x;}
+  function stopTimer(){ if(timer){clearInterval(timer);timer=null;} }
+  function startTimer(){ stopTimer(); sec=192; timerEl.textContent=fmt(sec); timer=setInterval(function(){ sec++; timerEl.textContent=fmt(sec); },1000); }
+  function renderQueue(mode){
+    qcount.textContent='발언 대기열 '+QUEUE.length+'명';
+    qList.innerHTML=QUEUE.map(function(q,i){
+      var cur=(mode==='live'&&q.cur); return '<div class="cv-arow'+(cur?' cur':'')+'"><span class="cv-no">'+(i+1)+'</span><span class="cv-atitle">'+q.n+'</span></div>';
+    }).join('');
+  }
   function render(){
     title.textContent=SLIDES[idx].t;
     script.innerHTML=SLIDES[idx].s;
     box.classList.toggle('big', !!SLIDES[idx].big);
     script.style.fontSize=SLIDES[idx].big?'':(fs+'px');
-    document.querySelectorAll('.cv-arow').forEach(function(r){ r.classList.toggle('on', +r.dataset.slide===SLIDES[idx].slide); });
+    var q=SLIDES[idx].queue;
+    if(q){ side.classList.add('show'); renderQueue(q);
+      if(q==='live'){ side.classList.add('live'); startTimer(); } else { side.classList.remove('live'); stopTimer(); }
+    } else { side.classList.remove('show','live'); stopTimer(); }
   }
-  var ag=document.getElementById('cvAgenda');
-  ag.innerHTML=AGENDA.map(function(a){return '<div class="cv-arow" data-slide="'+a.i+'"><span class="cv-no">'+a.i+'</span><span class="cv-atitle">제'+a.i+'호 '+a.t+'</span></div>';}).join('');
   document.getElementById('cvPrev').addEventListener('click',function(){ idx=Math.max(0,idx-1); render(); });
   document.getElementById('cvNext').addEventListener('click',function(){ idx=Math.min(SLIDES.length-1,idx+1); render(); });
   document.getElementById('cvPlus').addEventListener('click',function(){ fs=Math.min(56,fs+2); render(); });
