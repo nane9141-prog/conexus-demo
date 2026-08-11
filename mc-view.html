@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CONEXUS · 사회자용 화면</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:'Pretendard',system-ui,sans-serif;background:#0A0A0A;color:#E5E5E5;display:flex;flex-direction:column;overflow:hidden}
+  .mc-main{flex:1;display:flex;flex-direction:column;padding:48px;gap:16px;min-height:0}
+  .mc-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .mc-tabs{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 auto}
+  .mc-tab{display:inline-flex;align-items:center;justify-content:center;padding:4px 12px;height:32px;border-radius:8px;font-size:16px;font-weight:500;color:#A3A3A3;background:none;border:1px solid transparent;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .mc-tab:hover{color:#E5E5E5}
+  .mc-tab.on{color:#FAFAFA;background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.15);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+  .mc-tools{display:flex;align-items:center;gap:8px}
+  .mc-ib{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:none;border:none;cursor:pointer;color:#FAFAFA}
+  .mc-ib.box{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.15)}
+  .mc-ib:hover{background:rgba(255,255,255,.1)}
+  .mc-ib svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .mc-script{flex:1;display:flex;align-items:center;justify-content:center;padding:12px 0;overflow:auto}
+  .mc-script p{font-size:32px;font-weight:700;line-height:1.62;letter-spacing:-.01em;color:#E5E5E5}
+  /* 현재/다음 상태바 */
+  .mc-status{display:flex;align-items:center;gap:16px;background:#262626;padding:10px 16px}
+  .mc-status .cell{flex:1;display:flex;align-items:center;gap:10px;min-width:0}
+  .mc-status .lb{font-size:14px;font-weight:500;color:#A3A3A3;flex:none}
+  .mc-status .vv{font-size:16px;font-weight:600;color:#E5E5E5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* metric footer */
+  .mc-metrics{display:flex;border-top:1px solid rgba(255,255,255,.1)}
+  .mc-card{flex:1;background:#171717;padding:16px;display:flex;flex-direction:column;gap:8px;border-right:1px solid rgba(255,255,255,.1)}
+  .mc-card:last-child{border-right:none}
+  .mc-ch{display:flex;align-items:center;gap:8px}
+  .mc-k{flex:1;font-size:14px;font-weight:500;color:#A3A3A3}
+  .mc-bd{display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:6px;font-size:12px;font-weight:500;color:#525252}
+  .mc-bd .dot{width:6px;height:6px;border-radius:50%;background:#525252}
+  .mc-vrow{display:flex;align-items:center;gap:8px}
+  .mc-v{font-size:20px;font-weight:600;color:#FAFAFA}
+  .mc-v .sub{font-size:18px;font-weight:400;color:#A3A3A3;margin-left:2px}
+  .mc-vsep{width:1px;height:14px;background:rgba(255,255,255,.15)}
+  .mc-spark{width:80px;height:24px}
+</style>
+</head>
+<body>
+  <div class="mc-main">
+    <div class="mc-top">
+      <div class="mc-tabs" id="mcTabs"></div>
+      <div class="mc-tools">
+        <button class="mc-ib" id="mcPrev" title="이전"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+        <button class="mc-ib" id="mcNext" title="다음"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+        <button class="mc-ib box" id="mcCfg" title="설정"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      </div>
+    </div>
+    <div class="mc-script"><p id="mcScript"></p></div>
+  </div>
+
+  <div class="mc-status">
+    <div class="cell"><span class="lb">현재</span><span class="vv" id="mcCur">-</span></div>
+    <div class="cell"><span class="lb">다음</span><span class="vv" id="mcNextTxt">-</span></div>
+  </div>
+
+  <div class="mc-metrics">
+    <div class="mc-card"><div class="mc-ch"><span class="mc-k">의안 진행</span><span class="mc-bd"><span class="dot"></span>대기</span></div><div class="mc-v">3<span class="sub"> / 8</span></div></div>
+    <div class="mc-card"><div class="mc-ch"><span class="mc-k">전체 출석 주식수</span><span class="mc-bd"><span class="dot"></span>정족수 충족</span></div><div class="mc-vrow"><span class="mc-v">25,260,000주</span><span class="mc-vsep"></span><span class="mc-v" style="font-weight:400">64.2%</span></div></div>
+    <div class="mc-card"><div class="mc-ch"><span class="mc-k">전체 출석 주주수</span></div><div class="mc-v">1,231,542명</div></div>
+    <div class="mc-card"><div class="mc-ch"><span class="mc-k">현장 참석</span></div><div class="mc-vrow"><span class="mc-v">342명</span><span class="mc-v" style="font-weight:400;color:#A3A3A3">3,120,000주</span></div></div>
+    <div class="mc-card"><div class="mc-ch"><span class="mc-k">온라인 참석</span></div><div class="mc-vrow"><span class="mc-v">600,342명</span><svg class="mc-spark" viewBox="0 0 80 24" preserveAspectRatio="none"><polyline points="0,20 14,16 28,17 42,10 56,12 70,5 80,4" fill="none" stroke="#0071F3" stroke-width="2"/></svg></div></div>
+  </div>
+
+<script>
+(function(){
+  var STAGES=[
+    {tab:'개회선언', cur:'개회 선언', s:'지금부터 제10기 정기주주총회를 시작하겠습니다. 성원이 되었으므로 개회를 선언합니다. 원활한 진행을 위해 안내에 따라 협조해 주시기 바랍니다.'},
+    {tab:'제1호 상정', cur:'제1호 의안 상정', s:'제1호 재무제표 승인의 건을 상정합니다. 본 의안은 지난 한 해 동안의 경영 실적을 정리한 재무상태표 및 손익계산서를 승인받고자 하는 것입니다.'},
+    {tab:'발언 접수', cur:'제1호 의안 상정 · 발언 접수', s:'본 안건에 대해 질문이나 의견이 있으신 주주님께서는 화면 하단의 발언 신청 버튼을 눌러 주시고, 발언의 취지를 작성하여 발언 신청을 진행해 주세요. 신청해 주신 주주님께 순서대로 발언권을 부여해 드리겠습니다.'},
+    {tab:'발언 진행', cur:'제1호 의안 상정 · 발언 진행', s:'화면의 안내 메시지에 따라 마이크를 확인하시고 발언 의사를 회신 주시면, 순서에 따라 발언 기회를 드리겠습니다. 원활한 진행을 위해 발언 시간을 4분 이내로 지켜 주시면 해당 내용에 대해 답변드리도록 하겠습니다.'},
+    {tab:'표결', cur:'제1호 의안 표결', s:'발언이 종료되었으므로 제1호 의안에 대한 표결을 진행하겠습니다. 화면의 안내에 따라 찬성·반대·기권 중 하나를 선택해 주시기 바랍니다.'},
+    {tab:'폐회선언', cur:'폐회 선언', s:'모든 의안에 대한 표결이 종료되었습니다. 주주 여러분의 협조에 감사드리며, 제10기 정기주주총회의 폐회를 선언합니다.'}
+  ];
+  var idx=2;
+  var tabsEl=document.getElementById('mcTabs'), scriptEl=document.getElementById('mcScript'),
+      curEl=document.getElementById('mcCur'), nextEl=document.getElementById('mcNextTxt');
+  tabsEl.innerHTML=STAGES.map(function(st,i){return '<button class="mc-tab" data-i="'+i+'">'+st.tab+'</button>';}).join('');
+  function render(){
+    scriptEl.textContent=STAGES[idx].s;
+    curEl.textContent=STAGES[idx].cur;
+    nextEl.textContent=(idx<STAGES.length-1)?STAGES[idx+1].cur:'—';
+    tabsEl.querySelectorAll('.mc-tab').forEach(function(b){b.classList.toggle('on',+b.dataset.i===idx);});
+  }
+  tabsEl.addEventListener('click',function(e){var b=e.target.closest('.mc-tab'); if(b){idx=+b.dataset.i; render();}});
+  document.getElementById('mcPrev').addEventListener('click',function(){idx=Math.max(0,idx-1);render();});
+  document.getElementById('mcNext').addEventListener('click',function(){idx=Math.min(STAGES.length-1,idx+1);render();});
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight')document.getElementById('mcNext').click();if(e.key==='ArrowLeft')document.getElementById('mcPrev').click();});
+  render();
+})();
+</script>
+</body>
+</html>
