@@ -364,6 +364,10 @@
   .pip-actions button{width:24px;height:24px;border:none;background:none;color:#cfcfcf;font-size:13px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center}
   .pip-actions button:hover{background:rgba(255,255,255,.12);color:#fff}
   .pip video{display:block;width:100%;aspect-ratio:16/9;background:#000;object-fit:cover}
+  .pip-mute{position:absolute;left:8px;bottom:8px;width:32px;height:32px;border:none;border-radius:8px;background:rgba(0,0,0,.55);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity .15s;z-index:3}
+  .pip-mute i{font-size:18px}
+  .pip:hover .pip-mute{opacity:1}
+  .pip.min .pip-mute{display:none}
   .pip.min video{display:none}
   .vsheet{padding:0;overflow:hidden;height:100%}
   .vtoolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border);flex:none}
@@ -418,7 +422,7 @@
 </style>
 </head>
 <body>
-<div class="oc app" id="app">
+<div class="oc app collapsed" id="app">
   <aside class="lnb">
     <div class="lnb-head">
       <div class="lnb-brand exp-only">
@@ -1081,6 +1085,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 <div class="pip" id="pip">
   <div class="pip-bar" id="pipBar"><span class="pip-t"><span class="liv"></span>생중계 · 카카오뱅크 주주총회</span><div class="pip-actions"><button id="pipMin" title="최소화">—</button><button id="pipClose" title="닫기">✕</button></div></div>
   <video id="pipVid" src="kakaobank.mp4" autoplay muted loop playsinline></video>
+  <button class="pip-mute" id="pipMute" title="음소거 해제"><i class="ph ph-speaker-simple-x"></i></button>
 </div>
 <script>
 (function(){
@@ -1127,6 +1132,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     mt.addEventListener("click",function(e){e.stopPropagation(); mp.classList.toggle("hidden");});
     document.addEventListener("click",function(){mp.classList.add("hidden");});
     mp.addEventListener("click",function(e){e.stopPropagation();}); })();
+</script>
+<script>
+(function(){ var v=document.getElementById("pipVid"), b=document.getElementById("pipMute"); if(!v||!b) return;
+  function upd(){ b.innerHTML="<i class=\"ph "+(v.muted?"ph-speaker-simple-x":"ph-speaker-simple-high")+"\"></i>"; b.title=v.muted?"음소거 해제":"음소거"; }
+  upd();
+  b.addEventListener("click",function(){ v.muted=!v.muted; if(!v.muted){ try{v.play();}catch(_){} } upd(); });
+})();
 </script>
 <script src="conexus.js"></script>
 </body>

@@ -50,6 +50,8 @@
     <div class="mc-top">
       <div class="mc-tabs" id="mcTabs"></div>
       <div class="mc-tools">
+        <button class="mc-ib" id="mcMinus" title="글자 축소"><i class="ph ph-minus" style="font-size:16px"></i></button>
+        <button class="mc-ib" id="mcPlus" title="글자 확대"><i class="ph ph-plus" style="font-size:16px"></i></button>
         <button class="mc-ib" id="mcPrev" title="이전"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
         <button class="mc-ib" id="mcNext" title="다음"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
         <button class="mc-ib box" id="mcCfg" title="설정"><i class="ph ph-gear" style="font-size:16px"></i></button>
@@ -82,18 +84,21 @@
     {tab:'표결', cur:'제1호 의안 표결', s:'발언이 종료되었으므로 제1호 의안에 대한 표결을 진행하겠습니다. 화면의 안내에 따라 찬성·반대·기권 중 하나를 선택해 주시기 바랍니다.'},
     {tab:'폐회선언', cur:'폐회 선언', s:'모든 의안에 대한 표결이 종료되었습니다. 주주 여러분의 협조에 감사드리며, 제10기 정기주주총회의 폐회를 선언합니다.'}
   ];
-  var idx=2;
+  var idx=2, fs=32;
   var tabsEl=document.getElementById('mcTabs'), scriptEl=document.getElementById('mcScript'), titleEl=document.getElementById('mcTitle'),
       curEl=document.getElementById('mcCur'), nextEl=document.getElementById('mcNextTxt');
   tabsEl.innerHTML=STAGES.map(function(st,i){return '<button class="mc-tab" data-i="'+i+'">'+st.tab+'</button>';}).join('');
   function render(){
     titleEl.textContent=STAGES[idx].cur;
-    scriptEl.textContent=STAGES[idx].s;
+    scriptEl.innerHTML=STAGES[idx].s.replace(/([.!?])\s+/g,"$1<br>");
+    scriptEl.style.fontSize=fs+"px";
     curEl.textContent=STAGES[idx].cur;
     nextEl.textContent=(idx<STAGES.length-1)?STAGES[idx+1].cur:'—';
     tabsEl.querySelectorAll('.mc-tab').forEach(function(b){b.classList.toggle('on',+b.dataset.i===idx);});
   }
   tabsEl.addEventListener('click',function(e){var b=e.target.closest('.mc-tab'); if(b){idx=+b.dataset.i; render();}});
+  document.getElementById('mcMinus').addEventListener('click',function(){fs=Math.max(20,fs-2);render();});
+  document.getElementById('mcPlus').addEventListener('click',function(){fs=Math.min(56,fs+2);render();});
   document.getElementById('mcPrev').addEventListener('click',function(){idx=Math.max(0,idx-1);render();});
   document.getElementById('mcNext').addEventListener('click',function(){idx=Math.min(STAGES.length-1,idx+1);render();});
   document.addEventListener('keydown',function(e){if(e.key==='ArrowRight')document.getElementById('mcNext').click();if(e.key==='ArrowLeft')document.getElementById('mcPrev').click();});

@@ -27,6 +27,7 @@
   .search input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
   .search .ic{width:16px;height:16px;color:var(--muted-fg)}
   .page-title{font-size:18px;font-weight:600;color:#0a0a0a}
+  .content{gap:16px}
   h1.page-title{margin:0}
   /* 현장 참석자 등록 시트 */
   .assheet-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none}
@@ -73,13 +74,13 @@
   .tagid{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}
   .tagid.unset{background:#fff1f2;color:#e11d48}
   .tagid.set{background:var(--blue100);color:var(--blue700)}
-  .at-tabs{display:flex;gap:22px;border-bottom:1px solid var(--border);margin-top:18px}
-  .at-tab{position:relative;height:40px;border:none;background:none;font-family:inherit;font-size:15px;font-weight:500;color:#737373;cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:0}
+  .at-tabs{display:flex;gap:22px;border-bottom:1px solid var(--border);margin-top:0}
+  .at-tab{position:relative;height:40px;border:none;background:none;font-family:inherit;font-size:14px;font-weight:500;color:#737373;cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:0}
   .at-tab.on{color:#0a0a0a;font-weight:600}
   .at-tab.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#171717}
   .at-tab .cnt{display:inline-flex;align-items:center;height:20px;min-width:20px;padding:0 6px;border-radius:9999px;background:#f0f0f0;color:#525252;font-size:12px;font-weight:600}
   .at-tab.on .cnt{background:#171717;color:#fff}
-  .at-tb{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px}
+  .at-tb{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:0}
   .at-tb-l{display:flex;align-items:center;gap:8px}
   .selbox{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;font-size:14px;color:#0a0a0a;cursor:pointer}
   .selbox svg{width:15px;height:15px;fill:none;stroke:#737373;stroke-width:2}
@@ -91,7 +92,7 @@
   .abtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
   .abtn.dark{background:#171717;border-color:#171717;color:#fff}
   .abtn.ic{padding:0;width:38px;justify-content:center}
-  .atwrap{margin-top:14px;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
+  .atwrap{margin-top:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
   .atscroll{overflow:auto;max-height:calc(100vh - 340px)}
   table.attbl{width:100%;border-collapse:collapse;font-size:14px}
   table.attbl thead th{position:sticky;top:0;background:#fafafa;z-index:1;padding:10px 14px;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;white-space:nowrap;border-bottom:1px solid var(--border)}
