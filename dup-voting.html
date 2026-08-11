@@ -343,6 +343,14 @@
   });
 </script>
 <div class="dmodal-ov" id="bulkModal"><div class="bmodal"><div class="bm-hd"><div class="bm-t">중복 위임장 일괄 설정</div><button class="dm-x" data-bm-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div><div class="bm-body"><label class="l">행사방식</label><select class="bm-sel" id="bmSel"><option>서면위임(자사)</option><option>서면위임(타사)</option><option>전자투표/위임</option><option>서면투표</option></select><div class="bm-note"><div class="r"><i class="ph ph-info" style="font-size:16px"></i>선택한 투표방식으로 투표하지 않은 주주는 미설정 상태로 유지합니다.</div><div class="r"><i class="ph ph-info" style="font-size:16px"></i>일괄 처리되지 않은 주주는 수동으로 설정해주세요.</div></div></div><div class="bm-ft"><label class="bm-chk on" id="bmChk"><span class="cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></span>위 내용으로 중복 위임장을 일괄 설정합니다.</label><button class="bm-cancel" data-bm-close>취소</button><button class="bm-ok" id="bmOk">설정하기</button></div></div></div>
+<div class="cdlg-ov" id="cfmDlg">
+  <div class="cdlg">
+    <div class="cdlg-ic"><svg viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><path d="M5 7c0-1.1.9-2 2-2h10a2 2 0 0 1 2 2v12H5V7Z"/><path d="M22 19H2"/></svg></div>
+    <div class="cdlg-tt">중복의결권 처리를 확정하시겠습니까?</div>
+    <div class="cdlg-ds">주주총회 당일 투표가 진행된 이후에는 확정을 변경할 수 없습니다.</div>
+    <div class="cdlg-f"><button class="cdlg-btn cancel" data-cfm-cancel type="button">취소</button><button class="cdlg-btn ok" id="cfmConfirm" type="button">확정</button></div>
+  </div>
+</div>
 <script>
 (function(){
   var CH=['전자투표/위임','서면투표','서면위임(자사)','서면위임(타사)','미설정'];
@@ -420,14 +428,6 @@
   function resetReg(){ var r=document.getElementById('dmReg'); if(r){ r.textContent='설정'; r.classList.remove('reset'); } }
 })();
 </script>
-<div class="cdlg-ov" id="cfmDlg">
-  <div class="cdlg">
-    <div class="cdlg-ic"><svg viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><path d="M5 7c0-1.1.9-2 2-2h10a2 2 0 0 1 2 2v12H5V7Z"/><path d="M22 19H2"/></svg></div>
-    <div class="cdlg-tt">중복의결권 처리를 확정하시겠습니까?</div>
-    <div class="cdlg-ds">주주총회 당일 투표가 진행된 이후에는 확정을 변경할 수 없습니다.</div>
-    <div class="cdlg-f"><button class="cdlg-btn cancel" data-cfm-cancel type="button">취소</button><button class="cdlg-btn ok" id="cfmConfirm" type="button">확정</button></div>
-  </div>
-</div>
 <script src="conexus.js"></script>
 </body>
 </html>
