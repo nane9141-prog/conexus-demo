@@ -260,7 +260,8 @@
   .seg2 button{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:26px;padding:2px 8px;border:none;background:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:500;color:#737373;cursor:pointer}
   .seg2 button.on{background:#fff;color:#0A0A0A;box-shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1)}
   .seg2 .bn{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;background:#F5F5F5;border-radius:9999px;font-size:12px;font-weight:500;color:#171717}
-  .chat-b{flex:1;min-height:0;overflow:auto;padding:4px 12px 12px}
+  .chat-b{flex:1;min-height:0;overflow:auto;padding:4px 12px 12px;scrollbar-width:none;-ms-overflow-style:none}
+  .chat-b::-webkit-scrollbar{display:none;width:0;height:0}
   .chat-list{display:flex;flex-direction:column;gap:10px}
   .mcard{border:1px solid var(--border);border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);padding:16px;display:flex;flex-direction:column;gap:10px;background:#fff}
   .mcard.click{cursor:pointer}
@@ -798,7 +799,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   (function(){ var cvb=document.getElementById('chairViewBtn'); if(!cvb) return;
     cvb.addEventListener('click',function(){
       var ag=(OC.agenda||'제1호').replace('제','').replace('호','');
-      var st=OC.stage>=4?'close':(OC.stage===3?'count':'present');
+      var st=speakingId?'speak':(OC.stage>=4?'close':(OC.stage===3?'count':'present'));
       cvb.setAttribute('href','chair-view.html?ag='+encodeURIComponent(ag)+'&st='+st);
     });
   })();
