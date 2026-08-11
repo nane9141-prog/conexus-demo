@@ -74,6 +74,19 @@
   .ndrop-sep{height:1px;background:var(--border);margin:4px 0}
   .toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(8px);background:#171717;color:#fff;font-size:13px;padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:200}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* 진행 설정 카드 */
+  .pcard{border:1px solid var(--border);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:24px}
+  .pc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+  .pc-ttl{font-size:16px;font-weight:600;color:#0a0a0a}
+  .pc-desc{font-size:12px;color:var(--muted-fg);margin-top:6px;line-height:1.5}
+  .pc-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .pc-sub{font-size:14px;font-weight:600;color:#0a0a0a;margin-bottom:12px}
+  .dtrow{display:flex;gap:8px}
+  .dtrow .inp{height:32px}
+  .dtrow .inp.date{flex:1;min-width:0}
+  .dtrow .inp.time{width:96px;flex:none;justify-content:center}
+  .pc-cbx-row{display:flex;flex-wrap:wrap;gap:20px}
+  @media(max-width:640px){.pc-grid{grid-template-columns:1fr}}
   .emain2{display:flex;flex-direction:column;gap:28px}
   .esec-h{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
   .esec-t{font-size:16px;font-weight:700;color:#0a0a0a;display:flex;align-items:center;gap:8px}
@@ -231,20 +244,15 @@
 
           <!-- 진행 설정 -->
           <div class="st-tab" data-panel="progress"><div class="st-form">
-            <div class="st-head"><h2>진행 설정</h2><div class="actions"><button class="btn" data-load>이전 설정 불러오기</button><button class="st-save">저장</button></div></div>
-            <div class="st-section">
-              <div class="field"><label>진행 순서 안내</label><div class="rad-group" data-radgrp="flow"><span class="rad on" data-rad><span class="dotc"></span>자동 진행</span><span class="rad" data-rad><span class="dotc"></span>수동 진행</span></div></div>
-              <div class="fgrid c2">
-                <div class="field"><label>의결 정족수 기준</label><button class="inp sel val"><span>출석 주주 과반</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
-                <div class="field"><label>표결 제한 시간</label><input class="inp" value="3분"></div>
-              </div>
-            </div>
-            <div class="hr"></div>
-            <div class="st-section">
-              <div><div class="sub-h">도글(발언) 케이스 안내</div><div class="sub-help">진행 중 참석자에게 노출할 안내 메시지를 관리합니다.</div></div>
-              <div class="chk-row on" data-chk><span class="chk"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="ct">발언 신청 안내</div><div class="cd">참석자가 발언을 신청할 수 있음을 안내합니다.</div></div></div>
-              <div class="chk-row on" data-chk><span class="chk"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="ct">표결 개시 안내</div><div class="cd">표결이 시작될 때 참석자에게 안내합니다.</div></div></div>
-              <div class="chk-row" data-chk><span class="chk"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="ct">종료 안내</div><div class="cd">주주총회 종료 시 안내 메시지를 노출합니다.</div></div></div>
+            <div class="st-head"><div><h2>진행 설정</h2><div class="sub-help">전자투표·현장투표·질의 등 주주총회 진행 방식과 일정을 설정합니다.</div></div><div class="actions"><button class="st-save">저장</button></div></div>
+            <div class="st-section" style="gap:12px">
+              <div class="pcard"><div class="pc-head"><div><div class="pc-ttl">전자투표 / 전자위임</div><div class="pc-desc">주주가 주주총회 전에 온라인으로 미리 의결권을 행사하거나 대리인에게 위임할 수 있는 서비스입니다. (KSD·삼성증권 등 외부채널 선택 가능)</div></div><span class="sw on" data-sw></span></div><div class="pc-grid"><div class="field"><label>행사 시작일시</label><div class="dtrow"><button class="inp dt date val"><span>2027-03-05</span><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></button><button class="inp dt time val"><span>09:00</span></button></div></div><div class="field"><label>행사 종료일시</label><div class="dtrow"><button class="inp dt date val"><span>2027-03-19</span><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></button><button class="inp dt time val"><span>17:00</span></button></div></div></div></div>
+              <div class="pcard"><div class="pc-head"><div><div class="pc-ttl">서면투표</div><div class="pc-desc">주주가 서면(우편) 방식으로 의결권을 행사할 수 있도록 허용합니다.</div></div><span class="sw on" data-sw></span></div></div>
+              <div class="pcard"><div class="pc-head"><div><div class="pc-ttl">현장 투표</div><div class="pc-desc">총회 당일 현장에서 참석 주주의 투표 진행을 설정합니다.</div></div><span class="sw on" data-sw></span></div><div class="pc-grid"><div class="field"><label>접수 시작일시</label><div class="dtrow"><button class="inp dt date val"><span>2027-03-20</span><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></button><button class="inp dt time val"><span>08:30</span></button></div></div><div class="field"><label>접수 종료일시</label><div class="dtrow"><button class="inp dt date val"><span>2027-03-20</span><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></button><button class="inp dt time val"><span>09:30</span></button></div></div></div><div class="field"><label>현장 참석 예상 인원</label><input class="inp" value="1,200명"></div></div>
+              <div class="pcard"><div class="pc-head"><div><div class="pc-ttl">사전 참석 신청 설정</div><div class="pc-desc">주주가 총회 전 온라인으로 현장 참석을 사전 신청할 수 있습니다.</div></div><span class="sw on" data-sw></span></div><div class="pc-grid"><div class="field"><label>신청 시작일시</label><div class="dtrow"><button class="inp dt date val"><span>2027-03-05</span><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></button><button class="inp dt time val"><span>09:00</span></button></div></div><div class="field"><label>신청 종료일시</label><div class="dtrow"><button class="inp dt date val"><span>2027-03-18</span><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></button><button class="inp dt time val"><span>17:00</span></button></div></div></div></div>
+              <div class="pcard"><div class="pc-head"><div><div class="pc-ttl">사전 질의</div><div class="pc-desc">주주가 총회 전 안건에 대한 질의를 미리 등록할 수 있습니다.</div></div><span class="sw on" data-sw></span></div><div class="pc-grid"><div class="field"><label>인당 질의 수</label><input class="inp" value="3건"></div><div class="field"><label>질의 최대 글자 수</label><input class="inp" value="500자"></div></div><div class="field"><label>주주 권한 설정</label><div class="pc-cbx-row"><label class="cbx on" data-cbx><span class="cbb"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>질의 수정 허용</label><label class="cbx" data-cbx><span class="cbb"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>질의 삭제 허용</label></div></div><div class="field"><label>관리자 알림 설정</label><div class="pc-cbx-row"><label class="cbx on" data-cbx><span class="cbb"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>신규 질의 접수 시 알림</label></div></div></div>
+              <div class="pcard"><div class="pc-head"><div><div class="pc-ttl">온라인 질의 설정</div><div class="pc-desc">총회 진행 중 주주가 실시간으로 질의·발언을 신청할 수 있습니다.</div></div><span class="sw on" data-sw></span></div><div><div class="pc-sub">텍스트 질의</div><div class="pc-grid"><div class="field"><label>인당 질의 수</label><input class="inp" value="2건"></div><div class="field"><label>최대 글자 수</label><input class="inp" value="300자"></div></div><div class="pc-cbx-row" style="margin-top:12px"><label class="cbx on" data-cbx><span class="cbb"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>실시간 질의 노출</label></div></div><div class="hr"></div><div><div class="pc-sub">음성 질의</div><div class="pc-grid"><div class="field"><label>발언 신청 정원</label><input class="inp" value="10명"></div><div class="field"><label>1인 발언 시간</label><input class="inp" value="2분"></div></div></div></div>
+              <div class="pcard"><div class="pc-head"><div><div class="pc-ttl">AI 자막 · 통역 설정</div><div class="pc-desc">실시간 음성을 자막으로 변환하고 다국어 통역을 제공합니다.</div></div><span class="sw on" data-sw></span></div><div class="pc-grid"><div class="field"><label>기본 자막 언어</label><button class="inp sel val"><span>국문 (한국어)</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div></div><div class="field"><label>AI 자막 언어</label><div class="pc-cbx-row"><label class="cbx on disabled"><span class="cbb"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>국문</label><label class="cbx on" data-cbx><span class="cbb"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>영문</label><label class="cbx" data-cbx><span class="cbb"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>중문</label><label class="cbx" data-cbx><span class="cbb"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>일문</label></div></div></div>
             </div>
           </div></div>
 
