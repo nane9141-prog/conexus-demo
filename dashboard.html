@@ -18,7 +18,7 @@
   .db-memo-btn:hover{background:var(--muted)}
   /* tabs */
   .db-tabs{display:inline-flex;gap:2px;background:#f1f1f2;border-radius:10px;padding:3px;align-self:flex-start}
-  .db-tab{height:34px;padding:0 22px;border:none;background:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:600;color:#737373;cursor:pointer}
+  .db-tab{height:32px;padding:0 20px;border:none;background:none;border-radius:7px;font-family:inherit;font-size:13px;font-weight:600;color:#737373;cursor:pointer}
   .db-tab.active{background:#fff;color:#0a0a0a;box-shadow:0 1px 2px rgba(0,0,0,.06)}
   .db-panel{display:none;flex-direction:column;gap:16px}
   .db-panel.active{display:flex}
@@ -126,12 +126,11 @@
   table.db-atbl td.c{text-align:center}
   table.db-atbl tr.grp td{background:#fbfbfc;font-weight:600;color:#0a0a0a}
   .db-atag{font-size:11px;font-weight:600;padding:2px 7px;border-radius:6px;background:#f1f5f9;color:#475569;margin-left:6px}
-  .db-bar{position:relative;height:20px;background:#f1f3f5;border-radius:5px;overflow:hidden;min-width:120px}
+  .db-bar{position:relative;height:22px;background:#f1f3f5;border-radius:6px;overflow:hidden;min-width:120px}
   .db-bar .fill{position:absolute;left:0;top:0;bottom:0;background:#0071f3;border-radius:5px}
   .db-bar .fill.rej{background:#ef4444}
   .db-barwrap{position:relative;min-width:150px}
-  .db-line{position:absolute;top:-3px;bottom:-3px;width:0;border-left:2px dashed #0a0a0a}
-  .db-line b{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:9px;color:#525252;white-space:nowrap}
+  .db-line{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed #0a0a0a;z-index:1}
   .db-pct{font-size:12px;font-weight:600;color:#0a0a0a;margin-top:3px;font-variant-numeric:tabular-nums}
   .db-res{font-size:12px;font-weight:600;padding:3px 10px;border-radius:9999px;display:inline-block}
   .db-res.pass{background:#eff4ff;color:#0071f3}
@@ -144,8 +143,8 @@
   .db-attc .an{font-size:12px;color:#737373;font-weight:500}
   .db-attc .av{font-size:18px;font-weight:700;color:#0a0a0a;margin-top:6px;font-variant-numeric:tabular-nums}
   .db-attc .as{font-size:12px;color:#a3a3a3;margin-top:3px}
-  .db-ratio{display:flex;height:30px;border-radius:8px;overflow:hidden;margin-top:4px}
-  .db-ratio .seg{display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:600;min-width:0}
+  .db-ratio{display:flex;height:36px;border-radius:8px;overflow:hidden;margin-top:4px;border:1px solid var(--border)}
+  .db-ratio .seg{display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:600;min-width:0;box-shadow:inset -1px 0 0 rgba(255,255,255,.35);white-space:nowrap;overflow:hidden}
   .db-rlegend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:#525252}
   .db-rlegend .lg{display:inline-flex;align-items:center;gap:5px}
   .db-rlegend .sw{width:11px;height:11px;border-radius:3px}
@@ -204,7 +203,7 @@
       </div>
 
       <div class="lnb-rail col-only">
-        <button class="railbtn active" title="대시보드"><i class="ph ph-house" style="font-size:18px"></i></button>
+        <a href="dashboard.html" class="railbtn active" title="대시보드"><i class="ph ph-house" style="font-size:18px"></i></a>
         <button class="railbtn" title="명부관리"><i class="ph ph-address-book" style="font-size:18px"></i></button>
         <button class="railbtn" title="결의기준"><i class="ph ph-flag" style="font-size:18px"></i></button>
         <button class="railbtn" title="템플릿"><i class="ph ph-grid-four" style="font-size:18px"></i></button>
@@ -289,7 +288,7 @@
         </div>
 
         <div class="db-panel active" data-dp="set">
-          <div class="db-law open" id="lawBanner">
+          <div class="db-law" id="lawBanner">
             <div class="db-law-h" id="lawTrig">
               <div class="db-law-ic"><i class="ph ph-megaphone"></i></div>
               <div>
@@ -439,13 +438,13 @@
                 <th style="min-width:170px">찬성률 (총행사가능 기준)</th><th class="n">찬성률 (총행사 기준)</th><th class="c">예상</th>
               </tr></thead>
               <tbody>
-                <tr><td class="c">제1호</td><td>재무제표 승인의 건<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">124,411</td><td class="n">292,800,110</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:63.5%"></div><div class="db-line" style="left:25.00%"><b>25%</b></div></div><div class="db-pct">63.5%</div></div></td><td class="n">95.9%</td><td class="c"><span class="db-res pass">가결 예상</span></td></tr>
+                <tr><td class="c">제1호</td><td>재무제표 승인의 건<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">124,411</td><td class="n">292,800,110</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:63.5%"></div><div class="db-line" style="left:25.00%"></div></div><div class="db-pct">63.5%</div></div></td><td class="n">95.9%</td><td class="c"><span class="db-res pass">가결 예상</span></td></tr>
                 <tr class="grp"><td class="c">제2호</td><td>이사 선임의 건<span class="db-atag">일부선임</span></td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td>—</td><td class="n">—</td><td class="c">—</td></tr>
-                <tr><td class="c">제2-1호</td><td>사내이사 홍준표 선임<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">123,880</td><td class="n">267,900,300</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:58.1%"></div><div class="db-line" style="left:25.00%"><b>25%</b></div></div><div class="db-pct">58.1%</div></div></td><td class="n">89.4%</td><td class="c"><span class="db-res pass">가결 예상</span></td></tr>
-                <tr><td class="c">제2-2호</td><td>사외이사 김서연 선임<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">123,120</td><td class="n">255,400,880</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:55.4%"></div><div class="db-line" style="left:25.00%"><b>25%</b></div></div><div class="db-pct">55.4%</div></div></td><td class="n">86.1%</td><td class="c"><span class="db-res pass">가결 예상</span></td></tr>
-                <tr><td class="c">제3호</td><td>감사위원 사외이사 선임의 건<span class="db-atag">보통·합산3%룰</span></td><td class="n">461,090,220</td><td class="n">118,240</td><td class="n">100,520,140</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill rej" style="width:21.8%"></div><div class="db-line" style="left:25.00%"><b>25%</b></div></div><div class="db-pct">21.8%</div></div></td><td class="n">71.2%</td><td class="c"><span class="db-res fail">부결 예상</span></td></tr>
-                <tr><td class="c">제4호</td><td>정관 일부 변경의 건<span class="db-atag">특별</span></td><td class="n">461,090,220</td><td class="n">124,010</td><td class="n">277,600,410</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:60.2%"></div><div class="db-line" style="left:33.33%"><b>33.33%</b></div></div><div class="db-pct">60.2%</div></div></td><td class="n">90.9%</td><td class="c"><span class="db-res pass">가결 예상</span></td></tr>
-                <tr><td class="c">제5호</td><td>이사 보수한도 승인의 건<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">124,290</td><td class="n">284,500,220</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:61.7%"></div><div class="db-line" style="left:25.00%"><b>25%</b></div></div><div class="db-pct">61.7%</div></div></td><td class="n">93.2%</td><td class="c"><span class="db-res pass">가결 예상</span></td></tr>
+                <tr><td class="c">제2-1호</td><td>사내이사 홍준표 선임<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">123,880</td><td class="n">267,900,300</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:58.1%"></div><div class="db-line" style="left:25.00%"></div></div><div class="db-pct">58.1%</div></div></td><td class="n">89.4%</td><td class="c"><span class="db-res pass">가결 예상</span></td></tr>
+                <tr><td class="c">제2-2호</td><td>사외이사 김서연 선임<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">123,120</td><td class="n">255,400,880</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:55.4%"></div><div class="db-line" style="left:25.00%"></div></div><div class="db-pct">55.4%</div></div></td><td class="n">86.1%</td><td class="c"><span class="db-res pass">가결 예상</span></td></tr>
+                <tr><td class="c">제3호</td><td>감사위원 사외이사 선임의 건<span class="db-atag">보통·합산3%룰</span></td><td class="n">461,090,220</td><td class="n">118,240</td><td class="n">100,520,140</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill rej" style="width:21.8%"></div><div class="db-line" style="left:25.00%"></div></div><div class="db-pct">21.8%</div></div></td><td class="n">71.2%</td><td class="c"><span class="db-res fail">부결 예상</span></td></tr>
+                <tr><td class="c">제4호</td><td>정관 일부 변경의 건<span class="db-atag">특별</span></td><td class="n">461,090,220</td><td class="n">124,010</td><td class="n">277,600,410</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:60.2%"></div><div class="db-line" style="left:33.33%"></div></div><div class="db-pct">60.2%</div></div></td><td class="n">90.9%</td><td class="c"><span class="db-res pass">가결 예상</span></td></tr>
+                <tr><td class="c">제5호</td><td>이사 보수한도 승인의 건<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">124,290</td><td class="n">284,500,220</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:61.7%"></div><div class="db-line" style="left:25.00%"></div></div><div class="db-pct">61.7%</div></div></td><td class="n">93.2%</td><td class="c"><span class="db-res pass">가결 예상</span></td></tr>
               </tbody>
             </table>
             </div>
@@ -510,13 +509,13 @@
                 <th style="min-width:170px">찬성률 (총행사가능 기준)</th><th class="n">찬성률 (총행사 기준)</th><th class="c">결과</th>
               </tr></thead>
               <tbody>
-                <tr><td class="c">제1호</td><td>재무제표 승인의 건<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">156,880</td><td class="n">341,200,110</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:74.0%"></div><div class="db-line" style="left:25.00%"><b>25%</b></div></div><div class="db-pct">74.0%</div></div></td><td class="n">96.4%</td><td class="c"><span class="db-res pass">가결</span></td></tr>
+                <tr><td class="c">제1호</td><td>재무제표 승인의 건<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">156,880</td><td class="n">341,200,110</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:74.0%"></div><div class="db-line" style="left:25.00%"></div></div><div class="db-pct">74.0%</div></div></td><td class="n">96.4%</td><td class="c"><span class="db-res pass">가결</span></td></tr>
                 <tr class="grp"><td class="c">제2호</td><td>이사 선임의 건<span class="db-atag">일부선임</span></td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td>—</td><td class="n">—</td><td class="c">—</td></tr>
                 <tr><td class="c">제2-1호</td><td>사내이사 홍준표 선임<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">—</td><td class="n">—</td><td><div style="color:#a3a3a3;font-size:12px">집계 전</div></td><td class="n">—</td><td class="c"><span class="db-res wait">대기</span></td></tr>
                 <tr><td class="c">제2-2호</td><td>사외이사 김서연 선임<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">—</td><td class="n">—</td><td><div style="color:#a3a3a3;font-size:12px">집계 전</div></td><td class="n">—</td><td class="c"><span class="db-res wait">대기</span></td></tr>
-                <tr><td class="c">제3호</td><td>감사위원 사외이사 선임의 건<span class="db-atag">보통·합산3%룰</span></td><td class="n">461,090,220</td><td class="n">120,110</td><td class="n">98,700,220</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill rej" style="width:21.4%"></div><div class="db-line" style="left:25.00%"><b>25%</b></div></div><div class="db-pct">21.4%</div></div></td><td class="n">70.1%</td><td class="c"><span class="db-res fail">종료 · 부결</span></td></tr>
+                <tr><td class="c">제3호</td><td>감사위원 사외이사 선임의 건<span class="db-atag">보통·합산3%룰</span></td><td class="n">461,090,220</td><td class="n">120,110</td><td class="n">98,700,220</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill rej" style="width:21.4%"></div><div class="db-line" style="left:25.00%"></div></div><div class="db-pct">21.4%</div></div></td><td class="n">70.1%</td><td class="c"><span class="db-res fail">종료 · 부결</span></td></tr>
                 <tr><td class="c">제4호</td><td>정관 일부 변경의 건<span class="db-atag">특별</span></td><td class="n">461,090,220</td><td class="n">—</td><td class="n">—</td><td><div style="color:#7c3aed;font-size:12px">집계 중…</div></td><td class="n">—</td><td class="c"><span class="db-res count">집계중</span></td></tr>
-                <tr><td class="c">제5호</td><td>이사 보수한도 승인의 건<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">157,020</td><td class="n">332,900,540</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:72.2%"></div><div class="db-line" style="left:25.00%"><b>25%</b></div></div><div class="db-pct">72.2%</div></div></td><td class="n">94.8%</td><td class="c"><span class="db-res pass">가결</span></td></tr>
+                <tr><td class="c">제5호</td><td>이사 보수한도 승인의 건<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">157,020</td><td class="n">332,900,540</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:72.2%"></div><div class="db-line" style="left:25.00%"></div></div><div class="db-pct">72.2%</div></div></td><td class="n">94.8%</td><td class="c"><span class="db-res pass">가결</span></td></tr>
               </tbody>
             </table>
             </div>

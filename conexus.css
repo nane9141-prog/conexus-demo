@@ -234,7 +234,7 @@ body{font-family:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-s
     font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center}
   .lnb-rail{display:none;flex-direction:column;align-items:center;gap:8px;padding:8px 0}
   .app.collapsed .lnb-rail{display:flex}
-  .railbtn{width:32px;height:32px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;color:var(--sidebar-fg)}
+  .railbtn{width:32px;height:32px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;color:var(--sidebar-fg);text-decoration:none;cursor:pointer}
   .railbtn:hover{background:var(--muted)}
   .railbtn.active{background:var(--muted)}
   .railbtn svg{width:18px;height:18px}
