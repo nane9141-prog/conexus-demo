@@ -44,6 +44,7 @@
   .mbtn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:1px solid var(--border);border-radius:10px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap}
   .mbtn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
   .mbtn.dark{background:#171717;border-color:#171717;color:#fff}
+  .mbtn.rev{background:#FEE2E2;border-color:#FBD0D8;color:#E11D48}
   .mbtn.ic{padding:0;width:36px;justify-content:center}
   .mwrap{margin-top:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
   .mscroll{overflow:visible;max-height:none}
@@ -416,7 +417,7 @@
   // 확정하기 -> 확인 팝업, 확정 후 철회하기 토글
   (function(){ var btn=document.getElementById('dupConfirm'), ov=document.getElementById('cfmDlg'); if(!btn||!ov) return;
     var confirmed=false;
-    function setC(v){ confirmed=v; btn.innerHTML=v?'<i class="ph ph-arrow-u-up-left" style="font-size:16px"></i>철회하기':'<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>확정하기'; }
+    function setC(v){ confirmed=v; btn.className=v?'mbtn rev':'mbtn dark'; btn.innerHTML=v?'<i class="ph ph-arrow-u-up-left" style="font-size:16px"></i>철회하기':'<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>확정하기'; }
     btn.addEventListener('click',function(){ if(confirmed){ setC(false); } else { ov.classList.add('show'); } });
     document.getElementById('cfmConfirm').addEventListener('click',function(){ ov.classList.remove('show'); setC(true); });
     ov.addEventListener('click',function(e){ if(e.target===ov||e.target.closest('[data-cfm-cancel]')) ov.classList.remove('show'); });
