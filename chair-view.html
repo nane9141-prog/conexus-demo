@@ -18,8 +18,11 @@
   .cv-ib.plain{background:none;border:none}
   .cv-ib:hover{background:rgba(255,255,255,.1)}
   .cv-ib svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-  .cv-script{flex:1;display:flex;align-items:center;justify-content:center;text-align:left}
-  .cv-script p{font-size:32px;font-weight:700;line-height:1.62;letter-spacing:-.01em;color:#0071F3;max-width:100%}
+  .cv-script{flex:1;display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;overflow:auto;padding:8px 0}
+  .cv-script p{margin:auto 0;font-size:32px;font-weight:700;line-height:1.55;letter-spacing:-.01em;color:#E5E5E5;text-align:left;max-width:100%}
+  .cv-script .blue{color:#0071F3}
+  .cv-script.big{justify-content:center;align-items:center}
+  .cv-script.big p{text-align:center;font-size:72px;color:#0071F3}
   /* 우측 대기열 */
   .cv-side{width:400px;flex:none;background:#171717;border-left:1px solid rgba(255,255,255,.1);padding:16px;display:flex;flex-direction:column;gap:16px}
   .cv-qh{display:flex;align-items:center;gap:10px;padding-left:2px;color:#A3A3A3;font-size:16px;font-weight:500}
@@ -45,38 +48,63 @@
         <button class="cv-ib plain" id="cvNext" title="다음"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
       </div>
     </div>
-    <div class="cv-script"><p id="cvScript">지금부터 제10기 정기주주총회를 시작하겠습니다.</p></div>
+    <div class="cv-script" id="cvBox"><p id="cvScript"></p></div>
   </div>
   <div class="cv-side">
-    <div class="cv-qh"><svg viewBox="0 0 24 24"><path d="M16 4h5M16 9h5M16 14h5"/><circle cx="7" cy="8" r="3"/><path d="M2 19a5 5 0 0 1 10 0"/></svg><span id="cvQueue">발언 대기열 8명</span></div>
+    <div class="cv-qh"><svg viewBox="0 0 24 24"><path d="M16 4h5M16 9h5M16 14h5"/><circle cx="7" cy="8" r="3"/><path d="M2 19a5 5 0 0 1 10 0"/></svg><span>발언 대기열 8명</span></div>
     <div class="cv-agenda" id="cvAgenda"></div>
   </div>
 
 <script>
 (function(){
+  var B=function(x){return '<span class="blue">'+x+'</span>';};
   var SLIDES=[
-    {t:'개회 선언', s:'지금부터 제10기 정기주주총회를 시작하겠습니다. 의결권 있는 주식 총수의 과반이 참석하여 성원이 되었으므로, 본 총회의 개회를 선언합니다.'},
-    {t:'제1호 재무제표 승인의 건', s:'제1호 재무제표 승인의 건을 상정합니다. 본 의안은 지난 한 해 동안의 경영 실적을 정리한 재무상태표 및 손익계산서를 승인받고자 하는 것입니다. 표결에 앞서 본 안건에 대해 질문이나 의견이 있으신 주주께서는 발언 신청 버튼을 눌러 주시기 바랍니다. 신청해 주신 주주님께 순서대로 발언권을 부여해 드리겠으며, 발언이 끝난 후 표결을 진행하겠습니다.'},
-    {t:'제2호 정관 일부 변경의 건', s:'제2호 정관 일부 변경의 건을 상정합니다. 전자주주총회 도입 및 의결권 대리행사 수단 확대를 위한 정관 개정안입니다. 세부 조항에 대한 설명 후 표결을 진행하겠습니다.'},
-    {t:'제3호 이사 선임의 건', s:'제3호 이사 선임의 건을 상정합니다. 집중투표 방식으로 사외이사 후보 4인 중 2인을 선임합니다. 후보자별 약력은 소집공고 첨부자료를 참고해 주시기 바랍니다.'},
-    {t:'폐회 선언', s:'모든 의안에 대한 표결이 종료되었습니다. 주주 여러분의 협조에 감사드리며, 제10기 정기주주총회의 폐회를 선언합니다.'}
+    {t:'개회 선언', slide:0, s:
+      '2026년 3월 30일 기준일 현재<br>'+
+      '당사의 총 발행 주식수는 칠천 팔백 구십 구만 삼천 팔십 오 '+B('(78,993,085)')+' 주 이며,<br>'+
+      '총 주주수는 팔만 이천 육십 구 '+B('(82,069)')+' 명입니다.<br>'+
+      '이중 의결권 있는 주식수는 칠천 육십 육만 팔천 사백 삼십 '+B('(70,668,430)')+' 주 이며,<br>'+
+      '그 주주수는 팔만 이천 육십 일 '+B('(82,061)')+' 명입니다.<br><br>'+
+      '2026년 6월 30일 9시<br>'+
+      '현재 참석 주식수는 이천 일백 이십만 오백 이십 구 '+B('(21,200,529)')+' 주입니다.<br><br>'+
+      '당사의 의결권 있는 주식의 총수인<br>'+
+      '칠천 육십 육만 팔천 사백 삼십 '+B('(70,688,430)')+' 주의<br>'+
+      B('30 %')+' 가 출석하였음을 보고 드립니다.'},
+    {t:'제 1호 의안 상정 · 발언권 접수', slide:1, s:
+      B('제1호')+'<br>'+B('재무제표 승인의 건')+' 을 상정합니다.<br><br>'+
+      '본 의안은 지난 한 해 동안의 경영 실적을 정리한 재무상태표 및 손익계산서를 승인받고자 하는 것입니다.<br><br>'+
+      '표결에 앞서 본 안건에 대해 질문이나 의견이 있으신 주주께서는<br>발언 신청 버튼을 눌러 주시기 바랍니다.<br><br>'+
+      '신청해 주신 주주님께 순서대로 발언권을 부여해 드리겠으며,<br>발언이 끝난 후 표결을 진행하겠습니다.'},
+    {t:'제 1호 의안 · 발언 진행', slide:1, s:
+      B('쿼드자산운용')+'  ·  대리인 : 박선화  ·  20,000주<br><br>'+
+      '<span style="color:#A3A3A3;font-size:.7em">담당자 입력 내용</span><br>'+
+      '지난해 손익 변동은 [글로벌 경기 둔화 / 원자재 가격 상승 / 주요 원가 요소 변화] 등 대외적인 환경 변화가 주요 요인으로 작용했습니다. 회사는 이를 극복하기 위해 올해 [고부가가치 제품 및 서비스 비중 확대 / 공정 효율화를 통한 비용 절감 / 신규 판로 개척] 등을 중점적으로 추진하고 있습니다.<br><br>'+
+      '견고한 실적 반등을 통해 주주 여러분의 기대에 부응할 수 있도록 전 임직원이 최선을 다하겠습니다.'},
+    {t:'제 1호 의안 · 집계중', slide:1, big:true, s:'표결 집계중'},
+    {t:'제 1호 의안 · 표결 마감', slide:1, s:
+      '제 6호 의안에 대한 표결 결과를 말씀드리겠습니다.<br>'+
+      '본 의안은 보통 결의요건이 적용되는 의안으로,<br>'+
+      '의결권 있는 발행주식 총수의 4분의 1 이상, 출석한 주주의 의결권의 과반수의 찬성이 필요합니다.<br><br>'+
+      '오늘 주주총회장에서 참석한 의결권 있는 주식은 총 팔십 사만 사천이백오십오 '+B('(844,255)')+' 이며,<br>집계 결과는 다음과 같습니다.<br><br>'+
+      '찬성하는 주식수는 총 팔십 사만 사천 이백 오십 오 '+B('(844,255)')+'<br>'+
+      '반대하는 주식수는 총 일천 이백 삼십 칠만 오 '+B('(12,370,005)')+'<br>'+
+      '기권하는 주식수는 총 영 '+B('(0)')+' 주로<br><br>'+
+      '찬성 주식수는 출석한 의결권수 대비 '+B('96.00')+' 이며,<br>'+
+      '의결권 있는 발행주식 총수 대비 '+B('8.27%')+' 로 집계되었습니다.<br><br>'+
+      '이에 제 1호 의안 은 '+B('가결')+' 되었음을 선포합니다.'}
   ];
-  var AGENDA=[
-    {i:1,t:'재무제표 승인의 건',slide:1},
-    {i:2,t:'정관 일부 변경의 건',slide:2},
-    {i:3,t:'이사 선임의 건',slide:3}
-  ];
+  var AGENDA=[{i:1,t:'재무제표 승인의 건'},{i:2,t:'정관 일부 변경의 건'},{i:3,t:'이사 선임의 건'}];
   var idx=0, fs=32;
-  var title=document.getElementById('cvTitle'), script=document.getElementById('cvScript'), pEl=script;
+  var title=document.getElementById('cvTitle'), box=document.getElementById('cvBox'), script=document.getElementById('cvScript');
   function render(){
     title.textContent=SLIDES[idx].t;
-    script.textContent=SLIDES[idx].s;
-    script.style.fontSize=fs+'px';
-    document.querySelectorAll('.cv-arow').forEach(function(r){ r.classList.toggle('on', +r.dataset.slide===idx); });
+    script.innerHTML=SLIDES[idx].s;
+    box.classList.toggle('big', !!SLIDES[idx].big);
+    script.style.fontSize=SLIDES[idx].big?'':(fs+'px');
+    document.querySelectorAll('.cv-arow').forEach(function(r){ r.classList.toggle('on', +r.dataset.slide===SLIDES[idx].slide); });
   }
   var ag=document.getElementById('cvAgenda');
-  ag.innerHTML=AGENDA.map(function(a){return '<div class="cv-arow" data-slide="'+a.slide+'"><span class="cv-no">'+a.i+'</span><span class="cv-atitle">제'+a.i+'호 '+a.t+'</span></div>';}).join('');
-  ag.addEventListener('click',function(e){ var r=e.target.closest('.cv-arow'); if(r){ idx=+r.dataset.slide; render(); } });
+  ag.innerHTML=AGENDA.map(function(a){return '<div class="cv-arow" data-slide="'+a.i+'"><span class="cv-no">'+a.i+'</span><span class="cv-atitle">제'+a.i+'호 '+a.t+'</span></div>';}).join('');
   document.getElementById('cvPrev').addEventListener('click',function(){ idx=Math.max(0,idx-1); render(); });
   document.getElementById('cvNext').addEventListener('click',function(){ idx=Math.min(SLIDES.length-1,idx+1); render(); });
   document.getElementById('cvPlus').addEventListener('click',function(){ fs=Math.min(56,fs+2); render(); });
