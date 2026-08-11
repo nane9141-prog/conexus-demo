@@ -136,6 +136,15 @@
   .vdev svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
   .vlink{display:inline-flex;align-items:center;justify-content:center;height:28px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:12px;font-weight:500;color:#0a0a0a;cursor:pointer;font-family:inherit;white-space:nowrap}
   .vlink.danger{color:#e11d48;border-color:#FBD0D8;background:#FEE2E2}
+  .vtag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:600;white-space:nowrap}
+  .vtag.blue{background:#EBF4FF;color:#0071F3}
+  .vtag.neutral{background:#F4F4F5;color:#737373}
+  .vtag.ok{background:#EAFAF0;color:#0a8a3c}
+  .vtag.soft{background:#FAFAFA;color:#a3a3a3;border:1px solid #F0F0F0}
+  .vtag.obs{background:#F5F3FF;color:#7C3AED}
+  .vsearch{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;min-width:200px}
+  .vsearch svg{width:15px;height:15px;fill:none;stroke:#a3a3a3;stroke-width:1.8}
+  .vsearch input{border:none;outline:none;font-family:inherit;font-size:13px;flex:1;background:none;color:#0a0a0a}
   .pxbadge{display:inline-flex;align-items:center;height:20px;padding:0 7px;margin-left:6px;border-radius:9999px;background:#EEF5FF;color:#0071F3;font-size:11px;font-weight:600;cursor:pointer;vertical-align:middle}
   .pxdlg-ov{position:fixed;inset:0;background:rgba(10,10,10,.4);display:none;align-items:center;justify-content:center;z-index:300;padding:24px}
   .pxdlg-ov.show{display:flex}
@@ -671,6 +680,7 @@
               <div class="vtoolbar">
                 <div class="vseg"><button class="on" data-vw="all">전체</button><button data-vw="on">온라인</button><button data-vw="off">이탈</button></div>
                 <div class="vtools">
+                  <label class="vsearch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="vwSearch" placeholder="투표권자 검색" autocomplete="off"></label>
                   <button class="vbtn"><i class="ph ph-download-simple" style="font-size:16px"></i>다운로드</button>
                   <button class="vbtn ic"><i class="ph ph-funnel" style="font-size:16px"></i></button>
                 </div>
@@ -1202,7 +1212,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     {nm:'미래에셋증권(쿼드자산운용)',t:'기관',sh:18750000,on:true,tm:'09:03',dev:'PC',ev:'완료'},
     {nm:'이나리',t:'개인',sh:128500,on:true,tm:'09:04',dev:'모바일',ev:'완료'},
     {nm:'삼성자산운용',t:'기관',sh:9870000,on:true,tm:'09:04',dev:'태블릿',ev:'완료',px:{nm:'정하은',rel:'위임 대리인',sh:9870000,tel:'010-8842-3096',doc:'전자위임장'}},
-    {nm:'전승현',t:'개인',sh:96700,on:true,tm:'09:05',dev:'모바일',ev:'미투표'},
+    {nm:'전승현',t:'개인',sh:96700,on:true,tm:'09:05',dev:'모바일',ev:'참관'},
     {nm:'한국투자증권',t:'기관',sh:15200000,on:true,tm:'09:05',dev:'PC',ev:'완료'},
     {nm:'정하윤',t:'개인',sh:22400,on:false,tm:'09:06',dev:'모바일',ev:'완료'},
     {nm:'교보생명',t:'기관',sh:2980000,on:true,tm:'09:06',dev:'PC',ev:'완료',px:{nm:'박서준',rel:'임직원 대리',sh:2980000,tel:'010-2277-6710',doc:'전자위임장'}},
@@ -1212,17 +1222,17 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     {nm:'신한자산운용',t:'기관',sh:6540000,on:true,tm:'09:08',dev:'PC',ev:'완료'},
     {nm:'강도현',t:'개인',sh:16700,on:true,tm:'09:09',dev:'모바일',ev:'미투표'},
     {nm:'우정사업본부',t:'기관',sh:5300000,on:true,tm:'09:09',dev:'PC',ev:'완료'},
-    {nm:'임재민',t:'개인',sh:9600,on:false,tm:'09:10',dev:'모바일',ev:'미투표'},
+    {nm:'임재민',t:'개인',sh:9600,on:false,tm:'09:10',dev:'모바일',ev:'참관'},
     {nm:'한화투자증권',t:'기관',sh:3420000,on:true,tm:'09:10',dev:'PC',ev:'완료'}
   ];
   function cm(n){return Number(n).toLocaleString('en-US');}
   function tg(t){return '<span class="tg '+(t==='기관'?'tg-inst':'tg-ind')+'">'+t+'</span>';}
-  var vw='all', onlineN=206142;
+  var vw='all', onlineN=206142, q='';
   function render(){
-    body.innerHTML=V.map(function(x,i){return [x,i];}).filter(function(p){var x=p[0];return vw==='all'||(vw==='on'?x.on:!x.on);}).map(function(p){
+    body.innerHTML=V.map(function(x,i){return [x,i];}).filter(function(p){var x=p[0]; var okv=(vw==='all'||(vw==='on'?x.on:!x.on)); var okq=(!q||x.nm.indexOf(q)>=0||(x.px&&x.px.nm.indexOf(q)>=0)); return okv&&okq;}).map(function(p){
       var x=p[0], i=p[1];
-      var stat=x.on?'<span class="stbadge green"><span class="d"></span>온라인</span>':'<span class="stbadge gray"><span class="d"></span>이탈</span>';
-      var ev=x.ev==='완료'?'<span class="stbadge blue"><span class="d"></span>완료</span>':'<span class="stbadge gray"><span class="d"></span>미투표</span>';
+      var stat=x.on?'<span class="vtag blue">온라인</span>':'<span class="vtag neutral">이탈</span>';
+      var ev=x.ev==='완료'?'<span class="vtag ok">완료</span>':(x.ev==='참관'?'<span class="vtag obs">참관</span>':'<span class="vtag soft">미투표</span>');
       var dev='<span class="vdev">'+(DEVICE[x.dev]||'')+x.dev+'</span>';
       var mng=x.on?'<button class="vlink danger" type="button">접속 종료</button>':'<button class="vlink" type="button" disabled>-</button>';
       var pxb=x.px?'<span class="pxbadge" data-px="'+i+'">대리인</span>':'';
@@ -1238,6 +1248,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var pb=e.target.closest('.pxbadge'); if(pb){ e.stopPropagation(); openPx(V[+pb.dataset.px]); return; }
     var btn=e.target.closest('.vlink.danger'); if(btn){ var tr=btn.closest('tr'); var i=+tr.dataset.i; if(!isNaN(i)&&V[i]){V[i].on=false; onlineN=Math.max(0,onlineN-1); render(); document.getElementById('vwOnline').innerHTML=cm(onlineN)+'<small> 명</small>'; } }
   });
+  var srch=document.getElementById('vwSearch'); if(srch) srch.addEventListener('input',function(){ q=this.value.trim(); render(); });
   var pxOv=document.getElementById('pxDlg');
   function openPx(x){ if(!x||!x.px)return; document.getElementById('pxNm').textContent=x.px.nm; document.getElementById('pxRel').textContent=x.px.rel; document.getElementById('pxSh').textContent=cm(x.px.sh)+'주'; document.getElementById('pxTel').textContent=x.px.tel; document.getElementById('pxDoc').textContent=x.px.doc+' 완료'; pxOv.classList.add('show'); }
   if(pxOv){ pxOv.addEventListener('click',function(e){ if(e.target===pxOv||e.target.closest('[data-px-close]')) pxOv.classList.remove('show'); }); }
