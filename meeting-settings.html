@@ -964,6 +964,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   <div class="cal-grid" id="calGrid"></div>
 </div>
 <div class="selpop hidden" id="kindPop"></div>
+<div class="selpop hidden" id="prevMeetingPop" style="z-index:120"></div>
 <input type="file" id="fileInput" style="display:none">
 <div class="overlay hidden" id="loadOverlay">
   <aside class="sheet">
@@ -1289,7 +1290,12 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   const loadOverlay=document.getElementById('loadOverlay');
   document.querySelectorAll('[data-load]').forEach(b=>b.addEventListener('click',()=>loadOverlay.classList.remove('hidden')));
   document.querySelectorAll('[data-chk]').forEach(r=>r.addEventListener('click',()=>r.classList.toggle('on')));
-  document.getElementById('prevMeetingSel').addEventListener('click',function(){const s=this.querySelector('span');s.textContent='제51기 정기주주총회 (2025.09.26)';s.style.color='#0a0a0a';});
+  const PREV_MEETINGS=['제9기 정기주주총회 (2026.03.20)','제8기 정기주주총회 (2025.03.21)','제7기 정기주주총회 (2024.03.23)','제6기 정기주주총회 (2023.03.24)','제5기 정기주주총회 (2022.03.25)'];
+  const pmSel=document.getElementById('prevMeetingSel'),pmPop=document.getElementById('prevMeetingPop');
+  function openPm(){const cur=pmSel.querySelector('span').textContent;pmPop.innerHTML='';PREV_MEETINGS.forEach(function(m){const o=document.createElement('button');o.className='selopt'+(m===cur?' sel':'');o.innerHTML='<span class="sc">'+m+'</span><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';o.addEventListener('click',function(ev){ev.stopPropagation();const s=pmSel.querySelector('span');s.textContent=m;s.style.color='#0a0a0a';pmPop.classList.add('hidden');});pmPop.appendChild(o);});const r=pmSel.getBoundingClientRect();pmPop.style.left=r.left+'px';pmPop.style.top=(r.bottom+6)+'px';pmPop.style.minWidth=r.width+'px';pmPop.classList.remove('hidden');}
+  pmSel.addEventListener('click',function(e){e.stopPropagation();pmPop.classList.contains('hidden')?openPm():pmPop.classList.add('hidden');});
+  pmPop.addEventListener('click',function(e){e.stopPropagation();});
+  document.addEventListener('click',function(){pmPop.classList.add('hidden');});
   document.getElementById('loadApply').addEventListener('click',()=>{const a=document.getElementById('addrInp');if(a){a.value='서울특별시 강남구 테헤란로 123';}const z=document.getElementById('zipInp');if(z){z.value='06234';}loadOverlay.classList.add('hidden');showToast('이전 설정을 불러왔습니다');});
   document.querySelectorAll('.overlay').forEach(ov=>{ov.addEventListener('click',e=>{if(e.target===ov)ov.classList.add('hidden');});ov.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>ov.classList.add('hidden')));});
 
