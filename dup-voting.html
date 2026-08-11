@@ -58,7 +58,7 @@
   .mmut{color:#a3a3a3}
   .rsn{max-width:300px;overflow:hidden;text-overflow:ellipsis}
   .content{gap:16px}
-  .mstat-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin-top:0;margin-bottom:8px}
+  .mstat-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin-top:0;margin-bottom:8px;align-items:start}
   .mstat{border:1px solid var(--border);border-radius:10px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05);padding:16px}
   .mstat .k{font-size:12px;color:var(--muted-fg);font-weight:500}
   .mstat .v{font-size:18px;font-weight:600;color:#0a0a0a;margin-top:6px;font-variant-numeric:tabular-nums}
@@ -127,6 +127,10 @@
   .tw-chevron svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;transition:transform .15s}
   .tw-chevron.collapsed svg{transform:rotate(180deg)}
   .mmiss{color:#a3a3a3}
+  table.mtbl thead th.dsort{cursor:pointer;user-select:none}
+  table.mtbl thead th.dsort:hover{color:#0a0a0a}
+  table.mtbl thead th .dcar{display:inline-block;margin-left:4px;opacity:.28;font-size:10px;vertical-align:middle}
+  table.mtbl thead th.asc .dcar,table.mtbl thead th.desc .dcar{opacity:.9}
   /* 중복처리 드롭다운 */
   .dsel{position:relative}
   .dmenu{position:absolute;top:38px;left:0;z-index:40;min-width:160px;background:#fff;border:1px solid rgba(10,10,10,.1);box-shadow:0 4px 6px -1px rgba(0,0,0,.1);border-radius:10px;padding:4px;display:none}
@@ -293,7 +297,7 @@
     </div>
   </main>
 </div>
-<div class="dmodal-ov" id="dupModal"><div class="dmodal"><div class="dm-hd"><div class="dm-title">중복 의결권 상세</div><button class="dm-x" data-dm-close><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div><div class="dm-body"><div class="dm-info"><div class="dm-name" id="dmName">한국교직원공제회</div><div class="dm-meta"><span><span class="k">투표권자</span>사립학교교직원연금공단</span><span class="sep"></span><span><span class="k">행사방식</span><span id="dmMethods">전자위임 · 서면위임(자사) · 서면위임(타사)</span></span><span class="dm-badge">중복행사</span><span class="sep"></span><span><span class="k">보유의결권</span>80,000주</span><span class="sep"></span><span><span class="k">중복 건수</span>3건</span></div><div class="dm-tools"><span class="k">중복 처리</span><select class="dm-sel" id="dmSel"><option>전자위임</option><option>서면투표</option><option selected>서면위임(자사)</option><option>서면위임(타사)</option></select><button class="dm-reg" id="dmReg">설정</button></div></div><div style="overflow:auto"><table class="dmtbl"><thead><tr><th class="c" style="width:40px"></th><th class="l">채널 · 계좌</th><th>보유의결권</th><th class="c">1</th><th class="c">2-1</th><th class="c">2-2</th><th class="c">2-3</th><th class="c">3-1</th><th class="c">3-2</th></tr></thead><tbody><tr data-drow><td class="c"><span class="dm-radio"></span></td><td class="l" data-ch="전자위임"><div class="dm-a1">전자위임</div><div class="dm-a2">1233478-1154-1548978999</div></td><td>40,000</td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td></tr><tr class="on" data-drow><td class="c"><span class="dm-radio"></span></td><td class="l" data-ch="서면위임(자사)"><div class="dm-a1">서면위임(자사)</div><div class="dm-a2">1233478-1154-1548978999</div></td><td>20,000</td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv abs"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr><tr data-drow><td class="c"><span class="dm-radio"></span></td><td class="l" data-ch="서면위임(타사)"><div class="dm-a1">서면위임(타사)</div><div class="dm-a2">1233478-1154-1548978999</div></td><td>20,000</td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr></tbody></table></div></div></div></div>
+<div class="dmodal-ov" id="dupModal"><div class="dmodal"><div class="dm-hd"><div class="dm-title">중복 의결권 상세</div><button class="dm-x" data-dm-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div><div class="dm-body"><div class="dm-info"><div class="dm-name" id="dmName">한국교직원공제회</div><div class="dm-meta"><span><span class="k">투표권자</span>사립학교교직원연금공단</span><span class="sep"></span><span><span class="k">행사방식</span><span id="dmMethods">전자위임 · 서면위임(자사) · 서면위임(타사)</span></span><span class="dm-badge">중복행사</span><span class="sep"></span><span><span class="k">보유의결권</span>80,000주</span><span class="sep"></span><span><span class="k">중복 건수</span>3건</span></div><div class="dm-tools"><span class="k">중복 처리</span><select class="dm-sel" id="dmSel"><option>전자위임</option><option>서면투표</option><option selected>서면위임(자사)</option><option>서면위임(타사)</option></select><button class="dm-reg" id="dmReg">설정</button></div></div><div style="overflow:auto"><table class="dmtbl"><thead><tr><th class="c" style="width:40px"></th><th class="l">채널 · 계좌</th><th>보유의결권</th><th class="c">1</th><th class="c">2-1</th><th class="c">2-2</th><th class="c">2-3</th><th class="c">3-1</th><th class="c">3-2</th></tr></thead><tbody><tr data-drow><td class="c"><span class="dm-radio"></span></td><td class="l" data-ch="전자위임"><div class="dm-a1">전자위임</div><div class="dm-a2">1233478-1154-1548978999</div></td><td>40,000</td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td></tr><tr class="on" data-drow><td class="c"><span class="dm-radio"></span></td><td class="l" data-ch="서면위임(자사)"><div class="dm-a1">서면위임(자사)</div><div class="dm-a2">1233478-1154-1548978999</div></td><td>20,000</td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv abs"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr><tr data-drow><td class="c"><span class="dm-radio"></span></td><td class="l" data-ch="서면위임(타사)"><div class="dm-a1">서면위임(타사)</div><div class="dm-a2">1233478-1154-1548978999</div></td><td>20,000</td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opv for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr></tbody></table></div></div></div></div>
 <script>
   // LNB tab switching (설정/사전/당일)
   document.querySelectorAll('.lnb-tabs .t').forEach(function(t){
@@ -426,6 +430,52 @@
     sel.addEventListener('change',function(){ var val=sel.value; modal.querySelectorAll('#dupModal tbody tr[data-drow]').forEach(function(r){ var c=r.querySelector('[data-ch]'); r.classList.toggle('on', !!c && c.dataset.ch===val); }); });
   })();
   function resetReg(){ var r=document.getElementById('dmReg'); if(r){ r.textContent='설정'; r.classList.remove('reset'); } }
+})();
+</script>
+<script>
+(function(){
+  var tbl=document.querySelector('table.mtbl'); if(!tbl) return;
+  var tb=tbl.querySelector('tbody'), ths=tbl.querySelectorAll('thead th');
+  // snapshot original order of blocks
+  function blocks(){
+    var out=[], cur=null, rows=Array.prototype.slice.call(tb.children);
+    rows.forEach(function(r){
+      if(r.classList.contains('child')){ if(cur) cur.kids.push(r); }
+      else { cur={lead:r,kids:[]}; out.push(cur); }
+    });
+    return out;
+  }
+  var orig=blocks();
+  function num(t){ var m=(t||'').replace(/[, ]/g,'').match(/-?\d+(\.\d+)?/); return m?parseFloat(m[0]):null; }
+  function cellVal(r,i){
+    var td=r.children[i]; if(!td) return '';
+    var v=td.querySelector('.vname'); if(v) return v.textContent.trim();
+    var c=td.cloneNode(true); c.querySelectorAll('.tag,.mtag,.tw-chevron,svg,.dcar').forEach(function(e){e.remove();});
+    return (c.textContent||'').trim();
+  }
+  ths.forEach(function(th,i){
+    th.classList.add('dsort');
+    var car=document.createElement('span'); car.className='dcar'; car.textContent='\u25B4\u25BE';
+    th.appendChild(car);
+    th.addEventListener('click',function(){
+      var st=th.classList.contains('asc')?'desc':(th.classList.contains('desc')?'none':'asc');
+      ths.forEach(function(x){x.classList.remove('asc','desc');});
+      var arr=blocks();
+      if(st==='none'){ arr=orig.slice(); }
+      else {
+        th.classList.add(st);
+        var isNum=th.classList.contains('n');
+        arr.sort(function(a,b){
+          var av=cellVal(a.lead,i), bv=cellVal(b.lead,i), r;
+          if(isNum){ var an=num(av), bn=num(bv);
+            if(an===null&&bn===null) r=0; else if(an===null) r=1; else if(bn===null) r=-1; else r=an-bn; }
+          else r=av.localeCompare(bv,'ko');
+          return st==='asc'?r:-r;
+        });
+      }
+      arr.forEach(function(bk){ tb.appendChild(bk.lead); bk.kids.forEach(function(k){tb.appendChild(k);}); });
+    });
+  });
 })();
 </script>
 <script src="conexus.js"></script>
