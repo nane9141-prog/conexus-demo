@@ -56,6 +56,7 @@
   .mc-ebtn{height:40px;padding:0 16px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer}
   .mc-ebtn.cancel{background:none;border:1px solid #737373;color:#FAFAFA}
   .mc-ebtn.save{background:#003A7F;border:1px solid rgba(255,255,255,.15);color:#FAFAFA}
+  .mc-script p.editing{outline:1px dashed rgba(255,255,255,.4);border-radius:10px;padding:10px 12px;cursor:text}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 </head>
@@ -132,15 +133,18 @@
       var lbl=el.querySelector('.lbl');
       lbl.addEventListener('input',function(){ EDIT[+el.dataset.i].tab=lbl.textContent.trim()||'새 단계'; });
       lbl.addEventListener('mousedown',function(e){e.stopPropagation();});
+      lbl.addEventListener('focus',function(){ idx=+el.dataset.i; showEditScript(); });
       lbl.addEventListener('keydown',function(e){ if(e.key==='Enter'){e.preventDefault(); lbl.blur();} });
       el.querySelector('.rm').addEventListener('click',function(ev){ev.stopPropagation(); if(EDIT.length<=1)return; EDIT.splice(+el.dataset.i,1); editTabs();});
     });
     var add=document.getElementById('mcEadd');
     if(add) add.addEventListener('click',function(){ EDIT.push({tab:'새 단계',cur:'새 단계',s:'대본을 입력해 주세요.'}); editTabs(); });
   }
-  function enterEdit(){ editing=true; EDIT=STAGES.map(function(s){return {tab:s.tab,cur:s.cur,s:s.s};}); editTabs(); toolsEl.style.display='none'; ebar.style.display='flex'; }
-  function exitEdit(save){ editing=false; if(save){ STAGES=EDIT; if(idx>STAGES.length-1) idx=STAGES.length-1; } EDIT=null; toolsEl.style.display=''; ebar.style.display='none'; normalTabs(); render(); }
+  function showEditScript(){ if(idx>EDIT.length-1) idx=EDIT.length-1; if(idx<0) idx=0; titleEl.textContent=EDIT[idx].cur; scriptEl.textContent=EDIT[idx].s; scriptEl.style.fontSize=fs+'px'; }
+  function enterEdit(){ editing=true; EDIT=STAGES.map(function(s){return {tab:s.tab,cur:s.cur,s:s.s};}); editTabs(); scriptEl.setAttribute('contenteditable','true'); scriptEl.classList.add('editing'); showEditScript(); toolsEl.style.display='none'; ebar.style.display='flex'; }
+  function exitEdit(save){ editing=false; if(save){ STAGES=EDIT; if(idx>STAGES.length-1) idx=STAGES.length-1; } EDIT=null; scriptEl.setAttribute('contenteditable','false'); scriptEl.classList.remove('editing'); toolsEl.style.display=''; ebar.style.display='none'; normalTabs(); render(); }
 
+  scriptEl.addEventListener('input',function(){ if(editing && EDIT && EDIT[idx]) EDIT[idx].s=scriptEl.textContent; });
   function render(){
     titleEl.textContent=STAGES[idx].cur;
     scriptEl.innerHTML=STAGES[idx].s.replace(/([.!?])\s+/g,"$1<br>");
