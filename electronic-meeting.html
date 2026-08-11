@@ -165,6 +165,7 @@
   .btn.sm{height:28px;padding:0 10px;font-size:12px}
   .tfoot{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:#fafafa;border-top:1px solid var(--border)}
   .tfoot-l{font-size:12px;color:#1f1c18}
+  .st-tab[data-panel="preq"] .tbl td{white-space:normal;overflow:visible;text-overflow:clip;font-weight:400;line-height:1.5;padding-top:10px;padding-bottom:10px}
   .btn.dark{background:#171717;color:#fafafa;border-color:#171717}
   .btn.dark:hover{background:#000}
   .btn.danger{background:rgba(220,38,38,.1);border:none;color:#E9081B}
@@ -440,12 +441,12 @@
 
           <!-- 사전 질의 관리 -->
           <div class="st-tab" data-panel="preq"><div class="st-full">
-            <div class="st-head"><div><h2>사전 질의 관리</h2><div class="sub-help">주주가 총회 전 등록한 질의를 확인하고 답변을 관리합니다.</div></div><div class="actions"><button class="btn">엑셀 내보내기</button></div></div>
+            <div class="st-head"><div><h2>사전 질의 관리</h2><div class="sub-help">주주가 총회 전 등록한 질의를 확인하고 답변을 관리합니다.</div></div></div>
             <div class="atbar">
               <div class="chips" id="pqChips">
                 <button class="chip active" data-fs="all">전체 <span class="c">6</span></button>
                 <button class="chip" data-fs="답변완료">답변완료 <span class="c">3</span></button>
-                <button class="chip" data-fs="답변대기">답변대기 <span class="c">3</span></button>
+                <button class="chip" data-fs="미답변">미답변 <span class="c">3</span></button>
               </div>
               <div class="atbar-r"><button class="tibtn" title="필터"><svg viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></button><button class="tibtn" title="정렬"><svg viewBox="0 0 24 24"><path d="M3 6h18M6 12h12M10 18h4"/></svg></button></div>
             </div>
@@ -453,11 +454,11 @@
               <thead><tr><th style="width:96px;text-align:center">상태</th><th style="width:110px">작성일</th><th style="width:110px">작성자</th><th>질의 내용</th><th>답변</th><th style="width:110px">답변일</th></tr></thead>
               <tbody id="pqBody">
                 <tr data-status="답변완료"><td style="width:96px;text-align:center"><span class="badge blue">답변완료</span></td><td style="width:110px;color:#737373">2026-03-20</td><td style="width:110px">김민준</td><td>배당 정책 관련 향후 계획을 알고 싶습니다.</td><td style="color:#737373"><span style="color:#0a0a0a">중장기 배당성향 30% 수준 유지를 목표로 하고 있습니다.</span></td><td style="width:110px;color:#737373">2026-03-21</td></tr>
-                <tr data-status="답변대기"><td style="width:96px;text-align:center"><span class="badge amber">답변대기</span></td><td style="width:110px;color:#737373">2026-03-21</td><td style="width:110px">이서연</td><td>신규 사업 부문의 투자 규모는 어느 정도인가요?</td><td style="color:#737373"><span style="color:#a3a3a3">미답변</span></td><td style="width:110px;color:#737373">-</td></tr>
+                <tr data-status="미답변"><td style="width:96px;text-align:center"><span class="badge gray">미답변</span></td><td style="width:110px;color:#737373">2026-03-21</td><td style="width:110px">이서연</td><td>신규 사업 부문의 투자 규모는 어느 정도인가요?</td><td style="color:#737373"><span style="color:#a3a3a3">-</span></td><td style="width:110px;color:#737373">-</td></tr>
                 <tr data-status="답변완료"><td style="width:96px;text-align:center"><span class="badge blue">답변완료</span></td><td style="width:110px;color:#737373">2026-03-22</td><td style="width:110px">박도윤</td><td>이사 선임 안건의 후보자 이력을 확인하고 싶습니다.</td><td style="color:#737373"><span style="color:#0a0a0a">후보자 이력은 소집공고 첨부자료를 참고해 주시기 바랍니다.</span></td><td style="width:110px;color:#737373">2026-03-22</td></tr>
-                <tr data-status="답변대기"><td style="width:96px;text-align:center"><span class="badge amber">답변대기</span></td><td style="width:110px;color:#737373">2026-03-22</td><td style="width:110px">최지우</td><td>자사주 매입·소각 계획이 있는지 궁금합니다.</td><td style="color:#737373"><span style="color:#a3a3a3">미답변</span></td><td style="width:110px;color:#737373">-</td></tr>
+                <tr data-status="미답변"><td style="width:96px;text-align:center"><span class="badge gray">미답변</span></td><td style="width:110px;color:#737373">2026-03-22</td><td style="width:110px">최지우</td><td>자사주 매입·소각 계획이 있는지 궁금합니다.</td><td style="color:#737373"><span style="color:#a3a3a3">-</span></td><td style="width:110px;color:#737373">-</td></tr>
                 <tr data-status="답변완료"><td style="width:96px;text-align:center"><span class="badge blue">답변완료</span></td><td style="width:110px;color:#737373">2026-03-23</td><td style="width:110px">이준호</td><td>해외 법인의 올해 실적 전망을 알려주세요.</td><td style="color:#737373"><span style="color:#0a0a0a">해외 법인은 전년 대비 성장세를 유지하고 있습니다.</span></td><td style="width:110px;color:#737373">2026-03-23</td></tr>
-                <tr data-status="답변대기"><td style="width:96px;text-align:center"><span class="badge amber">답변대기</span></td><td style="width:110px;color:#737373">2026-03-23</td><td style="width:110px">정하늘</td><td>ESG 경영 관련 중장기 계획이 있나요?</td><td style="color:#737373"><span style="color:#a3a3a3">미답변</span></td><td style="width:110px;color:#737373">-</td></tr>
+                <tr data-status="미답변"><td style="width:96px;text-align:center"><span class="badge gray">미답변</span></td><td style="width:110px;color:#737373">2026-03-23</td><td style="width:110px">정하늘</td><td>ESG 경영 관련 중장기 계획이 있나요?</td><td style="color:#737373"><span style="color:#a3a3a3">-</span></td><td style="width:110px;color:#737373">-</td></tr>
               </tbody>
             </table>
               <div class="tfoot"><div class="tfoot-l">총 6건 · 답변완료 3건</div><div class="pager"><button class="pb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m11 17-5-5 5-5M18 17l-5-5 5-5"/></svg></button><button class="pb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m15 18-6-6 6-6"/></svg></button><span class="cur">1</span><span style="color:#737373;font-size:13px">/ 1</span><button class="pb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m9 18 6-6-6-6"/></svg></button><button class="pb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m13 17 5-5-5-5M6 17l5-5-5-5"/></svg></button></div></div>
