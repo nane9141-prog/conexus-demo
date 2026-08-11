@@ -335,6 +335,18 @@
   window.addEventListener("resize",close);
 })();
 </script>
+<script>
+(function(){
+  function setTips(){
+    document.querySelectorAll(".mtbl td.rsn").forEach(function(td){
+      if(td.scrollWidth>td.clientWidth+1){ td.setAttribute("title", td.textContent.trim()); }
+      else { td.removeAttribute("title"); }
+    });
+  }
+  setTips();
+  window.addEventListener("resize",setTips);
+})();
+</script>
 <script src="conexus.js"></script>
 </body>
 </html>
