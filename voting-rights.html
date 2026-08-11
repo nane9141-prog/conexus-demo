@@ -36,7 +36,7 @@
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
 
   /* 사전 의결권 현황 dashboard */
-  .vr-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:16px}
+  .vr-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:10px}
   .vr-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);width:100%}
   .vr-tab{appearance:none;background:none;border:none;font-family:inherit;font-size:14px;font-weight:500;color:var(--muted-fg);padding:8px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
   .vr-tab.active{color:#0a0a0a;border-bottom-color:#171717}
@@ -131,6 +131,16 @@
   .kpie{width:56px;height:56px;border-radius:50%;background:conic-gradient(#0071f3 0 75%,#e5e5e5 75% 100%);flex:none;display:flex;align-items:center;justify-content:center;position:relative}
   .kpie::before{content:"";position:absolute;inset:9px;background:#fff;border-radius:50%}
   .kpie-c{position:relative;font-size:12px;font-weight:600;color:#0a0a0a}
+  .rstbtn{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border:1px solid var(--border);border-radius:8px;background:#fff;color:#171717;font-weight:500;font-family:inherit;font-size:12px;cursor:pointer}
+  .rstbtn svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .krow2{display:flex;align-items:center;gap:10px}
+  .vsep2{width:1px;height:14px;background:#e5e5e5}
+  .korange{color:#F97316}
+  .dupbtn{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 10px;background:#171717;color:#fff;border-radius:8px;font-size:12px;font-weight:500;text-decoration:none;margin-top:auto;width:fit-content}
+  .dupbtn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2}
+  .chrow{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+  .chrow .chstat{margin-top:0}
+  .chev{width:16px;height:16px;color:#a3a3a3;fill:none;stroke:currentColor;stroke-width:2;flex:none}
   .vr-mut{color:var(--muted-fg)}
   .opb{display:inline-flex;align-items:center;gap:2px;height:20px;padding:2px;border-radius:6px;font-size:12px;font-weight:500;color:#171717;background:transparent}
   .opb svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -337,64 +347,66 @@
       <div class="content" style="width:100%">
         <div class="vr-head">
           <div class="vr-tabs">
-            <button class="vr-tab active" data-vt="status">사전 의결권 현황</button>
-            <button class="vr-tab" data-vt="solicit">의결권 권유대행 현황</button>
+            <button class="vr-tab active" data-vt="status">종합 현황</button>
+            <button class="vr-tab" data-vt="solicit">의결권 권유 현황</button>
           </div>
-          <div class="vr-meta"><span class="vr-hint">발행주식총수 476,211,964주 · 주주 650,000명</span><span class="vr-sep"></span><span class="vr-dday">D-10</span></div>
+          <div class="vr-meta"><button class="rstbtn"><svg viewBox="0 0 24 24"><path d="M3 2v6h6M3 13a9 9 0 1 0 3-7.7L3 8"/></svg>새로고침</button><span class="vr-sep"></span><span class="vr-hint">2026-01-02 12:30 기준</span><span class="vr-sep"></span><span class="vr-hint">권유기간 2026-01-01 ~ 2026-01-07</span><span class="vr-sep"></span><span class="vr-dday">D-5 · 2일차</span></div>
         </div>
 
         <!-- ===== 현황 ===== -->
         <div class="vr-panel active" data-vp="status">
           <div class="vr-kpi">
             <div class="kcard">
-              <div class="kk">행사 의결권</div>
-              <div class="krow"><div class="kv">262,140,000<span class="unit">주</span></div><span class="ubadge secondary">발행 대비 55.0%</span></div>
-              <div class="kbar"><span style="width:55%"></span></div>
+              <div class="kk">행사 주주수</div>
+              <div class="krow"><div class="kv">124,411<span class="unit">명</span></div><span class="ubadge secondary">13.1%</span></div>
+              <div class="kd">전체 3,456,780명</div>
+              <div class="kbar"><span style="width:13.1%"></span></div>
             </div>
             <div class="kcard">
-              <div class="kk">행사 주주수</div>
-              <div class="krow"><div class="kv">18,450<span class="unit">명</span></div><span class="ubadge secondary">주주 대비 2.8%</span></div>
-              <div class="kbar"><span style="width:2.8%"></span></div>
+              <div class="kk">행사 의결권</div>
+              <div class="krow"><div class="kv">6,210,410<span class="unit">주</span></div><span class="ubadge secondary">28.3%</span></div>
+              <div class="kd">전체 123,456,780주</div>
+              <div class="kbar"><span style="width:28.3%"></span></div>
             </div>
             <div class="kcard">
               <div class="kk">중복 의결권</div>
-              <div class="kv">240,000<span class="unit">주</span></div>
-              <div class="kd">중복 신청 주주 1,240명</div>
+              <div class="krow2"><span class="kv korange">145<span class="unit korange">명</span></span><span class="vsep2"></span><span class="kv korange">24,477<span class="unit korange">주</span></span></div>
+              <a class="dupbtn" href="dup-voting.html">중복 의결권 관리 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
             </div>
             <div class="kcard kpc">
-              <div><div class="kk">중복 확정 의결권</div><div class="kv">180,000<span class="unit">주</span></div><div class="kd">확정률 75.0% · 미확정 60,000주</div></div>
-              <div class="kpie"><span class="kpie-c">75%</span></div>
+              <div><div class="kk">중복 확정 의결권</div><div class="kv" style="font-size:24px;margin-top:6px">30<span class="unit">%</span></div><div class="kd" style="margin-top:6px">전체 행사가능의결권 대비<br>6,231,410주, 121,014명</div></div>
+              <div class="kpie" style="background:conic-gradient(#0071f3 0 30%,#e5e5e5 30% 100%)"><span class="kpie-c">30%</span></div>
             </div>
           </div>
 
           <div class="vr-kpi">
             <div class="kcard">
-              <div class="kk">전자투표·위임 (국내)</div>
-              <div class="kv">92,340,000<span class="unit">주</span></div>
-              <div class="chsub">15,200명</div>
+              <div class="kk">전자투표/위임장(국내)</div>
+              <div class="kv">3,240,000<span class="unit">주</span></div>
+              <div class="chsub">21,121명</div>
               <div class="chsep"></div>
-              <div class="chstat"><span class="cdot" style="background:#0071f3"></span><span style="color:#0071f3">실시간 연동 중</span></div>
+              <div class="chrow"><div class="chstat"><span class="cdot" style="background:#0071f3"></span><span style="color:#0071f3">실시간 연동 중</span></div><svg class="chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></div>
             </div>
             <div class="kcard">
-              <div class="kk">전자투표·위임 (해외)</div>
-              <div class="kv">48,600,000<span class="unit">주</span></div>
-              <div class="chsub">1,050명</div>
+              <div class="kk">전자투표/위임장(해외)</div>
+              <div class="kv">3,240,000<span class="unit">주</span></div>
+              <div class="chsub">189,741명</div>
               <div class="chsep"></div>
-              <div class="chstat"><span class="cdot" style="background:#a3a3a3"></span><span style="color:#737373">미등록</span></div>
+              <div class="chrow"><div class="chstat"><span class="cdot" style="background:#a3a3a3"></span><span style="color:#737373">미등록</span></div><svg class="chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></div>
             </div>
             <div class="kcard">
-              <div class="kk">서면위임 (자사)</div>
-              <div class="kv">78,200,000<span class="unit">주</span></div>
-              <div class="chsub">1,900명</div>
+              <div class="kk">서면위임(자사)</div>
+              <div class="kv">1,114,780<span class="unit">주</span></div>
+              <div class="chsub">57,465명</div>
               <div class="chsep"></div>
-              <div class="chstat"><span class="cdot" style="background:#525252"></span><span style="color:#525252">업로드 완료</span></div>
+              <div class="chrow"><div class="chstat"><span class="cdot" style="background:#525252"></span><span style="color:#525252">업로드 완료</span></div><svg class="chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></div>
             </div>
             <div class="kcard">
-              <div class="kk">서면위임 (타사)</div>
-              <div class="kv">43,000,000<span class="unit">주</span></div>
-              <div class="chsub">300명</div>
+              <div class="kk">서면위임(타사)</div>
+              <div class="kv">647,041<span class="unit">주</span></div>
+              <div class="chsub">20,410명</div>
               <div class="chsep"></div>
-              <div class="chstat"><span class="cdot" style="background:#0071f3"></span><span style="color:#0071f3">확정</span></div>
+              <div class="chrow"><div class="chstat"><span class="cdot" style="background:#0071f3"></span><span style="color:#0071f3">확정</span></div><svg class="chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></div>
             </div>
           </div>
 
