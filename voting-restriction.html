@@ -179,6 +179,19 @@
   .rv-tab.active::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--ink)}
   .rtype-list{margin-top:6px;border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-md);padding:4px;background:#fff}
   .rtype-list.hidden{display:none}
+  .rv-pane.hidden{display:none}
+  .rsn-input{width:100%;box-sizing:border-box;min-height:112px;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:inherit;font-size:14px;color:#0a0a0a;line-height:1.5;resize:vertical;outline:none}
+  .rsn-input:focus{border-color:var(--ink)}
+  .rsn-add{margin-top:12px;height:36px;padding:0 18px;border-radius:9px;background:var(--ink);color:#fff;border:none;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer}
+  .rsn-list{margin-top:16px;display:flex;flex-direction:column;gap:10px}
+  .rsn-item{border:1px solid var(--border);border-radius:12px;padding:14px 16px;background:#fff}
+  .rsn-tx{font-size:14px;line-height:1.55;color:#0a0a0a;white-space:pre-wrap}
+  .rsn-ft{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px}
+  .rsn-meta{font-size:13px;color:var(--muted-fg);font-variant-numeric:tabular-nums}
+  .rsn-acts{display:inline-flex;align-items:center;gap:8px}
+  .rsn-acts button{background:none;border:none;font-family:inherit;font-size:13px;color:var(--muted-fg);cursor:pointer;padding:0}
+  .rsn-acts button:hover{color:#0a0a0a}
+  .rsn-acts .divd{width:1px;height:11px;background:var(--border)}
   .sheet-cancel{height:44px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:14px;font-weight:600;color:#0a0a0a;cursor:pointer;font-family:inherit}
   .sheet-cancel:hover{background:var(--muted)}
   /* 표 투표권자·주주명 볼드 */
@@ -638,11 +651,19 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     </div>
     <div class="sheet-body">
       <div class="rv-card"><div class="rv-name" id="rvName">{주주명}</div><div class="rv-meta" id="rvMeta"></div></div>
-      <div class="rv-tabs"><button class="rv-tab active">의결권제한 설정</button><button class="rv-tab">제한 사유</button></div>
-      <div style="margin-top:18px">
-        <label class="field-label">의결권제한</label>
-        <button class="field-select" id="rtypeSel"><span id="rtypeLbl" style="color:var(--muted-fg)">의결권제한 유형 선택</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
-        <div class="rtype-list hidden" id="rtypeList"></div>
+      <div class="rv-tabs"><button class="rv-tab active" data-rvtab="set">의결권제한 설정</button><button class="rv-tab" data-rvtab="reason">제한 사유</button></div>
+      <div class="rv-pane" data-rvpane="set">
+        <div style="margin-top:18px">
+          <label class="field-label">의결권제한</label>
+          <button class="field-select" id="rtypeSel"><span id="rtypeLbl" style="color:var(--muted-fg)">의결권제한 유형 선택</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="rtype-list hidden" id="rtypeList"></div>
+        </div>
+      </div>
+      <div class="rv-pane hidden" data-rvpane="reason">
+        <label class="field-label" style="display:block;margin:18px 0 8px">제한 사유</label>
+        <textarea class="rsn-input" id="rsnInput" placeholder="사유를 입력하세요."></textarea>
+        <button class="rsn-add" id="rsnAdd" type="button">등록</button>
+        <div class="rsn-list" id="rsnList"><div class="rsn-item"><div class="rsn-tx">경영권 분쟁 관련, 서울중앙지법 의결권 행사 금지 가처분 인용 결정(2026.07.10)에 따라 해당 주식 의결권 행사 불가 처리.</div><div class="rsn-ft"><span class="rsn-meta">2026-07-17 15:58 · 김지만</span><span class="rsn-acts"><button type="button" data-rsn-edit>변경</button><span class="divd"></span><button type="button" data-rsn-del>삭제</button></span></div></div><div class="rsn-item"><div class="rsn-tx">2026.05 자사주 매입분. 상법상 의결권 없음 (모수 제외)</div><div class="rsn-ft"><span class="rsn-meta">2026-07-17 15:58 · 정윤호</span><span class="rsn-acts"><button type="button" data-rsn-edit>변경</button><span class="divd"></span><button type="button" data-rsn-del>삭제</button></span></div></div><div class="rsn-item"><div class="rsn-tx">경영권 분쟁 관련, 서울중앙지법 의결권 행사 금지 가처분 인용 결정(2026.07.10)에 따라 해당 주식 의결권 행사 불가 처리.</div><div class="rsn-ft"><span class="rsn-meta">2026-07-17 15:58 · 김지만</span><span class="rsn-acts"><button type="button" data-rsn-edit>변경</button><span class="divd"></span><button type="button" data-rsn-del>삭제</button></span></div></div></div>
       </div>
     </div>
     <div class="sheet-foot">
@@ -827,6 +848,30 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     restrictOverlay.classList.add('hidden');
   });
   restrictOverlay.addEventListener('click',()=>rtypeList.classList.add('hidden'));
+  // 제한 사유 탭 전환 + 등록/삭제/변경
+  (function(){
+    var tabs=document.querySelectorAll('.rv-tabs .rv-tab');
+    var panes=document.querySelectorAll('.rv-pane');
+    tabs.forEach(function(t){ t.addEventListener('click',function(){
+      tabs.forEach(function(x){x.classList.toggle('active',x===t);});
+      var key=t.dataset.rvtab;
+      panes.forEach(function(p){p.classList.toggle('hidden',p.dataset.rvpane!==key);});
+    });});
+    var input=document.getElementById('rsnInput'), addBtn=document.getElementById('rsnAdd'), list=document.getElementById('rsnList');
+    function pad(n){return (n<10?'0':'')+n;}
+    function nowStr(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes());}
+    function esc(x){return (x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    if(addBtn) addBtn.addEventListener('click',function(){
+      var v=(input.value||'').trim(); if(!v) return;
+      var item=document.createElement('div'); item.className='rsn-item';
+      item.innerHTML='<div class="rsn-tx">'+esc(v)+'</div><div class="rsn-ft"><span class="rsn-meta">'+nowStr()+' · 박지용</span><span class="rsn-acts"><button type="button" data-rsn-edit>변경</button><span class="divd"></span><button type="button" data-rsn-del>삭제</button></span></div>';
+      list.insertBefore(item, list.firstChild); input.value=''; input.focus();
+    });
+    if(list) list.addEventListener('click',function(e){
+      var del=e.target.closest('[data-rsn-del]'); if(del){ var it=del.closest('.rsn-item'); if(it) it.remove(); return; }
+      var ed=e.target.closest('[data-rsn-edit]'); if(ed){ var it2=ed.closest('.rsn-item'); var tx=it2.querySelector('.rsn-tx'); if(tx){ input.value=tx.textContent; input.focus(); it2.remove(); } return; }
+    });
+  })();
   rtypeList.addEventListener('click',e=>e.stopPropagation());
   document.querySelectorAll('.tbtn[data-restrict]').forEach(btn=>{
     btn.addEventListener('click',e=>{e.stopPropagation();openRestrict(btn);});

@@ -510,6 +510,24 @@
       });
     });
   });
+  // 저장 -> 현재 단계 완료 체크 + 다음 단계 이동
+  var EM_TABS=['basic','progress','terms','design','attendee','preq'];
+  function switchEmTab(id){
+    var nav=document.querySelector('.st-nav'); if(!nav) return;
+    nav.querySelectorAll('.st-item').forEach(function(i){i.classList.toggle('active',i.dataset.tab===id);});
+    var body=nav.parentElement.querySelector('.st-body')||document;
+    body.querySelectorAll('.st-tab').forEach(function(p){p.classList.toggle('active',p.dataset.panel===id);});
+    var sc=document.querySelector('.scroll'); if(sc) sc.scrollTop=0;
+  }
+  document.querySelectorAll('.st-save').forEach(function(b){
+    if(b.textContent.trim()!=='저장') return;
+    b.addEventListener('click',function(){
+      var nav=document.querySelector('.st-nav'); if(!nav) return;
+      var cur=nav.querySelector('.st-item.active'); if(cur) cur.classList.add('done');
+      var idx=cur?EM_TABS.indexOf(cur.dataset.tab):-1;
+      if(idx>=0&&idx<EM_TABS.length-1){ switchEmTab(EM_TABS[idx+1]); }
+    });
+  });
   // toggles + subtabs
   document.addEventListener('click',function(e){
     var sw=e.target.closest('[data-sw]'); if(sw){sw.classList.toggle('on');}
