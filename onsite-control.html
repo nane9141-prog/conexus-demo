@@ -38,7 +38,6 @@
   .oc-tab.on{color:#0a0a0a;border-bottom-color:#171717}
   .oc-tab .cnt{color:#a3a3a3;font-weight:500;margin-left:4px}
   .oc-tools{display:flex;align-items:center;gap:8px;flex:none}
-  .grp{display:flex;align-items:center;gap:8px}
   .tsep{width:1px;height:20px;background:var(--border)}
   .ocb{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 8px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap;text-decoration:none}
   .ocb svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.6}
@@ -387,7 +386,7 @@
   .vtbl tbody td{padding:12px 14px;text-align:right;color:#0a0a0a;border-bottom:1px solid #f0f0f0;white-space:nowrap;font-variant-numeric:tabular-nums}
   .vtbl tbody td.l{text-align:left}.vtbl tbody td.c{text-align:center}
   .vtbl td.mut{color:#a3a3a3}
-  .vtbl tr.grp td{background:#fafafa;color:#0a0a0a;font-weight:500}
+  .vtbl tr.vgrp td{background:#fafafa;color:#0a0a0a;font-weight:500}
   .vno{color:#525252}
   .vnm{font-weight:500;color:#0a0a0a}
   .vtag{display:inline-flex;align-items:center;height:20px;padding:0 8px;margin-left:6px;background:#F5F5F5;border-radius:6px;font-size:12px;font-weight:500;color:#525252}
@@ -934,7 +933,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   if(body){
     body.innerHTML=V.map(function(x){
       var tag=x.tag?'<span class="vtag">'+x.tag+'</span>':'';
-      if(x.grp) return '<tr class="grp"><td class="vno">'+x.no+'</td><td class="l"><span class="vnm">'+x.nm+'</span>'+tag+'</td><td colspan="9"></td></tr>';
+      if(x.grp) return '<tr class="vgrp"><td class="vno">'+x.no+'</td><td class="l"><span class="vnm">'+x.nm+'</span>'+tag+'</td><td colspan="9"></td></tr>';
       return '<tr><td class="vno">'+x.no+'</td><td class="l"><span class="vnm">'+x.nm+'</span>'+tag+'</td>'
         +num(x.pre)+num(x.site)+num(x.onl)+num(x.fo)+num(x.ag)+num(x.ab)
         +'<td>'+x.rate+'</td><td class="c">'+resHTML(x.res)+'</td><td class="c">'+stHTML(x.st)+'</td></tr>';
