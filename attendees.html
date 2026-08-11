@@ -58,6 +58,9 @@
   .as-radio.on .rd::after{content:"";width:8px;height:8px;border-radius:50%;background:#171717}
   .as-ft{display:flex;gap:8px}
   .as-ft button{flex:1;height:32px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer}
+  .as-tabs{display:flex}
+  .as-tab{flex:1;height:34px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:#737373;background:none;border:none;border-bottom:1px solid #E5E5E5;cursor:pointer;font-family:inherit}
+  .as-tab.on{color:#0a0a0a;border-bottom:2px solid #0a0a0a}
   .as-cancel{background:#fff;border:1px solid var(--border);color:#0a0a0a}
   .as-ok{background:#171717;border:none;color:#fafafa}
   .as-mod{text-align:center;font-size:12px;color:#737373}
@@ -404,7 +407,32 @@
    {voter:'백하린',gubun:'주주',name:'박도윤',no:'8809999',pre:'전자투표(국내)',hold:120000,attend:120000,ratio:'0.02%',site:'미참석',app:'서면투표',code:'EG-20240321',evote:'일부참석',limit:'-',ag:'-'},
    {voter:'유건우',gubun:'주주',name:'황시우',no:'8810136',pre:'전자투표(국내)',hold:67000,attend:67000,ratio:'0.01%',site:'참석',app:'미사용',code:'EG-20240322',evote:'일부참석',limit:'-',ag:'-'},
    {voter:'전소민',gubun:'주주',name:'신아름',no:'8810273',pre:'중복행사',hold:500000,attend:500000,ratio:'0.10%',site:'등록전',app:'사용',code:'EG-20240323',evote:'일부참석',limit:'-',ag:'-'},
-   {voter:'고은채',gubun:'주주',name:'정하준',no:'8810410',pre:'전자투표(국내)',hold:120000,attend:72000,ratio:'0.02%',site:'참석',app:'서면투표',code:'미발급',evote:'참석',limit:'자사주',ag:'-'}
+   {voter:'고은채',gubun:'주주',name:'정하준',no:'8810410',pre:'전자투표(국내)',hold:120000,attend:72000,ratio:'0.02%',site:'참석',app:'서면투표',code:'미발급',evote:'참석',limit:'자사주',ag:'-'},
+   {voter:'서지후',gubun:'주주',name:'서지후',no:'8811000',pre:'서면위임(타사)',hold:55000,attend:55000,ratio:'0.01%',site:'일부참석',app:'사용',code:'미발급',evote:'미참석',limit:'무효주',ag:'-'},
+   {voter:'노은비',gubun:'주주',name:'인예솔',no:'8811151',pre:'중복행사',hold:9000,attend:9000,ratio:'0.00%',site:'미참석',app:'사용',code:'EG-20240401',evote:'참석',limit:'자사주',ag:'-'},
+   {voter:'추민석',sub:'통합 2건',gubun:'비주주',name:'변하율',no:'8811302',pre:'미행사',hold:760000,attend:418000,ratio:'0.15%',site:'일부참석',app:'사용',code:'EG-20240402',evote:'일부참석',limit:'공익법인',ag:'-'},
+   {voter:'변하율',gubun:'주주',name:'추민석',no:'8811453',pre:'중복행사',hold:9000,attend:9000,ratio:'0.00%',site:'일부참석',app:'사용',code:'미발급',evote:'일부참석',limit:'공익법인',ag:'-'},
+   {voter:'석지원',sub:'통합 3건',gubun:'주주',name:'제이든',no:'8811604',pre:'미행사',hold:90000,attend:90000,ratio:'0.02%',site:'참석',app:'사용',code:'EG-20240404',evote:'일부참석',limit:'-',ag:'-'},
+   {voter:'도경민',sub:'통합 2건',gubun:'비주주',name:'도경민',no:'8811755',pre:'서면위임(타사)',hold:760000,attend:760000,ratio:'0.15%',site:'참석',app:'사용',code:'EG-20240405',evote:'미참석',limit:'최대주주',ag:'-'},
+   {voter:'피서현',gubun:'비주주',name:'도경민',no:'8811906',pre:'미행사',hold:1050000,attend:1050000,ratio:'0.21%',site:'참석',app:'사용',code:'EG-20240406',evote:'일부참석',limit:'상호주',ag:'-'},
+   {voter:'국지훈',gubun:'주주',name:'남우진',no:'8812057',pre:'서면위임(자사)',hold:55000,attend:30250,ratio:'0.01%',site:'일부참석',app:'사용',code:'미발급',evote:'참석',limit:'최대주주',ag:'-'},
+   {voter:'예주안',gubun:'주주',name:'제갈현',no:'8812208',pre:'미행사',hold:420000,attend:420000,ratio:'0.08%',site:'참석',app:'미사용',code:'EG-20240408',evote:'참석',limit:'공익법인',ag:'-'},
+   {voter:'봉하진',sub:'통합 4건',gubun:'주주',name:'노은비',no:'8812359',pre:'전자투표(국내)',hold:90000,attend:49500,ratio:'0.02%',site:'등록전',app:'사용',code:'EG-20240409',evote:'미참석',limit:'-',ag:'-'},
+   {voter:'마준혁',gubun:'주주',name:'황보라',no:'8812510',pre:'미행사',hold:180000,attend:99000,ratio:'0.04%',site:'미참석',app:'미사용',code:'미발급',evote:'미참석',limit:'자사주',ag:'-'},
+   {voter:'사공유나',gubun:'주주',name:'남우진',no:'8812661',pre:'미행사',hold:9000,attend:9000,ratio:'0.00%',site:'참석',app:'사용',code:'EG-20240411',evote:'미참석',limit:'-',ag:'-'},
+   {voter:'제갈현',sub:'대리인 1명',gubun:'주주',name:'예주안',no:'8812812',pre:'서면위임(타사)',hold:1050000,attend:1050000,ratio:'0.21%',site:'일부참석',app:'미사용',code:'EG-20240412',evote:'참석',limit:'-',ag:'-'},
+   {voter:'남우진',sub:'통합 5건',gubun:'주주',name:'변하율',no:'8812963',pre:'중복행사',hold:420000,attend:231000,ratio:'0.08%',site:'미참석',app:'서면투표',code:'EG-20240413',evote:'참석',limit:'상호주',ag:'-'},
+   {voter:'독고성',gubun:'주주',name:'제갈현',no:'8813114',pre:'서면위임(타사)',hold:55000,attend:55000,ratio:'0.01%',site:'등록전',app:'사용',code:'미발급',evote:'미참석',limit:'무효주',ag:'-'},
+   {voter:'황보라',gubun:'주주',name:'인예솔',no:'8813265',pre:'중복행사',hold:1050000,attend:577500,ratio:'0.21%',site:'등록전',app:'미사용',code:'EG-20240415',evote:'참석',limit:'자사주',ag:'-'},
+   {voter:'선우진',gubun:'주주',name:'옥천호',no:'8813416',pre:'미행사',hold:9000,attend:4950,ratio:'0.00%',site:'미참석',app:'사용',code:'미발급',evote:'일부참석',limit:'무효주',ag:'-'},
+   {voter:'제이든',sub:'대리인 1명',gubun:'주주',name:'선우진',no:'8813567',pre:'전자투표(국내)',hold:420000,attend:231000,ratio:'0.08%',site:'미참석',app:'미사용',code:'EG-20240417',evote:'미참석',limit:'최대주주',ag:'-'},
+   {voter:'태윤슬',gubun:'주주',name:'피서현',no:'8813718',pre:'서면위임(자사)',hold:420000,attend:231000,ratio:'0.08%',site:'일부참석',app:'사용',code:'EG-20240418',evote:'참석',limit:'-',ag:'-'},
+   {voter:'반서율',gubun:'주주',name:'호지민',no:'8813869',pre:'미행사',hold:420000,attend:420000,ratio:'0.08%',site:'미참석',app:'사용',code:'미발급',evote:'참석',limit:'무효주',ag:'-'},
+   {voter:'견우람',sub:'통합 4건',gubun:'주주',name:'옥천호',no:'8814020',pre:'중복행사',hold:1050000,attend:1050000,ratio:'0.21%',site:'미참석',app:'사용',code:'미발급',evote:'참석',limit:'-',ag:'-'},
+   {voter:'호지민',sub:'통합 3건',gubun:'주주',name:'황보라',no:'8814171',pre:'서면위임(타사)',hold:760000,attend:418000,ratio:'0.15%',site:'등록전',app:'사용',code:'미발급',evote:'참석',limit:'공익법인',ag:'-'},
+   {voter:'옥천호',gubun:'비주주',name:'제갈현',no:'8814322',pre:'전자투표(국내)',hold:420000,attend:231000,ratio:'0.08%',site:'미참석',app:'사용',code:'EG-20240422',evote:'일부참석',limit:'상호주',ag:'-'},
+   {voter:'인예솔',sub:'통합 3건',gubun:'주주',name:'추민석',no:'8814473',pre:'중복행사',hold:180000,attend:99000,ratio:'0.04%',site:'참석',app:'미사용',code:'미발급',evote:'미참석',limit:'최대주주',ag:'-'},
+   {voter:'좌하람',gubun:'비주주',name:'피서현',no:'8814624',pre:'서면위임(타사)',hold:2340000,attend:2340000,ratio:'0.46%',site:'미참석',app:'사용',code:'EG-20240424',evote:'참석',limit:'자사주',ag:'-'}
   ];
   function cm(n){return (n||0).toLocaleString('en-US');}
   function preB(p){ if(p==='미행사') return '<span class="atb gray" style="opacity:.5">미행사</span>'; if(p==='중복행사') return '<span class="atb purple">중복행사</span>'; return '<span class="atb gray">'+p+'</span>'; }
@@ -486,11 +514,13 @@
       document.getElementById('asNo').textContent=(tds[2].textContent||'').trim();
       var s=document.getElementById('asSec'); if(s) s.classList.remove('collapsed');
       var pq=document.getElementById('asPartQty'); if(pq){ pq.style.display='none'; } ov.querySelectorAll('.as-radio[data-rg="shares"]').forEach(function(r,i){r.classList.toggle('on',i===0);});
+      ov.querySelectorAll('.as-tab').forEach(function(x,i){x.classList.toggle('on',i===0);}); var lb0=document.getElementById('asSecLbl'); if(lb0) lb0.textContent='참석자 정보';
       ov.classList.add('show');
     });
     ov.addEventListener('click',function(e){
       if(e.target===ov || e.target.closest('[data-as-close]')){ ov.classList.remove('show'); return; }
       if(e.target.closest('[data-as-toggle]')){ document.getElementById('asSec').classList.toggle('collapsed'); return; }
+      var atb=e.target.closest('[data-astab]'); if(atb){ ov.querySelectorAll('.as-tab').forEach(function(x){x.classList.toggle('on',x===atb);}); var lb=document.getElementById('asSecLbl'); if(lb) lb.textContent=(atb.dataset.astab==='proxy')?'대리인 정보':'참석자 정보'; return; }
       var rd=e.target.closest('.as-radio[data-rg]');
       if(rd){ var g=rd.dataset.rg; ov.querySelectorAll('.as-radio[data-rg="'+g+'"]').forEach(function(r){r.classList.toggle('on',r===rd);}); if(g==='shares'){ var pq=document.getElementById('asPartQty'); if(pq) pq.style.display=(rd.dataset.v==='part')?'':'none'; } }
     });
@@ -499,7 +529,7 @@
 })();
 </script>
 
-<div class="assheet-ov" id="asSheet"><div class="assheet"><button class="as-x" data-as-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button><div class="as-hd"><div class="as-t">현장 참석자 등록</div><div class="as-d">현장 참석 정보를 입력해 등록합니다.</div></div><div class="as-body"><div class="as-card"><div class="as-f"><div class="k">투표권자</div><div class="v" id="asVoter">-</div></div><div class="as-f"><div class="k">주주명</div><div class="v" id="asName">-</div></div><div class="as-f"><div class="k">주주번호</div><div class="v" id="asNo">-</div></div><div class="as-f"><div class="k">실질계좌번호</div><div class="v">1230123456789</div></div></div><div class="as-sec" id="asSec"><div class="as-sec-h" data-as-toggle>참석자 정보 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div><div class="as-box"><div class="as-row2"><div class="as-field"><label>성명</label><input class="as-inp" placeholder="참석자 성명"></div><div class="as-field"><label>생년월일</label><input class="as-inp" placeholder="YYYY-MM-DD"></div></div><div><div class="as-rlbl">참석 주식수</div><div class="as-radios"><label class="as-radio on" data-rg="shares" data-v="all"><span class="rd"></span>전체 참석</label><label class="as-radio" data-rg="shares" data-v="part"><span class="rd"></span>일부 참석</label></div><input class="as-inp" id="asPartQty" placeholder="참석 주식수를 입력해 주세요" style="margin-top:8px;display:none"></div><div><div class="as-rlbl">참석 방식</div><div class="as-radios"><label class="as-radio on" data-rg="method"><span class="rd"></span>현장 참석</label><label class="as-radio" data-rg="method"><span class="rd"></span>앱 사용</label></div></div></div></div></div><div><div class="as-ft"><button class="as-cancel" data-as-close>취소</button><button class="as-ok" data-as-close>등록</button></div><div class="as-mod" style="margin-top:12px">마지막 수정 2026-07-17 15:58 · 박지용</div></div></div></div>
+<div class="assheet-ov" id="asSheet"><div class="assheet"><button class="as-x" data-as-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button><div class="as-hd"><div class="as-t">현장 참석자 등록</div><div class="as-d">현장 참석 정보를 입력해 등록합니다.</div></div><div class="as-body"><div class="as-card"><div class="as-f"><div class="k">투표권자</div><div class="v" id="asVoter">-</div></div><div class="as-f"><div class="k">주주명</div><div class="v" id="asName">-</div></div><div class="as-f"><div class="k">주주번호</div><div class="v" id="asNo">-</div></div><div class="as-f"><div class="k">실질계좌번호</div><div class="v">1230123456789</div></div></div><div class="as-tabs"><button class="as-tab on" data-astab="self">참석자</button><button class="as-tab" data-astab="proxy">대리인</button></div><div class="as-sec" id="asSec"><div class="as-sec-h" data-as-toggle><span id="asSecLbl">참석자 정보</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div><div class="as-box"><div class="as-row2"><div class="as-field"><label>성명</label><input class="as-inp" placeholder="참석자 성명"></div><div class="as-field"><label>생년월일</label><input class="as-inp" placeholder="YYYY-MM-DD"></div></div><div><div class="as-rlbl">참석 주식수</div><div class="as-radios"><label class="as-radio on" data-rg="shares" data-v="all"><span class="rd"></span>전체 참석</label><label class="as-radio" data-rg="shares" data-v="part"><span class="rd"></span>일부 참석</label></div><input class="as-inp" id="asPartQty" placeholder="참석 주식수를 입력해 주세요" style="margin-top:8px;display:none"></div><div><div class="as-rlbl">현장투표 앱 사용</div><div class="as-radios"><label class="as-radio on" data-rg="app"><span class="rd"></span>사용</label><label class="as-radio" data-rg="app"><span class="rd"></span>미사용</label></div></div></div></div></div><div><div class="as-ft"><button class="as-cancel" data-as-close>취소</button><button class="as-ok" data-as-close>등록</button></div><div class="as-mod" style="margin-top:12px">마지막 수정 2026-07-17 15:58 · 박지용</div></div></div></div>
 <script src="conexus.js"></script>
 </body>
 </html>
