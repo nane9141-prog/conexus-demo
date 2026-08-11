@@ -267,6 +267,8 @@
   .pill-red{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;
     background:var(--red50);color:var(--red600);font-size:12px;font-weight:600}
   .pill-green{display:inline-flex;align-items:center;gap:3px;height:20px;padding:0 8px;border-radius:9999px;background:#eafaf0;color:#0a8a3c;font-size:12px;font-weight:600}
+  .pill-blue{display:inline-flex;align-items:center;gap:3px;height:20px;padding:0 8px;border-radius:9999px;background:#E8F1FF;color:#0071F3;font-size:12px;font-weight:600}
+  .pill-blue svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.4}
   .pill-green svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.4}
   .tsec-head .desc{margin-top:4px;font-size:14px;color:var(--muted-fg)}
   table.tbl tr.filtered-out{display:none}
@@ -508,7 +510,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
         <div class="tsec">
           <div class="tsec-head">
             <div>
-              <div class="htitle"><h2>주주명부 (2026-01-31)</h2><span class="pill-green"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>명부확정</span></div>
+              <div class="htitle"><h2>주주명부 (2026-01-31)</h2><span class="pill-blue"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>명부확정</span></div>
               <div class="desc">제한 유형을 지정하면 해당 주주의 전체 주식이 모든 의안에서 의결권 제외됩니다.</div>
             </div>
           </div>
@@ -554,7 +556,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
                   <td><div class="voter" style="padding-left:38px">우리사주</div></td>
                   <td>우리사주</td><td class="sub">7603251</td>
                   <td class="r tnum">1,823</td><td class="r tnum sub">5.14%</td>
-                  <td><button class="tbtn" data-restrict data-type="공익법인(포함)"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>공익법인(포함)</button></td>
+                  <td><button class="tbtn" data-restrict data-type="자사주"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>자사주</button></td>
                   <td><button class="tbtn off" disabled>관계인 설정</button></td>
                   <td><button class="tbtn" data-exempt data-on="1"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>해제됨</button></td>
                 </tr>
@@ -572,7 +574,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
                   <td><div class="voter"><button class="tw-chevron" data-toggle="hti"><svg class="ic" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button><span class="vname">한국투자신탁운용</span><span class="tag">통합 3건</span></div></td>
                   <td></td><td></td>
                   <td class="r tnum">273,513</td><td class="r tnum sub">5.14%</td>
-                  <td><button class="tbtn" data-restrict data-type="공익법인(포함)"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>공익법인(포함)</button></td>
+                  <td><button class="tbtn" data-restrict data-type="공익법인(제외)"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>공익법인(제외)</button></td>
                   <td><button class="tbtn" data-rel data-count="12"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>12명</button></td>
                   <td><button class="tbtn" data-exempt data-on="0">해제하기</button></td>
                 </tr>
@@ -597,7 +599,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
                   <td><div class="voter" style="padding-left:38px">ADR</div></td>
                   <td>ADR</td><td class="sub">7603251</td>
                   <td class="r tnum">1,823</td><td class="r tnum sub">5.14%</td>
-                  <td><button class="tbtn" data-restrict data-type="공익법인(포함)"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>공익법인(포함)</button></td>
+                  <td><button class="tbtn" data-restrict data-type="금융보험사"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>금융보험사</button></td>
                   <td><button class="tbtn off" disabled>관계인 설정</button></td>
                   <td><button class="tbtn" data-exempt data-on="1"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>해제됨</button></td>
                 </tr>
