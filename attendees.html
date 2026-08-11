@@ -117,6 +117,22 @@
   .at-pg .pp.cur{background:#171717;color:#fff;border-color:#171717}
   .at-pg select{height:30px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;padding:0 6px}
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
+  .decl-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:300;display:none;align-items:center;justify-content:center;padding:24px}
+  .decl-ov.show{display:flex}
+  .decl{width:960px;max-width:100%;max-height:88vh;background:#fff;border:1px solid var(--border);border-radius:16px;display:flex;flex-direction:column;overflow:hidden}
+  .decl-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:20px 20px 0}
+  .decl-t{font-size:18px;font-weight:600;color:#0a0a0a}
+  .decl-d{font-size:12px;color:var(--muted-fg);margin-top:8px;line-height:1.5;max-width:820px}
+  .decl-x{width:28px;height:28px;border:none;background:none;cursor:pointer;color:#737373;display:flex;align-items:center;justify-content:center;flex:none}
+  .decl-x i{font-size:18px}
+  .decl-tb{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:16px 20px}
+  .decl-tpl{display:flex;flex-direction:column;gap:8px;min-width:340px}
+  .decl-tpl label{font-size:14px;font-weight:500;color:#0a0a0a}
+  .decl-sel{display:flex;align-items:center;justify-content:space-between;gap:8px;height:36px;padding:0 10px;border:1px solid var(--border);border-radius:10px;background:#fff;font-size:14px;color:#0a0a0a;cursor:pointer;font-family:inherit}
+  .decl-sel i{font-size:14px;color:#737373}
+  .decl-actions{display:flex;align-items:center;gap:8px}
+  .decl-body{flex:1;min-height:0;padding:0 20px 20px;display:flex}
+  .decl-text{width:100%;box-sizing:border-box;background:#fafafa;border:1px solid var(--border);border-radius:14px;padding:20px;font-family:inherit;font-size:18px;line-height:28px;color:#0a0a0a;resize:none;outline:none}
 </style>
 </head>
 <body>
@@ -227,7 +243,7 @@
       <div class="content" style="width:100%">
         <div class="at-head">
           <div><h1 class="page-title">참석자 관리</h1><div class="page-sub">현장·전자주총 참석자를 등록하고 관리합니다.</div></div>
-          <div class="at-head-r"><span class="at-tag">현장투표 태그 ID <span class="tagid unset" id="tagId">미설정</span></span><button class="abtn">주총선언문</button></div>
+          <div class="at-head-r"><span class="at-tag">현장투표 태그 ID <span class="tagid unset" id="tagId">미설정</span></span><button class="abtn" id="declBtn">주총선언문</button></div>
         </div>
         <div class="at-tabs">
           <button class="at-tab on" data-at="reg">현장참석자 등록</button>
@@ -423,7 +439,28 @@
 })();
 </script>
 
+<div class="decl-ov" id="declOv">
+  <div class="decl">
+    <div class="decl-hd"><div><div class="decl-t">주총선언문</div><div class="decl-d">템플릿 관리에서 등록한 주총선언문을 확인하고 현장에서 문구를 직접 수정할 수 있습니다. 수정내역 확정 시 변경된 내용이 사회자 및 의장 화면에 즉시 반영됩니다.</div></div><button class="decl-x" data-decl-close type="button"><i class="ph ph-x"></i></button></div>
+    <div class="decl-tb">
+      <div class="decl-tpl"><label>템플릿</label><button class="decl-sel" type="button"><span>제35기 정기주주총회 선언문</span><i class="ph ph-caret-down"></i></button></div>
+      <div class="decl-actions"><button class="abtn" id="declReset" type="button"><i class="ph ph-arrow-counter-clockwise" style="font-size:15px"></i>재설정</button><button class="abtn dark" id="declStart" type="button">주총 시작</button></div>
+    </div>
+    <div class="decl-body"><textarea class="decl-text" id="declText">안녕하십니까. 주식회사 아이알큐더스 대표이사 및 주주총회 의장을 맡은 김의장입니다. 바쁘신 가운데 당사의 제35기 정기주주총회에 참석해 주신 주주 여러분께 진심으로 감사드립니다. 지금부터 2026년 제35기 정기주주총회를 개최하겠습니다. 본 주주총회는 상법 및 정관에 따라 적법하게 소집되었으며, 성립 정족수를 충족하였음을 알려드립니다. 의장은 본인이 맡아 진행하겠으며, 원활한 진행을 위해 주주 여러분의 협조를 부탁드립니다. 2023년 12월 31일 기준일 현재 당사의 총 발행 주식수는 삼천육백육십구만팔천팔백팔십 주 (36,698,880 주), 총 주주수는 (26명) 입니다. 이중 의결권 있는 주식수는 삼천오백사십팔만사천삼백이십 주 (35,484,320 주), 그 주주수는 (25명) 입니다. 2024년 3월 15일 오전 9시 현재 참석 주주수는 (16)명 이고, 그 소유주식수는 (17,052,960 주)이며, 이 중 위임받은 주식수는 (11,600,160 주) 입니다. 당사의 의결권 있는 주식의 총수인 삼천오백사십팔만사천삼백이십 주 (35,484,320 주)의 (48.06%)가 출석하였음을 보고 드립니다.</textarea></div>
+  </div>
+</div>
 <div class="assheet-ov" id="asSheet"><div class="assheet"><button class="as-x" data-as-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button><div class="as-hd"><div class="as-t">현장 참석자 등록</div><div class="as-d">현장 참석 정보를 입력해 등록합니다.</div></div><div class="as-body"><div class="as-card"><div class="as-f"><div class="k">투표권자</div><div class="v" id="asVoter">-</div></div><div class="as-f"><div class="k">주주명</div><div class="v" id="asName">-</div></div><div class="as-f"><div class="k">주주번호</div><div class="v" id="asNo">-</div></div><div class="as-f"><div class="k">실질계좌번호</div><div class="v">1230123456789</div></div></div><div class="as-sec" id="asSec"><div class="as-sec-h" data-as-toggle>참석자 정보 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div><div class="as-box"><div class="as-row2"><div class="as-field"><label>성명</label><input class="as-inp" placeholder="참석자 성명"></div><div class="as-field"><label>생년월일</label><input class="as-inp" placeholder="YYYY-MM-DD"></div></div><div><div class="as-rlbl">참석 주식수</div><div class="as-radios"><label class="as-radio on" data-rg="shares" data-v="all"><span class="rd"></span>전체 참석</label><label class="as-radio" data-rg="shares" data-v="part"><span class="rd"></span>일부 참석</label></div><input class="as-inp" id="asPartQty" placeholder="참석 주식수를 입력해 주세요" style="margin-top:8px;display:none"></div><div><div class="as-rlbl">참석 방식</div><div class="as-radios"><label class="as-radio on" data-rg="method"><span class="rd"></span>현장 참석</label><label class="as-radio" data-rg="method"><span class="rd"></span>앱 사용</label></div></div></div></div></div><div><div class="as-ft"><button class="as-cancel" data-as-close>취소</button><button class="as-ok" data-as-close>등록</button></div><div class="as-mod" style="margin-top:12px">마지막 수정 2026-07-17 15:58 · 박지용</div></div></div></div>
+<script>
+(function(){
+  var btn=document.getElementById("declBtn"), ov=document.getElementById("declOv"); if(!btn||!ov) return;
+  var ta=document.getElementById("declText"); var orig=ta?ta.value:"";
+  function close(){ ov.classList.remove("show"); }
+  btn.addEventListener("click",function(){ ov.classList.add("show"); });
+  ov.addEventListener("click",function(e){ if(e.target===ov||e.target.closest("[data-decl-close]")) close(); });
+  var rs=document.getElementById("declReset"); if(rs) rs.addEventListener("click",function(){ if(ta) ta.value=orig; });
+  var st=document.getElementById("declStart"); if(st) st.addEventListener("click",function(){ window.location.href="onsite-control.html"; });
+})();
+</script>
 <script src="conexus.js"></script>
 </body>
 </html>
