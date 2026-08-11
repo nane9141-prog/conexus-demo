@@ -194,7 +194,7 @@
       var cum=[]; var run=0; daily.forEach(function(d){run+=d;cum.push(run);});
       chart=new Chart(cv.getContext('2d'),{
         data:{labels:labels,datasets:[
-          {type:'bar',label:'일일 수집',data:daily,backgroundColor:'#d4d4d4',borderRadius:6,yAxisID:'y',order:2,maxBarThickness:22,categoryPercentage:0.6},
+          {type:'bar',label:'일일 수집',data:daily,backgroundColor:'#d4d4d4',borderRadius:6,yAxisID:'y',order:2,maxBarThickness:44,categoryPercentage:0.8,barPercentage:0.9},
           {type:'line',label:'누적 수집',data:cum,borderColor:'#171717',backgroundColor:'#171717',borderWidth:2,tension:.3,pointRadius:3,yAxisID:'y1',order:1}
         ]},
         options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
