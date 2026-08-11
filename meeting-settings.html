@@ -1009,20 +1009,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     <div class="sheet-body">
       <div class="dtl-card"><div class="dtl-no" id="dtlNo">제 3-1-1호</div><div class="dtl-name" id="dtlName">감사위원회 위원 선임의 건</div></div>
       <div class="dtl-tabs"><button class="dtl-tab active" data-dtab="vote">투표 설정</button><button class="dtl-tab" data-dtab="desc">의안 설명</button></div>
-      <div class="dtl-pane" data-dpane="vote">
-        <div><div class="sub-h" style="font-size:14px">투표 설정</div><div class="sub-help" style="margin-top:2px">의안의 성격에 맞는 투표유형을 선택해 주세요.</div></div>
-        <div class="rad-group" data-radgrp="votetype" style="flex-direction:column;gap:8px;align-items:stretch">
-          <div class="vote-opt" data-rad><span class="dotc"></span><div class="vo-body"><div class="vo-t">일반투표</div><div class="vo-d">1주당 1표의 의결권을 행사하는 가장 기본적인 투표 방식입니다.</div></div></div>
-          <div class="vote-opt" data-rad><span class="dotc"></span><div class="vo-body"><div class="vo-t">양립불가</div><div class="vo-d">여러 의안 중 1개의 의안에만 '찬성'할 수 있습니다.</div></div></div>
-          <div class="vote-opt on" data-rad><span class="dotc"></span><div class="vo-body"><div class="vo-t">집중투표</div><div class="vo-d">1주당 선임할 이사 수만큼 의결권을 받아 표를 몰아주거나 분산할 수 있습니다.</div><div class="vo-extra">선임할 이사 수 <select class="nsel" onclick="event.stopPropagation()" style="min-width:72px"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select> 명</div></div></div>
-          <div class="vote-opt" data-rad><span class="dotc"></span><div class="vo-body"><div class="vo-t">일부선임</div><div class="vo-d">설정한 '선임할 이사 수' 만큼 '찬성' 표를 행사할 수 있습니다.</div></div></div>
-        </div>
-        <div><div class="sub-h" style="font-size:14px">표결 진행 방식 설정</div><div class="sub-help" style="margin-top:2px">표결 진행 방식을 선택해 주세요.</div></div>
-        <div class="rad-group" data-radgrp="progress" style="flex-direction:column;gap:8px;align-items:stretch">
-          <div class="vote-opt" data-rad><span class="dotc"></span><div class="vo-body"><div class="vo-t">하위 의안 일괄 표결</div><div class="vo-d">하위 의안 전체에 대해 표결을 동시에 진행합니다.</div></div></div>
-          <div class="vote-opt on" data-rad><span class="dotc"></span><div class="vo-body"><div class="vo-t">하위 의안별 표결</div><div class="vo-d">각각의 하위 의안마다 표결을 진행합니다.</div></div></div>
-        </div>
-      </div>
+      <div class="dtl-pane" data-dpane="vote" id="dtlVote"></div>
       <div class="dtl-pane hidden" data-dpane="desc">
         <div class="field"><label class="field-label">의안 설명</label><textarea class="ta" placeholder="의안 설명을 작성해 주세요. (최대 1,000자)"></textarea></div>
         <div class="field"><label class="field-label">의안 설명 (영문)</label><textarea class="ta" placeholder="영문 의안 설명을 작성해 주세요. (최대 1,000자)"></textarea></div>
@@ -1139,7 +1126,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   function agRow(it,sub){
     const handle=sub
       ? '<span class="ag-arrow"><svg class="ic" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></span>'
-      : '<span class="ag-drag" draggable="true" data-drag><i class="ph ph-dots-three" style="font-size:16px"></i></span>';
+      : '<span class="ag-drag" draggable="true" data-drag><i class="ph ph-dots-six-vertical" style="font-size:16px"></i></span>';
     return '<div class="ag-row'+(sub?' sub':'')+'" data-no="'+it.no+'" data-name="'+esc(it.name)+'" data-sub="'+(sub?'1':'0')+'">'+
       '<div class="ag-numcell">'+handle+'<span class="ag-no">'+it.no+'</span></div>'+
       '<button class="inp sel val agtype" onclick="event.stopPropagation()"><span>'+it.type+'</span>'+CHV2+'</button>'+
@@ -1283,11 +1270,42 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 
   // 의안 상세 설정 패널
   const agDetailOverlay=document.getElementById('agDetailOverlay');
-  function openAgDetail(no,name){document.getElementById('dtlNo').textContent='제 '+no+'호';document.getElementById('dtlName').textContent=name||'(의안명 미입력)';agDetailOverlay.classList.remove('hidden');}
+  var AG_DETAIL={
+    '1':{votetype:'일반투표',progress:null},
+    '2':{votetype:'일반투표',progress:'하위 의안별 표결'},
+    '2-1':{votetype:'일반투표',progress:null},'2-2':{votetype:'일반투표',progress:null},'2-3':{votetype:'일반투표',progress:null},
+    '3':{votetype:'일반투표',progress:'하위 의안별 표결'},
+    '3-1':{votetype:'집중투표',directors:2,progress:'하위 의안 일괄 표결'},
+    '3-2':{votetype:'일반투표',progress:null}
+  };
+  function voteOpt(t,d,on,extra){ return '<div class="vote-opt'+(on?' on':'')+'" data-rad><span class="dotc"></span><div class="vo-body"><div class="vo-t">'+t+'</div><div class="vo-d">'+d+'</div>'+(extra||'')+'</div></div>'; }
+  function renderDtlVote(cfg){
+    var vt=cfg.votetype||'일반투표', dirs=(cfg.directors!=null?cfg.directors:2);
+    var opts=[0,1,2,3,4,5].map(function(n){return '<option'+(n===dirs?' selected':'')+'>'+n+'</option>';}).join('');
+    var extra='<div class="vo-extra">선임할 이사 수 <select class="nsel" onclick="event.stopPropagation()" style="min-width:72px">'+opts+'</select> 명</div>';
+    var h='<div><div class="sub-h" style="font-size:14px">투표 설정</div><div class="sub-help" style="margin-top:2px">의안의 성격에 맞는 투표유형을 선택해 주세요.</div></div>';
+    h+='<div class="rad-group" data-radgrp="votetype" style="flex-direction:column;gap:8px;align-items:stretch">';
+    h+=voteOpt('일반투표','1주당 1표의 의결권을 행사하는 가장 기본적인 투표 방식입니다.', vt==='일반투표');
+    h+=voteOpt('양립불가','여러 의안 중 1개의 의안에만 \'찬성\'할 수 있습니다.', vt==='양립불가');
+    h+=voteOpt('집중투표','1주당 선임할 이사 수만큼 의결권을 받아 표를 몰아주거나 분산할 수 있습니다.', vt==='집중투표', extra);
+    h+=voteOpt('일부선임','설정한 \'선임할 이사 수\' 만큼 \'찬성\' 표를 행사할 수 있습니다.', vt==='일부선임');
+    h+='</div>';
+    if(cfg.progress){
+      h+='<div><div class="sub-h" style="font-size:14px">표결 진행 방식 설정</div><div class="sub-help" style="margin-top:2px">표결 진행 방식을 선택해 주세요.</div></div>';
+      h+='<div class="rad-group" data-radgrp="progress" style="flex-direction:column;gap:8px;align-items:stretch">';
+      h+=voteOpt('하위 의안 일괄 표결','하위 의안 전체에 대해 표결을 동시에 진행합니다.', cfg.progress==='하위 의안 일괄 표결');
+      h+=voteOpt('하위 의안별 표결','각각의 하위 의안마다 표결을 진행합니다.', cfg.progress==='하위 의안별 표결');
+      h+='</div>';
+    }
+    document.getElementById('dtlVote').innerHTML=h;
+  }
+  function openAgDetail(no,name){document.getElementById('dtlNo').textContent='제 '+no+'호';document.getElementById('dtlName').textContent=name||'(의안명 미입력)';renderDtlVote(AG_DETAIL[no]||{votetype:'일반투표',progress:null});document.querySelectorAll('[data-dtab]').forEach(function(x){x.classList.toggle('active',x.dataset.dtab==='vote');});document.querySelectorAll('[data-dpane]').forEach(function(p){p.classList.toggle('hidden',p.dataset.dpane!=='vote');});agDetailOverlay.classList.remove('hidden');}
   document.querySelectorAll('[data-dtab]').forEach(t=>t.addEventListener('click',()=>{
     document.querySelectorAll('[data-dtab]').forEach(x=>x.classList.toggle('active',x===t));
     document.querySelectorAll('[data-dpane]').forEach(p=>p.classList.toggle('hidden',p.dataset.dpane!==t.dataset.dtab));
   }));
+  (function(){ var dv=document.getElementById('dtlVote'); if(!dv) return;
+    dv.addEventListener('click',function(e){ var r=e.target.closest('.vote-opt[data-rad]'); if(!r) return; var g=r.closest('[data-radgrp]'); if(!g) return; g.querySelectorAll('[data-rad]').forEach(function(x){x.classList.remove('on');}); r.classList.add('on'); }); })();
 
   // 이전 설정 불러오기
   const loadOverlay=document.getElementById('loadOverlay');
