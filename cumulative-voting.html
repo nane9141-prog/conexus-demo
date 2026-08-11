@@ -86,6 +86,56 @@
   .cb-t{font-size:14px;font-weight:600;color:#0a0a0a}
   .cb-d{font-size:13px;color:#737373;margin-top:2px}
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
+  .cbanner{position:relative}
+  .mtbl tbody tr.mrow{cursor:pointer}
+  /* 집중투표 관리 우측 슬라이드 시트 */
+  .csheet-ov{position:fixed;inset:0;background:rgba(10,10,10,.4);display:none;z-index:200}
+  .csheet-ov.show{display:block}
+  .csheet{position:fixed;top:0;right:0;height:100%;width:765px;max-width:94vw;background:#fff;border-left:1px solid #E5E5E5;box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);display:flex;flex-direction:column;padding:16px;gap:16px;transform:translateX(100%);transition:transform .22s ease}
+  .csheet-ov.show .csheet{transform:translateX(0)}
+  .csheet-x{position:absolute;top:16px;right:16px;width:24px;height:24px;border:none;background:none;cursor:pointer;color:#0a0a0a;opacity:.7;display:flex;align-items:center;justify-content:center;padding:0}
+  .csheet-x i{font-size:16px}
+  .csheet-h{display:flex;flex-direction:column;gap:2px;padding-right:28px}
+  .csheet-h .t{font-size:16px;font-weight:600;color:#0a0a0a;letter-spacing:-.01em}
+  .csheet-h .d{font-size:12px;color:#737373;letter-spacing:-.01em}
+  .csheet-b{flex:1;overflow:auto;display:flex;flex-direction:column;gap:20px}
+  .cs-card{background:#F5F5F5;border-radius:10px;padding:12px;display:flex;align-items:center;gap:12px}
+  .cs-card .cc-l{flex:1;display:flex;align-items:center;gap:8px;padding:0 4px;min-width:0}
+  .cs-card .cc-no{font-size:14px;color:#0a0a0a;white-space:nowrap}
+  .cs-card .cc-nm{font-size:14px;font-weight:600;color:#0a0a0a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cs-badge{display:inline-flex;align-items:center;justify-content:center;padding:2px 8px;border:1px solid #E5E5E5;border-radius:9999px;font-size:12px;font-weight:500;color:#737373;background:#fff;white-space:nowrap}
+  .cs-sep{width:1px;height:44px;background:#E5E5E5;flex:none}
+  .cs-stat{display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:78px}
+  .cs-stat .l{font-size:12px;color:#0a0a0a}
+  .cs-stat .v{font-size:14px;font-weight:600;color:#0a0a0a;text-align:right}
+  .cs-stat.warn .v{color:#EA580C}
+  .cs-sec-h{display:flex;justify-content:space-between;align-items:center}
+  .cs-sec-h .lb{font-size:14px;font-weight:500;color:#0a0a0a}
+  .cs-grid{border:1px solid #E5E5E5;border-radius:10px;overflow:hidden}
+  table.csg{width:100%;border-collapse:collapse;font-size:14px}
+  table.csg thead th{background:#FAFAFA;padding:0 16px;height:42px;text-align:left;font-weight:500;color:#737373;font-size:14px;border-bottom:1px solid rgba(24,29,31,.15);white-space:nowrap}
+  table.csg thead th.n{text-align:right}table.csg thead th.c{text-align:center}
+  table.csg tbody td{padding:0 16px;height:42px;border-bottom:1px solid rgba(24,29,31,.15);color:#181D1F;white-space:nowrap;font-variant-numeric:tabular-nums}
+  table.csg tbody td.n{text-align:right}table.csg tbody td.c{text-align:center}
+  table.csg tbody tr:last-child td{border-bottom:none}
+  table.csg tbody tr.sel td{box-shadow:inset 0 0 0 1px #171717}
+  .cs-rd{width:16px;height:16px;border-radius:9999px;border:1px solid #E5E5E5;background:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;vertical-align:middle}
+  .cs-rd.on{background:#171717;border-color:#171717}
+  .cs-rd.on::after{content:"";width:8px;height:8px;border-radius:9999px;background:#fafafa}
+  .csheet-f{display:flex;flex-direction:column;gap:12px}
+  .csheet-f .frow{display:flex;gap:8px}
+  .csheet-f .frow button{flex:1;height:32px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;border:1px solid #E5E5E5;background:#fff;color:#0a0a0a}
+  .csheet-f .frow button.dark{background:#171717;color:#fafafa;border-color:#171717}
+  .csheet-f .modi{font-size:12px;color:#737373;text-align:center}
+  /* 분배 방식 드롭다운 */
+  .dm-pop{position:absolute;top:calc(100% + 6px);right:18px;z-index:1000;min-width:248px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 10px 15px -3px rgba(0,0,0,.1);padding:6px;display:none}
+  .dm-pop.show{display:block}
+  .dm-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;font-size:14px;color:#0a0a0a;cursor:pointer}
+  .dm-item:hover{background:#fafafa}
+  .dm-item .ck{width:16px;flex:none;color:#0071F3;display:inline-flex;justify-content:center}
+  /* 저장 토스트 */
+  .cs-toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(8px);background:#171717;color:#fff;font-size:14px;padding:10px 16px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:400}
+  .cs-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
@@ -196,12 +246,41 @@
       <div class="content" style="width:100%">
         <div class="st-head"><div><div class="page-title">집중 투표 관리</div><div class="page-sub">중복의결권 확정 후 집중투표에서 동일한 의안에 찬성한 주주 그룹별로 표 분배를 할 수 있습니다.</div></div></div>
         <div class="ctabs2"><button class="ct2 on">자사 표 분배</button><button class="ct2">타사 표 분배</button></div>
-        <div class="cbanner"><div class="cb-l"><i class="ph ph-gear" style="font-size:16px"></i><div><div class="cb-t">주주별 비례 분배 방식</div><div class="cb-d">분배 방식 선택 후 집중투표 표 분배 가능</div></div></div><button class="mbtn dark">설정</button></div>
+        <div class="cbanner"><div class="cb-l"><i class="ph ph-gear" style="font-size:16px"></i><div><div class="cb-t" id="dmName">주주별 비례 분배 방식</div><div class="cb-d">분배 방식 선택 후 집중투표 표 분배 가능</div></div></div><button class="mbtn dark" id="dmBtn">설정</button><div class="dm-pop" id="dmPop"><div class="dm-item" data-m="prop"><span class="ck"><i class="ph ph-check" style="font-size:14px"></i></span>주주별 비례 분배 방식</div><div class="dm-item" data-m="rep"><span class="ck"></span>대표 주주 지정 방식</div></div></div>
         <div class="mwrap"><div class="mscroll"><table class="mtbl"><thead><tr><th>의안번호</th><th>의안명</th><th class="n">찬성 의안 번호</th><th class="n">분배 가능 주주</th><th class="n">분배 가능 의결권</th><th class="n">미분배의결권</th><th>분배 여부</th><th>분배 완료 일시</th></tr></thead><tbody><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1</td><td class="n">1,200</td><td class="n">285,041</td><td class="n mmut">-</td><td><span class="mmut">분배완료</span></td><td>2026-07-27 13:40</td></tr><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1, 2</td><td class="n">400</td><td class="n">139,182</td><td class="n">139,182</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1, 2, 4</td><td class="n">100</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1, 3</td><td class="n">80</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-1호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">1, 4</td><td class="n">60</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">2</td><td class="n">50</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">2, 3</td><td class="n">1,200</td><td class="n">185,041</td><td class="n">185,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">2, 3, 4</td><td class="n">2,000</td><td class="n">285,041</td><td class="n">285,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">3</td><td class="n">100</td><td class="n">85,041</td><td class="n">85,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr><tr><td>제3-2호</td><td>집중투표 후보 3인 중 2인 선임의 건</td><td class="n">4</td><td class="n">3</td><td class="n">5,041</td><td class="n">5,041</td><td><span style="color:#ea580c;font-weight:600">미분배</span></td><td class="mmut">-</td></tr></tbody></table></div></div>
       </div>
     </div>
   </main>
 </div>
+<div class="csheet-ov" id="csOv">
+  <aside class="csheet" role="dialog" aria-label="집중투표 표 분배">
+    <button class="csheet-x" id="csX" aria-label="닫기"><i class="ph ph-x"></i></button>
+    <div class="csheet-h">
+      <div class="t" id="csTitle">집중투표 표 분배</div>
+      <div class="d" id="csDesc"></div>
+    </div>
+    <div class="csheet-b">
+      <div class="cs-card">
+        <div class="cc-l"><span class="cc-no" id="csNo"></span><span class="cc-nm" id="csNm"></span></div>
+        <span class="cs-badge" id="csBadge"></span>
+        <div class="cs-stat"><span class="l">분배 가능 주주</span><span class="v" id="csS1"></span></div>
+        <div class="cs-sep"></div>
+        <div class="cs-stat"><span class="l">분배 가능 의결권</span><span class="v" id="csS2"></span></div>
+        <div class="cs-sep"></div>
+        <div class="cs-stat" id="csS3wrap"><span class="l">미분배 의결권</span><span class="v" id="csS3"></span></div>
+      </div>
+      <div>
+        <div class="cs-sec-h"><span class="lb">제한된 주주</span><span class="cs-badge" id="csMethod"></span></div>
+        <div class="cs-grid" style="margin-top:12px"><table class="csg"><thead id="csGh"></thead><tbody id="csGb"></tbody></table></div>
+      </div>
+    </div>
+    <div class="csheet-f">
+      <div class="frow"><button id="csCancel">취소</button><button class="dark" id="csSave">저장</button></div>
+      <div class="modi">마지막 수정 2026-07-17 15:58 · 박지용</div>
+    </div>
+  </aside>
+</div>
+<div class="cs-toast" id="csToast">분배 방식이 저장되었습니다.</div>
 <script>
   // LNB tab switching (설정/사전/당일)
   document.querySelectorAll('.lnb-tabs .t').forEach(function(t){
@@ -249,6 +328,99 @@
     var cr=e.target.closest('.chk-row'); if(cr){cr.classList.toggle('on');}
     var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
   });
+</script>
+<script>
+(function(){
+  var curMethod='prop';
+  var METHODS={prop:{name:'주주별 비례 분배 방식',mode:'prop'},rep:{name:'대표 주주 지정 방식',mode:'rep'}};
+  var SH=[
+    {no:'0001',nm:'김민준',rn:'820314-1******',qty:5200},
+    {no:'0002',nm:'이서연',rn:'751122-2******',qty:3100},
+    {no:'0003',nm:'박도윤',rn:'690405-1******',qty:1800},
+    {no:'0004',nm:'최지우',rn:'880719-2******',qty:1200},
+    {no:'0005',nm:'정하준',rn:'930228-1******',qty:600}
+  ];
+  function n(x){return (x||'').toString().replace(/[^0-9]/g,'');}
+  function fmt(v){return (v||0).toLocaleString('en-US');}
+  var repSel=0;
+
+  // --- 분배 방식 드롭다운 ---
+  var dmBtn=document.getElementById('dmBtn'),dmPop=document.getElementById('dmPop'),dmName=document.getElementById('dmName');
+  if(dmBtn&&dmPop){
+    dmBtn.addEventListener('click',function(e){e.stopPropagation();dmPop.classList.toggle('show');});
+    document.addEventListener('click',function(){dmPop.classList.remove('show');});
+    dmPop.addEventListener('click',function(e){e.stopPropagation();});
+    dmPop.querySelectorAll('.dm-item').forEach(function(it){
+      it.addEventListener('click',function(){
+        curMethod=it.dataset.m; dmName.textContent=METHODS[curMethod].name;
+        dmPop.querySelectorAll('.dm-item .ck').forEach(function(c){c.innerHTML='';});
+        it.querySelector('.ck').innerHTML='<i class="ph ph-check" style="font-size:14px"></i>';
+        dmPop.classList.remove('show');
+        if(document.getElementById('csOv').classList.contains('show')) renderGrid();
+      });
+    });
+  }
+
+  // --- 시트 ---
+  var ov=document.getElementById('csOv');
+  function openSheet(td){
+    var no=td[0],nm=td[1],grp=td[2],cnt=td[3],cap=td[4],und=td[5];
+    document.getElementById('csTitle').textContent=nm;
+    document.getElementById('csDesc').textContent=no+' · 찬성 의안 번호 '+grp;
+    document.getElementById('csNo').textContent=no;
+    document.getElementById('csNm').textContent=nm;
+    document.getElementById('csBadge').textContent='찬성 의안 '+grp;
+    document.getElementById('csS1').textContent=cnt+'명';
+    document.getElementById('csS2').textContent=cap;
+    var s3=document.getElementById('csS3'), s3w=document.getElementById('csS3wrap');
+    s3.textContent=und; s3w.classList.toggle('warn', n(und)!=='' && n(und)!=='0');
+    document.getElementById('csS2').__cap=parseInt(n(cap)||'0',10);
+    repSel=0;
+    renderGrid();
+    ov.classList.add('show');
+  }
+  function renderGrid(){
+    document.getElementById('csMethod').textContent=METHODS[curMethod].name;
+    var gh=document.getElementById('csGh'), gb=document.getElementById('csGb');
+    var cap=document.getElementById('csS2').__cap||0;
+    var sum=SH.reduce(function(a,r){return a+r.qty;},0);
+    if(curMethod==='prop'){
+      gh.innerHTML='<tr><th>주주번호</th><th>주주명</th><th>실명확인번호</th><th class="n">보유의결권</th><th class="n">배분의결권</th></tr>';
+      gb.innerHTML=SH.map(function(r){
+        var al=Math.round(cap*r.qty/sum);
+        return '<tr><td>'+r.no+'</td><td>'+r.nm+'</td><td>'+r.rn+'</td><td class="n">'+fmt(r.qty)+'</td><td class="n">'+fmt(al)+'</td></tr>';
+      }).join('');
+    }else{
+      gh.innerHTML='<tr><th>주주번호</th><th>주주명</th><th>실명확인번호</th><th class="n">보유의결권</th><th class="c">선택</th></tr>';
+      gb.innerHTML=SH.map(function(r,i){
+        return '<tr class="'+(i===repSel?'sel':'')+'" data-i="'+i+'"><td>'+r.no+'</td><td>'+r.nm+'</td><td>'+r.rn+'</td><td class="n">'+fmt(r.qty)+'</td><td class="c"><span class="cs-rd'+(i===repSel?' on':'')+'"></span></td></tr>';
+      }).join('');
+      gb.querySelectorAll('tr').forEach(function(tr){
+        tr.style.cursor='pointer';
+        tr.addEventListener('click',function(){repSel=parseInt(tr.dataset.i,10);renderGrid();});
+      });
+    }
+  }
+  function closeSheet(){ov.classList.remove('show');}
+  document.getElementById('csX').addEventListener('click',closeSheet);
+  document.getElementById('csCancel').addEventListener('click',closeSheet);
+  ov.addEventListener('click',function(e){if(e.target===ov)closeSheet();});
+  var toast=document.getElementById('csToast');
+  document.getElementById('csSave').addEventListener('click',function(){
+    closeSheet();
+    toast.classList.add('show');
+    setTimeout(function(){toast.classList.remove('show');},1800);
+  });
+
+  // 행 클릭 → 시트
+  document.querySelectorAll('.mtbl tbody tr').forEach(function(tr){
+    tr.classList.add('mrow');
+    tr.addEventListener('click',function(){
+      var td=Array.prototype.map.call(tr.cells,function(c){return c.textContent.trim();});
+      openSheet(td);
+    });
+  });
+})();
 </script>
 <script src="conexus.js"></script>
 </body>
