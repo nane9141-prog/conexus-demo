@@ -269,7 +269,7 @@
         </div>
         <div class="dec-card">
           <div class="dec-card-top"><button class="abtn" id="decPreview" type="button"><i class="ph ph-arrow-square-out" style="font-size:15px"></i>대본 미리보기</button></div>
-          <div class="dec-script" id="decScript"><p>안녕하십니까. 주식회사 아이알큐더스 대표이사 및 주주총회 의장을 맡은 김의장입니다.<br>바쁘신 가운데 당사의 <b class="dec-hl">제35기 정기주주총회</b>에 참석해 주신 주주 여러분께 진심으로 감사드립니다.</p><p>지금부터 <b class="dec-hl">2026년 제35기 정기주주총회</b>를 개최하겠습니다.<br>본 주주총회는 상법 및 정관에 따라 적법하게 소집되었으며, 성립 정족수를 충족하였음을 알려드립니다.<br>의장은 본인이 맡아 진행하겠으며, 원활한 진행을 위해 주주 여러분의 협조를 부탁드립니다.</p><p><b class="dec-hl">2023년 12월 31일</b> 기준일 현재 당사의 총 발행 주식수는<br>삼천육백육십구만팔천팔백팔십 주 <b class="dec-hl">(36,698,880 주)</b>, 총 주주수는 <b class="dec-hl">(26명)</b> 입니다.</p><p>이중 의결권 있는 주식수는 삼천오백사십팔만사천삼백이십 주 <b class="dec-hl">(35,484,320 주)</b>, 그 주주수는 <b class="dec-hl">(25명)</b> 입니다.</p><p><b class="dec-hl">2024년 3월 15일 오전 9시</b> 현재 참석 주주수는 <b class="dec-hl">(16)</b>명 이고,<br>그 소유주식수는 <b class="dec-hl">(17,052,960 주)</b>이며, 이 중 위임받은 주식수는 <b class="dec-hl">(11,600,160 주)</b> 입니다.</p><p>당사의 의결권 있는 주식의 총수인 삼천오백사십팔만사천삼백이십 주 <b class="dec-hl">(35,484,320 주)</b>의 <b class="dec-hl">(48.06%)</b>가<br>출석하였음을 보고 드립니다.</p></div>
+          <div class="dec-script" id="decScript"><p>2026년 3월 30일 기준일 현재<br>당사의 총 발행 주식수는 <b class="dec-hl">칠천 팔백 구십 구만 삼천 팔십 오 (78,993,085)</b> 주 이며,<br>총 주주수는 <b class="dec-hl">팔만 이천 육십 구 (82,069)</b> 명입니다.<br>이중 의결권 있는 주식수는 <b class="dec-hl">칠천 육십 육만 팔천 사백 삼십 (70,668,430)</b> 주 이며,<br>그 주주수는 <b class="dec-hl">팔만 이천 육십 일 (82,061)</b> 명입니다.</p><p>2026년 6월 30일 9시<br>현재 참석 주식수는 <b class="dec-hl">이천 일백 이십만 오백 이십 구 (21,200,529)</b> 주입니다.</p><p>당사의 의결권 있는 주식의 총수인<br><b class="dec-hl">칠천 육십 육만 팔천 사백 삼십 (70,688,430)</b> 주의<br><b class="dec-hl">30 %</b> 가 출석하였음을 보고 드립니다.</p></div>
         </div>
       </div>
     </div>
@@ -281,6 +281,7 @@
   if(edit&&sc){ edit.addEventListener("click",function(){ var on=sc.getAttribute("contenteditable")==="true";
     if(on){ sc.setAttribute("contenteditable","false"); sc.classList.remove("editing"); edit.textContent="수정"; edit.classList.remove("dark"); }
     else { sc.setAttribute("contenteditable","true"); sc.classList.add("editing"); edit.textContent="완료"; edit.classList.add("dark"); sc.focus(); } }); }
+  var ap=document.getElementById("decApply"); if(ap) ap.addEventListener("click",function(){ window.location.href="onsite-control.html"; });
   var pv=document.getElementById("decPreview");
   if(pv) pv.addEventListener("click",function(){ window.open("chair-view.html","_blank","noopener"); });
 })();
