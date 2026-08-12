@@ -151,6 +151,8 @@
   .hicon.for{stroke:#0071f3}.hicon.against{stroke:#7c3aed}.hicon.abs{stroke:#a3a3a3}.hicon.neu{stroke:#a3a3a3}
   #viewHolder .tbl-scroll,#viewHolder{overflow-x:auto}
   table.tbl td.num,table.tbl th.num{text-align:right}
+  table.tbl[data-nosort] .cx-ar{display:none!important}
+  table.tbl[data-nosort] th.cx-sortable{cursor:default}
   .pgfoot{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-top:1px solid var(--border);background:#fafafa;font-size:12px;color:var(--muted-fg)}
   .tbl-wrap.novot tbody{display:none}
   .pg-empty{display:none;padding:48px 16px;text-align:center;color:var(--muted-fg);font-size:14px}
@@ -366,7 +368,7 @@
 
           <!-- 의안 기준 -->
           <div class="tbl-wrap" id="viewAgenda">
-            <table class="tbl">
+            <table class="tbl" data-nosort>
               <thead><tr><th>의안번호</th><th>의안명</th><th class="num">총행사가능의결권</th><th class="num">행사가능의결권</th><th class="num">행사의결권</th><th class="num">미행사의결권</th><th class="num"><span class="hh"><svg class="hicon for" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></th><th class="num"><span class="hh"><svg class="hicon against" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></th><th class="num"><span class="hh"><svg class="hicon abs" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</span></th><th class="num"><span class="hh"><svg class="hicon neu" viewBox="0 0 24 24"><path d="M12 5 4 19h16z"/></svg>중립</span></th></tr></thead>
               <tbody>
                   <tr><td>제1호</td><td>재무제표 승인의 건</td><td class="num">476,211,964</td><td class="num">300,000,000</td><td class="num">300,000,000</td><td class="num">176,211,964</td><td class="num">241,800,000</td><td class="num">58,200,000</td><td class="num">0</td><td class="num">0</td></tr>
