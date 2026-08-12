@@ -72,6 +72,7 @@
   function num(s){ var m=(s||'').replace(/[^0-9.\-]/g,''); return (m===''||m==='-')?NaN:parseFloat(m); }
   function enhance(tbl){
     if(tbl.__cxSort) return;
+    if(tbl.hasAttribute("data-nosort")) return;
     var thead=tbl.tHead, tb=tbl.tBodies[0];
     if(!thead||!tb||!thead.rows.length) return;
     if(tbl.querySelector('th.sortable')) return;                 // 자체 정렬 보유
