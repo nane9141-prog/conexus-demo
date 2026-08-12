@@ -294,7 +294,7 @@
   var ap=document.getElementById("decApply"), cdo=document.getElementById("closeDlg");
   if(ap&&cdo){ ap.addEventListener("click",function(){ cdo.classList.add("show"); });
     cdo.addEventListener("click",function(e){ if(e.target===cdo||e.target.closest("[data-cd-close]")) cdo.classList.remove("show"); });
-    var cf=document.getElementById("closeConfirm"); if(cf) cf.addEventListener("click",function(){ cdo.classList.remove("show"); }); }
+    var cf=document.getElementById("closeConfirm"); if(cf) cf.addEventListener("click",function(){ cdo.classList.remove("show"); window.location.href="tally.html"; }); }
   var pv=document.getElementById("decPreview");
   if(pv) pv.addEventListener("click",function(){ window.open("chair-view.html?ag=closing&st=closing","_blank","noopener"); });
 })();
