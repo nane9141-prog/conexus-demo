@@ -164,7 +164,8 @@
   .apanel-h{padding:11px 12px;font-size:14px;font-weight:600;color:#0a0a0a}
   .apanel-ph{padding:24px 12px;font-size:13px;color:#a3a3a3;text-align:center;line-height:1.6}
   .arow{padding:12px;border-top:1px solid #eee;display:flex;flex-direction:column;gap:8px}
-  #agTree{padding:2px 8px 8px;flex:1;min-height:0;overflow:auto}
+  #agTree{padding:2px 8px 8px;flex:1;min-height:0;overflow:auto;scrollbar-width:none;-ms-overflow-style:none}
+  #agTree::-webkit-scrollbar{display:none}
   #agTree>.arow:first-child{border-top:none}
   .acat{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
   .ano{font-size:12px;font-weight:500;color:#737373}
@@ -834,7 +835,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     {cls:'',name:'의안 상정 대기중',right:[{t:'의안 상정',c:'',go:1}]},
     {cls:'',name:'의안 상정 중',right:[{t:'투표 시작',c:'dark',go:2}]},
     {cls:'ia-voting',name:'투표 진행 중',red:1,sub:'출석·미투표 주주',sel:1,timer:1,right:[{t:'투표 종료',c:'red',go:3}]},
-    {cls:'ia-fill',name:'표결 집계중',sub:'출석·미투표 주주',sel:1,timer:1,right:[{t:'투표 재개',c:'play',go:2},{t:'표결 마감',c:'dark',go:4}]},
+    {cls:'ia-fill',name:'결과 확인 중',sub:'출석·미투표 주주',sel:1,timer:1,right:[{t:'투표 재개',c:'play',go:2},{t:'표결 마감',c:'dark',go:4}]},
     {cls:'ia-wait',name:'표결 마감',sub:'출석 · 미투표',selStatic:'기권 처리',timer:1,right:[{t:'',c:'dots'}]}
   ];
   var OC={agenda:'제1호',stage:0,preEx:false};
@@ -896,7 +897,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   }
   function badgeHTML(){
     var b=OC.stage>=4?'pass':(OC.stage===3?'counting':'expect');
-    return {expect:'<span class="rbadge">가결 예상</span>',counting:'<span class="rbadge counting"><span class="cdot"></span>집계중</span>',pass:'<span class="passmark">'+CK+'가결</span>'}[b];
+    return {expect:'<span class="rbadge">가결 예상</span>',counting:'<span class="rbadge counting"><span class="cdot"></span>결과 확인 중</span>',pass:'<span class="passmark">'+CK+'가결</span>'}[b];
   }
   function renderFooter(){
     var on=20000000, onsite=40000000, pre=240000000, total=OC.preEx?(on+onsite):(on+onsite+pre);
@@ -919,13 +920,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     else if(OC.stage===3){res='counting';st='prog';}
     else if(OC.stage===2){res='expect';st='prog';}
     else {res='expect';st='wait';}
-    var RB={expect:'<span class="rbadge">가결 예상</span>',counting:'<span class="rbadge counting"><span class="cdot"></span>집계중</span>',pass:'<span class="rbadge pass">가결</span>'};
+    var RB={expect:'<span class="rbadge">가결 예상</span>',counting:'<span class="rbadge counting"><span class="cdot"></span>결과 확인 중</span>',pass:'<span class="rbadge pass">가결</span>'};
     var SB={wait:'<span class="sbadge"><span class="d"></span>대기</span>',prog:'<span class="sbadge prog"><span class="d"></span>진행 중</span>',done:'<span class="sbadge done"><span class="d"></span>완료</span>'};
     ast.innerHTML=RB[res]+SB[st];
   }
   function updateMetric(){
     var m=document.getElementById('mAgSt'); if(!m) return;
-    var map={0:['대기','gray'],1:['상정','gray'],2:['진행 중','rose'],3:['집계중','amber'],4:['완료','gray']}, v=map[OC.stage];
+    var map={0:['대기','gray'],1:['상정','gray'],2:['진행 중','rose'],3:['결과 확인 중','amber'],4:['완료','gray']}, v=map[OC.stage];
     m.className='stbadge '+v[1]; m.innerHTML='<span class="d"></span>'+v[0];
   }
   function renderAll(){
@@ -934,7 +935,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     set('cCat',d.cat); set('cType',d.type); set('cName',d.name);
     var cb=document.getElementById('cBadge'); if(cb) cb.innerHTML=(d.type==='집중투표')?'<span class="hbadge">집중투표</span>':'';
     var box=document.getElementById('cVizBox'), gr=document.getElementById('gBadgeRow');
-    if(d.type==='집중투표'){ if(box) box.innerHTML=vizCumul(d); if(gr){ gr.innerHTML=(OC.stage>=4)?('<span class="passmark">'+CK+'가결 : 1, 2</span>'):(OC.stage===3?'<span class="rbadge counting"><span class="cdot"></span>집계중</span>':('<span class="rbadge">'+d.expect+'</span>')); gr.style.justifyContent='flex-end'; } }
+    if(d.type==='집중투표'){ if(box) box.innerHTML=vizCumul(d); if(gr){ gr.innerHTML=(OC.stage>=4)?('<span class="passmark">'+CK+'가결 : 1, 2</span>'):(OC.stage===3?'<span class="rbadge counting"><span class="cdot"></span>결과 확인 중</span>':('<span class="rbadge">'+d.expect+'</span>')); gr.style.justifyContent='flex-end'; } }
     else { if(box) box.innerHTML=vizNormal(d); if(gr){ gr.innerHTML=badgeHTML(); gr.style.justifyContent='flex-end'; } }
     renderFooter(); updateLeft(); updateMetric();
   }
@@ -1130,7 +1131,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       if(act.getAttribute('data-act')==='submit'){ var ta=card.querySelector('.mc-ta'); openDlg(id, ta.value); return; }
       var ci2=Q.filter(function(x){return x.id===id;})[0]; if(ci2&&ci2.st==='완료'){ editId=null; } else { selId=null; editId=null; } render(); return; }
     var ed=e.target.closest('[data-edit]'); if(ed){ editId=ed.closest('.mcard').getAttribute('data-id'); render(); return; }
-    var ca=e.target.closest('[data-cast]'); if(ca){ var cid=ca.closest('.mcard').getAttribute('data-id'); var ci=Q.filter(function(x){return x.id===cid;})[0]; if(ci) ci.cast=!ci.cast; render(); return; }
+    var ca=e.target.closest('[data-cast]'); if(ca){ var cid=ca.closest('.mcard').getAttribute('data-id'); var ci=Q.filter(function(x){return x.id===cid;})[0]; if(ci){ ci.cast=!ci.cast; if(ci.cast){ var who=ci.name+' · '+ci.t+' · '+Number(ci.sh).toLocaleString('en-US')+'주'; var url='chair-view.html?view=qna&who='+encodeURIComponent(who)+'&q='+encodeURIComponent(ci.q||'')+'&a='+encodeURIComponent(ci.a||''); window.open(url,'cvcast'); } render(); } return; }
     var tg=e.target.closest('[data-qtoggle]'); if(tg){ spOpen=!spOpen; render(); return; }
     var sst=e.target.closest('[data-spstart]'); if(sst){ speakingId=sst.getAttribute('data-spstart'); render(); return; }
     var sen=e.target.closest('[data-spend]'); if(sen){ var eid=sen.getAttribute('data-spend'); var sit=S.filter(function(x){return x.id===eid;})[0]; if(sit) sit.st='완료'; if(speakingId===eid) speakingId=null; render(); return; }

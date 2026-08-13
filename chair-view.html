@@ -25,6 +25,13 @@
   .cv-script.big{justify-content:center;align-items:center}
   .cv-script.big p{text-align:center;font-size:72px;color:#0071F3}
   /* 발언 대기열 */
+  .cv-qna{display:flex;flex-direction:column;gap:28px;width:100%;padding:8px 0}
+  .cv-qna-badge{align-self:center;display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border:1px solid #FAFAFA;border-radius:26px;font-size:16px;font-weight:600;color:#FAFAFA;flex:none}
+  .cv-qna-badge svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+  .cv-qna-who{font-size:32px;font-weight:700;color:#16A34A;letter-spacing:-.015em;line-height:1.5}
+  .cv-qna-sec{display:flex;flex-direction:column;gap:16px}
+  .cv-qna-lbl{font-size:18px;font-weight:500;color:#A3A3A3}
+  .cv-qna-body{font-size:32px;font-weight:700;line-height:1.6;letter-spacing:-.01em;color:#E5E5E5}
   .cv-side{width:400px;flex:none;background:#171717;border-left:1px solid rgba(255,255,255,.1);padding:16px;display:none;flex-direction:column;gap:16px}
   .cv-side.show{display:flex}
   .cv-qh{display:flex;align-items:center;gap:10px;padding-left:2px}
@@ -156,6 +163,20 @@
     for(var i=0;i<SLIDES.length;i++){ if(SLIDES[i].ag===pag){ if(f<0)f=i; if(SLIDES[i].st===pst){ f=i; break; } } }
     if(f>=0) idx=f; })();
   render();
+  (function(){ var p=new URLSearchParams(location.search); if(p.get('view')!=='qna') return;
+    function esc(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    var who=p.get('who')||'김이나 · 개인 · 1,100주';
+    var q=p.get('q')||'이번 주주총회에서 제시된 배당 수준에 대해 회사의 장기 배당성향 목표와 자사주 매입·소각 등 추가 주주환원 방안을 구체적으로 듣고 싶습니다.';
+    var a=p.get('a')||'회사는 미래 성장 투자와 안정적 주주환원의 균형을 고려해 배당을 결정하고 있으며, 중장기적으로 배당성향을 우상향시키는 것을 기본 방향으로 하고 있습니다. 자사주 매입·소각도 주요 주주환원 수단으로 검토 중이며, 실행 여부와 규모는 이사회 논의를 거쳐 투명하게 공시하겠습니다.';
+    title.textContent='질의 응답';
+    box.classList.remove('big'); script.style.fontSize=''; side.classList.remove('show','live'); stopTimer();
+    script.innerHTML='<div class="cv-qna">'
+      +'<div class="cv-qna-badge"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>담당자 송출 질의</div>'
+      +'<div class="cv-qna-who">'+esc(who)+'</div>'
+      +'<div class="cv-qna-sec"><div class="cv-qna-lbl">질의 내용</div><div class="cv-qna-body">'+esc(q)+'</div></div>'
+      +(a?('<div class="cv-qna-sec"><div class="cv-qna-lbl">답변 내용</div><div class="cv-qna-body">'+esc(a)+'</div></div>'):'')
+      +'</div>';
+  })();
 })();
 </script>
 <script src="conexus.js"></script>
