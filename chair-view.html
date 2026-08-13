@@ -154,27 +154,32 @@
       if(q==='live'){ side.classList.add('live'); startTimer(); } else { side.classList.remove('live'); stopTimer(); }
     } else { side.classList.remove('show','live'); stopTimer(); }
   }
-  document.getElementById('cvPrev').addEventListener('click',function(){ idx=Math.max(0,idx-1); render(); });
-  document.getElementById('cvNext').addEventListener('click',function(){ idx=Math.min(SLIDES.length-1,idx+1); render(); });
-  document.getElementById('cvPlus').addEventListener('click',function(){ fs=Math.min(56,fs+2); render(); });
-  document.getElementById('cvMinus').addEventListener('click',function(){ fs=Math.max(20,fs-2); render(); });
+  var qnaMode=false, qWho='', qQ='', qA='';
+  function qEsc(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function showQna(){
+    title.innerHTML='질의 응답<span class="cv-qna-badge"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>담당자 송출 질의</span>';
+    box.classList.remove('big'); script.style.fontSize=''; side.classList.remove('show','live'); stopTimer();
+    var bf=fs+'px', lf=Math.round(fs*0.56)+'px';
+    script.innerHTML='<div class="cv-qna">'
+      +'<div class="cv-qna-who" style="font-size:'+bf+'">'+qEsc(qWho)+'</div>'
+      +'<div class="cv-qna-sec"><div class="cv-qna-lbl" style="font-size:'+lf+'">질의 내용</div><div class="cv-qna-body" style="font-size:'+bf+'">'+qEsc(qQ)+'</div></div>'
+      +(qA?('<div class="cv-qna-sec"><div class="cv-qna-lbl" style="font-size:'+lf+'">답변 내용</div><div class="cv-qna-body" style="font-size:'+bf+'">'+qEsc(qA)+'</div></div>'):'')
+      +'</div>';
+  }
+  document.getElementById('cvPrev').addEventListener('click',function(){ qnaMode=false; idx=Math.max(0,idx-1); render(); });
+  document.getElementById('cvNext').addEventListener('click',function(){ qnaMode=false; idx=Math.min(SLIDES.length-1,idx+1); render(); });
+  document.getElementById('cvPlus').addEventListener('click',function(){ fs=Math.min(56,fs+2); if(qnaMode) showQna(); else render(); });
+  document.getElementById('cvMinus').addEventListener('click',function(){ fs=Math.max(20,fs-2); if(qnaMode) showQna(); else render(); });
   document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight')document.getElementById('cvNext').click(); if(e.key==='ArrowLeft')document.getElementById('cvPrev').click(); });
   (function(){ var p=new URLSearchParams(location.search), pag=p.get('ag'); if(!pag) return; var pst=p.get('st')||'present', f=-1;
     for(var i=0;i<SLIDES.length;i++){ if(SLIDES[i].ag===pag){ if(f<0)f=i; if(SLIDES[i].st===pst){ f=i; break; } } }
     if(f>=0) idx=f; })();
   render();
   (function(){ var p=new URLSearchParams(location.search); if(p.get('view')!=='qna') return;
-    function esc(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-    var who=p.get('who')||'김이나 · 개인 · 1,100주';
-    var q=p.get('q')||'이번 주주총회에서 제시된 배당 수준에 대해 회사의 장기 배당성향 목표와 자사주 매입·소각 등 추가 주주환원 방안을 구체적으로 듣고 싶습니다.';
-    var a=p.get('a')||'회사는 미래 성장 투자와 안정적 주주환원의 균형을 고려해 배당을 결정하고 있으며, 중장기적으로 배당성향을 우상향시키는 것을 기본 방향으로 하고 있습니다. 자사주 매입·소각도 주요 주주환원 수단으로 검토 중이며, 실행 여부와 규모는 이사회 논의를 거쳐 투명하게 공시하겠습니다.';
-    title.innerHTML='질의 응답<span class="cv-qna-badge"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>담당자 송출 질의</span>';
-    box.classList.remove('big'); script.style.fontSize=''; side.classList.remove('show','live'); stopTimer();
-    script.innerHTML='<div class="cv-qna">'
-      +'<div class="cv-qna-who">'+esc(who)+'</div>'
-      +'<div class="cv-qna-sec"><div class="cv-qna-lbl">질의 내용</div><div class="cv-qna-body">'+esc(q)+'</div></div>'
-      +(a?('<div class="cv-qna-sec"><div class="cv-qna-lbl">답변 내용</div><div class="cv-qna-body">'+esc(a)+'</div></div>'):'')
-      +'</div>';
+    qWho=p.get('who')||'김이나 · 개인 · 1,100주';
+    qQ=p.get('q')||'이번 주주총회에서 제시된 배당 수준에 대해 회사의 장기 배당성향 목표와 자사주 매입·소각 등 추가 주주환원 방안을 구체적으로 듣고 싶습니다.';
+    qA=p.get('a')||'회사는 미래 성장 투자와 안정적 주주환원의 균형을 고려해 배당을 결정하고 있으며, 중장기적으로 배당성향을 우상향시키는 것을 기본 방향으로 하고 있습니다. 자사주 매입·소각도 주요 주주환원 수단으로 검토 중이며, 실행 여부와 규모는 이사회 논의를 거쳐 투명하게 공시하겠습니다.';
+    qnaMode=true; showQna();
   })();
 })();
 </script>
