@@ -101,15 +101,15 @@
       '당사의 의결권 있는 주식의 총수인<br>'+
       B('칠천 육십 육만 팔천 사백 삼십 (70,688,430)')+' 주의<br>'+
       B('30 %')+' 가 출석하였음을 보고 드립니다.'},
-    {t:'제 1호 의안 · 상정', s:
+    {t:'제 1호 의안 : 상정', s:
       B('제1호')+'<br>'+B('재무제표 승인의 건')+' 을 상정합니다.<br><br>'+
       '본 의안은 지난 한 해 동안의 경영 실적을 정리한 재무상태표 및 손익계산서를 승인받고자 하는 것입니다.<br><br>'+
       '표결에 앞서 본 안건에 대해 질문이나 의견이 있으신 주주께서는<br>발언 신청 버튼을 눌러 주시기 바랍니다.<br><br>'+
       '신청해 주신 주주님께 순서대로 발언권을 부여해 드리겠으며,<br>발언이 끝난 후 표결을 진행하겠습니다.'},
-    {t:'제 1호 의안 · 질의답변', qna:true},
-    {t:'제 1호 의안 · 투표 중', big:true, vtimer:true},
-    {t:'제 1호 의안 · 표결 결과 확인 중', big:true, s:'표결 결과 확인 중'},
-    {t:'제 1호 의안 · 표결 마감', s:
+    {t:'제 1호 의안 : 질의답변', qna:true},
+    {t:'제 1호 의안 : 투표 중', big:true, vtimer:true},
+    {t:'제 1호 의안 : 표결 결과 확인 중', big:true, s:'표결 결과 확인 중'},
+    {t:'제 1호 의안 : 표결 마감', s:
       '제 1호 의안에 대한 표결 결과를 말씀드리겠습니다.<br>'+
       '본 의안은 보통 결의요건이 적용되는 의안으로,<br>'+
       '의결권 있는 발행주식 총수의 4분의 1 이상, 출석한 주주의 의결권의 과반수의 찬성이 필요합니다.<br><br>'+
@@ -160,10 +160,10 @@
     if(sl.vtimer){ vsec=0; paintVote(); voteT=setInterval(function(){ vsec++; paintVote(); },1000); }
     else { script.innerHTML=sl.s; }
   }
-  var qnaMode=false, qWho='', qQ='', qA='';
+  var qnaMode=false, qWho='김이나 · 개인 · 1,100주', qQ='이번 주주총회에서 제시된 배당 수준에 대해 회사의 장기 배당성향 목표와 자사주 매입·소각 등 추가 주주환원 방안을 구체적으로 듣고 싶습니다.', qA='회사는 미래 성장 투자와 안정적 주주환원의 균형을 고려해 배당을 결정하고 있으며, 중장기적으로 배당성향을 우상향시키는 것을 기본 방향으로 하고 있습니다. 자사주 매입·소각도 주요 주주환원 수단으로 검토 중이며, 실행 여부와 규모는 이사회 논의를 거쳐 투명하게 공시하겠습니다.';
   function qEsc(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
   function showQna(){
-    title.innerHTML='질의 응답<span class="cv-qna-badge"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>담당자 송출 질의</span>';
+    title.innerHTML='제 1호 의안 : 질의답변<span class="cv-qna-badge"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>담당자 송출 질의</span>';
     box.classList.remove('big'); script.style.fontSize=''; side.classList.remove('show','live'); stopTimer();
     var bf=fs+'px', lf=Math.round(fs*0.56)+'px';
     script.innerHTML='<div class="cv-qna">'
