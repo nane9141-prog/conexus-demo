@@ -161,6 +161,15 @@
   .pxdlg-f .vlink{background:#171717;color:#fff;border-color:#171717;height:32px;padding:0 16px}
   .vlink[disabled]{opacity:.45;cursor:not-allowed}
   .apanel{display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 1px 2px rgba(0,0,0,.05);overflow:hidden}
+  .ivid{background:#000;flex:none;position:relative;border-bottom:1px solid var(--border)}
+  .ivid-h{display:flex;align-items:center;justify-content:space-between;gap:8px;height:30px;padding:0 6px 0 10px;background:#171717}
+  .ivid-t{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ivid-t .liv{width:7px;height:7px;border-radius:50%;background:#ef4444;flex:none;animation:pipblink 1.4s infinite}
+  .ivid-act{display:flex;gap:2px;flex:none}
+  .ivid-act button{width:24px;height:24px;border:none;background:none;color:#cfcfcf;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .ivid-act button:hover{background:rgba(255,255,255,.12);color:#fff}
+  .ivid-act button i{font-size:15px}
+  .ivid video{display:block;width:100%;aspect-ratio:16/9;background:#000;object-fit:cover;cursor:pointer}
   .apanel-h{padding:11px 12px;font-size:14px;font-weight:600;color:#0a0a0a}
   .apanel-ph{padding:24px 12px;font-size:13px;color:#a3a3a3;text-align:center;line-height:1.6}
   .arow{padding:12px;border-top:1px solid #eee;display:flex;flex-direction:column;gap:8px}
@@ -597,6 +606,10 @@
         <div class="oc-panel on" data-panel="op">
           <div class="nowgrid3">
             <div class="apanel">
+              <div class="ivid">
+                <div class="ivid-h"><span class="ivid-t"><span class="liv"></span>생중계 · 카카오뱅크 주주총회</span><div class="ivid-act"><button id="pipMute" title="음소거"><i class="ph ph-speaker-simple-high"></i></button><button id="vidPip" title="PIP"><i class="ph ph-picture-in-picture"></i></button><button id="vidFull" title="전체화면"><i class="ph ph-arrows-out"></i></button></div></div>
+                <video id="pipVid" src="kakaobank.mp4" autoplay loop playsinline></video>
+              </div>
               <div class="apanel-h">의안 진행</div>
               <div id="agTree"></div>
             </div>
@@ -1138,23 +1151,20 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   render();
 })();
 </script>
-<div class="pip" id="pip">
-  <div class="pip-bar" id="pipBar"><span class="pip-t"><span class="liv"></span>생중계 · 카카오뱅크 주주총회</span><div class="pip-actions"><button id="pipMin" title="최소화">—</button><button id="pipClose" title="닫기">✕</button></div></div>
-  <video id="pipVid" src="kakaobank.mp4" autoplay loop playsinline></video>
-  <button class="pip-mute" id="pipMute" title="음소거 해제"><i class="ph ph-speaker-simple-x"></i></button>
-</div>
 <script>
 (function(){
-  var lnb=document.getElementById('lnbToggle'), oc=document.querySelector('.oc');
+  var lnb=document.getElementById('lnbToggle');
   if(lnb) lnb.addEventListener('click',function(){ var ap=document.getElementById('app'); if(ap) ap.classList.toggle('collapsed'); });
-  var pip=document.getElementById('pip'), bar=document.getElementById('pipBar'), vid=document.getElementById('pipVid');
-  document.getElementById('pipMin').addEventListener('click',function(e){ e.stopPropagation(); pip.classList.toggle('min'); });
-  document.getElementById('pipClose').addEventListener('click',function(e){ e.stopPropagation(); pip.style.display='none'; });
+  var vid=document.getElementById('pipVid');
   if(vid) vid.addEventListener('click',function(){ if(vid.paused) vid.play(); else vid.pause(); });
-  var dx=0,dy=0,drag=false;
-  bar.addEventListener('mousedown',function(e){ if(e.target.closest('button'))return; drag=true; var r=pip.getBoundingClientRect(); dx=e.clientX-r.left; dy=e.clientY-r.top; pip.style.right='auto'; pip.style.bottom='auto'; pip.style.left=r.left+'px'; pip.style.top=r.top+'px'; e.preventDefault(); });
-  window.addEventListener('mousemove',function(e){ if(!drag)return; var x=Math.max(0,Math.min(window.innerWidth-pip.offsetWidth,e.clientX-dx)); var y=Math.max(0,Math.min(window.innerHeight-40,e.clientY-dy)); pip.style.left=x+'px'; pip.style.top=y+'px'; });
-  window.addEventListener('mouseup',function(){ drag=false; });
+  var pipBtn=document.getElementById('vidPip');
+  if(pipBtn&&vid) pipBtn.addEventListener('click',function(){
+    try{ if(document.pictureInPictureElement){ document.exitPictureInPicture(); } else if(vid.requestPictureInPicture){ vid.requestPictureInPicture(); } }catch(_){}
+  });
+  var fullBtn=document.getElementById('vidFull');
+  if(fullBtn&&vid){ var box=document.querySelector('.ivid'); fullBtn.addEventListener('click',function(){
+    try{ if(document.fullscreenElement){ document.exitFullscreen(); } else if(box&&box.requestFullscreen){ box.requestFullscreen(); } else if(vid.webkitEnterFullscreen){ vid.webkitEnterFullscreen(); } }catch(_){}
+  }); }
 })();
 </script>
 <div class="ovl" id="closeOvl">
