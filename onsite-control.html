@@ -1157,6 +1157,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   if(lnb) lnb.addEventListener('click',function(){ var ap=document.getElementById('app'); if(ap) ap.classList.toggle('collapsed'); });
   var vid=document.getElementById('pipVid');
   if(vid) vid.addEventListener('click',function(){ if(vid.paused) vid.play(); else vid.pause(); });
+  if(vid){ var ividBox=document.querySelector('.ivid');
+    vid.addEventListener('enterpictureinpicture',function(){ if(ividBox) ividBox.style.display='none'; });
+    vid.addEventListener('leavepictureinpicture',function(){ if(ividBox) ividBox.style.display=''; });
+  }
   var pipBtn=document.getElementById('vidPip');
   if(pipBtn&&vid) pipBtn.addEventListener('click',function(){
     try{ if(document.pictureInPictureElement){ document.exitPictureInPicture(); } else if(vid.requestPictureInPicture){ vid.requestPictureInPicture(); } }catch(_){}
