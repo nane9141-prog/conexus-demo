@@ -471,7 +471,7 @@
   .chkc .cd{font-size:12px;color:#737373;margin-top:4px}
   /* === 현장 제어 리디자인 추가 === */
   .oc-mc .s{font-size:12px;font-weight:500;color:#737373;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .cag{padding:16px 4px 8px}
+  .cag{padding:16px 4px 16px}
   .cag-head{display:flex;align-items:center;gap:8px;margin-top:8px}
   .cag-head .cag-nm{margin-top:0;flex:1}
   #agStage{margin:0 -12px 12px}
@@ -967,15 +967,17 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function liveFrac(){ return [0,0,0.5,0.85,1][OC.stage]||0; }
   function vizNormal(d){
     var incPre=OC.preEx?0:1, lf=liveFrac(), f=incPre*0.8+0.2*lf;
-    var F=d['for']*f, A=d.against*f, AB=d.abs*f;
+    var F=d['for']*f;
     var present=d['for']+d.against+d.abs, base=OC.preEx?present*0.2:present;
-    var ratio=d.thrLabel.indexOf('2/3')>=0?2/3:0.5, thr=base*ratio;
-    var fp=base?F/base*100:0, ap=base?A/base*100:0, thp=base?thr/base*100:0;
+    var ISSUED=476211964, special=d.thrLabel.indexOf('2/3')>=0;
+    var iR=special?1/3:1/4, iLbl=special?'1/3':'1/4';
+    var aR=special?2/3:1/2, aLbl=special?'2/3':'1/2';
+    var fp=ISSUED?F/ISSUED*100:0, ap=base?F/base*100:0;
     return '<div class="gbars">'
-      +'<div class="gbar"><div class="grow"><div class="gtrack"><span class="gfill for" style="width:'+Math.min(100,fp).toFixed(1)+'%"></span><span class="qline" style="left:'+thp.toFixed(1)+'%"></span></div><span class="gpct">'+Math.round(fp)+'%</span></div>'
-      +'<div class="gcap"><span class="lbl"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span>'+comma(F)+'주</span><span>· 가결 기준 '+d.thrLabel+' ('+comma(thr)+'주)</span></div></div>'
-      +'<div class="gbar"><div class="grow"><div class="gtrack"><span class="gfill ag" style="width:'+Math.min(100,ap).toFixed(1)+'%"></span><span class="qline" style="left:'+Math.max(0,100-thp).toFixed(1)+'%"></span></div><span class="gpct">'+Math.round(ap)+'%</span></div>'
-      +'<div class="gcap"><span class="lbl"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span>'+comma(A)+'주</span>'+(AB?('<span>· 기권 '+comma(AB)+'주</span>'):'')+'</div></div>'
+      +'<div class="gbar"><div class="grow"><div class="gtrack"><span class="gfill for" style="width:'+Math.min(100,fp).toFixed(1)+'%"></span><span class="qline" style="left:'+(iR*100).toFixed(1)+'%"></span></div><span class="gpct">'+Math.round(fp)+'%</span></div>'
+      +'<div class="gcap">발행주식총수 : '+comma(ISSUED)+'주 · 가결기준 : 발행주식총수 '+iLbl+'</div></div>'
+      +'<div class="gbar"><div class="grow"><div class="gtrack"><span class="gfill ag" style="width:'+Math.min(100,ap).toFixed(1)+'%"></span><span class="qline" style="left:'+(aR*100).toFixed(1)+'%"></span></div><span class="gpct">'+Math.round(ap)+'%</span></div>'
+      +'<div class="gcap">출석의결권 : '+comma(base)+'주 · 출석주식총수 '+aLbl+'</div></div>'
       +'</div>';
   }
   function vizCumul(d){
