@@ -855,16 +855,22 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     {no:'제2호',nm:'정관 일부 변경의 건',header:true},
     {no:'제2-1호',nm:'집중투표제 배제 조항 삭제의 건(정관 제37조 제3항)',types:['특별결의']},
     {no:'제2-2호',nm:'전자주주총회 도입 관련 변경(정관 제26조 제2항)',types:['특별결의']},
-    {no:'제2-3호',nm:'의결권 대리행사 수단 확대(정관 제31조 제2항)',types:['특별결의']},
-    {no:'제3호',nm:'집중투표에 의한 이사 선임의 건',header:true},
-    {no:'제3-1호',nm:'집중투표 후보 4인 중 2인 선임의 건',types:['보통결의','집중투표'],children:[
-      {no:'제3-1-1호',nm:'사외이사 후보 김근수'},
-      {no:'제3-1-2호',nm:'사외이사 후보 진웅섭'},
-      {no:'제3-1-3호',nm:'사외이사 후보 남상일'},
-      {no:'제3-1-4호',nm:'사외이사 후보 박선화'}
+    {no:'제3호',nm:'선임 이사 수 결정의 건',header:true},
+    {no:'제3-1호',nm:'집중투표 4인 중 2인 선임의 건(회사제안)',types:['보통결의','양립불가']},
+    {no:'제3-2호',nm:'집중투표 5인 중 2인 선임의 건(주주제안)',types:['보통결의','양립불가']},
+    {no:'제4호',nm:'집중투표에 의한 이사 선임의 건',header:true},
+    {no:'제4-1호',nm:'집중투표 4인 중 2인 선임의 건(회사제안)',types:['보통결의','집중투표'],children:[
+      {no:'제4-1-1호',nm:'사외이사 후보 김도현'},
+      {no:'제4-1-2호',nm:'사외이사 후보 이수진'},
+      {no:'제4-1-3호',nm:'사외이사 후보 박준영'},
+      {no:'제4-1-4호',nm:'사외이사 후보 최민서'}
     ]},
-    {no:'제3-2호',nm:'감사위원이 되는 사외이사 선임의 건',types:['보통결의'],children:[
-      {no:'제3-2-1호',nm:'감사위원 사외이사 후보 김륜희'}
+    {no:'제4-2호',nm:'집중투표 5인 중 2인 선임의 건(주주제안)',types:['보통결의','집중투표'],children:[
+      {no:'제4-2-1호',nm:'사외이사 후보 정우성'},
+      {no:'제4-2-2호',nm:'사외이사 후보 한지민'},
+      {no:'제4-2-3호',nm:'사외이사 후보 오세훈'},
+      {no:'제4-2-4호',nm:'사외이사 후보 강가람'},
+      {no:'제4-2-5호',nm:'사외이사 후보 윤서연'}
     ]}
   ];
   function chipTxt(no){ return no.replace('제','제 '); }
@@ -917,14 +923,21 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     '제1호':{cat:'제1호',type:'보통결의',name:'재무제표 승인의 건',thrLabel:'출석의결권 1/2','for':241800000,against:58200000,abs:0,expect:'가결 예상'},
     '제2-1호':{cat:'제2-1호',type:'특별결의',name:'집중투표제 배제 조항 삭제의 건',thrLabel:'출석의결권 2/3','for':214000000,against:84000000,abs:2000000,expect:'가결 예상'},
     '제2-2호':{cat:'제2-2호',type:'특별결의',name:'전자주주총회 도입 관련 변경',thrLabel:'출석의결권 2/3','for':206000000,against:92000000,abs:2000000,expect:'가결 예상'},
-    '제2-3호':{cat:'제2-3호',type:'특별결의',name:'의결권 대리행사 수단 확대',thrLabel:'출석의결권 2/3','for':201000000,against:97000000,abs:2000000,expect:'가결 예상'},
-    '제3-1호':{cat:'제3-1호',type:'집중투표',name:'집중투표 후보 4인 중 2인 선임의 건',expect:'가결 예상 : 1, 3',cands:[
-      {rank:1,no:'제3-1-1호',name:'사외이사 후보 김근수',votes:10347519,elected:true},
-      {rank:2,no:'제3-1-3호',name:'사외이사 후보 남상일',votes:7347519,elected:true},
-      {rank:3,no:'제3-1-2호',name:'사외이사 후보 진웅섭',votes:4147519,elected:false},
-      {rank:4,no:'제3-1-4호',name:'사외이사 후보 박선화',votes:1347519,elected:false}
+    '제3-1호':{cat:'제3-1호',type:'보통결의',method:'양립불가',name:'집중투표 4인 중 2인 선임의 건(회사제안)',thrLabel:'출석의결권 1/2','for':241800000,against:58200000,abs:0,expect:'가결 예상'},
+    '제3-2호':{cat:'제3-2호',type:'보통결의',method:'양립불가',name:'집중투표 5인 중 2인 선임의 건(주주제안)',thrLabel:'출석의결권 1/2','for':118000000,against:182000000,abs:0,expect:'부결 예상'},
+    '제4-1호':{cat:'제4-1호',type:'집중투표',name:'집중투표 4인 중 2인 선임의 건(회사제안)',expect:'가결 예상 : 1, 2',cands:[
+      {rank:1,no:'제4-1-1호',name:'사외이사 후보 김도현',votes:10240000,elected:true},
+      {rank:2,no:'제4-1-3호',name:'사외이사 후보 박준영',votes:7180000,elected:true},
+      {rank:3,no:'제4-1-2호',name:'사외이사 후보 이수진',votes:4320000,elected:false},
+      {rank:4,no:'제4-1-4호',name:'사외이사 후보 최민서',votes:1260000,elected:false}
     ]},
-    '제3-2호':{cat:'제3-2호',type:'보통결의',name:'감사위원이 되는 사외이사 선임의 건',thrLabel:'출석의결권 1/2','for':230000000,against:70000000,abs:0,expect:'가결 예상'}
+    '제4-2호':{cat:'제4-2호',type:'집중투표',name:'집중투표 5인 중 2인 선임의 건(주주제안)',expect:'가결 예상 : 1, 2',cands:[
+      {rank:1,no:'제4-2-1호',name:'사외이사 후보 정우성',votes:9850000,elected:true},
+      {rank:2,no:'제4-2-2호',name:'사외이사 후보 한지민',votes:6420000,elected:true},
+      {rank:3,no:'제4-2-3호',name:'사외이사 후보 오세훈',votes:3980000,elected:false},
+      {rank:4,no:'제4-2-4호',name:'사외이사 후보 강가람',votes:2110000,elected:false},
+      {rank:5,no:'제4-2-5호',name:'사외이사 후보 윤서연',votes:980000,elected:false}
+    ]}
   };
   var STAGES=[
     {cls:'',name:'의안 상정 대기중',right:[{t:'의안 상정',c:'',go:1}]},
@@ -933,7 +946,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     {cls:'ia-fill',name:'결과 확인 중',sub:'출석·미투표 주주',sel:1,timer:1,right:[{t:'투표 재개',c:'play',go:2},{t:'표결 마감',c:'dark',go:4}]},
     {cls:'ia-wait',name:'표결 마감',sub:'출석 · 미투표',selStatic:'기권 처리',timer:1,right:[{t:'',c:'dots'}]}
   ];
-  var OC={agenda:'제1호',stage:0,preEx:false};
+  var OC={agenda:'제1호',stage:0,preEx:false,decided:null};
   var voteSec=0, ticker=null, autoAdv=null, el=document.getElementById('agStage');
   function selectNextAgenda(){ var tree=document.getElementById('agTree'); if(!tree) return; var nodes=Array.prototype.slice.call(tree.querySelectorAll('.selnode')); var ci=-1; for(var i=0;i<nodes.length;i++){ if(nodes[i].classList.contains('sel')){ci=i;break;} } if(ci>=0 && ci<nodes.length-1){ nodes[ci+1].click(); } }
   function fmt(x){var m=Math.floor(x/60),ss=x%60;return (m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;}
@@ -947,7 +960,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function renderStage(){
     if(!el) return;
     if(autoAdv){ clearTimeout(autoAdv); autoAdv=null; }
-    if(OC.stage===4){ autoAdv=setTimeout(selectNextAgenda,1600); }
+    if(OC.stage===4){ if(OC.agenda==='제3-1호'||OC.agenda==='제3-2호') OC.decided=OC.agenda; autoAdv=setTimeout(selectNextAgenda,1600); }
     var st=STAGES[OC.stage], m=STMETA[OC.stage];
     var l='<span class="cst '+m.tone+'">'+(m.noDot?'':'<span class="d"></span>')+m.badge+'</span>';
     if(m.timer) l+='<span class="ctimer" id="vTimer">'+fmt(voteSec)+'</span>';
@@ -1019,6 +1032,23 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(st===1) return '<span class="stt ready"><span class="d"></span>상정중</span>';
     return '';
   }
+  function persistBadge(no){
+    if(!OC.decided) return null;
+    var m={'제3-1호':{c:'제3-2호',cd:'제4-2호'},'제3-2호':{c:'제3-1호',cd:'제4-1호'}}[OC.decided];
+    if(!m) return null;
+    if(no===OC.decided) return '<span class="rst pass">가결</span>';
+    if(no===m.c) return '<span class="rst fail">부결</span>';
+    if(no===m.cd) return '<span class="rst drop">폐기</span>';
+    return null;
+  }
+  function repaintList(){
+    document.querySelectorAll('#agTree .arow.selnode').forEach(function(card){
+      var no=card.dataset.no, ast=card.querySelector('.astatus'); if(!ast) return;
+      var pb=persistBadge(no);
+      if(pb!=null){ ast.innerHTML=pb; return; }
+      ast.innerHTML=card.classList.contains('sel')?statusBadge(OC.stage,false):'';
+    });
+  }
   function updateLeft(){
     var node=document.querySelector('#agTree .selnode.sel'); if(!node) return;
     var ast=node.querySelector('.astatus'); if(!ast) return;
@@ -1034,14 +1064,14 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var d=CENTER[OC.agenda]; if(!d) return;
     var set=function(id,v){var e=document.getElementById(id); if(e) e.textContent=v;};
     set('cCat',d.cat.replace('제','제 ')); set('cName',d.name);
-    var types=d.type==='집중투표'?['보통결의','집중투표']:[d.type];
+    var types=d.type==='집중투표'?['보통결의','집중투표']:(d.method?[d.type,d.method]:[d.type]);
     var ct=document.getElementById('cTypes'); if(ct) ct.innerHTML=types.map(function(t,i){ var cls=(t==='특별결의'||t==='집중투표'||t==='양립불가')?' mth':''; return (i?'<span class="dot">·</span>':'')+'<span class="tp'+cls+'">'+t+'</span>'; }).join('');
     var pred=(d.expect&&d.expect.indexOf('부결')>=0)?{c:'fail',t:'부결 예상'}:{c:'pass',t:'가결 예상'};
     var cp=document.getElementById('cPred'); if(cp) cp.innerHTML='<span class="predb '+pred.c+'">'+pred.t+'</span>';
     var box=document.getElementById('cVizBox'), gr=document.getElementById('gBadgeRow');
     if(d.type==='집중투표'){ if(box) box.innerHTML=vizCumul(d); if(gr){ gr.innerHTML=(OC.stage>=4)?('<span class="passmark">'+CK+'가결 : 1, 2</span>'):statusBadge(OC.stage,false); gr.style.justifyContent='flex-end'; } }
     else { if(box) box.innerHTML=vizNormal(d); if(gr){ gr.innerHTML=badgeHTML(); gr.style.justifyContent='flex-end'; } }
-    renderChan(d); renderFooter(); updateLeft(); updateMetric();
+    renderChan(d); renderFooter(); repaintList(); updateMetric();
   }
   OC.select=function(no){ OC.agenda=no; OC.stage=0; voteSec=0; renderStage(); renderAll(); };
   // 의장용 뷰: 단계 매칭 없이 chair-view.html 오픈 (anchor href 사용)
