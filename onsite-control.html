@@ -107,8 +107,9 @@
   .qbtn.dark{background:#171717;border-color:#171717;color:#fff}
   .qbtn:hover{background:#fafafa}.qbtn.dark:hover{background:#000}
   /* 현황 */
-  .nowgrid3{display:grid;grid-template-columns:280px minmax(0,1fr) 474px;gap:8px;align-items:stretch;height:100%}
-  @media(max-width:1100px){.nowgrid3{grid-template-columns:1fr}}
+  .nowgrid3{display:grid;grid-template-columns:2fr 1fr;gap:8px;align-items:stretch;height:100%}
+  .ngleft{display:grid;grid-template-columns:1fr 2fr;gap:8px;min-height:0;min-width:0}
+  @media(max-width:1100px){.nowgrid3{grid-template-columns:1fr}.ngleft{grid-template-columns:1fr}}
   .ncard{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px}
   .ncard h3{margin:0 0 12px;font-size:14px;font-weight:600;color:#0a0a0a}
   .agrow{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #f0f0f0}
@@ -645,6 +646,7 @@
         <!-- 현황 -->
         <div class="oc-panel on" data-panel="op">
           <div class="nowgrid3">
+            <div class="ngleft">
             <div class="apanel">
               <div class="ivid">
                 <div class="ivid-h"><span class="ivid-t"><span class="liv"></span>생중계 · 카카오뱅크 주주총회</span><div class="ivid-act"><button id="pipMute" title="음소거"><i class="ph ph-speaker-simple-high"></i></button><button id="vidPip" title="PIP"><i class="ph ph-picture-in-picture"></i></button><button id="vidFull" title="전체화면"><i class="ph ph-arrows-out"></i></button></div></div>
@@ -677,6 +679,7 @@
                 </div>
               </div>
             </div>
+            </div><!--/ngleft-->
             <div class="apanel">
               <div class="chat-h"><span class="t">질의응답</span><button class="chat-x" title="확대"><i class="ph ph-arrow-square-out" style="font-size:16px"></i></button></div>
               <div class="chat-top">
