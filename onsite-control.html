@@ -107,7 +107,7 @@
   .qbtn.dark{background:#171717;border-color:#171717;color:#fff}
   .qbtn:hover{background:#fafafa}.qbtn.dark:hover{background:#000}
   /* 현황 */
-  .nowgrid3{display:grid;grid-template-columns:1fr 2fr 1fr;gap:8px;align-items:stretch;height:100%}
+  .nowgrid3{display:grid;grid-template-columns:280px minmax(0,1fr) 474px;gap:8px;align-items:stretch;height:100%}
   @media(max-width:1100px){.nowgrid3{grid-template-columns:1fr}}
   .ncard{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px}
   .ncard h3{margin:0 0 12px;font-size:14px;font-weight:600;color:#0a0a0a}
@@ -467,6 +467,45 @@
   .chkc.on .chkbox svg{display:block}
   .chkc .ct{font-size:14px;font-weight:600;color:#171717}
   .chkc .cd{font-size:12px;color:#737373;margin-top:4px}
+  /* === 현장 제어 리디자인 추가 === */
+  .oc-mc .s{font-size:12px;font-weight:500;color:#737373;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cag{padding:16px 4px 8px}
+  .cag-head{display:flex;align-items:center;gap:8px;margin-top:8px}
+  .cag-head .cag-nm{margin-top:0;flex:1}
+  #agStage{margin:0 0 12px}
+  #cVizBox{margin-top:4px}
+  .typebadge{display:inline-flex;align-items:center;height:20px;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;flex:none}
+  .typebadge.normal{background:#EEF5FF;color:#0071F3}
+  .typebadge.special{background:#FFF1F2;color:#E9081B}
+  .typebadge.cumul{background:#F5EEFF;color:#9333EA}
+  .gbars{display:flex;flex-direction:column;gap:16px;padding:8px 4px 12px}
+  .gbar{display:flex;flex-direction:column;gap:8px}
+  .grow{display:flex;align-items:center;gap:12px}
+  .gtrack{position:relative;flex:1;height:16px;background:#F5F5F5;border-radius:6px;overflow:visible}
+  .gfill{position:absolute;left:0;top:0;height:16px;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1)}
+  .gfill.for{background:linear-gradient(90deg,#82BBFF 0%,#0071F3 100%)}
+  .gfill.ag{background:linear-gradient(90deg,#A3A3A3 0%,#525252 100%)}
+  .qline{position:absolute;top:-4px;bottom:-4px;width:0;border-left:1.5px solid #171717}
+  .qline::before{content:"";position:absolute;top:-3px;left:-3px;width:6px;height:6px;border-radius:50%;background:#171717}
+  .gpct{width:42px;text-align:right;font-size:14px;font-weight:600;color:#0a0a0a;font-variant-numeric:tabular-nums;flex:none}
+  .gcap{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:#737373;flex-wrap:wrap}
+  .gcap .lbl{display:inline-flex;align-items:center;gap:4px;color:#171717}
+  .gcap .lbl .op{padding:0}
+  .chsec{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:4px}
+  .chsec-h{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fff;border-bottom:1px solid var(--border)}
+  .chsec-h .tt{font-size:14px;font-weight:600;color:#0a0a0a}
+  .chsec-h .sm{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px}
+  .chsec-h .sm .k{color:#737373}.chsec-h .sm .v{font-weight:600;color:#0a0a0a;font-variant-numeric:tabular-nums}
+  .chtbl{width:100%;border-collapse:collapse;font-size:12px}
+  .chtbl th{background:#FAFAFA;color:#737373;font-weight:500;padding:8px;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap}
+  .chtbl th.l{text-align:left}.chtbl th.c{text-align:center}
+  .chtbl td{padding:8px;text-align:right;color:#0a0a0a;border-bottom:1px solid #f0f0f0;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .chtbl td.l{text-align:left}.chtbl td.c{text-align:center}
+  .chtbl tr:last-child td{border-bottom:none}
+  .chtbl tr.sum td{background:#FAFAFA;font-weight:600}
+  .chst{display:inline-flex;align-items:center;gap:4px;height:20px;padding:2px 6px;border-radius:6px;font-size:12px;font-weight:500}
+  .chst.done{background:#F5F5F5;color:#525252}
+  .chst.live{background:#FEF5E7;color:#EA580C}
 </style>
 </head>
 <body>
@@ -594,11 +633,12 @@
       </div>
 
       <div class="oc-metrics">
-        <div class="oc-mc"><div class="k">의안 진행 <span class="stbadge blue" id="mAgSt"><span class="d"></span>진행 중</span></div><div class="v"><span><b>2</b> / 6</span></div></div>
-        <div class="oc-mc"><div class="k">전체 출석 주식수</div><div class="v">300,000,000<span class="sub">주</span><span class="sep"></span>63.0%</div></div>
-        <div class="oc-mc"><div class="k">전체 출석 주주수</div><div class="v">300,000<span class="sub">명</span></div></div>
-        <div class="oc-mc"><div class="k">현장 참석</div><div class="v">93,000<span class="sub">명 · 3,120,000주 행사 가능</span></div></div>
-        <div class="oc-mc"><div class="k">온라인 참석</div><div class="v"><span id="mOnline">207,000</span><span class="sub">명</span><svg class="spark" viewBox="0 0 80 22" preserveAspectRatio="none"><polyline fill="none" stroke="#0071f3" stroke-width="2" points="0,18 12,15 24,16 36,10 48,12 60,6 72,7 80,3"/></svg></div></div>
+        <div class="oc-mc"><div class="k">의안 진행 <span class="stbadge blue" id="mAgSt"><span class="d"></span>진행 중</span></div><div class="v"><span><b>2</b> / 8</span></div><div class="s" id="mAgSub">제2호 상정</div></div>
+        <div class="oc-mc"><div class="k">의결정족수</div><div class="v">1/4 이상</div><div class="s">476,211,964주 기준</div></div>
+        <div class="oc-mc"><div class="k">전체 출석 주주수</div><div class="v">300,000<span class="sub">명</span></div><div class="s">출석의결권 300,000,000주</div></div>
+        <div class="oc-mc"><div class="k">현장 참석</div><div class="v">93,000<span class="sub">명</span></div><div class="s">3,120,000주 행사 가능</div></div>
+        <div class="oc-mc"><div class="k">현장 표결</div><div class="v"><span><b>2</b> / 8</span></div><div class="s">34,217주 행사</div></div>
+        <div class="oc-mc"><div class="k">온라인 참석</div><div class="v"><span id="mOnline">207,000</span><span class="sub">명</span><svg class="spark" viewBox="0 0 80 22" preserveAspectRatio="none"><polyline fill="none" stroke="#0071f3" stroke-width="2" points="0,18 12,15 24,16 36,10 48,12 60,6 72,7 80,3"/></svg></div><div class="s">296,880,000주</div></div>
       </div>
 
       <div class="oc-grid">
@@ -616,15 +656,16 @@
             <div class="apanel cpanel">
               <div class="cbody">
                 <div class="cpane on" data-cp="op">
-                  <div id="agStage" class="iarow"></div>
                   <div class="cag">
                     <div class="cag-cat"><span id="cCat">제1호</span><span class="d"></span><span id="cType">보통결의</span><span id="cBadge"></span>
                       <label class="tgl-wrap"><span class="sw" data-sw></span>사전행사 제외</label>
                     </div>
-                    <div class="cag-nm" id="cName">재무제표 승인의 건</div>
+                    <div class="cag-head"><div class="cag-nm" id="cName">재무제표 승인의 건</div><span id="cResBadge"></span></div>
                   </div>
+                  <div id="agStage" class="iarow"></div>
                   <div class="cbadge-row" id="gBadgeRow"></div>
                   <div id="cVizBox"></div>
+                  <div id="cChanWrap"></div>
                 </div>
               </div>
               <div class="cfoot">
@@ -633,16 +674,6 @@
                   <span class="kv2"><em>미행사 의결권</em><b class="mut">0주</b></span>
                   <span class="sp"></span>
                   <button class="ocb" id="cfDetail">상세보기</button>
-                </div>
-                <div class="cchan" id="cchanBar">
-                  <span class="t1" style="width:6.7%"></span>
-                  <span class="t2" style="width:13.3%"></span>
-                  <span class="t3" style="width:80%"></span>
-                </div>
-                <div class="cchan-lg" id="cchanLg">
-                  <span><i class="c1"></i>온라인 투표 20,000,000주</span>
-                  <span><i class="c2"></i>현장 투표 40,000,000주</span>
-                  <span><i class="c3"></i>사전 투표 240,000,000주</span>
                 </div>
               </div>
             </div>
@@ -886,17 +917,12 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var present=d['for']+d.against+d.abs, base=OC.preEx?present*0.2:present;
     var ratio=d.thrLabel.indexOf('2/3')>=0?2/3:0.5, thr=base*ratio;
     var fp=base?F/base*100:0, ap=base?A/base*100:0, thp=base?thr/base*100:0;
-    return '<div class="cvbox"><div class="cvbar">'
-      +'<span class="sg for" style="width:'+fp.toFixed(1)+'%"></span>'
-      +'<span class="sg ag" style="width:'+Math.max(0,100-fp).toFixed(1)+'%"></span>'
-      +'<span class="th" style="left:'+thp.toFixed(1)+'%"></span>'
-      +'<span class="thl" style="left:2px">가결 기준 · '+d.thrLabel+'</span>'
-      +'<span class="thv" style="left:'+thp.toFixed(1)+'%;transform:translateX(4px)">'+comma(thr)+'주</span>'
-      +'</div><div class="cvdata">'
-      +'<span class="it"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span><span class="n">'+comma(F)+'주</span></span>'
-      +'<span class="it"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span><span class="n">'+comma(A)+'주</span></span>'
-      +'<span class="it"><span class="op abs"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</span><span class="n'+(AB?'':' mut')+'">'+comma(AB)+'주</span></span>'
-      +'</div></div>';
+    return '<div class="gbars">'
+      +'<div class="gbar"><div class="grow"><div class="gtrack"><span class="gfill for" style="width:'+Math.min(100,fp).toFixed(1)+'%"></span><span class="qline" style="left:'+thp.toFixed(1)+'%"></span></div><span class="gpct">'+Math.round(fp)+'%</span></div>'
+      +'<div class="gcap"><span class="lbl"><span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span>'+comma(F)+'주</span><span>· 가결 기준 '+d.thrLabel+' ('+comma(thr)+'주)</span></div></div>'
+      +'<div class="gbar"><div class="grow"><div class="gtrack"><span class="gfill ag" style="width:'+Math.min(100,ap).toFixed(1)+'%"></span><span class="qline" style="left:'+Math.max(0,100-thp).toFixed(1)+'%"></span></div><span class="gpct">'+Math.round(ap)+'%</span></div>'
+      +'<div class="gcap"><span class="lbl"><span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span>'+comma(A)+'주</span>'+(AB?('<span>· 기권 '+comma(AB)+'주</span>'):'')+'</div></div>'
+      +'</div>';
   }
   function vizCumul(d){
     var max=Math.max.apply(null,d.cands.map(function(c){return c.votes;}));
@@ -915,15 +941,23 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function renderFooter(){
     var on=20000000, onsite=40000000, pre=240000000, total=OC.preEx?(on+onsite):(on+onsite+pre);
     var ct=document.getElementById('cfTotal'); if(ct) ct.textContent=comma(total)+'주';
-    var bar=document.getElementById('cchanBar'), lg=document.getElementById('cchanLg'); if(!bar||!lg) return;
-    function p(v){return (v/total*100).toFixed(1);}
-    if(OC.preEx){
-      bar.innerHTML='<span class="t1" style="width:'+p(on)+'%"></span><span class="t2" style="width:'+p(onsite)+'%"></span>';
-      lg.innerHTML='<span><i class="c1"></i>온라인 투표 '+comma(on)+'주</span><span><i class="c2"></i>현장 투표 '+comma(onsite)+'주</span>';
-    } else {
-      bar.innerHTML='<span class="t1" style="width:'+p(on)+'%"></span><span class="t2" style="width:'+p(onsite)+'%"></span><span class="t3" style="width:'+p(pre)+'%"></span>';
-      lg.innerHTML='<span><i class="c1"></i>온라인 투표 '+comma(on)+'주</span><span><i class="c2"></i>현장 투표 '+comma(onsite)+'주</span><span><i class="c3"></i>사전 투표 '+comma(pre)+'주</span>';
-    }
+  }
+  function renderChan(d){
+    var wrap=document.getElementById('cChanWrap'); if(!wrap) return;
+    if(d.type==='집중투표'){ wrap.innerHTML=''; return; }
+    var incPre=OC.preEx?0:1, lf=liveFrac(), f=incPre*0.8+0.2*lf;
+    var F=d['for']*f, A=d.against*f, AB=d.abs*f;
+    var chans=[{nm:'사전투표',w:240000000,pre:true,st:'done'},{nm:'현장투표',w:40000000,st:'done'},{nm:'온라인투표',w:20000000,st:(OC.stage>=4?'done':'live')}];
+    if(OC.preEx) chans=chans.filter(function(c){return !c.pre;});
+    var totW=chans.reduce(function(a,c){return a+c.w;},0);
+    var rows=chans.map(function(c){
+      var sh=totW?c.w/totW:0, cf=Math.round(F*sh), ca=Math.round(A*sh), cab=Math.round(AB*sh);
+      var stt=c.st==='live'?'<span class="chst live">집계 중</span>':'<span class="chst done">반영 완료</span>';
+      return '<tr><td class="l">'+c.nm+'</td><td>'+comma(c.w)+'</td><td>'+comma(cf)+'</td><td>'+comma(ca)+'</td><td>'+comma(cab)+'</td><td class="c">'+stt+'</td></tr>';
+    }).join('');
+    rows+='<tr class="sum"><td class="l">합계</td><td>'+comma(totW)+'</td><td>'+comma(Math.round(F))+'</td><td>'+comma(Math.round(A))+'</td><td>'+comma(Math.round(AB))+'</td><td class="c">\u2014</td></tr>';
+    wrap.innerHTML='<div class="chsec"><div class="chsec-h"><span class="tt">채널별 표결 현황</span><span class="sm"><span class="k">행사 의결권</span><span class="v">'+comma(F+A+AB)+'주</span></span></div>'
+      +'<table class="chtbl"><thead><tr><th class="l">채널</th><th>행사 의결권</th><th>찬성</th><th>반대</th><th>기권</th><th class="c">상태</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
   }
   function updateLeft(){
     var node=document.querySelector('#agTree .selnode.sel'); if(!node) return;
@@ -946,11 +980,12 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var d=CENTER[OC.agenda]; if(!d) return;
     var set=function(id,v){var e=document.getElementById(id); if(e) e.textContent=v;};
     set('cCat',d.cat); set('cType',d.type); set('cName',d.name);
+    var rb=document.getElementById('cResBadge'); if(rb){ var tcls=d.type==='특별결의'?'special':(d.type==='집중투표'?'cumul':'normal'); rb.className='typebadge '+tcls; rb.textContent=d.type; }
     var cb=document.getElementById('cBadge'); if(cb) cb.innerHTML=(d.type==='집중투표')?'<span class="hbadge">집중투표</span>':'';
     var box=document.getElementById('cVizBox'), gr=document.getElementById('gBadgeRow');
     if(d.type==='집중투표'){ if(box) box.innerHTML=vizCumul(d); if(gr){ gr.innerHTML=(OC.stage>=4)?('<span class="passmark">'+CK+'가결 : 1, 2</span>'):(OC.stage===3?'<span class="rbadge counting"><span class="cdot"></span>결과 확인 중</span>':('<span class="rbadge">'+d.expect+'</span>')); gr.style.justifyContent='flex-end'; } }
     else { if(box) box.innerHTML=vizNormal(d); if(gr){ gr.innerHTML=badgeHTML(); gr.style.justifyContent='flex-end'; } }
-    renderFooter(); updateLeft(); updateMetric();
+    renderChan(d); renderFooter(); updateLeft(); updateMetric();
   }
   OC.select=function(no){ OC.agenda=no; OC.stage=0; voteSec=0; renderStage(); renderAll(); };
   // 의장용 뷰: 단계 매칭 없이 chair-view.html 오픈 (anchor href 사용)
