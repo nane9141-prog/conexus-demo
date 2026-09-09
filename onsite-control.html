@@ -511,7 +511,7 @@
   /* === 의안 카드 표결단위/유형 · 상태 뱃지 === */
   .acat>.astatus{flex:none;margin-left:auto}
   .atypes{display:flex;align-items:center;gap:6px;margin-top:2px;font-size:12px;font-weight:500;color:#737373}
-  .atypes .dot{color:#a3a3a3}
+  .atypes .tsep{color:#a3a3a3}
   .atypes .tp.mth{display:inline-flex;align-items:center;height:18px;padding:1px 6px;background:#F5F5F5;color:#525252;border-radius:6px}
   .aghead{background:#fafafa;cursor:default}
   .aghead .anm{color:#525252}
@@ -551,6 +551,15 @@
   .ctimer{font-size:14px;font-weight:600;color:#0a0a0a;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
   .ctrlbar.agg .ctimer,.ctrlbar.finish .ctimer{color:#737373}
   .ctrl-btns{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-left:auto}
+  /* === 양립불가 병합 표결 === */
+  .excl{display:flex;flex-direction:column;gap:18px;padding:8px 4px 4px}
+  .oblock{display:flex;flex-direction:column;gap:10px}
+  .oblock .gbars{padding:0}
+  .ohd{display:flex;align-items:center;gap:8px}
+  .ohd .onm{flex:1;min-width:0;font-size:14px;font-weight:600;color:#0a0a0a}
+  .oresult{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:3px;height:20px;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600;white-space:nowrap}
+  .oresult.pass{background:#EEF5FF;color:#0071F3}
+  .oresult.fail{background:#FDF0F1;color:#E9081B}
 </style>
 </head>
 <body>
@@ -855,9 +864,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     {no:'제2호',nm:'정관 일부 변경의 건',header:true},
     {no:'제2-1호',nm:'집중투표제 배제 조항 삭제의 건(정관 제37조 제3항)',types:['특별결의']},
     {no:'제2-2호',nm:'전자주주총회 도입 관련 변경(정관 제26조 제2항)',types:['특별결의']},
-    {no:'제3호',nm:'선임 이사 수 결정의 건',header:true},
-    {no:'제3-1호',nm:'집중투표 4인 중 2인 선임의 건(회사제안)',types:['보통결의','양립불가']},
-    {no:'제3-2호',nm:'집중투표 5인 중 2인 선임의 건(주주제안)',types:['보통결의','양립불가']},
+    {no:'제3호',nm:'선임 이사 수 결정의 건',types:['보통결의','양립불가'],children:[
+      {no:'제3-1호',nm:'집중투표 4인 중 2인 선임의 건(회사제안)'},
+      {no:'제3-2호',nm:'집중투표 5인 중 2인 선임의 건(주주제안)'}
+    ]},
     {no:'제4호',nm:'집중투표에 의한 이사 선임의 건',header:true},
     {no:'제4-1호',nm:'집중투표 4인 중 2인 선임의 건(회사제안)',types:['보통결의','집중투표'],children:[
       {no:'제4-1-1호',nm:'사외이사 후보 김도현'},
@@ -878,7 +888,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(!types||!types.length) return '';
     return '<div class="atypes">'+types.map(function(t,i){
       var cls=(t==='특별결의'||t==='집중투표'||t==='양립불가')?' mth':'';
-      return (i?'<span class="dot">·</span>':'')+'<span class="tp'+cls+'">'+t+'</span>';
+      return (i?'<span class="tsep">·</span>':'')+'<span class="tp'+cls+'">'+t+'</span>';
     }).join('')+'</div>';
   }
   function cardHTML(x){
@@ -923,8 +933,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     '제1호':{cat:'제1호',type:'보통결의',name:'재무제표 승인의 건',thrLabel:'출석의결권 1/2','for':241800000,against:58200000,abs:0,expect:'가결 예상'},
     '제2-1호':{cat:'제2-1호',type:'특별결의',name:'집중투표제 배제 조항 삭제의 건',thrLabel:'출석의결권 2/3','for':214000000,against:84000000,abs:2000000,expect:'가결 예상'},
     '제2-2호':{cat:'제2-2호',type:'특별결의',name:'전자주주총회 도입 관련 변경',thrLabel:'출석의결권 2/3','for':206000000,against:92000000,abs:2000000,expect:'가결 예상'},
-    '제3-1호':{cat:'제3-1호',type:'보통결의',method:'양립불가',name:'집중투표 4인 중 2인 선임의 건(회사제안)',thrLabel:'출석의결권 1/2','for':241800000,against:58200000,abs:0,expect:'가결 예상'},
-    '제3-2호':{cat:'제3-2호',type:'보통결의',method:'양립불가',name:'집중투표 5인 중 2인 선임의 건(주주제안)',thrLabel:'출석의결권 1/2','for':118000000,against:182000000,abs:0,expect:'부결 예상'},
+    '제3호':{cat:'제3호',type:'양립불가',name:'선임 이사 수 결정의 건',expect:'가결 예상',options:[
+      {no:'제3-1호',name:'집중투표 4인 중 2인 선임의 건(회사제안)','for':241800000,against:58200000,abs:0,result:'가결'},
+      {no:'제3-2호',name:'집중투표 5인 중 2인 선임의 건(주주제안)','for':118000000,against:182000000,abs:0,result:'부결'}
+    ]},
     '제4-1호':{cat:'제4-1호',type:'집중투표',name:'집중투표 4인 중 2인 선임의 건(회사제안)',expect:'가결 예상 : 1, 2',cands:[
       {rank:1,no:'제4-1-1호',name:'사외이사 후보 김도현',votes:10240000,elected:true},
       {rank:2,no:'제4-1-3호',name:'사외이사 후보 박준영',votes:7180000,elected:true},
@@ -960,7 +972,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function renderStage(){
     if(!el) return;
     if(autoAdv){ clearTimeout(autoAdv); autoAdv=null; }
-    if(OC.stage===4){ if(OC.agenda==='제3-1호'||OC.agenda==='제3-2호') OC.decided=OC.agenda; autoAdv=setTimeout(selectNextAgenda,1600); }
+    if(OC.stage===4){ if(OC.agenda==='제3호') OC.decided='회사'; autoAdv=setTimeout(selectNextAgenda,1600); }
     var st=STAGES[OC.stage], m=STMETA[OC.stage];
     var l='<span class="cst '+m.tone+'">'+(m.noDot?'':'<span class="d"></span>')+m.badge+'</span>';
     if(m.timer) l+='<span class="ctimer" id="vTimer">'+fmt(voteSec)+'</span>';
@@ -993,6 +1005,24 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       +'<div class="gcap">출석의결권 : '+comma(base)+'주 · 출석주식총수 '+aLbl+'</div></div>'
       +'</div>';
   }
+  function vizExclusive(d){
+    var ISSUED=476211964;
+    var CKS='<svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round"><path d="M20 6 9 17l-5-5"/></svg>';
+    var XS='<svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+    function bar(kind,pct,lp,cap){
+      return '<div class="gbar"><div class="grow"><div class="gtrack"><span class="gfill '+kind+'" style="width:'+Math.min(100,pct).toFixed(1)+'%"></span><span class="qline" style="left:'+lp+'%"></span></div><span class="gpct">'+Math.round(pct)+'%</span></div><div class="gcap">'+cap+'</div></div>';
+    }
+    return '<div class="excl">'+d.options.map(function(o){
+      var F=o['for'], base=o['for']+o.against+(o.abs||0);
+      var fp=ISSUED?F/ISSUED*100:0, ap=base?F/base*100:0, pass=o.result==='가결';
+      var rb='<span class="oresult '+(pass?'pass':'fail')+'">'+(pass?CKS:XS)+o.result+'</span>';
+      return '<div class="oblock"><div class="ohd"><span class="ano">'+o.no.replace('제','제 ')+'</span><span class="onm">'+o.name+'</span>'+rb+'</div>'
+        +'<div class="gbars">'
+        +bar('for',fp,25,'발행주식총수 : '+comma(ISSUED)+'주 · 가결기준 : 발행주식총수 1/4')
+        +bar('ag',ap,50,'출석의결권 : '+comma(base)+'주 · 출석주식총수 1/2')
+        +'</div></div>';
+    }).join('')+'</div>';
+  }
   function vizCumul(d){
     var max=Math.max.apply(null,d.cands.map(function(c){return c.votes;}));
     var rows=d.cands.map(function(c){
@@ -1010,7 +1040,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   }
   function renderChan(d){
     var wrap=document.getElementById('cChanWrap'); if(!wrap) return;
-    if(d.type==='집중투표'){ wrap.innerHTML=''; return; }
+    if(d.type==='집중투표'||d.type==='양립불가'){ wrap.innerHTML=''; return; }
     var incPre=OC.preEx?0:1, lf=liveFrac(), f=incPre*0.8+0.2*lf;
     var F=d['for']*f, A=d.against*f, AB=d.abs*f;
     var chans=[{nm:'사전투표',w:240000000,pre:true,st:'done'},{nm:'현장투표',w:40000000,st:'done'},{nm:'온라인투표',w:20000000,st:(OC.stage>=4?'done':'live')}];
@@ -1034,11 +1064,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   }
   function persistBadge(no){
     if(!OC.decided) return null;
-    var m={'제3-1호':{c:'제3-2호',cd:'제4-2호'},'제3-2호':{c:'제3-1호',cd:'제4-1호'}}[OC.decided];
-    if(!m) return null;
-    if(no===OC.decided) return '<span class="rst pass">가결</span>';
-    if(no===m.c) return '<span class="rst fail">부결</span>';
-    if(no===m.cd) return '<span class="rst drop">폐기</span>';
+    if(OC.decided==='회사'&&no==='제4-2호') return '<span class="rst drop">폐기</span>';
+    if(OC.decided==='주주'&&no==='제4-1호') return '<span class="rst drop">폐기</span>';
     return null;
   }
   function repaintList(){
@@ -1064,12 +1091,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var d=CENTER[OC.agenda]; if(!d) return;
     var set=function(id,v){var e=document.getElementById(id); if(e) e.textContent=v;};
     set('cCat',d.cat.replace('제','제 ')); set('cName',d.name);
-    var types=d.type==='집중투표'?['보통결의','집중투표']:(d.method?[d.type,d.method]:[d.type]);
-    var ct=document.getElementById('cTypes'); if(ct) ct.innerHTML=types.map(function(t,i){ var cls=(t==='특별결의'||t==='집중투표'||t==='양립불가')?' mth':''; return (i?'<span class="dot">·</span>':'')+'<span class="tp'+cls+'">'+t+'</span>'; }).join('');
+    var types=d.type==='집중투표'?['보통결의','집중투표']:(d.type==='양립불가'?['보통결의','양립불가']:(d.method?[d.type,d.method]:[d.type]));
+    var ct=document.getElementById('cTypes'); if(ct) ct.innerHTML=types.map(function(t,i){ var cls=(t==='특별결의'||t==='집중투표'||t==='양립불가')?' mth':''; return (i?'<span class="tsep">·</span>':'')+'<span class="tp'+cls+'">'+t+'</span>'; }).join('');
     var pred=(d.expect&&d.expect.indexOf('부결')>=0)?{c:'fail',t:'부결 예상'}:{c:'pass',t:'가결 예상'};
     var cp=document.getElementById('cPred'); if(cp) cp.innerHTML='<span class="predb '+pred.c+'">'+pred.t+'</span>';
     var box=document.getElementById('cVizBox'), gr=document.getElementById('gBadgeRow');
     if(d.type==='집중투표'){ if(box) box.innerHTML=vizCumul(d); if(gr){ gr.innerHTML=(OC.stage>=4)?('<span class="passmark">'+CK+'가결 : 1, 2</span>'):statusBadge(OC.stage,false); gr.style.justifyContent='flex-end'; } }
+    else if(d.type==='양립불가'){ if(box) box.innerHTML=vizExclusive(d); if(gr){ gr.innerHTML=badgeHTML(); gr.style.justifyContent='flex-end'; } }
     else { if(box) box.innerHTML=vizNormal(d); if(gr){ gr.innerHTML=badgeHTML(); gr.style.justifyContent='flex-end'; } }
     renderChan(d); renderFooter(); repaintList(); updateMetric();
   }
