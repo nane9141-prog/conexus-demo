@@ -474,7 +474,7 @@
   .cag{padding:16px 4px 8px}
   .cag-head{display:flex;align-items:center;gap:8px;margin-top:8px}
   .cag-head .cag-nm{margin-top:0;flex:1}
-  #agStage{margin:0 0 12px}
+  #agStage{margin:0 -12px 12px}
   #cVizBox{margin-top:4px}
   .typebadge{display:inline-flex;align-items:center;height:20px;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;flex:none}
   .typebadge.normal{background:#EEF5FF;color:#0071F3}
@@ -534,6 +534,23 @@
   .predb.fail{background:#FDF0F1;color:#E9081B}
   .cag-second{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
   .cag-second .atypes{margin-top:0}
+  /* === 표결 컨트롤 바 (풀블리드 그라데이션) === */
+  .ctrlbar{display:flex;align-items:center;gap:8px;min-height:44px;padding:8px 12px;border-top:1px solid #E5E5E5;border-bottom:1px solid #E5E5E5}
+  .ctrlbar.default{background:linear-gradient(270deg,#FFFFFF 0%,#FAFAFA 100%)}
+  .ctrlbar.ready{background:#fff}
+  .ctrlbar.vote{background:linear-gradient(270deg,#FFFFFF 0%,#EEF5FF 100%)}
+  .ctrlbar.agg{background:linear-gradient(270deg,#FFFFFF 0%,#FEF5E7 100%)}
+  .ctrlbar.finish{background:linear-gradient(270deg,#FFFFFF 0%,#FAFAFA 100%)}
+  .cst{display:inline-flex;align-items:center;gap:4px;height:20px;padding:2px 6px;border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;flex:none}
+  .cst .d{width:6px;height:6px;border-radius:50%}
+  .cst.ready{color:#525252}.cst.ready .d{background:#525252}
+  .cst.vote{color:#0071F3}.cst.vote .d{background:#0071F3}
+  .cst.agg{color:#EA580C}.cst.agg .d{background:#EA580C}
+  .cst.done{color:#525252}
+  .ctrlbar.default .cst{opacity:.5}
+  .ctimer{font-size:14px;font-weight:600;color:#0a0a0a;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .ctrlbar.agg .ctimer,.ctrlbar.finish .ctimer{color:#737373}
+  .ctrl-btns{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-left:auto}
 </style>
 </head>
 <body>
@@ -687,7 +704,7 @@
                 <div class="cpane on" data-cp="op">
                   <div class="cag">
                     <div class="acat cag-acat"><span class="ano" id="cCat">제 1호</span><span class="anm cag-nm" id="cName">재무제표 승인의 건</span><span class="cag-pred" id="cPred"></span></div>
-                    <div class="cag-second"><div class="atypes" id="cTypes"></div><label class="tgl-wrap"><span class="sw" data-sw></span>사전행사 제외</label></div>
+                    <div class="cag-second"><div class="atypes" id="cTypes"></div></div>
                   </div>
                   <div id="agStage" class="iarow"></div>
                   <div class="cbadge-row" id="gBadgeRow"></div>
@@ -920,25 +937,28 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   var voteSec=0, ticker=null, autoAdv=null, el=document.getElementById('agStage');
   function selectNextAgenda(){ var tree=document.getElementById('agTree'); if(!tree) return; var nodes=Array.prototype.slice.call(tree.querySelectorAll('.selnode')); var ci=-1; for(var i=0;i<nodes.length;i++){ if(nodes[i].classList.contains('sel')){ci=i;break;} } if(ci>=0 && ci<nodes.length-1){ nodes[ci+1].click(); } }
   function fmt(x){var m=Math.floor(x/60),ss=x%60;return (m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;}
+  var STMETA={
+    0:{key:'default',badge:'상정 대기',tone:'ready'},
+    1:{key:'ready',badge:'상정중',tone:'ready'},
+    2:{key:'vote',badge:'투표중',tone:'vote',timer:true},
+    3:{key:'agg',badge:'집계중',tone:'agg',timer:true},
+    4:{key:'finish',badge:'표결 마감',tone:'done',timer:true,noDot:true}
+  };
   function renderStage(){
     if(!el) return;
     if(autoAdv){ clearTimeout(autoAdv); autoAdv=null; }
     if(OC.stage===4){ autoAdv=setTimeout(selectNextAgenda,1600); }
-    var st=STAGES[OC.stage];
-    var l='<div class="iarow-l"><span class="ianame'+(st.red?' red':'')+'">'+st.name+'</span>';
-    if(st.sub) l+='<span class="iasub">'+st.sub+'</span>';
-    if(st.sel) l+='<select class="iasel"><option>기권 처리</option><option>불참 처리</option><option>기권 미처리</option></select>';
-    else if(st.selStatic) l+='<span class="iastat">'+st.selStatic+'</span>';
-    l+='</div>';
-    var r='<div class="iarow-r">';
-    if(st.timer) r+='<span class="iatimer" id="vTimer">'+fmt(voteSec)+'</span>';
+    var st=STAGES[OC.stage], m=STMETA[OC.stage];
+    var l='<span class="cst '+m.tone+'">'+(m.noDot?'':'<span class="d"></span>')+m.badge+'</span>';
+    if(m.timer) l+='<span class="ctimer" id="vTimer">'+fmt(voteSec)+'</span>';
+    var r='<div class="ctrl-btns">';
     st.right.forEach(function(b){
       if(b.c==='dots') r+='<button class="iabtn ic">'+DOTS+'</button>';
       else if(b.c==='play') r+='<button class="iabtn" data-go="'+b.go+'">'+PLAY+b.t+'</button>';
       else r+='<button class="iabtn'+(b.c?' '+b.c:'')+'" data-go="'+b.go+'">'+b.t+'</button>';
     });
     r+='</div>';
-    el.className='iarow'+(st.cls?' '+st.cls:'');
+    el.className='ctrlbar '+m.key;
     el.innerHTML=l+r;
     el.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click',function(){ OC.stage=+b.getAttribute('data-go'); renderStage(); renderAll(); }); });
     if(OC.stage===2){ if(!ticker){ ticker=setInterval(function(){ voteSec++; var t=document.getElementById('vTimer'); if(t) t.textContent=fmt(voteSec); },1000); } }
