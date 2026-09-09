@@ -248,10 +248,8 @@
   .sbadge.done{color:#525252}.sbadge.done .d{background:#525252}
   .selnode{cursor:pointer;border-radius:8px}
   .selnode.sel{border-radius:8px;position:relative;z-index:1}
-  .arow.selnode.sel{border-color:#171717;box-shadow:0 0 0 1px #171717}
-  .achild.selnode.sel{background:#FAFAFA;border-radius:8px}
-  .achild.selnode.sel .ano{background:#171717;border-color:#171717;color:#fff}
-  .achild.selnode.sel{border-top-color:transparent}
+  .arow.selnode.sel{border-color:#a3a3a3}
+  .achild.selnode.sel{border:1px solid #a3a3a3;border-radius:8px}
   .achild.selnode:not(.sel){border-radius:0}
   .iarow{box-sizing:border-box;display:flex;align-items:center;gap:12px;padding:8px;min-height:44px;background:#fff;border:1px solid #E5E5E5;border-radius:6px}
   .iarow-l{display:flex;align-items:center;gap:8px;padding:0 8px;flex:1;min-width:0}
@@ -828,8 +826,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       ]}
     ]}
   ];
-  function rBadge(res){ return res?'<span class="rbadge">'+res+'</span>':''; }
-  function sBadge(st){ if(!st) return ''; var c=st==='진행 중'?' prog':''; return '<span class="sbadge'+c+'"><span class="d"></span>'+st+'</span>'; }
+  function rBadge(res){ if(!res||res.indexOf('가결 예상')===0) return ''; return '<span class="rbadge">'+res+'</span>'; }
+  function sBadge(st){ if(!st||st==='대기') return ''; var c=st==='진행 중'?' prog':''; return '<span class="sbadge'+c+'"><span class="d"></span>'+st+'</span>'; }
   function agNode(x){
     var cat='<div class="acat"><span class="ano">'+x.no+'</span><span class="anm">'+x.nm+'</span>'+(x.tag?'<span class="atag">'+x.tag+'</span>':'')+'</div>';
     var stat = x.v ? '<div class="astatus">'+rBadge(x.res)+sBadge(x.st)+'</div>' : '';
@@ -941,8 +939,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     return '<div class="ccard">'+rows+'</div>';
   }
   function badgeHTML(){
-    var b=OC.stage>=4?'pass':(OC.stage===3?'counting':'expect');
-    return {expect:'<span class="rbadge">가결 예상</span>',counting:'<span class="rbadge counting"><span class="cdot"></span>결과 확인 중</span>',pass:'<span class="passmark">'+CK+'가결</span>'}[b];
+    if(OC.stage>=4) return '<span class="passmark">'+CK+'가결</span>';
+    if(OC.stage===3) return '<span class="rbadge counting"><span class="cdot"></span>결과 확인 중</span>';
+    if(OC.stage===2) return '<span class="sbadge prog"><span class="d"></span>진행 중</span>';
+    return '';
   }
   function renderFooter(){
     var on=20000000, onsite=40000000, pre=240000000, total=OC.preEx?(on+onsite):(on+onsite+pre);
@@ -968,14 +968,11 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function updateLeft(){
     var node=document.querySelector('#agTree .selnode.sel'); if(!node) return;
     var ast=node.querySelector('.astatus'); if(!ast) return;
-    var res,st;
-    if(OC.stage>=4){res='pass';st='done';}
-    else if(OC.stage===3){res='counting';st='prog';}
-    else if(OC.stage===2){res='expect';st='prog';}
-    else {res='expect';st='wait';}
-    var RB={expect:'<span class="rbadge">가결 예상</span>',counting:'<span class="rbadge counting"><span class="cdot"></span>결과 확인 중</span>',pass:'<span class="rbadge pass">가결</span>'};
-    var SB={wait:'<span class="sbadge"><span class="d"></span>대기</span>',prog:'<span class="sbadge prog"><span class="d"></span>진행 중</span>',done:'<span class="sbadge done"><span class="d"></span>완료</span>'};
-    ast.innerHTML=RB[res]+SB[st];
+    var html='';
+    if(OC.stage>=4) html='<span class="rbadge pass">가결</span>';
+    else if(OC.stage===3) html='<span class="rbadge counting"><span class="cdot"></span>결과 확인 중</span>';
+    else if(OC.stage===2) html='<span class="sbadge prog"><span class="d"></span>진행 중</span>';
+    ast.innerHTML=html;
   }
   function updateMetric(){
     var m=document.getElementById('mAgSt'); if(!m) return;
@@ -989,7 +986,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var rb=document.getElementById('cResBadge'); if(rb){ var tcls=d.type==='특별결의'?'special':(d.type==='집중투표'?'cumul':'normal'); rb.className='typebadge '+tcls; rb.textContent=d.type; }
     var cb=document.getElementById('cBadge'); if(cb) cb.innerHTML=(d.type==='집중투표')?'<span class="hbadge">집중투표</span>':'';
     var box=document.getElementById('cVizBox'), gr=document.getElementById('gBadgeRow');
-    if(d.type==='집중투표'){ if(box) box.innerHTML=vizCumul(d); if(gr){ gr.innerHTML=(OC.stage>=4)?('<span class="passmark">'+CK+'가결 : 1, 2</span>'):(OC.stage===3?'<span class="rbadge counting"><span class="cdot"></span>결과 확인 중</span>':('<span class="rbadge">'+d.expect+'</span>')); gr.style.justifyContent='flex-end'; } }
+    if(d.type==='집중투표'){ if(box) box.innerHTML=vizCumul(d); if(gr){ gr.innerHTML=(OC.stage>=4)?('<span class="passmark">'+CK+'가결 : 1, 2</span>'):(OC.stage===3?'<span class="rbadge counting"><span class="cdot"></span>결과 확인 중</span>':(OC.stage===2?'<span class="sbadge prog"><span class="d"></span>진행 중</span>':'')); gr.style.justifyContent='flex-end'; } }
     else { if(box) box.innerHTML=vizNormal(d); if(gr){ gr.innerHTML=badgeHTML(); gr.style.justifyContent='flex-end'; } }
     renderChan(d); renderFooter(); updateLeft(); updateMetric();
   }
