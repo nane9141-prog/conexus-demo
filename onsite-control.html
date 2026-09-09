@@ -569,6 +569,22 @@
   .ohd .opn,.ohd .predb{margin-left:auto;flex:none}
   .clabel .opn{margin-left:auto;font-size:12px}
   .clabel .opn .opnic{width:14px;height:14px}
+  /* === 집중투표 후보 득표 그래프 + 채널 탭 === */
+  .cg{display:flex;flex-direction:column;gap:14px;padding:8px 4px 4px}
+  .cgrow{display:flex;flex-direction:column;gap:8px}
+  .cghd{display:flex;align-items:center;gap:8px}
+  .cghd .cgnm{flex:1;min-width:0;font-size:14px;font-weight:600;color:#0a0a0a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cghd .opn,.cghd .predb{margin-left:auto;flex:none}
+  .cgbar{height:20px;border-radius:6px;background:#F5F5F5;display:flex;align-items:center}
+  .cgfill{display:flex;align-items:center;height:20px;border-radius:6px;min-width:20px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+  .cgfill.blue{background:linear-gradient(90deg,#82BBFF 0%,#0071F3 100%)}
+  .cgfill.gray{background:linear-gradient(90deg,#A3A3A3 0%,#525252 100%)}
+  .cgrank{display:flex;align-items:center;justify-content:center;width:16px;height:16px;margin-left:2px;border-radius:5px;background:rgba(255,255,255,.35);color:#fff;font-size:11px;font-weight:700;flex:none}
+  .cgval{margin-left:auto;padding:0 8px;font-size:12px;font-weight:600;color:#fff;white-space:nowrap}
+  .cgvalout{padding:0 8px;font-size:12px;font-weight:600;color:#0a0a0a;white-space:nowrap}
+  .chtabs{display:flex;gap:2px}
+  .chtab{height:24px;padding:0 10px;border:none;background:none;border-radius:6px;font-family:inherit;font-size:12px;font-weight:600;color:#737373;cursor:pointer}
+  .chtab.on{background:#F5F5F5;color:#0a0a0a}
 </style>
 </head>
 <body>
@@ -967,7 +983,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     {cls:'ia-fill',name:'결과 확인 중',sub:'출석·미투표 주주',sel:1,timer:1,right:[{t:'투표 재개',c:'play',go:2},{t:'표결 마감',c:'dark',go:4}]},
     {cls:'ia-wait',name:'표결 마감',sub:'출석 · 미투표',selStatic:'기권 처리',timer:1,right:[{t:'',c:'dots'}]}
   ];
-  var OC={agenda:'제1호',stage:0,preEx:false,decided:null};
+  var OC={agenda:'제1호',stage:0,preEx:false,decided:null,exclTab:null};
   var voteSec=0, ticker=null, autoAdv=null, el=document.getElementById('agStage');
   function selectNextAgenda(){ var tree=document.getElementById('agTree'); if(!tree) return; var nodes=Array.prototype.slice.call(tree.querySelectorAll('.selnode')); var ci=-1; for(var i=0;i<nodes.length;i++){ if(nodes[i].classList.contains('sel')){ci=i;break;} } if(ci>=0 && ci<nodes.length-1){ nodes[ci+1].click(); } }
   function fmt(x){var m=Math.floor(x/60),ss=x%60;return (m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;}
@@ -1045,26 +1061,21 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function vizCumul(d){
     var max=Math.max.apply(null,d.cands.map(function(c){return c.votes;}));
     var rows=d.cands.map(function(c){
-      var w=Math.max(8,c.votes/max*92), out=w<34, col=c.elected?'blue':'gray', val=comma(c.votes)+'주';
-      var cb=OC.stage>=4?opinionBadge(c.elected?'선임':'미선임'):'';
-      return '<div class="crow"><div class="clabel"><span class="cno">'+c.no+'</span><span class="cnm">'+c.name+'</span>'+cb+'</div>'
-        +'<div class="cbar"><span class="cfill '+col+'" style="width:'+w.toFixed(1)+'%"><span class="cnum">'+c.rank+'</span>'
-        +(out?'':'<span class="cval">'+val+'</span>')+'</span>'+(out?'<span class="cvalout">'+val+'</span>':'')+'</div></div>';
+      var w=Math.max(6,c.votes/max*100), out=w<34, col=c.elected?'blue':'gray', val=comma(c.votes)+'주';
+      var badge=OC.stage>=4?opinionBadge(c.elected?'가결':'부결'):predBadge(c.elected?'가결':'부결');
+      return '<div class="cgrow"><div class="cghd"><span class="ano">'+c.no.replace('제','제 ')+'</span><span class="cgnm">'+c.name+'</span>'+badge+'</div>'
+        +'<div class="cgbar"><span class="cgfill '+col+'" style="width:'+w.toFixed(1)+'%"><span class="cgrank">'+c.rank+'</span>'
+        +(out?'':'<span class="cgval">'+val+'</span>')+'</span>'+(out?'<span class="cgvalout">'+val+'</span>':'')+'</div></div>';
     }).join('');
-    return '<div class="ccard">'+rows+'</div>';
+    return '<div class="cg">'+rows+'</div>';
   }
   function badgeHTML(){ return statusBadge(OC.stage,true); }
   function renderFooter(){
     var on=20000000, onsite=40000000, pre=240000000, total=OC.preEx?(on+onsite):(on+onsite+pre);
     var ct=document.getElementById('cfTotal'); if(ct) ct.textContent=comma(total)+'주';
   }
-  function renderChan(d){
-    var wrap=document.getElementById('cChanWrap'); if(!wrap) return;
-    if(d.type==='집중투표'||d.type==='양립불가'){ wrap.innerHTML=''; return; }
-    var incPre=OC.preEx?0:1, lf=liveFrac(), f=incPre*0.8+0.2*lf;
-    var F=d['for']*f, A=d.against*f, AB=d.abs*f;
-    var chans=[{nm:'사전투표',w:240000000,pre:true,st:'done'},{nm:'현장투표',w:40000000,st:'done'},{nm:'온라인투표',w:20000000,st:(OC.stage>=4?'done':'live')}];
-    if(OC.preEx) chans=chans.filter(function(c){return !c.pre;});
+  function chanChannels(F,A,AB){
+    var chans=[{nm:'사전투표',w:240000000,st:'done'},{nm:'현장투표',w:40000000,st:'done'},{nm:'온라인투표',w:20000000,st:(OC.stage>=4?'done':'live')}];
     var totW=chans.reduce(function(a,c){return a+c.w;},0);
     var rows=chans.map(function(c){
       var sh=totW?c.w/totW:0, cf=Math.round(F*sh), ca=Math.round(A*sh), cab=Math.round(AB*sh);
@@ -1072,8 +1083,33 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       return '<tr><td class="l">'+c.nm+'</td><td>'+comma(c.w)+'</td><td>'+comma(cf)+'</td><td>'+comma(ca)+'</td><td>'+comma(cab)+'</td><td class="c">'+stt+'</td></tr>';
     }).join('');
     rows+='<tr class="sum"><td class="l">합계</td><td>'+comma(totW)+'</td><td>'+comma(Math.round(F))+'</td><td>'+comma(Math.round(A))+'</td><td>'+comma(Math.round(AB))+'</td><td class="c">\u2014</td></tr>';
-    wrap.innerHTML='<div class="chsec"><div class="chsec-h"><span class="tt">채널별 표결 현황</span><span class="sm"><span class="k">행사 의결권</span><span class="v">'+comma(F+A+AB)+'주</span></span></div>'
-      +'<table class="chtbl"><thead><tr><th class="l">채널</th><th>행사 의결권</th><th>찬성</th><th>반대</th><th>기권</th><th class="c">상태</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+    return '<table class="chtbl"><thead><tr><th class="l">채널</th><th>행사 의결권</th><th>찬성</th><th>반대</th><th>기권</th><th class="c">상태</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  }
+  function renderChan(d){
+    var wrap=document.getElementById('cChanWrap'); if(!wrap) return;
+    var lf=liveFrac(), f=0.8+0.2*lf;
+    if(d.type==='집중투표'){
+      var head='<tr><th class="l">후보</th><th>사전투표</th><th>현장투표</th><th>온라인투표</th><th>합계</th><th class="c">상태</th></tr>';
+      var body=d.cands.map(function(c){
+        var v=c.votes*f, pre=Math.round(v*0.8), on=Math.round(v*0.1333), onl=Math.round(v)-pre-on;
+        var stt=(OC.stage>=4)?'<span class="chst done">반영 완료</span>':'<span class="chst live">집계 중</span>';
+        return '<tr><td class="l">'+c.no.replace('제','제 ')+' '+c.name+'</td><td>'+comma(pre)+'</td><td>'+comma(on)+'</td><td>'+comma(onl)+'</td><td>'+comma(Math.round(v))+'</td><td class="c">'+stt+'</td></tr>';
+      }).join('');
+      var tot=d.cands.reduce(function(a,c){return a+c.votes*f;},0);
+      wrap.innerHTML='<div class="chsec"><div class="chsec-h"><span class="tt">채널별 표결 현황</span><span class="sm"><span class="k">총 득표</span><span class="v">'+comma(Math.round(tot))+'주</span></span></div><table class="chtbl"><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div>';
+      return;
+    }
+    if(d.type==='양립불가'){
+      if(!OC.exclTab||!d.options.some(function(o){return o.no===OC.exclTab;})) OC.exclTab=d.options[0].no;
+      var opt=d.options.filter(function(o){return o.no===OC.exclTab;})[0];
+      var tabs=d.options.map(function(o){return '<button class="chtab'+(o.no===OC.exclTab?' on':'')+'" data-ct="'+o.no+'">'+o.no.replace('제','제 ')+'</button>';}).join('');
+      var F=opt['for']*f,A=opt.against*f,AB=(opt.abs||0)*f;
+      wrap.innerHTML='<div class="chsec"><div class="chsec-h"><div class="chtabs">'+tabs+'</div><span class="sm"><span class="k">행사 의결권</span><span class="v">'+comma(F+A+AB)+'주</span></span></div>'+chanChannels(F,A,AB)+'</div>';
+      wrap.querySelectorAll('.chtab').forEach(function(b){ b.addEventListener('click',function(){ OC.exclTab=b.getAttribute('data-ct'); renderChan(d); }); });
+      return;
+    }
+    var F=d['for']*f, A=d.against*f, AB=d.abs*f;
+    wrap.innerHTML='<div class="chsec"><div class="chsec-h"><span class="tt">채널별 표결 현황</span><span class="sm"><span class="k">행사 의결권</span><span class="v">'+comma(F+A+AB)+'주</span></span></div>'+chanChannels(F,A,AB)+'</div>';
   }
   function statusBadge(st,big){
     if(st>=4) return big?('<span class="passmark">'+CK+'가결</span>'):'<span class="rst pass">가결</span>';
