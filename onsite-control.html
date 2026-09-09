@@ -976,8 +976,9 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   }
   function updateMetric(){
     var m=document.getElementById('mAgSt'); if(!m) return;
-    var map={0:['대기','gray'],1:['상정','gray'],2:['진행 중','rose'],3:['결과 확인 중','amber'],4:['완료','gray']}, v=map[OC.stage];
-    m.className='stbadge '+v[1]; m.innerHTML='<span class="d"></span>'+v[0];
+    var map={1:['상정','gray'],2:['진행 중','rose'],3:['결과 확인 중','amber'],4:['완료','gray']}, v=map[OC.stage];
+    if(!v){ m.style.display='none'; return; }
+    m.style.display=''; m.className='stbadge '+v[1]; m.innerHTML='<span class="d"></span>'+v[0];
   }
   function renderAll(){
     var d=CENTER[OC.agenda]; if(!d) return;
