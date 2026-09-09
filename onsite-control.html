@@ -560,6 +560,15 @@
   .oresult{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:3px;height:20px;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600;white-space:nowrap}
   .oresult.pass{background:#EEF5FF;color:#0071F3}
   .oresult.fail{background:#FDF0F1;color:#E9081B}
+  /* === 표결 결과 오피니언 배지(피그마: 동그라미/X + 컬러 텍스트) === */
+  .opn{display:inline-flex;align-items:center;gap:4px;font-size:14px;font-weight:600;white-space:nowrap;flex:none}
+  .opn .opnic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .opn.pass{color:#0071F3}
+  .opn.fail{color:#E9081B}
+  .opn.mut{color:#a3a3a3}
+  .ohd .opn,.ohd .predb{margin-left:auto;flex:none}
+  .clabel .opn{margin-left:auto;font-size:12px}
+  .clabel .opn .opnic{width:14px;height:14px}
 </style>
 </head>
 <body>
@@ -1005,6 +1014,16 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       +'<div class="gcap">출석의결권 : '+comma(base)+'주 · 출석주식총수 '+aLbl+'</div></div>'
       +'</div>';
   }
+  function opinionBadge(r){
+    if(r==='미선임') return '<span class="opn mut"><svg viewBox="0 0 24 24" class="opnic"><path d="M18 6 6 18M6 6l12 12"/></svg>미선임</span>';
+    var pass=(r==='가결'||r==='선임');
+    var ic=pass?'<svg viewBox="0 0 24 24" class="opnic"><circle cx="12" cy="12" r="8.5"/></svg>':'<svg viewBox="0 0 24 24" class="opnic"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+    return '<span class="opn '+(pass?'pass':'fail')+'">'+ic+r+'</span>';
+  }
+  function predBadge(r){
+    var pass=(r==='가결'||r==='선임');
+    return '<span class="predb '+(pass?'pass':'fail')+'">'+(pass?'가결 예상':'부결 예상')+'</span>';
+  }
   function vizExclusive(d){
     var ISSUED=476211964;
     var CKS='<svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round"><path d="M20 6 9 17l-5-5"/></svg>';
@@ -1014,8 +1033,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     }
     return '<div class="excl">'+d.options.map(function(o){
       var F=o['for'], base=o['for']+o.against+(o.abs||0);
-      var fp=ISSUED?F/ISSUED*100:0, ap=base?F/base*100:0, pass=o.result==='가결';
-      var rb='<span class="oresult '+(pass?'pass':'fail')+'">'+(pass?CKS:XS)+o.result+'</span>';
+      var fp=ISSUED?F/ISSUED*100:0, ap=base?F/base*100:0;
+      var rb=OC.stage>=4?opinionBadge(o.result):predBadge(o.result);
       return '<div class="oblock"><div class="ohd"><span class="ano">'+o.no.replace('제','제 ')+'</span><span class="onm">'+o.name+'</span>'+rb+'</div>'
         +'<div class="gbars">'
         +bar('for',fp,25,'발행주식총수 : '+comma(ISSUED)+'주 · 가결기준 : 발행주식총수 1/4')
@@ -1027,7 +1046,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var max=Math.max.apply(null,d.cands.map(function(c){return c.votes;}));
     var rows=d.cands.map(function(c){
       var w=Math.max(8,c.votes/max*92), out=w<34, col=c.elected?'blue':'gray', val=comma(c.votes)+'주';
-      return '<div class="crow"><div class="clabel"><span class="cno">'+c.no+'</span><span class="cnm">'+c.name+'</span></div>'
+      var cb=OC.stage>=4?opinionBadge(c.elected?'선임':'미선임'):'';
+      return '<div class="crow"><div class="clabel"><span class="cno">'+c.no+'</span><span class="cnm">'+c.name+'</span>'+cb+'</div>'
         +'<div class="cbar"><span class="cfill '+col+'" style="width:'+w.toFixed(1)+'%"><span class="cnum">'+c.rank+'</span>'
         +(out?'':'<span class="cval">'+val+'</span>')+'</span>'+(out?'<span class="cvalout">'+val+'</span>':'')+'</div></div>';
     }).join('');
@@ -1093,12 +1113,14 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     set('cCat',d.cat.replace('제','제 ')); set('cName',d.name);
     var types=d.type==='집중투표'?['보통결의','집중투표']:(d.type==='양립불가'?['보통결의','양립불가']:(d.method?[d.type,d.method]:[d.type]));
     var ct=document.getElementById('cTypes'); if(ct) ct.innerHTML=types.map(function(t,i){ var cls=(t==='특별결의'||t==='집중투표'||t==='양립불가')?' mth':''; return (i?'<span class="atsep">·</span>':'')+'<span class="tp'+cls+'">'+t+'</span>'; }).join('');
-    var pred=(d.expect&&d.expect.indexOf('부결')>=0)?{c:'fail',t:'부결 예상'}:{c:'pass',t:'가결 예상'};
-    var cp=document.getElementById('cPred'); if(cp) cp.innerHTML='<span class="predb '+pred.c+'">'+pred.t+'</span>';
+    var single=(d.type!=='집중투표'&&d.type!=='양립불가');
+    var cp=document.getElementById('cPred');
+    if(cp){ if(!single){ cp.innerHTML=''; } else { var res=(d.expect&&d.expect.indexOf('부결')>=0)?'부결':'가결'; cp.innerHTML=OC.stage>=4?opinionBadge(res):predBadge(res); } }
     var box=document.getElementById('cVizBox'), gr=document.getElementById('gBadgeRow');
-    if(d.type==='집중투표'){ if(box) box.innerHTML=vizCumul(d); if(gr){ gr.innerHTML=(OC.stage>=4)?('<span class="passmark">'+CK+'가결 : 1, 2</span>'):statusBadge(OC.stage,false); gr.style.justifyContent='flex-end'; } }
-    else if(d.type==='양립불가'){ if(box) box.innerHTML=vizExclusive(d); if(gr){ gr.innerHTML=badgeHTML(); gr.style.justifyContent='flex-end'; } }
-    else { if(box) box.innerHTML=vizNormal(d); if(gr){ gr.innerHTML=badgeHTML(); gr.style.justifyContent='flex-end'; } }
+    if(d.type==='집중투표'){ if(box) box.innerHTML=vizCumul(d); }
+    else if(d.type==='양립불가'){ if(box) box.innerHTML=vizExclusive(d); }
+    else { if(box) box.innerHTML=vizNormal(d); }
+    if(gr) gr.innerHTML='';
     renderChan(d); renderFooter(); repaintList(); updateMetric();
   }
   OC.select=function(no){ OC.agenda=no; OC.stage=0; voteSec=0; renderStage(); renderAll(); };
