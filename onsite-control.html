@@ -511,8 +511,10 @@
   /* === 의안 카드 표결단위/유형 · 상태 뱃지 === */
   .acat>.astatus{flex:none;margin-left:auto}
   .atypes{display:flex;align-items:center;gap:6px;margin-top:2px;font-size:12px;font-weight:500;color:#737373}
-  .atypes .dot{color:#d4d4d4}
-  .atypes .tp.mth{color:#7c3aed}
+  .atypes .dot{color:#a3a3a3}
+  .atypes .tp.mth{display:inline-flex;align-items:center;height:18px;padding:1px 6px;background:#F5F5F5;color:#525252;border-radius:6px}
+  .aghead{background:#fafafa;cursor:default}
+  .aghead .anm{color:#525252}
   .stt{display:inline-flex;align-items:center;gap:4px;height:20px;padding:2px 6px;border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;flex:none}
   .stt .d{width:6px;height:6px;border-radius:50%}
   .stt.ready{color:#525252}.stt.ready .d{background:#525252}
@@ -826,9 +828,11 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   // 집중투표(3-1호)·후보 선임(3-2호)은 후보 하위행을 한 카드로 묶는다.
   var CARDS=[
     {no:'제1호',nm:'재무제표 승인의 건',types:['보통결의']},
+    {no:'제2호',nm:'정관 일부 변경의 건',header:true},
     {no:'제2-1호',nm:'집중투표제 배제 조항 삭제의 건(정관 제37조 제3항)',types:['특별결의']},
     {no:'제2-2호',nm:'전자주주총회 도입 관련 변경(정관 제26조 제2항)',types:['특별결의']},
     {no:'제2-3호',nm:'의결권 대리행사 수단 확대(정관 제31조 제2항)',types:['특별결의']},
+    {no:'제3호',nm:'집중투표에 의한 이사 선임의 건',header:true},
     {no:'제3-1호',nm:'집중투표 후보 4인 중 2인 선임의 건',types:['보통결의','집중투표'],children:[
       {no:'제3-1-1호',nm:'사외이사 후보 김근수'},
       {no:'제3-1-2호',nm:'사외이사 후보 진웅섭'},
@@ -848,6 +852,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     }).join('')+'</div>';
   }
   function cardHTML(x){
+    if(x.header){ return '<div class="arow aghead"><div class="acat"><span class="ano">'+chipTxt(x.no)+'</span><span class="anm">'+x.nm+'</span></div></div>'; }
     var head='<div class="acat"><span class="ano">'+chipTxt(x.no)+'</span><span class="anm">'+x.nm+'</span><span class="astatus"></span></div>';
     var kids=x.children?'<div class="asub">'+x.children.map(function(c){return '<div class="achild"><div class="acat"><span class="ano">'+chipTxt(c.no)+'</span><span class="anm">'+c.nm+'</span></div></div>';}).join('')+'</div>':'';
     return '<div class="arow selnode" data-no="'+x.no+'">'+head+typeLine(x.types)+kids+'</div>';
