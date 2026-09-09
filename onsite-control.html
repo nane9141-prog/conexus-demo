@@ -525,6 +525,15 @@
   .rst.fail{background:#FEE2E2;color:#DC2626}
   .rst.drop{background:#F5F5F5;color:#A3A3A3}
   .rst.wd{background:#F5F5F5;color:#737373}
+  /* === 중앙 진행 의안 헤더(카드형) + 예상 배지 === */
+  .cag-acat{display:flex;align-items:center;gap:8px}
+  .cag .cag-nm{font-size:16px;font-weight:700;color:#0a0a0a;flex:1;min-width:0;margin-top:0}
+  .cag-pred{margin-left:auto;flex:none}
+  .predb{display:inline-flex;align-items:center;height:22px;padding:2px 10px;border-radius:6px;font-size:13px;font-weight:600;white-space:nowrap}
+  .predb.pass{background:#EEF5FF;color:#0071F3}
+  .predb.fail{background:#FDF0F1;color:#E9081B}
+  .cag-second{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
+  .cag-second .atypes{margin-top:0}
 </style>
 </head>
 <body>
@@ -677,10 +686,8 @@
               <div class="cbody">
                 <div class="cpane on" data-cp="op">
                   <div class="cag">
-                    <div class="cag-cat"><span id="cCat">제1호</span><span class="d"></span><span id="cType">보통결의</span><span id="cBadge"></span>
-                      <label class="tgl-wrap"><span class="sw" data-sw></span>사전행사 제외</label>
-                    </div>
-                    <div class="cag-head"><div class="cag-nm" id="cName">재무제표 승인의 건</div><span id="cResBadge"></span></div>
+                    <div class="acat cag-acat"><span class="ano" id="cCat">제 1호</span><span class="anm cag-nm" id="cName">재무제표 승인의 건</span><span class="cag-pred" id="cPred"></span></div>
+                    <div class="cag-second"><div class="atypes" id="cTypes"></div><label class="tgl-wrap"><span class="sw" data-sw></span>사전행사 제외</label></div>
                   </div>
                   <div id="agStage" class="iarow"></div>
                   <div class="cbadge-row" id="gBadgeRow"></div>
@@ -847,7 +854,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function typeLine(types){
     if(!types||!types.length) return '';
     return '<div class="atypes">'+types.map(function(t,i){
-      var cls=(t==='집중투표'||t==='양립불가')?' mth':'';
+      var cls=(t==='특별결의'||t==='집중투표'||t==='양립불가')?' mth':'';
       return (i?'<span class="dot">·</span>':'')+'<span class="tp'+cls+'">'+t+'</span>';
     }).join('')+'</div>';
   }
@@ -1004,9 +1011,11 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function renderAll(){
     var d=CENTER[OC.agenda]; if(!d) return;
     var set=function(id,v){var e=document.getElementById(id); if(e) e.textContent=v;};
-    set('cCat',d.cat); set('cType',d.type); set('cName',d.name);
-    var rb=document.getElementById('cResBadge'); if(rb){ var tcls=d.type==='특별결의'?'special':(d.type==='집중투표'?'cumul':'normal'); rb.className='typebadge '+tcls; rb.textContent=d.type; }
-    var cb=document.getElementById('cBadge'); if(cb) cb.innerHTML=(d.type==='집중투표')?'<span class="hbadge">집중투표</span>':'';
+    set('cCat',d.cat.replace('제','제 ')); set('cName',d.name);
+    var types=d.type==='집중투표'?['보통결의','집중투표']:[d.type];
+    var ct=document.getElementById('cTypes'); if(ct) ct.innerHTML=types.map(function(t,i){ var cls=(t==='특별결의'||t==='집중투표'||t==='양립불가')?' mth':''; return (i?'<span class="dot">·</span>':'')+'<span class="tp'+cls+'">'+t+'</span>'; }).join('');
+    var pred=(d.expect&&d.expect.indexOf('부결')>=0)?{c:'fail',t:'부결 예상'}:{c:'pass',t:'가결 예상'};
+    var cp=document.getElementById('cPred'); if(cp) cp.innerHTML='<span class="predb '+pred.c+'">'+pred.t+'</span>';
     var box=document.getElementById('cVizBox'), gr=document.getElementById('gBadgeRow');
     if(d.type==='집중투표'){ if(box) box.innerHTML=vizCumul(d); if(gr){ gr.innerHTML=(OC.stage>=4)?('<span class="passmark">'+CK+'가결 : 1, 2</span>'):statusBadge(OC.stage,false); gr.style.justifyContent='flex-end'; } }
     else { if(box) box.innerHTML=vizNormal(d); if(gr){ gr.innerHTML=badgeHTML(); gr.style.justifyContent='flex-end'; } }
@@ -1015,7 +1024,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   OC.select=function(no){ OC.agenda=no; OC.stage=0; voteSec=0; renderStage(); renderAll(); };
   // 의장용 뷰: 단계 매칭 없이 chair-view.html 오픈 (anchor href 사용)
   window.OC=OC;
-  var sw=document.querySelector('.cag-cat [data-sw]');
+  var sw=document.querySelector('.cag [data-sw]');
   if(sw) sw.addEventListener('click',function(){ OC.preEx=sw.classList.contains('on'); renderAll(); });
   var onl=document.getElementById('mOnline'), obase=207000;
   if(onl){ setInterval(function(){ obase+=Math.round((Math.random()-0.4)*12); if(obase<206800)obase=206800; if(obase>207200)obase=207200; onl.textContent=obase.toLocaleString('en-US'); },3000); }
