@@ -1223,7 +1223,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 (function(){
   var Q=window.QUESTIONS||[], S=window.SPEECHES||[];
   S.forEach(function(x){ x._iw=(x.st==='대기'); });
-  var qt='q', qf='all', selId=null, editId=null, spAgenda='all', spOpen=true, speakingId=null;
+  var qt='q', qf='all', selId=null, editId=null, spAgenda='제1호', spOpen=true, speakingId=null;
   function comma(n){return (n||0).toLocaleString('en-US');}
   var TPL=[
     {l:'배당 정책',t:'당사는 안정적 배당과 성장 투자의 균형을 배당 정책의 원칙으로 하며, 별도재무제표 당기순이익 기준 배당성향 약 27% 수준을 유지하고 있습니다.'},
@@ -1234,7 +1234,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     {l:'자료 안내',t:'질의하신 내용은 소집공고 및 사업보고서에 관련 사항이 기재되어 있으니 참고하여 주시기 바랍니다.'}
   ];
   var SN={'1':'재무제표 승인','2-1':'집중투표 배제 삭제','2-2':'전자주주총회 도입','2-3':'대리행사 수단 확대','2':'정관 일부 변경','3-1':'집중투표 후보 선임','3-2':'감사위원 선임','3':'이사 선임'};
-  function agL(x){ return x.sub?('제'+x.sub+'호'):('제'+x.ag+'호'); }
+  /* 구 의안번호 → 현행 표결 단위.
+     원격 이력의 마이그레이션(2-3호 삭제 · 3호→4호 이동)을 그대로 따른다.
+     표결 단위가 아닌 제2호(헤더)와 삭제된 제2-3호는 제2-1/제2-2 로 나눈다. */
+  var UNIT={'1':'제1호','2':'제2-1호','2-1':'제2-1호','2-2':'제2-2호','2-3':'제2-2호',
+            '3':'제3호','3-1':'제4-1호','3-2':'제4-2호'};
+  function unitOf(x){ return UNIT[x.sub]||UNIT[x.ag]||''; }
+  function agL(x){ return CX.util.chip(unitOf(x)); }
   function sn(x){ return SN[x.sub]||SN[x.ag]||''; }
   function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function stBadge(x){
@@ -1279,7 +1285,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   }
   /* 목록 필터 — 상단 3단(전체·미답변·답변완료) + 의안 셀렉트를 함께 적용 */
   function pass(x){
-    if(spAgenda!=='all' && String(x.ag)!==spAgenda) return false;
+    if(spAgenda==='pre'){ if(!x.pre) return false; }
+    else if(spAgenda && unitOf(x)!==spAgenda) return false;
     if(qf==='all') return true;
     var open=(qt==='q')?(x.st==='미답변'):(x.st==='대기');
     return qf==='open'?open:!open;
@@ -1287,7 +1294,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function list(){ return (qt==='q'?Q:S).filter(pass); }
   function spList(){ return S.filter(pass); }
   function spControls(){
-    var base=S.filter(function(x){return (spAgenda==='all'||x.ag===spAgenda)&&x._iw;});
+    var base=S.filter(function(x){return unitOf(x)===spAgenda&&x._iw;});
     var q=base.filter(function(x){return x.st==='대기';});
     var rows=q.map(function(x,i){
       var sk=(x.id===speakingId), btn='';
@@ -1310,6 +1317,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       +metaRow(x)+reject+'</div>';
   }
   function render(){
+    fillAgSel();
     var host=document.getElementById('chatList');
     if(qt==='q'){ host.innerHTML=list().map(cardHTML).join('')||'<div class="mc-q" style="padding:12px;color:#737373">항목이 없습니다.</div>'; }
     else { host.innerHTML=spControls()+(spList().map(spCardHTML).join('')||'<div class="mc-q" style="padding:12px;color:#737373">항목이 없습니다.</div>'); }
@@ -1329,10 +1337,18 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   }
   document.querySelectorAll('.qtabs button').forEach(function(b){ b.addEventListener('click',function(){ qt=b.getAttribute('data-qt'); selId=null; document.querySelectorAll('.qtabs button').forEach(function(x){x.classList.toggle('on',x===b);}); render(); }); });
   document.querySelectorAll('.seg2 button[data-qf]').forEach(function(b){ b.addEventListener('click',function(){ qf=b.getAttribute('data-qf'); selId=null; document.querySelectorAll('.seg2 button[data-qf]').forEach(function(x){x.classList.toggle('on',x===b);}); render(); }); });
+  /* 의안 셀렉트 — 표결 단위(CX.votingUnits) 그대로. 사전 질의는 질의 탭에만 둔다. */
+  function fillAgSel(){
+    var sel=document.getElementById('qAgSel'); if(!sel) return;
+    var opts=CX.votingUnits.map(function(no){ return [no, CX.util.chip(no)+' 의안']; });
+    if(qt==='q') opts.unshift(['pre','사전 질의']);
+    if(!opts.some(function(o){ return o[0]===spAgenda; })) spAgenda=CX.votingUnits[0];
+    sel.innerHTML=opts.map(function(o){
+      return '<option value="'+o[0]+'"'+(o[0]===spAgenda?' selected':'')+'>'+o[1]+'</option>';
+    }).join('');
+  }
   (function(){
     var sel=document.getElementById('qAgSel'); if(!sel) return;
-    sel.innerHTML=[['all','전체 의안'],['1','제1호'],['2','제2호'],['3','제3호']]
-      .map(function(o){ return '<option value="'+o[0]+'">'+o[1]+'</option>'; }).join('');
     sel.addEventListener('change',function(){ spAgenda=sel.value; selId=null; render(); });
   })();
   var cl=document.getElementById('chatList');
