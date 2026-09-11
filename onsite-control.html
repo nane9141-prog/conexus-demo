@@ -698,9 +698,7 @@
           <!-- 제어 -->
           <div class="ocg">
             <span class="otimer"><span class="dot"></span><span id="ocTimer">00:10:12</span></span>
-            <button class="ocb gray" id="btnPause"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9 2h6"/></svg>총회 지연</button>
-            <button class="ocb red" id="btnClose"><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z"/><path d="M12 8v4l2 2"/><path d="m16 19 2 2 4-4"/></svg>총회 종료</button>
-            <button class="ocb gray icon" title="더보기"><i class="ph ph-dots-three-vertical" style="font-size:16px"></i></button>
+            <button class="ocb gray" id="btnMeetingCtl">총회 제어<svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
       </div>
@@ -788,6 +786,11 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="menupop hidden" id="meetingCtlPop">
+  <button class="menuitem" id="btnPause"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9 2h6"/></svg>총회 지연</button>
+  <button class="menuitem danger" id="btnClose"><svg class="ic" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z"/><path d="M12 8v4l2 2"/><path d="m16 19 2 2 4-4"/></svg>총회 종료</button>
 </div>
 
 <script>
@@ -1343,5 +1346,26 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 })();
 </script>
 <script src="conexus.js"></script>
+<script>
+/* 총회 제어 드롭다운 — 지연/종료를 한 버튼으로 묶는다.
+   항목의 id(btnPause/btnClose)는 그대로라 기존 핸들러가 계속 붙는다. */
+(function () {
+  var btn = document.getElementById('btnMeetingCtl'), pop = document.getElementById('meetingCtlPop');
+  if (!btn || !pop) return;
+  function hide() { pop.classList.add('hidden'); }
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (!pop.classList.contains('hidden')) { hide(); return; }
+    pop.classList.remove('hidden');
+    var r = btn.getBoundingClientRect();
+    var top = r.bottom + 6;
+    if (top + pop.offsetHeight > window.innerHeight - 8) top = Math.max(8, r.top - 6 - pop.offsetHeight);
+    pop.style.left = Math.max(8, r.right - pop.offsetWidth) + 'px';
+    pop.style.top = top + 'px';
+  });
+  pop.addEventListener('click', hide);          /* 항목 선택 후 닫기 */
+  document.addEventListener('click', hide);
+})();
+</script>
 </body>
 </html>
