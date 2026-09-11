@@ -404,7 +404,7 @@
   /* 대기열 행 — 펼치면 의장 전달 메시지 작성 영역이 열린다 */
   .vqitem{box-sizing:border-box;background:#FAFAFA;border:1px solid var(--border);border-radius:10px;overflow:hidden}
   .vqitem.live{background:#fff;border-color:#171717}
-  .vqitem.open{background:#fff;border-color:#171717}
+  .vqitem.open{border-color:#171717}   /* 머리 배경은 그대로, 입력 영역만 흰색 */
   .vqitem .vqrow{background:transparent;border:none;border-radius:0}
   .vqitem.live .vqrow{background:transparent}
   .vqnm.clickable{cursor:pointer}
@@ -1371,12 +1371,22 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 <script>
 (function(){
   var Q=window.QUESTIONS||[], S=window.SPEECHES||[];
-  S.forEach(function(x,i){ x.inq=(x.st==='대기'&&i%2===0); });  /* inq: 대기열 등재 여부 */
+  S.forEach(function(x,i){ x.inq=(x.st==='대기'&&i%2===0); x.seq=i; });
+  /* inq: 대기열 등재 여부 · seq: 접수 순서. 대기열은 S 배열 순서를 바꾸므로
+     카드 목록은 seq 로 다시 세운다 — 순서 조정이 목록을 흔들지 않는다. */
   var qt='q', qf='all', selId=null, editId=null, spAgenda='제1호', speakingId=null, noteId=null;
   /* 호스트 권한 — active(제어 가능) · locked(위임 중) · connecting · sub(서브 호스트) · proxy(대행) */
   var hostState='active', speakSec=0, speakTick=null, openRow=null;
   /* 의장 전달 메시지 빠른 태그 */
-  var CHAIR_TAGS=['시간 안내','의안 관련 확인','중복 발언','요지 정리','답변 필요','추가 설명','발언 제한'];
+  var CHAIR_TAGS=[
+    ['시간 안내',  '발언 시간은 3분입니다. 시간 경과 시 안내드리겠습니다.'],
+    ['의안 관련 확인','상정된 의안과의 관련성을 먼저 확인해 주시기 바랍니다.'],
+    ['중복 발언',  '앞선 주주와 동일한 취지의 발언입니다. 요지만 말씀해 주십시오.'],
+    ['요지 정리',  '질문 요지를 한 문장으로 정리해 주시기 바랍니다.'],
+    ['답변 필요',  '경영진 답변이 필요한 사안입니다. 답변 후 진행 부탁드립니다.'],
+    ['추가 설명',  '해당 내용은 총회 후 개별 안내로 갈음하겠습니다.'],
+    ['발언 제한',  '의사 진행에 방해가 되어 발언을 제한하겠습니다.']
+  ];
   var STAFF=[
     { id:'u1', name:'강하나', online:true,  me:true,  role:'host' },
     { id:'u2', name:'이민아', online:true,  role:null },
@@ -1454,8 +1464,12 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(qt==='q') return qf==='open'?(x.st==='미답변'):(x.st!=='미답변');
     return qf==='rej'?(x.st==='반려'):true;
   }
-  function list(){ return (qt==='q'?Q:S).filter(pass); }
-  function spList(){ return S.filter(pass); }
+  function list(){
+    var a=(qt==='q'?Q:S).filter(pass);
+    if(qt==='s') a=a.slice().sort(function(p,q2){ return p.seq-q2.seq; });   /* 전체 목록은 접수 순 */
+    return a;
+  }
+  function spList(){ return S.filter(pass).slice().sort(function(p,q2){ return p.seq-q2.seq; }); }
   /* ── 발언 대기열 뷰 ─────────────────────────────────────
      선택된 의안의 대기/완료 발언을 한 화면에서 다룬다.
      순서는 S 배열 자체를 바꿔서 옮긴다(별도 정렬 키를 두지 않는다). */
@@ -1475,8 +1489,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var v=x.chair||'';
     return '<div class="vqbody">'
       + '<div class="vqlbl">의장 전달 메시지 작성</div>'
-      + '<div class="vqchips">'+CHAIR_TAGS.map(function(t){
-          return '<button class="vqchip" type="button" data-tag="'+t+'">'+t+'</button>'; }).join('')+'</div>'
+      + '<div class="vqchips">'+CHAIR_TAGS.map(function(t,i){
+          return '<button class="vqchip" type="button" data-tag="'+i+'">'+t[0]+'</button>'; }).join('')+'</div>'
       + '<div class="vqmsg"><textarea data-chair maxlength="200" placeholder="의장에게 전달할 내용을 입력하세요">'+esc(v)+'</textarea>'
       +   '<div class="cnt"><span data-cnt>'+v.length+'</span>/200</div></div>'
       + '<div class="vqnote"><span class="warn">'+IC.warn+'발언 진행시 의장 화면에 표시 됩니다.</span>'
@@ -1832,7 +1846,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(op){ var oid2=op.getAttribute('data-open'); openRow=(openRow===oid2)?null:oid2; render(); return; }
     var tg=e.target.closest('[data-tag]');
     if(tg){ var ta=tg.closest('.vqbody').querySelector('[data-chair]');
-      ta.value=(ta.value?ta.value.replace(/\s*$/,'')+' ':'')+tg.getAttribute('data-tag');
+      ta.value=(ta.value?ta.value.replace(/\s*$/,'')+' ':'')+CHAIR_TAGS[+tg.getAttribute('data-tag')][1];
       ta.dispatchEvent(new Event('input',{bubbles:true})); ta.focus(); return; }
     var cs=e.target.closest('[data-chairsave]');
     if(cs){ var cid=cs.getAttribute('data-chairsave');
