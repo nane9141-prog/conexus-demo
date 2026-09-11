@@ -545,6 +545,64 @@
   .vbtn.dark{background:#171717;border-color:#171717;color:#fafafa}
   .vbtn.ic{padding:0;width:34px;justify-content:center;border-radius:8px}
   .vscroll{flex:1;min-height:0;overflow:auto;margin:0 12px 12px;border:1px solid #E5E5E5;border-radius:8px;background:#fff}
+  /* 질의 · 발언 관리 */
+  .qmwrap{padding:0;height:100%;display:flex;flex-direction:column;overflow:hidden;background:transparent;border:none;box-shadow:none}
+  .qmhead{display:flex;align-items:center;gap:6px;padding:0 12px;height:40px;border-bottom:1px solid #E5E5E5;flex:none;background:#fff;border-radius:12px 12px 0 0}
+  .qmhead button{height:100%;padding:0 12px;border:none;background:none;border-bottom:2px solid transparent;font-family:inherit;font-size:14px;font-weight:500;letter-spacing:-.01em;color:#737373;cursor:pointer}
+  .qmhead button.on{color:#0A0A0A;border-bottom-color:#0A0A0A}
+  .qmhead .sp{margin-left:auto}
+  .qmbody{flex:1;min-height:0;display:flex;gap:8px;padding:8px;background:#F5F5F5}
+  .qmleft{flex:1;min-width:0;display:flex;flex-direction:column;background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:hidden}
+  .qmscroll{flex:1;min-height:0;overflow:auto}
+  .qmright{width:356px;flex:none;display:flex;flex-direction:column;gap:12px;padding:16px;background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:auto}
+  .qmtbl{width:100%;min-width:900px;border-collapse:separate;border-spacing:0;font-size:14px;letter-spacing:-.01em}
+  .qmtbl th,.qmtbl td{height:46px;padding:0 16px;white-space:nowrap;text-align:left;border-bottom:1px solid #E5E5E5;background:#fff}
+  .qmtbl th{height:48px;position:sticky;top:0;z-index:2;background:#FAFAFA;font-weight:500;color:#737373}
+  .qmtbl td{color:#171717}
+  .qmtbl .r{text-align:right;font-variant-numeric:tabular-nums}
+  .qmtbl .c{text-align:center}
+  .qmtbl td.txt{max-width:0;width:40%;overflow:hidden;text-overflow:ellipsis}
+  .qmtbl tbody tr{cursor:pointer}
+  .qmtbl tbody tr:hover td{background:#FAFAFA}
+  .qmtbl tbody tr.sel td{background:#EEF5FF}
+  .qmtbl tbody tr.off td{opacity:.5}
+  .qmdot{display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:6px;font-size:12px;line-height:16px;font-weight:500;color:#525252}
+  .qmdot i{width:6px;height:6px;border-radius:50%;background:#525252;display:block}
+  .qmdot.blue{color:#0071F3}.qmdot.blue i{background:#0071F3}
+  .qmdot.violet{color:#7C3AED}.qmdot.violet i{background:#7C3AED}
+  .qmdot.amber{color:#EA580C}.qmdot.amber i{background:#EA580C}
+  .qmqbtn{height:24px;padding:0 8px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0A0A0A;cursor:pointer}
+  .qmqbtn.rm{background:#F5F5F5;border-color:#F5F5F5;color:#171717}
+  .qmname{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A}
+  .qmname .sp{margin-left:auto}
+  .qmmeta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .qmq{font-size:14px;line-height:20px;letter-spacing:-.01em;color:#171717;white-space:pre-wrap}
+  .qmsub{display:flex;gap:6px;font-size:12px;line-height:16px;font-weight:500;color:#737373}
+  .qmlb{font-size:14px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A}
+  .qmchips{display:flex;flex-wrap:wrap;gap:6px}
+  .qmchip{height:24px;padding:0 10px;border:1px solid #E5E5E5;border-radius:9999px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0A0A0A;cursor:pointer}
+  .qmchip:hover{background:#F5F5F5}
+  .qmta{width:100%;box-sizing:border-box;min-height:140px;padding:8px 10px;border:1px solid #E5E5E5;border-radius:10px;font-family:inherit;font-size:14px;line-height:20px;color:#171717;resize:vertical}
+  .qmacts{display:flex;justify-content:flex-end;gap:8px}
+  .qmempty{display:flex;align-items:center;justify-content:center;height:100%;color:#a3a3a3;font-size:13px}
+  /* 발언 대기열 아코디언 */
+  .qmacc{flex:none;margin:0 8px 8px;border:1px solid #E5E5E5;border-radius:10px;background:#fff;overflow:hidden}
+  .qmacc-h{display:flex;align-items:center;gap:8px;padding:6px;background:#171717;color:#FAFAFA}
+  .qmacc-h .t{font-size:14px;font-weight:600;letter-spacing:-.01em}
+  .qmacc-h .d{font-size:14px;font-weight:600;color:#A3A3A3}
+  .qmacc-h .sp{margin-left:auto}
+  .qmacc-h button{width:24px;height:24px;border:none;background:none;border-radius:8px;color:#A3A3A3;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+  .qmacc-h button:hover{background:rgba(255,255,255,.1)}
+  .qmacc-h svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .qmacc-b{display:none;flex-direction:column;gap:8px;padding:12px}
+  .qmacc.on .qmacc-b{display:flex}
+  .qmqrow{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #E5E5E5;border-radius:10px;background:#FAFAFA}
+  .qmqrow.live{background:#fff;border-color:#171717}
+  .qmqno{width:20px;height:20px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;background:rgba(255,255,255,.8);border:1px solid #E5E5E5;font-size:12px;color:#171717}
+  .qmqrow.live .qmqno{background:#171717;border-color:#171717;color:#FAFAFA}
+  .qmqnm{font-size:14px;font-weight:500;letter-spacing:-.01em;color:#171717}
+  .qmqag{font-size:12px;font-weight:500;color:#737373}
+  .qmqrow .sp{margin-left:auto}
   /* 표결 관리 */
   .psheet{padding:0;height:100%;display:flex;flex-direction:column;overflow:hidden}
   .pnav{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #E5E5E5;flex:none}
@@ -1046,7 +1104,34 @@
         </div>
 
         <div class="oc-panel" data-panel="qa">
-          <div class="oc-empty">질의 · 발언 관리 — 준비 중</div>
+          <div class="apanel qmwrap">
+            <div class="qmhead" id="qmTabs">
+              <button class="on" data-qm="q" type="button">질의</button>
+              <button data-qm="s" type="button">발언</button>
+              <button data-qm="v" type="button">시청자 관리</button>
+              <span class="sp"></span>
+              <button class="vbtn" type="button" style="height:28px;font-size:12px"><i class="ph ph-download-simple" style="font-size:14px"></i>다운로드</button>
+              <button class="vbtn ic" type="button" style="width:28px;height:28px" title="컬럼 · 필터"><i class="ph ph-sliders-horizontal" style="font-size:14px"></i></button>
+            </div>
+            <div class="qmbody">
+              <div class="qmleft">
+                <div class="qmscroll"><table class="qmtbl"><thead id="qmHead"></thead><tbody id="qmBody"></tbody></table></div>
+              </div>
+              <div class="qmright" id="qmPane"></div>
+            </div>
+            <div class="qmacc" id="qmAcc" style="display:none">
+              <div class="qmacc-h">
+                <button type="button" id="qmAccTgl" title="펼치기"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+                <span class="t" id="qmAccAg">제1호 의안</span>
+                <span class="d">|</span>
+                <span class="t" id="qmAccN">발언 대기열 0/0</span>
+                <span class="sp"></span>
+                <button type="button" id="qmAccPrev"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+                <button type="button" id="qmAccNext"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+              </div>
+              <div class="qmacc-b" id="qmAccB"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1471,6 +1556,162 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   // 초기 선택: 제1호
   (function(){ var f=document.querySelector('#agTree .selnode[data-no="제1호"]'); if(f) f.classList.add('sel'); })();
   renderStage(); renderAll();
+})();
+</script>
+<script>
+/* 질의 · 발언 관리 — 실시간 운영과 같은 데이터를 표로 일괄 관리하는 뷰. */
+(function(){
+  var head=document.getElementById('qmHead'); if(!head||!window.QUESTIONS) return;
+  var tbody=document.getElementById('qmBody'), pane=document.getElementById('qmPane'), acc=document.getElementById('qmAcc');
+  var mode='q', selId=null, queue=[];
+  function esc(t){ return String(t==null?'':t).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
+  function cm(n){ return Number(n).toLocaleString('en-US'); }
+  function agOf(x){ return '제'+(x.sub||x.ag)+'호'; }
+  function tType(t){ return '<span class="tg '+(t==='기관'?'tg-inst':'tg-ind')+'">'+t+'</span>'; }
+
+  var HEAD={
+    q:'<tr><th style="width:110px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th style="width:90px">의안</th><th>질의 내용</th><th style="width:110px">접수시간</th><th class="c" style="width:96px">공개</th><th class="c" style="width:110px">상태</th><th class="c" style="width:56px">상세</th></tr>',
+    s:'<tr><th style="width:110px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th style="width:90px">의안</th><th>신청 내용</th><th class="c" style="width:110px">상태</th><th class="c" style="width:110px">대기열</th></tr>',
+    v:'<tr><th style="width:110px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th style="width:120px">접속 채널</th><th>단말 · 브라우저</th><th style="width:110px">접속시간</th><th class="c" style="width:110px">상태</th></tr>'
+  };
+  var INFO='<svg class="exi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="7.6" r=".9" fill="#737373" stroke="none"/></svg>';
+  /* 시청자 — 온라인 접속자 표본 */
+  var VIEWERS=QUESTIONS.slice(0,14).map(function(x,i){
+    return {name:x.name,t:x.t,sh:x.sh,ch:i%3===0?'모바일 앱':(i%3===1?'웹 브라우저':'태블릿'),
+      ua:i%3===1?'Chrome 131 · Windows':(i%3===0?'CONEXUS 앱 2.4.0 · iOS 18':'Safari 18 · iPadOS'),
+      tm:'09:'+(2+i)+(i<8?'':''),st:i%5===4?'이탈':'시청 중'};
+  });
+
+  function rows(){
+    if(mode==='q') return QUESTIONS.filter(function(x){return !x.pre;});
+    if(mode==='s') return SPEECHES;
+    return VIEWERS;
+  }
+  function pubCell(x){
+    if(x.st==='미답변') return '<span class="qmdot">−</span>';
+    return '<span class="qmdot'+(x.pub?' blue':'')+'"><i></i>'+(x.pub?'전체공개':'비공개')+'</span>';
+  }
+  function spDot(st){
+    if(st==='대기') return '<span class="qmdot violet"><i></i>대기열</span>';
+    if(st==='완료') return '<span class="qmdot violet"><i></i>대기열</span>';
+    if(st==='반려') return '<span class="qmdot" style="opacity:.5"><i></i>반려</span>';
+    return '<span class="qmdot"><i></i>접수</span>';
+  }
+  function render(){
+    head.innerHTML=HEAD[mode];
+    var list=rows();
+    tbody.innerHTML=list.map(function(x,i){
+      var id=x.id||('V'+i);
+      var base='<td>'+esc(x.name).slice(0,14)+'</td><td class="r">'+cm(x.sh)+'</td>';
+      if(mode==='v'){
+        return '<tr data-id="'+id+'">'+base+'<td>'+x.ch+'</td><td class="txt">'+x.ua+'</td><td>'+x.tm+'</td>'
+          +'<td class="c">'+(x.st==='시청 중'?'<span class="qmdot blue"><i></i>시청 중</span>':'<span class="qmdot" style="opacity:.5"><i></i>이탈</span>')+'</td></tr>';
+      }
+      if(mode==='s'){
+        var inQ=queue.indexOf(id)>=0;
+        var act = x.st==='반려' ? '<span class="qmdot" style="opacity:.5">−</span>'
+          : '<button class="qmqbtn'+(inQ?' rm':'')+'" data-q="'+id+'" type="button">'+(inQ?'제거':'추가')+'</button>';
+        return '<tr data-id="'+id+'"'+(x.st==='반려'?' class="off"':'')+'>'+base+'<td>'+agOf(x)+'</td>'
+          +'<td class="txt">'+esc(x.r)+'</td><td class="c">'+spDot(inQ?'대기':(x.st==='반려'?'반려':'접수'))+'</td>'
+          +'<td class="c">'+act+'</td></tr>';
+      }
+      return '<tr data-id="'+id+'">'+base+'<td>'+agOf(x)+'</td><td class="txt">'+esc(x.q)+'</td>'
+        +'<td>'+x.tm+'</td><td class="c">'+pubCell(x)+'</td>'
+        +'<td class="c">'+(x.st==='완료'?'<span class="qmdot blue"><i></i>답변완료</span>':'<span class="qmdot"><i></i>미답변</span>')+'</td>'
+        +'<td class="c"><span class="extip" data-tip="접수 '+x.tm+'\n'+(x.st==='완료'?'답변완료':'미답변')+'">'+INFO+'</span></td></tr>';
+    }).join('');
+    acc.style.display = mode==='s' ? 'block' : 'none';
+    if(!selId || !list.some(function(x){return (x.id||'')===selId;})) selId=(list[0]&&list[0].id)||null;
+    paint();
+    if(mode==='s') renderAcc();
+  }
+  function paint(){
+    tbody.querySelectorAll('tr').forEach(function(tr){ tr.classList.toggle('sel',tr.dataset.id===selId); });
+    renderPane();
+  }
+  var TPL=['주주 기준 안내','의안과 무관','추후 서면 답변','공시 자료 참조','담당 임원 답변','시간 관계상 종료'];
+  function renderPane(){
+    if(mode==='v'){ pane.innerHTML='<div class="qmempty">온라인 시청자는 목록에서 접속 상태만 확인합니다.</div>'; return; }
+    var list=rows(), x=null, idx=0;
+    list.forEach(function(y,i){ if((y.id||'')===selId){ x=y; idx=i; } });
+    if(!x){ pane.innerHTML='<div class="qmempty">좌측 목록에서 항목을 고르세요.</div>'; return; }
+    var isQ=(mode==='q');
+    var st = isQ
+      ? (x.st==='완료'?'<span class="qmdot blue"><i></i>답변완료</span>':'<span class="qmdot"><i></i>미답변</span>')
+      : (x.kind==='수정동의'?'<span class="qmdot amber"><i></i>수정동의</span>':spDot(queue.indexOf(x.id)>=0?'대기':(x.st==='반려'?'반려':'접수')));
+    var same=list.filter(function(y){return (y.sub||y.ag)===(x.sub||x.ag);});
+    var seq=same.indexOf(x)+1;
+    var acts = isQ
+      ? '<button class="dlg-btn" type="button">취소</button><button class="dlg-btn dark" type="button">답변 등록</button>'
+      : '<button class="dlg-btn" type="button" data-act="rej">반려</button><button class="dlg-btn dark" type="button" data-act="add">대기열 등록</button>';
+    pane.innerHTML=
+      '<div style="display:flex;flex-direction:column;gap:8px">'
+      +'<div class="qmname">'+esc(x.name)+'<span class="sp"></span>'+st+'</div>'
+      +'<div class="qmmeta"><span class="pchip">'+(isQ?'질의':(x.kind||'발언'))+'</span><span class="pchip">'+agOf(x)+'</span>'
+      +'<span class="pchip">'+x.t+'</span><span class="pchip">'+cm(x.sh)+'주</span></div></div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px">'
+      +'<div class="qmq">'+esc(isQ?x.q:x.r)+'</div>'
+      +'<div class="qmsub"><span>'+(x.tm||'')+'</span><span>'+(isQ?'질의':'발언')+' '+seq+'/'+same.length+'</span></div></div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px">'
+      +'<div class="qmlb">'+(isQ?'답변 작성':'처리 사유')+'</div>'
+      +'<div class="qmchips">'+TPL.map(function(t){return '<button class="qmchip" type="button">'+t+'</button>';}).join('')+'</div></div>'
+      +'<textarea class="qmta" id="qmTa" placeholder="'+(isQ?'답변 내용을 입력하세요.':'처리 사유를 입력하세요.')+'">'+esc(isQ?(x.a||''):'')+'</textarea>'
+      +'<div class="qmacts">'+acts+'</div>';
+  }
+
+  /* 발언 대기열 아코디언 */
+  var accAg='제1호';
+  function renderAcc(){
+    var items=queue.map(function(id){ var f=null; SPEECHES.forEach(function(x){ if(x.id===id) f=x; }); return f; }).filter(Boolean);
+    var inAg=items.filter(function(x){ return agOf(x).indexOf(accAg.replace(/호$/,''))===0; });
+    document.getElementById('qmAccAg').textContent=accAg+' 의안';
+    document.getElementById('qmAccN').textContent='발언 대기열 '+inAg.length+'/'+items.length+'명';
+    document.getElementById('qmAccB').innerHTML = items.length
+      ? items.map(function(x,i){
+          return '<div class="qmqrow'+(i===0?' live':'')+'"><span class="qmqno">'+(i+1)+'</span>'
+            +'<span class="qmqnm">'+esc(x.name)+'</span><span class="qmqag">'+agOf(x)+'</span>'
+            +'<span class="sp"></span>'
+            +(i===0?'<button class="qmqbtn" type="button">발언 종료</button>':'')
+            +'<button class="qmqbtn rm" data-q="'+x.id+'" type="button">제거</button></div>';
+        }).join('')
+      : '<div style="color:#a3a3a3;font-size:13px;padding:12px;text-align:center">대기열이 비어 있습니다. 목록에서 추가하세요.</div>';
+  }
+  document.getElementById('qmAccTgl').addEventListener('click',function(){ acc.classList.toggle('on'); });
+  document.getElementById('qmAccPrev').addEventListener('click',function(){ stepAg(-1); });
+  document.getElementById('qmAccNext').addEventListener('click',function(){ stepAg(1); });
+  function stepAg(d){
+    var list=CX.agenda.filter(function(a){return !a.header;}).map(function(a){return a.no;});
+    var i=list.indexOf(accAg); if(i<0) i=0;
+    accAg=list[Math.min(list.length-1,Math.max(0,i+d))]; renderAcc();
+  }
+  document.getElementById('qmAccB').addEventListener('click',function(e){
+    var b=e.target.closest('[data-q]'); if(!b) return; toggleQ(b.dataset.q);
+  });
+
+  function toggleQ(id){
+    var i=queue.indexOf(id);
+    if(i>=0) queue.splice(i,1); else queue.push(id);
+    render(); acc.classList.add('on');
+  }
+
+  document.getElementById('qmTabs').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-qm]'); if(!b) return;
+    this.querySelectorAll('button[data-qm]').forEach(function(x){ x.classList.toggle('on',x===b); });
+    mode=b.dataset.qm; selId=null; render();
+  });
+  tbody.addEventListener('click',function(e){
+    var q=e.target.closest('.qmqbtn[data-q]');
+    if(q){ e.stopPropagation(); toggleQ(q.dataset.q); return; }
+    var tr=e.target.closest('tr[data-id]'); if(!tr) return;
+    selId=tr.dataset.id; paint();
+  });
+  pane.addEventListener('click',function(e){
+    var c=e.target.closest('.qmchip');
+    if(c){ var ta=document.getElementById('qmTa'); if(ta) ta.value=(ta.value?ta.value+' ':'')+c.textContent; return; }
+    var a=e.target.closest('[data-act]');
+    if(a && a.dataset.act==='add' && selId){ toggleQ(selId); }
+  });
+  render();
 })();
 </script>
 <div class="ovl" id="bulkOvl">
