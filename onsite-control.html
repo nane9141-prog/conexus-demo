@@ -227,8 +227,8 @@
   .sbadge.done{color:#525252}.sbadge.done .d{background:#525252}
   .selnode{cursor:pointer;border-radius:8px}
   .selnode.sel{border-radius:8px;position:relative;z-index:1}
-  .arow.selnode.sel{border-color:#a3a3a3}
-  .achild.selnode.sel{border:1px solid #a3a3a3;border-radius:8px}
+  .arow.selnode.sel{border-color:#0A0A0A}
+  .achild.selnode.sel{border:1px solid #0A0A0A;border-radius:8px}
   .achild.selnode:not(.sel){border-radius:0}
   .iarow{box-sizing:border-box;display:flex;align-items:center;gap:12px;padding:8px;min-height:44px;background:#fff;border:1px solid #E5E5E5;border-radius:6px}
   .iarow-l{display:flex;align-items:center;gap:8px;padding:0 8px;flex:1;min-width:0}
@@ -281,7 +281,22 @@
   .chat-h .t{font-size:14px;font-weight:600;color:#0A0A0A}
   .chat-x{width:24px;height:24px;border:1px solid var(--border);border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
   .chat-x svg{width:12px;height:12px;fill:none;stroke:#0A0A0A;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-  .chat-top{padding:8px 12px 4px;flex:none}
+  .chat-top{display:flex;flex-direction:column;gap:10px;padding:12px;flex:none}
+  /* 상단 탭 — 밑줄형(질의/발언) */
+  .qtabs{display:flex;align-items:center;gap:4px;padding:3px;flex:1;min-width:0}
+  .qtabs button{display:inline-flex;align-items:center;justify-content:center;gap:6px;flex:none;
+    height:34px;padding:4px 12px;border:none;border-bottom:1px solid var(--border);background:none;
+    font-family:inherit;font-size:14px;font-weight:500;letter-spacing:inherit;color:#737373;cursor:pointer}
+  .qtabs button.on{border-bottom:2px solid #0A0A0A;color:#0A0A0A}
+  .qtabs .bn{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;
+    padding:0 4px;background:#F5F5F5;border-radius:9999px;font-size:12px;font-weight:500;color:#171717}
+  .qtabs button.on .bn{background:#171717;color:#fff}
+  /* 의안 필터 */
+  .qsel{display:flex;align-items:center;gap:6px;height:32px;padding:4px 10px;
+    border:1px solid var(--border);border-radius:10px;background:transparent}
+  .qsel select{flex:1;min-width:0;border:none;background:none;outline:none;cursor:pointer;
+    font-family:inherit;font-size:14px;letter-spacing:inherit;color:#171717;appearance:none;-webkit-appearance:none}
+  .qsel svg{width:16px;height:16px;color:#737373;flex:none}
   .chat-tabs-row{display:flex;justify-content:space-between;align-items:center;gap:6px}
   .seg2{display:flex;align-items:center;padding:3px;background:#F5F5F5;border-radius:10px}
   .seg2 button{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:26px;padding:2px 8px;border:none;background:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:500;color:#737373;cursor:pointer}
@@ -290,17 +305,19 @@
   .chat-b{flex:1;min-height:0;overflow:auto;padding:4px 12px 12px;scrollbar-width:none;-ms-overflow-style:none}
   .chat-b::-webkit-scrollbar{display:none;width:0;height:0}
   .chat-list{display:flex;flex-direction:column;gap:10px}
-  .mcard{border:1px solid var(--border);border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);padding:16px;display:flex;flex-direction:column;gap:10px;background:#fff}
+  .mcard{border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px;background:#fff}
   .mcard.click{cursor:pointer}
-  .mcard.sel{border-color:#0A0A0A}
+  .mcard.sel{border-color:#171717}
+  .mc-meta{display:flex;align-items:flex-start;gap:6px;font-size:12px;font-weight:500;color:#737373;font-variant-numeric:tabular-nums}
   .mc-h{display:flex;align-items:center;gap:6px}
   .mc-nm{flex:1;font-size:14px;font-weight:600;color:#0A0A0A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .mc-st{display:flex;align-items:center;gap:6px;flex:none}
   .mc-tm{font-size:12px;font-weight:500;color:#737373}
   .mbadge{display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:6px;font-size:12px;font-weight:500}
   .mbadge .d{width:6px;height:6px;border-radius:50%}
-  .mbadge.wait{color:#EA580C}.mbadge.wait .d{background:#EA580C}
-  .mbadge.done{color:#525252}.mbadge.done .d{background:#525252}
+  .mbadge.wait{color:#525252}.mbadge.wait .d{background:#525252}
+  .mbadge.done{color:#0071F3}.mbadge.done .d{background:#0071F3}
+  .mbadge.plain{color:#525252;padding:2px}
   .mbadge.rej{color:#DC2626}.mbadge.rej .d{background:#DC2626}
   .mbadge.prog{color:#0071F3}.mbadge.prog .d{background:#0071F3}
   .mc-cat{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
@@ -313,7 +330,7 @@
   .mc-ans .lb{font-size:14px;font-weight:500;color:#0A0A0A}
   .mc-chips{display:flex;flex-wrap:wrap;gap:6px}
   .mc-chip{padding:6px 10px;border:1px solid var(--border);border-radius:9999px;background:#fff;font-size:12px;font-weight:500;color:#0A0A0A;cursor:pointer}
-  .mc-ta{width:100%;box-sizing:border-box;min-height:96px;padding:8px 10px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px;color:#171717;resize:vertical}
+  .mc-ta{width:100%;box-sizing:border-box;min-height:64px;padding:12px;background:#FAFAFA;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px;color:#171717;resize:vertical}
   .mc-btns{display:flex;justify-content:flex-end;gap:8px}
   .mc-btn{padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0A0A0A;cursor:pointer}
   .mc-btn.dark{background:#171717;border-color:#171717;color:#FAFAFA}
@@ -747,9 +764,10 @@
               <div class="chat-h"><span class="t">질의응답</span><button class="chat-x" title="확대"><i class="ph ph-arrow-square-out" style="font-size:16px"></i></button></div>
               <div class="chat-top">
                 <div class="chat-tabs-row">
-                  <div class="seg2"><button data-qt="q" class="on">질의<span class="bn" id="qCnt"></span></button><button data-qt="s">발언<span class="bn" id="sCnt"></span></button></div>
-                  <label class="tgl-wrap"><span class="sw" id="unreadSw"></span>미답변만</label>
+                  <div class="qtabs"><button data-qt="q" class="on">질의<span class="bn" id="qCnt"></span></button><button data-qt="s">발언<span class="bn" id="sCnt"></span></button></div>
+                  <div class="seg2"><button data-qf="all" class="on">전체</button><button data-qf="open">미답변</button><button data-qf="done">답변완료</button></div>
                 </div>
+                <div class="qsel"><select id="qAgSel"></select><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
               </div>
               <div class="chat-b"><div id="chatList" class="chat-list"></div></div>
             </div>
@@ -1210,7 +1228,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 (function(){
   var Q=window.QUESTIONS||[], S=window.SPEECHES||[];
   S.forEach(function(x){ x._iw=(x.st==='대기'); });
-  var qt='q', unread=false, selId=null, editId=null, spAgenda='1', spOpen=true, speakingId=null;
+  var qt='q', qf='all', selId=null, editId=null, spAgenda='all', spOpen=true, speakingId=null;
   function comma(n){return (n||0).toLocaleString('en-US');}
   var TPL=[
     {l:'배당 정책',t:'당사는 안정적 배당과 성장 투자의 균형을 배당 정책의 원칙으로 하며, 별도재무제표 당기순이익 기준 배당성향 약 27% 수준을 유지하고 있습니다.'},
@@ -1233,12 +1251,18 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     return '<div class="mc-ans"><div class="lb">답변 작성</div>'
       +'<div class="mc-chips">'+TPL.map(function(t,i){return '<button class="mc-chip" type="button" data-tpl="'+i+'">'+t.l+'</button>';}).join('')+'</div>'
       +'<textarea class="mc-ta" placeholder="답변을 입력하세요">'+esc(x.a||'')+'</textarea>'
+      +(x.a?'<div class="mc-meta">답변 : '+x.tm+', '+CX.meeting.operator.name+'</div>':'')
       +'<div class="mc-btns"><button class="mc-btn" data-act="cancel" type="button">취소</button><button class="mc-btn dark" data-act="submit" type="button">등록</button></div></div>';
   }
   function answerView(x){
     return '<div class="mc-ansview"><div class="lb">답변 내용</div><div class="tx">'+esc(x.a)+'</div>'
       +'<div class="mc-viewbtns two"><button class="mc-editbtn" data-edit="1" type="button">수정</button>'
       +'<button class="mc-castbtn'+(x.cast?' on':'')+'" data-cast="1" type="button"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>'+(x.cast?'송출 중':'의장 송출')+'</button></div></div>';
+  }
+  /* 카드 하단 메타 — 접수 시각과 현재 목록 기준 순번 */
+  function metaRow(x){
+    var a=list(), i=a.indexOf(x)+1;
+    return '<div class="mc-meta"><span>'+x.tm+'</span><span>'+(qt==='q'?'질의':'발언')+' '+i+'/'+a.length+'</span></div>';
   }
   function cardHTML(x){
     var on=(qt==='q'&&(x.id===selId||x.id===editId));
@@ -1250,15 +1274,23 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var sel=on;
     var badges='<span class="cbadge ag">'+agL(x)+'</span><span class="cbadge gr">'+x.t+'</span><span class="cbadge gr">'+sn(x)+'</span>'
       +(qt==='s'&&x.kind==='수정동의'?'<span class="cbadge amend">수정동의</span>':'');
-    var priv=x.pub?'':'<span class="mc-tm">비공개</span>';
+    var priv=x.pub?'':'<span class="mbadge plain">비공개</span>';
     return '<div class="mcard'+(qt==='q'?' click':'')+(sel?' sel':'')+'" data-id="'+x.id+'">'
-      +'<div class="mc-h"><span class="mc-nm">'+x.name+'</span><span class="mc-st">'+priv+'<span class="mc-tm">'+x.tm+'</span>'+stBadge(x)+'</span></div>'
+      +'<div class="mc-h"><span class="mc-nm">'+x.name+'</span><span class="mc-st">'+priv+stBadge(x)+'</span></div>'
       +'<div class="mc-cat">'+badges+'</div>'
       +'<div class="mc-q">'+esc(qt==='q'?x.q:x.r)+'</div>'
+      +metaRow(x)
       +extra+'</div>';
   }
-  function list(){ var a=(qt==='q'?Q:S); if(unread) a=a.filter(function(x){return qt==='q'?x.st==='미답변':x.st==='대기';}); return a; }
-  function spList(){ var a=S.filter(function(x){return spAgenda==='all'||x.ag===spAgenda;}); if(unread) a=a.filter(function(x){return x.st==='대기';}); return a; }
+  /* 목록 필터 — 상단 3단(전체·미답변·답변완료) + 의안 셀렉트를 함께 적용 */
+  function pass(x){
+    if(spAgenda!=='all' && String(x.ag)!==spAgenda) return false;
+    if(qf==='all') return true;
+    var open=(qt==='q')?(x.st==='미답변'):(x.st==='대기');
+    return qf==='open'?open:!open;
+  }
+  function list(){ return (qt==='q'?Q:S).filter(pass); }
+  function spList(){ return S.filter(pass); }
   function spControls(){
     var base=S.filter(function(x){return (spAgenda==='all'||x.ag===spAgenda)&&x._iw;});
     var q=base.filter(function(x){return x.st==='대기';});
@@ -1268,8 +1300,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       else if(!speakingId && i===0) btn='<button class="spq-btn start" type="button" data-spstart="'+x.id+'">시작</button>';
       return '<div class="spq-row'+(sk?' speaking':'')+'"><span class="spq-no">'+(base.indexOf(x)+1)+'</span><span class="spq-nm">'+x.name+'</span>'+btn+'</div>';
     }).join('');
-    var opts=[['all','전체 의안'],['1','제1호'],['2','제2호'],['3','제3호']].map(function(o){return '<option value="'+o[0]+'"'+(spAgenda===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('');
-    var sel='<select class="spsel" id="spAgSel">'+opts+'</select>';
+    var sel='';
     var queue='<div class="spqueue"><div class="spq-h" data-qtoggle><svg class="ui" viewBox="0 0 24 24"><path d="M3 6h13M3 12h13M3 18h9"/><circle cx="20" cy="7" r="1"/></svg><span>발언 대기열 <b>'+q.length+'명</b></span><svg class="spq-caret'+(spOpen?' open':'')+'" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>'+(spOpen?('<div class="spq-body">'+(rows||'<div class="spq-empty">대기 중인 발언이 없습니다.</div>')+'</div>'):'')+'</div>';
     return sel+queue;
   }
@@ -1278,9 +1309,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var badges='<span class="cbadge ag">'+agL(x)+'</span>'+(x.kind==='수정동의'?'<span class="cbadge amend">수정동의</span>':'<span class="cbadge gr">발언</span>')+'<span class="cbadge gr">'+sn(x)+'</span>';
     var reject=(sel&&x.st==='대기')?'<div class="mc-btns"><button class="mc-btn reject" data-reject type="button">반려</button></div>':'';
     return '<div class="mcard sp-click'+(sel?' sel':'')+'" data-id="'+x.id+'">'
-      +'<div class="mc-h"><span class="mc-nm">'+x.name+'</span><span class="mc-st"><span class="mc-tm">'+x.tm+'</span>'+stBadge(x)+'</span></div>'
+      +'<div class="mc-h"><span class="mc-nm">'+x.name+'</span><span class="mc-st">'+stBadge(x)+'</span></div>'
       +'<div class="mc-cat">'+badges+'</div>'
-      +'<div class="mc-q">'+esc(x.r)+'</div>'+reject+'</div>';
+      +'<div class="mc-q">'+esc(x.r)+'</div>'
+      +metaRow(x)+reject+'</div>';
   }
   function render(){
     var host=document.getElementById('chatList');
@@ -1300,8 +1332,14 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     document.querySelectorAll('#ansVis button').forEach(function(b){ b.addEventListener('click',function(){ setVis(b.getAttribute('data-v')); }); });
     document.getElementById('ansSubmit').addEventListener('click',function(){ if(!pend) return; var it=Q.filter(function(x){return x.id===pend;})[0]; if(it){ it.a=taD.value; it.st='완료'; it.pub=(vis==='pub'); } closeDlg(); selId=null; editId=null; render(); });
   }
-  document.querySelectorAll('.seg2 button').forEach(function(b){ b.addEventListener('click',function(){ qt=b.getAttribute('data-qt'); selId=null; document.querySelectorAll('.seg2 button').forEach(function(x){x.classList.toggle('on',x===b);}); render(); }); });
-  var usw=document.getElementById('unreadSw'); usw.addEventListener('click',function(){ unread=!unread; usw.classList.toggle('on',unread); render(); });
+  document.querySelectorAll('.qtabs button').forEach(function(b){ b.addEventListener('click',function(){ qt=b.getAttribute('data-qt'); selId=null; document.querySelectorAll('.qtabs button').forEach(function(x){x.classList.toggle('on',x===b);}); render(); }); });
+  document.querySelectorAll('.seg2 button[data-qf]').forEach(function(b){ b.addEventListener('click',function(){ qf=b.getAttribute('data-qf'); selId=null; document.querySelectorAll('.seg2 button[data-qf]').forEach(function(x){x.classList.toggle('on',x===b);}); render(); }); });
+  (function(){
+    var sel=document.getElementById('qAgSel'); if(!sel) return;
+    sel.innerHTML=[['all','전체 의안'],['1','제1호'],['2','제2호'],['3','제3호']]
+      .map(function(o){ return '<option value="'+o[0]+'">'+o[1]+'</option>'; }).join('');
+    sel.addEventListener('change',function(){ spAgenda=sel.value; selId=null; render(); });
+  })();
   var cl=document.getElementById('chatList');
   cl.addEventListener('click',function(e){
     var chip=e.target.closest('.mc-chip'); if(chip){ var ta=chip.closest('.mc-ans').querySelector('.mc-ta'); var tt=TPL[+chip.getAttribute('data-tpl')].t; ta.value=tt; ta.focus(); return; }
@@ -1318,7 +1356,6 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(e.target.closest('.mc-ans, .mc-ansview, .mc-chips, textarea, input, select, label')) return;
     var mc=e.target.closest('.mcard'); if(!mc) return; var id=mc.getAttribute('data-id'); selId=(selId===id)?null:id; editId=null; render();
   });
-  cl.addEventListener('change',function(e){ var s2=e.target.closest('#spAgSel'); if(s2){ spAgenda=s2.value; render(); } });
   render();
 })();
 </script>
