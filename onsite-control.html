@@ -545,6 +545,42 @@
   .vbtn.dark{background:#171717;border-color:#171717;color:#fafafa}
   .vbtn.ic{padding:0;width:34px;justify-content:center;border-radius:8px}
   .vscroll{flex:1;min-height:0;overflow:auto;margin:0 12px 12px;border:1px solid #E5E5E5;border-radius:8px;background:#fff}
+  .dlg-inp,.dlg-sel{width:100%;box-sizing:border-box;height:32px;padding:0 10px;border:1px solid #E5E5E5;border-radius:10px;font-family:inherit;font-size:14px;letter-spacing:-.01em;color:#171717;background:#fff}
+  .dlg-sel{padding-right:28px}
+  /* 수정동의 */
+  .achip{display:inline-flex;align-items:center;padding:2px 6px;border-radius:6px;font-size:12px;line-height:16px;font-weight:500;background:#F5F5F5;color:#525252;flex:none}
+  .achip.b{background:#EEF5FF;color:#0071F3}
+  .achip.v{background:#F5F3FF;color:#7C3AED}
+  .atypes .amd{color:#EA580C}
+  .achild .acat>.achip{margin-left:auto}
+  .arow.amended>.acat>.anm{color:#171717}
+  .amrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .amf{display:flex;align-items:center;gap:8px;font-size:14px;color:#171717;white-space:nowrap}
+  .amf b{font-size:12px;font-weight:500;color:#737373}
+  .amsep{width:1px;height:14px;background:#E5E5E5;flex:none}
+  .amcards{display:flex;gap:12px}
+  .amcard{flex:1;min-width:0;box-sizing:border-box;border:1px solid #E5E5E5;border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:4px}
+  .amcard .k{font-size:12px;font-weight:500;color:#171717}
+  .amcard .v{font-size:16px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A;font-variant-numeric:tabular-nums}
+  .amnote{background:#F5F5F5;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px}
+  .amnote .h{display:flex;align-items:center;gap:4px;font-size:14px;font-weight:600;letter-spacing:-.01em;color:#171717}
+  .amnote .h svg{width:16px;height:16px;fill:none;stroke:#171717;stroke-width:1.33;stroke-linecap:round}
+  .amnote p{margin:0;font-size:14px;line-height:20px;letter-spacing:-.01em;color:#737373}
+  .amnote hr{width:100%;height:0;margin:8px 0;border:none;border-top:1px solid #E5E5E5}
+  .ckrow{display:flex;align-items:center;gap:8px;margin-right:auto;font-size:14px;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer}
+  .ckbox{width:16px;height:16px;flex:none;border:1px solid #E5E5E5;border-radius:4px;background:#fff;display:inline-flex;align-items:center;justify-content:center;color:#FAFAFA}
+  .ckrow.on .ckbox{background:#171717;border-color:#171717}
+  .ckbox svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;display:none}
+  .ckrow.on .ckbox svg{display:block}
+  .adlg{box-sizing:border-box;width:320px;max-width:320px;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;display:flex;flex-direction:column;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+  .adlg-h{display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 8px}
+  .adlg-ic{width:40px;height:40px;border-radius:8px;background:#FDE7E9;display:flex;align-items:center;justify-content:center;flex:none}
+  .adlg-ic svg{width:24px;height:24px;fill:none;stroke:#E9081B;stroke-width:1.5;stroke-linecap:round}
+  .adlg-t{font-size:16px;font-weight:600;line-height:24px;letter-spacing:-.01em;text-align:center;color:#0A0A0A}
+  .adlg-d{font-size:14px;line-height:20px;letter-spacing:-.01em;text-align:center;color:#737373}
+  .adlg-f{display:flex;align-items:center;gap:8px;padding:12px 16px 16px}
+  .adlg-f button{flex:1;height:32px;border:1px solid #E5E5E5;border-radius:10px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer}
+  .adlg-f button.danger{border-color:transparent;background:rgba(220,38,38,.1);color:#E9081B}
   /* 질의 · 발언 관리 */
   .qmwrap{padding:0;height:100%;display:flex;flex-direction:column;overflow:hidden;background:transparent;border:none;box-shadow:none}
   .qmhead{display:flex;align-items:center;gap:6px;padding:0 12px;height:40px;border-bottom:1px solid #E5E5E5;flex:none;background:#fff;border-radius:12px 12px 0 0}
@@ -1643,7 +1679,9 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var seq=same.indexOf(x)+1;
     var acts = isQ
       ? '<button class="dlg-btn" type="button">취소</button><button class="dlg-btn dark" type="button">답변 등록</button>'
-      : '<button class="dlg-btn" type="button" data-act="rej">반려</button><button class="dlg-btn dark" type="button" data-act="add">대기열 등록</button>';
+      : '<button class="dlg-btn" type="button" data-act="rej">반려</button>'
+        + (x.kind==='수정동의' ? '<button class="dlg-btn dark" type="button" data-act="amend">수정동의 상정</button>'
+                              : '<button class="dlg-btn dark" type="button" data-act="add">대기열 등록</button>');
     pane.innerHTML=
       '<div style="display:flex;flex-direction:column;gap:8px">'
       +'<div class="qmname">'+esc(x.name)+'<span class="sp"></span>'+st+'</div>'
@@ -1708,10 +1746,153 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   pane.addEventListener('click',function(e){
     var c=e.target.closest('.qmchip');
     if(c){ var ta=document.getElementById('qmTa'); if(ta) ta.value=(ta.value?ta.value+' ':'')+c.textContent; return; }
-    var a=e.target.closest('[data-act]');
-    if(a && a.dataset.act==='add' && selId){ toggleQ(selId); }
+    var a=e.target.closest('[data-act]'); if(!a) return;
+    if(a.dataset.act==='add' && selId){ toggleQ(selId); return; }
+    if(a.dataset.act==='amend' && selId && window.openAmend){
+      var f=null; SPEECHES.forEach(function(y){ if(y.id===selId) f=y; });
+      if(f) openAmend({no:'제'+(f.sub||f.ag)+'호',who:f.name,title:'',body:f.r});
+    }
   });
   render();
+})();
+</script>
+<div class="ovl" id="amOvl">
+  <div class="dlg" style="width:480px">
+    <button class="dlg-x" id="amClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="dlg-h"><div class="tt">수정동의 등록</div><div class="ds">현장에서 제안된 수정동의를 의안으로 올립니다.</div></div>
+    <div class="dlg-c">
+      <div><div class="lb">대상 의안</div>
+        <select class="dlg-sel" id="amAg"></select></div>
+      <div><div class="lb">제안자</div>
+        <input class="dlg-inp" id="amWho" type="text" value=""></div>
+      <div><div class="lb">수정안 제목</div>
+        <input class="dlg-inp" id="amTitle" type="text" placeholder="예) 배당금 상향 추가 반영 건"></div>
+      <div><div class="lb">수정 내용</div>
+        <textarea class="dlg-ta" id="amBody" style="min-height:64px" placeholder="원안에서 바뀌는 내용을 적습니다."></textarea></div>
+      <div><div class="lb">제안 사유</div>
+        <textarea class="dlg-ta" id="amWhy" style="min-height:64px" placeholder="수정동의를 제안한 사유를 적습니다."></textarea></div>
+    </div>
+    <div class="dlg-f"><button class="dlg-btn" id="amCancel" type="button">취소</button><button class="dlg-btn dark" id="amNext" type="button">다음</button></div>
+  </div>
+</div>
+<div class="ovl" id="amvOvl">
+  <div class="dlg" style="width:480px">
+    <button class="dlg-x" id="amvClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="dlg-h"><div class="tt">수정동의 표결 처리</div><div class="ds">원안과 수정안을 나눠 다시 표결합니다. 처리 전 영향 범위를 확인하세요.</div></div>
+    <div class="dlg-c">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="amrow" id="amvWho"></div>
+      </div>
+      <div class="palert"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>기존 투표 여부와 관계없이 모든 참석 주주를 처리합니다.</div>
+      <div class="amcards">
+        <div class="amcard"><div class="k">재투표 대상 주주</div><div class="v" id="amvHolders">0명</div></div>
+        <div class="amcard"><div class="k">효력 상실 의결권</div><div class="v" id="amvShares">0 주</div></div>
+      </div>
+      <div class="amnote">
+        <div class="h"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>사전투표 및 현장 데이터 처리 안내</div>
+        <p>사전투표 효력 상실: 수정안 발생으로 인해 사전투표 내역은 자동 ‘기권’ 처리 됩니다.</p>
+        <p>현장 재투표: 현장 참석자는 수정안에 대해 새로 투표를 진행해야 합니다.</p>
+        <hr>
+        <div class="h"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>표결 전 검증</div>
+        <p>보유의결권보다 행사를 많게한 주주 검증</p>
+      </div>
+    </div>
+    <div class="dlg-f">
+      <label class="ckrow" id="amvAgree"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 안내를 확인했으며 수정동의 표결을 진행합니다.</label>
+      <button class="dlg-btn" id="amvCancel" type="button">취소</button>
+      <button class="dlg-btn dark" id="amvOk" type="button">표결 진행</button>
+    </div>
+  </div>
+</div>
+<div class="ovl" id="amcOvl">
+  <div class="adlg">
+    <div class="adlg-h">
+      <div class="adlg-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg></div>
+      <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+        <div class="adlg-t">의안 구성을 변경하시겠습니까?</div>
+        <div class="adlg-d" id="amcDesc">제1호가 원안과 수정안으로 나뉘며, 사전투표 내역은 기권 처리됩니다.</div>
+      </div>
+      <label class="ckrow" id="amcAgree" style="margin:0;justify-content:center"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>이 안내를 다시 보지 않기</label>
+    </div>
+    <div class="adlg-f"><button type="button" id="amcCancel">취소</button><button type="button" class="danger" id="amcOk">변경</button></div>
+  </div>
+</div>
+<script>
+/* 수정동의 — 등록 → 표결 처리 안내 → 확인. 확정되면 좌측 의안 리스트가 원안/수정안으로 갈라진다. */
+(function(){
+  var o1=document.getElementById('amOvl'), o2=document.getElementById('amvOvl'), o3=document.getElementById('amcOvl');
+  if(!o1||!window.CX) return;
+  var M=CX.meeting, cm=CX.util.comma;
+  var sel=document.getElementById('amAg');
+  sel.innerHTML=CX.agenda.filter(function(a){return !a.header;}).map(function(a){
+    return '<option value="'+a.no+'">'+a.no+' '+a.nm+'</option>';
+  }).join('');
+  var draft={no:'제1호',title:'',who:''};
+
+  function open(x){ x.classList.add('on'); }
+  function close(x){ x.classList.remove('on'); }
+  [[o1,'amClose','amCancel'],[o2,'amvClose','amvCancel'],[o3,null,'amcCancel']].forEach(function(t){
+    if(t[1]) document.getElementById(t[1]).addEventListener('click',function(){ close(t[0]); });
+    document.getElementById(t[2]).addEventListener('click',function(){ close(t[0]); });
+    t[0].addEventListener('click',function(e){ if(e.target===t[0]) close(t[0]); });
+  });
+  document.querySelectorAll('#amvAgree,#amcAgree').forEach(function(l){
+    l.addEventListener('click',function(){ l.classList.toggle('on'); });
+  });
+
+  window.openAmend=function(pre){
+    pre=pre||{};
+    /* 상위 의안(제2호처럼 표결 단위가 아닌 것)은 첫 하위 표결 단위로 대체한다 */
+    if(pre.no){
+      var vals=Array.prototype.map.call(sel.options,function(o){return o.value;});
+      sel.value = vals.indexOf(pre.no)>=0 ? pre.no
+        : (vals.filter(function(v){ return v.indexOf(pre.no.replace(/호$/,'-'))===0; })[0] || vals[0]);
+    }
+    document.getElementById('amWho').value=pre.who||'';
+    document.getElementById('amTitle').value=pre.title||'';
+    document.getElementById('amBody').value=pre.body||'';
+    open(o1);
+  };
+  document.getElementById('amNext').addEventListener('click',function(){
+    draft.no=sel.value;
+    draft.title=document.getElementById('amTitle').value.trim()||'수정안';
+    draft.who=document.getElementById('amWho').value.trim()||'주주 제안';
+    close(o1);
+    var d=CX.center[draft.no];
+    document.getElementById('amvWho').innerHTML=
+      '<div class="amf"><b>대상 의안</b>'+draft.no+' '+(d?d.name:'')+'</div><span class="amsep"></span>'
+      +'<div class="amf"><b>제안자</b>'+draft.who+'</div><span class="amsep"></span>'
+      +'<div class="amf"><b>수정안</b>'+draft.title+'</div>';
+    document.getElementById('amvHolders').textContent=cm(M.attendHolders)+'명';
+    document.getElementById('amvShares').textContent=cm(M.preExercised)+' 주';
+    open(o2);
+  });
+  document.getElementById('amvOk').addEventListener('click',function(){
+    close(o2);
+    document.getElementById('amcDesc').textContent=draft.no+'가 원안과 수정안으로 나뉘며, 사전투표 내역은 기권 처리됩니다.';
+    open(o3);
+  });
+  document.getElementById('amcOk').addEventListener('click',function(){ close(o3); applyAmend(draft); });
+
+  /* 좌측 의안 리스트 반영 — 원안(제N-1호) · 수정안(제N-2호)으로 가른다 */
+  function applyAmend(a){
+    var card=document.querySelector('#agTree .selnode[data-no="'+a.no+'"]');
+    if(!card || card.classList.contains('amended')) return;
+    card.classList.add('amended');
+    var base=a.no.replace(/호$/,'');
+    var types=card.querySelector('.atypes');
+    if(types) types.insertAdjacentHTML('beforeend','<span class="atsep">·</span><span class="tp amd">수정동의</span>');
+    else card.querySelector('.acat').insertAdjacentHTML('afterend','<div class="atypes"><span class="tp amd">수정동의</span></div>');
+    var nm=card.querySelector('.acat .anm');
+    var sub=card.querySelector('.asub');
+    var kids='<div class="achild selnode" data-no="'+base+'-1호"><div class="acat"><span class="ano">'+CX.util.chip(base+'-1호')
+      +'</span><span class="anm">'+(nm?nm.textContent:'')+' (원안)</span><span class="achip b">원안</span></div></div>'
+      +'<div class="achild selnode" data-no="'+base+'-2호"><div class="acat"><span class="ano">'+CX.util.chip(base+'-2호')
+      +'</span><span class="anm">[수정동의] '+a.title+'</span><span class="achip v">수정</span></div></div>';
+    if(sub) sub.insertAdjacentHTML('afterbegin',kids);
+    else card.insertAdjacentHTML('beforeend','<div class="asub">'+kids+'</div>');
+  }
+  window.applyAmend=applyAmend;
 })();
 </script>
 <div class="ovl" id="bulkOvl">
