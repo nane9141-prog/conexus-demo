@@ -1378,14 +1378,16 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   /* 호스트 권한 — active(제어 가능) · locked(위임 중) · connecting · sub(서브 호스트) · proxy(대행) */
   var hostState='active', speakSec=0, speakTick=null, openRow=null;
   /* 의장 전달 메시지 빠른 태그 */
+  /* 의장 전달 메시지 빠른 태그 — 진행 안내가 아니라,
+     해당 발언에 의장이 답변할 때 참고할 근거·수치를 넣는 자리다. */
   var CHAIR_TAGS=[
-    ['시간 안내',  '발언 시간은 3분입니다. 시간 경과 시 안내드리겠습니다.'],
-    ['의안 관련 확인','상정된 의안과의 관련성을 먼저 확인해 주시기 바랍니다.'],
-    ['중복 발언',  '앞선 주주와 동일한 취지의 발언입니다. 요지만 말씀해 주십시오.'],
-    ['요지 정리',  '질문 요지를 한 문장으로 정리해 주시기 바랍니다.'],
-    ['답변 필요',  '경영진 답변이 필요한 사안입니다. 답변 후 진행 부탁드립니다.'],
-    ['추가 설명',  '해당 내용은 총회 후 개별 안내로 갈음하겠습니다.'],
-    ['발언 제한',  '의사 진행에 방해가 되어 발언을 제한하겠습니다.']
+    ['실적 근거',  '당기 실적: 매출·영업이익 추이와 전년 대비 증감 요인. '],
+    ['배당 정책',  '배당 정책: 당기 배당성향 27%, 중기 25~30% 유지 방침. '],
+    ['주가 관련',  '주가 관련: 업종 평균 대비 밸류에이션과 주주환원 계획. '],
+    ['정관 조항',  '관련 정관: 제○조 제○항 개정 취지와 적용 시점. '],
+    ['후보 이력',  '후보 이력: 주요 경력·겸직 현황·추천 사유. '],
+    ['법령 근거',  '법령 근거: 상법 제○조에 따른 요건과 절차. '],
+    ['기존 답변',  '기존 답변: 직전 총회·공시에서 안내한 내용과 동일. ']
   ];
   var STAFF=[
     { id:'u1', name:'강하나', online:true,  me:true,  role:'host' },
@@ -1491,7 +1493,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       + '<div class="vqlbl">의장 전달 메시지 작성</div>'
       + '<div class="vqchips">'+CHAIR_TAGS.map(function(t,i){
           return '<button class="vqchip" type="button" data-tag="'+i+'">'+t[0]+'</button>'; }).join('')+'</div>'
-      + '<div class="vqmsg"><textarea data-chair maxlength="200" placeholder="의장에게 전달할 내용을 입력하세요">'+esc(v)+'</textarea>'
+      + '<div class="vqmsg"><textarea data-chair maxlength="200" placeholder="의장이 답변할 때 참고할 내용을 입력하세요">'+esc(v)+'</textarea>'
       +   '<div class="cnt"><span data-cnt>'+v.length+'</span>/200</div></div>'
       + '<div class="vqnote"><span class="warn">'+IC.warn+'발언 진행시 의장 화면에 표시 됩니다.</span>'
       +   '<button class="mc-btn'+(v?'':' dark')+'" type="button" data-chairsave="'+x.id+'">저장</button></div>'
