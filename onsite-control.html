@@ -632,6 +632,7 @@
   .chst{display:inline-flex;align-items:center;gap:4px;height:20px;padding:2px 6px;border-radius:6px;font-size:12px;font-weight:500}
   .chst.done{background:#F5F5F5;color:#525252}
   .chst.live{background:#FEF5E7;color:#EA580C}
+  .chst.wait{background:#FAFAFA;color:#A3A3A3}
   /* === 의안 카드 표결단위/유형 · 상태 뱃지 === */
   .acat>.astatus{flex:none;margin-left:auto}
   .atypes{display:flex;align-items:center;gap:6px;margin-top:2px;font-size:12px;font-weight:500;color:#737373}
@@ -1164,16 +1165,41 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function renderFooter(){
     var on=20000000, onsite=40000000, pre=240000000, total=OC.preEx?(on+onsite):(on+onsite+pre);
   }
+  /* 채널별 표결 현황 — 표결 단계에 따라 채널이 차례로 반영된다.
+       상정 전   : 사전 집계(전자·서면)만 확정
+       투표 시작 : 현장투표 앱 · 온라인 투표가 들어온다
+                   (현장투표 앱은 상단 KPI '현장 표결' 과 같은 수치를 본다)
+       투표 종료 : 집계중 단계에서 현장투표 서면이 일부 반영
+       표결 마감 : 모든 채널 확정
+     사전/현장/온라인 총량은 CX.channels 를 쪼개 쓴다. */
+  function chanRows(){
+    var pre=CX.channels[0].w, onsite=CX.channels[1].w, online=CX.channels[2].w, st=OC.stage;
+    var paperShare=(st>=4?1:0.6);                 /* 집계중엔 현장 서면이 일부만 들어온다 */
+    return [
+      { nm:'전자투표 (사전)', w:Math.round(pre*0.8), ready:true,   live:false },
+      { nm:'서면투표 (사전)', w:Math.round(pre*0.2), ready:true,   live:false },
+      { nm:'현장투표 앱',     w:OC.siteW,            ready:st>=2,  live:st===2 },
+      { nm:'현장투표 서면',   w:Math.round(onsite*0.125*paperShare), ready:st>=3, live:st===3 },
+      { nm:'온라인 투표',     w:online,              ready:st>=2,  live:st===2 }
+    ];
+  }
   function chanChannels(F,A,AB){
-    var chans=[{nm:'사전투표',w:240000000,st:'done'},{nm:'현장투표',w:40000000,st:'done'},{nm:'온라인투표',w:20000000,st:(OC.stage>=4?'done':'live')}];
-    var totW=chans.reduce(function(a,c){return a+c.w;},0);
+    var chans=chanRows();
+    var base=chans.reduce(function(a,c){return a+c.w;},0) || 1;
+    var sum={w:0,f:0,a:0,ab:0};
     var rows=chans.map(function(c){
-      var sh=totW?c.w/totW:0, cf=Math.round(F*sh), ca=Math.round(A*sh), cab=Math.round(AB*sh);
-      var stt=c.st==='live'?'<span class="chst live">집계 중</span>':'<span class="chst done">반영 완료</span>';
-      return '<tr><td class="l">'+c.nm+'</td><td>'+comma(c.w)+'</td><td>'+comma(cf)+'</td><td>'+comma(ca)+'</td><td>'+comma(cab)+'</td><td class="c">'+stt+'</td></tr>';
+      var sh=c.ready?(c.w/base):0;
+      var w=c.ready?c.w:0, cf=Math.round(F*sh), ca=Math.round(A*sh), cab=Math.round(AB*sh);
+      sum.w+=w; sum.f+=cf; sum.a+=ca; sum.ab+=cab;
+      var stt = !c.ready ? '<span class="chst wait">대기</span>'
+              : c.live   ? '<span class="chst live">집계 중</span>'
+                         : '<span class="chst done">반영 완료</span>';
+      return '<tr><td class="l">'+c.nm+'</td><td>'+comma(w)+'</td><td>'+comma(cf)+'</td><td>'+comma(ca)+'</td><td>'+comma(cab)+'</td><td class="c">'+stt+'</td></tr>';
     }).join('');
-    rows+='<tr class="sum"><td class="l">합계</td><td>'+comma(totW)+'</td><td>'+comma(Math.round(F))+'</td><td>'+comma(Math.round(A))+'</td><td>'+comma(Math.round(AB))+'</td><td class="c">\u2014</td></tr>';
-    return '<table class="chtbl"><thead><tr><th class="l">채널</th><th>행사 의결권</th><th>찬성</th><th>반대</th><th>기권</th><th class="c">상태</th></tr></thead><tbody>'+rows+'</tbody></table>';
+    var allDone=(OC.stage>=4);
+    var sumSt=allDone?'<span class="chst done">확정</span>':'<span class="chst live">집계 중</span>';
+    var head='<tr class="sum"><td class="l">합계</td><td>'+comma(sum.w)+'</td><td>'+comma(sum.f)+'</td><td>'+comma(sum.a)+'</td><td>'+comma(sum.ab)+'</td><td class="c">'+sumSt+'</td></tr>';
+    return '<table class="chtbl"><thead><tr><th class="l">채널</th><th>행사 의결권</th><th>찬성</th><th>반대</th><th>기권</th><th class="c">상태</th></tr></thead><tbody>'+head+rows+'</tbody></table>';
   }
   /* 채널별 표결 현황 섹션 — 헤더 클릭으로 접었다 폈다. 기본은 펼침(OC.chanOpen). */
   function chsec(summary, table, tabsRow){
@@ -1269,6 +1295,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(OC.stage!==2 || OC.siteN>=SITE_TOT) return;
     if(Math.random()<0.45){ OC.siteN++; OC.siteW+=3000+Math.round(Math.random()*3000); }
     updateMetric();
+    renderChan(CENTER[OC.agenda]);   /* 현장투표 앱 행이 KPI 와 같은 수치를 본다 */
   }
   function renderAll(){
     var d=CENTER[OC.agenda]; if(!d) return;
