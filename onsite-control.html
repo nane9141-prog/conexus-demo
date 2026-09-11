@@ -32,12 +32,13 @@
   .vsep{width:1px;height:15px;background:var(--border)}
   .crumb{font-size:14px;color:#0a0a0a}
   /* sub header */
-  .oc-sub{min-height:40px;flex:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:0 12px;border-bottom:1px solid var(--border);overflow-x:auto}
+  .oc-sub{min-height:40px;flex:none;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;padding:0 12px;border-bottom:1px solid var(--border);overflow-x:auto}
   .oc-tabs{display:flex;gap:2px;flex:none}
   .oc-tab{height:40px;padding:0 10px;border:none;background:none;font-family:inherit;font-weight:500;font-size:14px;color:#737373;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
   .oc-tab.on{color:#0a0a0a;border-bottom-color:#171717}
   .oc-tab .cnt{color:#a3a3a3;font-weight:500;margin-left:4px}
-  .oc-tools{display:flex;align-items:center;gap:8px;flex:none}
+  .oc-tools{display:flex;align-items:center;gap:12px;flex:none}
+  .ocg{display:flex;align-items:center;gap:8px}
   .tsep{width:1px;height:20px;background:var(--border)}
   .ocb{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 8px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap;text-decoration:none}
   .ocb svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.6}
@@ -73,6 +74,7 @@
   /* grid workspace */
   .oc-grid{flex:1;min-height:0;background:#f5f5f5;overflow:auto;padding:8px}
   .oc-panel{display:none}
+  .oc-empty{display:flex;align-items:center;justify-content:center;padding:96px 0;font-size:14px;color:#737373}
   .oc-panel.on{display:block;height:100%}
   /* filter chips */
   .chips{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
@@ -125,8 +127,6 @@
   .mb .n{font-size:16px;font-weight:600;color:#0a0a0a}
   .mb .l{font-size:11px;color:#737373;margin-top:2px}
   /* 시청자 관리 */
-  .vwwrap{display:flex;flex-direction:column;gap:12px;height:100%}
-  .vwwrap .apanel{flex:1;min-height:0}
   .vkpi{display:flex;gap:10px;flex:none}
   .vkpi .k{flex:1;min-width:0;border:1px solid var(--border);border-radius:8px;padding:12px 14px;background:#fff}
   .vkpi .k .kl{font-size:12px;color:#737373}
@@ -147,19 +147,6 @@
   .vsearch svg{width:15px;height:15px;fill:none;stroke:#a3a3a3;stroke-width:1.8}
   .vsearch input{border:none;outline:none;font-family:inherit;font-size:13px;flex:1;background:none;color:#0a0a0a}
   .vdrop{font-size:13px;color:#a3a3a3;font-variant-numeric:tabular-nums}
-  .pxbadge{display:inline-flex;align-items:center;height:20px;padding:0 7px;margin-left:6px;border-radius:9999px;background:#EEF5FF;color:#0071F3;font-size:11px;font-weight:600;cursor:pointer;vertical-align:middle}
-  .pxdlg-ov{position:fixed;inset:0;background:rgba(10,10,10,.4);display:none;align-items:center;justify-content:center;z-index:300;padding:24px}
-  .pxdlg-ov.show{display:flex}
-  .pxdlg{width:380px;max-width:100%;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;position:relative}
-  .pxdlg-h{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 8px}
-  .pxdlg-h .t{font-size:16px;font-weight:600;color:#0a0a0a}
-  .pxdlg-x{width:24px;height:24px;border:none;background:none;cursor:pointer;color:#0a0a0a;display:flex;align-items:center;justify-content:center;padding:0}.pxdlg-x i{font-size:16px}
-  .pxdlg-b{padding:4px 16px 8px;display:flex;flex-direction:column}
-  .pxrow{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0}
-  .pxrow:last-child{border-bottom:none}
-  .pxrow .k{font-size:13px;color:#737373}.pxrow .v{font-size:14px;font-weight:500;color:#0a0a0a;text-align:right}
-  .pxdlg-f{display:flex;justify-content:flex-end;padding:8px 16px 16px}
-  .pxdlg-f .vlink{background:#171717;color:#fff;border-color:#171717;height:32px;padding:0 16px}
   .vlink[disabled]{opacity:.45;cursor:not-allowed}
   .apanel{display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 1px 2px rgba(0,0,0,.05);overflow:hidden}
   .ivid{background:#000;flex:none;position:relative;border-bottom:1px solid var(--border)}
@@ -586,6 +573,7 @@
   .chtab{height:24px;padding:0 10px;border:none;background:none;border-radius:6px;font-family:inherit;font-size:12px;font-weight:600;color:#737373;cursor:pointer}
   .chtab.on{background:#F5F5F5;color:#0a0a0a}
 </style>
+<script src="cx-data.js"></script>
 </head>
 <body>
 <div class="oc app collapsed" id="app">
@@ -606,7 +594,7 @@
       <div class="lnb-select exp-only">
         <div class="select-box" id="mtrigger">
           <span class="dot"></span>
-          <span class="lbl" id="mcurrent">제10기 정기주주총회</span>
+          <span class="lbl" id="mcurrent" data-cx="meeting.name">제10기 정기주주총회</span>
           <i class="ph ph-caret-up-down" style="font-size:16px"></i>
         </div>
         <div class="mpop hidden" id="mpop">
@@ -695,29 +683,43 @@
         <div class="oc-tabs">
           <button class="oc-tab on" data-tab="op">실시간 운영</button>
           <button class="oc-tab" data-tab="vote">의결권 행사현황</button>
-          <button class="oc-tab" data-tab="viewer">시청자 관리</button>
+          <button class="oc-tab" data-tab="poll">표결 관리</button>
+          <button class="oc-tab" data-tab="qa">질의 · 발언 관리</button>
         </div>
         <div class="oc-tools">
-          <button class="ocb"><svg viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>공지</button>
-          <a class="ocb" id="chairViewBtn" href="chair-view.html" target="_blank" rel="noopener"><i class="ph ph-arrow-square-out" style="font-size:16px"></i>의장용 뷰</a>
-          <a class="ocb" href="mc-view.html" target="_blank" rel="noopener"><i class="ph ph-arrow-square-out" style="font-size:16px"></i>사회자용 뷰</a>
-          <button class="ocb"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m17 8 5 5M22 8l-5 5"/></svg>출석 미투표 처리</button>
-          <button class="ocb"><svg viewBox="0 0 24 24"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg>비콘 제어</button>
+          <!-- 운영 -->
+          <div class="ocg">
+            <button class="ocb"><svg viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>공지</button>
+            <div class="seg">
+              <a class="ocb" id="chairViewBtn" href="chair-view.html" target="_blank" rel="noopener">의장용</a>
+              <a class="ocb" href="mc-view.html" target="_blank" rel="noopener">사회자용</a>
+            </div>
+          </div>
           <span class="tsep"></span>
-          <span class="otimer"><span class="dot"></span><span id="ocTimer">00:10:12</span></span>
-          <button class="ocb gray" id="btnPause"><svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>정회</button>
-          <button class="ocb red" id="btnClose"><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z"/><path d="M12 8v4l2 2"/><path d="m16 19 2 2 4-4"/></svg>폐회문</button>
-          <button class="ocb gray icon" title="더보기"><i class="ph ph-dots-three-vertical" style="font-size:16px"></i></button>
+          <!-- 옵션 -->
+          <div class="ocg">
+            <button class="ocb"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m17 8 5 5M22 8l-5 5"/></svg>출석 미투표 처리</button>
+            <button class="ocb"><svg viewBox="0 0 24 24"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg>비콘 제어</button>
+          </div>
+          <span class="tsep"></span>
+          <!-- 제어 -->
+          <div class="ocg">
+            <span class="otimer"><span class="dot"></span><span id="ocTimer">00:10:12</span></span>
+            <button class="ocb gray" id="btnPause"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9 2h6"/></svg>총회 지연</button>
+            <button class="ocb red" id="btnClose"><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z"/><path d="M12 8v4l2 2"/><path d="m16 19 2 2 4-4"/></svg>총회 종료</button>
+            <button class="ocb gray icon" title="더보기"><i class="ph ph-dots-three-vertical" style="font-size:16px"></i></button>
+          </div>
         </div>
+        <div></div>
       </div>
 
       <div class="oc-metrics">
         <div class="oc-mc"><div class="k">의안 진행 <span class="stbadge blue" id="mAgSt"><span class="d"></span>진행 중</span></div><div class="v"><span><b>2</b> / 8</span></div><div class="s" id="mAgSub">제2호 상정</div></div>
-        <div class="oc-mc"><div class="k">의결정족수</div><div class="v">1/4 이상</div><div class="s">476,211,964주 기준</div></div>
-        <div class="oc-mc"><div class="k">전체 출석 주주수</div><div class="v">300,000<span class="sub">명</span></div><div class="s">출석의결권 300,000,000주</div></div>
-        <div class="oc-mc"><div class="k">현장 참석</div><div class="v">93,000<span class="sub">명</span></div><div class="s">3,120,000주 행사 가능</div></div>
+        <div class="oc-mc"><div class="k">의결정족수</div><div class="v">1/4 이상</div><div class="s"><span data-cx="meeting.sharesIssued">476,211,964</span>주 기준</div></div>
+        <div class="oc-mc"><div class="k">전체 출석 주주수</div><div class="v"><span data-cx="meeting.attendHolders">300,000</span><span class="sub">명</span></div><div class="s">출석의결권 <span data-cx="meeting.attendShares">300,000,000</span>주</div></div>
+        <div class="oc-mc"><div class="k">현장 참석</div><div class="v"><span data-cx="meeting.onsiteHolders">93,000</span><span class="sub">명</span></div><div class="s"><span data-cx="meeting.onsiteShares">3,120,000</span>주 행사 가능</div></div>
         <div class="oc-mc"><div class="k">현장 표결</div><div class="v"><span><b>2</b> / 8</span></div><div class="s">34,217주 행사</div></div>
-        <div class="oc-mc"><div class="k">온라인 참석</div><div class="v"><span id="mOnline">207,000</span><span class="sub">명</span><svg class="spark" viewBox="0 0 80 22" preserveAspectRatio="none"><polyline fill="none" stroke="#0071f3" stroke-width="2" points="0,18 12,15 24,16 36,10 48,12 60,6 72,7 80,3"/></svg></div><div class="s">296,880,000주</div></div>
+        <div class="oc-mc"><div class="k">온라인 참석</div><div class="v"><span id="mOnline" data-cx="meeting.onlineHolders">207,000</span><span class="sub">명</span><svg class="spark" viewBox="0 0 80 22" preserveAspectRatio="none"><polyline fill="none" stroke="#0071f3" stroke-width="2" points="0,18 12,15 24,16 36,10 48,12 60,6 72,7 80,3"/></svg></div><div class="s"><span data-cx="meeting.onlineShares">296,880,000</span>주</div></div>
       </div>
 
       <div class="oc-grid">
@@ -748,7 +750,7 @@
               </div>
               <div class="cfoot">
                 <div class="cfoot-row">
-                  <span class="kv2"><em>총 행사가능 의결권</em><b id="cfTotal">300,000,000주</b></span>
+                  <span class="kv2"><em>총 행사가능 의결권</em><b id="cfTotal"><span data-cx="meeting.attendShares">300,000,000</span>주</b></span>
                   <span class="kv2"><em>미행사 의결권</em><b class="mut">0주</b></span>
                   <span class="sp"></span>
                   <button class="ocb" id="cfDetail">상세보기</button>
@@ -792,30 +794,12 @@
           </div>
         </div>
         <!-- 시청자 관리 -->
-        <div class="oc-panel" data-panel="viewer">
-          <div class="vwwrap">
-            <div class="vkpi">
-              <div class="k live"><div class="kl">현재 온라인 접속</div><div class="kv" id="vwOnline">206,142<small> 명</small></div></div>
-              <div class="k"><div class="kl">누적 접속</div><div class="kv">231,480<small> 명</small></div></div>
-              <div class="k"><div class="kl">온라인 참석 의결권</div><div class="kv">296,880,000<small> 주</small></div></div>
-              <div class="k"><div class="kl">평균 시청 시간</div><div class="kv">42<small> 분</small></div></div>
-            </div>
-            <div class="apanel vsheet">
-              <div class="vtoolbar">
-                <div class="vseg"><button class="on" data-vw="all">전체</button><button data-vw="on">온라인</button><button data-vw="off">이탈</button></div>
-                <div class="vtools">
-                  <label class="vsearch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="vwSearch" placeholder="투표권자 검색" autocomplete="off"></label>
-                  <button class="vbtn"><i class="ph ph-download-simple" style="font-size:16px"></i>다운로드</button>
-                  <button class="vbtn ic"><i class="ph ph-funnel" style="font-size:16px"></i></button>
-                </div>
-              </div>
-              <div class="vscroll"><table class="vtbl"><thead><tr>
-                <th class="l">투표권자</th><th class="c">주주구분</th><th>보유주식수</th>
-                <th class="c">접속상태</th><th class="c">접속시각</th><th class="l">시청 기기</th>
-                <th class="c">전자투표</th><th class="c">관리</th>
-              </tr></thead><tbody id="vwBody"></tbody></table></div>
-            </div>
-          </div>
+        <div class="oc-panel" data-panel="poll">
+          <div class="oc-empty">표결 관리 — 준비 중</div>
+        </div>
+
+        <div class="oc-panel" data-panel="qa">
+          <div class="oc-empty">질의 · 발언 관리 — 준비 중</div>
         </div>
       </div>
     </div>
@@ -884,31 +868,9 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   // 의안 진행 트리 (라이브)
   // 표결(voting) 단위 = 카드. 상위 의안(제2호·제3호)은 카드가 아니며, 개별 표결되는 2-1/2-2/2-3은 개별 카드,
   // 집중투표(3-1호)·후보 선임(3-2호)은 후보 하위행을 한 카드로 묶는다.
-  var CARDS=[
-    {no:'제1호',nm:'재무제표 승인의 건',types:['보통결의']},
-    {no:'제2호',nm:'정관 일부 변경의 건',header:true},
-    {no:'제2-1호',nm:'집중투표제 배제 조항 삭제의 건(정관 제37조 제3항)',types:['특별결의']},
-    {no:'제2-2호',nm:'전자주주총회 도입 관련 변경(정관 제26조 제2항)',types:['특별결의']},
-    {no:'제3호',nm:'선임 이사 수 결정의 건',types:['보통결의','양립불가'],children:[
-      {no:'제3-1호',nm:'집중투표 4인 중 2인 선임의 건(회사제안)'},
-      {no:'제3-2호',nm:'집중투표 5인 중 2인 선임의 건(주주제안)'}
-    ]},
-    {no:'제4호',nm:'집중투표에 의한 이사 선임의 건',header:true},
-    {no:'제4-1호',nm:'집중투표 4인 중 2인 선임의 건(회사제안)',types:['보통결의','집중투표'],children:[
-      {no:'제4-1-1호',nm:'사외이사 후보 김도현'},
-      {no:'제4-1-2호',nm:'사외이사 후보 이수진'},
-      {no:'제4-1-3호',nm:'사외이사 후보 박준영'},
-      {no:'제4-1-4호',nm:'사외이사 후보 최민서'}
-    ]},
-    {no:'제4-2호',nm:'집중투표 5인 중 2인 선임의 건(주주제안)',types:['보통결의','집중투표'],children:[
-      {no:'제4-2-1호',nm:'사외이사 후보 정우성'},
-      {no:'제4-2-2호',nm:'사외이사 후보 한지민'},
-      {no:'제4-2-3호',nm:'사외이사 후보 오세훈'},
-      {no:'제4-2-4호',nm:'사외이사 후보 강가람'},
-      {no:'제4-2-5호',nm:'사외이사 후보 윤서연'}
-    ]}
-  ];
-  function chipTxt(no){ return no.replace('제','제 '); }
+  /* 의안 목록·표결 상세는 cx-data.js(CX) 단일 출처. 페이지에 다시 적지 않는다. */
+  var CARDS=CX.agenda;
+  var chipTxt=CX.util.chip;
   function typeLine(types){
     if(!types||!types.length) return '';
     return '<div class="atypes">'+types.map(function(t,i){
@@ -954,28 +916,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   var PLAY='<svg viewBox="0 0 24 24" style="fill:#171717;stroke:none"><path d="M8 5v14l11-7z"/></svg>';
   var DOTS='<i class="ph ph-dots-three-vertical" style="font-size:16px"></i>';
   var CK='<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM10.6 16 6.8 12.2l1.4-1.4 2.4 2.4 5-5 1.4 1.4z"/></svg>';
-  var CENTER={
-    '제1호':{cat:'제1호',type:'보통결의',name:'재무제표 승인의 건',thrLabel:'출석의결권 1/2','for':241800000,against:58200000,abs:0,expect:'가결 예상'},
-    '제2-1호':{cat:'제2-1호',type:'특별결의',name:'집중투표제 배제 조항 삭제의 건',thrLabel:'출석의결권 2/3','for':214000000,against:84000000,abs:2000000,expect:'가결 예상'},
-    '제2-2호':{cat:'제2-2호',type:'특별결의',name:'전자주주총회 도입 관련 변경',thrLabel:'출석의결권 2/3','for':206000000,against:92000000,abs:2000000,expect:'가결 예상'},
-    '제3호':{cat:'제3호',type:'양립불가',name:'선임 이사 수 결정의 건',expect:'가결 예상',options:[
-      {no:'제3-1호',name:'집중투표 4인 중 2인 선임의 건(회사제안)','for':241800000,against:58200000,abs:0,result:'가결'},
-      {no:'제3-2호',name:'집중투표 5인 중 2인 선임의 건(주주제안)','for':118000000,against:182000000,abs:0,result:'부결'}
-    ]},
-    '제4-1호':{cat:'제4-1호',type:'집중투표',name:'집중투표 4인 중 2인 선임의 건(회사제안)',expect:'가결 예상 : 1, 2',cands:[
-      {rank:1,no:'제4-1-1호',name:'사외이사 후보 김도현',votes:10240000,elected:true},
-      {rank:2,no:'제4-1-3호',name:'사외이사 후보 박준영',votes:7180000,elected:true},
-      {rank:3,no:'제4-1-2호',name:'사외이사 후보 이수진',votes:4320000,elected:false},
-      {rank:4,no:'제4-1-4호',name:'사외이사 후보 최민서',votes:1260000,elected:false}
-    ]},
-    '제4-2호':{cat:'제4-2호',type:'집중투표',name:'집중투표 5인 중 2인 선임의 건(주주제안)',expect:'가결 예상 : 1, 2',cands:[
-      {rank:1,no:'제4-2-1호',name:'사외이사 후보 정우성',votes:9850000,elected:true},
-      {rank:2,no:'제4-2-2호',name:'사외이사 후보 한지민',votes:6420000,elected:true},
-      {rank:3,no:'제4-2-3호',name:'사외이사 후보 오세훈',votes:3980000,elected:false},
-      {rank:4,no:'제4-2-4호',name:'사외이사 후보 강가람',votes:2110000,elected:false},
-      {rank:5,no:'제4-2-5호',name:'사외이사 후보 윤서연',votes:980000,elected:false}
-    ]}
-  };
+  var CENTER=CX.center;
   var STAGES=[
     {cls:'',name:'의안 상정 대기중',right:[{t:'의안 상정',c:'',go:1}]},
     {cls:'',name:'의안 상정 중',right:[{t:'투표 시작',c:'dark',go:2}]},
@@ -1420,72 +1361,6 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   b.addEventListener("click",function(){ v.muted=!v.muted; if(!v.muted){ try{v.play();}catch(_){} } upd(); });
 })();
 </script>
-<script>
-(function(){
-  var body=document.getElementById('vwBody'); if(!body) return;
-  var DEVICE={'모바일':'<svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>','PC':'<svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>','태블릿':'<svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M12 18h.01"/></svg>'};
-  var V=[
-    {nm:'국민연금공단',t:'기관',sh:42300000,on:true,tm:'09:01',dev:'PC',ev:'완료',px:{nm:'김수현',rel:'위임 대리인',sh:42300000,tel:'010-3921-4477',doc:'전자위임장'}},
-    {nm:'블랙록펀드',t:'기관',sh:12940000,on:true,tm:'09:02',dev:'PC',ev:'완료',px:{nm:'이정우',rel:'법무법인 대리',sh:12940000,tel:'010-5540-1188',doc:'서면위임장'}},
-    {nm:'김명준',t:'개인',sh:350040,on:true,tm:'09:03',dev:'모바일',ev:'미투표'},
-    {nm:'미래에셋증권(쿼드자산운용)',t:'기관',sh:18750000,on:true,tm:'09:03',dev:'PC',ev:'완료'},
-    {nm:'이나리',t:'개인',sh:128500,on:true,tm:'09:04',dev:'모바일',ev:'완료'},
-    {nm:'삼성자산운용',t:'기관',sh:9870000,on:true,tm:'09:04',dev:'태블릿',ev:'완료',px:{nm:'정하은',rel:'위임 대리인',sh:9870000,tel:'010-8842-3096',doc:'전자위임장'}},
-    {nm:'전승현',t:'개인',sh:96700,on:true,tm:'09:05',dev:'모바일',ev:'참관'},
-    {nm:'한국투자증권',t:'기관',sh:15200000,on:true,tm:'09:05',dev:'PC',ev:'완료'},
-    {nm:'정하윤',t:'개인',sh:22400,on:false,tm:'09:06',dev:'모바일',ev:'완료',offtm:'10:14'},
-    {nm:'교보생명',t:'기관',sh:2980000,on:true,tm:'09:06',dev:'PC',ev:'완료',px:{nm:'박서준',rel:'임직원 대리',sh:2980000,tel:'010-2277-6710',doc:'전자위임장'}},
-    {nm:'오세훈',t:'개인',sh:19900,on:true,tm:'09:07',dev:'모바일',ev:'미투표'},
-    {nm:'KB자산운용',t:'기관',sh:8110000,on:true,tm:'09:07',dev:'PC',ev:'완료'},
-    {nm:'민경선',t:'개인',sh:54900,on:false,tm:'09:08',dev:'태블릿',ev:'미투표',offtm:'10:22'},
-    {nm:'신한자산운용',t:'기관',sh:6540000,on:true,tm:'09:08',dev:'PC',ev:'완료'},
-    {nm:'강도현',t:'개인',sh:16700,on:true,tm:'09:09',dev:'모바일',ev:'미투표'},
-    {nm:'우정사업본부',t:'기관',sh:5300000,on:true,tm:'09:09',dev:'PC',ev:'완료'},
-    {nm:'임재민',t:'개인',sh:9600,on:false,tm:'09:10',dev:'모바일',ev:'참관',offtm:'10:31'},
-    {nm:'한화투자증권',t:'기관',sh:3420000,on:true,tm:'09:10',dev:'PC',ev:'완료'}
-  ];
-  function cm(n){return Number(n).toLocaleString('en-US');}
-  function tg(t){return '<span class="tg '+(t==='기관'?'tg-inst':'tg-ind')+'">'+t+'</span>';}
-  var vw='all', onlineN=206142, q='';
-  function render(){
-    body.innerHTML=V.map(function(x,i){return [x,i];}).filter(function(p){var x=p[0]; var okv=(vw==='all'||(vw==='on'?x.on:!x.on)); var okq=(!q||x.nm.indexOf(q)>=0||(x.px&&x.px.nm.indexOf(q)>=0)); return okv&&okq;}).map(function(p){
-      var x=p[0], i=p[1];
-      var stat=x.on?'<span class="vtag blue">온라인</span>':'<span class="vtag neutral">이탈</span>';
-      var ev=x.ev==='완료'?'<span class="vtag ok">완료</span>':(x.ev==='참관'?'<span class="vtag obs">참관</span>':'<span class="vtag soft">미투표</span>');
-      var dev='<span class="vdev">'+(DEVICE[x.dev]||'')+x.dev+'</span>';
-      var mng=x.on?'<button class="vlink danger" type="button">접속 종료</button>':'<span class="vdrop">이탈 '+(x.offtm||'-')+'</span>';
-      var pxb=x.px?'<span class="pxbadge" data-px="'+i+'">대리인</span>':'';
-      return '<tr data-i="'+i+'"><td class="l">'+x.nm+pxb+'</td><td class="c">'+x.t+'</td><td>'+cm(x.sh)+'</td>'
-        +'<td class="c">'+stat+'</td><td class="c mut">'+x.tm+'</td><td class="l">'+dev+'</td>'
-        +'<td class="c">'+ev+'</td><td class="c">'+mng+'</td></tr>';
-    }).join('');
-  }
-  document.querySelectorAll('.vseg button[data-vw]').forEach(function(b){
-    b.addEventListener('click',function(){ document.querySelectorAll('.vseg button[data-vw]').forEach(function(x){x.classList.toggle('on',x===b);}); vw=b.dataset.vw; render(); });
-  });
-  body.addEventListener('click',function(e){
-    var pb=e.target.closest('.pxbadge'); if(pb){ e.stopPropagation(); openPx(V[+pb.dataset.px]); return; }
-    var btn=e.target.closest('.vlink.danger'); if(btn){ var tr=btn.closest('tr'); var i=+tr.dataset.i; if(!isNaN(i)&&V[i]){V[i].on=false; V[i].offtm=new Date().toTimeString().slice(0,5); onlineN=Math.max(0,onlineN-1); render(); document.getElementById('vwOnline').innerHTML=cm(onlineN)+'<small> 명</small>'; } }
-  });
-  var srch=document.getElementById('vwSearch'); if(srch) srch.addEventListener('input',function(){ q=this.value.trim(); render(); });
-  function openPx(x){ if(!x||!x.px)return; var pxOv=document.getElementById('pxDlg'); if(!pxOv)return; document.getElementById('pxNm').textContent=x.px.nm; document.getElementById('pxRel').textContent=x.px.rel; document.getElementById('pxSh').textContent=cm(x.px.sh)+'주'; document.getElementById('pxTel').textContent=x.px.tel; document.getElementById('pxDoc').textContent=x.px.doc+' 완료'; pxOv.classList.add('show'); }
-  document.addEventListener('click',function(e){ var pxOv=document.getElementById('pxDlg'); if(!pxOv||!pxOv.classList.contains('show'))return; if(e.target===pxOv||(e.target.closest&&e.target.closest('[data-px-close]'))) pxOv.classList.remove('show'); });
-  render();
-})();
-</script>
-<div class="pxdlg-ov" id="pxDlg">
-  <div class="pxdlg" role="dialog" aria-label="대리인 정보">
-    <div class="pxdlg-h"><div class="t">대리인 정보</div><button class="pxdlg-x" data-px-close type="button"><i class="ph ph-x"></i></button></div>
-    <div class="pxdlg-b">
-      <div class="pxrow"><span class="k">대리인 성명</span><span class="v" id="pxNm">-</span></div>
-      <div class="pxrow"><span class="k">주주와의 관계</span><span class="v" id="pxRel">-</span></div>
-      <div class="pxrow"><span class="k">위임 주식수</span><span class="v" id="pxSh">-</span></div>
-      <div class="pxrow"><span class="k">연락처</span><span class="v" id="pxTel">-</span></div>
-      <div class="pxrow"><span class="k">위임장</span><span class="v" id="pxDoc">-</span></div>
-    </div>
-    <div class="pxdlg-f"><button class="vlink" data-px-close type="button">확인</button></div>
-  </div>
-</div>
 <script src="conexus.js"></script>
 </body>
 </html>

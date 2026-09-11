@@ -188,6 +188,7 @@
   .badge svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.6;margin-right:3px}
   .ty-tbl .subnote{font-size:11px;color:#a3a3a3;margin-left:6px;font-weight:400}
 </style>
+<script src="cx-data.js"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -208,7 +209,7 @@
       <div class="lnb-select exp-only">
         <div class="select-box" id="mtrigger">
           <span class="dot"></span>
-          <span class="lbl" id="mcurrent">제10기 정기주주총회</span>
+          <span class="lbl" id="mcurrent" data-cx="meeting.name">제10기 정기주주총회</span>
           <i class="ph ph-caret-up-down" style="font-size:16px"></i>
         </div>
         <div class="mpop hidden" id="mpop">
@@ -405,13 +406,13 @@
           </div>
           <div class="cert-info">
             <div class="r"><span class="lb">회사명</span><span class="vl">카카오뱅크</span></div>
-            <div class="r"><span class="lb">총발행주식수</span><span class="vl">476,211,964주</span></div>
+            <div class="r"><span class="lb">총발행주식수</span><span class="vl"><span data-cx="meeting.sharesIssued">476,211,964</span>주</span></div>
             <div class="r"><span class="lb">행사명</span><span class="vl">제10기 정기주주총회</span></div>
             <div class="r"><span class="lb">총행사가능의결권</span><span class="vl">476,211,964주</span></div>
             <div class="r"><span class="lb">주주총회 일시</span><span class="vl">2026-03-27 09:00</span></div>
-            <div class="r"><span class="lb">총행사의결권</span><span class="vl">300,000,000주</span></div>
+            <div class="r"><span class="lb">총행사의결권</span><span class="vl"><span data-cx="meeting.attendShares">300,000,000</span>주</span></div>
             <div class="r"><span class="lb">전자투표/위임 기간</span><span class="vl">2026-03-12 ~ 2026-03-26</span></div>
-            <div class="r"><span class="lb">총행사주주수</span><span class="vl">300,000명</span></div>
+            <div class="r"><span class="lb">총행사주주수</span><span class="vl"><span data-cx="meeting.attendHolders">300,000</span>명</span></div>
             <div class="r"><span class="lb">주주명부 기준일</span><span class="vl">2025-12-31</span></div>
             <div class="r"><span class="lb">행사율</span><span class="vl">63.0%</span></div>
           </div>

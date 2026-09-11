@@ -246,6 +246,7 @@
     if(rst&&sl){ rst.addEventListener('click',function(){ sl.value=0; upd(); }); }
   });
 </script>
+<script src="cx-data.js"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -266,7 +267,7 @@
       <div class="lnb-select exp-only">
         <div class="select-box" id="mtrigger">
           <span class="dot"></span>
-          <span class="lbl" id="mcurrent">제10기 정기주주총회</span>
+          <span class="lbl" id="mcurrent" data-cx="meeting.name">제10기 정기주주총회</span>
           <i class="ph ph-caret-up-down" style="font-size:16px"></i>
         </div>
         <div class="mpop hidden" id="mpop">

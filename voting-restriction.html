@@ -436,6 +436,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 .mitem.cur{font-weight:600}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<script src="cx-data.js"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -458,7 +459,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
       <div class="lnb-select exp-only">
         <div class="select-box" id="mtrigger">
           <span class="dot"></span>
-          <span class="lbl" id="mcurrent">제10기 정기주주총회</span>
+          <span class="lbl" id="mcurrent" data-cx="meeting.name">제10기 정기주주총회</span>
           <i class="ph ph-caret-up-down" style="font-size:16px"></i>
         </div>
         <div class="mpop hidden" id="mpop">

@@ -149,6 +149,7 @@
   .decl-body{flex:1;min-height:0;padding:0 20px 20px;display:flex}
   .decl-text{width:100%;box-sizing:border-box;background:#fafafa;border:1px solid var(--border);border-radius:14px;padding:20px;font-family:inherit;font-size:18px;line-height:28px;color:#0a0a0a;resize:none;outline:none}
 </style>
+<script src="cx-data.js"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -169,7 +170,7 @@
       <div class="lnb-select exp-only">
         <div class="select-box" id="mtrigger">
           <span class="dot"></span>
-          <span class="lbl" id="mcurrent">제10기 정기주주총회</span>
+          <span class="lbl" id="mcurrent" data-cx="meeting.name">제10기 정기주주총회</span>
           <i class="ph ph-caret-up-down" style="font-size:16px"></i>
         </div>
         <div class="mpop hidden" id="mpop">

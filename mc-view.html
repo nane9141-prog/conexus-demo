@@ -59,6 +59,7 @@
   .mc-script p.editing{outline:1px dashed rgba(255,255,255,.4);border-radius:10px;padding:10px 12px;cursor:text}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<script src="cx-data.js"></script>
 </head>
 <body>
   <div class="mc-main">
@@ -83,8 +84,8 @@
 
   <div class="mc-metrics">
     <div class="mc-card"><div class="mc-ch"><span class="mc-k">의안 진행</span><span class="mc-bd"><span class="dot"></span>대기</span></div><div class="mc-v">1<span class="sub"> / 6</span></div></div>
-    <div class="mc-card"><div class="mc-ch"><span class="mc-k">전체 출석 주식수</span><span class="mc-bd"><span class="dot"></span>정족수 충족</span></div><div class="mc-vrow"><span class="mc-v">300,000,000주</span><span class="mc-vsep"></span><span class="mc-v" style="font-weight:400">63.0%</span></div></div>
-    <div class="mc-card"><div class="mc-ch"><span class="mc-k">전체 출석 주주수</span></div><div class="mc-v">300,000명</div></div>
+    <div class="mc-card"><div class="mc-ch"><span class="mc-k">전체 출석 주식수</span><span class="mc-bd"><span class="dot"></span>정족수 충족</span></div><div class="mc-vrow"><span class="mc-v"><span data-cx="meeting.attendShares">300,000,000</span>주</span><span class="mc-vsep"></span><span class="mc-v" style="font-weight:400">63.0%</span></div></div>
+    <div class="mc-card"><div class="mc-ch"><span class="mc-k">전체 출석 주주수</span></div><div class="mc-v"><span data-cx="meeting.attendHolders">300,000</span>명</div></div>
     <div class="mc-card"><div class="mc-ch"><span class="mc-k">현장 참석</span></div><div class="mc-vrow"><span class="mc-v">93,000명</span><span class="mc-v" style="font-weight:400;color:#A3A3A3">3,120,000주</span></div></div>
     <div class="mc-card"><div class="mc-ch"><span class="mc-k">온라인 참석</span></div><div class="mc-vrow"><span class="mc-v">207,000명</span><svg class="mc-spark" style="margin-left:auto" viewBox="0 0 80 24" preserveAspectRatio="none"><polyline points="0,20 14,16 28,17 42,10 56,12 70,5 80,4" fill="none" stroke="#0071F3" stroke-width="2"/></svg></div></div>
   </div>
