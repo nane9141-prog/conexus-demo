@@ -1420,8 +1420,9 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   }
   function answerView(x){
     return '<div class="mc-ansview"><div class="lb">답변 내용</div><div class="tx">'+esc(x.a)+'</div>'
-      +'<div class="mc-viewbtns two"><button class="mc-editbtn" data-edit="1" type="button">수정</button>'
-      +'<button class="mc-castbtn'+(x.cast?' on':'')+'" data-cast="1" type="button"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>'+(x.cast?'송출 중':'의장 송출')+'</button></div></div>';
+      +'<div class="mc-viewbtns two">'
+      +'<button class="mc-castbtn'+(x.cast?' on':'')+'" data-cast="1" type="button"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>'+(x.cast?'송출 중':'의장 송출')+'</button>'
+      +'<button class="mc-editbtn" data-edit="1" type="button">수정</button></div></div>';
   }
   /* 카드 하단 메타 — 접수 시각과 현재 목록 기준 순번 */
   function metaRow(x){
@@ -1508,12 +1509,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
         var on=(x.id===speakingId);
         var btn=on ? '<button class="vqbtn" type="button" data-spend="'+x.id+'">발언 종료</button>'
                    : '<button class="vqbtn go" type="button" data-spstart="'+x.id+'">발언 시작</button>';
-        /* 발언 중에는 경과 타이머가 순번 자리를 대신한다 */
-        var lead=on ? '<span class="vqclock"><span class="d"></span>'+mmss(speakSec)+'</span>'
-                    : '<span class="vqno">'+(i+1)+'</span>';
-        return '<div class="vqitem live'+(open?' open':'')+'"><div class="vqrow">'+lead
+        /* 발언 중에는 접수 시각 자리(버튼 바로 옆)를 경과 타이머가 대신한다 */
+        var tail=on ? '<span class="vqclock"><span class="d"></span>'+mmss(speakSec)+'</span>'
+                    : '<span class="vqtm">'+x.tm+'</span>';
+        return '<div class="vqitem live'+(open?' open':'')+'"><div class="vqrow">'
+             + '<span class="vqno">'+(i+1)+'</span>'
              + '<span class="vqnm clickable" data-open="'+x.id+'">'+x.name+'</span>'
-             + '<span class="vqtm">'+x.tm+'</span>'+btn+'</div>'+body+'</div>';
+             + tail+btn+'</div>'+body+'</div>';
       }
       return '<div class="vqitem'+(open?' open':'')+'" data-row="'+x.id+'"><div class="vqrow">'
            + '<span class="vqdrag" data-grip>'+IC.grip+'</span>'
