@@ -329,6 +329,78 @@
   .sptime svg{width:16px;height:16px;flex:none;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
   .sp-note{display:flex;flex-direction:column;gap:6px}
   .sp-note .by{font-size:14px;font-weight:500;color:#737373}
+  /* 대기열 — 대기 목록은 스크롤, 완료는 하단 고정 */
+  .chat-b.fill{display:flex;flex-direction:column}
+  .chat-b.fill .chat-list{flex:1;min-height:0;display:flex}
+  .vqwrap{flex:1;min-height:0;display:flex;flex-direction:column;gap:10px}
+  .vqmain{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:10px;
+    scrollbar-width:none;-ms-overflow-style:none}
+  .vqmain::-webkit-scrollbar{display:none;width:0}
+  .vqfoot{flex:none;display:flex;flex-direction:column;gap:10px;padding-top:10px;border-top:1px solid var(--border)}
+  /* 드래그앤드롭 */
+  .vqdrag{cursor:grab}
+  .vqrow.dragging{opacity:.4}
+  .vqrow.over{border-color:#0A0A0A}
+  /* 발언 타이머 */
+  .vqclock{display:inline-flex;align-items:center;gap:4px;flex:none;font-size:12px;font-weight:600;
+    color:#0071F3;font-variant-numeric:tabular-nums}
+  .vqclock .d{width:6px;height:6px;border-radius:50%;background:#0071F3;animation:otblink 1.3s ease-in-out infinite}
+  /* 호스트 알림 바 상태 */
+  .vqhost.mute{background:#FAFAFA;border-color:var(--border)}
+  .vqhost.mute .t{color:#737373}
+  .vqhost.mute .t svg{stroke:#737373}
+  .vqhost .act{display:inline-flex;align-items:center;justify-content:center;height:24px;padding:0 8px;flex:none;
+    border:none;border-radius:8px;background:#171717;font-family:inherit;font-size:12px;font-weight:500;
+    letter-spacing:inherit;color:#FAFAFA;cursor:pointer;white-space:nowrap}
+  .vqhost .spin{animation:vqspin 1s linear infinite}
+  @keyframes vqspin{to{transform:rotate(360deg)}}
+  /* 호스트 지정·위임 모달 */
+  .hostdlg{width:480px;max-width:100%;max-height:86vh;background:#fff;border:1px solid rgba(10,10,10,.1);
+    border-radius:14px;display:flex;flex-direction:column;position:relative}
+  .hostdlg-h{display:flex;flex-direction:column;gap:8px;padding:16px;flex:none}
+  .hostdlg-h .tt{font-size:16px;font-weight:600;color:#0A0A0A}
+  .hostdlg-h .ds{font-size:14px;color:#737373}
+  .hostdlg-x{position:absolute;right:16px;top:16px;width:16px;height:16px;border:none;background:none;
+    padding:0;cursor:pointer;opacity:.7;color:#171717}
+  .hostdlg-b{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:16px;padding:0 16px 8px}
+  .hostdlg-f{flex:none;display:flex;align-items:center;gap:8px;padding:12px 16px 16px}
+  .hostdlg-f .chk{flex:1;display:flex;align-items:center;gap:8px;font-size:14px;color:#0A0A0A;cursor:pointer}
+  .hbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 10px;
+    border:1px solid var(--border);border-radius:10px;background:#fff;font-family:inherit;font-size:14px;
+    font-weight:500;letter-spacing:inherit;color:#0A0A0A;cursor:pointer;white-space:nowrap}
+  .hbtn.dark{background:#171717;border-color:#171717;color:#FAFAFA}
+  .hbtn[disabled]{opacity:.5;cursor:default}
+  .halert{box-sizing:border-box;display:flex;align-items:flex-start;gap:8px;padding:8px 10px;
+    background:#F5F9FF;border:1px solid #D4E8FF;border-radius:10px}
+  .halert svg{width:16px;height:16px;flex:none;fill:none;stroke:#0071F3;stroke-width:1.33}
+  .halert p{margin:0;font-size:12px;line-height:16px;color:#0071F3}
+  .hlist{display:flex;flex-direction:column;gap:10px}
+  .hcard{box-sizing:border-box;display:flex;align-items:center;gap:8px;padding:8px 12px;
+    background:#fff;border:1px solid var(--border);border-radius:14px}
+  .hcard.me{background:#FAFAFA}
+  .havatar{position:relative;width:32px;height:32px;flex:none;display:flex;align-items:center;justify-content:center;
+    background:#F5F5F5;border-radius:9999px;font-size:14px;font-weight:600;color:#A3A3A3}
+  .havatar .dot{position:absolute;right:0;bottom:0;width:8px;height:8px;background:#22C55E;
+    border:2px solid #fff;border-radius:9999px}
+  .havatar.off .dot{background:#A3A3A3}
+  .hname{flex:1;min-width:0;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#0A0A0A}
+  .hrole{display:inline-flex;align-items:center;height:20px;padding:2px 8px;background:#fff;
+    border:1px solid var(--border);border-radius:26px;font-size:12px;font-weight:500;color:#0A0A0A}
+  .hradio{display:inline-flex;align-items:center;gap:6px;flex:none;font-size:12px;font-weight:500;color:#0A0A0A;cursor:pointer}
+  .hradio .r{width:16px;height:16px;box-sizing:border-box;border:1px solid var(--border);border-radius:9999px;
+    background:#fff;display:flex;align-items:center;justify-content:center}
+  .hradio.on .r{background:#171717;border-color:#171717}
+  .hradio.on .r::after{content:"";width:8px;height:8px;border-radius:9999px;background:#FAFAFA}
+  .hsub{display:inline-flex;align-items:center;justify-content:center;gap:4px;height:28px;padding:0 10px;flex:none;
+    border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;
+    font-weight:500;letter-spacing:inherit;color:#0A0A0A;cursor:pointer;white-space:nowrap}
+  .hsub.on{background:#F5F5F5;border-color:transparent;color:#171717}
+  .hsub[disabled]{background:#F5F5F5;opacity:.5;cursor:default}
+  .hsub svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round}
+  .hchk{width:16px;height:16px;box-sizing:border-box;flex:none;border:1px solid var(--border);border-radius:4px;
+    background:#fff;display:flex;align-items:center;justify-content:center;color:transparent}
+  .hchk.on{background:#171717;border-color:#171717;color:#FAFAFA}
+  .hchk svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
   /* 발언 대기열 뷰 (panel_voice_option) */
   .vqwrap{display:flex;flex-direction:column;gap:10px}
   .vqhost{display:flex;justify-content:space-between;align-items:center;gap:4px;box-sizing:border-box;
@@ -838,6 +910,27 @@
   </div>
 </div>
 
+<div class="ovl" id="hostOvl">
+  <div class="hostdlg">
+    <button class="hostdlg-x" type="button" id="hostClose" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="hostdlg-h">
+      <div class="tt">호스트 지정 · 위임</div>
+      <div class="ds">발언 제어 권한을 넘기거나 서브 호스트를 지정합니다.</div>
+    </div>
+    <div class="hostdlg-b">
+      <div class="halert">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6" fill="currentColor" stroke="none"/></svg>
+        <p>위임하면 발언 시작·종료 및 세션 종료 권한이 즉시 상대에게 넘어갑니다. 재접속 시 모든 권한이 자동으로 돌아옵니다.<br>서브 호스트는 음소거·발언권 제한만 수행할 수 있습니다.</p>
+      </div>
+      <div class="hlist" id="hostList"></div>
+    </div>
+    <div class="hostdlg-f">
+      <label class="chk" id="hostAgree"><span class="hchk"><svg viewBox="0 0 24 24"><path d="m5 13 4 4 10-10"/></svg></span>위 내용을 확인했으며, 권한을 저장합니다.</label>
+      <button class="hbtn" type="button" id="hostCancel">취소</button>
+      <button class="hbtn dark" type="button" id="hostSave" disabled>권한 저장</button>
+    </div>
+  </div>
+</div>
 <div class="menupop hidden" id="cxSelPop"></div>
 <div class="menupop hidden" id="meetingCtlPop">
   <button class="menuitem" id="btnPause"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9 2h6"/></svg>총회 지연</button>
@@ -1259,6 +1352,16 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   var Q=window.QUESTIONS||[], S=window.SPEECHES||[];
   S.forEach(function(x,i){ x.inq=(x.st==='대기'&&i%2===0); });  /* inq: 대기열 등재 여부 */
   var qt='q', qf='all', selId=null, editId=null, spAgenda='제1호', speakingId=null, noteId=null;
+  /* 호스트 권한 — active(제어 가능) · locked(위임 중) · connecting · sub(서브 호스트) · proxy(대행) */
+  var hostState='active', speakSec=0, speakTick=null;
+  var STAFF=[
+    { id:'u1', name:'강하나', online:true,  me:true,  role:'host' },
+    { id:'u2', name:'이민아', online:true,  role:null },
+    { id:'u3', name:'박지용', online:true,  role:null },
+    { id:'u4', name:'최서린', online:true,  role:null },
+    { id:'u5', name:'오세훈', online:false, role:null },
+    { id:'u6', name:'정하람', online:false, role:null }
+  ];
   function comma(n){return (n||0).toLocaleString('en-US');}
   var TPL=[
     {l:'배당 정책',t:'당사는 안정적 배당과 성장 투자의 균형을 배당 정책의 원칙으로 하며, 별도재무제표 당기순이익 기준 배당성향 약 27% 수준을 유지하고 있습니다.'},
@@ -1338,24 +1441,40 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     up   :'<svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
     down :'<svg viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>',
     trash:'<svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>',
+    lock :'<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
     grip :'<svg viewBox="0 0 24 24"><circle cx="9" cy="6" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="18" r="1.4"/></svg>'
   };
   function queueHTML(){
     var mine=S.filter(function(x){ return unitOf(x)===spAgenda; });
     var wait=mine.filter(function(x){ return x.inq && x.st==='대기'; });
     var done=mine.filter(function(x){ return x.st==='완료'; });
-    var host='<div class="vqhost"><span class="t">'+IC.check+'호스트 · 발언 제어가 가능합니다.</span>'
-           + '<button class="gear" type="button" title="발언 설정">'+IC.gear+'</button></div>';
+    var HB={
+      active   :['','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></svg>',
+                 '호스트 · 발언 제어가 가능합니다.', 'gear'],
+      locked   :[' mute', IC.lock, '호스트 · 현재 권한 위임 상태 입니다.', 'reclaim'],
+      connecting:['', '<svg class="spin" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/></svg>',
+                 '호스트 · 연결 중, 잠시만 기다려 주세요.', ''],
+      sub      :[' mute', IC.lock, '서브 호스트 · 현재 권한에서는 음소거만 제어할 수 있습니다.', ''],
+      proxy    :['','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></svg>',
+                 '호스트 대행 · 발언 제어가 가능합니다.', 'gear']
+    };
+    var hb=HB[hostState]||HB.active;
+    var tail = hb[3]==='gear'    ? '<button class="gear" type="button" data-hostdlg title="호스트 설정">'+IC.gear+'</button>'
+             : hb[3]==='reclaim' ? '<button class="act" type="button" data-reclaim>권한 회수</button>' : '';
+    var host='<div class="vqhost'+hb[0]+'"><span class="t">'+hb[1]+hb[2]+'</span>'+tail+'</div>';
     var rows=wait.map(function(x,i){
       var live=(x.id===speakingId)||(!speakingId&&i===0);
       if(live){
-        var btn=(x.id===speakingId)
-          ? '<button class="vqbtn" type="button" data-spend="'+x.id+'">발언 종료</button>'
-          : '<button class="vqbtn go" type="button" data-spstart="'+x.id+'">발언 시작</button>';
-        return '<div class="vqrow live"><span class="vqno">'+(i+1)+'</span><span class="vqnm">'+x.name+'</span>'
+        var on=(x.id===speakingId);
+        var btn=on ? '<button class="vqbtn" type="button" data-spend="'+x.id+'">발언 종료</button>'
+                   : '<button class="vqbtn go" type="button" data-spstart="'+x.id+'">발언 시작</button>';
+        /* 발언 중에는 경과 타이머가 순번 자리를 대신한다 */
+        var lead=on ? '<span class="vqclock"><span class="d"></span>'+mmss(speakSec)+'</span>'
+                    : '<span class="vqno">'+(i+1)+'</span>';
+        return '<div class="vqrow live">'+lead+'<span class="vqnm">'+x.name+'</span>'
              + '<span class="vqtm">'+x.tm+'</span>'+btn+'</div>';
       }
-      return '<div class="vqrow"><span class="vqdrag">'+IC.grip+'</span>'
+      return '<div class="vqrow" data-row="'+x.id+'"><span class="vqdrag" data-grip>'+IC.grip+'</span>'
            + '<span class="vqno">'+(i+1)+'</span><span class="vqnm">'+x.name+'</span>'
            + '<button class="vqic" type="button" data-qup="'+x.id+'"'+(i<=1?' disabled':'')+'>'+IC.up+'</button>'
            + '<button class="vqic" type="button" data-qdn="'+x.id+'"'+(i===wait.length-1?' disabled':'')+'>'+IC.down+'</button>'
@@ -1365,11 +1484,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       return '<div class="vqrow"><span class="vqno">'+(i+1)+'</span><span class="vqnm">'+x.name+'</span>'
            + '<span class="vqtm">'+x.tm+'</span></div>';
     }).join('')||'<div class="mc-q" style="padding:4px 2px;color:#737373">완료된 발언이 없습니다.</div>';
-    return '<div class="vqwrap">'+host
-      + '<div class="vqsec">대기<span class="vqcnt">'+wait.length+'</span></div>'
-      + (rows||'<div class="mc-q" style="padding:4px 2px;color:#737373">대기 중인 발언이 없습니다.</div>')
-      + '<div class="vqsec" style="margin-top:2px">완료<span class="vqcnt out">'+done.length+'</span></div>'
-      + doneRows + '</div>';
+    return '<div class="vqwrap">'
+      + '<div class="vqmain">'+host
+      +   '<div class="vqsec">대기<span class="vqcnt">'+wait.length+'</span></div>'
+      +   (rows||'<div class="mc-q" style="padding:4px 2px;color:#737373">대기 중인 발언이 없습니다.</div>')
+      + '</div>'
+      + '<div class="vqfoot"><div class="vqsec">완료<span class="vqcnt out">'+done.length+'</span></div>'
+      +   doneRows + '</div></div>';
   }
   /* 대기열 n번째 자리로 옮긴다 (드롭박스) */
   function qSetPos(id, pos){
@@ -1460,6 +1581,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(qt==='q'){ host.innerHTML=list().map(cardHTML).join('')||'<div class="mc-q" style="padding:12px;color:#737373">항목이 없습니다.</div>'; }
     else if(qf==='queue'){ host.innerHTML=queueHTML(); }
     else { host.innerHTML=spList().map(spCardHTML).join('')||'<div class="mc-q" style="padding:12px;color:#737373">항목이 없습니다.</div>'; }
+    /* 대기열 뷰에서만 목록 영역을 꽉 채워 완료 섹션을 하단에 붙인다 */
+    host.parentElement.classList.toggle('fill', qt==='s'&&qf==='queue');
     document.getElementById('qCnt').textContent=Q.filter(function(x){return x.st==='미답변';}).length;
     document.getElementById('sCnt').textContent=S.filter(function(x){return x.inq&&x.st==='대기';}).length;
   }
@@ -1534,6 +1657,119 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       }
     });
   })();
+  /* 대기열 드래그앤드롭 — 왼쪽 그립에서만 잡힌다.
+     놓은 위치의 행 앞으로 옮기고, 순서는 qSetPos 가 S 배열에 그대로 반영한다. */
+  (function(){
+    var list=document.getElementById('chatList'); if(!list) return;
+    var dragId=null;
+    list.addEventListener('mousedown',function(e){
+      var g=e.target.closest('[data-grip]'); var row=g&&g.closest('.vqrow');
+      if(row) row.setAttribute('draggable','true');
+    });
+    list.addEventListener('mouseup',function(){
+      list.querySelectorAll('.vqrow[draggable]').forEach(function(r){ r.removeAttribute('draggable'); });
+    });
+    list.addEventListener('dragstart',function(e){
+      var row=e.target.closest('.vqrow[data-row]'); if(!row) return;
+      dragId=row.getAttribute('data-row'); row.classList.add('dragging');
+      e.dataTransfer.effectAllowed='move';
+      try{ e.dataTransfer.setData('text/plain', dragId); }catch(_){}
+    });
+    list.addEventListener('dragover',function(e){
+      var row=e.target.closest('.vqrow[data-row]'); if(!row||!dragId) return;
+      e.preventDefault(); e.dataTransfer.dropEffect='move';
+      list.querySelectorAll('.vqrow.over').forEach(function(r){ r.classList.remove('over'); });
+      if(row.getAttribute('data-row')!==dragId) row.classList.add('over');
+    });
+    list.addEventListener('drop',function(e){
+      var row=e.target.closest('.vqrow[data-row]'); if(!row||!dragId) return;
+      e.preventDefault();
+      var target=row.getAttribute('data-row');
+      if(target!==dragId){
+        var it=null; S.forEach(function(x){ if(x.id===target) it=x; });
+        if(it) qSetPos(dragId, qPos(it).at);
+      }
+      dragId=null; render();
+    });
+    list.addEventListener('dragend',function(){
+      dragId=null;
+      list.querySelectorAll('.dragging,.over').forEach(function(r){ r.classList.remove('dragging','over'); });
+    });
+  })();
+  /* 호스트 지정·위임 — STAFF·hostState·render 가 이 스코프에 있어야 한다 */
+  (function () {
+  var ovl=document.getElementById('hostOvl'); if(!ovl) return;
+  var list=document.getElementById('hostList'), save=document.getElementById('hostSave'),
+      agree=document.getElementById('hostAgree');
+  var draft=null, ok=false;
+  var PLUS='<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>';
+
+  function paint(){
+    list.innerHTML=draft.map(function(u){
+      var sub=(u.role==='sub'), host=(u.role==='host'), proxy=(u.role==='proxy');
+      var badge = host  ? '<span class="hrole">호스트</span>'
+                : proxy ? '<span class="hrole">호스트 대행</span>'
+                : sub   ? '<span class="hrole">서브 호스트</span>' : '';
+      var radio = (host||!u.online) ? ''
+        : '<span class="hradio'+(proxy?' on':'')+'" data-deleg="'+u.id+'"><span class="r"></span>호스트 위임</span>';
+      var subBtn = host ? ''
+        : '<button class="hsub'+(sub?' on':'')+'" type="button" data-sub="'+u.id+'"'+(u.online?'':' disabled')+'>'
+          + (sub?'지정 해제':PLUS+'서브 호스트') + '</button>';
+      return '<div class="hcard'+(u.me?' me':'')+'">'
+        + '<span class="havatar'+(u.online?'':' off')+'">'+u.name.slice(0,1)+'<span class="dot"></span></span>'
+        + '<span class="hname">'+u.name+badge+'</span>'+radio+subBtn+'</div>';
+    }).join('');
+  }
+  function open(){
+    draft=STAFF.map(function(u){ return { id:u.id, name:u.name, online:u.online, me:u.me, role:u.role }; });
+    ok=false; agree.querySelector('.hchk').classList.remove('on'); save.disabled=true;
+    paint(); ovl.classList.add('on');
+  }
+  function close(){ ovl.classList.remove('on'); }
+
+  document.addEventListener('click',function(e){
+    if(e.target.closest('[data-hostdlg]')){ open(); return; }
+    if(e.target.closest('[data-reclaim]')){ hostState='active'; STAFF.forEach(function(u){ if(u.role==='proxy') u.role=null; }); render(); return; }
+  });
+  list.addEventListener('click',function(e){
+    var d=e.target.closest('[data-deleg]');
+    if(d){ var did=d.getAttribute('data-deleg');
+      draft.forEach(function(u){ if(u.role==='proxy') u.role=null; });
+      draft.forEach(function(u){ if(u.id===did) u.role='proxy'; });
+      paint(); return; }
+    var b=e.target.closest('[data-sub]');
+    if(b&&!b.disabled){ var sid=b.getAttribute('data-sub');
+      draft.forEach(function(u){ if(u.id===sid) u.role=(u.role==='sub')?null:'sub'; });
+      paint(); }
+  });
+  agree.addEventListener('click',function(e){
+    e.preventDefault(); ok=!ok;
+    agree.querySelector('.hchk').classList.toggle('on', ok); save.disabled=!ok;
+  });
+  document.getElementById('hostCancel').addEventListener('click',close);
+  document.getElementById('hostClose').addEventListener('click',close);
+  ovl.addEventListener('click',function(e){ if(e.target===ovl) close(); });
+  save.addEventListener('click',function(){
+    if(!ok) return;
+    STAFF.forEach(function(u,i){ u.role=draft[i].role; });
+    hostState = draft.some(function(u){ return u.role==='proxy'; }) ? 'locked' : 'active';
+    close(); render();
+  });
+})();
+  /* mm:ss — 상단 스크립트의 fmt 는 다른 블록 스코프라 여기선 안 보인다 */
+  function mmss(n){ var m=Math.floor(n/60), x=n%60; return (m<10?'0':'')+m+':'+(x<10?'0':'')+x; }
+  /* 발언 경과 타이머 — 진행 중일 때만 돈다 */
+  function startSpeak(id){
+    speakingId=id; speakSec=0;
+    if(speakTick) clearInterval(speakTick);
+    speakTick=setInterval(function(){
+      speakSec++;
+      var el=document.querySelector('.vqclock');
+      if(el) el.innerHTML='<span class="d"></span>'+mmss(speakSec);
+    },1000);
+    render();
+  }
+  function stopSpeak(){ if(speakTick){ clearInterval(speakTick); speakTick=null; } speakSec=0; }
   var cl=document.getElementById('chatList');
   cl.addEventListener('click',function(e){
     var chip=e.target.closest('.mc-chip'); if(chip){ var ta=chip.closest('.mc-ans').querySelector('.mc-ta'); var tt=TPL[+chip.getAttribute('data-tpl')].t; ta.value=tt; ta.focus(); return; }
@@ -1552,13 +1788,14 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var qi=e.target.closest('[data-qin]'); if(qi){ var iid=qi.closest('.mcard').getAttribute('data-id');
       S.forEach(function(x){ if(x.id===iid) x.inq=true; }); render(); return; }
     var qo=e.target.closest('[data-qout]'); if(qo){ var oid=qo.closest('.mcard').getAttribute('data-id');
-      S.forEach(function(x){ if(x.id===oid) x.inq=false; }); if(speakingId===oid) speakingId=null; render(); return; }
+      S.forEach(function(x){ if(x.id===oid) x.inq=false; }); if(speakingId===oid){ speakingId=null; stopSpeak(); } render(); return; }
     var up=e.target.closest('[data-qup]'); if(up){ qmove(up.getAttribute('data-qup'),-1); render(); return; }
     var dn=e.target.closest('[data-qdn]'); if(dn){ qmove(dn.getAttribute('data-qdn'),1); render(); return; }
     var dl=e.target.closest('[data-qdel]'); if(dl){ var did=dl.getAttribute('data-qdel');
-      S.forEach(function(x){ if(x.id===did) x.inq=false; }); if(speakingId===did) speakingId=null; render(); return; }
-    var sst=e.target.closest('[data-spstart]'); if(sst){ speakingId=sst.getAttribute('data-spstart'); render(); return; }
-    var sen=e.target.closest('[data-spend]'); if(sen){ var eid=sen.getAttribute('data-spend'); var sit=S.filter(function(x){return x.id===eid;})[0]; if(sit) sit.st='완료'; if(speakingId===eid) speakingId=null; render(); return; }
+      S.forEach(function(x){ if(x.id===did) x.inq=false; }); if(speakingId===did){ speakingId=null; stopSpeak(); } render(); return; }
+    var sst=e.target.closest('[data-spstart]');
+    if(sst){ startSpeak(sst.getAttribute('data-spstart')); return; }
+    var sen=e.target.closest('[data-spend]'); if(sen){ var eid=sen.getAttribute('data-spend'); var sit=S.filter(function(x){return x.id===eid;})[0]; if(sit) sit.st='완료'; if(speakingId===eid){ speakingId=null; stopSpeak(); } render(); return; }
     var rj=e.target.closest('[data-reject]'); if(rj){ var rid=rj.closest('.mcard').getAttribute('data-id'); var it=S.filter(function(x){return x.id===rid;})[0]; if(it) it.st='반려'; selId=null; render(); return; }
     // 답변 작성/보기 영역 내부 클릭은 카드 접힘 방지
     if(e.target.closest('.mc-ans, .mc-ansview, .mc-chips, .sp-acts, .sp-note, textarea, input, select, label')) return;
