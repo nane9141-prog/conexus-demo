@@ -317,7 +317,8 @@
   .mbadge.plain{color:#525252;padding:2px}
   .mbadge.dim{color:#525252;opacity:.5}.mbadge.dim .d{background:#525252}
   /* 발언 카드 액션 — 케이스별 버튼 묶음(가운데 정렬) */
-  .sp-acts{display:flex;justify-content:center;align-items:center;gap:8px}
+  .sp-acts{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .sp-l{display:flex;align-items:center;gap:8px}
   .sp-acts.end{justify-content:flex-end}
   .mc-ta.plain{background:transparent;padding:8px 10px;min-height:140px}
   .mc-ta[readonly]{background:#FAFAFA}
@@ -1255,7 +1256,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 <script>
 (function(){
   var Q=window.QUESTIONS||[], S=window.SPEECHES||[];
-  S.forEach(function(x){ x._iw=(x.st==='대기'); });
+  S.forEach(function(x,i){ x.inq=(x.st==='대기'&&i%2===0); });  /* inq: 대기열 등재 여부 */
   var qt='q', qf='all', selId=null, editId=null, spAgenda='제1호', speakingId=null, noteId=null;
   function comma(n){return (n||0).toLocaleString('en-US');}
   var TPL=[
@@ -1277,9 +1278,11 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function shBadge(x){ return '<span class="cbadge gr">'+x.t+' · '+CX.util.comma(x.sh)+'주</span>'; }
   function stBadge(x){
     if(qt==='q') return x.st==='미답변'?'<span class="mbadge wait"><span class="d"></span>미답변</span>':'<span class="mbadge done"><span class="d"></span>답변완료</span>';
-    /* 발언 — 대기는 회색, 완료는 블루, 반려는 흐리게 */
-    var c=x.st==='대기'?'wait':(x.st==='반려'?'dim':'done');
-    return '<span class="mbadge '+c+'"><span class="d"></span>'+x.st+'</span>';
+    /* 발언 — 접수(회색) · 대기열(블루) · 반려(흐림) · 완료(블루) */
+    if(x.st==='반려') return '<span class="mbadge dim"><span class="d"></span>반려</span>';
+    if(x.st==='완료') return '<span class="mbadge done"><span class="d"></span>완료</span>';
+    return x.inq ? '<span class="mbadge done"><span class="d"></span>대기열</span>'
+                 : '<span class="mbadge wait"><span class="d"></span>접수</span>';
   }
   function answerHTML(x){
     return '<div class="mc-ans"><div class="lb">답변 작성</div>'
@@ -1338,7 +1341,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   };
   function queueHTML(){
     var mine=S.filter(function(x){ return unitOf(x)===spAgenda; });
-    var wait=mine.filter(function(x){ return x.st==='대기'; });
+    var wait=mine.filter(function(x){ return x.inq && x.st==='대기'; });
     var done=mine.filter(function(x){ return x.st==='완료'; });
     var host='<div class="vqhost"><span class="t">'+IC.check+'호스트 · 발언 제어가 가능합니다.</span>'
            + '<button class="gear" type="button" title="발언 설정">'+IC.gear+'</button></div>';
@@ -1367,13 +1370,24 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       + '<div class="vqsec" style="margin-top:2px">완료<span class="vqcnt out">'+done.length+'</span></div>'
       + doneRows + '</div>';
   }
+  /* 대기열 n번째 자리로 옮긴다 (드롭박스) */
+  function qSetPos(id, pos){
+    var it=null; S.forEach(function(x){ if(x.id===id) it=x; }); if(!it) return;
+    var key=unitOf(it);
+    var q=S.filter(function(y){ return y.inq && y.st==='대기' && unitOf(y)===key; });
+    var idx=Math.max(0, Math.min(q.length-1, pos-1));
+    var others=q.filter(function(y){ return y!==it; });
+    others.splice(idx, 0, it);
+    var slots=[]; S.forEach(function(y,n){ if(q.indexOf(y)>=0) slots.push(n); });
+    slots.forEach(function(n,i){ S[n]=others[i]; });
+  }
   /* 대기열에서 한 칸 옮긴다 — 현재 발언 중인 첫 행 아래에서만 움직인다 */
   function qmove(id, dir){
     var i=-1; S.forEach(function(x,n){ if(x.id===id) i=n; });
     if(i<0) return;
     var j=-1;
     for(var n=i+dir; n>=0 && n<S.length; n+=dir){
-      if(S[n].st==='대기' && unitOf(S[n])===spAgenda){ j=n; break; }
+      if(S[n].inq && S[n].st==='대기' && unitOf(S[n])===spAgenda){ j=n; break; }
     }
     if(j<0) return;
     var t=S[i]; S[i]=S[j]; S[j]=t;
@@ -1383,33 +1397,44 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     minus:'<svg viewBox="0 0 24 24"><path d="M3 6h12M3 12h12M3 18h8M17 15h6"/></svg>',
     chev :'<svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>'
   };
-  /* 발언 카드 액션 — 선택 상태에서만, 진행 단계별로 갈린다.
-     미선택 / 대기 / 발언중 / 메모 작성 / 메모 완료 5가지. */
+  /* 발언 카드 액션 — 좌측은 대기열 조작, 우측은 반려. 선택했을 때만 나온다.
+     접수 → 대기열 등재 → (발언중) / 반려 → 반려 사유 순으로 갈린다. */
+  function qPos(x){
+    var q=S.filter(function(y){ return y.inq && y.st==='대기' && unitOf(y)===unitOf(x); });
+    return { list:q, at:q.indexOf(x)+1 };
+  }
   function spActs(x){
-    if(x.id===speakingId){                      /* 발언 중 */
-      return '<div class="sp-acts">'
-        + '<span class="sptime"><select data-sptime>'
-        +   ['1분','3분','5분'].map(function(t){ return '<option'+(t===(x.limit||'3분')?' selected':'')+'>'+t+'</option>'; }).join('')
+    if(x.st==='반려'){                          /* 반려 완료 — 사유 보기 */
+      if(x.id===noteId) return reasonEdit(x);
+      return '<div class="sp-note"><textarea class="mc-ta" readonly>'+esc(x.reason||'(사유 미입력)')+'</textarea></div>'
+        + '<div class="sp-acts end"><button class="mc-btn" type="button" data-noedit>사유 수정</button></div>';
+    }
+    if(x.id===noteId) return reasonEdit(x);     /* 반려 사유 입력 */
+
+    var left;
+    if(x.id===speakingId){
+      left='<span class="sptime"><select data-sptime>'
+        + ['1분','3분','5분'].map(function(t){ return '<option'+(t===(x.limit||'3분')?' selected':'')+'>'+t+'</option>'; }).join('')
         + '</select>'+SPIC.chev+'</span>'
-        + '<button class="mc-btn" type="button" data-spdrop>'+SPIC.minus+'제외</button>'
-        + '<button class="mc-btn" type="button" data-spend="'+x.id+'">종료</button></div>';
+        + '<button class="mc-btn" type="button" data-qout>'+SPIC.minus+'대기열 제거</button>';
+    } else if(x.inq){                           /* 대기열 — 순서 조정 + 제거 */
+      var p=qPos(x);
+      left='<span class="sptime"><select data-qorder>'
+        + p.list.map(function(_,i){ return '<option value="'+(i+1)+'"'+((i+1)===p.at?' selected':'')+'>'+(i+1)+'번</option>'; }).join('')
+        + '</select>'+SPIC.chev+'</span>'
+        + '<button class="mc-btn" type="button" data-qout>'+SPIC.minus+'대기열 제거</button>';
+    } else {                                    /* 접수 — 대기열 추가 */
+      left='<button class="mc-btn" type="button" data-qin>'+SPIC.plus+'대기열 추가</button>';
     }
-    if(x.id===noteId){                          /* 메모 작성 */
-      return '<textarea class="mc-ta plain" placeholder="발언 메모를 입력하세요">'+esc(x.note||'')+'</textarea>'
-        + '<div class="sp-acts end"><button class="mc-btn" type="button" data-nocancel>취소</button>'
-        + '<button class="mc-btn dark" type="button" data-nosave>등록</button></div>';
-    }
-    if(x.note){                                 /* 메모 완료 */
-      return '<div class="sp-note"><textarea class="mc-ta" readonly>'+esc(x.note)+'</textarea>'
-        + '<span class="by">메모 : '+x.tm+', '+CX.meeting.operator.name+'</span></div>'
-        + '<div class="sp-acts end"><button class="mc-btn" type="button" data-noedit>메모 수정</button></div>';
-    }
-    if(x.st==='대기'){                           /* 대기 */
-      return '<div class="sp-acts">'
-        + '<button class="mc-btn" type="button" data-noedit>'+SPIC.plus+'메모</button>'
-        + '<button class="mc-btn reject" type="button" data-reject>반려</button></div>';
-    }
-    return '';
+    var right=(x.id===speakingId)
+      ? '<button class="mc-btn" type="button" data-spend="'+x.id+'">종료</button>'
+      : '<button class="mc-btn reject" type="button" data-rjopen>반려</button>';
+    return '<div class="sp-acts"><span class="sp-l">'+left+'</span>'+right+'</div>';
+  }
+  function reasonEdit(x){
+    return '<textarea class="mc-ta plain" placeholder="반려 사유를 입력하세요">'+esc(x.reason||'')+'</textarea>'
+      + '<div class="sp-acts end"><button class="mc-btn" type="button" data-nocancel>취소</button>'
+      + '<button class="mc-btn reject" type="button" data-rjsave>반려</button></div>';
   }
   function spCardHTML(x){
     var sel=(x.id===selId);
@@ -1439,7 +1464,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     else if(qf==='queue'){ host.innerHTML=queueHTML(); }
     else { host.innerHTML=spList().map(spCardHTML).join('')||'<div class="mc-q" style="padding:12px;color:#737373">항목이 없습니다.</div>'; }
     document.getElementById('qCnt').textContent=Q.filter(function(x){return x.st==='미답변';}).length;
-    document.getElementById('sCnt').textContent=S.filter(function(x){return x.st==='대기';}).length;
+    document.getElementById('sCnt').textContent=S.filter(function(x){return x.inq&&x.st==='대기';}).length;
   }
   var ovl=document.getElementById('ansOvl'), taD=document.getElementById('ansTa'), desc=document.getElementById('ansDesc'), pend=null, vis='pub';
   function setVis(v){ vis=v; document.querySelectorAll('#ansVis button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-v')===v);}); }
@@ -1476,9 +1501,11 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   })();
   var cl=document.getElementById('chatList');
   cl.addEventListener('change',function(e){
-    var t=e.target.closest('[data-sptime]'); if(!t) return;
-    var id=t.closest('.mcard').getAttribute('data-id');
-    S.forEach(function(x){ if(x.id===id) x.limit=t.value; });
+    var t=e.target.closest('[data-sptime]');
+    if(t){ var id=t.closest('.mcard').getAttribute('data-id');
+      S.forEach(function(x){ if(x.id===id) x.limit=t.value; }); return; }
+    var o=e.target.closest('[data-qorder]');
+    if(o){ var oid=o.closest('.mcard').getAttribute('data-id'); qSetPos(oid, +o.value); render(); }
   });
   cl.addEventListener('click',function(e){
     var chip=e.target.closest('.mc-chip'); if(chip){ var ta=chip.closest('.mc-ans').querySelector('.mc-ta'); var tt=TPL[+chip.getAttribute('data-tpl')].t; ta.value=tt; ta.focus(); return; }
@@ -1488,21 +1515,26 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var ed=e.target.closest('[data-edit]'); if(ed){ editId=ed.closest('.mcard').getAttribute('data-id'); render(); return; }
     var ca=e.target.closest('[data-cast]'); if(ca){ var cid=ca.closest('.mcard').getAttribute('data-id'); var ci=Q.filter(function(x){return x.id===cid;})[0]; if(ci){ ci.cast=!ci.cast; if(ci.cast){ var who=ci.name+' · '+ci.t+' · '+Number(ci.sh).toLocaleString('en-US')+'주'; var url='chair-view.html?view=qna&who='+encodeURIComponent(who)+'&q='+encodeURIComponent(ci.q||'')+'&a='+encodeURIComponent(ci.a||''); window.open(url,'cvcast'); } render(); } return; }
     var ne=e.target.closest('[data-noedit]'); if(ne){ noteId=ne.closest('.mcard').getAttribute('data-id'); render(); return; }
+    var ro=e.target.closest('[data-rjopen]'); if(ro){ noteId=ro.closest('.mcard').getAttribute('data-id'); render(); return; }
     var nc=e.target.closest('[data-nocancel]'); if(nc){ noteId=null; render(); return; }
-    var ns=e.target.closest('[data-nosave]'); if(ns){ var card=ns.closest('.mcard'), nid=card.getAttribute('data-id');
-      var ta=card.querySelector('.mc-ta'); S.forEach(function(x){ if(x.id===nid) x.note=ta.value; }); noteId=null; render(); return; }
-    var dp=e.target.closest('[data-spdrop]'); if(dp){ var pid=dp.closest('.mcard').getAttribute('data-id');
-      S.forEach(function(x){ if(x.id===pid) x.st='반려'; }); if(speakingId===pid) speakingId=null; render(); return; }
+    var rs=e.target.closest('[data-rjsave]'); if(rs){ var card=rs.closest('.mcard'), rid=card.getAttribute('data-id');
+      var ta=card.querySelector('.mc-ta');
+      S.forEach(function(x){ if(x.id===rid){ x.reason=ta.value; x.st='반려'; x.inq=false; } });
+      if(speakingId===rid) speakingId=null; noteId=null; render(); return; }
+    var qi=e.target.closest('[data-qin]'); if(qi){ var iid=qi.closest('.mcard').getAttribute('data-id');
+      S.forEach(function(x){ if(x.id===iid) x.inq=true; }); render(); return; }
+    var qo=e.target.closest('[data-qout]'); if(qo){ var oid=qo.closest('.mcard').getAttribute('data-id');
+      S.forEach(function(x){ if(x.id===oid) x.inq=false; }); if(speakingId===oid) speakingId=null; render(); return; }
     var up=e.target.closest('[data-qup]'); if(up){ qmove(up.getAttribute('data-qup'),-1); render(); return; }
     var dn=e.target.closest('[data-qdn]'); if(dn){ qmove(dn.getAttribute('data-qdn'),1); render(); return; }
     var dl=e.target.closest('[data-qdel]'); if(dl){ var did=dl.getAttribute('data-qdel');
-      S.forEach(function(x){ if(x.id===did) x.st='반려'; }); if(speakingId===did) speakingId=null; render(); return; }
+      S.forEach(function(x){ if(x.id===did) x.inq=false; }); if(speakingId===did) speakingId=null; render(); return; }
     var sst=e.target.closest('[data-spstart]'); if(sst){ speakingId=sst.getAttribute('data-spstart'); render(); return; }
     var sen=e.target.closest('[data-spend]'); if(sen){ var eid=sen.getAttribute('data-spend'); var sit=S.filter(function(x){return x.id===eid;})[0]; if(sit) sit.st='완료'; if(speakingId===eid) speakingId=null; render(); return; }
     var rj=e.target.closest('[data-reject]'); if(rj){ var rid=rj.closest('.mcard').getAttribute('data-id'); var it=S.filter(function(x){return x.id===rid;})[0]; if(it) it.st='반려'; selId=null; render(); return; }
     // 답변 작성/보기 영역 내부 클릭은 카드 접힘 방지
     if(e.target.closest('.mc-ans, .mc-ansview, .mc-chips, .sp-acts, .sp-note, textarea, input, select, label')) return;
-    var mc=e.target.closest('.mcard'); if(!mc) return; var id=mc.getAttribute('data-id'); selId=(selId===id)?null:id; editId=null; render();
+    var mc=e.target.closest('.mcard'); if(!mc) return; var id=mc.getAttribute('data-id'); selId=(selId===id)?null:id; editId=null; noteId=null; render();
   });
   render();
 })();
