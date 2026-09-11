@@ -708,11 +708,11 @@
       </div>
 
       <div class="oc-metrics">
-        <div class="oc-mc"><div class="k">의안 진행 <span class="stbadge blue" id="mAgSt"><span class="d"></span>진행 중</span></div><div class="v"><span><b>2</b> / 8</span></div><div class="s" id="mAgSub">제2호 상정</div></div>
-        <div class="oc-mc"><div class="k">의결정족수</div><div class="v">1/4 이상</div><div class="s"><span data-cx="meeting.sharesIssued">476,211,964</span>주 기준</div></div>
+        <div class="oc-mc"><div class="k">의안 진행 <span class="stbadge blue" id="mAgSt"><span class="d"></span>진행 중</span></div><div class="v"><span><b id="mAgNo">0</b> / <span id="mAgTot">8</span></span></div><div class="s" id="mAgSub"></div></div>
+        <div class="oc-mc"><div class="k">출석률</div><div class="v" id="mAttendRate">00%</div><div class="s"><span data-cx="meeting.sharesIssued">476,211,964</span>주 기준</div></div>
         <div class="oc-mc"><div class="k">전체 출석 주주수</div><div class="v"><span data-cx="meeting.attendHolders">300,000</span><span class="sub">명</span></div><div class="s">출석의결권 <span data-cx="meeting.attendShares">300,000,000</span>주</div></div>
         <div class="oc-mc"><div class="k">현장 참석</div><div class="v"><span data-cx="meeting.onsiteHolders">93,000</span><span class="sub">명</span></div><div class="s"><span data-cx="meeting.onsiteShares">3,120,000</span>주 행사 가능</div></div>
-        <div class="oc-mc"><div class="k">현장 표결</div><div class="v"><span><b>2</b> / 8</span></div><div class="s">34,217주 행사</div></div>
+        <div class="oc-mc"><div class="k">현장 표결</div><div class="v"><span><b id="mSiteN">0</b> / <span id="mSiteTot">8</span></span></div><div class="s"><span id="mSiteW">0</span>주 행사</div></div>
         <div class="oc-mc"><div class="k">온라인 참석</div><div class="v"><span id="mOnline" data-cx="meeting.onlineHolders">207,000</span><span class="sub">명</span><svg class="spark" viewBox="0 0 80 22" preserveAspectRatio="none"><polyline fill="none" stroke="#0071f3" stroke-width="2" points="0,18 12,15 24,16 36,10 48,12 60,6 72,7 80,3"/></svg></div><div class="s"><span data-cx="meeting.onlineShares">296,880,000</span>주</div></div>
       </div>
 
@@ -912,7 +912,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     {cls:'ia-fill',name:'결과 확인 중',sub:'출석·미투표 주주',sel:1,timer:1,right:[{t:'투표 재개',c:'play',go:2},{t:'표결 마감',c:'dark',go:4}]},
     {cls:'ia-wait',name:'표결 마감',sub:'출석 · 미투표',selStatic:'기권 처리',timer:1,right:[{t:'',c:'dots'}]}
   ];
-  var OC={agenda:'제1호',stage:0,preEx:false,decided:null,exclTab:null,chanOpen:true};
+  var OC={agenda:'제1호',stage:0,preEx:false,decided:null,exclTab:null,chanOpen:true,siteN:0,siteW:0};
   var voteSec=0, ticker=null, autoAdv=null, el=document.getElementById('agStage');
   function selectNextAgenda(){ var tree=document.getElementById('agTree'); if(!tree) return; var nodes=Array.prototype.slice.call(tree.querySelectorAll('.selnode')); var ci=-1; for(var i=0;i<nodes.length;i++){ if(nodes[i].classList.contains('sel')){ci=i;break;} } if(ci>=0 && ci<nodes.length-1){ nodes[ci+1].click(); } }
   function fmt(x){var m=Math.floor(x/60),ss=x%60;return (m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;}
@@ -940,7 +940,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     el.className='ctrlbar '+m.key;
     el.innerHTML=l+r;
     el.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click',function(){ OC.stage=+b.getAttribute('data-go'); renderStage(); renderAll(); }); });
-    if(OC.stage===2){ if(!ticker){ ticker=setInterval(function(){ voteSec++; var t=document.getElementById('vTimer'); if(t) t.textContent=fmt(voteSec); },1000); } }
+    if(OC.stage===2){ if(!ticker){ ticker=setInterval(function(){ voteSec++; var t=document.getElementById('vTimer'); if(t) t.textContent=fmt(voteSec); bumpSite(); },1000); } }
     else if(ticker){ clearInterval(ticker); ticker=null; }
   }
   function liveFrac(){ return [0,0,0.5,0.85,1][OC.stage]||0; }
@@ -1085,11 +1085,28 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var ast=node.querySelector('.astatus'); if(!ast) return;
     ast.innerHTML=statusBadge(OC.stage,false);
   }
+  var SITE_TOT=8;   /* 현장 표결 대상 수 — 데모 고정값 */
   function updateMetric(){
+    var set=function(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; };
+    /* 출석률 — 캡션이 발행주식총수 기준이므로 분모도 발행주식총수 */
+    set('mAttendRate', CX.util.pct(CX.meeting.attendShares, CX.meeting.sharesIssued).toFixed(1)+'%');
+    /* 의안 진행 — 표결 진행 컨트롤이 보고 있는 의안의 순번 */
+    var i=0; CX.agenda.forEach(function(a,n){ if(a.no===OC.agenda) i=n+1; });
+    set('mAgNo', i); set('mAgTot', CX.agenda.length);
+    set('mAgSub', OC.agenda ? CX.util.chip(OC.agenda)+' '+STAGES[OC.stage].name : '');
+    /* 현장 표결 — 의안별. 투표 중에만 움직이고 투표 종료 시 그대로 굳는다. */
+    set('mSiteN', OC.siteN); set('mSiteTot', SITE_TOT); set('mSiteW', comma(OC.siteW));
+
     var m=document.getElementById('mAgSt'); if(!m) return;
     var map={1:['상정중','gray'],2:['투표중','blue'],3:['집계중','rose'],4:['가결','blue']}, v=map[OC.stage];
     if(!v){ m.style.display='none'; return; }
     m.style.display=''; m.className='stbadge '+v[1]; m.innerHTML='<span class="d"></span>'+v[0];
+  }
+  /* 투표 중 1초마다 조금씩 오른다. stage 2 를 벗어나면 ticker 가 멈춰 값이 고정된다. */
+  function bumpSite(){
+    if(OC.stage!==2 || OC.siteN>=SITE_TOT) return;
+    if(Math.random()<0.45){ OC.siteN++; OC.siteW+=3000+Math.round(Math.random()*3000); }
+    updateMetric();
   }
   function renderAll(){
     var d=CENTER[OC.agenda]; if(!d) return;
@@ -1106,7 +1123,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     else { if(box) box.innerHTML=vizNormal(d); }
     renderChan(d); renderFooter(); repaintList(); updateMetric();
   }
-  OC.select=function(no){ OC.agenda=no; OC.stage=0; voteSec=0; renderStage(); renderAll(); };
+  OC.select=function(no){ OC.agenda=no; OC.stage=0; voteSec=0; OC.siteN=0; OC.siteW=0; renderStage(); renderAll(); };
   // 의장용 뷰: 단계 매칭 없이 chair-view.html 오픈 (anchor href 사용)
   window.OC=OC;
   var sw=document.querySelector('.cag [data-sw]');
