@@ -47,7 +47,7 @@
   .ocb.gray:hover{background:#ececec}
   .ocb.red{background:rgba(220,38,38,.1);border-color:transparent;color:#e9081b}
   .ocb.icon{padding:0;width:28px;justify-content:center}
-  .seg{display:inline-flex}
+  .seg{display:inline-flex;padding:2px}
   .seg .ocb{border-radius:0}
   .seg .ocb:first-child{border-radius:8px 0 0 8px}
   .seg .ocb:last-child{border-radius:0 8px 8px 0;border-left:none}
@@ -1398,7 +1398,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 <script>
 (function(){
   var Q=window.QUESTIONS||[], S=window.SPEECHES||[];
-  S.forEach(function(x,i){ x.inq=(x.st==='대기'&&i%2===0); x.seq=i; });
+  S.forEach(function(x,i){ x.inq=(x.st==='대기'&&i%2===0); x.seq=i; x.qord=i; });
   /* inq: 대기열 등재 여부 · seq: 접수 순서. 대기열은 S 배열 순서를 바꾸므로
      카드 목록은 seq 로 다시 세운다 — 순서 조정이 목록을 흔들지 않는다. */
   var qt='q', qf='all', selId=null, editId=null, spAgenda='제1호', speakingId=null, noteId=null;
@@ -1528,7 +1528,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   }
   function queueHTML(){
     var mine=S.filter(function(x){ return unitOf(x)===spAgenda; });
-    var wait=mine.filter(function(x){ return x.inq && x.st==='대기'; });
+    var wait=qList(spAgenda);
     var done=mine.filter(function(x){ return x.st==='완료'; });
     var HB={
       active   :['','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></svg>',
@@ -1580,27 +1580,27 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       + '<div class="vqfoot"><div class="vqsec">완료<span class="vqcnt out">'+done.length+'</span></div>'
       +   doneRows + '</div></div>';
   }
-  /* 대기열 n번째 자리로 옮긴다 (드롭박스) */
+  /* 대기열 순번은 qord 로 들고 있는다.
+     S 배열 순서에 기대면 카드 목록·필터까지 같이 흔들리고 계산이 흩어진다. */
+  function qList(unit){
+    return S.filter(function(y){ return y.inq && y.st==='대기' && unitOf(y)===unit; })
+            .sort(function(a,b){ return (a.qord||0)-(b.qord||0); });
+  }
+  function qRenum(unit){ qList(unit).forEach(function(y,i){ y.qord=i+1; }); }
+  /* 대기열에 넣는다 — 항상 맨 뒤 */
+  function qAppend(id){
+    var it=null; S.forEach(function(x){ if(x.id===id) it=x; }); if(!it) return;
+    it.inq=true; it.qord=1e9; qRenum(unitOf(it));
+  }
+  /* n번째 자리로 (드롭박스·드래그) */
   function qSetPos(id, pos){
     var it=null; S.forEach(function(x){ if(x.id===id) it=x; }); if(!it) return;
-    var key=unitOf(it);
-    var q=S.filter(function(y){ return y.inq && y.st==='대기' && unitOf(y)===key; });
-    var idx=Math.max(0, Math.min(q.length-1, pos-1));
-    var others=q.filter(function(y){ return y!==it; });
-    others.splice(idx, 0, it);
-    var slots=[]; S.forEach(function(y,n){ if(q.indexOf(y)>=0) slots.push(n); });
-    slots.forEach(function(n,i){ S[n]=others[i]; });
+    it.qord=pos-0.5; qRenum(unitOf(it));
   }
-  /* 대기열에서 한 칸 옮긴다 — 현재 발언 중인 첫 행 아래에서만 움직인다 */
+  /* 위/아래 한 칸 */
   function qmove(id, dir){
-    var i=-1; S.forEach(function(x,n){ if(x.id===id) i=n; });
-    if(i<0) return;
-    var j=-1;
-    for(var n=i+dir; n>=0 && n<S.length; n+=dir){
-      if(S[n].inq && S[n].st==='대기' && unitOf(S[n])===spAgenda){ j=n; break; }
-    }
-    if(j<0) return;
-    var t=S[i]; S[i]=S[j]; S[j]=t;
+    var it=null; S.forEach(function(x){ if(x.id===id) it=x; }); if(!it) return;
+    qSetPos(id, qPos(it).at + dir);
   }
   var SPIC={
     plus :'<svg viewBox="0 0 24 24"><path d="M3 6h12M3 12h12M3 18h8M17 15h6M20 12v6"/></svg>',
@@ -1610,8 +1610,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   /* 발언 카드 액션 — 좌측은 대기열 조작, 우측은 반려. 선택했을 때만 나온다.
      접수 → 대기열 등재 → (발언중) / 반려 → 반려 사유 순으로 갈린다. */
   function qPos(x){
-    var q=S.filter(function(y){ return y.inq && y.st==='대기' && unitOf(y)===unitOf(x); });
-    return { list:q, at:q.indexOf(x)+1 };
+    var q=qList(unitOf(x)), i=q.indexOf(x);
+    return { list:q, at:(i<0?q.length:i+1) };   /* 목록에 없으면 맨 뒤로 본다 — 0번째가 뜨지 않게 */
   }
   function spActs(x){
     if(x.st==='반려'){                          /* 반려 완료 — 사유 보기 */
@@ -1875,7 +1875,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(op){ var oid2=op.getAttribute('data-open'); openRow=(openRow===oid2)?null:oid2; render(); return; }
     var tg=e.target.closest('[data-tag]');
     if(tg){ var ta=tg.closest('.vqbody').querySelector('[data-chair]');
-      ta.value=(ta.value?ta.value.replace(/\s*$/,'')+' ':'')+CHAIR_TAGS[+tg.getAttribute('data-tag')][1];
+      ta.value=CHAIR_TAGS[+tg.getAttribute('data-tag')][1];   /* 누적하지 않고 교체 */
       ta.dispatchEvent(new Event('input',{bubbles:true})); ta.focus(); return; }
     var cs=e.target.closest('[data-chairsave]');
     if(cs){ var cid=cs.getAttribute('data-chairsave');
@@ -1890,7 +1890,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       S.forEach(function(x){ if(x.id===rid){ x.reason=ta.value; x.st='반려'; x.inq=false; } });
       if(speakingId===rid) speakingId=null; noteId=null; render(); return; }
     var qi=e.target.closest('[data-qin]'); if(qi){ var iid=qi.closest('.mcard').getAttribute('data-id');
-      S.forEach(function(x){ if(x.id===iid) x.inq=true; }); render(); return; }
+      qAppend(iid); render(); return; }
     var qo=e.target.closest('[data-qout]'); if(qo){ var oid=qo.closest('.mcard').getAttribute('data-id');
       S.forEach(function(x){ if(x.id===oid){ x.inq=false; delete x.chair; } });
       if(speakingId===oid){ speakingId=null; stopSpeak(); } if(openRow===oid) openRow=null; render(); return; }
