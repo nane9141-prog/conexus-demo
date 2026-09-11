@@ -545,6 +545,81 @@
   .vbtn.dark{background:#171717;border-color:#171717;color:#fafafa}
   .vbtn.ic{padding:0;width:34px;justify-content:center;border-radius:8px}
   .vscroll{flex:1;min-height:0;overflow:auto;margin:0 12px 12px;border:1px solid #E5E5E5;border-radius:8px;background:#fff}
+  /* 표결 관리 */
+  .psheet{padding:0;height:100%;display:flex;flex-direction:column;overflow:hidden}
+  .pnav{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #E5E5E5;flex:none}
+  .pnav-a{width:28px;height:28px;border:1px solid var(--border);border-radius:8px;background:#fff;color:#0a0a0a;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex:none}
+  .pnav-a svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .pnav-t{font-size:14px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A;white-space:nowrap}
+  .pnav .sp{margin-left:auto}
+  .pload{display:none;align-items:center;gap:8px;margin:8px 12px 0;padding:8px 10px;background:#EEF5FF;border:1px solid #D4E8FF;border-radius:10px;font-size:13px;font-weight:500;color:#0066DF;flex:none}
+  .pload.on{display:flex}
+  .pspin{width:14px;height:14px;border:2px solid #BBDCFF;border-top-color:#0071F3;border-radius:50%;animation:pspin .7s linear infinite;flex:none}
+  @keyframes pspin{to{transform:rotate(360deg)}}
+  .pcards{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:12px;flex:none}
+  .pcard{border:1px solid #E5E5E5;border-radius:10px;padding:12px;background:#fff;display:flex;flex-direction:column;gap:8px;min-width:0}
+  .pcard.tot{background:#FAFAFA}
+  .pcard .k{font-size:12px;font-weight:500;color:#737373}
+  .pcard .v{font-size:16px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A;font-variant-numeric:tabular-nums}
+  .pcard .v .u{font-size:12px;font-weight:500;color:#737373;margin-left:2px}
+  .pbar{display:flex;height:6px;border-radius:999px;overflow:hidden;background:#F5F5F5}
+  .pbar i{display:block;height:100%}
+  .pbar .bf{background:#0071F3}.pbar .ba{background:#E9081B}.pbar .bb{background:#A3A3A3}.pbar .bn{background:#D4D4D4}
+  .pleg{display:flex;flex-direction:column;gap:3px;font-size:12px;line-height:16px;color:#525252}
+  .pleg div{display:flex;justify-content:space-between;gap:8px}
+  .pleg em{font-style:normal;font-variant-numeric:tabular-nums;color:#171717}
+  .ptabs{display:flex;gap:4px;padding:0 12px;flex:none}
+  .ptabs button{height:28px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#737373;cursor:pointer}
+  .ptabs button.on{background:#171717;border-color:#171717;color:#FAFAFA}
+  .pchip{display:inline-flex;align-items:center;padding:2px 6px;border-radius:6px;font-size:12px;line-height:16px;font-weight:500;background:#F5F5F5;color:#525252}
+  .pchip.b{background:#EEF5FF;color:#0071F3}
+  .pchip.g{background:#EAFAF0;color:#0A8A3C}
+  .pnm{background:none;border:none;padding:0;font:inherit;letter-spacing:inherit;color:#171717;cursor:pointer;text-align:left}
+  .pnm:hover{text-decoration:underline}
+  .pfoot{flex:none;display:flex;justify-content:flex-end;align-items:center;gap:16px;height:40px;padding:0 16px;background:#FAFAFA;border-top:1px solid #E5E5E5;font-size:12px;line-height:16px;color:#1F1C18}
+  .pfoot .cnt{margin-right:auto}
+  .pfoot .pg{display:flex;align-items:center;gap:8px;color:#737373;font-weight:500}
+  .pfoot .pg select,.pfoot .pg input{height:24px;border:1px solid var(--border);border-radius:6px;background:#fff;font-family:inherit;font-size:12px;color:#0a0a0a;padding:0 6px}
+  .pfoot .pg input{width:36px;text-align:center}
+  /* 일괄 투표 · 경고 */
+  .palert{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#FFF1F2;border:1px solid #FECDD3;border-radius:10px;font-size:14px;font-weight:500;color:#E9081B}
+  .palert svg{width:16px;height:16px;flex:none;fill:none;stroke:#E9081B;stroke-width:1.4;stroke-linecap:round}
+  .prad{display:flex;flex-direction:column;gap:8px}
+  .prad label{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border:1px solid #E5E5E5;border-radius:10px;cursor:pointer;font-size:14px;color:#0A0A0A}
+  .prad label.on{border-color:#171717}
+  .prad .dot{width:16px;height:16px;border:1px solid #E5E5E5;border-radius:50%;flex:none;margin-top:1px;position:relative;background:#fff}
+  .prad label.on .dot{border-color:#171717}
+  .prad label.on .dot::after{content:'';position:absolute;inset:3px;border-radius:50%;background:#171717}
+  .prad .ds{font-size:12px;line-height:16px;color:#737373;margin-top:4px}
+  /* 수동(서면) 투표 등록 */
+  .dlg.wide{width:1134px;max-width:calc(100vw - 32px)}
+  .mvinfo{position:relative;border:1px solid #E5E5E5;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+  .mvrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .mvf{display:flex;align-items:center;gap:8px;font-size:14px;color:#171717;white-space:nowrap}
+  .mvf b{font-size:12px;font-weight:500;color:#737373}
+  .mvsep{width:1px;height:14px;background:#E5E5E5;flex:none}
+  .mvtog{position:absolute;right:14px;top:12px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#737373}
+  .mvtog .sw{width:34px;height:20px;border-radius:999px;background:#E5E5E5;position:relative;cursor:pointer;transition:background .15s}
+  .mvtog .sw::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .15s}
+  .mvtog .sw.on{background:#171717}
+  .mvtog .sw.on::after{transform:translateX(14px)}
+  .mvscroll{max-height:calc(100vh - 380px);overflow:auto;border:1px solid #E5E5E5;border-radius:10px}
+  .mvtbl{width:100%;border-collapse:separate;border-spacing:0;font-size:14px;letter-spacing:-.01em}
+  .mvtbl th,.mvtbl td{height:44px;padding:0 12px;white-space:nowrap;text-align:right;border-bottom:1px solid #E5E5E5;background:#fff}
+  .mvtbl th{position:sticky;top:0;background:#FAFAFA;font-weight:500;color:#737373;z-index:1;height:42px}
+  .mvtbl tr:last-child td{border-bottom:none}
+  .mvtbl .l{text-align:left}.mvtbl .c{text-align:center}
+  .mvtbl td{color:#171717;font-variant-numeric:tabular-nums}
+  .mvtbl tr.done td{background:#FAFAFA;color:#737373}
+  .mvtbl tr.amend td{background:#FEF5E7}
+  .mvsub{display:block;font-size:12px;line-height:16px;color:#737373;font-variant-numeric:normal}
+  .mvck{width:18px;height:18px;border:1px solid #E5E5E5;border-radius:4px;background:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:#FAFAFA}
+  .mvck.on{background:#171717;border-color:#171717}
+  .mvck.ro{cursor:default;background:#E5E5E5;border-color:#E5E5E5;color:#fff}
+  .mvck.ro.on{background:#737373;border-color:#737373}
+  .mvck svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;display:none}
+  .mvck.on svg{display:block}
+  .mvin{width:96px;height:30px;box-sizing:border-box;border:1px solid #E5E5E5;border-radius:8px;padding:0 8px;font-family:inherit;font-size:13px;text-align:right;color:#171717;font-variant-numeric:tabular-nums}
   /* 의안별 집계 테이블 */
   .extbl{width:100%;min-width:1240px;border-collapse:separate;border-spacing:0;font-size:14px;letter-spacing:-.01em}
   .extbl th,.extbl td{height:46px;padding:0 12px;white-space:nowrap;text-align:right;border-right:1px solid rgba(24,29,31,.12);border-bottom:1px solid #E5E5E5;background:#fff}
@@ -935,7 +1010,39 @@
         </div>
         <!-- 시청자 관리 -->
         <div class="oc-panel" data-panel="poll">
-          <div class="oc-empty">표결 관리 — 준비 중</div>
+          <div class="apanel psheet">
+            <div class="pnav">
+              <button class="pnav-a" id="pPrev" type="button" title="이전 의안"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+              <span class="exno" id="pNo">1</span>
+              <span class="pnav-t" id="pName">재무제표 승인의 건</span>
+              <span class="expill" id="pMethod">보통결의</span>
+              <button class="pnav-a" id="pNext" type="button" title="다음 의안"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+              <span class="sp"></span>
+              <button class="vbtn" type="button" id="pTally"><i class="ph ph-arrows-clockwise" style="font-size:16px"></i>집계 갱신</button>
+              <button class="vbtn dark" type="button" id="pBulk"><i class="ph ph-check-square" style="font-size:16px"></i>일괄 투표</button>
+            </div>
+            <div class="pload" id="pLoad"><span class="pspin"></span>투표 결과 집계 중입니다.</div>
+            <div class="ptabs" id="pOpts" style="display:none"></div>
+            <div class="pcards" id="pCards"></div>
+            <div class="vscroll" style="margin-top:0"><table class="extbl" id="pTbl"><thead><tr>
+              <th class="l" style="width:96px">투표권자</th>
+              <th class="l" style="min-width:220px">주주명</th>
+              <th class="l" style="width:120px">대리인명</th>
+              <th class="c" style="width:84px">앱 사용</th>
+              <th class="c" style="width:90px">행사여부</th>
+              <th style="width:130px">행사가능의결권</th>
+              <th style="width:80px">지분율</th>
+              <th class="c" style="width:110px">의결권제한</th>
+              <th class="c" style="width:120px">의안별 제한</th>
+              <th class="c" style="width:90px">참석번호</th>
+              <th class="c" style="width:56px">상세</th>
+            </tr></thead><tbody id="pBody"></tbody></table></div>
+            <div class="pfoot">
+              <span class="cnt" id="pCnt"></span>
+              <span class="pg">페이지당<select><option>50</option><option>100</option></select></span>
+              <span class="pg"><input value="1"> / <span id="pPages">1</span></span>
+            </div>
+          </div>
         </div>
 
         <div class="oc-panel" data-panel="qa">
@@ -1364,6 +1471,287 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   // 초기 선택: 제1호
   (function(){ var f=document.querySelector('#agTree .selnode[data-no="제1호"]'); if(f) f.classList.add('sel'); })();
   renderStage(); renderAll();
+})();
+</script>
+<div class="ovl" id="bulkOvl">
+  <div class="dlg" style="width:480px">
+    <button class="dlg-x" id="bulkClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="dlg-h"><div class="tt">일괄 투표</div><div class="ds" id="bulkAg">대상 의안 · 제1호 재무제표 승인의 건</div></div>
+    <div class="dlg-c">
+      <div>
+        <div class="lb">일괄 처리 범위</div>
+        <div class="prad" id="bulkScope">
+          <label data-sc="all"><span class="dot"></span><span><b style="font-weight:500">현장 참석자 전체</b><span class="ds">현장에 참석한 모든 주주를 대상으로 처리합니다.</span></span></label>
+          <label class="on" data-sc="noapp"><span class="dot"></span><span><b style="font-weight:500">앱 미사용자만</b><span class="ds">앱으로 투표할 수 없는 주주만 골라 처리합니다.</span></span></label>
+          <label data-sc="novote"><span class="dot"></span><span><b style="font-weight:500">미투표자만</b><span class="ds">아직 의결권을 행사하지 않은 주주만 처리합니다.</span></span></label>
+        </div>
+      </div>
+      <div class="palert" id="bulkWarn" style="display:none"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="#E9081B" stroke="none"/></svg>기존 투표 여부와 관계없이 모든 참석 주주를 처리합니다.</div>
+      <div>
+        <div class="lb">처리할 의사</div>
+        <div class="dlg-tabs" id="bulkVote"><button class="on" data-v="찬성" type="button">찬성</button><button data-v="반대" type="button">반대</button></div>
+      </div>
+    </div>
+    <div class="dlg-f"><button class="dlg-btn" id="bulkCancel" type="button">취소</button><button class="dlg-btn dark" id="bulkOk" type="button">일괄 처리</button></div>
+  </div>
+</div>
+<div class="ovl" id="mvOvl">
+  <div class="dlg wide">
+    <button class="dlg-x" id="mvClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="dlg-h"><div class="tt">수동(서면) 투표 등록</div><div class="ds">앱을 쓰지 않는 현장 참석 주주의 서면 투표를 의안별로 입력합니다.</div></div>
+    <div class="dlg-c">
+      <div class="mvinfo" id="mvInfo"></div>
+      <div class="mvscroll"><table class="mvtbl"><thead><tr>
+        <th class="l" style="min-width:300px">의안명</th>
+        <th style="width:120px">제한의결권</th>
+        <th style="width:130px">미행사의결권</th>
+        <th class="c" style="width:70px">찬성</th>
+        <th class="c" style="width:70px">반대</th>
+        <th class="c" style="width:70px">기권</th>
+        <th class="c" style="width:70px">중립</th>
+        <th class="c" style="width:110px">행사여부</th>
+      </tr></thead><tbody id="mvBody"></tbody></table></div>
+    </div>
+    <div class="dlg-f"><button class="dlg-btn" id="mvCancel" type="button">취소</button><button class="dlg-btn dark" id="mvOk" type="button">등록</button></div>
+  </div>
+</div>
+<script>
+/* 표결 관리 — 의안 단위 현장 표결. 집계는 CX(SSOT)에서 파생, 명부 행만 시연용 표본. */
+(function(){
+  var body=document.getElementById('pBody');
+  if(!body||!window.CX) return;
+  var M=CX.meeting, C=CX.center, cm=CX.util.comma;
+  var INFO='<svg class="exi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="7.6" r=".9" fill="#737373" stroke="none"/></svg>';
+  /* 채널 비중 — 사전(전자/서면) · 현장 · 온라인 */
+  var CH=[{k:'전자투표 (사전)',w:.46},{k:'서면투표 (사전)',w:.26},{k:'현장 투표',w:.13},{k:'온라인 투표',w:.15}];
+  function pc(a,b){ return b? (Math.round(a/b*1000)/10).toFixed(1)+'%' : '0.0%'; }
+  function no2(no){ return String(no).replace(/^제/,'').replace(/호$/,''); }
+
+  /* 현장 명부 표본 — 대리인 · 앱 사용 · 제한 조합을 골고루 */
+  var ROWS=[
+    ['본인','국민연금공단','',        1,1, 41200000,'해당없음','없음','A01'],
+    ['대리인','사립학교교직원연금공단','김우진', 1,1, 28600000,'해당없음','없음','A02'],
+    ['본인','한국투자신탁운용','',     0,1, 19400000,'상호주 제한','없음','A05'],
+    ['본인','삼성자산운용','',         1,1, 17800000,'해당없음','없음','A07'],
+    ['대리인','미래에셋자산운용','정하늘',1,0, 15200000,'해당없음','없음','A09'],
+    ['본인','KB자산운용','',           0,0, 12600000,'자기주식','감사 선임 3% 제한','A11'],
+    ['대리인','신한자산운용','오세영',  0,1, 9800000,'상호주 제한','없음','A12'],
+    ['본인','우리사주조합','',         1,1, 6300000,'자기주식','감사 선임 3% 제한','A14'],
+    ['본인','최길준','',               0,0, 4120000,'해당없음','없음','A16'],
+    ['본인','이유정','',               1,1, 2860000,'3% 룰','감사 선임 3% 제한','A17'],
+    ['대리인','윤대일','윤가람',        0,0, 1940000,'해당없음','없음','A18'],
+    ['본인','정하윤','',               1,1, 980000,'3% 룰','없음','A21'],
+    ['본인','강가람','',               0,1, 640000,'해당없음','없음','A23']
+  ];
+
+  function cur(){ return (window.OC&&OC.agenda)||'제1호'; }
+  /* 양립불가·집중투표는 하위 표결 단위를 탭으로 고른다 */
+  var optIdx=0;
+  function unitOf(){
+    var d=C[cur()]; if(!d) return null;
+    if(d.type==='양립불가'){ var o=d.options[Math.min(optIdx,d.options.length-1)]; return {d:o,parent:d,label:o.name,no:o.no}; }
+    return {d:d,parent:d,label:d.name,no:cur()};
+  }
+
+  function renderNav(){
+    var d=C[cur()]; if(!d) return;
+    document.getElementById('pNo').textContent=no2(cur());
+    document.getElementById('pName').textContent=d.name;
+    document.getElementById('pMethod').textContent=
+      d.type==='집중투표'?'집중투표':(d.type==='양립불가'?'양립불가':(d.type||'보통결의'));
+    var tabs=document.getElementById('pOpts');
+    if(d.type==='양립불가'){
+      tabs.style.display='flex';
+      tabs.innerHTML=d.options.map(function(o,i){ return '<button type="button" data-i="'+i+'"'+(i===optIdx?' class="on"':'')+'>'+no2(o.no)+' '+o.name+'</button>'; }).join('');
+    } else { tabs.style.display='none'; tabs.innerHTML=''; }
+  }
+
+  function cardHTML(k,tot,f,a,b,n,klass){
+    var bar=tot?'<i class="bf" style="width:'+(f/tot*100)+'%"></i><i class="ba" style="width:'+(a/tot*100)+'%"></i><i class="bb" style="width:'+(b/tot*100)+'%"></i><i class="bn" style="width:'+(n/tot*100)+'%"></i>':'';
+    return '<div class="pcard'+(klass?' '+klass:'')+'"><div class="k">'+k+'</div>'
+      +'<div class="v">'+cm(tot)+'<span class="u">주</span></div>'
+      +'<div class="pbar">'+bar+'</div>'
+      +'<div class="pleg">'
+      +'<div><span>찬성</span><em>'+cm(f)+' · '+pc(f,tot)+'</em></div>'
+      +'<div><span>반대</span><em>'+cm(a)+' · '+pc(a,tot)+'</em></div>'
+      +'<div><span>기권</span><em>'+cm(b)+' · '+pc(b,tot)+'</em></div>'
+      +'<div><span>중립</span><em>'+cm(n)+' · '+pc(n,tot)+'</em></div>'
+      +'</div></div>';
+  }
+  function cumCardHTML(k,cands,tot,klass){
+    return '<div class="pcard'+(klass?' '+klass:'')+'"><div class="k">'+k+'</div>'
+      +'<div class="v">'+cm(tot)+'<span class="u">표</span></div>'
+      +'<div class="pbar">'+cands.map(function(c,i){ return '<i class="'+(i%2?'bb':'bf')+'" style="width:'+(tot?c.v/tot*100:0)+'%"></i>'; }).join('')+'</div>'
+      +'<div class="pleg">'+cands.map(function(c){ return '<div><span>'+c.name+'</span><em>'+cm(c.v)+' · '+pc(c.v,tot)+'</em></div>'; }).join('')+'</div></div>';
+  }
+
+  function renderCards(){
+    var u=unitOf(); if(!u) return;
+    var box=document.getElementById('pCards'), d=u.d;
+    if(d.cands){
+      var all=d.cands.slice().sort(function(x,y){return x.rank-y.rank;});
+      var T=all.reduce(function(a,x){return a+x.votes;},0);
+      var html=CH.map(function(c){
+        var cc=all.map(function(x){return {name:x.name,v:Math.round(x.votes*c.w)};});
+        return cumCardHTML(c.k,cc,cc.reduce(function(a,x){return a+x.v;},0));
+      }).join('');
+      html+=cumCardHTML('전체',all.map(function(x){return {name:x.name,v:x.votes};}),T,'tot');
+      box.innerHTML=html; return;
+    }
+    var F=d['for']||0, A=d.against||0, B=d.abs||0, N=0, T=F+A+B+N;
+    var html=CH.map(function(c){
+      return cardHTML(c.k,Math.round(T*c.w),Math.round(F*c.w),Math.round(A*c.w),Math.round(B*c.w),Math.round(N*c.w));
+    }).join('');
+    box.innerHTML=html+cardHTML('전체',T,F,A,B,N,'tot');
+  }
+
+  function renderRows(){
+    var tot=0;
+    document.getElementById('pBody').innerHTML=ROWS.map(function(r,i){
+      var voter=r[0],nm=r[1],agent=r[2],app=r[3],done=r[4],can=r[5],lim=r[6],aglim=r[7],seat=r[8];
+      tot+=can;
+      var agentCell = agent
+        ? '<td class="l"><span class="extip" data-tip="대리인 '+agent+'\n생년월일 1978-0'+(i%9+1)+'-1'+(i%9)+'\n연락처 010-'+(3000+i*37)+'-'+(1000+i*53)+'">'+agent+'</span></td>'
+        : '<td class="l mut">−</td>';
+      return '<tr data-i="'+i+'">'
+        +'<td class="l">'+voter+'</td>'
+        +'<td class="l"><button class="pnm" type="button" data-mv="'+i+'">'+nm+'</button></td>'
+        +agentCell
+        +'<td class="c"><span class="pchip'+(app?' b':'')+'">'+(app?'사용':'미사용')+'</span></td>'
+        +'<td class="c"><span class="pchip'+(done?' g':'')+'">'+(done?'행사':'미행사')+'</span></td>'
+        +'<td>'+cm(can)+'</td>'
+        +'<td>'+(Math.round(can/M.sharesIssued*10000)/100).toFixed(2)+'%</td>'
+        +'<td class="c'+(lim==='해당없음'?' mut':'')+'">'+lim+'</td>'
+        +'<td class="c'+(aglim==='없음'?' mut':'')+'">'+aglim+'</td>'
+        +'<td class="c">'+seat+'</td>'
+        +'<td class="c"><span class="extip" data-tip="참석처리 '+M.operator.name+'\n'+M.date+' 09:'+(20+i)+'\n참석번호 '+seat+'">'+INFO+'</span></td></tr>';
+    }).join('');
+    document.getElementById('pCnt').textContent='총 '+cm(M.onsiteHolders)+'명 · '+cm(M.onsiteShares)+'주';
+    document.getElementById('pPages').textContent=cm(Math.ceil(M.onsiteHolders/50));
+  }
+
+  function renderPoll(){ renderNav(); renderCards(); }
+  renderPoll(); renderRows();
+
+  /* 의안 변경 시 같이 갱신 */
+  var sel=window.OC&&OC.select;
+  if(sel){ OC.select=function(no){ optIdx=0; sel.call(OC,no); renderPoll(); }; }
+  function step(dir){
+    var list=CX.agenda.filter(function(a){return !a.header&&C[a.no];}).map(function(a){return a.no;});
+    var i=list.indexOf(cur()); if(i<0) i=0;
+    var n=list[Math.min(list.length-1,Math.max(0,i+dir))];
+    if(window.OC&&OC.select) OC.select(n); else { optIdx=0; renderPoll(); }
+  }
+  document.getElementById('pPrev').addEventListener('click',function(){ step(-1); });
+  document.getElementById('pNext').addEventListener('click',function(){ step(1); });
+  document.getElementById('pOpts').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-i]'); if(!b) return; optIdx=+b.dataset.i; renderPoll();
+  });
+  /* 집계 갱신 — 1초 로딩 바 */
+  var load=document.getElementById('pLoad');
+  document.getElementById('pTally').addEventListener('click',function(){
+    load.classList.add('on'); setTimeout(function(){ load.classList.remove('on'); renderCards(); },1000);
+  });
+
+  /* 일괄 투표 */
+  var bo=document.getElementById('bulkOvl'), warn=document.getElementById('bulkWarn');
+  function bulkOpen(){
+    document.getElementById('bulkAg').textContent='대상 의안 · '+cur()+' '+(C[cur()]?C[cur()].name:'');
+    bo.classList.add('on');
+  }
+  function bulkClose(){ bo.classList.remove('on'); }
+  document.getElementById('pBulk').addEventListener('click',bulkOpen);
+  document.getElementById('bulkClose').addEventListener('click',bulkClose);
+  document.getElementById('bulkCancel').addEventListener('click',bulkClose);
+  document.getElementById('bulkOk').addEventListener('click',function(){
+    bulkClose(); load.classList.add('on'); setTimeout(function(){ load.classList.remove('on'); },1000);
+  });
+  bo.addEventListener('click',function(e){ if(e.target===bo) bulkClose(); });
+  document.getElementById('bulkScope').addEventListener('click',function(e){
+    var l=e.target.closest('label[data-sc]'); if(!l) return;
+    this.querySelectorAll('label').forEach(function(x){ x.classList.toggle('on',x===l); });
+    warn.style.display = l.dataset.sc==='all' ? 'flex' : 'none';
+  });
+  document.getElementById('bulkVote').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-v]'); if(!b) return;
+    this.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on',x===b); });
+  });
+
+  /* 수동(서면) 투표 등록 — 주주명 클릭 */
+  var mo=document.getElementById('mvOvl');
+  var VOTED={'제1호':'찬성','제2-1호':'찬성','제2-2호':'반대'};  /* 이미 행사 완료된 의안 */
+  function mvRow(no,nm,can,extra){
+    var restricted = extra&&extra.lim ? extra.lim : 0;
+    var v=VOTED[no];
+    var cells=['찬성','반대','기권','중립'].map(function(kind){
+      if(v) return '<td class="c"><span class="mvck ro'+(v===kind?' on':'')+'">'+CKSVG+'</span></td>';
+      return '<td class="c"><span class="mvck" data-no="'+no+'" data-k="'+kind+'">'+CKSVG+'</span></td>';
+    }).join('');
+    var un = v ? 0 : can-restricted;
+    var name='<span class="exno">'+no2(no)+'</span> '+nm
+      + (v?'<span class="mvsub">'+(extra&&extra.app?'앱투표':'서면투표')+' · 2026-08-10 15:5'+(extra&&extra.t||2)+'</span>':'');
+    return '<tr'+(v?' class="done"':'')+'><td class="l">'+name+'</td>'
+      +'<td'+(restricted?'':' class="mut"')+'>'+(restricted?'−'+cm(restricted):'제한 없음')+'</td>'
+      +'<td'+(un?'':' class="mut"')+'>'+cm(un)+'</td>'+cells
+      +'<td class="c"><span class="pchip'+(v?' g':'')+'">'+(v?'행사':'미행사')+'</span></td></tr>';
+  }
+  var CKSVG='<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';
+  function mvOpen(i){
+    var r=ROWS[i], can=r[5];
+    document.getElementById('mvInfo').innerHTML=
+      '<div class="mvtog"><span>불통일행사</span><span class="sw" id="mvSplit"></span></div>'
+      +'<div class="mvrow"><div class="mvf"><b>투표권자</b>'+r[0]+'</div><span class="mvsep"></span>'
+      +'<div class="mvf"><b>주주명</b>'+r[1]+'</div><span class="mvsep"></span>'
+      +'<div class="mvf"><b>주주번호</b>S-'+(100000+i*137)+'</div><span class="mvsep"></span>'
+      +'<div class="mvf"><b>실질계좌번호</b>'+(2300+i)+'-01-'+(884210+i*7)+'</div></div>'
+      +'<div class="mvrow"><div class="mvf"><b>보유주식</b>'+cm(can)+'주</div><span class="mvsep"></span>'
+      +'<div class="mvf"><b>의결권 제한</b>'+r[6]+'</div><span class="mvsep"></span>'
+      +'<div class="mvf"><b>앱 사용</b>'+(r[3]?'사용':'미사용')+'</div><span class="mvsep"></span>'
+      +'<div class="mvf"><b>참석번호</b>'+r[8]+'</div><span class="mvsep"></span>'
+      +'<div class="mvf"><b>참석처리</b>'+M.operator.name+' · '+M.date+' 09:'+(20+i)+'</div></div>'
+      +(r[2]?'<div class="mvrow"><div class="mvf"><b>대리인</b>'+r[2]+'</div><span class="mvsep"></span>'
+        +'<div class="mvf"><b>생년월일</b>1978-0'+(i%9+1)+'-1'+(i%9)+'</div><span class="mvsep"></span>'
+        +'<div class="mvf"><b>전화번호</b>010-'+(3000+i*37)+'-'+(1000+i*53)+'</div></div>':'');
+
+    var out=[];
+    CX.agenda.forEach(function(a){
+      if(a.header) return;
+      var d=C[a.no]; if(!d) return;
+      if(d.type==='양립불가'){ d.options.forEach(function(o){ out.push(mvRow(o.no,o.name,can,{lim:0})); }); return; }
+      if(d.type==='집중투표'){
+        var seats=+((a.nm.match(/중\s*(\d+)\s*인/)||[0,1])[1])||1;
+        out.push('<tr><td class="l"><span class="exno">'+no2(a.no)+'</span> '+a.nm
+          +'<span class="mvsub">집중투표 · 후보별 배분 수량을 직접 입력합니다 (총 '+cm(can*seats)+'표)</span></td>'
+          +'<td class="mut">제한 없음</td><td>'+cm(can*seats)+'</td>'
+          +'<td class="c" colspan="4">'+d.cands.slice().sort(function(x,y){return x.rank-y.rank;}).map(function(c){
+             return '<span style="display:inline-flex;align-items:center;gap:6px;margin:0 6px"><span style="font-size:12px;color:#737373">'+c.name+'</span><input class="mvin" type="text" value="0"></span>';
+           }).join('')+'</td>'
+          +'<td class="c"><span class="pchip">미행사</span></td></tr>');
+        return;
+      }
+      out.push(mvRow(a.no,a.nm,can,{lim:(a.no==='제2-1호'?32000:0),app:(a.no==='제1호'),t:(a.no==='제1호'?2:6)}));
+    });
+    document.getElementById('mvBody').innerHTML=out.join('');
+    mo.classList.add('on');
+  }
+  function mvClose(){ mo.classList.remove('on'); }
+  body.addEventListener('click',function(e){
+    var b=e.target.closest('.pnm[data-mv]'); if(!b) return; mvOpen(+b.dataset.mv);
+  });
+  document.getElementById('mvClose').addEventListener('click',mvClose);
+  document.getElementById('mvCancel').addEventListener('click',mvClose);
+  document.getElementById('mvOk').addEventListener('click',mvClose);
+  mo.addEventListener('click',function(e){
+    if(e.target===mo){ mvClose(); return; }
+    var sw=e.target.closest('#mvSplit'); if(sw){ sw.classList.toggle('on'); return; }
+    /* 같은 의안 안에서는 하나만 — 라디오처럼 동작 */
+    var ck=e.target.closest('.mvck:not(.ro)'); if(!ck) return;
+    var tr=ck.closest('tr'), on=ck.classList.contains('on');
+    tr.querySelectorAll('.mvck:not(.ro)').forEach(function(x){ x.classList.remove('on'); });
+    if(!on) ck.classList.add('on');
+    var chip=tr.querySelector('.pchip');
+    if(chip){ var any=tr.querySelector('.mvck.on'); chip.textContent=any?'행사':'미행사'; chip.classList.toggle('g',!!any); }
+  });
 })();
 </script>
 <div class="ovl" id="discOvl">
