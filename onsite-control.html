@@ -316,6 +316,41 @@
   .mbadge.done{color:#0071F3}.mbadge.done .d{background:#0071F3}
   .mbadge.plain{color:#525252;padding:2px}
   .mbadge.dim{color:#525252;opacity:.5}.mbadge.dim .d{background:#525252}
+  /* 발언 대기열 뷰 (panel_voice_option) */
+  .vqwrap{display:flex;flex-direction:column;gap:10px}
+  .vqhost{display:flex;justify-content:space-between;align-items:center;gap:4px;box-sizing:border-box;
+    height:36px;padding:10px 6px 10px 12px;background:#EEF5FF;border:1px solid #D4E8FF;border-radius:10px}
+  .vqhost .t{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#0071F3}
+  .vqhost .t svg{width:16px;height:16px;fill:none;stroke:#0071F3;stroke-width:1.5;flex:none}
+  .vqhost .gear{display:flex;align-items:center;justify-content:center;width:24px;height:24px;flex:none;
+    background:#fff;border:1px solid #E5E5E5;border-radius:8px;cursor:pointer;padding:0}
+  .vqhost .gear svg{width:14px;height:14px;fill:none;stroke:#0A0A0A;stroke-width:1}
+  .vqsec{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:#737373}
+  .vqcnt{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:20px;
+    padding:2px 8px;background:#171717;border-radius:26px;font-size:12px;font-weight:500;color:#FAFAFA}
+  .vqcnt.out{background:#fff;border:1px solid #E5E5E5;color:#0A0A0A}
+  .vqrow{display:flex;align-items:center;gap:8px;box-sizing:border-box;height:40px;padding:8px 10px;
+    background:#FAFAFA;border:1px solid var(--border);border-radius:10px}
+  .vqrow.live{background:#fff;border-color:#171717}
+  .vqno{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;flex:none;
+    background:linear-gradient(0deg,rgba(255,255,255,.8),rgba(255,255,255,.8)),#737373;border-radius:6px;
+    font-size:12px;font-weight:400;color:#171717}
+  .vqrow.live .vqno{background:#171717;color:#FAFAFA}
+  .vqnm{flex:1;min-width:0;font-size:14px;font-weight:500;color:#171717;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .vqtm{font-size:12px;font-weight:500;color:#737373;flex:none}
+  .vqrow.live .vqtm{color:#171717}
+  .vqbtn{display:inline-flex;align-items:center;justify-content:center;height:24px;padding:0 8px;flex:none;
+    border:none;border-radius:8px;background:rgba(220,38,38,.1);font-family:inherit;font-size:12px;
+    font-weight:500;letter-spacing:inherit;color:#E9081B;cursor:pointer;white-space:nowrap}
+  .vqbtn.go{background:#171717;color:#FAFAFA}
+  .vqic{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;flex:none;
+    border:none;background:none;border-radius:8px;cursor:pointer;padding:0}
+  .vqic svg{width:14px;height:14px;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .vqic:hover{background:#F5F5F5}
+  .vqic[disabled]{opacity:.35;cursor:default}
+  .vqic[disabled]:hover{background:none}
+  .vqdrag{display:inline-flex;align-items:center;justify-content:center;width:16px;height:24px;flex:none;color:#0A0A0A}
+  .vqdrag svg{width:14px;height:14px;fill:currentColor}
   .mbadge.rej{color:#DC2626}.mbadge.rej .d{background:#DC2626}
   .mbadge.prog{color:#0071F3}.mbadge.prog .d{background:#0071F3}
   .mc-cat{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
@@ -367,25 +402,6 @@
   .mc-castbtn{display:inline-flex;align-items:center;gap:4px;padding:6px 10px;border:1px solid #171717;border-radius:8px;background:#171717;color:#FAFAFA;font-family:inherit;font-size:12px;font-weight:500;cursor:pointer}
   .mc-castbtn svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .mc-castbtn.on{background:#0071F3;border-color:#0071F3}
-  .spsel{width:100%;box-sizing:border-box;height:32px;padding:0 30px 0 10px;border:1px solid #E5E5E5;border-radius:10px;font-family:inherit;font-size:14px;color:#171717;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") no-repeat right 10px center;-webkit-appearance:none;-moz-appearance:none;appearance:none;cursor:pointer;margin-bottom:10px}
-  .spqueue{background:#FAFAFA;border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:10px}
-  .spq-h{display:flex;align-items:center;gap:8px;cursor:pointer}
-  .spq-h .ui{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:1.6;stroke-linecap:round}
-  .spq-h>span{flex:1;font-size:12px;font-weight:600;color:#737373}
-  .spq-h>span b{color:#171717}
-  .spq-caret{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:1.8;transition:transform .15s}
-  .spq-caret.open{transform:rotate(180deg)}
-  .spq-body{display:flex;flex-direction:column;gap:6px;margin-top:10px}
-  .spq-row{display:flex;align-items:center;gap:8px}
-  .spq-no{width:16px;height:16px;flex:none;display:flex;align-items:center;justify-content:center;background:#e5e5e5;border-radius:6px;font-size:10px;font-weight:600;color:#171717}
-  .spq-nm{flex:1;font-size:12px;font-weight:500;color:#171717;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .spq-meta{font-size:12px;color:#737373;white-space:nowrap}
-  .spq-btn{margin-left:4px;height:24px;padding:0 10px;border-radius:6px;border:none;font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;flex:none}
-  .spq-btn.start{background:#171717;color:#fff}
-  .spq-btn.end{background:#fff;color:#e11d48;border:1px solid #e11d48}
-  .spq-row.speaking .spq-nm{color:#171717;font-weight:600}
-  .spq-row.speaking .spq-no{background:#171717;color:#fff}
-  .spq-empty{font-size:12px;color:#a3a3a3;padding:2px 0}
   .mcard.sp-click{cursor:pointer}
   .mc-btn.reject{background:rgba(220,38,38,.1);border-color:transparent;color:#E9081B}
   .oc-logo-row{display:flex;align-items:center;gap:10px}
@@ -1225,7 +1241,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 (function(){
   var Q=window.QUESTIONS||[], S=window.SPEECHES||[];
   S.forEach(function(x){ x._iw=(x.st==='대기'); });
-  var qt='q', qf='all', selId=null, editId=null, spAgenda='제1호', spOpen=true, speakingId=null;
+  var qt='q', qf='all', selId=null, editId=null, spAgenda='제1호', speakingId=null;
   function comma(n){return (n||0).toLocaleString('en-US');}
   var TPL=[
     {l:'배당 정책',t:'당사는 안정적 배당과 성장 투자의 균형을 배당 정책의 원칙으로 하며, 별도재무제표 당기순이익 기준 배당성향 약 27% 수준을 유지하고 있습니다.'},
@@ -1288,24 +1304,64 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function pass(x){
     if(spAgenda==='pre'){ if(!x.pre) return false; }          /* 사전 질의만 */
     else if(x.pre || unitOf(x)!==spAgenda) return false;        /* 의안 필터엔 현장 건만 */
-    if(qf==='all') return true;
-    var open=(qt==='q')?(x.st==='미답변'):(x.st==='대기');
-    return qf==='open'?open:!open;
+    if(qf==='all'||qf==='queue') return true;
+    if(qt==='q') return qf==='open'?(x.st==='미답변'):(x.st!=='미답변');
+    return qf==='rej'?(x.st==='반려'):true;
   }
   function list(){ return (qt==='q'?Q:S).filter(pass); }
   function spList(){ return S.filter(pass); }
-  function spControls(){
-    var base=S.filter(function(x){return unitOf(x)===spAgenda&&x._iw;});
-    var q=base.filter(function(x){return x.st==='대기';});
-    var rows=q.map(function(x,i){
-      var sk=(x.id===speakingId), btn='';
-      if(sk) btn='<button class="spq-btn end" type="button" data-spend="'+x.id+'">종료</button>';
-      else if(!speakingId && i===0) btn='<button class="spq-btn start" type="button" data-spstart="'+x.id+'">시작</button>';
-      return '<div class="spq-row'+(sk?' speaking':'')+'"><span class="spq-no">'+(base.indexOf(x)+1)+'</span><span class="spq-nm">'+x.name+'</span>'+btn+'</div>';
+  /* ── 발언 대기열 뷰 ─────────────────────────────────────
+     선택된 의안의 대기/완료 발언을 한 화면에서 다룬다.
+     순서는 S 배열 자체를 바꿔서 옮긴다(별도 정렬 키를 두지 않는다). */
+  var IC={
+    check:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></svg>',
+    gear :'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6 1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+    up   :'<svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
+    down :'<svg viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>',
+    trash:'<svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>',
+    grip :'<svg viewBox="0 0 24 24"><circle cx="9" cy="6" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="18" r="1.4"/></svg>'
+  };
+  function queueHTML(){
+    var mine=S.filter(function(x){ return unitOf(x)===spAgenda; });
+    var wait=mine.filter(function(x){ return x.st==='대기'; });
+    var done=mine.filter(function(x){ return x.st==='완료'; });
+    var host='<div class="vqhost"><span class="t">'+IC.check+'호스트 · 발언 제어가 가능합니다.</span>'
+           + '<button class="gear" type="button" title="발언 설정">'+IC.gear+'</button></div>';
+    var rows=wait.map(function(x,i){
+      var live=(x.id===speakingId)||(!speakingId&&i===0);
+      if(live){
+        var btn=(x.id===speakingId)
+          ? '<button class="vqbtn" type="button" data-spend="'+x.id+'">발언 종료</button>'
+          : '<button class="vqbtn go" type="button" data-spstart="'+x.id+'">발언 시작</button>';
+        return '<div class="vqrow live"><span class="vqno">'+(i+1)+'</span><span class="vqnm">'+x.name+'</span>'
+             + '<span class="vqtm">'+x.tm+'</span>'+btn+'</div>';
+      }
+      return '<div class="vqrow"><span class="vqdrag">'+IC.grip+'</span>'
+           + '<span class="vqno">'+(i+1)+'</span><span class="vqnm">'+x.name+'</span>'
+           + '<button class="vqic" type="button" data-qup="'+x.id+'"'+(i<=1?' disabled':'')+'>'+IC.up+'</button>'
+           + '<button class="vqic" type="button" data-qdn="'+x.id+'"'+(i===wait.length-1?' disabled':'')+'>'+IC.down+'</button>'
+           + '<button class="vqic" type="button" data-qdel="'+x.id+'">'+IC.trash+'</button></div>';
     }).join('');
-    var sel='';
-    var queue='<div class="spqueue"><div class="spq-h" data-qtoggle><svg class="ui" viewBox="0 0 24 24"><path d="M3 6h13M3 12h13M3 18h9"/><circle cx="20" cy="7" r="1"/></svg><span>발언 대기열 <b>'+q.length+'명</b></span><svg class="spq-caret'+(spOpen?' open':'')+'" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>'+(spOpen?('<div class="spq-body">'+(rows||'<div class="spq-empty">대기 중인 발언이 없습니다.</div>')+'</div>'):'')+'</div>';
-    return sel+queue;
+    var doneRows=done.map(function(x,i){
+      return '<div class="vqrow"><span class="vqno">'+(i+1)+'</span><span class="vqnm">'+x.name+'</span>'
+           + '<span class="vqtm">'+x.tm+'</span></div>';
+    }).join('')||'<div class="mc-q" style="padding:4px 2px;color:#737373">완료된 발언이 없습니다.</div>';
+    return '<div class="vqwrap">'+host
+      + '<div class="vqsec">대기<span class="vqcnt">'+wait.length+'</span></div>'
+      + (rows||'<div class="mc-q" style="padding:4px 2px;color:#737373">대기 중인 발언이 없습니다.</div>')
+      + '<div class="vqsec" style="margin-top:2px">완료<span class="vqcnt out">'+done.length+'</span></div>'
+      + doneRows + '</div>';
+  }
+  /* 대기열에서 한 칸 옮긴다 — 현재 발언 중인 첫 행 아래에서만 움직인다 */
+  function qmove(id, dir){
+    var i=-1; S.forEach(function(x,n){ if(x.id===id) i=n; });
+    if(i<0) return;
+    var j=-1;
+    for(var n=i+dir; n>=0 && n<S.length; n+=dir){
+      if(S[n].st==='대기' && unitOf(S[n])===spAgenda){ j=n; break; }
+    }
+    if(j<0) return;
+    var t=S[i]; S[i]=S[j]; S[j]=t;
   }
   function spCardHTML(x){
     var sel=(x.id===selId);
@@ -1317,16 +1373,21 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       +'<div class="mc-q">'+esc(x.r)+'</div>'
       +metaRow(x)+reject+'</div>';
   }
-  var QF_LABEL={q:['전체','미답변','답변완료'], s:['전체','대기','완료']};
+  var QF={q:[['all','전체'],['open','미답변'],['done','답변완료']],
+          s:[['all','전체'],['rej','반려'],['queue','대기열']]};
   function fillQf(){
-    var L=QF_LABEL[qt]||QF_LABEL.q;
-    document.querySelectorAll('.seg2 button[data-qf]').forEach(function(b,i){ b.textContent=L[i]; });
+    var L=QF[qt]||QF.q;
+    if(!L.some(function(o){ return o[0]===qf; })) qf='all';
+    document.querySelectorAll('.seg2 button[data-qf]').forEach(function(b,i){
+      b.setAttribute('data-qf',L[i][0]); b.textContent=L[i][1]; b.classList.toggle('on',L[i][0]===qf);
+    });
   }
   function render(){
     fillAgSel(); fillQf();
     var host=document.getElementById('chatList');
     if(qt==='q'){ host.innerHTML=list().map(cardHTML).join('')||'<div class="mc-q" style="padding:12px;color:#737373">항목이 없습니다.</div>'; }
-    else { host.innerHTML=spControls()+(spList().map(spCardHTML).join('')||'<div class="mc-q" style="padding:12px;color:#737373">항목이 없습니다.</div>'); }
+    else if(qf==='queue'){ host.innerHTML=queueHTML(); }
+    else { host.innerHTML=spList().map(spCardHTML).join('')||'<div class="mc-q" style="padding:12px;color:#737373">항목이 없습니다.</div>'; }
     document.getElementById('qCnt').textContent=Q.filter(function(x){return x.st==='미답변';}).length;
     document.getElementById('sCnt').textContent=S.filter(function(x){return x.st==='대기';}).length;
   }
@@ -1342,7 +1403,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     document.getElementById('ansSubmit').addEventListener('click',function(){ if(!pend) return; var it=Q.filter(function(x){return x.id===pend;})[0]; if(it){ it.a=taD.value; it.st='완료'; it.pub=(vis==='pub'); } closeDlg(); selId=null; editId=null; render(); });
   }
   document.querySelectorAll('.qtabs button').forEach(function(b){ b.addEventListener('click',function(){ qt=b.getAttribute('data-qt'); selId=null; document.querySelectorAll('.qtabs button').forEach(function(x){x.classList.toggle('on',x===b);}); render(); }); });
-  document.querySelectorAll('.seg2 button[data-qf]').forEach(function(b){ b.addEventListener('click',function(){ qf=b.getAttribute('data-qf'); selId=null; document.querySelectorAll('.seg2 button[data-qf]').forEach(function(x){x.classList.toggle('on',x===b);}); render(); }); });
+  (function(){
+    var seg=document.querySelector('.seg2'); if(!seg) return;
+    seg.addEventListener('click',function(e){
+      var b=e.target.closest('button[data-qf]'); if(!b) return;
+      qf=b.getAttribute('data-qf'); selId=null; render();
+    });
+  })();
   /* 의안 셀렉트 — 표결 단위(CX.votingUnits) 그대로. 사전 질의는 질의 탭에만 둔다. */
   function fillAgSel(){
     var sel=document.getElementById('qAgSel'); if(!sel) return;
@@ -1365,7 +1432,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       var ci2=Q.filter(function(x){return x.id===id;})[0]; if(ci2&&ci2.st==='완료'){ editId=null; } else { selId=null; editId=null; } render(); return; }
     var ed=e.target.closest('[data-edit]'); if(ed){ editId=ed.closest('.mcard').getAttribute('data-id'); render(); return; }
     var ca=e.target.closest('[data-cast]'); if(ca){ var cid=ca.closest('.mcard').getAttribute('data-id'); var ci=Q.filter(function(x){return x.id===cid;})[0]; if(ci){ ci.cast=!ci.cast; if(ci.cast){ var who=ci.name+' · '+ci.t+' · '+Number(ci.sh).toLocaleString('en-US')+'주'; var url='chair-view.html?view=qna&who='+encodeURIComponent(who)+'&q='+encodeURIComponent(ci.q||'')+'&a='+encodeURIComponent(ci.a||''); window.open(url,'cvcast'); } render(); } return; }
-    var tg=e.target.closest('[data-qtoggle]'); if(tg){ spOpen=!spOpen; render(); return; }
+    var up=e.target.closest('[data-qup]'); if(up){ qmove(up.getAttribute('data-qup'),-1); render(); return; }
+    var dn=e.target.closest('[data-qdn]'); if(dn){ qmove(dn.getAttribute('data-qdn'),1); render(); return; }
+    var dl=e.target.closest('[data-qdel]'); if(dl){ var did=dl.getAttribute('data-qdel');
+      S.forEach(function(x){ if(x.id===did) x.st='반려'; }); if(speakingId===did) speakingId=null; render(); return; }
     var sst=e.target.closest('[data-spstart]'); if(sst){ speakingId=sst.getAttribute('data-spstart'); render(); return; }
     var sen=e.target.closest('[data-spend]'); if(sen){ var eid=sen.getAttribute('data-spend'); var sit=S.filter(function(x){return x.id===eid;})[0]; if(sit) sit.st='완료'; if(speakingId===eid) speakingId=null; render(); return; }
     var rj=e.target.closest('[data-reject]'); if(rj){ var rid=rj.closest('.mcard').getAttribute('data-id'); var it=S.filter(function(x){return x.id===rid;})[0]; if(it) it.st='반려'; selId=null; render(); return; }
