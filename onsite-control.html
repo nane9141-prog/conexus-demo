@@ -288,11 +288,12 @@
     padding:0 4px;background:#F5F5F5;border-radius:9999px;font-size:12px;font-weight:500;color:#171717}
   .qtabs button.on .bn{background:#171717;color:#fff}
   /* 의안 필터 */
-  .qsel{display:flex;align-items:center;gap:6px;height:32px;padding:4px 10px;
-    border:1px solid var(--border);border-radius:10px;background:transparent}
-  .qsel select{flex:1;min-width:0;border:none;background:none;outline:none;cursor:pointer;
-    font-family:inherit;font-size:14px;letter-spacing:inherit;color:#171717;appearance:none;-webkit-appearance:none}
-  .qsel svg{width:16px;height:16px;color:#737373;flex:none}
+  .qsel{display:flex;align-items:center;gap:6px;box-sizing:border-box;height:32px;padding:4px 10px;
+    border:1px solid #E5E5E5;border-radius:10px;background:transparent;cursor:pointer}
+  .qsel select{flex:1;min-width:0;height:20px;padding:0;border:none;background:none;outline:none;cursor:pointer;
+    font-family:inherit;font-size:14px;font-weight:400;line-height:20px;letter-spacing:-0.01em;color:#737373;
+    appearance:none;-webkit-appearance:none}
+  .qsel svg{width:16px;height:16px;flex:none;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
   .chat-tabs-row{display:flex;justify-content:space-between;align-items:center;gap:6px}
   .seg2{display:flex;align-items:center;padding:3px;background:#F5F5F5;border-radius:10px}
   .seg2 button{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:26px;padding:2px 8px;border:none;background:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:500;color:#737373;cursor:pointer}
@@ -314,6 +315,7 @@
   .mbadge.wait{color:#525252}.mbadge.wait .d{background:#525252}
   .mbadge.done{color:#0071F3}.mbadge.done .d{background:#0071F3}
   .mbadge.plain{color:#525252;padding:2px}
+  .mbadge.dim{color:#525252;opacity:.5}.mbadge.dim .d{background:#525252}
   .mbadge.rej{color:#DC2626}.mbadge.rej .d{background:#DC2626}
   .mbadge.prog{color:#0071F3}.mbadge.prog .d{background:#0071F3}
   .mc-cat{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
@@ -1233,19 +1235,19 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     {l:'규정 준수',t:'관련 법령과 정관 및 내부 규정에 따라 적법한 절차로 처리하고 있습니다.'},
     {l:'자료 안내',t:'질의하신 내용은 소집공고 및 사업보고서에 관련 사항이 기재되어 있으니 참고하여 주시기 바랍니다.'}
   ];
-  var SN={'1':'재무제표 승인','2-1':'집중투표 배제 삭제','2-2':'전자주주총회 도입','2-3':'대리행사 수단 확대','2':'정관 일부 변경','3-1':'집중투표 후보 선임','3-2':'감사위원 선임','3':'이사 선임'};
   /* 구 의안번호 → 현행 표결 단위.
      원격 이력의 마이그레이션(2-3호 삭제 · 3호→4호 이동)을 그대로 따른다.
      표결 단위가 아닌 제2호(헤더)와 삭제된 제2-3호는 제2-1/제2-2 로 나눈다. */
   var UNIT={'1':'제1호','2':'제2-1호','2-1':'제2-1호','2-2':'제2-2호','2-3':'제2-2호',
             '3':'제3호','3-1':'제4-1호','3-2':'제4-2호'};
   function unitOf(x){ return UNIT[x.sub]||UNIT[x.ag]||''; }
-  function agL(x){ return CX.util.chip(unitOf(x)); }
-  function sn(x){ return SN[x.sub]||SN[x.ag]||''; }
   function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  /* 주주 분류 · 보유주식수 — 카드의 유일한 info 배지 */
+  function shBadge(x){ return '<span class="cbadge gr">'+x.t+' · '+CX.util.comma(x.sh)+'주</span>'; }
   function stBadge(x){
     if(qt==='q') return x.st==='미답변'?'<span class="mbadge wait"><span class="d"></span>미답변</span>':'<span class="mbadge done"><span class="d"></span>답변완료</span>';
-    var c=x.st==='대기'?'prog':(x.st==='반려'?'rej':'done');
+    /* 발언 — 대기는 회색, 완료는 블루, 반려는 흐리게 */
+    var c=x.st==='대기'?'wait':(x.st==='반려'?'dim':'done');
     return '<span class="mbadge '+c+'"><span class="d"></span>'+x.st+'</span>';
   }
   function answerHTML(x){
@@ -1273,8 +1275,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       else if(x.id===selId) extra=(x.st==='완료'&&x.a)?answerView(x):answerHTML(x);
     }
     var sel=on;
-    var badges='<span class="cbadge ag">'+agL(x)+'</span><span class="cbadge gr">'+x.t+'</span><span class="cbadge gr">'+sn(x)+'</span>'
-      +(qt==='s'&&x.kind==='수정동의'?'<span class="cbadge amend">수정동의</span>':'');
+    var badges=shBadge(x);
     var priv=x.pub?'':'<span class="mbadge plain">비공개</span>';
     return '<div class="mcard'+(qt==='q'?' click':'')+(sel?' sel':'')+'" data-id="'+x.id+'">'
       +'<div class="mc-h"><span class="mc-nm">'+x.name+'</span><span class="mc-st">'+priv+stBadge(x)+'</span></div>'
@@ -1308,7 +1309,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   }
   function spCardHTML(x){
     var sel=(x.id===selId);
-    var badges='<span class="cbadge ag">'+agL(x)+'</span>'+(x.kind==='수정동의'?'<span class="cbadge amend">수정동의</span>':'<span class="cbadge gr">발언</span>')+'<span class="cbadge gr">'+sn(x)+'</span>';
+    var badges=(x.kind==='수정동의'?'<span class="cbadge amend">수정동의</span>':'')+shBadge(x);
     var reject=(sel&&x.st==='대기')?'<div class="mc-btns"><button class="mc-btn reject" data-reject type="button">반려</button></div>':'';
     return '<div class="mcard sp-click'+(sel?' sel':'')+'" data-id="'+x.id+'">'
       +'<div class="mc-h"><span class="mc-nm">'+x.name+'</span><span class="mc-st">'+stBadge(x)+'</span></div>'
@@ -1316,8 +1317,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       +'<div class="mc-q">'+esc(x.r)+'</div>'
       +metaRow(x)+reject+'</div>';
   }
+  var QF_LABEL={q:['전체','미답변','답변완료'], s:['전체','대기','완료']};
+  function fillQf(){
+    var L=QF_LABEL[qt]||QF_LABEL.q;
+    document.querySelectorAll('.seg2 button[data-qf]').forEach(function(b,i){ b.textContent=L[i]; });
+  }
   function render(){
-    fillAgSel();
+    fillAgSel(); fillQf();
     var host=document.getElementById('chatList');
     if(qt==='q'){ host.innerHTML=list().map(cardHTML).join('')||'<div class="mc-q" style="padding:12px;color:#737373">항목이 없습니다.</div>'; }
     else { host.innerHTML=spControls()+(spList().map(spCardHTML).join('')||'<div class="mc-q" style="padding:12px;color:#737373">항목이 없습니다.</div>'); }
