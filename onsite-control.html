@@ -364,7 +364,7 @@
     padding:0;cursor:pointer;opacity:.7;color:#171717}
   .hostdlg-b{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:16px;padding:0 16px 8px}
   .hostdlg-f{flex:none;display:flex;align-items:center;gap:8px;padding:12px 16px 16px}
-  .hostdlg-f .chk{flex:1;display:flex;align-items:center;gap:8px;font-size:14px;color:#0A0A0A;cursor:pointer}
+  .hostdlg-f .hagree{flex:1;display:flex;align-items:center;gap:8px;font-size:14px;color:#0A0A0A;cursor:pointer}
   .hbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 10px;
     border:1px solid var(--border);border-radius:10px;background:#fff;font-family:inherit;font-size:14px;
     font-weight:500;letter-spacing:inherit;color:#0A0A0A;cursor:pointer;white-space:nowrap}
@@ -469,7 +469,7 @@
   .mc-ans .lb{font-size:14px;font-weight:500;color:#0A0A0A}
   .mc-chips{display:flex;flex-wrap:wrap;gap:6px}
   .mc-chip{padding:6px 10px;border:1px solid var(--border);border-radius:9999px;background:#fff;font-size:12px;font-weight:500;color:#0A0A0A;cursor:pointer}
-  .mc-ta{width:100%;box-sizing:border-box;min-height:64px;padding:12px;background:#FAFAFA;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px;color:#171717;resize:vertical}
+  .mc-ta{width:100%;box-sizing:border-box;min-height:64px;padding:8px 10px;background:transparent;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px;line-height:20px;letter-spacing:inherit;color:#171717;outline:none;resize:none}
   .mc-btns{display:flex;justify-content:flex-end;gap:8px}
   .mc-btn{display:inline-flex;align-items:center;justify-content:center;gap:4px;height:28px;padding:8px 10px;
     border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;
@@ -644,7 +644,7 @@
   .stt .d{width:6px;height:6px;border-radius:50%}
   .stt.ready{color:#525252}.stt.ready .d{background:#525252}
   .stt.vote{color:#0071F3}.stt.vote .d{background:#0071F3}
-  .stt.count{color:#E11D48}.stt.count .d{background:#E11D48}
+  .stt.count{color:#EA580C}.stt.count .d{background:#EA580C}
   .rst{display:inline-flex;align-items:center;height:20px;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600;white-space:nowrap;flex:none}
   .rst.pass{background:#EEF5FF;color:#0071F3}
   .rst.fail{background:#FEE2E2;color:#DC2626}
@@ -664,6 +664,17 @@
   .ctrlbar.default{background:linear-gradient(270deg,#FFFFFF 0%,#FAFAFA 100%)}
   .ctrlbar.ready{background:#fff}
   .ctrlbar.vote{background:linear-gradient(270deg,#FFFFFF 0%,#EEF5FF 100%)}
+  /* 투표 종료 직후 집계 대기 */
+  .ctrlbar.loading{background:linear-gradient(270deg,#FFFFFF 0%,#EEF5FF 100%)}
+  .ctrlbar .ldspin{width:24px;height:24px;flex:none;fill:none;stroke:#0071F3;stroke-width:1.5;
+    stroke-linecap:round;animation:vqspin 1s linear infinite}
+  .ctrlbar .ldtx{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+  .ctrlbar .ldtx b{font-size:12px;font-weight:600;line-height:1;color:#0A0A0A}
+  .ctrlbar .ldtx span{font-size:10px;font-weight:400;line-height:1;color:#737373}
+  .ctrlbar .ldbtns{display:flex;justify-content:flex-end;align-items:center;gap:8px;flex:none}
+  .ctrlbar .ldbtns .iabtn{opacity:.5;pointer-events:none}
+  .iabtn .btnspin{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;
+    stroke-linecap:round;animation:vqspin 1s linear infinite}
   .ctrlbar.agg{background:linear-gradient(270deg,#FFFFFF 0%,#FEF5E7 100%)}
   .ctrlbar.finish{background:linear-gradient(270deg,#FFFFFF 0%,#FAFAFA 100%)}
   .cst{display:inline-flex;align-items:center;gap:4px;height:20px;padding:2px 6px;border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;flex:none}
@@ -947,7 +958,7 @@
       <div class="hlist" id="hostList"></div>
     </div>
     <div class="hostdlg-f">
-      <label class="chk" id="hostAgree"><span class="hchk"><svg viewBox="0 0 24 24"><path d="m5 13 4 4 10-10"/></svg></span>위 내용을 확인했으며, 권한을 저장합니다.</label>
+      <label class="hagree" id="hostAgree"><span class="hchk"><svg viewBox="0 0 24 24"><path d="m5 13 4 4 10-10"/></svg></span>위 내용을 확인했으며, 권한을 저장합니다.</label>
       <button class="hbtn" type="button" id="hostCancel">취소</button>
       <button class="hbtn dark" type="button" id="hostSave" disabled>권한 저장</button>
     </div>
@@ -1075,7 +1086,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     {cls:'ia-fill',name:'결과 확인 중',sub:'출석·미투표 주주',sel:1,timer:1,right:[{t:'투표 재개',c:'play',go:2},{t:'표결 마감',c:'dark',go:4}]},
     {cls:'ia-wait',name:'표결 마감',sub:'출석 · 미투표',selStatic:'기권 처리',timer:1,right:[{t:'',c:'dots'}]}
   ];
-  var OC={agenda:'제1호',stage:0,preEx:false,decided:null,exclTab:null,chanOpen:true,siteN:0,siteW:0};
+  var OC={agenda:'제1호',stage:0,preEx:false,decided:null,exclTab:null,chanOpen:true,siteN:0,siteW:0,loading:false};
   var voteSec=0, ticker=null, autoAdv=null, el=document.getElementById('agStage');
   function selectNextAgenda(){ var tree=document.getElementById('agTree'); if(!tree) return; var nodes=Array.prototype.slice.call(tree.querySelectorAll('.selnode')); var ci=-1; for(var i=0;i<nodes.length;i++){ if(nodes[i].classList.contains('sel')){ci=i;break;} } if(ci>=0 && ci<nodes.length-1){ nodes[ci+1].click(); } }
   function fmt(x){var m=Math.floor(x/60),ss=x%60;return (m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;}
@@ -1088,6 +1099,15 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   };
   function renderStage(){
     if(!el) return;
+    if(OC.loading){                       /* 투표 종료 → 집계 준비 (1초) */
+      el.className='ctrlbar loading';
+      el.innerHTML='<svg class="ldspin" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/></svg>'
+        + '<div class="ldtx"><b>투표 결과를 집계하는 중입니다.</b>'
+        +   '<span>온라인 투표 내역을 빠짐없이 확인하고 있으니 잠시만 기다려 주세요.</span></div>'
+        + '<div class="ldbtns"><button class="iabtn dark" type="button"><svg class="btnspin" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/></svg>집계중</button>'
+        +   '<button class="iabtn red" type="button">투표 종료</button></div>';
+      return;
+    }
     if(autoAdv){ clearTimeout(autoAdv); autoAdv=null; }
     if(OC.stage===4){ if(OC.agenda==='제3호') OC.decided='회사'; autoAdv=setTimeout(selectNextAgenda,1600); }
     var st=STAGES[OC.stage], m=STMETA[OC.stage];
@@ -1102,11 +1122,30 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     r+='</div>';
     el.className='ctrlbar '+m.key;
     el.innerHTML=l+r;
-    el.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click',function(){ OC.stage=+b.getAttribute('data-go'); renderStage(); renderAll(); }); });
+    el.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click',function(){
+      var to=+b.getAttribute('data-go');
+      if(OC.stage===2 && to===3){        /* 집계로 넘어갈 때만 대기 화면을 거친다 */
+        OC.loading=true; renderStage();
+        setTimeout(function(){ OC.loading=false; OC.stage=3; renderStage(); renderAll(); },1000);
+        return;
+      }
+      OC.stage=to; renderStage(); renderAll();
+    }); });
     if(OC.stage===2){ if(!ticker){ ticker=setInterval(function(){ voteSec++; var t=document.getElementById('vTimer'); if(t) t.textContent=fmt(voteSec); bumpSite(); },1000); } }
     else if(ticker){ clearInterval(ticker); ticker=null; }
   }
   function liveFrac(){ return [0,0,0.5,0.85,1][OC.stage]||0; }
+  /* 예상 판정 — 발행주식총수 기준과 출석의결권 기준을 모두 넘어야 가결 예상.
+     하나라도 미달이면 부결 예상. (그래프의 두 기준선과 같은 계산) */
+  function predOf(d){
+    if(!d || d['for']==null) return '가결';
+    var incPre=OC.preEx?0:1, lf=liveFrac(), f=incPre*0.8+0.2*lf;
+    var F=d['for']*f;
+    var present=d['for']+d.against+d.abs, base=OC.preEx?present*0.2:present;
+    var ISSUED=CX.meeting.sharesIssued, special=(d.thrLabel||'').indexOf('2/3')>=0;
+    var iR=special?1/3:1/4, aR=special?2/3:1/2;
+    return (F/ISSUED>=iR && base && F/base>=aR) ? '가결' : '부결';
+  }
   function vizNormal(d){
     var incPre=OC.preEx?0:1, lf=liveFrac(), f=incPre*0.8+0.2*lf;
     var F=d['for']*f;
@@ -1305,7 +1344,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var ct=document.getElementById('cTypes'); if(ct) ct.innerHTML=types.map(function(t,i){ return (i?'<span class="atsep">·</span>':'')+'<span class="tp">'+t+'</span>'; }).join('');
     var single=(d.type!=='집중투표'&&d.type!=='양립불가');
     var cp=document.getElementById('cPred');
-    if(cp){ if(!single){ cp.innerHTML=''; } else { var res=(d.expect&&d.expect.indexOf('부결')>=0)?'부결':'가결'; cp.innerHTML=OC.stage>=4?opinionBadge(res):predBadge(res); } }
+    if(cp){ if(!single){ cp.innerHTML=''; } else { var res=predOf(d); cp.innerHTML=OC.stage>=4?opinionBadge(res):predBadge(res); } }
     var box=document.getElementById('cVizBox');
     if(d.type==='집중투표'){ if(box) box.innerHTML=vizCumul(d); }
     else if(d.type==='양립불가'){ if(box) box.innerHTML=vizExclusive(d); }
@@ -1798,8 +1837,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       var badge = host  ? '<span class="hrole">호스트</span>'
                 : proxy ? '<span class="hrole">호스트 대행</span>'
                 : sub   ? '<span class="hrole">서브 호스트</span>' : '';
-      var radio = (host||!u.online) ? ''
-        : '<span class="hradio'+(proxy?' on':'')+'" data-deleg="'+u.id+'"><span class="r"></span>호스트 위임</span>';
+      /* 위임은 서브 호스트로 지정한 사람에게만 — 대행 중인 본인도 계속 보인다 */
+      var canDeleg=(!host && u.online && (sub||proxy));
+      var radio = canDeleg
+        ? '<span class="hradio'+(proxy?' on':'')+'" data-deleg="'+u.id+'"><span class="r"></span>호스트 위임</span>' : '';
       var subBtn = host ? ''
         : '<button class="hsub'+(sub?' on':'')+'" type="button" data-sub="'+u.id+'"'+(u.online?'':' disabled')+'>'
           + (sub?'지정 해제':PLUS+'서브 호스트') + '</button>';
@@ -1827,7 +1868,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       paint(); return; }
     var b=e.target.closest('[data-sub]');
     if(b&&!b.disabled){ var sid=b.getAttribute('data-sub');
-      draft.forEach(function(u){ if(u.id===sid) u.role=(u.role==='sub')?null:'sub'; });
+      draft.forEach(function(u){ if(u.id===sid) u.role=(u.role===null)?'sub':null; });  /* sub ↔ 해제, 대행이면 같이 풀린다 */
       paint(); }
   });
   agree.addEventListener('click',function(e){
