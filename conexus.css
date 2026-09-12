@@ -705,3 +705,115 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 .mitem .dot.gray{background:#d4d4d4}
 .mitem .mlbl{flex:1}
 .mitem.cur{font-weight:600}
+
+/* ── 관리 페이지(명부 · 결의기준 · 템플릿) 공통 ───────────────────────── */
+.mgscroll{flex:1;min-height:0;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:20px}
+.phead{display:flex;align-items:flex-start;gap:24px}
+.phead .l{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.phead h1{margin:0;font-size:18px;line-height:28px;font-weight:600;color:#0A0A0A}
+.phead .sub{font-size:12px;line-height:16px;letter-spacing:-.01em;color:#737373}
+.phead .acts{display:flex;align-items:center;gap:8px;flex:none}
+.ttl{display:flex;align-items:center;gap:12px}
+/* 버튼 */
+.fbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 10px;border:1px solid #E5E5E5;border-radius:10px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer;white-space:nowrap}
+.fbtn.dark{background:#171717;border-color:#171717;color:#FAFAFA}
+.fbtn.red{border-color:transparent;background:rgba(220,38,38,.1);color:#E9081B}
+.fbtn.sm{height:24px;padding:0 10px;border-radius:8px;font-size:12px}
+.fbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.fbtn[disabled]{opacity:.5;cursor:default}
+.iconb{width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:8px;background:none;cursor:pointer}
+.iconb:hover{background:#F5F5F5}
+.iconb svg{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+/* 표 */
+.fbox{border:1px solid #E5E5E5;border-radius:10px;overflow:hidden;background:#fff}
+.fscroll{overflow:auto}
+.ftbl{width:100%;border-collapse:separate;border-spacing:0;font-size:14px;letter-spacing:-.01em}
+.ftbl th{height:48px;padding:0 16px;background:#F5F5F5;border-bottom:1px solid #E5E5E5;font-weight:500;color:#737373;text-align:left;white-space:nowrap}
+.ftbl td{height:46px;padding:0 16px;border-bottom:1px solid #E5E5E5;color:#0A0A0A;white-space:nowrap}
+.ftbl tbody tr:last-child td{border-bottom:none}
+.ftbl tbody tr:hover td{background:#FAFAFA}
+.ftbl .c{text-align:center}
+.ftbl .r{text-align:right;font-variant-numeric:tabular-nums}
+.ftbl .mut{color:#737373}
+.ftbl .md{font-weight:500}
+.ftbl .acts{display:flex;justify-content:flex-end;align-items:center;gap:8px}
+.flink{background:none;border:none;padding:0;font:inherit;letter-spacing:inherit;font-weight:500;color:#0A0A0A;cursor:pointer}
+.flink:hover{text-decoration:underline}
+/* 상태 뱃지 */
+.sbadge{display:inline-flex;align-items:center;padding:2px 6px;border-radius:6px;background:#F5F5F5;color:#525252;font-size:12px;line-height:16px;font-weight:500;white-space:nowrap}
+.sbadge.b{background:#EEF5FF;color:#0071F3}
+.sbadge.r{background:#FDF4F5;color:#E9081B}
+.sbadge.a{background:#FEF5E7;color:#EA580C}
+.pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:26px;background:#F5F5F5;color:#171717;font-size:12px;line-height:16px;font-weight:500}
+.pill.b{background:#EEF5FF;color:#0071F3}
+/* 페이지네이션 */
+.fpage{display:flex;justify-content:flex-end;align-items:center;gap:16px;height:40px;padding:0 16px;background:#FAFAFA;border-top:1px solid #E5E5E5;font-size:12px;line-height:16px;color:#1F1C18}
+.fpage .cnt{margin-right:auto;color:#1F1C18}
+.fpage .grp{display:flex;align-items:center;gap:8px;flex:none;color:#737373;font-weight:500}
+.fpage select,.fpage input{height:24px;border:1px solid #E5E5E5;border-radius:6px;background:#fff;font-family:inherit;font-size:12px;color:#0A0A0A;padding:0 6px}
+.fpage input{width:24px;text-align:center}
+.fpage .nav{display:flex;flex-direction:row;align-items:center;gap:12px;flex:none}
+.fpage .nav button{border:none;background:none;padding:0;color:#737373;cursor:pointer;display:inline-flex}
+.fpage .nav svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+/* 비어 있는 표 */
+.fempty{display:flex;flex-direction:column;align-items:center;gap:16px;padding:24px;background:rgba(245,245,245,.7);border:1px solid #E5E5E5;border-radius:14px;font-size:14px;color:#737373}
+/* 안내 */
+.falert{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:#F5F9FF;border:1px solid #D4E8FF;border-radius:10px;font-size:12px;line-height:16px;letter-spacing:-.01em;color:#0071F3}
+.falert svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.33;stroke-linecap:round}
+.falert b{display:block;font-weight:700}
+/* 입력 */
+.ffield{display:flex;flex-direction:column;gap:8px}
+.ffield .lb{font-size:14px;line-height:20px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A}
+.finp,.fsel{box-sizing:border-box;width:100%;height:32px;padding:0 10px;border:1px solid #E5E5E5;border-radius:10px;background:#fff;font-family:inherit;font-size:14px;letter-spacing:-.01em;color:#0A0A0A}
+.fta{box-sizing:border-box;width:100%;min-height:120px;padding:8px 10px;border:1px solid #E5E5E5;border-radius:10px;background:#fff;font-family:inherit;font-size:14px;line-height:20px;letter-spacing:-.01em;color:#171717;resize:vertical}
+.fnum{box-sizing:border-box;width:80px;height:32px;padding:0 10px;border:1px solid #E5E5E5;border-radius:10px;background:#fff;font-family:inherit;font-size:14px;text-align:center;color:#0A0A0A}
+/* 라디오 카드 */
+.fradio{display:flex;flex-direction:column;gap:8px}
+.fradio label{display:flex;align-items:flex-start;gap:8px;padding:10px 10px 8px;border:1px solid #E5E5E5;border-radius:10px;cursor:pointer}
+.fradio label.on{border-color:transparent;background:rgba(23,23,23,.05)}
+.fradio .dot{width:16px;height:16px;flex:none;border:1px solid #E5E5E5;border-radius:9999px;background:#fff;position:relative}
+.fradio label.on .dot{border-color:#171717;background:#171717}
+.fradio label.on .dot::after{content:'';position:absolute;inset:4px;border-radius:9999px;background:#FAFAFA}
+.fradio .tx{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fradio .tx b{font-size:14px;line-height:14px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A}
+.fradio .tx span{font-size:12px;line-height:16px;letter-spacing:-.01em;color:#737373}
+/* 체크 */
+.fchk{display:inline-flex;align-items:center;gap:8px;font-size:14px;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer}
+.fchk .bx{width:16px;height:16px;flex:none;border:1px solid #E5E5E5;border-radius:4px;background:#fff;display:inline-flex;align-items:center;justify-content:center;color:#FAFAFA}
+.fchk.on .bx{background:#171717;border-color:#171717}
+.fchk .bx svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;display:none}
+.fchk.on .bx svg{display:block}
+/* 우측 시트 */
+.rsheet{position:fixed;inset:0;background:rgba(0,0,0,.2);display:none;justify-content:flex-end;z-index:1200}
+.rsheet.on{display:flex}
+.rsheet-in{box-sizing:border-box;width:500px;max-width:100%;height:100%;display:flex;flex-direction:column;gap:16px;padding:16px;background:#fff;border-left:1px solid #E5E5E5;box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);position:relative}
+.rsheet-h{display:flex;flex-direction:column;gap:2px}
+.rsheet-h .tt{font-size:16px;line-height:24px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A}
+.rsheet-h .ds{font-size:12px;line-height:16px;letter-spacing:-.01em;color:#737373}
+.rsheet-b{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:24px}
+.rsheet-f{display:flex;flex-direction:column;gap:12px}
+.rsheet-f .row{display:flex;gap:8px}
+.rsheet-f .row .fbtn{flex:1}
+.rsheet-f .last{font-size:12px;line-height:16px;text-align:center;color:#737373}
+.rsheet-x{position:absolute;right:16px;top:16px;width:16px;height:16px;border:none;background:none;padding:0;opacity:.7;cursor:pointer}
+.rsheet-x svg{width:16px;height:16px;fill:none;stroke:#171717;stroke-width:2;stroke-linecap:round}
+/* 회색 상자 */
+.fpanel{display:flex;flex-direction:column;gap:12px;padding:12px;background:#FAFAFA;border-radius:10px}
+.frow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14px;letter-spacing:-.01em;color:#0A0A0A}
+.frow .hl{font-weight:700;color:#0071F3}
+.fdiv{height:0;border-top:1px solid #E5E5E5}
+/* 빠른 메뉴가 링크가 되면서 필요한 것들 */
+.qitem{text-decoration:none;cursor:pointer}
+.qitem.cur,.railbtn.cur{background:var(--muted);color:var(--fg)}
+/* 확인 팝업 — 현장 제어에만 있던 것을 관리 페이지에서도 쓴다 */
+.ovl{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:1300;padding:16px}
+.ovl.on{display:flex}
+.adlg{box-sizing:border-box;width:320px;max-width:320px;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;display:flex;flex-direction:column;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.adlg-h{display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 8px}
+.adlg-ic{width:40px;height:40px;border-radius:8px;background:#FDE7E9;display:flex;align-items:center;justify-content:center;flex:none}
+.adlg-ic svg{width:24px;height:24px;fill:none;stroke:#E9081B;stroke-width:1.5;stroke-linecap:round}
+.adlg-t{font-size:16px;font-weight:600;line-height:24px;letter-spacing:-.01em;text-align:center;color:#0A0A0A}
+.adlg-d{font-size:14px;line-height:20px;letter-spacing:-.01em;text-align:center;color:#737373}
+.adlg-f{display:flex;align-items:center;gap:8px;padding:12px 16px 16px}
+.adlg-f button{flex:1;height:32px;border:1px solid #E5E5E5;border-radius:10px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer}
+.adlg-f button.danger{border-color:transparent;background:rgba(220,38,38,.1);color:#E9081B}

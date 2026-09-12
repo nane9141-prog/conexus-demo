@@ -3,38 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CONEXUS · 주주 FAQ</title>
+<title>CONEXUS · 결의기준 설정</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 <link rel="stylesheet" href="conexus.css">
 <style>
-  /* page-local content helpers (LNB styling comes from conexus.css) */
-  .scroll{flex:1;overflow-y:auto}
-  .ic{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .tbl-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
-  table.tbl{width:100%;border-collapse:collapse;font-size:14px}
-  table.tbl th{background:#fafafa;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap}
-  table.tbl td{padding:12px 14px;border-bottom:1px solid #f0f0f0;color:#0a0a0a}
-  table.tbl tr:last-child td{border-bottom:none}
-  table.tbl tr:hover td{background:#fafafa}
-  .badge{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:9999px;font-size:12px;font-weight:600}
-  .badge.green{background:#eafaf0;color:#0a8a3c}
-  .badge.gray{background:var(--muted);color:var(--muted-fg)}
-  .badge.blue{background:var(--blue100);color:var(--blue700)}
-  .badge.red{background:var(--red50);color:var(--red600)}
-  .badge.amber{background:#fef6e7;color:#b45309}
-  .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-  .search{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;min-width:240px}
-  .search input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
-  .search .ic{width:16px;height:16px;color:var(--muted-fg)}
-  .page-title{font-size:20px;font-weight:600;color:#0a0a0a}
-  .page-sub{font-size:13px;color:var(--muted-fg);margin-top:4px}
-  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-  .stat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px}
-  .stat .k{font-size:12px;color:var(--muted-fg);font-weight:500}
-  .stat .v{font-size:24px;font-weight:600;color:#0a0a0a;margin-top:6px}
-  .stat .d{font-size:12px;margin-top:4px}
-  .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
-  @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
+
+  .rsnum{display:flex;align-items:center;gap:8px}
+  .rsnum .sep{width:72px;height:0;border-top:1px solid #0A0A0A}
+  .rsnum .col{display:flex;flex-direction:column;align-items:center;gap:8px}
+  .rschip{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 </style>
 <script src="cx-data.js"></script>
 </head>
@@ -47,7 +24,7 @@
         <div class="lnb-org">카카오뱅크</div>
         <div class="lnb-quick">
           <a class="qitem" href="roster-manage.html"><i class="ph ph-address-book" style="font-size:18px"></i>명부관리</a>
-          <a class="qitem" href="resolution-standard.html"><i class="ph ph-flag" style="font-size:18px"></i>결의기준</a>
+          <a class="qitem cur" href="resolution-standard.html"><i class="ph ph-flag" style="font-size:18px"></i>결의기준</a>
           <a class="qitem" href="template-manage.html"><i class="ph ph-grid-four" style="font-size:18px"></i>템플릿</a>
         </div>
       </div>
@@ -77,7 +54,7 @@
       <div class="lnb-rail col-only">
         <a href="dashboard.html" class="railbtn" title="대시보드"><i class="ph ph-house" style="font-size:18px"></i></a>
         <a class="railbtn" href="roster-manage.html" title="명부관리"><i class="ph ph-address-book" style="font-size:18px"></i></a>
-        <a class="railbtn" href="resolution-standard.html" title="결의기준"><i class="ph ph-flag" style="font-size:18px"></i></a>
+        <a class="railbtn cur" href="resolution-standard.html" title="결의기준"><i class="ph ph-flag" style="font-size:18px"></i></a>
         <a class="railbtn" href="template-manage.html" title="템플릿"><i class="ph ph-grid-four" style="font-size:18px"></i></a>
       </div>
       <div class="lnb-tabs exp-only">
@@ -91,12 +68,12 @@
 
     <div class="lnb-content show exp-only" data-tabpanel="set">
       <div class="grp"><div class="grp-label">주주총회 설정</div><div class="nav">
-        <a class="nav-item" href="shareholders.html">주주명부 확정</a>
+        <a class="nav-item active" href="shareholders.html">주주명부 확정</a>
         <a class="nav-item" href="meeting-settings.html">주주총회 설정</a>
         <a class="nav-item" href="voting-restriction.html">의결권제한 설정</a>
       </div></div>
       <div class="grp"><div class="grp-label">의결권 대행 권유 설정</div><div class="nav">
-        <a class="nav-item active" href="proxy-basic.html">의결권 대행 권유 설정</a>
+        <a class="nav-item" href="proxy-basic.html">의결권 대행 권유 설정</a>
       </div></div>
     </div>
 
@@ -135,71 +112,222 @@
       <div class="left">
         <button class="iconbtn sm" id="toggleLnb" title="사이드바"><i class="ph ph-sidebar-simple" style="font-size:16px"></i></button>
         <span class="vsep"></span>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="crumb">주주 FAQ</span>
-        </div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="crumb">결의기준 설정</span></div>
       </div>
       <button class="iconbtn md" title="변경이력"><i class="ph ph-clock-counter-clockwise" style="font-size:16px"></i></button>
     </div>
-    <div class="scroll">
-      <div class="content" style="width:100%">
-        <div class="st-head"><div><div class="page-title">주주 FAQ</div><div class="page-sub">주주용 사이트에 노출할 자주 묻는 질문을 관리합니다.</div></div></div>
-        <div class="ag-empty" style="min-height:440px">
-          <svg viewBox="0 0 24 24" class="ic"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-          <div class="e1">준비 중인 화면입니다.</div>
-          <div class="e2">이 메뉴는 곧 제공될 예정입니다.</div>
+    <div class="mgscroll">
+      <div class="phead">
+        <div class="l"><h1>결의기준 설정</h1>
+          <div class="sub">등록된 결의 기준 설정은 주주총회 생성 시 자동 적용됩니다. 결의기준은 주주총회 당일 등록이 불가합니다.</div></div>
+        <div class="acts"><button class="fbtn dark" type="button" id="rsAdd">기준 등록</button></div>
+      </div>
+
+      <div class="fbox">
+        <div class="fscroll"><table class="ftbl" id="rsTbl"><thead><tr>
+          <th class="c" style="width:80px">구분</th>
+          <th class="c" style="width:96px">적용조건</th>
+          <th class="c" style="width:72px">결의방법</th>
+          <th style="min-width:265px">의안 종류</th>
+          <th style="min-width:230px">가결 조건</th>
+          <th class="c" style="width:110px">의결정족수</th>
+          <th class="c" style="width:110px">적용일</th>
+          <th class="c" style="width:143px">최종 수정</th>
+          <th style="width:64px"></th>
+        </tr></thead><tbody id="rsBody"></tbody></table></div>
+        <div class="fpage"><span class="cnt" id="rsCnt"></span>
+          <span class="grp">페이지당 <select><option>15</option><option>30</option></select></span>
+          <span class="nav"><button type="button"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+            <input value="1"><span>/ 1</span>
+            <button type="button"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button></span>
+        </div>
+      </div>
+
+      <!-- 등록 · 수정 시트 -->
+      <div class="rsheet" id="rsSheet">
+        <div class="rsheet-in">
+          <button class="rsheet-x" type="button" data-sclose><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          <div class="rsheet-h"><div class="tt" id="rsTt">결의기준 등록</div>
+            <div class="ds">의안 종류별로 가결 조건과 의결정족수를 정해 둡니다.</div></div>
+          <div class="rsheet-b">
+            <div class="ffield"><div class="lb">대상의안*</div>
+              <select class="fsel" id="rsAg"></select></div>
+
+            <div class="ffield"><div class="lb">적용조건*</div>
+              <div class="fradio" id="rsCond">
+                <label data-v="normal"><span class="dot"></span><span class="tx"><b>보통결의</b>
+                  <span>출석 의결권의 과반수와 발행주식총수의 1/4 이상</span></span></label>
+                <label data-v="special"><span class="dot"></span><span class="tx"><b>특별결의</b>
+                  <span>출석 의결권의 2/3 이상과 발행주식총수의 1/3 이상</span></span></label>
+                <label data-v="cum" class="on"><span class="dot"></span><span class="tx"><b>집중투표</b>
+                  <span>1주당 선임 예정 이사 수만큼 의결권을 부여해 다득표 순으로 선임</span></span></label>
+              </div></div>
+
+            <div class="ffield"><div class="lb">상세설정*</div>
+              <div style="display:flex;align-items:center;gap:20px">
+                <span style="font-size:14px;font-weight:500;color:#737373">현행 결의기준으로 적용</span>
+                <label class="fchk on" data-ck id="rsStd"><span class="bx"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>상법 기준</label>
+              </div>
+              <div class="fpanel">
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div class="lb">의결정족수 구분</div>
+                  <div class="frow"><span style="width:84px">출석 의결권</span>
+                    <span class="rsnum"><span class="col"><input class="fnum" id="rsQa" value="1"><span class="sep"></span><input class="fnum" id="rsQb" value="4"></span></span>
+                    <select class="fsel" id="rsQbase" style="width:110px"><option>이상</option><option>초과</option></select></div>
+                </div>
+                <div class="fdiv"></div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div class="lb">가결 조건</div>
+                  <div class="frow"><span style="width:84px">발행주식총수</span>
+                    <span class="rsnum"><span class="col"><input class="fnum" id="rsPa" value="1"><span class="sep"></span><input class="fnum" id="rsPb" value="2"></span></span>
+                    <select class="fsel" id="rsPbase" style="width:110px"><option>초과</option><option>이상</option></select></div>
+                </div>
+              </div>
+              <div class="falert"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>
+                <span><b id="rsHintT">가결 조건</b><span id="rsHint"></span></span></div>
+            </div>
+
+            <div class="ffield"><div class="lb">적용일</div>
+              <input class="finp" id="rsDate" type="date" value="2026-01-02"></div>
+          </div>
+          <div class="rsheet-f">
+            <div class="row"><button class="fbtn" type="button" data-sclose>취소</button>
+              <button class="fbtn dark" type="button" id="rsSave">저장</button></div>
+            <div class="last" id="rsLast">마지막 수정 2026-01-02 15:58 · 강하나</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 삭제 확인 -->
+      <div class="ovl" id="rsDelOvl">
+        <div class="adlg">
+          <div class="adlg-h">
+            <div class="adlg-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg></div>
+            <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+              <div class="adlg-t">결의기준을 삭제하시겠습니까?</div>
+              <div class="adlg-d" id="rsDelD">삭제하면 이후 생성되는 주주총회에는 이 기준이 적용되지 않습니다.</div>
+            </div>
+          </div>
+          <div class="adlg-f"><button type="button" id="rsDelNo">취소</button>
+            <button type="button" class="danger" id="rsDelYes">삭제</button></div>
         </div>
       </div>
     </div>
   </main>
 </div>
 <script>
-  // LNB tab switching (설정/사전/당일)
-  document.querySelectorAll('.lnb-tabs .t').forEach(function(t){
-    t.addEventListener('click',function(){
-      var tab=t.dataset.tab; if(!tab) return;
-      document.querySelectorAll('.lnb-tabs .t').forEach(function(x){x.classList.toggle('active',x===t);});
-      document.querySelectorAll('.lnb-content[data-tabpanel]').forEach(function(p){p.classList.toggle('show',p.dataset.tabpanel===tab);});
-    });
+/* 결의기준 설정 — 의안 종류별 가결 조건을 등록해 둔다. */
+(function () {
+  var METHOD = { normal: '보통결의', special: '특별결의', cum: '집중투표' };
+  var COND = {
+    normal: { q: [1, 4], qb: '이상', p: [1, 2], pb: '초과',
+      hint: '출석한 주주 의결권의 과반수와 발행주식총수의 1/4 이상 찬성으로 가결됩니다.' },
+    special: { q: [1, 3], qb: '이상', p: [2, 3], pb: '이상',
+      hint: '출석한 주주 의결권의 2/3 이상과 발행주식총수의 1/3 이상 찬성으로 가결됩니다.' },
+    cum: { q: [1, 4], qb: '이상', p: [1, 2], pb: '초과',
+      hint: '1주당 선임 예정 이사 수만큼 의결권이 부여되고, 다득표 순으로 선임 인원만큼 선임됩니다.' }
+  };
+
+  var ROWS = [
+    { id: 1, base: 1, on: '전체 총회', m: 'normal', ag: '재무제표 승인의 건', pass: '출석 과반수 · 발행 1/4 이상', q: '보통결의', d: '2026-01-02', by: '강하나' },
+    { id: 2, base: 1, on: '전체 총회', m: 'special', ag: '정관 일부 변경의 건', pass: '출석 2/3 이상 · 발행 1/3 이상', q: '특별결의', d: '2026-01-02', by: '강하나' },
+    { id: 3, base: 1, on: '전체 총회', m: 'normal', ag: '이사 보수한도 승인의 건', pass: '출석 과반수 · 발행 1/4 이상', q: '보통결의', d: '2026-01-02', by: '강하나' },
+    { id: 4, base: 0, on: '정기 총회', m: 'cum', ag: '사외이사 선임의 건(집중투표)', pass: '후보별 득표 다득표 순', q: '집중투표', d: '2025-12-18', by: '박지용' },
+    { id: 5, base: 0, on: '임시 총회', m: 'special', ag: '합병 계약서 승인의 건', pass: '출석 2/3 이상 · 발행 1/3 이상', q: '특별결의', d: '2025-11-05', by: '이수민' }
+  ];
+  var AGENDAS = ['재무제표 승인의 건', '정관 일부 변경의 건', '이사 보수한도 승인의 건',
+    '사외이사 선임의 건(집중투표)', '감사위원회 위원 선임의 건', '합병 계약서 승인의 건',
+    '영업 양수도 승인의 건', '주식매수선택권 부여의 건', '기타 안건'];
+
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function $(id) { return document.getElementById(id); }
+
+  function draw() {
+    $('rsBody').innerHTML = ROWS.map(function (r) {
+      return '<tr><td class="c"><span class="sbadge' + (r.base ? ' b' : '') + '">' + (r.base ? '기본' : '추가') + '</span></td>'
+        + '<td class="c"><span class="sbadge">' + r.on + '</span></td>'
+        + '<td class="c mut">' + METHOD[r.m] + '</td>'
+        + '<td class="md">' + esc(r.ag) + '</td>'
+        + '<td class="mut">' + esc(r.pass) + '</td>'
+        + '<td class="c mut">' + r.q + '</td>'
+        + '<td class="c mut">' + r.d + '</td>'
+        + '<td class="c mut">' + r.d + ' · ' + r.by + '</td>'
+        + '<td><span class="acts">'
+        + '<button class="iconb" type="button" title="수정" data-edit="' + r.id + '"><svg viewBox="0 0 24 24"><path d="M4 20h4l10-10-4-4L4 16v4z"/><path d="m14 6 4 4"/></svg></button>'
+        + '<button class="iconb" type="button" title="삭제" data-del="' + r.id + '"><svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/></svg></button>'
+        + '</span></td></tr>';
+    }).join('');
+    $('rsCnt').textContent = '총 ' + ROWS.length + '건 · 기본 기준 ' + ROWS.filter(function (r) { return r.base; }).length + '건';
+  }
+
+  /* 시트 */
+  var sheet = $("rsSheet"), editing = null;
+  $('rsAg').innerHTML = AGENDAS.map(function (a) { return '<option>' + esc(a) + '</option>'; }).join('');
+
+  function setCond(v) {
+    var c = COND[v]; if (!c) return;
+    $('rsCond').querySelectorAll('label').forEach(function (l) { l.classList.toggle('on', l.getAttribute('data-v') === v); });
+    $('rsQa').value = c.q[0]; $('rsQb').value = c.q[1]; $('rsQbase').value = c.qb;
+    $('rsPa').value = c.p[0]; $('rsPb').value = c.p[1]; $('rsPbase').value = c.pb;
+    $('rsHint').textContent = c.hint;
+  }
+  $('rsCond').addEventListener('click', function (e) {
+    var l = e.target.closest('label'); if (l) setCond(l.getAttribute('data-v'));
   });
-  // sidebar collapse
-  var tg=document.getElementById('toggleLnb');
-  if(tg){tg.addEventListener('click',function(){document.getElementById('app').classList.toggle('collapsed');});}
-  // meeting dropdown (shadcn-style)
-  (function(){
-    var mt=document.getElementById('mtrigger'), mp=document.getElementById('mpop'), ml=document.getElementById('mlist'), mc=document.getElementById('mcurrent');
-    if(!mt||!mp) return;
-    if(ml&&!ml.children.length){
-      ['제10기 정기주주총회','제9기 정기주주총회','제8기 정기주주총회'].forEach(function(t,i){
-        var b=document.createElement('button'); b.className='mitem'+(i===0?' cur':'');
-        b.innerHTML='<span class="dot'+(i===0?'':' gray')+'"></span><span class="mlbl">'+t+'</span>';
-        b.addEventListener('click',function(ev){ev.stopPropagation(); if(mc)mc.textContent=t; ml.querySelectorAll('.mitem').forEach(function(x){x.classList.remove('cur');}); b.classList.add('cur'); mp.classList.add('hidden');});
-        ml.appendChild(b);
-      });
+
+  function openSheet(r) {
+    editing = r || null;
+    $('rsTt').textContent = r ? '결의기준 수정' : '결의기준 등록';
+    $('rsAg').value = r ? r.ag : AGENDAS[0];
+    setCond(r ? r.m : 'normal');
+    $('rsDate').value = r ? r.d : '2026-01-02';
+    $('rsLast').textContent = r ? ('마지막 수정 ' + r.d + ' 15:58 · ' + r.by) : '아직 저장한 적이 없습니다.';
+    sheet.classList.add('on');
+  }
+  function closeSheet() { sheet.classList.remove('on'); }
+
+  $('rsAdd').addEventListener('click', function () { openSheet(null); });
+  sheet.addEventListener('click', function (e) {
+    if (e.target === sheet || e.target.closest('[data-sclose]')) closeSheet();
+  });
+  $('rsSave').addEventListener('click', function () {
+    var v = $('rsCond').querySelector('label.on').getAttribute('data-v');
+    var pass = $('rsPa').value + '/' + $('rsPb').value + ' ' + $('rsPbase').value
+      + ' · 발행 ' + $('rsQa').value + '/' + $('rsQb').value + ' ' + $('rsQbase').value;
+    if (editing) { editing.ag = $('rsAg').value; editing.m = v; editing.q = METHOD[v]; editing.pass = pass; editing.d = $('rsDate').value; }
+    else {
+      ROWS.push({ id: Date.now(), base: 0, on: '전체 총회', m: v, ag: $('rsAg').value,
+        pass: pass, q: METHOD[v], d: $('rsDate').value, by: '강하나' });
     }
-    mt.addEventListener('click',function(e){e.stopPropagation(); mp.classList.toggle('hidden');});
-    document.addEventListener('click',function(){mp.classList.add('hidden');});
-    mp.addEventListener('click',function(e){e.stopPropagation();});
-  })();
-  // settings tab switching (in-page st-nav)
-  document.querySelectorAll('.st-nav').forEach(function(nav){
-    nav.querySelectorAll('.st-item').forEach(function(item){
-      item.addEventListener('click',function(){
-        var tab=item.dataset.tab;
-        nav.querySelectorAll('.st-item').forEach(function(i){i.classList.toggle('active',i===item);});
-        var body=nav.parentElement.querySelector('.st-body')||document;
-        body.querySelectorAll('.st-tab').forEach(function(p){p.classList.toggle('active',p.dataset.panel===tab);});
-      });
-    });
+    draw(); closeSheet();
   });
-  // toggles + subtabs
-  document.addEventListener('click',function(e){
-    var sw=e.target.closest('[data-sw]'); if(sw){sw.classList.toggle('on');}
-    var cb=e.target.closest('[data-cbx]'); if(cb){cb.classList.toggle('on');}
-    var rd=e.target.closest('[data-rad]'); if(rd){var g=rd.closest('[data-radgrp]')||rd.parentElement;g.querySelectorAll('[data-rad]').forEach(function(r){r.classList.toggle('on',r===rd);});}
-    var cr=e.target.closest('.chk-row'); if(cr){cr.classList.toggle('on');}
-    var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
+
+  /* 삭제 */
+  var delOvl = $('rsDelOvl'), pend = null;
+  $('rsTbl').addEventListener('click', function (e) {
+    var ed = e.target.closest('[data-edit]');
+    if (ed) { openSheet(ROWS.filter(function (r) { return r.id === +ed.getAttribute('data-edit'); })[0]); return; }
+    var dl = e.target.closest('[data-del]');
+    if (!dl) return;
+    pend = ROWS.filter(function (r) { return r.id === +dl.getAttribute('data-del'); })[0];
+    $('rsDelD').textContent = pend && pend.base
+      ? '상법상 기본 기준은 삭제할 수 없습니다. 값을 바꾸려면 수정을 이용하세요.'
+      : '삭제하면 이후 생성되는 주주총회에는 이 기준이 적용되지 않습니다.';
+    $('rsDelYes').style.display = (pend && pend.base) ? 'none' : '';
+    delOvl.classList.add('on');
   });
+  $('rsDelNo').addEventListener('click', function () { delOvl.classList.remove('on'); });
+  $('rsDelYes').addEventListener('click', function () {
+    ROWS = ROWS.filter(function (r) { return r !== pend; });
+    draw(); delOvl.classList.remove('on');
+  });
+  delOvl.addEventListener('click', function (e) { if (e.target === delOvl) delOvl.classList.remove('on'); });
+  document.addEventListener('click', function (e) {
+    var ck = e.target.closest('[data-ck]'); if (ck) { e.preventDefault(); ck.classList.toggle('on'); }
+  });
+
+  draw();
+})();
 </script>
 <script src="conexus.js"></script>
 </body>

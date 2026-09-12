@@ -3,38 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CONEXUS · 주주 FAQ</title>
+<title>CONEXUS · 주주명부 관리</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 <link rel="stylesheet" href="conexus.css">
 <style>
-  /* page-local content helpers (LNB styling comes from conexus.css) */
-  .scroll{flex:1;overflow-y:auto}
-  .ic{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .tbl-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
-  table.tbl{width:100%;border-collapse:collapse;font-size:14px}
-  table.tbl th{background:#fafafa;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap}
-  table.tbl td{padding:12px 14px;border-bottom:1px solid #f0f0f0;color:#0a0a0a}
-  table.tbl tr:last-child td{border-bottom:none}
-  table.tbl tr:hover td{background:#fafafa}
-  .badge{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:9999px;font-size:12px;font-weight:600}
-  .badge.green{background:#eafaf0;color:#0a8a3c}
-  .badge.gray{background:var(--muted);color:var(--muted-fg)}
-  .badge.blue{background:var(--blue100);color:var(--blue700)}
-  .badge.red{background:var(--red50);color:var(--red600)}
-  .badge.amber{background:#fef6e7;color:#b45309}
-  .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-  .search{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;min-width:240px}
-  .search input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
-  .search .ic{width:16px;height:16px;color:var(--muted-fg)}
-  .page-title{font-size:20px;font-weight:600;color:#0a0a0a}
-  .page-sub{font-size:13px;color:var(--muted-fg);margin-top:4px}
-  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-  .stat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px}
-  .stat .k{font-size:12px;color:var(--muted-fg);font-weight:500}
-  .stat .v{font-size:24px;font-weight:600;color:#0a0a0a;margin-top:6px}
-  .stat .d{font-size:12px;margin-top:4px}
-  .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
-  @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
+
+  .rmcards{display:flex;align-items:stretch;gap:12px}
+  .rmsum{flex:1;min-width:0;display:flex;background:#FAFAFA;border:1px solid #E5E5E5;border-radius:14px}
+  .rmsum .cell{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:8px;padding:20px 16px}
+  .rmsum .cell+.cell{border-left:1px solid #E5E5E5}
+  .rmsum .k{display:flex;align-items:center;gap:8px;font-size:14px;line-height:20px;font-weight:500;letter-spacing:-.01em;color:#737373}
+  .rmsum .k .sp{margin-left:auto}
+  .rmsum .v{font-size:18px;line-height:28px;font-weight:700;color:#0A0A0A;text-align:right;font-variant-numeric:tabular-nums}
+  .rmlink{box-sizing:border-box;width:400px;flex:none;display:flex;flex-direction:column;gap:8px;padding:16px;background:#FAFAFA;border:1px solid #E5E5E5;border-radius:14px}
+  .rmlink .h{display:flex;align-items:center;gap:8px;font-size:14px;line-height:20px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A}
+  .rmlink .b{display:flex;align-items:center;gap:8px}
+  .rmlink .nm{flex:1;min-width:0;font-size:16px;line-height:24px;font-weight:700;letter-spacing:-.01em;color:#737373;overflow:hidden;text-overflow:ellipsis}
+  .rmlink .nm.on{color:#0A0A0A}
+  .rmlink .sub{font-size:12px;line-height:16px;color:#737373}
+  @media(max-width:1200px){.rmcards{flex-direction:column}.rmlink{width:auto}}
 </style>
 <script src="cx-data.js"></script>
 </head>
@@ -46,7 +33,7 @@
         <img src="data:image/png;base64,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" alt="CONEXUS">
         <div class="lnb-org">카카오뱅크</div>
         <div class="lnb-quick">
-          <a class="qitem" href="roster-manage.html"><i class="ph ph-address-book" style="font-size:18px"></i>명부관리</a>
+          <a class="qitem cur" href="roster-manage.html"><i class="ph ph-address-book" style="font-size:18px"></i>명부관리</a>
           <a class="qitem" href="resolution-standard.html"><i class="ph ph-flag" style="font-size:18px"></i>결의기준</a>
           <a class="qitem" href="template-manage.html"><i class="ph ph-grid-four" style="font-size:18px"></i>템플릿</a>
         </div>
@@ -76,7 +63,7 @@
 
       <div class="lnb-rail col-only">
         <a href="dashboard.html" class="railbtn" title="대시보드"><i class="ph ph-house" style="font-size:18px"></i></a>
-        <a class="railbtn" href="roster-manage.html" title="명부관리"><i class="ph ph-address-book" style="font-size:18px"></i></a>
+        <a class="railbtn cur" href="roster-manage.html" title="명부관리"><i class="ph ph-address-book" style="font-size:18px"></i></a>
         <a class="railbtn" href="resolution-standard.html" title="결의기준"><i class="ph ph-flag" style="font-size:18px"></i></a>
         <a class="railbtn" href="template-manage.html" title="템플릿"><i class="ph ph-grid-four" style="font-size:18px"></i></a>
       </div>
@@ -91,12 +78,12 @@
 
     <div class="lnb-content show exp-only" data-tabpanel="set">
       <div class="grp"><div class="grp-label">주주총회 설정</div><div class="nav">
-        <a class="nav-item" href="shareholders.html">주주명부 확정</a>
+        <a class="nav-item active" href="shareholders.html">주주명부 확정</a>
         <a class="nav-item" href="meeting-settings.html">주주총회 설정</a>
         <a class="nav-item" href="voting-restriction.html">의결권제한 설정</a>
       </div></div>
       <div class="grp"><div class="grp-label">의결권 대행 권유 설정</div><div class="nav">
-        <a class="nav-item active" href="proxy-basic.html">의결권 대행 권유 설정</a>
+        <a class="nav-item" href="proxy-basic.html">의결권 대행 권유 설정</a>
       </div></div>
     </div>
 
@@ -135,71 +122,196 @@
       <div class="left">
         <button class="iconbtn sm" id="toggleLnb" title="사이드바"><i class="ph ph-sidebar-simple" style="font-size:16px"></i></button>
         <span class="vsep"></span>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="crumb">주주 FAQ</span>
-        </div>
+        <div style="display:flex;align-items:center;gap:8px"><a class="crumb" href="roster-manage.html" style="color:#737373;text-decoration:none">주주명부 관리</a><svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round"><path d="m9 18 6-6-6-6"/></svg><span class="crumb">주주명부 상세</span></div>
       </div>
       <button class="iconbtn md" title="변경이력"><i class="ph ph-clock-counter-clockwise" style="font-size:16px"></i></button>
     </div>
-    <div class="scroll">
-      <div class="content" style="width:100%">
-        <div class="st-head"><div><div class="page-title">주주 FAQ</div><div class="page-sub">주주용 사이트에 노출할 자주 묻는 질문을 관리합니다.</div></div></div>
-        <div class="ag-empty" style="min-height:440px">
-          <svg viewBox="0 0 24 24" class="ic"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-          <div class="e1">준비 중인 화면입니다.</div>
-          <div class="e2">이 메뉴는 곧 제공될 예정입니다.</div>
+    <div class="mgscroll">
+      <!-- 목록 -->
+      <section id="rmList" style="display:flex;flex-direction:column;gap:20px">
+        <div class="phead">
+          <div class="l"><h1>주주명부 관리</h1>
+            <div class="sub">주주명부를 등록하면 주주총회에 연결해 사용할 수 있습니다. 확정된 명부는 삭제할 수 없습니다.</div></div>
+          <div class="acts"><button class="fbtn dark" type="button" id="rmAdd">주주명부 추가</button></div>
         </div>
-      </div>
+        <div class="fbox">
+          <div class="fscroll"><table class="ftbl" id="rmTbl"><thead><tr>
+            <th class="c" style="width:80px">상태</th>
+            <th style="min-width:214px">명부명</th>
+            <th class="r" style="width:176px">총 주식수</th>
+            <th class="r" style="width:176px">총 주주수</th>
+            <th class="c" style="width:176px">기준일</th>
+            <th class="c" style="width:103px">등록일</th>
+            <th class="c" style="width:145px">등록자</th>
+            <th style="width:64px"></th>
+          </tr></thead><tbody id="rmBody"></tbody></table></div>
+          <div class="fpage"><span class="cnt" id="rmCnt"></span>
+            <span class="grp">페이지당 <select><option>15</option><option>30</option><option>50</option></select></span>
+            <span class="nav"><button type="button"><svg viewBox="0 0 24 24"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg></button>
+              <button type="button"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+              <input value="1"><span>/ 1</span>
+              <button type="button"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+              <button type="button"><svg viewBox="0 0 24 24"><path d="m13 17 5-5-5-5"/><path d="m6 17 5-5-5-5"/></svg></button></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 상세 -->
+      <section id="rmDetail" style="display:none;flex-direction:column;gap:20px">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div class="phead">
+            <div class="l"><div class="ttl"><h1>주주명부 상세</h1><span class="pill b" id="rmState">연결됨</span></div></div>
+            <div class="acts"><button class="fbtn red" type="button" id="rmDel">명부 삭제</button></div>
+          </div>
+          <div class="phead"><div class="l"><div class="sub" id="rmBase">주주명부 기준일 2026-01-31</div></div></div>
+        </div>
+
+        <div class="rmcards">
+          <div class="rmsum">
+            <div class="cell"><div class="k">총 주식수<span class="sp"></span><button class="fbtn sm" type="button">발행주식 상세보기</button></div>
+              <div class="v" id="rmShares">0</div></div>
+            <div class="cell"><div class="k">총 주주수<span class="sp"></span><button class="fbtn sm" type="button">주주 구성 보기</button></div>
+              <div class="v" id="rmHolders">0</div></div>
+          </div>
+          <div class="rmlink">
+            <div class="h">주주총회 연결</div>
+            <div class="b"><div class="nm on" id="rmMeeting">제10기 정기주주총회</div>
+              <button class="fbtn" type="button" id="rmUnlink">연결 해제</button></div>
+            <div class="sub" id="rmLinkSub">명부확정 · 2026-02-02 · 강하나</div>
+          </div>
+        </div>
+
+        <div class="fbox">
+          <div class="fscroll"><table class="ftbl"><thead><tr>
+            <th class="c" style="width:80px">구분</th>
+            <th class="c" style="width:110px">유형</th>
+            <th style="min-width:240px">주주명</th>
+            <th class="c" style="width:120px">주주번호</th>
+            <th class="r" style="width:120px">주식수</th>
+            <th class="r" style="width:80px">지분율</th>
+            <th style="min-width:181px">주소</th>
+            <th style="min-width:181px">명의개서 대리인</th>
+          </tr></thead><tbody id="rmRows"></tbody></table></div>
+          <div class="fpage"><span class="cnt" id="rmFoot"></span>
+            <span class="grp">페이지당 <select><option>15</option><option>30</option><option>50</option></select></span>
+            <span class="nav"><button type="button"><svg viewBox="0 0 24 24"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg></button>
+              <button type="button"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+              <input value="1"><span>/ 30</span>
+              <button type="button"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+              <button type="button"><svg viewBox="0 0 24 24"><path d="m13 17 5-5-5-5"/><path d="m6 17 5-5-5-5"/></svg></button></span>
+          </div>
+        </div>
+      </section>
     </div>
   </main>
 </div>
 <script>
-  // LNB tab switching (설정/사전/당일)
-  document.querySelectorAll('.lnb-tabs .t').forEach(function(t){
-    t.addEventListener('click',function(){
-      var tab=t.dataset.tab; if(!tab) return;
-      document.querySelectorAll('.lnb-tabs .t').forEach(function(x){x.classList.toggle('active',x===t);});
-      document.querySelectorAll('.lnb-content[data-tabpanel]').forEach(function(p){p.classList.toggle('show',p.dataset.tabpanel===tab);});
+/* 주주명부 관리 — 목록/상세 한 화면. ?id 가 있으면 상세를 편다. */
+(function () {
+  var M = (window.CX && CX.meeting) || {};
+  var cm = (window.CX && CX.util && CX.util.comma) || function (n) { return String(n); };
+
+  /* 명부 목록 — 확정된 한 건이 이번 총회에 물려 있다 */
+  var LIST = [
+    { id: 'R-2026-01', st: '연결됨', nm: '제10기 정기주주총회 기준 주주명부',
+      sh: M.sharesIssued || 476211964, ho: 234000, base: '2026-01-31', reg: '2026-02-02', by: '강하나' },
+    { id: 'R-2025-08', st: '확정', nm: '2025년 8월 임시주주총회 기준 주주명부',
+      sh: 468902110, ho: 221400, base: '2025-07-31', reg: '2025-08-04', by: '박지용' },
+    { id: 'R-2025-01', st: '확정', nm: '제9기 정기주주총회 기준 주주명부',
+      sh: 461330500, ho: 208700, base: '2025-01-31', reg: '2025-02-03', by: '강하나' },
+    { id: 'R-2024-12', st: '검증중', nm: '2024년 12월 기준 주주명부(가등록)',
+      sh: 455120000, ho: 199200, base: '2024-12-31', reg: '2025-01-08', by: '이수민' },
+    { id: 'R-2024-07', st: '검증 실패', nm: '2024년 7월 임시주주총회 기준 주주명부',
+      sh: 0, ho: 0, base: '2024-06-30', reg: '2024-07-02', by: '이수민' }
+  ];
+  var TONE = { '연결됨': 'b', '확정': '', '검증중': 'a', '검증 실패': 'r' };
+
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+  function drawList() {
+    document.getElementById('rmBody').innerHTML = LIST.map(function (r) {
+      return '<tr><td class="c"><span class="sbadge ' + (TONE[r.st] || '') + '">' + r.st + '</span></td>'
+        + '<td class="md"><button class="flink" type="button" data-go="' + r.id + '">' + esc(r.nm) + '</button></td>'
+        + '<td class="r mut">' + (r.sh ? cm(r.sh) : '−') + '</td>'
+        + '<td class="r mut">' + (r.ho ? cm(r.ho) : '−') + '</td>'
+        + '<td class="c mut">' + r.base + '</td>'
+        + '<td class="c mut">' + r.reg + '</td>'
+        + '<td class="c mut">' + r.by + '</td>'
+        + '<td><span class="acts"><button class="iconb" type="button" title="삭제" data-del="' + r.id + '">'
+        + '<svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/></svg>'
+        + '</button></span></td></tr>';
+    }).join('');
+    document.getElementById('rmCnt').textContent = '총 ' + LIST.length + '건';
+  }
+
+  /* 상세 표본 — 주주 구성을 보여 주는 14행 */
+  var KIND = ['개인', '법인', '기관', '외국인'];
+  var GUBUN = ['보통주', '우선주'];
+  var NAMES = ['국민연금공단', '김명준', '미래에셋증권(쿼드자산운용-신한은행)', '블랙록펀드', '이나리',
+    '삼성자산운용', '한국투자증권', '교직원공제회', '정하윤', '우정사업본부',
+    '신한자산운용', '최길준', 'KB자산운용', '오세훈'];
+  var ADDR = ['서울특별시 중구 세종대로', '서울특별시 영등포구 여의대로', '경기도 성남시 분당구 판교로',
+    '부산광역시 해운대구 센텀중앙로', '서울특별시 강남구 테헤란로'];
+  var AGENT = ['한국예탁결제원', '국민은행 증권대행부', '하나은행 신탁부'];
+
+  function drawDetail(r) {
+    document.getElementById('rmState').textContent = r.st;
+    document.getElementById('rmState').className = 'pill' + (r.st === '연결됨' ? ' b' : '');
+    document.getElementById('rmBase').textContent = '주주명부 기준일 ' + r.base;
+    document.getElementById('rmShares').textContent = cm(r.sh);
+    document.getElementById('rmHolders').textContent = cm(r.ho);
+    var linked = (r.st === '연결됨');
+    var nm = document.getElementById('rmMeeting');
+    nm.textContent = linked ? (M.name || '제10기 정기주주총회') : '연결된 주주총회 없음';
+    nm.className = 'nm' + (linked ? ' on' : '');
+    document.getElementById('rmUnlink').textContent = linked ? '연결 해제' : '총회 연결';
+    document.getElementById('rmLinkSub').textContent = linked
+      ? '명부확정 · ' + r.reg + ' · ' + r.by
+      : '연결하면 이 명부를 기준으로 의결권이 계산됩니다.';
+
+    var tot = r.sh || 1, rows = [], sum = 0;
+    NAMES.forEach(function (n, i) {
+      var sh = Math.round(tot * (0.09 - i * 0.0055));
+      if (sh < 1000) sh = 1000 + i * 137;
+      sum += sh;
+      rows.push('<tr><td class="c"><span class="sbadge">' + GUBUN[i % 5 === 4 ? 1 : 0] + '</span></td>'
+        + '<td class="c"><span class="sbadge">' + KIND[i % 4] + '</span></td>'
+        + '<td class="md">' + esc(n) + '</td>'
+        + '<td class="c mut">' + ('00' + (1001 + i * 7)).slice(-6) + '</td>'
+        + '<td class="r">' + cm(sh) + '</td>'
+        + '<td class="r mut">' + (sh / tot * 100).toFixed(2) + '%</td>'
+        + '<td class="mut">' + ADDR[i % ADDR.length] + '</td>'
+        + '<td class="mut">' + AGENT[i % AGENT.length] + '</td></tr>');
     });
+    document.getElementById('rmRows').innerHTML = rows.join('');
+    document.getElementById('rmFoot').textContent = '총 ' + cm(r.ho) + '명 · ' + cm(r.sh) + '주';
+  }
+
+  function show(id) {
+    var r = LIST.filter(function (x) { return x.id === id; })[0];
+    var list = document.getElementById('rmList'), det = document.getElementById('rmDetail');
+    if (r) { drawDetail(r); list.style.display = 'none'; det.style.display = 'flex'; }
+    else { list.style.display = 'flex'; det.style.display = 'none'; }
+  }
+
+  drawList();
+  document.getElementById('rmTbl').addEventListener('click', function (e) {
+    var g = e.target.closest('[data-go]');
+    if (g) { history.pushState(null, '', '?id=' + g.getAttribute('data-go')); show(g.getAttribute('data-go')); return; }
+    var d = e.target.closest('[data-del]');
+    if (d) { alert('확정된 주주명부는 삭제할 수 없습니다.'); }
   });
-  // sidebar collapse
-  var tg=document.getElementById('toggleLnb');
-  if(tg){tg.addEventListener('click',function(){document.getElementById('app').classList.toggle('collapsed');});}
-  // meeting dropdown (shadcn-style)
-  (function(){
-    var mt=document.getElementById('mtrigger'), mp=document.getElementById('mpop'), ml=document.getElementById('mlist'), mc=document.getElementById('mcurrent');
-    if(!mt||!mp) return;
-    if(ml&&!ml.children.length){
-      ['제10기 정기주주총회','제9기 정기주주총회','제8기 정기주주총회'].forEach(function(t,i){
-        var b=document.createElement('button'); b.className='mitem'+(i===0?' cur':'');
-        b.innerHTML='<span class="dot'+(i===0?'':' gray')+'"></span><span class="mlbl">'+t+'</span>';
-        b.addEventListener('click',function(ev){ev.stopPropagation(); if(mc)mc.textContent=t; ml.querySelectorAll('.mitem').forEach(function(x){x.classList.remove('cur');}); b.classList.add('cur'); mp.classList.add('hidden');});
-        ml.appendChild(b);
-      });
-    }
-    mt.addEventListener('click',function(e){e.stopPropagation(); mp.classList.toggle('hidden');});
-    document.addEventListener('click',function(){mp.classList.add('hidden');});
-    mp.addEventListener('click',function(e){e.stopPropagation();});
-  })();
-  // settings tab switching (in-page st-nav)
-  document.querySelectorAll('.st-nav').forEach(function(nav){
-    nav.querySelectorAll('.st-item').forEach(function(item){
-      item.addEventListener('click',function(){
-        var tab=item.dataset.tab;
-        nav.querySelectorAll('.st-item').forEach(function(i){i.classList.toggle('active',i===item);});
-        var body=nav.parentElement.querySelector('.st-body')||document;
-        body.querySelectorAll('.st-tab').forEach(function(p){p.classList.toggle('active',p.dataset.panel===tab);});
-      });
-    });
+  document.getElementById('rmDel').addEventListener('click', function () {
+    history.pushState(null, '', location.pathname); show(null);
   });
-  // toggles + subtabs
-  document.addEventListener('click',function(e){
-    var sw=e.target.closest('[data-sw]'); if(sw){sw.classList.toggle('on');}
-    var cb=e.target.closest('[data-cbx]'); if(cb){cb.classList.toggle('on');}
-    var rd=e.target.closest('[data-rad]'); if(rd){var g=rd.closest('[data-radgrp]')||rd.parentElement;g.querySelectorAll('[data-rad]').forEach(function(r){r.classList.toggle('on',r===rd);});}
-    var cr=e.target.closest('.chk-row'); if(cr){cr.classList.toggle('on');}
-    var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
+  window.addEventListener('popstate', function () {
+    show(new URLSearchParams(location.search).get('id'));
   });
+  document.getElementById('rmAdd').addEventListener('click', function () {
+    location.href = 'shareholders.html';
+  });
+  show(new URLSearchParams(location.search).get('id'));
+})();
 </script>
 <script src="conexus.js"></script>
 </body>

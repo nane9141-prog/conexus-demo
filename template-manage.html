@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CONEXUS · 템플릿 관리</title>
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="conexus.css">
+<style>
+
+  .tpedit{display:flex;align-items:flex-start;gap:20px;flex:1;min-height:0}
+  .tpleft{flex:1;min-width:0;display:flex;flex-direction:column;gap:20px}
+  .tprow{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .tprow .ffield{width:200px;flex:none}
+  .tprow .wide{flex:1;min-width:200px}
+  .tpbody{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px}
+  .tpbox{box-sizing:border-box;flex:1;min-height:320px;display:flex;flex-direction:column;gap:20px;padding:20px;background:#fff;border:1px solid #E5E5E5;border-radius:14px}
+  .tptools{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .bgrp{display:flex;align-items:center}
+  .bgrp button{height:32px;min-width:32px;padding:0 10px;border:1px solid #E5E5E5;border-left-width:0;background:#fff;font-family:inherit;font-size:14px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer}
+  .bgrp button:first-child{border-left-width:1px;border-radius:10px 0 0 10px}
+  .bgrp button:last-child{border-radius:0 10px 10px 0}
+  .bgrp button.on{background:#F5F5F5}
+  .bgrp svg{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .tpta{flex:1;min-height:240px;border:none;outline:none;resize:none;font-family:inherit;font-size:14px;line-height:20px;letter-spacing:-.01em;color:#171717;background:none}
+  /* 변수 패널 */
+  .tpvar{box-sizing:border-box;width:500px;flex:none;align-self:stretch;display:flex;flex-direction:column;gap:20px;padding:24px;background:rgba(245,245,245,.6);border-radius:10px;overflow:auto}
+  .tpvar .hd{display:flex;flex-direction:column;gap:4px}
+  .tpvar .hd b{font-size:16px;line-height:24px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A}
+  .tpvar .hd span{font-size:12px;line-height:16px;letter-spacing:-.01em;color:#737373}
+  .tpchips{display:flex;flex-wrap:wrap;gap:6px}
+  .tpchip{display:inline-flex;align-items:center;height:24px;padding:0 6px;border:1px solid #E5E5E5;border-radius:9999px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer;white-space:nowrap}
+  .tpchip.on{background:#0A0A0A;border-color:#0A0A0A;color:#FAFAFA}
+  .tpgrp{display:flex;flex-direction:column}
+  .tptrig{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 0 12px;border:none;background:none;font-family:inherit;font-size:14px;line-height:20px;font-weight:700;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer;text-align:left}
+  .tptrig svg{width:20px;height:20px;flex:none;fill:none;stroke:#737373;stroke-width:1.875;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+  .tpgrp.off .tptrig svg{transform:rotate(-90deg)}
+  .tpgrp.off .tpitems{display:none}
+  .tpitems{display:flex;flex-direction:column}
+  .tpitem{display:flex;flex-direction:column;gap:4px;padding:8px;border:none;border-radius:8px;background:none;font-family:inherit;text-align:left;cursor:pointer}
+  .tpitem:hover,.tpitem.on{background:#F5F5F5}
+  .tpitem b{font-size:14px;line-height:14px;font-weight:600;letter-spacing:-.01em;color:#0071F3}
+  .tpitem span{font-size:12px;line-height:16px;letter-spacing:-.01em;color:#737373}
+  @media(max-width:1280px){.tpedit{flex-direction:column}.tpvar{width:auto;align-self:auto}}
+</style>
+<script src="cx-data.js"></script>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="lnb">
+    <div class="lnb-head">
+      <div class="lnb-brand exp-only">
+        <img src="data:image/png;base64,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" alt="CONEXUS">
+        <div class="lnb-org">카카오뱅크</div>
+        <div class="lnb-quick">
+          <a class="qitem" href="roster-manage.html"><i class="ph ph-address-book" style="font-size:18px"></i>명부관리</a>
+          <a class="qitem" href="resolution-standard.html"><i class="ph ph-flag" style="font-size:18px"></i>결의기준</a>
+          <a class="qitem cur" href="template-manage.html"><i class="ph ph-grid-four" style="font-size:18px"></i>템플릿</a>
+        </div>
+      </div>
+
+      <div class="lnb-mark col-only"><div class="mark">C</div></div>
+
+      <div class="lnb-select exp-only">
+        <div class="select-box" id="mtrigger">
+          <span class="dot"></span>
+          <span class="lbl" id="mcurrent" data-cx="meeting.name">제10기 정기주주총회</span>
+          <i class="ph ph-caret-up-down" style="font-size:16px"></i>
+        </div>
+        <div class="mpop hidden" id="mpop">
+          <div class="mpop-search">
+            <i class="ph ph-magnifying-glass" style="font-size:16px"></i>
+            <input type="text" id="msearch" placeholder="주주총회 검색" autocomplete="off">
+          </div>
+          <div class="mpop-list" id="mlist"></div>
+          <div class="mpop-foot"><button id="maddbtn">새 주주총회 추가</button></div>
+        </div>
+      </div>
+
+      <div class="lnb-menu exp-only">
+        <a class="nav-item" href="dashboard.html"><i class="ph ph-house" style="font-size:18px"></i>대시보드</a>
+      </div>
+
+      <div class="lnb-rail col-only">
+        <a href="dashboard.html" class="railbtn" title="대시보드"><i class="ph ph-house" style="font-size:18px"></i></a>
+        <a class="railbtn" href="roster-manage.html" title="명부관리"><i class="ph ph-address-book" style="font-size:18px"></i></a>
+        <a class="railbtn" href="resolution-standard.html" title="결의기준"><i class="ph ph-flag" style="font-size:18px"></i></a>
+        <a class="railbtn cur" href="template-manage.html" title="템플릿"><i class="ph ph-grid-four" style="font-size:18px"></i></a>
+      </div>
+      <div class="lnb-tabs exp-only">
+        <div class="tabs">
+          <div class="t active" data-tab="set">설정</div>
+          <div class="t " data-tab="pre">사전</div>
+          <div class="t " data-tab="day">당일</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lnb-content show exp-only" data-tabpanel="set">
+      <div class="grp"><div class="grp-label">주주총회 설정</div><div class="nav">
+        <a class="nav-item active" href="shareholders.html">주주명부 확정</a>
+        <a class="nav-item" href="meeting-settings.html">주주총회 설정</a>
+        <a class="nav-item" href="voting-restriction.html">의결권제한 설정</a>
+      </div></div>
+      <div class="grp"><div class="grp-label">의결권 대행 권유 설정</div><div class="nav">
+        <a class="nav-item" href="proxy-basic.html">의결권 대행 권유 설정</a>
+      </div></div>
+    </div>
+
+    <div class="lnb-content  exp-only" data-tabpanel="pre">
+      <div class="grp"><div class="grp-label">전자주주총회 관리</div><div class="nav">
+        <a class="nav-item" href="electronic-meeting.html">전자주주총회 관리</a>
+      </div></div>
+      <div class="grp"><div class="grp-label">사전 의결권 관리</div><div class="nav">
+        <a class="nav-item" href="voting-rights.html">사전 의결권 현황</a>
+        <a class="nav-item" href="evote-records.html">전자투표/위임 내역</a>
+        <a class="nav-item" href="paper-records.html">서면투표/위임 내역</a>
+        <a class="nav-item" href="dup-voting.html">중복 의결권 관리</a>
+      </div></div>
+      <div class="grp"><div class="grp-label">불통일행사 관리</div><div class="nav">
+        <a class="nav-item" href="split-voting.html">불통일행사 관리</a>
+      </div></div>
+      <div class="grp"><div class="grp-label">집중투표 관리</div><div class="nav">
+        <a class="nav-item" href="cumulative-voting.html">집중투표 관리</a>
+      </div></div>
+    </div>
+
+    <div class="lnb-content  exp-only" data-tabpanel="day">
+      <div class="grp"><div class="grp-label">주주총회</div><div class="nav">
+        <a class="nav-item" href="attendees.html">참석자 관리</a>
+        <a class="nav-item" href="onsite-control.html">주주총회 현장 제어</a>
+        <a class="nav-item" href="tally.html">주주총회 집계</a>
+      </div></div>
+    </div>
+
+    <div class="lnb-foot">
+      <button class="foot-btn"><span class="avatar">강</span><span class="who exp-only"><span class="n">강하나</span><span class="e">doji@irkudos.co.kr</span></span><svg class="ic cud exp-only" viewBox="0 0 24 24" style="width:16px;height:16px;color:var(--muted-fg)"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></button>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="left">
+        <button class="iconbtn sm" id="toggleLnb" title="사이드바"><i class="ph ph-sidebar-simple" style="font-size:16px"></i></button>
+        <span class="vsep"></span>
+        <div style="display:flex;align-items:center;gap:8px"><span class="crumb">템플릿 관리</span></div>
+      </div>
+      <button class="iconbtn md" title="변경이력"><i class="ph ph-clock-counter-clockwise" style="font-size:16px"></i></button>
+    </div>
+    <div class="mgscroll">
+      <!-- 목록 -->
+      <section id="tpList" style="display:flex;flex-direction:column;gap:20px">
+        <div class="phead">
+          <div class="l"><h1>템플릿 관리</h1>
+            <div class="sub">주주에게 나가는 안내문을 템플릿으로 저장해 둡니다. 기본 템플릿은 주주총회 생성 시 자동 적용됩니다.</div></div>
+          <div class="acts"><button class="fbtn dark" type="button" id="tpAdd">템플릿 등록</button></div>
+        </div>
+        <div class="fbox">
+          <div class="fscroll"><table class="ftbl" id="tpTbl"><thead><tr>
+            <th class="c" style="width:80px">구분</th>
+            <th class="c" style="width:96px">사용 여부</th>
+            <th class="c" style="width:72px">채널</th>
+            <th style="min-width:265px">템플릿명</th>
+            <th style="min-width:230px">전달 대상</th>
+            <th class="c" style="width:82px">변수</th>
+            <th class="c" style="width:110px">수정일</th>
+            <th class="c" style="width:143px">수정자</th>
+            <th style="width:64px"></th>
+          </tr></thead><tbody id="tpBody"></tbody></table></div>
+          <div class="fpage"><span class="cnt" id="tpCnt"></span>
+            <span class="grp">페이지당 <select><option>15</option><option>30</option></select></span>
+            <span class="nav"><button type="button"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+              <input value="1"><span>/ 1</span>
+              <button type="button"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 등록 · 수정 -->
+      <section id="tpEdit" style="display:none;flex-direction:column;gap:12px;flex:1;min-height:0">
+        <div class="phead" style="padding-bottom:12px">
+          <div class="l"><h1 id="tpTt" style="font-size:16px;line-height:24px">템플릿 등록</h1></div>
+          <div class="acts">
+            <button class="fbtn" type="button" id="tpPreview"><svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg>템플릿 미리보기</button>
+            <button class="fbtn dark" type="button" id="tpSave">저장</button>
+          </div>
+        </div>
+
+        <div class="tpedit">
+          <div class="tpleft">
+            <label class="fchk on" data-ck id="tpBase"><span class="bx"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>기본 템플릿으로 사용</label>
+
+            <div class="tprow">
+              <div class="ffield"><div class="lb">템플릿 종류*</div>                <select class="fsel" id="tpKind">
+                  <option>소집통지</option><option>전자투표 안내</option><option>위임장 권유</option>
+                  <option>총회 당일 안내</option><option>결과 공지</option>
+                </select></div>
+              <div class="ffield"><div class="lb">전달 대상*</div>
+                <div style="display:flex;align-items:center;gap:16px;height:32px" id="tpTo">
+                  <label class="fchk on" data-rd data-v="all"><span class="bx" style="border-radius:9999px"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>전체</label>
+                  <label class="fchk" data-rd data-v="pick"><span class="bx" style="border-radius:9999px"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>개별</label>
+                </div></div>
+            </div>
+
+            <div class="tprow">
+              <div class="ffield"><div class="lb">발송 채널*</div>
+                <select class="fsel" id="tpCh"><option>알림톡</option><option>문자</option><option>이메일</option></select></div>
+              <div class="ffield"><div class="lb">발송 시점</div>
+                <select class="fsel" id="tpWhen" disabled><option>수동 발송</option></select></div>
+            </div>
+
+            <div class="ffield"><div class="lb">제목*</div>
+              <input class="finp" id="tpTitle" type="text" placeholder="제목을 입력하세요"></div>
+
+            <div class="tpbody">
+              <div class="lb" style="font-size:14px;font-weight:500">본문*</div>
+              <div class="tpbox">
+                <div class="tptools">
+                  <div class="bgrp"><button type="button" data-fs="-">−</button><button type="button" id="tpFs">14</button><button type="button" data-fs="+">+</button></div>
+                  <div class="bgrp" id="tpStyle">
+                    <button type="button" data-st="b" style="font-weight:700">굵게</button>
+                    <button type="button" data-st="i" style="font-style:italic">기울임</button>
+                    <button type="button" data-st="u" style="text-decoration:underline">밑줄</button>
+                    <button type="button" data-st="s" style="text-decoration:line-through">취소선</button>
+                  </div>
+                  <span style="margin-left:auto"></span>
+                  <button class="fbtn" type="button" id="tpUndo"><svg viewBox="0 0 24 24"><path d="M3 8h12a5 5 0 0 1 0 10h-4"/><path d="m7 4-4 4 4 4"/></svg>되돌리기</button>
+                </div>
+                <textarea class="tpta" id="tpTa" placeholder="내용을 입력하세요"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <aside class="tpvar">
+            <div class="hd"><b>변수명 선택</b>
+              <span>변수명을 클릭하면 본문에 자동 추가되며, 템플릿 미리보기에서 적용 결과를 확인할 수 있습니다.</span></div>
+            <div class="tpchips" id="tpChips"></div>
+            <div id="tpGroups"></div>
+          </aside>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<script>
+/* 템플릿 관리 — 목록과 편집기를 한 화면에서 오간다. */
+(function () {
+  function $(id) { return document.getElementById(id); }
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+  var ROWS = [
+    { id: 1, base: 1, use: '사용중', ch: '알림톡', nm: '제10기 정기주주총회 소집통지',
+      to: '전체 주주', vars: 7, d: '2026-01-08', by: '강하나' },
+    { id: 2, base: 1, use: '사용중', ch: '알림톡', nm: '전자투표 참여 안내',
+      to: '전자투표 대상 주주', vars: 5, d: '2026-01-08', by: '강하나' },
+    { id: 3, base: 0, use: '사용중', ch: '문자', nm: '총회 당일 현장 안내',
+      to: '현장 참석 예정 주주', vars: 4, d: '2026-01-12', by: '박지용' },
+    { id: 4, base: 0, use: '미사용', ch: '이메일', nm: '의결권 대리행사 권유 안내',
+      to: '기관 투표권자', vars: 6, d: '2025-12-20', by: '이수민' },
+    { id: 5, base: 0, use: '미사용', ch: '알림톡', nm: '표결 결과 공지',
+      to: '전체 주주', vars: 3, d: '2025-12-02', by: '박지용' }
+  ];
+
+  function draw() {
+    $('tpBody').innerHTML = ROWS.map(function (r) {
+      return '<tr><td class="c"><span class="sbadge' + (r.base ? ' b' : '') + '">' + (r.base ? '기본' : '추가') + '</span></td>'
+        + '<td class="c"><span class="sbadge' + (r.use === '사용중' ? '' : '') + '">' + r.use + '</span></td>'
+        + '<td class="c mut">' + r.ch + '</td>'
+        + '<td class="md"><button class="flink" type="button" data-edit="' + r.id + '">' + esc(r.nm) + '</button></td>'
+        + '<td class="mut">' + esc(r.to) + '</td>'
+        + '<td class="c mut">' + r.vars + '개</td>'
+        + '<td class="c mut">' + r.d + '</td>'
+        + '<td class="c mut">' + r.by + '</td>'
+        + '<td><span class="acts">'
+        + '<button class="iconb" type="button" title="수정" data-edit="' + r.id + '"><svg viewBox="0 0 24 24"><path d="M4 20h4l10-10-4-4L4 16v4z"/><path d="m14 6 4 4"/></svg></button>'
+        + '<button class="iconb" type="button" title="삭제" data-del="' + r.id + '"><svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/></svg></button>'
+        + '</span></td></tr>';
+    }).join('');
+    $('tpCnt').textContent = '총 ' + ROWS.length + '건';
+  }
+
+  /* 변수 — 묶음별로 접었다 편다 */
+  var VARS = [
+    { k: '주주 기준', items: [
+      ['{{주주명}}', '주주명부에 기재된 이름 또는 법인명'],
+      ['{{주주번호}}', '명부상 주주 식별 번호'],
+      ['{{보유주식수}}', '기준일 기준 보유 주식 수'],
+      ['{{지분율}}', '발행주식총수 대비 보유 비율']] },
+    { k: '총회 기준', items: [
+      ['{{회사명}}', '주주총회를 여는 회사 이름'],
+      ['{{총회명}}', '제10기 정기주주총회 등 총회 명칭'],
+      ['{{총회일시}}', '개최 일시 (YYYY-MM-DD HH:mm)'],
+      ['{{총회장소}}', '현장 개최 장소'],
+      ['{{기준일}}', '의결권 기준일']] },
+    { k: '의안', items: [
+      ['{{의안목록}}', '상정 의안 전체 목록'],
+      ['{{의안수}}', '상정 의안 건수'],
+      ['{{집중투표의안}}', '집중투표로 진행하는 의안']] },
+    { k: '전자투표', items: [
+      ['{{전자투표기간}}', '전자투표 시작일 ~ 종료일'],
+      ['{{전자투표링크}}', '주주별 전자투표 접속 링크'],
+      ['{{본인인증수단}}', '간편인증 · 공동인증서 등']] },
+    { k: '결과', items: [
+      ['{{가결의안}}', '가결된 의안 목록'],
+      ['{{부결의안}}', '부결된 의안 목록'],
+      ['{{출석률}}', '출석 의결권 비율']] }
+  ];
+
+  function drawVars(sel) {
+    $('tpChips').innerHTML = VARS.map(function (g, i) {
+      return '<button class="tpchip' + (i === sel ? ' on' : '') + '" type="button" data-g="' + i + '">' + g.k + '</button>';
+    }).join('');
+    $('tpGroups').innerHTML = VARS.map(function (g, i) {
+      return '<div class="tpgrp' + (i === sel ? '' : ' off') + '" data-grp="' + i + '">'
+        + '<button class="tptrig" type="button">' + g.k
+        + '<svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>'
+        + '<div class="tpitems">' + g.items.map(function (it) {
+            return '<button class="tpitem" type="button" data-v="' + it[0] + '"><b>' + it[0] + '</b><span>' + it[1] + '</span></button>';
+          }).join('') + '</div></div>';
+    }).join('');
+  }
+
+  $('tpChips').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-g]'); if (b) drawVars(+b.getAttribute('data-g'));
+  });
+  $('tpGroups').addEventListener('click', function (e) {
+    var t = e.target.closest('.tptrig');
+    if (t) { t.parentNode.classList.toggle('off'); return; }
+    var it = e.target.closest('[data-v]');
+    if (!it) return;
+    var ta = $('tpTa'), v = it.getAttribute('data-v');
+    var a = ta.selectionStart, b = ta.selectionEnd;      /* 커서 자리에 꽂는다 */
+    ta.value = ta.value.slice(0, a) + v + ta.value.slice(b);
+    ta.focus(); ta.selectionStart = ta.selectionEnd = a + v.length;
+  });
+
+  /* 편집기 도구 — 시연이라 글자 크기와 강조만 실제로 먹인다 */
+  $('tpTa').style.fontSize = '14px';
+  document.querySelector('.tptools').addEventListener('click', function (e) {
+    var f = e.target.closest('[data-fs]');
+    if (f) {
+      var n = +$('tpFs').textContent + (f.getAttribute('data-fs') === '+' ? 1 : -1);
+      n = Math.max(12, Math.min(22, n));
+      $('tpFs').textContent = n; $('tpTa').style.fontSize = n + 'px';
+      return;
+    }
+    var st = e.target.closest('[data-st]');
+    if (!st) return;
+    st.classList.toggle('on');
+    var ta = $('tpTa'), on = function (k) { return $('tpStyle').querySelector('[data-st="' + k + '"]').classList.contains('on'); };
+    ta.style.fontWeight = on('b') ? '700' : '400';
+    ta.style.fontStyle = on('i') ? 'italic' : 'normal';
+    ta.style.textDecoration = (on('u') ? 'underline ' : '') + (on('s') ? 'line-through' : '') || 'none';
+  });
+  $('tpUndo').addEventListener('click', function () { $('tpTa').focus(); document.execCommand('undo'); });
+
+  /* 목록 ↔ 편집기 */
+  var editing = null;
+  function openEdit(r) {
+    editing = r || null;
+    $('tpTt').textContent = r ? '템플릿 수정' : '템플릿 등록';
+    $('tpTitle').value = r ? r.nm : '';
+    $('tpCh').value = r ? r.ch : '알림톡';
+    $('tpBase').classList.toggle('on', !!(r && r.base));
+    $('tpTa').value = r
+      ? '{{주주명}} 주주님께\n\n{{회사명}} {{총회명}}이 {{총회일시}}에 {{총회장소}}에서 열립니다.\n상정 의안은 총 {{의안수}}건입니다.\n\n감사합니다.'
+      : '';
+    drawVars(0);
+    $('tpList').style.display = 'none';
+    $('tpEdit').style.display = 'flex';
+  }
+  function backToList() { $('tpEdit').style.display = 'none'; $('tpList').style.display = 'flex'; }
+
+  $('tpAdd').addEventListener('click', function () { openEdit(null); });
+  $('tpTbl').addEventListener('click', function (e) {
+    var ed = e.target.closest('[data-edit]');
+    if (ed) { openEdit(ROWS.filter(function (r) { return r.id === +ed.getAttribute('data-edit'); })[0]); return; }
+    var dl = e.target.closest('[data-del]');
+    if (!dl) return;
+    var r = ROWS.filter(function (x) { return x.id === +dl.getAttribute('data-del'); })[0];
+    if (r && r.base) { alert('기본 템플릿은 삭제할 수 없습니다.'); return; }
+    ROWS = ROWS.filter(function (x) { return x !== r; }); draw();
+  });
+  $('tpSave').addEventListener('click', function () {
+    var nm = $('tpTitle').value.trim() || '이름 없는 템플릿';
+    var base = $('tpBase').classList.contains('on') ? 1 : 0;
+    var used = ($('tpTa').value.match(/\{\{[^}]+\}\}/g) || []).length;
+    if (editing) { editing.nm = nm; editing.ch = $('tpCh').value; editing.base = base; editing.vars = used; editing.d = '2026-01-14'; }
+    else {
+      ROWS.push({ id: Date.now(), base: base, use: '미사용', ch: $('tpCh').value, nm: nm,
+        to: $('tpTo').querySelector('.on').getAttribute('data-v') === 'all' ? '전체 주주' : '개별 지정',
+        vars: used, d: '2026-01-14', by: '강하나' });
+    }
+    draw(); backToList();
+  });
+  $('tpPreview').addEventListener('click', function () {
+    alert('미리보기\n\n' + $('tpTa').value.replace(/\{\{주주명\}\}/g, '김명준')
+      .replace(/\{\{회사명\}\}/g, '카카오뱅크').replace(/\{\{총회명\}\}/g, '제10기 정기주주총회')
+      .replace(/\{\{총회일시\}\}/g, '2026-03-27 10:00').replace(/\{\{총회장소\}\}/g, '본사 대강당')
+      .replace(/\{\{의안수\}\}/g, '8'));
+  });
+
+  /* 체크 · 라디오 */
+  document.addEventListener('click', function (e) {
+    var rd = e.target.closest('[data-rd]');
+    if (rd) { e.preventDefault(); rd.parentNode.querySelectorAll('[data-rd]').forEach(function (x) { x.classList.toggle('on', x === rd); }); return; }
+    var ck = e.target.closest('[data-ck]');
+    if (ck) { e.preventDefault(); ck.classList.toggle('on'); }
+  });
+
+  draw();
+})();
+</script>
+<script src="conexus.js"></script>
+</body>
+</html>
