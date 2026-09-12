@@ -88,6 +88,15 @@
   .selopt .sc{flex:1;text-align:left}
   .selopt svg{width:15px;height:15px;opacity:0}
   .selopt.sel svg{opacity:1}
+  /* 의안 종류 — 묶음 제목과 검색을 얹는다 */
+  .selpop.grouped{width:254px;max-height:420px;overflow:auto;display:flex;flex-direction:column;gap:2px}
+  .selsrch{box-sizing:border-box;display:flex;align-items:center;gap:6px;height:32px;margin:0 0 4px;padding:0 10px;
+    border:1px solid var(--border);border-radius:10px;background:#fff;position:sticky;top:0;z-index:1}
+  .selsrch svg{width:16px;height:16px;flex:none;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round}
+  .selsrch input{flex:1;min-width:0;border:none;outline:none;background:none;font-family:inherit;font-size:14px;
+    letter-spacing:-.01em;color:#0A0A0A}
+  .selgh{padding:6px 10px 2px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#737373}
+  .selnone{padding:12px 10px;font-size:13px;color:#737373;text-align:center}
   /* calendar */
   .cal{position:fixed;z-index:80;width:280px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-md);padding:12px}
   .cal.hidden{display:none}
@@ -1102,6 +1111,17 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   // ===== 의안 설정 =====
   const AG_METHOD_MAP={'재무제표 승인':'보통결의','정관변경':'특별결의','정관변경(집중투표 배제 및 해지)':'특별결의','이익배당':'보통결의','이사선임':'보통결의','이사해임':'특별결의','감사선임':'보통결의','감사해임':'특별결의','감사위원회 감사위원 선임(사외이사)':'보통결의','감사위원회 감사위원 선임(독립이사)':'보통결의','감사위원회 감사위원 해임(사외이사)':'특별결의','감사위원회 감사위원 해임(독립이사)':'보통결의','감사위원회 감사위원 선임(일반)':'보통결의','감사위원회 감사위원 해임(일반)':'특별결의','이사 보수한도 승인':'보통결의','감사 보수한도 승인':'보통결의','합병계약서의 승인':'특별결의','분할계획서의 승인':'특별결의','분할합병계약서의 승인':'특별결의','영업의 양도/양수 및 포괄적 계약 체결 승인':'특별결의','기타':'보통결의'};
   const AG_TYPES=Object.keys(AG_METHOD_MAP);
+  /* 의안 종류 묶음 — 고를 때 성격별로 모아 보여 준다 */
+  const AG_GROUPS=[
+    ['결산 및 배당(재무관련)',['재무제표 승인','이익배당']],
+    ['정관 변경',['정관변경','정관변경(집중투표 배제 및 해지)']],
+    ['임원 선임 및 해임(지배구조)',['이사선임','이사해임','감사선임','감사해임',
+      '감사위원회 감사위원 선임(사외이사)','감사위원회 감사위원 선임(독립이사)','감사위원회 감사위원 선임(일반)',
+      '감사위원회 감사위원 해임(사외이사)','감사위원회 감사위원 해임(독립이사)','감사위원회 감사위원 해임(일반)']],
+    ['임원 보수',['이사 보수한도 승인','감사 보수한도 승인']],
+    ['기업 재편',['합병계약서의 승인','분할계획서의 승인','분할합병계약서의 승인','영업의 양도/양수 및 포괄적 계약 체결 승인']],
+    ['기타',['기타']]
+  ];
   const AG_METHODS=['보통결의','특별결의'];
   const AGENDA_DATA=[
     {no:'1',type:'재무제표 승인',method:'보통결의',name:'재무제표 승인의 건',sub:[]},
@@ -1160,11 +1180,41 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   }
   // 의안 종류 shadcn 드롭다운
   function openAgType(btn){
-    const cur=btn.querySelector('span').textContent;agTypePop.innerHTML='';
-    AG_TYPES.forEach(t=>{const o=document.createElement('button');o.className='selopt'+(t===cur?' sel':'');o.innerHTML='<span class="sc">'+t+'</span><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';o.addEventListener('click',ev=>{ev.stopPropagation();btn.querySelector('span').textContent=t;var row=btn.closest('.ag-row');var mb=row&&row.querySelector('.agmethod span');var mm=AG_METHOD_MAP[t];if(mb&&mm)mb.textContent=mm;agTypePop.classList.add('hidden');});agTypePop.appendChild(o);});
+    const cur=btn.querySelector('span').textContent;
+    agTypePop.classList.add('grouped');
+    function pick(t){
+      btn.querySelector('span').textContent=t;
+      var row=btn.closest('.ag-row'),mb=row&&row.querySelector('.agmethod span'),mm=AG_METHOD_MAP[t];
+      if(mb&&mm)mb.textContent=mm;
+      agTypePop.classList.add('hidden');
+    }
+    function list(q){
+      const box=agTypePop.querySelector('#agTypeList');
+      const key=(q||'').trim();
+      let html='',hit=0;
+      AG_GROUPS.forEach(g=>{
+        const items=g[1].filter(t=>!key||t.indexOf(key)>=0);
+        if(!items.length)return;
+        hit+=items.length;
+        html+='<div class="selgh">'+g[0]+'</div>';
+        items.forEach(t=>{
+          html+='<button class="selopt'+(t===cur?' sel':'')+'" type="button" data-t="'+t.replace(/"/g,'&quot;')+'">'
+            +'<span class="sc">'+t+'</span><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>';
+        });
+      });
+      box.innerHTML=hit?html:'<div class="selnone">검색 결과가 없습니다.</div>';
+      box.querySelectorAll('[data-t]').forEach(o=>o.addEventListener('click',ev=>{ev.stopPropagation();pick(o.getAttribute('data-t'));}));
+    }
+    agTypePop.innerHTML='<div class="selsrch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>'
+      +'<input type="text" id="agTypeQ" placeholder="의안 종류 검색" autocomplete="off"></div><div id="agTypeList"></div>';
+    list('');
+    const q=agTypePop.querySelector('#agTypeQ');
+    q.addEventListener('input',()=>list(q.value));
+    q.addEventListener('click',ev=>ev.stopPropagation());
     agMenuPop.classList.add('hidden');agTypePop.classList.remove('hidden');
-    const r=btn.getBoundingClientRect();agTypePop.style.left=r.left+'px';agTypePop.style.minWidth=r.width+'px';agTypePop.style.maxHeight='280px';agTypePop.style.overflowY='auto';
+    const r=btn.getBoundingClientRect();agTypePop.style.left=Math.max(8,Math.min(r.left,window.innerWidth-262))+'px';
     let top=r.bottom+6;if(top+agTypePop.offsetHeight>window.innerHeight-8)top=Math.max(8,r.top-6-agTypePop.offsetHeight);agTypePop.style.top=top+'px';
+    q.focus();
   }
   agTypePop.addEventListener('click',e=>e.stopPropagation());
   function openAgMethod(btn){

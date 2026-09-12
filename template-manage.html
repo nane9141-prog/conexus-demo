@@ -36,11 +36,16 @@
   .tptrig svg{width:20px;height:20px;flex:none;fill:none;stroke:#737373;stroke-width:1.875;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
   .tpgrp.off .tptrig svg{transform:rotate(-90deg)}
   .tpgrp.off .tpitems{display:none}
-  .tpitems{display:flex;flex-direction:column}
+  .tpitems{display:flex;flex-direction:column;gap:4px}
   .tpitem{display:flex;flex-direction:column;gap:4px;padding:8px;border:none;border-radius:8px;background:none;font-family:inherit;text-align:left;cursor:pointer}
   .tpitem:hover,.tpitem.on{background:#F5F5F5}
   .tpitem b{font-size:14px;line-height:14px;font-weight:600;letter-spacing:-.01em;color:#0071F3}
   .tpitem span{font-size:12px;line-height:16px;letter-spacing:-.01em;color:#737373}
+  .tpitem{min-height:50px;justify-content:center}
+  /* 미리보기 — 변수 자리에 들어간 값은 파랗게 */
+  .tppv{max-height:360px;overflow:auto;padding:14px 16px;background:#FAFAFA;border:1px solid #E5E5E5;border-radius:10px;
+    font-size:14px;line-height:20px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A}
+  .tpfill{font-weight:600;color:#0071F3}
   @media(max-width:1280px){.tpedit{flex-direction:column}.tpvar{width:auto;align-self:auto}}
 </style>
 <script src="cx-data.js"></script>
@@ -243,6 +248,17 @@
     </div>
   </main>
 </div>
+
+<!-- 템플릿 미리보기 -->
+<div class="ovl" id="tpPvOv">
+  <div class="cxdlg" style="width:520px">
+    <div class="cxdlg-h"><div class="t" id="tpPvTt">템플릿 미리보기</div>
+      <div class="d">변수 자리에 예시 값을 넣어 본 모습입니다. 실제 발송 시에는 주주별 값으로 채워집니다.</div></div>
+    <div class="cxdlg-c"><div class="tppv" id="tpPvBody"></div></div>
+    <div class="cxdlg-f"><button class="dark wide" type="button" id="tpPvClose">확인</button></div>
+  </div>
+</div>
+
 <script>
 /* 템플릿 관리 — 목록과 편집기를 한 화면에서 오간다. */
 (function () {
@@ -316,7 +332,9 @@
         + '<button class="tptrig" type="button">' + g.k
         + '<svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>'
         + '<div class="tpitems">' + g.items.map(function (it) {
-            return '<button class="tpitem" type="button" data-v="' + it[0] + '"><b>' + it[0] + '</b><span>' + it[1] + '</span></button>';
+            /* 보여 줄 때는 기호를 뗀 파란 글씨, 꽂을 때는 변수 그대로 */
+            var nm = it[0].replace(/^\{\{|\}\}$/g, '');
+            return '<button class="tpitem" type="button" data-v="' + it[0] + '"><b>' + nm + '</b><span>' + it[1] + '</span></button>';
           }).join('') + '</div></div>';
     }).join('');
   }
@@ -333,6 +351,9 @@
     var a = ta.selectionStart, b = ta.selectionEnd;      /* 커서 자리에 꽂는다 */
     ta.value = ta.value.slice(0, a) + v + ta.value.slice(b);
     ta.focus(); ta.selectionStart = ta.selectionEnd = a + v.length;
+    $('tpGroups').querySelectorAll('.tpitem.on').forEach(function (x) { x.classList.remove('on'); });
+    it.classList.add('on');
+    if (window.cxToast) cxToast(v.replace(/^\{\{|\}\}$/g, '') + ' 변수를 본문에 추가했습니다.');
   });
 
   /* 편집기 도구 — 시연이라 글자 크기와 강조만 실제로 먹인다 */
@@ -396,11 +417,29 @@
     draw(); backToList();
     if (window.cxToast) cxToast(editing ? '템플릿을 수정했습니다.' : '템플릿을 등록했습니다.');
   });
+  /* 미리보기 — 변수를 실제 값으로 바꿔 그대로 보여 준다 */
+  var SAMPLE = {
+    '주주명': '김명준', '주주번호': '0001-238914', '보유주식수': '350,040주', '지분율': '0.07%',
+    '회사명': '카카오뱅크', '총회명': '제10기 정기주주총회', '총회일시': '2026-03-27 10:00',
+    '총회장소': '서울 영등포구 카카오뱅크 본사 대강당', '기준일': '2025-12-31',
+    '의안목록': '제1호 재무제표 승인의 건 외 5건', '의안수': '6', '집중투표의안': '제4-1호',
+    '전자투표기간': '2026-03-17 ~ 2026-03-26', '전자투표링크': 'https://vote.conexus.co.kr/k10',
+    '본인인증수단': '간편인증 · 공동인증서', '가결의안': '제1호 · 제2-1호 · 제2-2호',
+    '부결의안': '없음', '출석률': '63.6%'
+  };
+  function fill(t) {
+    return String(t).replace(/\{\{([^}]+)\}\}/g, function (m, k) {
+      var v = SAMPLE[k.trim()];
+      return v == null ? m : '<span class="tpfill">' + v + '</span>';
+    }).replace(/\n/g, '<br>');
+  }
   $('tpPreview').addEventListener('click', function () {
-    alert('미리보기\n\n' + $('tpTa').value.replace(/\{\{주주명\}\}/g, '김명준')
-      .replace(/\{\{회사명\}\}/g, '카카오뱅크').replace(/\{\{총회명\}\}/g, '제10기 정기주주총회')
-      .replace(/\{\{총회일시\}\}/g, '2026-03-27 10:00').replace(/\{\{총회장소\}\}/g, '본사 대강당')
-      .replace(/\{\{의안수\}\}/g, '8'));
+    $('tpPvTt').textContent = $('tpTitle').value.trim() || '이름 없는 템플릿';
+    $('tpPvBody').innerHTML = fill($('tpTa').value) || '<span style="color:#A3A3A3">본문이 비어 있습니다.</span>';
+    $('tpPvOv').classList.add('on');
+  });
+  $('tpPvOv').addEventListener('click', function (e) {
+    if (e.target === $('tpPvOv') || e.target.id === 'tpPvClose') $('tpPvOv').classList.remove('on');
   });
 
   /* 체크 · 라디오 */
