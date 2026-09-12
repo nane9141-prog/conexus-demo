@@ -502,6 +502,7 @@
   .dlg-f{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px 16px}
   .dlg-btn{padding:8px 12px;border:1px solid #E5E5E5;border-radius:10px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;color:#171717;cursor:pointer}
   .dlg-btn.dark{background:#171717;border-color:#171717;color:#FAFAFA}
+  .dlg-btn[disabled],.adlg-f button[disabled]{opacity:.5;cursor:default}
   .dlg-x{position:absolute;right:16px;top:16px;width:16px;height:16px;border:none;background:none;cursor:pointer;opacity:.7;padding:0}
   .dlg-x svg{width:16px;height:16px;fill:none;stroke:#000;stroke-width:2;stroke-linecap:round}
   .dlg-btn.red{border-color:transparent;background:rgba(220,38,38,.1);color:#E9081B}
@@ -1287,9 +1288,9 @@
       <div class="palert"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>기존 투표 여부와 관계없이 모든 참석 주주를 처리합니다.</div>
     </div>
     <div class="dlg-f">
-      <label class="ckrow on" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>처리 결과를 확인했으며 되돌릴 수 없음에 동의합니다.</label>
+      <label class="ckrow" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>처리 결과를 확인했으며 되돌릴 수 없음에 동의합니다.</label>
       <button class="dlg-btn" type="button" data-close="nvOvl">취소</button>
-      <button class="dlg-btn dark" type="button" data-close="nvOvl">저장</button>
+      <button class="dlg-btn dark" type="button" id="nvOk" data-close="nvOvl">저장</button>
     </div>
   </div>
 </div>
@@ -1342,7 +1343,7 @@
       <div class="palert" id="dlyWarn" style="display:none"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>종료를 안내하면 현장·온라인 투표가 더 이상 접수되지 않습니다.</div>
     </div>
     <div class="dlg-f">
-      <label class="ckrow on" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>현장 화면과 온라인에 함께 전송합니다.</label>
+      <label class="ckrow" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 내용을 확인했으며 현장 화면과 온라인에 전송합니다.</label>
       <button class="dlg-btn" type="button" data-close="dlyOvl">취소</button>
       <button class="dlg-btn dark" type="button" id="dlyOk">화면 전송</button>
     </div>
@@ -1358,7 +1359,7 @@
         <div class="adlg-t">총회를 종료하시겠습니까?</div>
         <div class="adlg-d">종료하면 모든 채널의 의결권 행사가 마감되고 집계가 확정됩니다. 종료 후에는 되돌릴 수 없습니다.</div>
       </div>
-      <label class="ckrow on" data-ck id="endAgree" style="margin-right:0;width:100%"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>모든 의안의 표결이 마감된 것을 확인했습니다.</label>
+      <label class="ckrow" data-ck id="endAgree" style="margin-right:0;width:100%"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>모든 의안의 표결이 마감된 것을 확인했습니다.</label>
     </div>
     <div class="adlg-f">
       <button type="button" data-close="endOvl">취소</button>
@@ -2117,7 +2118,11 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
         <div class="dlg-tabs" id="bulkVote"><button class="on" data-v="찬성" type="button">찬성</button><button data-v="반대" type="button">반대</button></div>
       </div>
     </div>
-    <div class="dlg-f"><button class="dlg-btn" id="bulkCancel" type="button">취소</button><button class="dlg-btn dark" id="bulkOk" type="button">일괄 처리</button></div>
+    <div class="dlg-f">
+      <label class="ckrow" data-ck id="bulkAgree"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>처리 범위를 확인했으며 일괄 처리에 동의합니다.</label>
+      <button class="dlg-btn" id="bulkCancel" type="button">취소</button>
+      <button class="dlg-btn dark" id="bulkOk" type="button">일괄 처리</button>
+    </div>
   </div>
 </div>
 <div class="ovl" id="mvOvl">
@@ -3299,6 +3304,86 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     drawNtc();
   });
   drawNtc();
+})();
+</script>
+<script>
+/* 팝업 확인 절차와 결과 알림.
+   하단 동의 체크가 있는 팝업은 체크해야 최종 버튼이 열리고,
+   최종 액션 뒤에는 무엇이 처리됐는지 토스트로 알린다. */
+(function () {
+  function $(id) { return document.getElementById(id); }
+  function say(m) { if (window.cxToast) cxToast(m); }
+
+  /* ── 동의 체크 ↔ 최종 버튼 ─────────────────────────────────────────── */
+  var GATES = [
+    ['nvOvl', '#nvOvl .ckrow', 'nvOk'],
+    ['dlyOvl', '#dlyOvl .ckrow', 'dlyOk'],
+    ['endOvl', '#endAgree', 'endGo'],
+    ['amvOvl', '#amvAgree', 'amvOk'],
+    ['bulkOvl', '#bulkAgree', 'bulkOk']
+  ];
+  GATES.forEach(function (g) {
+    var ovl = $(g[0]), chk = document.querySelector(g[1]), btn = $(g[2]);
+    if (!ovl || !chk || !btn) return;
+    function sync() { btn.disabled = !chk.classList.contains('on'); }
+    chk.addEventListener('click', function () { setTimeout(sync, 0); });  /* 토글은 다른 곳에서 한다 */
+    /* 팝업이 열릴 때마다 체크를 도로 끈다 — 앞선 확인이 다음 처리까지 따라가면 안 된다 */
+    new MutationObserver(function () {
+      if (ovl.classList.contains('on')) { chk.classList.remove('on'); sync(); }
+    }).observe(ovl, { attributes: true, attributeFilter: ['class'] });
+    sync();
+  });
+
+  /* ── 처리 결과 알림 ───────────────────────────────────────────────── */
+  function on(id, fn) { var b = $(id); if (b) b.addEventListener('click', function () { if (!b.disabled) fn(); }); }
+  /* 받침에 따라 조사를 고른다 — '반대로 / 찬성으로' */
+  function josa(w, withJong, without) {
+    var c = (w || '').charCodeAt((w || '').length - 1) - 0xAC00;
+    var jong = (c >= 0 && c < 11172) ? (c % 28) !== 0 : false;
+    return w + (jong ? withJong : without);
+  }
+
+  /* 비콘 제어 — 저장 버튼에는 id 가 없어 푸터에서 찾는다 */
+  var bcnSave = document.querySelector('#bcnOvl .dlg-btn.dark');
+  if (bcnSave) bcnSave.addEventListener('click', function () {
+    var t = document.querySelector('#bcnTabs button.on');
+    say('비콘 신호 유지 시간을 ' + (t ? t.textContent : '30초') + '로 저장했습니다.');
+  });
+
+  on('nvOk', function () {
+    var t = document.querySelector('#nvTabs button.on');
+    say('출석 미투표 주주를 ' + (t ? t.textContent : '기권 처리') + '했습니다.');   /* '기권 처리' · '불참 처리' */
+  });
+
+  /* 공지 등록 핸들러가 입력을 비우고 가므로 캡처 단계에서 먼저 읽는다 */
+  $('ntcSend').addEventListener('click', function () {
+    var t = ($('ntcTitle').value || $('ntcBody').value || '').trim();
+    say(t ? '공지를 전송했습니다.' : '공지 내용을 입력해 주세요.');
+  }, true);
+
+  var DLY = { delay: '총회 지연', resume: '총회 속개', end: '총회 종료' };
+  on('dlyOk', function () {
+    var t = document.querySelector('#dlyTabs button.on');
+    var k = t ? t.getAttribute('data-v') : 'delay';
+    say(DLY[k] + ' 안내를 현장 화면과 온라인에 전송했습니다.');
+  });
+
+  on('bulkOk', function () {
+    var sc = document.querySelector('#bulkScope label.on'),
+        vt = document.querySelector('#bulkVote button.on');
+    var who = sc ? sc.querySelector('b').textContent : '현장 참석자';
+    say(josa(who, '을 ', '를 ') + josa(vt ? vt.textContent : '찬성', '으로', '로') + ' 일괄 처리했습니다.');
+  });
+
+  on('mvOk', function () { say('서면 투표를 등록했습니다.'); });
+  on('discOk', function () { say('질의 공개 설정을 저장했습니다.'); });
+  on('ansSubmit', function () { say('답변을 등록했습니다.'); });
+  on('hostSave', function () { say('발언 제어 권한을 저장했습니다.'); });
+  on('amcOk', function () {
+    var d = $('amcDesc').textContent, m = /^(제[\d-]+호)/.exec(d);
+    say((m ? m[1] : '해당 의안') + '를 원안과 수정안으로 나눴습니다.');
+  });
+  /* 총회 종료는 폐회 화면으로 넘어가므로 토스트를 띄우지 않는다 */
 })();
 </script>
 </body>

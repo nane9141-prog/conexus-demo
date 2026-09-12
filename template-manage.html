@@ -379,6 +379,7 @@
     var r = ROWS.filter(function (x) { return x.id === +dl.getAttribute('data-del'); })[0];
     if (r && r.base) { alert('기본 템플릿은 삭제할 수 없습니다.'); return; }
     ROWS = ROWS.filter(function (x) { return x !== r; }); draw();
+    if (window.cxToast) cxToast('템플릿을 삭제했습니다.');
   });
   $('tpSave').addEventListener('click', function () {
     var nm = $('tpTitle').value.trim() || '이름 없는 템플릿';
@@ -391,6 +392,7 @@
         vars: used, d: '2026-01-14', by: '강하나' });
     }
     draw(); backToList();
+    if (window.cxToast) cxToast(editing ? '템플릿을 수정했습니다.' : '템플릿을 등록했습니다.');
   });
   $('tpPreview').addEventListener('click', function () {
     alert('미리보기\n\n' + $('tpTa').value.replace(/\{\{주주명\}\}/g, '김명준')

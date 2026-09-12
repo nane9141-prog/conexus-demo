@@ -299,7 +299,9 @@
       ROWS.push({ id: Date.now(), base: 0, on: '전체 총회', m: v, ag: $('rsAg').value,
         pass: pass, q: METHOD[v], d: $('rsDate').value, by: '강하나' });
     }
+    var made = !editing;
     draw(); closeSheet();
+    if (window.cxToast) cxToast(made ? '결의기준을 등록했습니다.' : '결의기준을 수정했습니다.');
   });
 
   /* 삭제 */
@@ -320,6 +322,7 @@
   $('rsDelYes').addEventListener('click', function () {
     ROWS = ROWS.filter(function (r) { return r !== pend; });
     draw(); delOvl.classList.remove('on');
+    if (window.cxToast) cxToast('결의기준을 삭제했습니다.');
   });
   delOvl.addEventListener('click', function (e) { if (e.target === delOvl) delOvl.classList.remove('on'); });
   document.addEventListener('click', function (e) {

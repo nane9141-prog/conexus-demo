@@ -303,6 +303,10 @@
   });
   document.getElementById('rmDel').addEventListener('click', function () {
     history.pushState(null, '', location.pathname); show(null);
+    if (window.cxToast) cxToast('주주명부를 삭제했습니다.');
+  });
+  document.getElementById('rmUnlink').addEventListener('click', function () {
+    if (window.cxToast) cxToast('주주총회 연결 상태를 변경했습니다.');
   });
   window.addEventListener('popstate', function () {
     show(new URLSearchParams(location.search).get('id'));
