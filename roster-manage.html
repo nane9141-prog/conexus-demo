@@ -21,6 +21,24 @@
   .rmlink .nm{flex:1;min-width:0;font-size:16px;line-height:24px;font-weight:700;letter-spacing:-.01em;color:#737373;overflow:hidden;text-overflow:ellipsis}
   .rmlink .nm.on{color:#0A0A0A}
   .rmlink .sub{font-size:12px;line-height:16px;color:#737373}
+  .rmlink .desc{font-size:12px;line-height:16px;color:#737373}
+  .rmlink .stg{display:inline-flex;align-items:center;gap:6px;font-size:12px;line-height:16px;font-weight:500;color:#171717}
+  .rmlink .stg i{width:6px;height:6px;border-radius:50%;background:#0071F3;display:block;flex:none}
+  .fbtn[disabled]{opacity:.5;cursor:default}
+  /* 회색 정보 상자 — 해제 전 무엇이 걸려 있는지 보여 준다 */
+  .rmbox{display:flex;flex-direction:column;gap:4px;width:100%;box-sizing:border-box;padding:8px;background:#F5F5F5;border-radius:8px}
+  .rmbox .r{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px;line-height:20px;letter-spacing:-.01em;color:#0A0A0A}
+  .rmbox .r b{font-weight:600;text-align:right}
+  /* 주주총회 생성 내역 고르기 */
+  .rmpick{display:flex;flex-direction:column;gap:4px;max-height:220px;overflow:auto;padding:4px;border:1px solid #E5E5E5;border-radius:10px}
+  .rmpick button{display:flex;flex-direction:column;gap:2px;padding:8px 6px;border:none;border-radius:8px;background:none;font-family:inherit;text-align:left;cursor:pointer}
+  .rmpick button:hover{background:#F5F5F5}
+  .rmpick button.on{background:rgba(23,23,23,.05)}
+  .rmpick .t{font-size:14px;line-height:20px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A}
+  .rmpick .d{font-size:12px;line-height:16px;letter-spacing:-.01em;color:#0071F3}
+  .rmrow{display:flex;gap:16px}
+  .rmrow .fradio{flex:1;flex-direction:row;gap:16px}
+  .rmrow .fradio label{flex:1;align-items:center;padding:8px 10px}
   @media(max-width:1200px){.rmcards{flex-direction:column}.rmlink{width:auto}}
 </style>
 <script src="cx-data.js"></script>
@@ -175,8 +193,10 @@
           </div>
           <div class="rmlink">
             <div class="h">주주총회 연결</div>
+            <div class="desc">이 명부를 기준으로 의결권을 계산할 주주총회입니다.</div>
             <div class="b"><div class="nm on" id="rmMeeting">제10기 정기주주총회</div>
-              <button class="fbtn" type="button" id="rmUnlink">연결 해제</button></div>
+              <button class="fbtn" type="button" id="rmUnlink">명부 연결해제</button></div>
+            <div class="stg" id="rmStage"><i></i><span></span></div>
             <div class="sub" id="rmLinkSub">명부확정 · 2026-02-02 · 강하나</div>
           </div>
         </div>
@@ -204,6 +224,82 @@
       </section>
     </div>
   </main>
+
+  <!-- 주주총회 연결 -->
+  <div class="ovl" id="rmLinkOvl">
+    <div class="rsheet-dlg" style="box-sizing:border-box;width:384px;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;display:flex;flex-direction:column">
+      <div style="display:flex;flex-direction:column;gap:8px;padding:16px">
+        <div style="font-size:16px;line-height:16px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A">주주총회 연결</div>
+        <div style="font-size:14px;line-height:20px;letter-spacing:-.01em;color:#737373">이 주주명부를 기준으로 의결권을 계산할 주주총회를 정합니다.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:24px;padding:0 16px 8px;max-height:60vh;overflow:auto">
+        <div class="ffield"><div class="lb">연결방법</div>
+          <div class="fradio" id="rmWay" style="flex-direction:row;gap:16px">
+            <label class="on" data-v="new"><span class="dot"></span><span class="tx"><b>새 주주총회 생성</b></span></label>
+            <label data-v="pick"><span class="dot"></span><span class="tx"><b>생성내역 선택</b></span></label>
+          </div></div>
+
+        <div id="rmNewBox" style="display:flex;flex-direction:column;gap:16px">
+          <div class="ffield"><div class="lb">생성유형</div>
+            <div class="fradio" id="rmType" style="flex-direction:row;gap:16px">
+              <label class="on" data-v="real"><span class="dot"></span><span class="tx"><b>주주총회</b></span></label>
+              <label data-v="test"><span class="dot"></span><span class="tx"><b>테스트 주주총회</b></span></label>
+            </div></div>
+          <div class="ffield"><div class="lb">주총 구분</div>
+            <div class="fradio" id="rmKind" style="flex-direction:row;gap:16px">
+              <label class="on" data-v="정기"><span class="dot"></span><span class="tx"><b>정기 주주총회</b></span></label>
+              <label data-v="임시"><span class="dot"></span><span class="tx"><b>임시 주주총회</b></span></label>
+            </div></div>
+          <div class="ffield"><div class="lb" id="rmNoLb">주총기수</div>
+            <input class="finp" id="rmNo" type="text" placeholder="숫자만 입력해 주세요" inputmode="numeric">
+            <div style="font-size:12px;line-height:16px;color:#737373">주총 구분과 기수는 주주총회 설정에서 다시 바꿀 수 있습니다.</div>
+          </div>
+        </div>
+
+        <div class="ffield" id="rmPickBox" style="display:none"><div class="lb">주주총회 생성내역</div>
+          <div class="rmpick" id="rmPick"></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;padding:12px 16px 16px">
+        <button class="fbtn" type="button" id="rmLinkCancel" style="flex:1;height:32px">취소</button>
+        <button class="fbtn dark" type="button" id="rmLinkOk" style="flex:1;height:32px">주주총회 연결</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 연결 해제 -->
+  <div class="ovl" id="rmFreeOvl">
+    <div class="adlg">
+      <div class="adlg-h">
+        <div class="adlg-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5"/><circle cx="12" cy="16.4" r=".8" fill="#E9081B" stroke="none"/></svg></div>
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div class="adlg-t">주주명부 연결을 해제할까요?</div>
+          <div class="adlg-d" style="color:#0A0A0A">해제 시 주주별 의결권 계산 내역이 초기화됩니다. 해제 후 동일 명부를 다시 연결할 수 있습니다.</div>
+        </div>
+        <div class="rmbox">
+          <div class="r"><span>연결서비스</span><b>주주총회</b></div>
+          <div class="r"><span>주주명부 기준일</span><b id="rmFreeBase">2026-01-31</b></div>
+          <div class="r"><span>연결대상</span><b id="rmFreeTo">제10기 정기주주총회</b></div>
+        </div>
+        <label class="fchk" id="rmFreeChk"><span class="bx"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 안내를 확인했습니다.</label>
+      </div>
+      <div class="adlg-f"><button type="button" id="rmFreeCancel">취소</button><button type="button" class="danger" id="rmFreeOk">연결 해제</button></div>
+    </div>
+  </div>
+
+  <!-- 삭제 불가 -->
+  <div class="ovl" id="rmNoDelOvl">
+    <div class="adlg">
+      <div class="adlg-h">
+        <div class="adlg-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5"/><circle cx="12" cy="16.4" r=".8" fill="#E9081B" stroke="none"/></svg></div>
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div class="adlg-t">주주명부를 삭제할 수 없습니다</div>
+          <div class="adlg-d" id="rmNoDelDesc">주주총회에 연결된 명부입니다. 연결을 해제한 뒤 삭제해 주세요.</div>
+        </div>
+      </div>
+      <div class="adlg-f"><button type="button" id="rmNoDelOk">확인</button></div>
+    </div>
+  </div>
 </div>
 <script>
 /* 주주명부 관리 — 목록/상세 한 화면. ?id 가 있으면 상세를 편다. */
@@ -213,9 +309,11 @@
 
   /* 명부 목록 — 확정된 한 건이 이번 총회에 물려 있다 */
   var LIST = [
-    { id: 'R-2026-01', st: '연결됨', nm: '제10기 정기주주총회 기준 주주명부',
+    { id: 'R-2026-01', st: '연결됨', nm: '제10기 정기주주총회 기준 주주명부', stage: 'set',
+      meeting: '제10기 정기주주총회',
       sh: M.sharesIssued || 476211964, ho: 234000, base: '2026-01-31', reg: '2026-02-02', by: '강하나' },
-    { id: 'R-2025-08', st: '확정', nm: '2025년 8월 임시주주총회 기준 주주명부',
+    { id: 'R-2025-08', st: '연결됨', nm: '2025년 8월 임시주주총회 기준 주주명부', stage: 'end',
+      meeting: '2025년 8월 임시주주총회',
       sh: 468902110, ho: 221400, base: '2025-07-31', reg: '2025-08-04', by: '박지용' },
     { id: 'R-2025-01', st: '확정', nm: '제9기 정기주주총회 기준 주주명부',
       sh: 461330500, ho: 208700, base: '2025-01-31', reg: '2025-02-03', by: '강하나' },
@@ -227,6 +325,24 @@
   var TONE = { '연결됨': 'b', '확정': '', '검증중': 'a', '검증 실패': 'r' };
 
   function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+  /* 서비스 진행 단계 — 이름과 지금 무엇을 하는 중인지 */
+  var STAGE = {
+    set:   ['주주총회 설정 중', '기본 정보·서비스 설정 진행 중'],
+    evote: ['전자투표/위임장 진행 중', '전자투표 시작 후 마감 전'],
+    vend:  ['전자투표/위임 마감', '전자투표 종료, 현장 준비 중'],
+    site:  ['현장투표 진행 중', '주총 당일 현장 운영 중'],
+    fix:   ['결과 확정', '집계 완료, 결과 확정 처리'],
+    end:   ['주총 종료', '모든 절차 완료']
+  };
+  /* LNB 에서 만든 주주총회 — 생성 최신순 */
+  var MEETINGS = [
+    { no: '제10기 정기주주총회', kind: '정기', linked: '제10기 정기주주총회 기준 주주명부' },
+    { no: '2025년 8월 임시주주총회', kind: '임시', linked: '2025년 8월 임시주주총회 기준 주주명부' },
+    { no: '제9기 정기주주총회', kind: '정기', linked: '' },
+    { no: '제9기 테스트 주주총회', kind: '테스트', linked: '' }
+  ];
+  var cur = null;
 
   function drawList() {
     document.getElementById('rmBody').innerHTML = LIST.map(function (r) {
@@ -262,12 +378,21 @@
     document.getElementById('rmHolders').textContent = cm(r.ho);
     var linked = (r.st === '연결됨');
     var nm = document.getElementById('rmMeeting');
-    nm.textContent = linked ? (M.name || '제10기 정기주주총회') : '연결된 주주총회 없음';
+    nm.textContent = linked ? (r.meeting || M.name || '제10기 정기주주총회') : '연결된 주주총회 없음';
     nm.className = 'nm' + (linked ? ' on' : '');
-    document.getElementById('rmUnlink').textContent = linked ? '연결 해제' : '총회 연결';
+    /* 연결 해제는 설정 단계에서만 — 그 뒤로는 의결권 계산이 이미 걸려 있다 */
+    var st = STAGE[r.stage] || STAGE.set, canFree = linked && r.stage === 'set';
+    var btn = document.getElementById('rmUnlink');
+    btn.textContent = linked ? '명부 연결해제' : '주주총회 연결';
+    btn.disabled = linked && !canFree;
+    btn.title = btn.disabled ? '주주총회 설정 단계에서만 명부 연결을 해제할 수 있습니다.' : '';
+    var stg = document.getElementById('rmStage');
+    stg.style.display = linked ? 'inline-flex' : 'none';
+    stg.querySelector('span').textContent = st[0] + ' · ' + st[1];
     document.getElementById('rmLinkSub').textContent = linked
       ? '명부확정 · ' + r.reg + ' · ' + r.by
       : '연결하면 이 명부를 기준으로 의결권이 계산됩니다.';
+    cur = r;
 
     var tot = r.sh || 1, rows = [], sum = 0;
     NAMES.forEach(function (n, i) {
@@ -299,14 +424,114 @@
     var g = e.target.closest('[data-go]');
     if (g) { history.pushState(null, '', '?id=' + g.getAttribute('data-go')); show(g.getAttribute('data-go')); return; }
     var d = e.target.closest('[data-del]');
-    if (d) { alert('확정된 주주명부는 삭제할 수 없습니다.'); }
+    if (d) {
+      var row = LIST.filter(function (x) { return x.id === d.getAttribute('data-del'); })[0];
+      if (row && row.st === '연결됨') {
+        document.getElementById('rmNoDelDesc').textContent = '주주총회에 연결된 명부입니다. 연결을 해제한 뒤 삭제해 주세요.';
+      } else {
+        document.getElementById('rmNoDelDesc').textContent = '확정된 주주명부는 삭제할 수 없습니다.';
+      }
+      document.getElementById('rmNoDelOvl').classList.add('on');
+    }
   });
-  document.getElementById('rmDel').addEventListener('click', function () {
+  function $(id) { return document.getElementById(id); }
+  function open(o) { o.classList.add('on'); }
+  function close(o) { o.classList.remove('on'); }
+
+  /* 연결된 명부는 지울 수 없다 — 무엇을 먼저 해야 하는지 알려 준다 */
+  $('rmDel').addEventListener('click', function () {
+    if (cur && cur.st === '연결됨') { open($('rmNoDelOvl')); return; }
     history.pushState(null, '', location.pathname); show(null);
     if (window.cxToast) cxToast('주주명부를 삭제했습니다.');
   });
-  document.getElementById('rmUnlink').addEventListener('click', function () {
-    if (window.cxToast) cxToast('주주총회 연결 상태를 변경했습니다.');
+  $('rmNoDelOk').addEventListener('click', function () { close($('rmNoDelOvl')); });
+
+  /* ── 연결 해제 ─────────────────────────────────────────────────────── */
+  var freeOk = $('rmFreeOk'), freeChk = $('rmFreeChk');
+  function syncFree() { freeOk.disabled = !freeChk.classList.contains('on'); }
+  freeChk.addEventListener('click', function () { freeChk.classList.toggle('on'); syncFree(); });
+  $('rmFreeCancel').addEventListener('click', function () { close($('rmFreeOvl')); });
+  freeOk.addEventListener('click', function () {
+    close($('rmFreeOvl'));
+    if (cur) { cur.st = '확정'; cur.meeting = ''; drawList(); drawDetail(cur); }
+    if (window.cxToast) cxToast('주주총회 연결을 해제했습니다.');
+  });
+
+  /* ── 연결 ─────────────────────────────────────────────────────────── */
+  var pickSel = null;
+  function drawPick() {
+    $('rmPick').innerHTML = MEETINGS.map(function (m, i) {
+      return '<button type="button" data-m="' + i + '"' + (pickSel === i ? ' class="on"' : '') + '>'
+        + '<span class="t">' + m.no + '</span>'
+        + (m.linked ? '<span class="d">연결됨 · ' + m.linked + '</span>' : '') + '</button>';
+    }).join('');
+  }
+  function radio(box, v) {
+    box.querySelectorAll('label').forEach(function (l) { l.classList.toggle('on', l.dataset.v === v); });
+  }
+  function pickedValue(box) {
+    var on = box.querySelector('label.on'); return on ? on.dataset.v : '';
+  }
+  function syncLink() {
+    var way = pickedValue($('rmWay'));
+    $('rmNewBox').style.display = way === 'new' ? 'flex' : 'none';
+    $('rmPickBox').style.display = way === 'pick' ? 'flex' : 'none';
+    var ok;
+    if (way === 'pick') { ok = pickSel !== null; }
+    else {
+      /* 임시 주주총회는 기수를 적지 않아도 된다 */
+      var kind = pickedValue($('rmKind'));
+      ok = kind === '임시' || $('rmNo').value.trim() !== '';
+    }
+    $('rmLinkOk').disabled = !ok;
+    $('rmLinkOk').style.opacity = ok ? '' : '.5';
+    /* 테스트 주총은 기수에 한글도 쓴다 */
+    var test = pickedValue($('rmType')) === 'test';
+    $('rmNoLb').textContent = '주총기수' + (pickedValue($('rmKind')) === '임시' ? ' (선택)' : '');
+    $('rmNo').placeholder = test ? '예) 9 또는 사전리허설' : '숫자만 입력해 주세요';
+    $('rmNo').inputMode = test ? 'text' : 'numeric';
+  }
+  ['rmWay', 'rmType', 'rmKind'].forEach(function (id) {
+    $(id).addEventListener('click', function (e) {
+      var l = e.target.closest('label'); if (!l) return;
+      radio($(id), l.dataset.v); syncLink();
+    });
+  });
+  $('rmNo').addEventListener('input', function () {
+    if (pickedValue($('rmType')) !== 'test') this.value = this.value.replace(/[^0-9]/g, '');
+    syncLink();
+  });
+  $('rmPick').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-m]'); if (!b) return;
+    pickSel = +b.dataset.m; drawPick(); syncLink();
+  });
+  $('rmLinkCancel').addEventListener('click', function () { close($('rmLinkOvl')); });
+  $('rmLinkOk').addEventListener('click', function () {
+    if ($('rmLinkOk').disabled) return;
+    var name;
+    if (pickedValue($('rmWay')) === 'pick') { name = MEETINGS[pickSel].no; }
+    else {
+      var no = $('rmNo').value.trim(), kind = pickedValue($('rmKind'));
+      var head = pickedValue($('rmType')) === 'test' ? '테스트 ' : '';
+      name = head + (no ? '제' + no + '기 ' : '') + kind + '주주총회';
+    }
+    close($('rmLinkOvl'));
+    if (cur) { cur.st = '연결됨'; cur.stage = 'set'; cur.meeting = name; drawList(); drawDetail(cur); }
+    if (window.cxToast) cxToast(name + '에 주주명부를 연결했습니다.');
+  });
+
+  $('rmUnlink').addEventListener('click', function () {
+    if (this.disabled) return;
+    if (cur && cur.st === '연결됨') {
+      $('rmFreeBase').textContent = cur.base;
+      $('rmFreeTo').textContent = cur.meeting || (M.name || '제10기 정기주주총회');
+      freeChk.classList.remove('on'); syncFree();
+      open($('rmFreeOvl'));
+    } else {
+      pickSel = null; radio($('rmWay'), 'new'); radio($('rmType'), 'real'); radio($('rmKind'), '정기');
+      $('rmNo').value = ''; drawPick(); syncLink();
+      open($('rmLinkOvl'));
+    }
   });
   window.addEventListener('popstate', function () {
     show(new URLSearchParams(location.search).get('id'));

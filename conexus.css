@@ -817,6 +817,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 .adlg-f{display:flex;align-items:center;gap:8px;padding:12px 16px 16px}
 .adlg-f button{flex:1;height:32px;border:1px solid #E5E5E5;border-radius:10px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer}
 .adlg-f button.danger{border-color:transparent;background:rgba(220,38,38,.1);color:#E9081B}
+.adlg-f button[disabled]{opacity:.5;cursor:default}
 
 /* ── 표 공통 규칙 ────────────────────────────────────────────────────────
    정렬 아이콘은 두지 않는다. 헤더를 눌러 정렬하되 ▲/▼ 표시가 없으므로
