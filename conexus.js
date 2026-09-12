@@ -78,7 +78,7 @@
    · 찬성·반대·기권·중립 헤더는 같은 기호를 달고 가운데로 둔다.
    · 투표권자·주주명·의안명은 텍스트 필터, 행사방식 같은 분류는 목록 필터.
      칸이 좁은 컬럼(100px 미만)은 필터를 달지 않는다.
-   · 표 위 도구 두 개 — 행 높이, 컬럼 표시.
+   · 표 위 도구 두 개 — 줄 간격, 컬럼 표시. 자리만 <span data-cx-tools> 로 잡아 두면 된다.
 
    새로 만드는 표도 이 규칙을 그대로 따른다. 표를 다시 그렸으면
    cxTable.apply(table) 한 번만 불러 주면 된다. */
@@ -402,16 +402,35 @@
     }
   }
 
-  /* ── 표 위 도구 — 행 높이 · 컬럼 표시 ──────────────────────────────── */
+  /* ── 표 위 도구 — 줄 간격 · 컬럼 표시 ──────────────────────────────────
+     표 위 어딘가에 <span data-cx-tools></span> 만 두면 두 버튼이 그려진다.
+     한 자리에서 표를 바꿔 보여 주는 화면이 있어(의안 기준 ↔ 주주 기준),
+     도구는 늘 지금 보이는 표를 본다. */
   var ROWH = [['좁게', 36], ['보통', 0], ['넓게', 60]];
+  /* 도구를 누른 그 순간 보이는 표가 대상이다 — 화면을 갈아 끼워도 따라간다 */
+  function target(host) {
+    for (var i = 0; i < host.__ts.length; i++) {
+      if (host.__ts[i].tbl.offsetParent !== null) return host.__ts[i];
+    }
+    return host.__ts[0];
+  }
+  function toolSlot(tbl) {
+    for (var el = tbl.parentElement; el && el !== document.body; el = el.parentElement) {
+      var slot = el.querySelector('[data-cx-tools]');
+      if (slot) return slot;
+    }
+    return null;
+  }
   function tools(tbl, t) {
-    var host = tbl.closest('[data-cx-host]');
-    host = host ? host.querySelector('[data-cx-tools]') : null;
-    if (!host || host.__cx) return;
+    var host = toolSlot(tbl);
+    if (!host) return;
+    host.__ts = host.__ts || [];
+    if (host.__ts.indexOf(t) < 0) host.__ts.push(t);
+    if (host.__cx) return;
     host.__cx = 1;
     host.classList.add('cx-tools');
     host.innerHTML =
-      '<button class="cx-tbtn" type="button" data-rowh title="행 높이">'
+      '<button class="cx-tbtn" type="button" data-rowh title="줄 간격">'
       + '<svg viewBox="0 0 24 24"><path d="M3 5h18M3 12h18M3 19h18"/></svg></button>'
       + '<button class="cx-tbtn" type="button" data-cols title="컬럼 표시">'
       + '<svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 12h4M12 12h8M4 17h12M20 17h0"/>'
@@ -419,8 +438,8 @@
 
     host.querySelector('[data-rowh]').addEventListener('click', function (e) {
       e.stopPropagation();
-      var b = e.currentTarget;
-      show(b, '<div class="lb">행 높이</div>' + ROWH.map(function (r) {
+      var b = e.currentTarget, t = target(host);
+      show(b, '<div class="lb">줄 간격</div>' + ROWH.map(function (r) {
         return '<button class="it' + (t.rowh === r[1] ? ' on' : '') + '" type="button" data-h="' + r[1] + '">'
           + '<span class="tx">' + r[0] + '</span>' + CHECK + '</button>';
       }).join(''), function (m) {
@@ -438,7 +457,7 @@
 
     host.querySelector('[data-cols]').addEventListener('click', function (e) {
       e.stopPropagation();
-      var b = e.currentTarget;
+      var b = e.currentTarget, t = target(host);
       t.hidden = t.hidden || {};
       var items = t.ths.map(function (th, i) {
         var lb = label(th); if (!lb) return '';
