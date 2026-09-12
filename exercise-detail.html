@@ -164,7 +164,7 @@
       </div>
       <button class="iconbtn md" title="변경이력"><i class="ph ph-clock-counter-clockwise" style="font-size:16px"></i></button>
     </div>
-    <div class="scroll">
+    <div class="scroll" data-cx-host>
       <div class="exd-head">
         <button class="exd-back" type="button" onclick="history.back()" aria-label="뒤로"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
         <span class="exd-no" id="exdNo">1</span>
@@ -175,15 +175,14 @@
       <div class="exd-bar">
         <div class="exd-search"><i class="ph ph-magnifying-glass" style="font-size:16px"></i><input type="text" placeholder="주주명 · 주주번호 검색"></div>
         <button class="xbtn" type="button"><i class="ph ph-download-simple" style="font-size:16px"></i>다운로드</button>
-        <button class="xbtn ic" type="button" title="정렬"><i class="ph ph-list-dashes" style="font-size:14px"></i></button>
-        <button class="xbtn ic" type="button" title="컬럼 · 필터"><i class="ph ph-sliders-horizontal" style="font-size:14px"></i></button>
+        <span data-cx-tools></span>
       </div>
       <div class="exd-grid">
         <div class="exd-scroll"><table class="extbl">
           <thead><tr>
-            <th class="l fic" style="width:110px">투표권자<svg class="exfic" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></th>
-            <th class="l fic" style="min-width:220px">주주명<svg class="exfic" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></th>
-            <th class="l fic" style="width:120px">행사방식<svg class="exfic" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></th>
+            <th class="l" style="width:110px">투표권자</th>
+            <th class="l" style="min-width:220px">주주명</th>
+            <th class="l" style="width:120px">행사방식</th>
             <th style="width:130px">행사가능의결권</th>
             <th style="width:120px">미행사의결권</th>
             <th style="width:120px">행사의결권</th>

@@ -128,11 +128,11 @@
     </div>
     <div class="mgscroll">
       <!-- 목록 -->
-      <section id="rmList" style="display:flex;flex-direction:column;gap:20px">
+      <section id="rmList" data-cx-host style="display:flex;flex-direction:column;gap:20px">
         <div class="phead">
           <div class="l"><h1>주주명부 관리</h1>
             <div class="sub">주주명부를 등록하면 주주총회에 연결해 사용할 수 있습니다. 확정된 명부는 삭제할 수 없습니다.</div></div>
-          <div class="acts"><button class="fbtn dark" type="button" id="rmAdd">주주명부 추가</button></div>
+          <div class="acts"><span data-cx-tools></span><button class="fbtn dark" type="button" id="rmAdd">주주명부 추가</button></div>
         </div>
         <div class="fbox">
           <div class="fscroll"><table class="ftbl" id="rmTbl"><thead><tr>
@@ -157,11 +157,11 @@
       </section>
 
       <!-- 상세 -->
-      <section id="rmDetail" style="display:none;flex-direction:column;gap:20px">
+      <section id="rmDetail" data-cx-host style="display:none;flex-direction:column;gap:20px">
         <div style="display:flex;flex-direction:column;gap:4px">
           <div class="phead">
             <div class="l"><div class="ttl"><h1>주주명부 상세</h1><span class="pill b" id="rmState">연결됨</span></div></div>
-            <div class="acts"><button class="fbtn red" type="button" id="rmDel">명부 삭제</button></div>
+            <div class="acts"><span data-cx-tools></span><button class="fbtn red" type="button" id="rmDel">명부 삭제</button></div>
           </div>
           <div class="phead"><div class="l"><div class="sub" id="rmBase">주주명부 기준일 2026-01-31</div></div></div>
         </div>

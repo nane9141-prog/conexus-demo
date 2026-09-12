@@ -64,46 +64,353 @@
   }, false);
 })();
 
-/* CONEXUS 공통 테이블 정렬: 헤더 클릭 시 정렬(정렬 표시는 히든, 활성 시 노출) */
-(function(){
-  var st=document.createElement('style');
-  st.textContent='th.cx-sortable{cursor:pointer;user-select:none}th.cx-sortable .cx-ar{display:inline-block;width:0;height:0;margin-left:5px;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid currentColor;opacity:0;vertical-align:middle;transition:opacity .12s}th.cx-sortable.cx-asc .cx-ar{opacity:.85;border-top:none;border-bottom:5px solid currentColor}th.cx-sortable.cx-desc .cx-ar{opacity:.85}';
-  (document.head||document.documentElement).appendChild(st);
-  function num(s){ var m=(s||'').replace(/[^0-9.\-]/g,''); return (m===''||m==='-')?NaN:parseFloat(m); }
-  function enhance(tbl){
-    if(tbl.__cxSort) return;
-    if(tbl.hasAttribute("data-nosort")) return;
-    var thead=tbl.tHead, tb=tbl.tBodies[0];
-    if(!thead||!tb||!thead.rows.length) return;
-    if(tbl.querySelector('th.sortable')) return;                 // 자체 정렬 보유
-    if(tb.querySelector('tr.child,tr.atchild,tr.grp,tr.vgrp,tr[data-child],tr[data-grp],tr[data-toggle]')) return; // 그룹/트리 테이블 제외
-    var brows=Array.prototype.filter.call(tb.rows,function(r){return r.cells.length>1 && !r.querySelector('[colspan]');});
-    if(brows.length<2) return;
-    tbl.__cxSort=true;
-    var hrow=thead.rows[thead.rows.length-1], ths=hrow.cells;
-    Array.prototype.forEach.call(ths,function(th,idx){
-      if(!(th.textContent||'').trim()) return;                   // 액션/빈 헤더 제외
-      th.classList.add('cx-sortable');
-      var ar=document.createElement('span'); ar.className='cx-ar'; th.appendChild(ar);
-      th.addEventListener('click',function(e){
-        if(e.target.closest('a,button,input,select,label')) return;
-        var rows=Array.prototype.slice.call(tb.rows);
-        rows.forEach(function(r,k){ if(r.__cxIdx==null) r.__cxIdx=k; });
-        var dir=th.__cxDir===1?-1:(th.__cxDir===-1?0:1);
-        Array.prototype.forEach.call(ths,function(o){ if(o!==th){o.__cxDir=0;o.classList.remove('cx-asc','cx-desc');} });
-        th.__cxDir=dir; th.classList.remove('cx-asc','cx-desc'); if(dir===1)th.classList.add('cx-asc'); else if(dir===-1)th.classList.add('cx-desc');
-        rows.sort(function(a,b){
-          if(dir===0) return a.__cxIdx-b.__cxIdx;
-          var x=(a.cells[idx]?a.cells[idx].textContent:'').trim(), y=(b.cells[idx]?b.cells[idx].textContent:'').trim();
-          var nx=num(x),ny=num(y), c;
-          if(!isNaN(nx)&&!isNaN(ny)) c=nx-ny; else c=x.localeCompare(y,'ko');
-          return dir*c;
-        });
-        rows.forEach(function(r){ tb.appendChild(r); });
+/* CONEXUS 표 공통 규칙 ─────────────────────────────────────────────────────
+   컬럼 성격 하나로 정렬·가로정렬·필터를 함께 정한다.
+
+   · 정렬 표시(▲▼)는 두지 않는다. 헤더를 눌러 정렬하되 아이콘이 없으므로
+     헤더 글자가 본문 글자와 같은 자리에서 시작한다.
+   · 정렬은 사람·수치·분류·일시 컬럼에만 건다. 의안명·의안번호·더보기는 뺀다.
+   · 가로 정렬 — 이름/코드는 왼쪽, 의결권·지분율 같은 수치는 오른쪽,
+     유형·상태·제한 같은 분류는 가운데. dot 뱃지가 든 칸은 왼쪽으로 돌린다.
+   · 투표권자 칸은 본문 글자를 굵게(600) 쓴다.
+   · 투표권자·주주명·의안명은 텍스트 필터, 행사방식 같은 분류는 목록 필터.
+     칸이 좁은 컬럼(100px 미만)은 필터를 달지 않는다.
+   · 표 위 도구 두 개 — 행 높이, 컬럼 표시.
+
+   새로 만드는 표도 이 규칙을 그대로 따른다. 표를 다시 그렸으면
+   cxTable.apply(table) 한 번만 불러 주면 된다. */
+(function () {
+  var L = 'left', C = 'center', R = 'right';
+  /* [헤더 이름, {al:가로정렬, sort:정렬 가능, ft:필터 종류, bold:본문 굵게}] — 위에서부터 먼저 맞는 것 */
+  var RULES = [
+    [/투표권자/, { al: L, sort: 1, ft: 'text', bold: 1 }],
+    [/(주주명|성명|예탁자명|대리인명|후보자?명)/, { al: L, sort: 1, ft: 'text' }],
+    [/의안명/, { al: L, sort: 0, ft: 'text' }],
+    [/(의안번호|^의안$|^번호$)/, { al: C, sort: 0 }],
+    [/(더보기|^상세$|^비고$|^관리$|^액션$|^삭제$|^수정$)/, { al: C, sort: 0 }],
+    [/(의결권\s*제한|의안별\s*제한|제한사유)/, { al: C, sort: 1 }],
+    [/(입장코드|참석번호|주주번호|^코드$|사번)/, { al: L, sort: 1 }],
+    [/(행사방식|채널|^유형$|^구분$|^종류$|결의방법|^상태$|사용\s*여부|행사여부|앱\s*사용|^공개$|^결과$|카테고리|템플릿\s*종류|전달\s*대상|적용조건)/,
+      { al: C, sort: 1, ft: 'list' }],
+    [/(의결권|주식수|주수|지분율|비율|득표|수량|금액|표수|건수|변수|보유주식|찬성|반대|기권|중립|투표|률$|율$)/, { al: R, sort: 1 }],
+    [/(일시|시간|시각|일자|날짜|기준일|등록일|수정일|접수|적용일|최종\s*수정)/, { al: C, sort: 1 }],
+    [/(내용|사유|주소|명의개서|제목|질의|발언)/, { al: L, sort: 0, ft: 'text' }]
+  ];
+  var DEF = { al: L, sort: 1 };
+
+  function rule(label) {
+    for (var i = 0; i < RULES.length; i++) if (RULES[i][0].test(label)) return RULES[i][1];
+    return DEF;
+  }
+  function label(th) {
+    var t = (th.textContent || '').replace(/\s+/g, ' ').trim();
+    return t;
+  }
+  function num(s) { var m = (s || '').replace(/[^0-9.\-]/g, ''); return (m === '' || m === '-') ? NaN : parseFloat(m); }
+  function txt(el) { return (el ? el.textContent : '').replace(/\s+/g, ' ').trim(); }
+
+  /* ── 팝오버 한 장을 돌려 쓴다 ─────────────────────────────────────── */
+  var pop = null, popOwner = null;
+  function menu() {
+    if (!pop) {
+      pop = document.createElement('div');
+      pop.className = 'cxmenu';
+      document.body.appendChild(pop);
+      pop.addEventListener('click', function (e) { e.stopPropagation(); });
+      document.addEventListener('click', hide);
+      window.addEventListener('resize', hide);
+      document.addEventListener('scroll', hide, true);
+    }
+    return pop;
+  }
+  function hide() {
+    if (!pop) return;
+    pop.classList.remove('on');
+    if (popOwner) popOwner.classList.remove('on');
+    popOwner = null;
+  }
+  function show(anchor, html, wire) {
+    var m = menu();
+    if (popOwner === anchor) { hide(); return; }
+    hide();
+    m.innerHTML = html;
+    m.classList.add('on');
+    popOwner = anchor; anchor.classList.add('on');
+    var r = anchor.getBoundingClientRect();
+    var left = Math.min(r.left, window.innerWidth - m.offsetWidth - 8);
+    var top = r.bottom + 4;
+    if (top + m.offsetHeight > window.innerHeight - 8) top = Math.max(8, r.top - 4 - m.offsetHeight);
+    m.style.left = Math.max(8, left) + 'px';
+    m.style.top = top + 'px';
+    if (wire) wire(m);
+  }
+
+  var CHECK = '<span class="ck"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>';
+  var BOX = '<span class="bx"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>';
+  var SEARCH = '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>';
+  var FUNNEL = '<svg viewBox="0 0 24 24"><path d="M3 5h18"/><path d="M7 12h10"/><path d="M11 19h2"/></svg>';
+
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+
+  /* ── 표 하나 ──────────────────────────────────────────────────────── */
+  function bodyRows(tb) {
+    return Array.prototype.filter.call(tb.rows, function (r) {
+      return r.cells.length > 1 && !r.querySelector('th') && !r.querySelector('[colspan]');
+    });
+  }
+
+  function applyFilters(t) {
+    var rows = Array.prototype.slice.call(t.tb.rows);
+    rows.forEach(function (r) {
+      if (r.cells.length < 2 || r.querySelector('th')) return;
+      var keep = true;
+      for (var k in t.filters) {
+        if (!t.filters[k]) continue;
+        var cell = r.cells[+k];
+        if (!t.filters[k](txt(cell))) { keep = false; break; }
+      }
+      r.style.display = keep ? '' : 'none';
+    });
+  }
+
+  function textFilter(t, idx, th, btn) {
+    var f = t.draft[idx] || { op: 'has', q: '' };
+    var OPS = [['has', '포함'], ['eq', '같음'], ['start', '시작'], ['end', '끝남']];
+    var html = '<div class="lb">' + esc(label(th)) + ' 필터</div>'
+      + '<select>' + OPS.map(function (o) {
+          return '<option value="' + o[0] + '"' + (f.op === o[0] ? ' selected' : '') + '>' + o[1] + '</option>';
+        }).join('') + '</select>'
+      + '<label class="srch">' + SEARCH + '<input type="text" placeholder="검색" value="' + esc(f.q) + '"></label>'
+      + '<div class="foot"><button type="button" data-rst>초기화</button><button type="button" class="dark" data-ok>적용</button></div>';
+    show(btn, html, function (m) {
+      var sel = m.querySelector('select'), inp = m.querySelector('input');
+      inp.focus();
+      function commit() {
+        var op = sel.value, q = inp.value.trim();
+        t.draft[idx] = { op: op, q: q };
+        t.filters[idx] = q ? function (v) {
+          if (op === 'eq') return v === q;
+          if (op === 'start') return v.indexOf(q) === 0;
+          if (op === 'end') return v.slice(-q.length) === q;
+          return v.indexOf(q) >= 0;
+        } : null;
+        btn.classList.toggle('cx-act', !!q);
+        applyFilters(t); hide();
+      }
+      m.querySelector('[data-ok]').addEventListener('click', commit);
+      inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') commit(); });
+      m.querySelector('[data-rst]').addEventListener('click', function () {
+        t.draft[idx] = null; t.filters[idx] = null; btn.classList.remove('cx-act');
+        applyFilters(t); hide();
       });
     });
   }
-  function run(){ Array.prototype.forEach.call(document.querySelectorAll('table'),enhance); }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',run); else run();
-  setTimeout(run,500); setTimeout(run,1200);
+
+  function listFilter(t, idx, th, btn) {
+    var seen = {}, vals = [];
+    bodyRows(t.tb).forEach(function (r) {
+      var v = txt(r.cells[idx]); if (!v || seen[v]) return; seen[v] = 1; vals.push(v);
+    });
+    var picked = t.draft[idx] || null;                       /* null 이면 전체 */
+    var html = '<label class="srch">' + SEARCH + '<input type="text" placeholder="검색"></label>'
+      + '<div class="lb">' + esc(label(th)) + '</div>'
+      + '<div data-list>' + vals.map(function (v) {
+          var on = !picked || picked.indexOf(v) >= 0;
+          return '<button class="it' + (on ? ' on' : '') + '" type="button" data-v="' + esc(v) + '">'
+            + '<span class="tx">' + esc(v) + '</span>' + CHECK + '</button>';
+        }).join('') + '</div>'
+      + '<div class="foot"><button type="button" data-rst>초기화</button><button type="button" class="dark" data-ok>적용</button></div>';
+    show(btn, html, function (m) {
+      var list = m.querySelector('[data-list]');
+      m.querySelector('input').addEventListener('input', function (e) {
+        var q = e.target.value.trim();
+        list.querySelectorAll('.it').forEach(function (b) {
+          b.style.display = (!q || b.getAttribute('data-v').indexOf(q) >= 0) ? '' : 'none';
+        });
+      });
+      list.addEventListener('click', function (e) {
+        var b = e.target.closest('.it'); if (b) b.classList.toggle('on');
+      });
+      m.querySelector('[data-ok]').addEventListener('click', function () {
+        var on = Array.prototype.filter.call(list.querySelectorAll('.it'), function (b) { return b.classList.contains('on'); })
+          .map(function (b) { return b.getAttribute('data-v'); });
+        var all = (on.length === vals.length);
+        t.draft[idx] = all ? null : on;
+        t.filters[idx] = all ? null : function (v) { return on.indexOf(v) >= 0; };
+        btn.classList.toggle('cx-act', !all);
+        applyFilters(t); hide();
+      });
+      m.querySelector('[data-rst]').addEventListener('click', function () {
+        t.draft[idx] = null; t.filters[idx] = null; btn.classList.remove('cx-act');
+        applyFilters(t); hide();
+      });
+    });
+  }
+
+  function sortBy(t, idx, th) {
+    var rows = Array.prototype.slice.call(t.tb.rows);
+    rows.forEach(function (r, k) { if (r.__i == null) r.__i = k; });
+    var dir = th.__d === 1 ? -1 : (th.__d === -1 ? 0 : 1);
+    t.ths.forEach(function (o) { if (o !== th) o.__d = 0; });
+    th.__d = dir;
+    rows.sort(function (a, b) {
+      if (!dir) return a.__i - b.__i;
+      var x = txt(a.cells[idx]), y = txt(b.cells[idx]);
+      var nx = num(x), ny = num(y);
+      return dir * ((!isNaN(nx) && !isNaN(ny)) ? nx - ny : x.localeCompare(y, 'ko'));
+    });
+    rows.forEach(function (r) { t.tb.appendChild(r); });
+  }
+
+  function headRow(tbl) {
+    if (tbl.tHead && tbl.tHead.rows.length) return tbl.tHead.rows[tbl.tHead.rows.length - 1];
+    var tb = tbl.tBodies[0];                                  /* thead 없이 첫 줄이 머리인 표도 있다 */
+    if (tb && tb.rows.length && tb.rows[0].cells.length && tb.rows[0].cells[0].tagName === 'TH') return tb.rows[0];
+    return null;
+  }
+
+  function apply(tbl) {
+    if (!tbl || tbl.hasAttribute('data-nocx')) return;
+    var hrow = headRow(tbl), tb = tbl.tBodies[0];
+    if (!hrow || !tb) return;
+    var t = tbl.__cx;
+    if (!t) { t = tbl.__cx = { tbl: tbl, tb: tb, filters: {}, draft: {} }; }
+    t.tb = tb;
+    t.ths = Array.prototype.slice.call(hrow.cells);
+    var rows = bodyRows(tb);
+
+    t.ths.forEach(function (th, idx) {
+      var lb = label(th);
+      var old = th.querySelector('.cx-fbtn');
+      if (old) { lb = lb; }
+      var rl = rule(lb);
+      var cells = rows.map(function (r) { return r.cells[idx]; }).filter(Boolean);
+
+      /* dot 뱃지가 든 칸은 왼쪽으로 */
+      var al = rl.al;
+      if (cells.some(function (c) { return c.querySelector('.qmdot,.stbadge,.dotbadge'); })) al = L;
+
+      if (lb) { th.style.textAlign = al; }
+      cells.forEach(function (c) {
+        c.style.textAlign = al;
+        if (rl.bold) c.style.fontWeight = '600';
+      });
+
+      /* 정렬 — 표시는 없다 */
+      var canSort = rl.sort && lb && rows.length > 1;
+      th.classList.toggle('cx-sort', !!canSort);
+      if (canSort && !th.__cxSort) {
+        th.__cxSort = 1;
+        th.addEventListener('click', function (e) {
+          if (e.target.closest('.cx-fbtn,a,button,input,select,label')) return;
+          sortBy(t, idx, th);
+        });
+      }
+
+      /* 필터 — 칸이 좁으면 달지 않는다 */
+      var w = th.getBoundingClientRect().width;
+      var canFilter = rl.ft && lb && rows.length > 0 && (w === 0 || w >= 100);
+      if (canFilter && !th.querySelector('.cx-fbtn')) {
+        th.classList.add('cx-filterable');
+        /* sticky 헤더를 덮어쓰지 않도록, 자리 기준이 없을 때만 relative 를 준다 */
+        if (getComputedStyle(th).position === 'static') th.style.position = 'relative';
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'cx-fbtn'; b.title = lb + ' 필터';
+        b.innerHTML = FUNNEL;
+        b.addEventListener('click', function (e) {
+          e.stopPropagation();
+          (rl.ft === 'list' ? listFilter : textFilter)(t, idx, th, b);
+        });
+        th.appendChild(b);
+      } else if (!canFilter) {
+        var f = th.querySelector('.cx-fbtn'); if (f) f.remove();
+        th.classList.remove('cx-filterable');
+      }
+    });
+
+    applyFilters(t);
+    tools(tbl, t);
+
+    /* 본문을 다시 그리는 표가 많다 — 새 줄에도 같은 규칙이 붙도록 지켜본다 */
+    if (!t.watch) {
+      t.watch = new MutationObserver(function () {
+        clearTimeout(t.timer);
+        t.timer = setTimeout(function () { apply(tbl); }, 60);
+      });
+      t.watch.observe(tb, { childList: true });
+    }
+  }
+
+  /* ── 표 위 도구 — 행 높이 · 컬럼 표시 ──────────────────────────────── */
+  var ROWH = [['좁게', 36], ['보통', 0], ['넓게', 60]];
+  function tools(tbl, t) {
+    var host = tbl.closest('[data-cx-host]');
+    host = host ? host.querySelector('[data-cx-tools]') : null;
+    if (!host || host.__cx) return;
+    host.__cx = 1;
+    host.classList.add('cx-tools');
+    host.innerHTML =
+      '<button class="cx-tbtn" type="button" data-rowh title="행 높이">'
+      + '<svg viewBox="0 0 24 24"><path d="M3 5h18M3 12h18M3 19h18"/></svg></button>'
+      + '<button class="cx-tbtn" type="button" data-cols title="컬럼 표시">'
+      + '<svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 12h4M12 12h8M4 17h12M20 17h0"/>'
+      + '<circle cx="16" cy="7" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="17" r="2"/></svg></button>';
+
+    host.querySelector('[data-rowh]').addEventListener('click', function (e) {
+      e.stopPropagation();
+      var b = e.currentTarget;
+      show(b, '<div class="lb">행 높이</div>' + ROWH.map(function (r) {
+        return '<button class="it' + (t.rowh === r[1] ? ' on' : '') + '" type="button" data-h="' + r[1] + '">'
+          + '<span class="tx">' + r[0] + '</span>' + CHECK + '</button>';
+      }).join(''), function (m) {
+        m.addEventListener('click', function (ev) {
+          var it = ev.target.closest('[data-h]'); if (!it) return;
+          var h = +it.getAttribute('data-h');
+          t.rowh = h;
+          bodyRows(t.tb).forEach(function (r) {
+            Array.prototype.forEach.call(r.cells, function (c) { c.style.height = h ? h + 'px' : ''; });
+          });
+          hide();
+        });
+      });
+    });
+
+    host.querySelector('[data-cols]').addEventListener('click', function (e) {
+      e.stopPropagation();
+      var b = e.currentTarget;
+      t.hidden = t.hidden || {};
+      var items = t.ths.map(function (th, i) {
+        var lb = label(th); if (!lb) return '';
+        return '<button class="it' + (t.hidden[i] ? '' : ' on') + '" type="button" data-c="' + i + '">'
+          + BOX + '<span class="tx">' + esc(lb) + '</span></button>';
+      }).join('');
+      show(b, '<div class="lb">컬럼 표시</div>' + items
+        + '<div class="foot"><button type="button" data-rst>초기화</button><button type="button" class="dark" data-ok>적용</button></div>',
+        function (m) {
+          m.addEventListener('click', function (ev) {
+            var it = ev.target.closest('[data-c]'); if (it) { it.classList.toggle('on'); return; }
+            if (ev.target.closest('[data-rst]')) { t.hidden = {}; paintCols(t); hide(); return; }
+            if (!ev.target.closest('[data-ok]')) return;
+            t.hidden = {};
+            m.querySelectorAll('[data-c]').forEach(function (x) {
+              if (!x.classList.contains('on')) t.hidden[+x.getAttribute('data-c')] = 1;
+            });
+            paintCols(t); hide();
+          });
+        });
+    });
+  }
+  function paintCols(t) {
+    var all = [t.ths].concat(Array.prototype.slice.call(t.tb.rows).map(function (r) {
+      return Array.prototype.slice.call(r.cells);
+    }));
+    all.forEach(function (cells) {
+      cells.forEach(function (c, i) { c.style.display = t.hidden[i] ? 'none' : ''; });
+    });
+  }
+
+  function run() { Array.prototype.forEach.call(document.querySelectorAll('table'), apply); }
+  window.cxTable = { apply: apply, run: run };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+  setTimeout(run, 400); setTimeout(run, 1200);
 })();

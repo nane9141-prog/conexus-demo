@@ -1124,13 +1124,12 @@
         </div>
         <!-- 의결권 행사현황 -->
         <div class="oc-panel" data-panel="vote">
-          <div class="apanel vsheet">
+          <div class="apanel vsheet" data-cx-host>
             <div class="vtoolbar">
               <div class="vtools">
                 <button class="vbtn dark" id="vDisclose" type="button"><i class="ph ph-gear" style="font-size:16px"></i>공개 설정</button>
                 <button class="vbtn" type="button"><i class="ph ph-download-simple" style="font-size:16px"></i>다운로드</button>
-                <button class="vbtn ic" type="button" title="정렬"><i class="ph ph-list-dashes" style="font-size:14px"></i></button>
-                <button class="vbtn ic" type="button" title="컬럼 · 필터"><i class="ph ph-sliders-horizontal" style="font-size:14px"></i></button>
+                <span data-cx-tools></span>
               </div>
             </div>
             <div class="vscroll"><table class="extbl"><thead><tr>
@@ -1152,7 +1151,7 @@
         </div>
         <!-- 시청자 관리 -->
         <div class="oc-panel" data-panel="poll">
-          <div class="apanel psheet">
+          <div class="apanel psheet" data-cx-host>
             <div class="pnav">
               <button class="pnav-a" id="pPrev" type="button" title="이전 의안"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
               <button class="pnav-a" id="pNext" type="button" title="다음 의안"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
@@ -1167,6 +1166,7 @@
             <div class="ptabs" id="pOpts" style="display:none"></div>
             <div class="pcards" id="pCards"></div>
             <div class="ptitle"><span class="t">현장 표결 관리</span><span class="sp"></span>
+              <span data-cx-tools></span>
               <button class="vbtn dark" type="button" id="pBulk"><i class="ph ph-check-square" style="font-size:16px"></i>일괄 투표</button>
             </div>
             <div class="vscroll" style="margin-top:0"><table class="extbl" id="pTbl"><thead><tr>
@@ -1191,14 +1191,14 @@
         </div>
 
         <div class="oc-panel" data-panel="qa">
-          <div class="apanel qmwrap">
+          <div class="apanel qmwrap" data-cx-host>
             <div class="qmhead" id="qmTabs">
               <button class="on" data-qm="q" type="button">질의</button>
               <button data-qm="s" type="button">발언</button>
               <button data-qm="v" type="button">시청자 관리</button>
               <span class="sp"></span>
               <button class="vbtn" type="button" style="height:28px;font-size:12px"><i class="ph ph-download-simple" style="font-size:14px"></i>다운로드</button>
-              <button class="vbtn ic" type="button" style="width:28px;height:28px" title="컬럼 · 필터"><i class="ph ph-sliders-horizontal" style="font-size:14px"></i></button>
+              <span data-cx-tools></span>
             </div>
             <div class="qmbody">
               <div class="qmleft">
@@ -1312,7 +1312,7 @@
         <button class="dlg-btn dark" type="button" id="ntcSend">공지 등록</button>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px">
-        <table class="ntbl" id="ntcTbl"><tbody>
+        <table class="ntbl" data-nocx id="ntcTbl"><tbody>
           <tr><th>내용</th><th class="tm">시간</th><th class="pin">고정</th></tr>
         </tbody></table>
         <div class="dlg-cap">고정한 공지는 현장 화면 상단에 계속 노출됩니다. 최대 1건까지 고정할 수 있습니다.</div>
@@ -1663,7 +1663,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       return '<tr><td class="l">'+c.nm+'</td>'+wcell(w,un)+'<td>'+comma(cf)+'</td><td>'+comma(ca)+'</td><td>'+comma(cab)+'</td><td class="c">'+stt+'</td></tr>';
     }).join('');
     var head='<tr class="sum"><td class="l">합계</td>'+wcell(sum.w,sum.un)+'<td>'+comma(sum.f)+'</td><td>'+comma(sum.a)+'</td><td>'+comma(sum.ab)+'</td><td class="c"></td></tr>';
-    return '<table class="chtbl"><thead><tr><th class="l">채널</th><th>행사 의결권<span class="chun">미행사</span></th><th>찬성</th><th>반대</th><th>기권</th><th class="c">상태</th></tr></thead><tbody>'+head+rows+'</tbody></table>';
+    return '<table class="chtbl" data-nocx><thead><tr><th class="l">채널</th><th>행사 의결권<span class="chun">미행사</span></th><th>찬성</th><th>반대</th><th>기권</th><th class="c">상태</th></tr></thead><tbody>'+head+rows+'</tbody></table>';
   }
   /* 채널별 표결 현황 섹션 — 헤더 클릭으로 접었다 폈다. 기본은 펼침(OC.chanOpen). */
   function chsec(summary, table, tabsRow){
@@ -1691,7 +1691,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       }).join('');
       var tot=d.cands.reduce(function(a,c){return a+c.votes*f;},0);
       wrap.innerHTML=chsec('<span class="k">총 득표</span><span class="v">'+comma(Math.round(tot))+'주</span>',
-        '<table class="chtbl"><thead>'+head+'</thead><tbody>'+body+'</tbody></table>');
+        '<table class="chtbl" data-nocx><thead>'+head+'</thead><tbody>'+body+'</tbody></table>');
       bindChsec(wrap,d);
       return;
     }
@@ -2131,7 +2131,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     <div class="dlg-h"><div class="tt">수동(서면) 투표 등록</div><div class="ds">앱을 쓰지 않는 현장 참석 주주의 서면 투표를 의안별로 입력합니다.</div></div>
     <div class="dlg-c">
       <div class="mvinfo" id="mvInfo"></div>
-      <div class="mvscroll"><table class="mvtbl"><thead><tr>
+      <div class="mvscroll"><table class="mvtbl" data-nocx><thead><tr>
         <th class="l" style="min-width:300px">의안명</th>
         <th style="width:120px">제한의결권</th>
         <th style="width:130px">미행사의결권</th>
