@@ -86,13 +86,16 @@
     [/투표권자/, { al: L, sort: 1, ft: 'text', bold: 1 }],
     [/(주주명|성명|예탁자명|대리인명|후보자?명)/, { al: L, sort: 1, ft: 'text' }],
     [/의안명/, { al: L, sort: 0, ft: 'text' }],
-    [/(의안번호|^의안$|^번호$)/, { al: C, sort: 0 }],
+    [/(의안번호|^의안$|^번호$)/, { al: L, sort: 0 }],
     [/(더보기|^상세$|^비고$|^관리$|^액션$|^삭제$|^수정$)/, { al: C, sort: 0 }],
     [/(의결권\s*제한|의안별\s*제한|제한사유)/, { al: C, sort: 1 }],
     [/(입장코드|참석번호|주주번호|^코드$|사번)/, { al: L, sort: 1 }],
     [/(행사방식|채널|^유형$|^구분$|^종류$|결의방법|^상태$|사용\s*여부|행사여부|앱\s*사용|^공개$|^결과$|카테고리|템플릿\s*종류|전달\s*대상|적용조건)/,
       { al: C, sort: 1, ft: 'list' }],
-    [/(의결권|주식수|주수|지분율|비율|득표|수량|금액|표수|건수|변수|보유주식|찬성|반대|기권|중립|투표|률$|율$)/, { al: R, sort: 1 }],
+    /* 찬반 칸은 표에 따라 표기(체크)이기도 하고 수치이기도 하다.
+       헤더는 늘 가운데, 본문은 칸 내용을 보고 정한다. */
+    [/^(찬성|반대|기권|중립)(?![가-힣])/, { al: C, sort: 1, vote: 1 }],   /* '찬성 1' 처럼 단축키가 붙어도 잡는다 */
+    [/(의결권|주식수|주수|지분율|비율|득표|수량|금액|표수|건수|변수|보유주식|찬성률|투표|률$|율$)/, { al: R, sort: 1 }],
     [/(일시|시간|시각|일자|날짜|기준일|등록일|수정일|접수|적용일|최종\s*수정)/, { al: C, sort: 1 }],
     [/(내용|사유|주소|명의개서|제목|질의|발언)/, { al: L, sort: 0, ft: 'text' }]
   ];
@@ -159,17 +162,31 @@
     });
   }
 
+  /* 통합기관처럼 접었다 펴는 줄은 상위 줄에 딸린 것이다.
+     정렬도 필터도 상위 줄을 기준으로 하고, 딸린 줄은 함께 따라간다. */
+  var CHILD = '.pchild,.child,.atchild,.vchild,.subrow,[data-child]';
+  function isChild(r) { return !!(r.matches && r.matches(CHILD)); }
+  function blocks(tb) {
+    var out = [], cur = null;
+    Array.prototype.forEach.call(tb.rows, function (r) {
+      if (cur && isChild(r)) { cur.rows.push(r); return; }
+      cur = { lead: r, rows: [r] };
+      out.push(cur);
+    });
+    return out;
+  }
+
   function applyFilters(t) {
-    var rows = Array.prototype.slice.call(t.tb.rows);
-    rows.forEach(function (r) {
-      if (r.cells.length < 2 || r.querySelector('th')) return;
+    blocks(t.tb).forEach(function (b) {
+      var lead = b.lead;
+      if (lead.cells.length < 2 || lead.querySelector('th')) return;
       var keep = true;
       for (var k in t.filters) {
         if (!t.filters[k]) continue;
-        var cell = r.cells[+k];
-        if (!t.filters[k](txt(cell))) { keep = false; break; }
+        if (!t.filters[k](txt(lead.cells[+k]))) { keep = false; break; }
       }
-      r.style.display = keep ? '' : 'none';
+      /* 남길 때는 인라인 값을 비운다 — 접혀 있는 줄은 그대로 접힌 채로 둔다 */
+      b.rows.forEach(function (r) { r.style.display = keep ? '' : 'none'; });
     });
   }
 
@@ -248,18 +265,18 @@
   }
 
   function sortBy(t, idx, th) {
-    var rows = Array.prototype.slice.call(t.tb.rows);
-    rows.forEach(function (r, k) { if (r.__i == null) r.__i = k; });
+    var bs = blocks(t.tb);
+    bs.forEach(function (b, k) { if (b.lead.__i == null) b.lead.__i = k; });
     var dir = th.__d === 1 ? -1 : (th.__d === -1 ? 0 : 1);
     t.ths.forEach(function (o) { if (o !== th) o.__d = 0; });
     th.__d = dir;
-    rows.sort(function (a, b) {
-      if (!dir) return a.__i - b.__i;
-      var x = txt(a.cells[idx]), y = txt(b.cells[idx]);
+    bs.sort(function (a, b) {
+      if (!dir) return a.lead.__i - b.lead.__i;
+      var x = txt(a.lead.cells[idx]), y = txt(b.lead.cells[idx]);
       var nx = num(x), ny = num(y);
       return dir * ((!isNaN(nx) && !isNaN(ny)) ? nx - ny : x.localeCompare(y, 'ko'));
     });
-    rows.forEach(function (r) { t.tb.appendChild(r); });
+    bs.forEach(function (b) { b.rows.forEach(function (r) { t.tb.appendChild(r); }); });
   }
 
   function headRow(tbl) {
@@ -290,14 +307,21 @@
       var al = rl.al;
       if (cells.some(function (c) { return c.querySelector('.qmdot,.stbadge,.dotbadge'); })) al = L;
 
-      if (lb) { th.style.textAlign = al; }
+      /* 찬반 칸은 표마다 다르다 — 집계 수치면 오른쪽, 체크 표기면 가운데.
+         헤더는 본문을 따라가야 글자가 어긋나지 않는다. */
+      function isNum(c) { var v = txt(c); return v !== '' && !isNaN(num(v)); }
+      var allNum = rl.vote && cells.length > 0 && cells.every(isNum);
+      if (lb) { th.style.textAlign = rl.vote ? (allNum ? R : C) : al; }
       cells.forEach(function (c) {
-        c.style.textAlign = al;
+        c.style.textAlign = rl.vote
+          ? ((c.querySelector('input') || isNum(c)) ? R : C)
+          : al;
         if (rl.bold) c.style.fontWeight = '600';
       });
 
       /* 정렬 — 표시는 없다 */
-      var canSort = rl.sort && lb && rows.length > 1;
+      var grouped = !!tb.querySelector('tr [colspan]');   /* 소계·그룹 줄이 있는 표 */
+      var canSort = rl.sort && lb && rows.length > 1 && !grouped;
       th.classList.toggle('cx-sort', !!canSort);
       if (canSort && !th.__cxSort) {
         th.__cxSort = 1;
@@ -309,7 +333,7 @@
 
       /* 필터 — 칸이 좁으면 달지 않는다 */
       var w = th.getBoundingClientRect().width;
-      var canFilter = rl.ft && lb && rows.length > 0 && (w === 0 || w >= 100);
+      var canFilter = rl.ft && lb && rows.length > 0 && !grouped && (w === 0 || w >= 100);
       if (canFilter && !th.querySelector('.cx-fbtn')) {
         th.classList.add('cx-filterable');
         /* sticky 헤더를 덮어쓰지 않도록, 자리 기준이 없을 때만 relative 를 준다 */

@@ -754,6 +754,8 @@
   .mvtbl td.mut{color:#737373}
   .mvtbl tr.done td{background:#FAFAFA;color:#737373}
   .mvtbl tr.amend td{background:#FEF5E7}
+  /* 집중투표 배분 수량도 오른쪽으로 — 찬반 표기 칸만 가운데다 */
+  .mvtbl td.cum{text-align:right}
   .mvsub{display:block;font-size:12px;line-height:16px;color:#737373;font-variant-numeric:normal}
   .mvck{width:18px;height:18px;border:1px solid #E5E5E5;border-radius:4px;background:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:#FAFAFA}
   .mvck.on{background:#171717;border-color:#171717}
@@ -2394,7 +2396,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
         out.push('<tr><td class="l"><span class="exno">'+no2(a.no)+'</span> '+a.nm
           +'<span class="mvsub">집중투표 · 후보별 배분 수량을 직접 입력합니다 (총 '+cm(can*seats)+'표)</span></td>'
           +'<td class="mut">제한 없음</td><td>'+cm(can*seats)+'</td>'
-          +'<td class="c" colspan="4">'+d.cands.slice().sort(function(x,y){return x.rank-y.rank;}).map(function(c){
+          +'<td class="cum" colspan="4">'+d.cands.slice().sort(function(x,y){return x.rank-y.rank;}).map(function(c){
              return '<span style="display:inline-flex;align-items:center;gap:6px;margin:0 6px"><span style="font-size:12px;color:#737373">'+c.name+'</span><input class="mvin" type="text" value="0"></span>';
            }).join('')+'</td>'
           +'<td class="c"><span class="pchip">미행사</span></td></tr>');
