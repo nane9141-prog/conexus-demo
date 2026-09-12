@@ -587,10 +587,10 @@
   .qmhead button{height:100%;padding:0 12px;border:none;background:none;border-bottom:2px solid transparent;font-family:inherit;font-size:14px;font-weight:500;letter-spacing:-.01em;color:#737373;cursor:pointer}
   .qmhead button.on{color:#0A0A0A;border-bottom-color:#0A0A0A}
   .qmhead .sp{margin-left:auto}
-  .qmbody{flex:1;min-height:0;display:flex;gap:8px;padding:8px;background:#F5F5F5}
+  .qmbody{flex:1;min-height:0;display:grid;grid-template-columns:3fr 1fr;gap:8px;padding:8px;background:#F5F5F5}
   .qmleft{flex:1;min-width:0;display:flex;flex-direction:column;background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:hidden}
   .qmscroll{flex:1;min-height:0;overflow:auto}
-  .qmright{width:356px;flex:none;display:flex;flex-direction:column;gap:12px;padding:16px;background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:auto}
+  .qmright{min-width:0;display:flex;flex-direction:column;gap:12px;padding:16px;background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:auto}
   .qmtbl{width:100%;min-width:900px;border-collapse:separate;border-spacing:0;font-size:14px;letter-spacing:-.01em}
   .qmtbl th,.qmtbl td{height:46px;padding:0 16px;white-space:nowrap;text-align:left;border-bottom:1px solid #E5E5E5;background:#fff}
   .qmtbl th{height:48px;position:sticky;top:0;z-index:2;background:#FAFAFA;font-weight:500;color:#737373}
@@ -607,6 +607,9 @@
   .qmdot.blue{color:#0071F3}.qmdot.blue i{background:#0071F3}
   .qmdot.violet{color:#7C3AED}.qmdot.violet i{background:#7C3AED}
   .qmdot.amber{color:#EA580C}.qmdot.amber i{background:#EA580C}
+  /* 공개 여부 — info 배경 뱃지. 비공개는 같은 뱃지를 반투명하게 둔다. */
+  .qmpub{display:inline-flex;align-items:center;padding:2px 6px;border-radius:6px;background:#EEF5FF;color:#0071F3;font-size:12px;line-height:16px;font-weight:500}
+  .qmpub.off{opacity:.5}
   .qmqbtn{height:24px;padding:0 8px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0A0A0A;cursor:pointer}
   .qmqbtn.rm{background:#F5F5F5;border-color:#F5F5F5;color:#171717}
   .qmname{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A}
@@ -1637,10 +1640,17 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function esc(t){ return String(t==null?'':t).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
   function cm(n){ return Number(n).toLocaleString('en-US'); }
   function agOf(x){ return '제'+(x.sub||x.ag)+'호'; }
+  var OP=((CX.meeting||{}).operator||{}).name||'운영자';
+  /* 접수 시각에서 몇 분 뒤를 답변 시각으로 본다 — 시연용 파생값 */
+  function plusMin(tm,add){
+    var p=/(\d{1,2}):(\d{2})/.exec(tm||''); if(!p) return '−';
+    var t=(+p[1])*60+(+p[2])+add, h=Math.floor(t/60)%24, m=t%60;
+    return (h<10?'0':'')+h+':'+(m<10?'0':'')+m;
+  }
   function tType(t){ return '<span class="tg '+(t==='기관'?'tg-inst':'tg-ind')+'">'+t+'</span>'; }
 
   var HEAD={
-    q:'<tr><th style="width:110px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th style="width:90px">의안</th><th>질의 내용</th><th style="width:110px">접수시간</th><th class="c" style="width:96px">공개</th><th class="c" style="width:110px">상태</th><th class="c" style="width:56px">상세</th></tr>',
+    q:'<tr><th style="width:110px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th class="c" style="width:90px">의안</th><th>질의 내용</th><th class="c" style="width:110px">접수시간</th><th style="width:96px">공개</th><th style="width:110px">상태</th><th class="c" style="width:56px">상세</th></tr>',
     s:'<tr><th style="width:110px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th style="width:90px">의안</th><th>신청 내용</th><th class="c" style="width:110px">상태</th><th class="c" style="width:110px">대기열</th></tr>',
     v:'<tr><th style="width:110px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th style="width:120px">접속 채널</th><th>단말 · 브라우저</th><th style="width:110px">접속시간</th><th class="c" style="width:110px">상태</th></tr>'
   };
@@ -1658,8 +1668,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     return VIEWERS;
   }
   function pubCell(x){
-    if(x.st==='미답변') return '<span class="qmdot">−</span>';
-    return '<span class="qmdot'+(x.pub?' blue':'')+'"><i></i>'+(x.pub?'전체공개':'비공개')+'</span>';
+    if(x.st==='미답변') return '<span class="qmdot">−</span>';   /* 답변 전이라 공개 범위가 아직 없다 */
+    return '<span class="qmpub'+(x.pub?'':' off')+'">'+(x.pub?'전체공개':'비공개')+'</span>';
   }
   function spDot(st){
     if(st==='대기') return '<span class="qmdot violet"><i></i>대기열</span>';
@@ -1685,10 +1695,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
           +'<td class="txt">'+esc(x.r)+'</td><td class="c">'+spDot(inQ?'대기':(x.st==='반려'?'반려':'접수'))+'</td>'
           +'<td class="c">'+act+'</td></tr>';
       }
-      return '<tr data-id="'+id+'">'+base+'<td>'+agOf(x)+'</td><td class="txt">'+esc(x.q)+'</td>'
-        +'<td>'+x.tm+'</td><td class="c">'+pubCell(x)+'</td>'
-        +'<td class="c">'+(x.st==='완료'?'<span class="qmdot blue"><i></i>답변완료</span>':'<span class="qmdot"><i></i>미답변</span>')+'</td>'
-        +'<td class="c"><span class="extip" data-tip="접수 '+x.tm+'\n'+(x.st==='완료'?'답변완료':'미답변')+'">'+INFO+'</span></td></tr>';
+      var ans=(x.st==='완료');
+      var tip='접수 '+x.tm+'\n답변 '+(ans?plusMin(x.tm,3+i%7):'−')+'\n담당자 '+(ans?OP:'−')
+        +'\n상태 '+(ans?'답변완료':'미답변');
+      return '<tr data-id="'+id+'">'+base+'<td class="c">'+agOf(x)+'</td><td class="txt">'+esc(x.q)+'</td>'
+        +'<td class="c">'+x.tm+'</td><td>'+pubCell(x)+'</td>'
+        +'<td>'+(ans?'<span class="qmdot blue"><i></i>답변완료</span>':'<span class="qmdot"><i></i>미답변</span>')+'</td>'
+        +'<td class="c"><span class="extip" data-tip="'+tip+'">'+INFO+'</span></td></tr>';
     }).join('');
     acc.style.display = mode==='s' ? 'block' : 'none';
     if(!selId || !list.some(function(x){return (x.id||'')===selId;})) selId=(list[0]&&list[0].id)||null;
