@@ -221,8 +221,8 @@ body{font-family:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-s
   .lnb-brand{display:flex;flex-direction:column;padding:12px 16px 0}
   .lnb-brand img{height:15px;width:auto;align-self:flex-start}
   .lnb-org{margin-top:14px;font-size:14px;font-weight:600;color:var(--fg)}
-  .lnb-quick{display:flex;gap:4px;margin-top:12px}
-  .qitem{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:6px 4px;
+  .lnb-quick{display:flex;flex-wrap:wrap;gap:4px;margin-top:12px}
+  .qitem{flex:1 1 0;min-width:0;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:4px;padding:6px 2px;
     border-radius:var(--r-md);font-size:12px;color:var(--muted-fg);white-space:nowrap}
   .qitem:hover{background:var(--muted);color:var(--fg)}
   .qitem svg{width:14px;height:14px}
@@ -878,3 +878,16 @@ th.cx-sort{cursor:pointer;user-select:none}
 .cx-vh.ab svg{stroke:#171717}
 .cx-vh.nt svg{stroke:#737373}
 .cx-vh .kbd{margin-left:2px}
+/* ── 왼쪽 맨 아래 프로필 메뉴 ──────────────────────────────────────────── */
+.profmenu{position:fixed;z-index:3200;box-sizing:border-box;width:187px;
+  display:none;flex-direction:column;gap:2px;padding:4px;background:#fff;
+  border:1px solid rgba(10,10,10,.1);border-radius:10px;
+  box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1)}
+.profmenu.on{display:flex}
+.profmenu .grp{display:flex;flex-direction:column}
+.profmenu button{display:flex;align-items:center;gap:6px;width:100%;box-sizing:border-box;
+  height:28px;padding:4px 6px;border:none;border-radius:8px;background:none;
+  font-family:inherit;font-size:14px;line-height:20px;letter-spacing:-.01em;color:#0A0A0A;
+  text-align:left;cursor:pointer}
+.profmenu button:hover{background:#F5F5F5}
+.profmenu hr{width:100%;height:0;margin:0;border:none;border-top:1px solid #E5E5E5}

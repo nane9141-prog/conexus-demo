@@ -87,14 +87,14 @@
   /* [헤더 이름, {al:가로정렬, sort:정렬 가능, ft:필터 종류, bold:본문 굵게}] — 위에서부터 먼저 맞는 것 */
   var RULES = [
     [/투표권자/, { al: L, sort: 1, ft: 'text', bold: 1, flex: 1 }],
-    [/(주주명|성명|예탁자명|대리인명|후보자?명|템플릿명|명부명|양식명|파일명)/, { al: L, sort: 1, ft: 'text' }],
+    [/(주주명|성명|예탁자명|대리인명|후보자?명|템플릿명|명부명|양식명|파일명|^이름$)/, { al: L, sort: 1, ft: 'text' }],
     [/의안명/, { al: L, sort: 0, ft: 'text', flex: 1 }],
     [/(의안번호|^의안$|^번호$)/, { al: L, sort: 0 }],
     [/^(의결권\s*행사|질의|발언|참여\s*방법)$/, { al: C, sort: 0 }],
     [/(더보기|^상세$|^비고$|^관리$|^액션$|^삭제$|^수정$|^처리$|설정$|통합내역|특수관계인|해제)/, { al: C, sort: 0 }],
     [/(의결권\s*제한|의안별\s*제한|주주\s*제한|제한사유)/, { al: C, sort: 1 }],
     [/(입장코드|참석번호|주주번호|^코드$|사번)/, { al: L, sort: 1 }],
-    [/(방식|^채널$|^유형$|^구분$|종류|여부|결의방법|주주\s*구분|통합방법|^상태$|^예상$|앱\s*사용|^공개$|^결과$|참석|중복\s*처리|카테고리|전달\s*대상|적용조건)/,
+    [/(방식|^채널$|^유형$|^구분$|종류|여부|결의방법|주주\s*구분|통합방법|^상태$|^예상$|앱\s*사용|^공개$|^결과$|^권한$|참석|중복\s*처리|카테고리|전달\s*대상|적용조건)/,
       { al: C, sort: 1, ft: 'list' }],
     /* 의안 번호가 그대로 컬럼이 되는 표가 있다(1 · 2-1 · 3-1-1 …).
        찬반 표기일 때도 집중투표 표수일 때도 있어 찬반 칸과 똑같이 다룬다. */
@@ -494,4 +494,52 @@
   window.cxTable = { apply: apply, run: run };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   setTimeout(run, 400); setTimeout(run, 1200);
+})();
+
+/* 왼쪽 맨 아래 프로필 — 눌러서 계정 메뉴를 연다.
+   페이지마다 같은 .foot-btn 하나뿐이라 여기서 한 번만 달아 둔다. */
+(function () {
+  var GROUPS = [
+    ['내 정보', '비밀번호 변경', '알림 설정'],
+    ['이용 가이드', '로그아웃']
+  ];
+  var pop = null, owner = null;
+
+  function build() {
+    pop = document.createElement('div');
+    pop.className = 'profmenu';
+    pop.innerHTML = GROUPS.map(function (g) {
+      return '<div class="grp">' + g.map(function (t) {
+        return '<button type="button">' + t + '</button>';
+      }).join('') + '</div>';
+    }).join('<hr>');
+    document.body.appendChild(pop);
+    pop.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      hide();
+      if (window.cxToast) {
+        cxToast(b.textContent === '로그아웃' ? '로그아웃했습니다.' : b.textContent + ' 화면을 준비 중입니다.');
+      }
+    });
+    document.addEventListener('click', hide);
+    window.addEventListener('resize', hide);
+    document.addEventListener('scroll', hide, true);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
+  }
+  function hide() { if (pop) pop.classList.remove('on'); owner = null; }
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.foot-btn'); if (!btn) return;
+    e.stopPropagation();
+    if (!pop) build();
+    if (owner === btn) { hide(); return; }
+    owner = btn;
+    pop.classList.add('on');
+    /* 아래쪽 끝에 있는 버튼이라 위로 편다 */
+    var r = btn.getBoundingClientRect();
+    var top = r.top - pop.offsetHeight - 6;
+    if (top < 8) top = Math.min(r.bottom + 6, window.innerHeight - pop.offsetHeight - 8);
+    pop.style.left = Math.max(8, Math.min(r.left, window.innerWidth - pop.offsetWidth - 8)) + 'px';
+    pop.style.top = Math.max(8, top) + 'px';
+  });
 })();
