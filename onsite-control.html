@@ -1368,7 +1368,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(OC.stage===4){
       if(OC.agenda==='제3호') OC.decided='회사';
       /* 새로 마감된 순간에만 알린다 — renderStage 는 자주 다시 도는 함수다 */
-      if(!OC.done[OC.agenda]){ OC.done[OC.agenda]=true; if(OC.onDone) OC.onDone(); }
+      OC.done[OC.agenda]=true;
       autoAdv=setTimeout(selectNextAgenda,1600);
     }
     var st=STAGES[OC.stage], m=STMETA[OC.stage];
@@ -1386,7 +1386,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     el.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click',function(){
       goStage(+b.getAttribute('data-go'));
     }); });
-    if(OC.onStage) OC.onStage();          /* 표결 관리 탭의 컨트롤 바도 같은 단계를 본다 */
+    OC.fire();                            /* 다른 탭들이 같은 단계·진행률을 본다 */
     if(OC.stage===2){ if(!ticker){ ticker=setInterval(function(){ voteSec++; var t=document.getElementById('vTimer'); if(t) t.textContent=fmt(voteSec); bumpSite(); },1000); } }
     else if(ticker){ clearInterval(ticker); ticker=null; }
   }
@@ -1400,6 +1400,15 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     OC.stage=to; renderStage(); renderAll();
   }
   OC.go=goStage; OC.STAGES=STAGES; OC.STMETA=STMETA;
+  /* 진행 상황을 보는 화면들(표결 관리 컨트롤 바 · 의결권 행사현황)이 여기에 붙는다 */
+  OC.hooks=[];
+  OC.on=function(fn){ OC.hooks.push(fn); };
+  OC.fire=function(){ OC.hooks.forEach(function(f){ try{ f(); }catch(e){} }); };
+  /* 단계별 진행률 — 실시간 운영의 채널 표와 같은 값을 쓴다 */
+  OC.frac=function(no){
+    if(OC.done[no]) return 1;
+    return (no===OC.agenda) ? ([0,0,0.5,0.85,1][OC.stage]||0) : 0;
+  };
   function liveFrac(){ return [0,0,0.5,0.85,1][OC.stage]||0; }
   /* 예상 판정 — 발행주식총수 기준과 출석의결권 기준을 모두 넘어야 가결 예상.
      하나라도 미달이면 부결 예상. (그래프의 두 기준선과 같은 계산) */
@@ -2138,7 +2147,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   });
   function renderPoll(){ renderNav(); renderCards(); renderCtrl(); }
   renderPoll(); renderRows();
-  if(window.OC) OC.onStage=renderCtrl;
+  if(window.OC) OC.on(renderCtrl);
 
   /* 의안 변경 시 같이 갱신 */
   var sel=window.OC&&OC.select;
@@ -2293,11 +2302,37 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function no2(no){ return String(no).replace(/^제/,'').replace(/호$/,''); }
   function dash(){ return '<td class="mut">−</td>'; }
   function n(v){ return '<td>'+cm(v)+'</td>'; }
-  /* 채널 셀 — 마우스오버 시 찬성·반대·기권 분해 */
-  function chTd(d,i,v){
-    var f=ch(d['for'])[i], a=ch(d.against)[i], b=ch(d.abs)[i], t=f+a+b;
-    var tip='찬성 '+cm(f)+' ('+pc(f,t)+')\n반대 '+cm(a)+' ('+pc(a,t)+')\n기권 '+cm(b)+' ('+pc(b,t)+')';
+  /* 채널 셀 — 마우스오버 시 그 채널의 찬성·반대·기권 분해. 아직 안 들어온 채널은 0. */
+  function chTd(v,F,A,AB,tot){
+    if(!v) return '<td class="mut">0</td>';
+    var sh=tot? v/tot : 0;
+    var f=Math.round(F*sh), a=Math.round(A*sh), b=v-f-a;
+    var tip='찬성 '+cm(f)+' ('+pc(f,v)+')\n반대 '+cm(a)+' ('+pc(a,v)+')\n기권 '+cm(b)+' ('+pc(b,v)+')';
     return '<td><span class="extip" data-tip="'+tip+'">'+cm(v)+'</span></td>';
+  }
+  /* 표결 진행률 — 사전의결권은 총회 전에 끝나 늘 확정이고,
+     현장·온라인은 그 의안이 진행된 만큼만 들어온다. 실시간 운영의 채널 표와 같은 기준. */
+  function frac(no){
+    if(!window.OC||!OC.frac) return 1;
+    return OC.frac(ownerOf(no));
+  }
+  function ownerOf(no){
+    var D=(window.OC&&OC.done)||{};
+    if(D[no]||no===((window.OC||{}).agenda)) return no;
+    var p=String(no).replace(/^(제\d+)-\d+호$/,'$1호');
+    return p!==no ? p : no;
+  }
+  /* T(최종 행사의결권)를 진행률 p 에 맞춰 채널별로 나눈다 */
+  function chan(T,p){
+    var c=ch(T), on=Math.round(c[1]*p), onl=Math.round(c[2]*p);
+    return {pre:c[0], on:on, onl:onl, tot:c[0]+on+onl};
+  }
+  /* 진행률만큼만 반영된 찬성·반대·기권 */
+  function tally(d,cs,T){
+    var r=T? cs.tot/T : 0;
+    var F=Math.round((d['for']||0)*r), A=Math.round((d.against||0)*r);
+    var AB=cs.tot-F-A; if(AB<0) AB=0;
+    return {F:F,A:A,AB:AB,tot:cs.tot};
   }
   function resTd(r){
     if(!r) return '<td class="c"></td>';   /* 아직 표결 전 — 결과는 비워 둔다 */
@@ -2331,28 +2366,31 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       +(pill?'<span class="expill">'+pill+'</span>':'')+'</div></td></tr>';
   }
   function voteRow(no,nm,d,res,dim,i){
-    var tot=d['for']+d.against+d.abs, c=ch(tot), done=isDone(no);
+    var done=isDone(no), T=(d['for']||0)+(d.against||0)+(d.abs||0);
+    var cs=chan(T,frac(no)), v=tally(d,cs,T);
     return '<tr'+(dim?' class="exdim"':'')+'>'+nameCell(no,nm)
-      + n(ATT) + n(tot)
-      + chTd(d,0,c[0]) + chTd(d,1,c[1]) + chTd(d,2,c[2])
-      + n(d['for']) + n(d.against) + n(d.abs) + n(0)
-      + '<td>'+pc(d['for'],tot)+'</td>'
+      + n(ATT) + n(v.tot)
+      + chTd(cs.pre,v.F,v.A,v.AB,v.tot) + chTd(cs.on,v.F,v.A,v.AB,v.tot) + chTd(cs.onl,v.F,v.A,v.AB,v.tot)
+      + n(v.F) + n(v.A) + n(v.AB) + n(0)
+      + '<td>'+pc(v.F,v.tot)+'</td>'
       + resTd(done ? (dim?'폐기':res) : '')
       + infoTd(1+i, 12+i*7, done) + '</tr>';
   }
   /* 집중투표 — 상위 행은 합계만, 후보 행에 배분·찬성률·결과 */
   function cumRows(no,nm,d,dim){
-    var done=isDone(no);
+    var done=isDone(no), p=frac(no);
     var seats=+((nm.match(/중\s*(\d+)\s*인/)||[0,1])[1])||1;
-    var avail=ATT*seats, tot=d.cands.reduce(function(a,x){return a+x.votes;},0), c=ch(tot);
-    var out=['<tr class="exsub'+(dim?' exdim':'')+'">'+nameCell(no,nm)+n(avail)+n(tot)+n(c[0])+n(c[1])+n(c[2])
+    var avail=ATT*seats, T=d.cands.reduce(function(a,x){return a+x.votes;},0);
+    var cs=chan(T,p);
+    var out=['<tr class="exsub'+(dim?' exdim':'')+'">'+nameCell(no,nm)+n(avail)+n(cs.tot)
+      +n(cs.pre)+n(cs.on)+n(cs.onl)
       +'<td colspan="5"></td><td class="c"></td><td class="c"></td></tr>'];
     d.cands.slice().sort(function(a,b){return a.rank-b.rank;}).forEach(function(x,i){
-      var cc=ch(x.votes);
+      var cc=chan(x.votes,p), cv=cc.tot;   /* 후보 득표도 같은 진행률로 나뉜다 */
       out.push('<tr'+(dim?' class="exdim"':'')+'>'+nameCell(x.no,x.name)
-        + n(avail) + n(x.votes) + n(cc[0]) + n(cc[1]) + n(cc[2])
-        + n(x.votes) + dash() + dash() + dash()
-        + '<td>'+pc(x.votes,tot)+'</td>'
+        + n(avail) + n(cv) + n(cc.pre) + n(cc.on) + n(cc.onl)
+        + n(cv) + dash() + dash() + dash()
+        + '<td>'+pc(cv,cs.tot)+'</td>'
         + resTd(done ? (dim?'폐기':(x.elected?'가결':'부결')) : '')
         + infoTd(2+i, 8+i*9, done) + '</tr>');
     });
@@ -2379,7 +2417,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   }
   paintRows();
   /* 실시간 운영에서 표결이 마감될 때마다 결과 칸을 다시 그린다 */
-  if(window.OC) OC.onDone=paintRows;
+  if(window.OC) OC.on(paintRows);
 
   /* 의안명 → 주주별 행사 내역 상세 */
   body.addEventListener('click',function(e){
