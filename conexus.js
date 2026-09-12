@@ -543,3 +543,23 @@
     pop.style.top = Math.max(8, top) + 'px';
   });
 })();
+
+/* 현장 제어 ↔ 의장·사회자 화면 — 같은 브라우저의 다른 탭끼리 상태를 나눈다.
+   localStorage 한 칸에 쓰고, storage 이벤트로 받는다(같은 탭에는 즉시 호출). */
+window.cxSync = (function () {
+  var K = 'cx.live', subs = [];
+  function get() { try { return JSON.parse(localStorage.getItem(K) || '{}'); } catch (e) { return {}; } }
+  function fire(s) { subs.forEach(function (f) { try { f(s); } catch (e) {} }); }
+  window.addEventListener('storage', function (e) { if (e.key === K) fire(get()); });
+  return {
+    get: get,
+    set: function (patch) {
+      var s = get();
+      for (var k in patch) s[k] = patch[k];
+      s.ts = Date.now();
+      try { localStorage.setItem(K, JSON.stringify(s)); } catch (e) {}
+      fire(s);
+    },
+    on: function (f) { subs.push(f); f(get()); }
+  };
+})();

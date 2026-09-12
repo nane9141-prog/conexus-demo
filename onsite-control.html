@@ -1594,7 +1594,11 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   /* 진행 상황을 보는 화면들(표결 관리 컨트롤 바 · 의결권 행사현황)이 여기에 붙는다 */
   OC.hooks=[];
   OC.on=function(fn){ OC.hooks.push(fn); };
-  OC.fire=function(){ OC.hooks.forEach(function(f){ try{ f(); }catch(e){} }); };
+  OC.fire=function(){
+    OC.hooks.forEach(function(f){ try{ f(); }catch(e){} });
+    /* 의장·사회자 화면은 이 신호만 보고 따라 넘어간다 */
+    if(window.cxSync) cxSync.set({ag:OC.agenda, stage:(OC.loading?2:OC.stage), sec:voteSec, cast:null});
+  };
   /* 단계별 진행률 — 실시간 운영의 채널 표와 같은 값을 쓴다 */
   OC.frac=function(no){
     if(OC.done[no]) return 1;
@@ -2044,11 +2048,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var rm=e.target.closest('[data-q]'); if(rm){ toggleQ(rm.dataset.q); return; }
     var fin=e.target.closest('[data-fin]');
     if(fin){ var id=fin.dataset.fin; queue=queue.filter(function(x){return x!==id;}); done.push(id);
+      if(window.cxSync) cxSync.set({cast:null, msg:''});
       renderAcc(); render(); if(window.cxToast) cxToast('발언을 종료했습니다.'); return; }
     var chip=e.target.closest('[data-msg]');
     if(chip){ var ta=document.getElementById('qmQTa'); if(ta){ ta.value=chip.textContent; ta.focus(); } return; }
     if(e.target.closest('[data-send]')){
       var t=document.getElementById('qmQTa');
+      if(t && t.value.trim() && window.cxSync) cxSync.set({msg:t.value.trim()});
       if(window.cxToast) cxToast((t&&t.value.trim())?'의장 화면에 메시지를 전달했습니다.':'전달할 내용을 입력해 주세요.');
       return;
     }
@@ -3199,6 +3205,11 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   /* 발언 경과 타이머 — 진행 중일 때만 돈다 */
   function startSpeak(id){
     speakingId=id; speakSec=0;
+    (function(){
+      var x=null; SPEECHES.forEach(function(v){ if(v.id===id) x=v; });
+      if(x && window.cxSync) cxSync.set({cast:(x.kind==='수정동의'?'amend':'speech'),
+        who:x.name+' · '+x.t+' · '+Number(x.sh).toLocaleString('en-US')+'주', msg:''});
+    })();
     if(speakTick) clearInterval(speakTick);
     speakTick=setInterval(function(){
       speakSec++;
@@ -3220,7 +3231,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       if(act.getAttribute('data-act')==='submit'){ var ta=card.querySelector('.mc-ta'); openDlg(id, ta.value); return; }
       var ci2=Q.filter(function(x){return x.id===id;})[0]; if(ci2&&ci2.st==='완료'){ editId=null; } else { selId=null; editId=null; } render(); return; }
     var ed=e.target.closest('[data-edit]'); if(ed){ editId=ed.closest('.mcard').getAttribute('data-id'); render(); return; }
-    var ca=e.target.closest('[data-cast]'); if(ca){ var cid=ca.closest('.mcard').getAttribute('data-id'); var ci=Q.filter(function(x){return x.id===cid;})[0]; if(ci){ ci.cast=!ci.cast; if(ci.cast){ var who=ci.name+' · '+ci.t+' · '+Number(ci.sh).toLocaleString('en-US')+'주'; var url='chair-view.html?view=qna&who='+encodeURIComponent(who)+'&q='+encodeURIComponent(ci.q||'')+'&a='+encodeURIComponent(ci.a||''); window.open(url,'cvcast'); } render(); } return; }
+    var ca=e.target.closest('[data-cast]'); if(ca){ var cid=ca.closest('.mcard').getAttribute('data-id'); var ci=Q.filter(function(x){return x.id===cid;})[0]; if(ci){ ci.cast=!ci.cast; if(ci.cast){ var who=ci.name+' · '+ci.t+' · '+Number(ci.sh).toLocaleString('en-US')+'주'; if(window.cxSync) cxSync.set({cast:'qna', who:who, q:ci.q||'', a:ci.a||''});
+        var url='chair-view.html?view=qna&who='+encodeURIComponent(who)+'&q='+encodeURIComponent(ci.q||'')+'&a='+encodeURIComponent(ci.a||''); window.open(url,'cvcast'); } render(); } return; }
     var op=e.target.closest('[data-open]');
     if(op){ var oid2=op.getAttribute('data-open'); openRow=(openRow===oid2)?null:oid2; render(); return; }
     var tg=e.target.closest('[data-tag]');
