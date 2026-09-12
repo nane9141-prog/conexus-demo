@@ -73,6 +73,9 @@
    · 가로 정렬 — 이름/코드는 왼쪽, 의결권·지분율 같은 수치는 오른쪽,
      유형·상태·제한 같은 분류는 가운데. dot 뱃지가 든 칸은 왼쪽으로 돌린다.
    · 투표권자 칸은 본문 글자를 굵게(600) 쓴다.
+   · 칸 너비는 내용에 맞춘다. 투표권자·의안명만 남는 자리를 나눠 갖는다.
+     colgroup 으로 너비를 미리 짜 둔 표는 그 계획을 그대로 둔다.
+   · 찬성·반대·기권·중립 헤더는 같은 기호를 달고 가운데로 둔다.
    · 투표권자·주주명·의안명은 텍스트 필터, 행사방식 같은 분류는 목록 필터.
      칸이 좁은 컬럼(100px 미만)은 필터를 달지 않는다.
    · 표 위 도구 두 개 — 행 높이, 컬럼 표시.
@@ -83,20 +86,26 @@
   var L = 'left', C = 'center', R = 'right';
   /* [헤더 이름, {al:가로정렬, sort:정렬 가능, ft:필터 종류, bold:본문 굵게}] — 위에서부터 먼저 맞는 것 */
   var RULES = [
-    [/투표권자/, { al: L, sort: 1, ft: 'text', bold: 1 }],
-    [/(주주명|성명|예탁자명|대리인명|후보자?명)/, { al: L, sort: 1, ft: 'text' }],
-    [/의안명/, { al: L, sort: 0, ft: 'text' }],
+    [/투표권자/, { al: L, sort: 1, ft: 'text', bold: 1, flex: 1 }],
+    [/(주주명|성명|예탁자명|대리인명|후보자?명|템플릿명|명부명|양식명|파일명)/, { al: L, sort: 1, ft: 'text' }],
+    [/의안명/, { al: L, sort: 0, ft: 'text', flex: 1 }],
     [/(의안번호|^의안$|^번호$)/, { al: L, sort: 0 }],
-    [/(더보기|^상세$|^비고$|^관리$|^액션$|^삭제$|^수정$)/, { al: C, sort: 0 }],
-    [/(의결권\s*제한|의안별\s*제한|제한사유)/, { al: C, sort: 1 }],
+    [/(더보기|^상세$|^비고$|^관리$|^액션$|^삭제$|^수정$|설정$|통합내역|특수관계인|해제)/, { al: C, sort: 0 }],
+    [/(의결권\s*제한|의안별\s*제한|주주\s*제한|제한사유)/, { al: C, sort: 1 }],
     [/(입장코드|참석번호|주주번호|^코드$|사번)/, { al: L, sort: 1 }],
-    [/(행사방식|채널|^유형$|^구분$|^종류$|결의방법|^상태$|사용\s*여부|행사여부|앱\s*사용|^공개$|^결과$|카테고리|템플릿\s*종류|전달\s*대상|적용조건)/,
+    [/(방식|^채널$|^유형$|^구분$|종류|여부|결의방법|주주\s*구분|통합방법|^상태$|^예상$|앱\s*사용|^공개$|^결과$|참석|중복\s*처리|카테고리|전달\s*대상|적용조건)/,
       { al: C, sort: 1, ft: 'list' }],
+    /* 의안 번호가 그대로 컬럼이 되는 표가 있다(1 · 2-1 · 3-1-1 …).
+       찬반 표기일 때도 집중투표 표수일 때도 있어 찬반 칸과 똑같이 다룬다. */
+    [/^(제\s*)?\d+(-\d+)*(호)?(\s*의안)?$/, { al: C, sort: 0, vote: 1 }],
+    /* 행사 채널이 컬럼이 되는 표 — 집계 수치인 곳도, 보기 버튼인 곳도 있다.
+       칸 내용을 보고 헤더까지 함께 정한다. */
+    [/(전자투표|서면투표|전자위임|서면위임|사전\s*투표|현장\s*투표|온라인\s*투표|위임장)/, { al: R, sort: 1, auto: 1 }],
     /* 찬반 칸은 표에 따라 표기(체크)이기도 하고 수치이기도 하다.
        헤더는 늘 가운데, 본문은 칸 내용을 보고 정한다. */
-    [/^(찬성|반대|기권|중립)(?![가-힣])/, { al: C, sort: 1, vote: 1 }],   /* '찬성 1' 처럼 단축키가 붙어도 잡는다 */
-    [/(의결권|주식수|주수|지분율|비율|득표|수량|금액|표수|건수|변수|보유주식|찬성률|투표|률$|율$)/, { al: R, sort: 1 }],
-    [/(일시|시간|시각|일자|날짜|기준일|등록일|수정일|접수|적용일|최종\s*수정)/, { al: C, sort: 1 }],
+    [/^(찬성|반대|기권|중립)(\s*\d+)?$/, { al: C, sort: 1, vote: 1 }],   /* '찬성 1' 처럼 단축키가 붙어도 잡는다 */
+    [/(의결권|주식수|주식\s*총수|주수|주주수|주주$|단수주|지분율|비율|득표|수량|금액|표수|건수|변수|보유주식|찬성률|투표|분배|나이|연령|률$|율$)/, { al: R, sort: 1 }],
+    [/(일시|시간|시각|일자|날짜|생년월일|기준일|등록일|수정일|접수|적용일|최종\s*수정)/, { al: C, sort: 1 }],
     [/(내용|사유|주소|명의개서|제목|질의|발언)/, { al: L, sort: 0, ft: 'text' }]
   ];
   var DEF = { al: L, sort: 1 };
@@ -152,6 +161,23 @@
   var BOX = '<span class="bx"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>';
   var SEARCH = '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>';
   var FUNNEL = '<svg viewBox="0 0 24 24"><path d="M3 5h18"/><path d="M7 12h10"/><path d="M11 19h2"/></svg>';
+
+  /* 찬반 기호는 한 벌만 쓴다 — 현장 제어 · 의결권 행사현황을 기준으로 삼았다 */
+  var VOTE = {
+    '찬성': ['for', '<circle cx="12" cy="12" r="9"/>'],
+    '반대': ['ag', '<path d="M18 6 6 18M6 6l12 12"/>'],
+    '기권': ['ab', '<path d="M5 12h14"/>'],
+    '중립': ['nt', '<rect x="5" y="5" width="14" height="14" rx="2"/>']
+  };
+  function voteHead(th, lb) {
+    var v = VOTE[lb.slice(0, 2)];
+    if (!v || th.__cxvh) return;
+    th.__cxvh = 1;
+    var kbd = th.querySelector('.kbd');   /* 단축키 배지는 헤더에 그대로 남긴다 */
+    th.innerHTML = '<span class="cx-vh ' + v[0] + '"><svg viewBox="0 0 24 24">' + v[1]
+      + '</svg>' + lb.slice(0, 2) + '</span>';
+    if (kbd) th.firstChild.appendChild(kbd);
+  }
 
   function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
 
@@ -291,7 +317,7 @@
     var hrow = headRow(tbl), tb = tbl.tBodies[0];
     if (!hrow || !tb) return;
     var t = tbl.__cx;
-    if (!t) { t = tbl.__cx = { tbl: tbl, tb: tb, filters: {}, draft: {} }; }
+    if (!t) { t = tbl.__cx = { tbl: tbl, tb: tb, filters: {}, draft: {}, rowh: 0 }; }
     t.tb = tb;
     t.ths = Array.prototype.slice.call(hrow.cells);
     var rows = bodyRows(tb);
@@ -310,18 +336,27 @@
       /* 찬반 칸은 표마다 다르다 — 집계 수치면 오른쪽, 체크 표기면 가운데.
          헤더는 본문을 따라가야 글자가 어긋나지 않는다. */
       function isNum(c) { var v = txt(c); return v !== '' && !isNaN(num(v)); }
-      var allNum = rl.vote && cells.length > 0 && cells.every(isNum);
-      if (lb) { th.style.textAlign = rl.vote ? (allNum ? R : C) : al; }
+      var allNum = cells.length > 0 && cells.every(isNum);
+      if (rl.vote) voteHead(th, lb);
+      if (lb) { th.style.textAlign = rl.vote ? C : (rl.auto ? (allNum ? R : C) : al); }
       cells.forEach(function (c) {
-        c.style.textAlign = rl.vote
+        c.style.textAlign = (rl.vote || rl.auto)
           ? ((c.querySelector('input') || isNum(c)) ? R : C)
           : al;
         if (rl.bold) c.style.fontWeight = '600';
       });
 
+      /* 칸 너비 — 글자 길이에 맞춰 좁히고, 투표권자·의안명이 남는 자리를 가져간다 */
+      if (lb) {
+        th.style.width = rl.flex ? 'auto' : '1%';
+        th.style.whiteSpace = 'nowrap';
+      }
+      cells.forEach(function (c) { c.style.whiteSpace = rl.flex ? '' : 'nowrap'; });
+
       /* 정렬 — 표시는 없다 */
       var grouped = !!tb.querySelector('tr [colspan]');   /* 소계·그룹 줄이 있는 표 */
-      var canSort = rl.sort && lb && rows.length > 1 && !grouped;
+      var canSort = rl.sort && lb && rows.length > 1 && !grouped
+        && !th.matches('.sortable,[data-key],[data-sort]');
       th.classList.toggle('cx-sort', !!canSort);
       if (canSort && !th.__cxSort) {
         th.__cxSort = 1;
@@ -333,7 +368,9 @@
 
       /* 필터 — 칸이 좁으면 달지 않는다 */
       var w = th.getBoundingClientRect().width;
-      var canFilter = rl.ft && lb && rows.length > 0 && !grouped && (w === 0 || w >= 100);
+      /* 채널 칸이 표기라면 목록으로 고를 수 있게 해 준다 — 수치면 거를 것이 없다 */
+      var ft = rl.ft || (rl.auto && !allNum ? 'list' : 0);
+      var canFilter = ft && lb && rows.length > 0 && (w === 0 || w >= 100);
       if (canFilter && !th.querySelector('.cx-fbtn')) {
         th.classList.add('cx-filterable');
         /* sticky 헤더를 덮어쓰지 않도록, 자리 기준이 없을 때만 relative 를 준다 */
@@ -343,7 +380,7 @@
         b.innerHTML = FUNNEL;
         b.addEventListener('click', function (e) {
           e.stopPropagation();
-          (rl.ft === 'list' ? listFilter : textFilter)(t, idx, th, b);
+          (ft === 'list' ? listFilter : textFilter)(t, idx, th, b);
         });
         th.appendChild(b);
       } else if (!canFilter) {

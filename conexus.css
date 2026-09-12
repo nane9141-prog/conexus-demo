@@ -869,3 +869,11 @@ th.cx-sort{cursor:pointer;user-select:none}
 .cxmenu .foot button{flex:1;height:24px;border:none;border-radius:8px;background:#F5F5F5;font-family:inherit;
   font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#171717;cursor:pointer}
 .cxmenu .foot button.dark{background:#171717;color:#FAFAFA}
+/* 찬반 헤더 — 기호를 한 벌로 맞춘다(현장 제어 · 의결권 행사현황 기준) */
+.cx-vh{display:inline-flex;align-items:center;justify-content:center;gap:4px}
+.cx-vh svg{width:16px;height:16px;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.cx-vh.for svg{stroke:#0071F3}
+.cx-vh.ag svg{stroke:#E9081B}
+.cx-vh.ab svg{stroke:#171717}
+.cx-vh.nt svg{stroke:#737373}
+.cx-vh .kbd{margin-left:2px}
