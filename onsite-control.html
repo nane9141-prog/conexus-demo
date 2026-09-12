@@ -504,6 +504,30 @@
   .dlg-btn.dark{background:#171717;border-color:#171717;color:#FAFAFA}
   .dlg-x{position:absolute;right:16px;top:16px;width:16px;height:16px;border:none;background:none;cursor:pointer;opacity:.7;padding:0}
   .dlg-x svg{width:16px;height:16px;fill:none;stroke:#000;stroke-width:2;stroke-linecap:round}
+  .dlg-btn.red{border-color:transparent;background:rgba(220,38,38,.1);color:#E9081B}
+  /* 배경 없는 안내 줄 — 경고가 아니라 설명이다 */
+  .dlg-note{display:flex;align-items:flex-start;gap:8px;font-size:14px;line-height:20px;letter-spacing:-.01em;font-weight:500;color:#0A0A0A}
+  .dlg-note svg{width:16px;height:16px;flex:none;margin-top:2px;fill:none;stroke:#0A0A0A;stroke-width:1.33;stroke-linecap:round}
+  .dlg-field{display:flex;flex-direction:column;gap:6px}
+  .dlg-field .lb{margin-bottom:0}
+  .dlg-ds{font-size:14px;line-height:20px;letter-spacing:-.01em;color:#737373}
+  /* 시각 입력 — 아이콘을 상자 안에 둔다 */
+  .dlg-time{display:flex;align-items:center;gap:8px;height:32px;padding:0 10px;border:1px solid #E5E5E5;border-radius:10px;background:#fff}
+  .dlg-time svg{width:16px;height:16px;flex:none;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round}
+  .dlg-time input{flex:1;min-width:0;border:none;outline:none;background:none;font-family:inherit;font-size:14px;letter-spacing:-.01em;color:#0A0A0A}
+  /* 공지 목록 — 내용 / 시간 / 고정 */
+  .ntbl{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #E5E5E5;border-radius:8px;overflow:hidden;font-size:12px;line-height:16px}
+  .ntbl th,.ntbl td{height:36px;padding:0 8px;border-bottom:1px solid #E5E5E5;text-align:left;white-space:nowrap}
+  .ntbl th{height:32px;background:#FAFAFA;font-weight:400;color:#737373}
+  .ntbl td{font-weight:500;color:#0A0A0A}
+  .ntbl tr:last-child th,.ntbl tr:last-child td{border-bottom:none}
+  .ntbl .tm{width:60px;text-align:center;color:#737373}
+  .ntbl .pin{width:40px;text-align:center;padding:0}
+  .ntbl .nm{overflow:hidden;text-overflow:ellipsis;max-width:0}
+  .npin{width:28px;height:24px;border:none;border-radius:8px;background:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+  .npin svg{width:12px;height:12px;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .npin.on svg{stroke:#0A0A0A}
+  .dlg-cap{font-size:12px;line-height:12px;letter-spacing:-.01em;color:#737373}
   .mc-ansview{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border);padding-top:12px}
   .mc-ansview .lb{font-size:12px;font-weight:500;color:#737373}
   .mc-ansview .tx{background:#FAFAFA;border:1px solid var(--border);border-radius:10px;padding:12px;font-size:13px;line-height:18px;color:#171717}
@@ -1028,7 +1052,7 @@
         <div class="oc-tools">
           <!-- 운영 -->
           <div class="ocg">
-            <button class="ocb"><svg viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>공지</button>
+            <button class="ocb" id="btnNotice"><svg viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>공지</button>
             <div class="seg">
               <a class="ocb" id="chairViewBtn" href="chair-view.html" target="_blank" rel="noopener">의장용</a>
               <a class="ocb" href="mc-view.html" target="_blank" rel="noopener">사회자용</a>
@@ -1037,8 +1061,8 @@
           <span class="tsep"></span>
           <!-- 옵션 -->
           <div class="ocg">
-            <button class="ocb"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m17 8 5 5M22 8l-5 5"/></svg>출석 미투표 처리</button>
-            <button class="ocb"><svg viewBox="0 0 24 24"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg>비콘 제어</button>
+            <button class="ocb" id="btnNoVote"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m17 8 5 5M22 8l-5 5"/></svg>출석 미투표 처리</button>
+            <button class="ocb" id="btnBeacon"><svg viewBox="0 0 24 24"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg>비콘 제어</button>
           </div>
           <span class="tsep"></span>
           <!-- 제어 -->
@@ -1218,6 +1242,127 @@
       <label class="hagree" id="hostAgree"><span class="hchk"><svg viewBox="0 0 24 24"><path d="m5 13 4 4 10-10"/></svg></span>위 내용을 확인했으며, 권한을 저장합니다.</label>
       <button class="hbtn" type="button" id="hostCancel">취소</button>
       <button class="hbtn dark" type="button" id="hostSave" disabled>권한 저장</button>
+    </div>
+  </div>
+</div>
+<!-- 비콘 제어 -->
+<div class="ovl" id="bcnOvl">
+  <div class="dlg">
+    <button class="dlg-x" id="bcnClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="dlg-h"><div class="tt">비콘 제어</div><div class="ds">현장 참석 인증에 쓰는 비콘 신호의 유지 시간을 설정합니다.</div></div>
+    <div class="dlg-c">
+      <div class="dlg-field">
+        <div class="lb">신호 유지 시간</div>
+        <div class="dlg-tabs" id="bcnTabs">
+          <button type="button" data-v="5">5초</button>
+          <button type="button" data-v="10">10초</button>
+          <button type="button" class="on" data-v="30">30초</button>
+          <button type="button" data-v="60">60초</button>
+          <button type="button" data-v="120">120초</button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="dlg-note"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>시간을 길게 설정할수록 연결 안정성은 높아지나, 주주가 행사장을 이탈한 후 설정한 시간 동안 투표권이 유지될 수 있습니다.</div>
+        <div class="dlg-note"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>기본 30초(권장)로 설정되어 있으며, 현장 전파 환경이 매우 불안정한 경우에만 시간을 늘려 주세요.</div>
+      </div>
+    </div>
+    <div class="dlg-f"><button class="dlg-btn" type="button" data-close="bcnOvl">취소</button><button class="dlg-btn dark" type="button" data-close="bcnOvl">저장</button></div>
+  </div>
+</div>
+
+<!-- 출석 미투표 처리 -->
+<div class="ovl" id="nvOvl">
+  <div class="dlg">
+    <button class="dlg-x" id="nvClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="dlg-h"><div class="tt">출석 미투표 처리</div><div class="ds">표결이 마감된 의안에 대해 아직 행사하지 않은 출석 주주를 일괄 처리합니다.</div></div>
+    <div class="dlg-c">
+      <div class="dlg-field">
+        <div class="lb">처리 방식</div>
+        <div class="dlg-tabs" id="nvTabs">
+          <button type="button" class="on" data-v="abs">기권 처리</button>
+          <button type="button" data-v="no">불참 처리</button>
+        </div>
+        <div class="dlg-ds" id="nvDs">행사하지 않은 의결권을 기권으로 집계합니다.</div>
+      </div>
+      <div class="palert"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>기존 투표 여부와 관계없이 모든 참석 주주를 처리합니다.</div>
+    </div>
+    <div class="dlg-f">
+      <label class="ckrow on" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>처리 결과를 확인했으며 되돌릴 수 없음에 동의합니다.</label>
+      <button class="dlg-btn" type="button" data-close="nvOvl">취소</button>
+      <button class="dlg-btn dark" type="button" data-close="nvOvl">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 공지 -->
+<div class="ovl" id="ntcOvl">
+  <div class="dlg">
+    <button class="dlg-x" id="ntcClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="dlg-h"><div class="tt">공지</div><div class="ds">현장 화면과 온라인 참석 주주에게 공지를 전송합니다.</div></div>
+    <div class="dlg-c" style="padding-bottom:16px">
+      <div class="dlg-field"><div class="lb">제목</div>
+        <input class="dlg-inp" id="ntcTitle" type="text" placeholder="공지 제목을 입력하세요"></div>
+      <div class="dlg-field">
+        <textarea class="dlg-ta" id="ntcBody" style="min-height:165px" placeholder="공지 내용을 입력하세요"></textarea></div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <label class="ckrow" data-ck style="margin-right:0"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>상단 고정</label>
+        <span style="margin-left:auto"></span>
+        <button class="dlg-btn" type="button" data-close="ntcOvl">취소</button>
+        <button class="dlg-btn dark" type="button" id="ntcSend">공지 등록</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <table class="ntbl" id="ntcTbl"><tbody>
+          <tr><th>내용</th><th class="tm">시간</th><th class="pin">고정</th></tr>
+        </tbody></table>
+        <div class="dlg-cap">고정한 공지는 현장 화면 상단에 계속 노출됩니다. 최대 1건까지 고정할 수 있습니다.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 총회 지연 · 속개 · 종료 안내 -->
+<div class="ovl" id="dlyOvl">
+  <div class="dlg">
+    <button class="dlg-x" id="dlyClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="dlg-h"><div class="tt" id="dlyTt">총회 지연</div><div class="ds" id="dlyDs">현장 화면과 온라인 참석 주주에게 진행 상황을 안내합니다.</div></div>
+    <div class="dlg-c">
+      <div class="dlg-tabs" id="dlyTabs" style="width:117px;flex:none">
+        <button type="button" class="on" data-v="delay">지연</button>
+        <button type="button" data-v="resume">속개</button>
+        <button type="button" data-v="end">종료</button>
+      </div>
+      <div class="dlg-field" id="dlyTimeF">
+        <div class="lb" id="dlyTimeLb">재개 예정 시각</div>
+        <div class="dlg-time"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg><input id="dlyTime" type="time" value="10:30"></div>
+      </div>
+      <div class="dlg-field">
+        <div class="lb">안내 문구</div>
+        <textarea class="dlg-ta" id="dlyBody" style="min-height:137px"></textarea>
+      </div>
+      <div class="palert" id="dlyWarn" style="display:none"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>종료를 안내하면 현장·온라인 투표가 더 이상 접수되지 않습니다.</div>
+    </div>
+    <div class="dlg-f">
+      <label class="ckrow on" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>현장 화면과 온라인에 함께 전송합니다.</label>
+      <button class="dlg-btn" type="button" data-close="dlyOvl">취소</button>
+      <button class="dlg-btn dark" type="button" id="dlyOk">화면 전송</button>
+    </div>
+  </div>
+</div>
+
+<!-- 총회 종료 확인 -->
+<div class="ovl" id="endOvl">
+  <div class="adlg">
+    <div class="adlg-h">
+      <div class="adlg-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg></div>
+      <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+        <div class="adlg-t">총회를 종료하시겠습니까?</div>
+        <div class="adlg-d">종료하면 모든 채널의 의결권 행사가 마감되고 집계가 확정됩니다. 종료 후에는 되돌릴 수 없습니다.</div>
+      </div>
+      <label class="ckrow on" data-ck id="endAgree" style="margin-right:0;width:100%"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>모든 의안의 표결이 마감된 것을 확인했습니다.</label>
+    </div>
+    <div class="adlg-f">
+      <button type="button" data-close="endOvl">취소</button>
+      <button type="button" class="danger" id="endGo">총회 종료</button>
     </div>
   </div>
 </div>
@@ -3004,28 +3149,6 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   }); }
 })();
 </script>
-<div class="ovl" id="closeOvl">
-  <div class="adlg" role="alertdialog" aria-modal="true">
-    <div class="adlg-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg></div>
-    <div class="adlg-tt">주주총회를 폐회하시겠습니까?</div>
-    <div class="adlg-ds">주주총회를 폐회하면 총회 진행이 최종 마감되며, 참석자 접속이 차단됩니다.</div>
-    <div class="adlg-f">
-      <button class="adlg-btn cancel" id="closeCancel" type="button">취소</button>
-      <button class="adlg-btn danger" id="closeConfirm" type="button">주주총회 폐회</button>
-    </div>
-  </div>
-</div>
-<script>
-(function(){
-  var ov=document.getElementById("closeOvl"), bt=document.getElementById("btnClose");
-  var cc=document.getElementById("closeCancel"), cf=document.getElementById("closeConfirm");
-  function close(){ ov.classList.remove("on"); }
-  if(bt) bt.addEventListener("click",function(){ window.location.href="closing.html"; });
-  if(cc) cc.addEventListener("click",close);
-  if(cf) cf.addEventListener("click",close);
-  ov.addEventListener("click",function(e){ if(e.target===ov) close(); });
-})();
-</script>
 <script>
   document.querySelectorAll(".lnb-tabs .t").forEach(function(t){ t.addEventListener("click",function(){ var tab=t.dataset.tab; if(!tab) return;
     document.querySelectorAll(".lnb-tabs .t").forEach(function(x){x.classList.toggle("active",x===t);});
@@ -3066,6 +3189,116 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   });
   pop.addEventListener('click', hide);          /* 항목 선택 후 닫기 */
   document.addEventListener('click', hide);
+})();
+</script>
+<script>
+/* 현장 제어 팝업 — 비콘 · 출석 미투표 · 공지 · 지연/속개/종료. */
+(function () {
+  function $(id) { return document.getElementById(id); }
+  function open(id) { var o = $(id); if (o) o.classList.add('on'); }
+  function close(id) { var o = $(id); if (o) o.classList.remove('on'); }
+
+  /* 열기 */
+  [['btnBeacon', 'bcnOvl'], ['btnNoVote', 'nvOvl'], ['btnNotice', 'ntcOvl']].forEach(function (p) {
+    var b = $(p[0]); if (b) b.addEventListener('click', function () { open(p[1]); });
+  });
+  var pause = $('btnPause'); if (pause) pause.addEventListener('click', function () { setDly('delay'); open('dlyOvl'); });
+  var cls = $('btnClose'); if (cls) cls.addEventListener('click', function () { open('endOvl'); });
+  $('endGo').addEventListener('click', function () { window.location.href = 'closing.html'; });
+
+  /* 닫기 — X · 취소 · 배경 */
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('[data-close]') : null;
+    if (b) { close(b.getAttribute('data-close')); return; }
+    var x = e.target.closest ? e.target.closest('.dlg-x') : null;
+    if (x && x.parentNode.parentNode.id) close(x.parentNode.parentNode.id);
+  });
+  ['bcnOvl', 'nvOvl', 'ntcOvl', 'dlyOvl', 'endOvl'].forEach(function (id) {
+    var o = $(id); if (!o) return;
+    o.addEventListener('click', function (e) { if (e.target === o) close(id); });
+  });
+
+  /* 체크박스 · 탭 */
+  document.addEventListener('click', function (e) {
+    var ck = e.target.closest ? e.target.closest('[data-ck]') : null;
+    if (ck) { e.preventDefault(); ck.classList.toggle('on'); }
+  });
+  function tabs(id, fn) {
+    var box = $(id); if (!box) return;
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      box.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      if (fn) fn(b.getAttribute('data-v'));
+    });
+  }
+  tabs('bcnTabs');
+  tabs('nvTabs', function (v) {
+    $('nvDs').textContent = v === 'abs'
+      ? '행사하지 않은 의결권을 기권으로 집계합니다.'
+      : '행사하지 않은 주주를 불참으로 처리해 출석 의결권에서 제외합니다.';
+  });
+
+  /* 지연 · 속개 · 종료 — 한 팝업에서 문구와 버튼만 바뀐다 */
+  var DLY = {
+    delay: { tt: '총회 지연', lb: '재개 예정 시각', btn: '화면 전송', red: 0, time: 1,
+             body: '총회 진행이 지연되고 있습니다. 재개 예정 시각에 맞춰 다시 안내드리겠습니다.' },
+    resume: { tt: '총회 속개', lb: '속개 시각', btn: '화면 전송', red: 0, time: 1,
+             body: '잠시 후 총회를 속개합니다. 자리에 착석해 주시기 바랍니다.' },
+    end: { tt: '총회 종료 안내', lb: '', btn: '종료 안내', red: 1, time: 0,
+             body: '모든 의안의 표결이 마감되었습니다. 오늘 총회를 마치겠습니다. 참석해 주셔서 감사합니다.' }
+  };
+  function setDly(v) {
+    var m = DLY[v]; if (!m) return;
+    $('dlyTt').textContent = m.tt;
+    $('dlyTimeF').style.display = m.time ? '' : 'none';
+    if (m.time) $('dlyTimeLb').textContent = m.lb;
+    $('dlyBody').value = m.body;
+    $('dlyWarn').style.display = m.red ? '' : 'none';
+    var ok = $('dlyOk'); ok.textContent = m.btn;
+    ok.classList.toggle('dark', !m.red); ok.classList.toggle('red', !!m.red);
+    $('dlyTabs').querySelectorAll('button').forEach(function (b) {
+      b.classList.toggle('on', b.getAttribute('data-v') === v);
+    });
+  }
+  tabs('dlyTabs', setDly);
+  setDly('delay');
+  $('dlyOk').addEventListener('click', function () { close('dlyOvl'); });
+
+  /* 공지 — 등록하면 목록 맨 위에 쌓인다 */
+  var NTC = [
+    { t: '총회장 내 금연 및 정숙을 부탁드립니다.', tm: '09:42', pin: 0 },
+    { t: '의결권 행사는 배부된 단말기로 진행해 주세요.', tm: '09:31', pin: 1 },
+    { t: '2층 주주 대기실이 개방되었습니다.', tm: '09:18', pin: 0 },
+    { t: '참석 등록은 1층 안내데스크에서 가능합니다.', tm: '09:05', pin: 0 }
+  ];
+  var PIN = '<svg viewBox="0 0 24 24"><path d="M9 4h6l-1 6 4 3v2H6v-2l4-3-1-6z"/><path d="M12 15v5"/></svg>';
+  var PINOFF = '<svg viewBox="0 0 24 24"><path d="M9 4h6l-1 6 4 3v2h-7"/><path d="M12 15v5"/><path d="m4 3 16 18"/></svg>';
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function drawNtc() {
+    var b = $('ntcTbl').querySelector('tbody'); if (!b) return;
+    b.innerHTML = '<tr><th>내용</th><th class="tm">시간</th><th class="pin">고정</th></tr>'
+      + NTC.map(function (n, i) {
+          return '<tr><td class="nm">' + esc(n.t) + '</td><td class="tm">' + n.tm + '</td>'
+            + '<td class="pin"><button class="npin' + (n.pin ? ' on' : '') + '" type="button" data-pin="' + i + '">'
+            + (n.pin ? PIN : PINOFF) + '</button></td></tr>';
+        }).join('');
+  }
+  $('ntcTbl').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-pin]'); if (!b) return;
+    var i = +b.getAttribute('data-pin'), was = NTC[i].pin;
+    NTC.forEach(function (n) { n.pin = 0; });      /* 고정은 한 건만 */
+    NTC[i].pin = was ? 0 : 1;
+    drawNtc();
+  });
+  $('ntcSend').addEventListener('click', function () {
+    var t = $('ntcTitle').value.trim() || $('ntcBody').value.trim();
+    if (!t) { close('ntcOvl'); return; }
+    var d = new Date(), hh = d.getHours(), mm = d.getMinutes();
+    NTC.unshift({ t: t, tm: (hh < 10 ? '0' : '') + hh + ':' + (mm < 10 ? '0' : '') + mm, pin: 0 });
+    $('ntcTitle').value = ''; $('ntcBody').value = '';
+    drawNtc();
+  });
+  drawNtc();
 })();
 </script>
 </body>
