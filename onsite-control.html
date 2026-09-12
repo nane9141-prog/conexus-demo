@@ -646,6 +646,24 @@
   .pnav-a svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
   .pnav-t{font-size:14px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A;white-space:nowrap}
   .pnav .sp{margin-left:auto}
+  .pnav .gap{width:4px;flex:none}
+  .pctrl{display:flex;align-items:center;gap:8px}
+  /* 결의방법은 배경 없이 글자만 */
+  .pmethod{font-size:12px;font-weight:500;letter-spacing:-.01em;color:#737373;white-space:nowrap}
+  .pmethod .sep{margin:0 4px;color:#A3A3A3}
+  .vbtn.red{background:rgba(220,38,38,.1);border-color:transparent;color:#E9081B}
+  /* 테이블 머리줄 — 제목과 표 단위 액션 */
+  .ptitle{display:flex;align-items:center;gap:8px;padding:12px 12px 8px;flex:none}
+  .ptitle .t{font-size:14px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A}
+  .ptitle .sp{margin-left:auto}
+  /* 통합기관 아코디언 — 다른 명부 화면과 같은 형태 */
+  .pvoter{display:flex;align-items:center;gap:8px;min-width:0}
+  .pchev{width:24px;height:24px;flex:none;padding:0;border:1px solid var(--border);border-radius:9999px;background:#fff;color:#0A0A0A;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+  .pchev svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+  .pchev.collapsed svg{transform:rotate(180deg)}
+  .ptag{display:inline-flex;align-items:center;height:20px;padding:0 6px;border-radius:9999px;background:#F5F5F5;color:#737373;font-size:12px;font-weight:500;flex:none}
+  .extbl tr.pchild.off{display:none}
+  .pind{padding-left:44px !important}
   .pload{display:none;align-items:center;gap:8px;margin:8px 12px 0;padding:8px 10px;background:#EEF5FF;border:1px solid #D4E8FF;border-radius:10px;font-size:13px;font-weight:500;color:#0066DF;flex:none}
   .pload.on{display:flex}
   .pspin{width:14px;height:14px;border:2px solid #BBDCFF;border-top-color:#0071F3;border-radius:50%;animation:pspin .7s linear infinite;flex:none}
@@ -667,7 +685,6 @@
   .ptabs button.on{background:#171717;border-color:#171717;color:#FAFAFA}
   .pchip{display:inline-flex;align-items:center;padding:2px 6px;border-radius:6px;font-size:12px;line-height:16px;font-weight:500;background:#F5F5F5;color:#525252}
   .pchip.b{background:#EEF5FF;color:#0071F3}
-  .pchip.g{background:#EAFAF0;color:#0A8A3C}
   .pnm{background:none;border:none;padding:0;font:inherit;letter-spacing:inherit;color:#171717;cursor:pointer;text-align:left}
   .pnm:hover{text-decoration:underline}
   .pfoot{flex:none;display:flex;justify-content:flex-end;align-items:center;gap:16px;height:40px;padding:0 16px;background:#FAFAFA;border-top:1px solid #E5E5E5;font-size:12px;line-height:16px;color:#1F1C18}
@@ -704,6 +721,7 @@
   .mvtbl tr:last-child td{border-bottom:none}
   .mvtbl .l{text-align:left}.mvtbl .c{text-align:center}
   .mvtbl td{color:#171717;font-variant-numeric:tabular-nums}
+  .mvtbl td.mut{color:#737373}
   .mvtbl tr.done td{background:#FAFAFA;color:#737373}
   .mvtbl tr.amend td{background:#FEF5E7}
   .mvsub{display:block;font-size:12px;line-height:16px;color:#737373;font-variant-numeric:normal}
@@ -728,7 +746,6 @@
   .exh{display:inline-flex;align-items:center;gap:4px}
   .exh svg{width:16px;height:16px;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
   .exh.for svg{stroke:#0071F3}.exh.ag svg{stroke:#E9081B}.exh.ab svg{stroke:#171717}.exh.nt svg{stroke:#737373}
-  .exfic{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:1.6;stroke-linecap:round;vertical-align:-3px;margin-left:6px;cursor:pointer}
   .exnm{display:flex;align-items:center;gap:8px;min-width:0}
   .exno{display:inline-flex;align-items:center;justify-content:center;padding:2px 6px;background:#fff;border:1px solid #EEF0F2;border-radius:6px;font-size:12px;line-height:1;color:#151419;flex:none}
   .exnm .t{overflow:hidden;text-overflow:ellipsis;color:#171717;background:none;border:none;padding:0;font:inherit;letter-spacing:inherit;text-align:left;cursor:pointer}
@@ -1087,7 +1104,7 @@
               </div>
             </div>
             <div class="vscroll"><table class="extbl"><thead><tr>
-              <th class="l" style="min-width:255px">의안명<svg class="exfic" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></th>
+              <th class="l" style="min-width:255px">의안명</th>
               <th style="width:125px">총 행사가능의결권</th>
               <th style="width:118px">총 행사의결권</th>
               <th style="width:108px">사전의결권</th>
@@ -1108,20 +1125,23 @@
           <div class="apanel psheet">
             <div class="pnav">
               <button class="pnav-a" id="pPrev" type="button" title="이전 의안"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
-              <span class="exno" id="pNo">1</span>
-              <span class="pnav-t" id="pName">재무제표 승인의 건</span>
-              <span class="expill" id="pMethod">보통결의</span>
               <button class="pnav-a" id="pNext" type="button" title="다음 의안"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+              <span class="gap"></span>
+              <span class="exno" id="pNo">제 1호</span>
+              <span class="pnav-t" id="pName">재무제표 승인의 건</span>
+              <span class="pmethod" id="pMethod">보통결의</span>
               <span class="sp"></span>
-              <button class="vbtn" type="button" id="pTally"><i class="ph ph-arrows-clockwise" style="font-size:16px"></i>집계 갱신</button>
-              <button class="vbtn dark" type="button" id="pBulk"><i class="ph ph-check-square" style="font-size:16px"></i>일괄 투표</button>
+              <span class="pctrl" id="pCtrl"></span>
             </div>
             <div class="pload" id="pLoad"><span class="pspin"></span>투표 결과 집계 중입니다.</div>
             <div class="ptabs" id="pOpts" style="display:none"></div>
             <div class="pcards" id="pCards"></div>
+            <div class="ptitle"><span class="t">현장 표결 관리</span><span class="sp"></span>
+              <button class="vbtn dark" type="button" id="pBulk"><i class="ph ph-check-square" style="font-size:16px"></i>일괄 투표</button>
+            </div>
             <div class="vscroll" style="margin-top:0"><table class="extbl" id="pTbl"><thead><tr>
-              <th class="l" style="width:96px">투표권자</th>
-              <th class="l" style="min-width:220px">주주명</th>
+              <th class="l" style="min-width:230px">투표권자</th>
+              <th class="l" style="min-width:160px">주주명</th>
               <th class="l" style="width:120px">대리인명</th>
               <th class="c" style="width:84px">앱 사용</th>
               <th class="c" style="width:90px">행사여부</th>
@@ -1361,17 +1381,22 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     el.className='ctrlbar '+m.key;
     el.innerHTML=l+r;
     el.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click',function(){
-      var to=+b.getAttribute('data-go');
-      if(OC.stage===2 && to===3){        /* 집계로 넘어갈 때만 대기 화면을 거친다 */
-        OC.loading=true; renderStage();
-        setTimeout(function(){ OC.loading=false; OC.stage=3; renderStage(); renderAll(); },1000);
-        return;
-      }
-      OC.stage=to; renderStage(); renderAll();
+      goStage(+b.getAttribute('data-go'));
     }); });
+    if(OC.onStage) OC.onStage();          /* 표결 관리 탭의 컨트롤 바도 같은 단계를 본다 */
     if(OC.stage===2){ if(!ticker){ ticker=setInterval(function(){ voteSec++; var t=document.getElementById('vTimer'); if(t) t.textContent=fmt(voteSec); bumpSite(); },1000); } }
     else if(ticker){ clearInterval(ticker); ticker=null; }
   }
+  /* 단계 이동 — 실시간 운영 컨트롤 바와 표결 관리 탭이 같이 쓴다 */
+  function goStage(to){
+    if(OC.stage===2 && to===3){          /* 집계로 넘어갈 때만 대기 화면을 거친다 */
+      OC.loading=true; renderStage();
+      setTimeout(function(){ OC.loading=false; OC.stage=3; renderStage(); renderAll(); },1000);
+      return;
+    }
+    OC.stage=to; renderStage(); renderAll();
+  }
+  OC.go=goStage; OC.STAGES=STAGES; OC.STMETA=STMETA;
   function liveFrac(){ return [0,0,0.5,0.85,1][OC.stage]||0; }
   /* 예상 판정 — 발행주식총수 기준과 출석의결권 기준을 모두 넘어야 가결 예상.
      하나라도 미달이면 부결 예상. (그래프의 두 기준선과 같은 계산) */
@@ -1958,21 +1983,24 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function pc(a,b){ return b? (Math.round(a/b*1000)/10).toFixed(1)+'%' : '0.0%'; }
   function no2(no){ return String(no).replace(/^제/,'').replace(/호$/,''); }
 
-  /* 현장 명부 표본 — 대리인 · 앱 사용 · 제한 조합을 골고루 */
+  /* 현장 명부 표본 — 투표권자 / 주주명 / 대리인 / 앱 / 행사 / 의결권 / 제한 / 의안별 / 참석번호.
+     kids 가 있으면 통합기관이라 아코디언으로 하위 건을 편다(다른 명부 화면과 같은 형태). */
   var ROWS=[
-    ['본인','국민연금공단','',        1,1, 41200000,'해당없음','없음','A01'],
-    ['대리인','사립학교교직원연금공단','김우진', 1,1, 28600000,'해당없음','없음','A02'],
-    ['본인','한국투자신탁운용','',     0,1, 19400000,'상호주 제한','없음','A05'],
-    ['본인','삼성자산운용','',         1,1, 17800000,'해당없음','없음','A07'],
-    ['대리인','미래에셋자산운용','정하늘',1,0, 15200000,'해당없음','없음','A09'],
-    ['본인','KB자산운용','',           0,0, 12600000,'자기주식','감사 선임 3% 제한','A11'],
-    ['대리인','신한자산운용','오세영',  0,1, 9800000,'상호주 제한','없음','A12'],
-    ['본인','우리사주조합','',         1,1, 6300000,'자기주식','감사 선임 3% 제한','A14'],
-    ['본인','최길준','',               0,0, 4120000,'해당없음','없음','A16'],
-    ['본인','이유정','',               1,1, 2860000,'3% 룰','감사 선임 3% 제한','A17'],
-    ['대리인','윤대일','윤가람',        0,0, 1940000,'해당없음','없음','A18'],
-    ['본인','정하윤','',               1,1, 980000,'3% 룰','없음','A21'],
-    ['본인','강가람','',               0,1, 640000,'해당없음','없음','A23']
+    ['국민연금공단','국민연금공단','',        1,1, 41200000,'해당없음','없음','A01'],
+    ['사립학교교직원연금공단','사립학교교직원연금공단','김우진', 1,1, 28600000,'해당없음','없음','A02'],
+    ['한국투자신탁운용','','',                0,1, 19400000,'상호주 제한','없음','A05',
+      [['한국투자신탁운용 제 1호',5670000],['한국투자신탁운용 제 2호',8060000],['한국투자신탁운용 제 3호',5670000]]],
+    ['삼성자산운용','삼성자산운용','',         1,1, 17800000,'해당없음','없음','A07'],
+    ['미래에셋자산운용','미래에셋자산운용','정하늘',1,0, 15200000,'해당없음','없음','A09'],
+    ['교직원공제회','','',                    0,0, 12600000,'자기주식','감사 선임 3% 제한','A11',
+      [['교직원공제회 제 1호',3200000],['교직원공제회 제 2호',4100000],['교직원공제회 제 3호',2900000],['교직원공제회 제 4호',2400000]]],
+    ['신한자산운용','신한자산운용','오세영',   0,1, 9800000,'상호주 제한','없음','A12'],
+    ['우리사주조합','우리사주조합','',         1,1, 6300000,'자기주식','감사 선임 3% 제한','A14'],
+    ['최길준','최길준','',                    0,0, 4120000,'해당없음','없음','A16'],
+    ['이유정','이유정','',                    1,1, 2860000,'3% 룰','감사 선임 3% 제한','A17'],
+    ['윤대일','윤대일','윤가람',              0,0, 1940000,'해당없음','없음','A18'],
+    ['정하윤','정하윤','',                    1,1, 980000,'3% 룰','없음','A21'],
+    ['강가람','강가람','',                    0,1, 640000,'해당없음','없음','A23']
   ];
 
   function cur(){ return (window.OC&&OC.agenda)||'제1호'; }
@@ -1986,10 +2014,12 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 
   function renderNav(){
     var d=C[cur()]; if(!d) return;
-    document.getElementById('pNo').textContent=no2(cur());
+    document.getElementById('pNo').textContent=CX.util.chip(cur());   /* 제 1호 */
     document.getElementById('pName').textContent=d.name;
-    document.getElementById('pMethod').textContent=
-      d.type==='집중투표'?'집중투표':(d.type==='양립불가'?'양립불가':(d.type||'보통결의'));
+    var m=(d.type==='집중투표'||d.type==='양립불가')
+      ? ['보통결의',d.type] : [d.type||'보통결의'].concat(d.method?[d.method]:[]);
+    document.getElementById('pMethod').innerHTML=
+      m.map(function(t,i){ return (i?'<span class="sep">·</span>':'')+t; }).join('');
     var tabs=document.getElementById('pOpts');
     if(d.type==='양립불가'){
       tabs.style.display='flex';
@@ -2036,33 +2066,66 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     box.innerHTML=html+cardHTML('전체',T,F,A,B,N,'tot');
   }
 
+  var CHEV='<svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg>';
+  function pct(v){ return (Math.round(v/M.sharesIssued*10000)/100).toFixed(2)+'%'; }
   function renderRows(){
-    var tot=0;
-    document.getElementById('pBody').innerHTML=ROWS.map(function(r,i){
-      var voter=r[0],nm=r[1],agent=r[2],app=r[3],done=r[4],can=r[5],lim=r[6],aglim=r[7],seat=r[8];
-      tot+=can;
+    var out=[];
+    ROWS.forEach(function(r,i){
+      var voter=r[0],nm=r[1],agent=r[2],app=r[3],done=r[4],can=r[5],lim=r[6],aglim=r[7],seat=r[8],kids=r[9];
       var agentCell = agent
         ? '<td class="l"><span class="extip" data-tip="대리인 '+agent+'\n생년월일 1978-0'+(i%9+1)+'-1'+(i%9)+'\n연락처 010-'+(3000+i*37)+'-'+(1000+i*53)+'">'+agent+'</span></td>'
         : '<td class="l mut">−</td>';
-      return '<tr data-i="'+i+'">'
-        +'<td class="l">'+voter+'</td>'
-        +'<td class="l"><button class="pnm" type="button" data-mv="'+i+'">'+nm+'</button></td>'
+      var vcell = kids
+        ? '<td class="l"><div class="pvoter"><button class="pchev" type="button" data-acc="'+i+'">'+CHEV+'</button>'
+          + '<span>'+voter+'</span><span class="ptag">통합 '+kids.length+'건</span></div></td>'
+        : '<td class="l"><div class="pvoter" style="padding-left:32px">'+voter+'</div></td>';
+      out.push('<tr data-i="'+i+'">'+vcell
+        +'<td class="l">'+(nm?'<button class="pnm" type="button" data-mv="'+i+'">'+nm+'</button>':'<span class="mut">−</span>')+'</td>'
         +agentCell
         +'<td class="c"><span class="pchip'+(app?' b':'')+'">'+(app?'사용':'미사용')+'</span></td>'
-        +'<td class="c"><span class="pchip'+(done?' g':'')+'">'+(done?'행사':'미행사')+'</span></td>'
-        +'<td>'+cm(can)+'</td>'
-        +'<td>'+(Math.round(can/M.sharesIssued*10000)/100).toFixed(2)+'%</td>'
+        +'<td class="c"><span class="pchip'+(done?' b':'')+'">'+(done?'행사':'미행사')+'</span></td>'
+        +'<td>'+cm(can)+'</td><td>'+pct(can)+'</td>'
         +'<td class="c'+(lim==='해당없음'?' mut':'')+'">'+lim+'</td>'
         +'<td class="c'+(aglim==='없음'?' mut':'')+'">'+aglim+'</td>'
         +'<td class="c">'+seat+'</td>'
-        +'<td class="c"><span class="extip" data-tip="참석처리 '+M.operator.name+'\n'+M.date+' 09:'+(20+i)+'\n참석번호 '+seat+'">'+INFO+'</span></td></tr>';
-    }).join('');
+        +'<td class="c"><span class="extip" data-tip="참석처리 '+M.operator.name+'\n'+M.date+' 09:'+(20+i)+'\n참석번호 '+seat+'">'+INFO+'</span></td></tr>');
+      (kids||[]).forEach(function(k){
+        out.push('<tr class="pchild" data-child="'+i+'">'
+          +'<td class="l pind mut"></td>'
+          +'<td class="l mut">'+k[0]+'</td><td class="l mut">−</td>'
+          +'<td class="c"><span class="pchip'+(app?' b':'')+'">'+(app?'사용':'미사용')+'</span></td>'
+          +'<td class="c"><span class="pchip'+(done?' b':'')+'">'+(done?'행사':'미행사')+'</span></td>'
+          +'<td>'+cm(k[1])+'</td><td>'+pct(k[1])+'</td>'
+          +'<td class="c mut">'+lim+'</td><td class="c mut">'+aglim+'</td>'
+          +'<td class="c mut">'+seat+'</td><td class="c"></td></tr>');
+      });
+    });
+    document.getElementById('pBody').innerHTML=out.join('');
     document.getElementById('pCnt').textContent='총 '+cm(M.onsiteHolders)+'명 · '+cm(M.onsiteShares)+'주';
     document.getElementById('pPages').textContent=cm(Math.ceil(M.onsiteHolders/50));
   }
 
-  function renderPoll(){ renderNav(); renderCards(); }
+  /* 상단 컨트롤 — 의안 상정 · 투표 시작 · 투표 종료 · 표결 마감.
+     버튼 목록은 실시간 운영의 단계 기계(STAGES)를 그대로 읽어 어긋나지 않게 한다. */
+  var TONE={ready:'gray',vote:'blue',agg:'amber',done:'green'};
+  function renderCtrl(){
+    var box=document.getElementById('pCtrl'); if(!box) return;
+    var st=(window.OC&&OC.STAGES)?OC.STAGES[OC.stage]:null;
+    var m =(window.OC&&OC.STMETA)?OC.STMETA[OC.stage]:null;
+    if(!st||!m){ box.innerHTML=''; return; }
+    box.innerHTML='<span class="stbadge '+(TONE[m.tone]||'gray')+'">'+(m.noDot?'':'<span class="d"></span>')+m.badge+'</span>'
+      + st.right.filter(function(b){ return b.c!=='dots'; }).map(function(b){
+          var k=b.c==='dark'?' dark':(b.c==='red'?' red':'');
+          return '<button class="vbtn'+k+'" type="button" data-pgo="'+b.go+'">'+b.t+'</button>';
+        }).join('');
+  }
+  document.getElementById('pCtrl').addEventListener('click',function(e){
+    var b=e.target.closest('[data-pgo]'); if(!b||!window.OC||!OC.go) return;
+    OC.go(+b.getAttribute('data-pgo'));
+  });
+  function renderPoll(){ renderNav(); renderCards(); renderCtrl(); }
   renderPoll(); renderRows();
+  if(window.OC) OC.onStage=renderCtrl;
 
   /* 의안 변경 시 같이 갱신 */
   var sel=window.OC&&OC.select;
@@ -2078,10 +2141,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   document.getElementById('pOpts').addEventListener('click',function(e){
     var b=e.target.closest('button[data-i]'); if(!b) return; optIdx=+b.dataset.i; renderPoll();
   });
-  /* 집계 갱신 — 1초 로딩 바 */
   var load=document.getElementById('pLoad');
-  document.getElementById('pTally').addEventListener('click',function(){
-    load.classList.add('on'); setTimeout(function(){ load.classList.remove('on'); renderCards(); },1000);
+  /* 통합기관 접기/펴기 */
+  body.addEventListener('click',function(e){
+    var c=e.target.closest('[data-acc]'); if(!c) return;
+    c.classList.toggle('collapsed');
+    var off=c.classList.contains('collapsed');
+    body.querySelectorAll('tr.pchild[data-child="'+c.getAttribute('data-acc')+'"]').forEach(function(r){ r.classList.toggle('off',off); });
   });
 
   /* 일괄 투표 */
@@ -2124,7 +2190,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     return '<tr'+(v?' class="done"':'')+'><td class="l">'+name+'</td>'
       +'<td'+(restricted?'':' class="mut"')+'>'+(restricted?'−'+cm(restricted):'제한 없음')+'</td>'
       +'<td'+(un?'':' class="mut"')+'>'+cm(un)+'</td>'+cells
-      +'<td class="c"><span class="pchip'+(v?' g':'')+'">'+(v?'행사':'미행사')+'</span></td></tr>';
+      +'<td class="c"><span class="pchip'+(v?' b':'')+'">'+(v?'행사':'미행사')+'</span></td></tr>';
   }
   var CKSVG='<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';
   function mvOpen(i){
@@ -2181,7 +2247,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     tr.querySelectorAll('.mvck:not(.ro)').forEach(function(x){ x.classList.remove('on'); });
     if(!on) ck.classList.add('on');
     var chip=tr.querySelector('.pchip');
-    if(chip){ var any=tr.querySelector('.mvck.on'); chip.textContent=any?'행사':'미행사'; chip.classList.toggle('g',!!any); }
+    if(chip){ var any=tr.querySelector('.mvck.on'); chip.textContent=any?'행사':'미행사'; chip.classList.toggle('b',!!any); }
   });
 })();
 </script>
@@ -2281,7 +2347,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   }
 
   var PILL={'제2호':'특별결의','제4호':'집중투표'};
-  function paint(){
+  /* 같은 스코프에 공개 설정용 paint 가 따로 있다 — 이름을 겹치지 않게 둔다 */
+  function paintRows(){
   var out=[], i=0;
   CX.agenda.forEach(function(a){
     if(a.header){ out.push(grpRow(a.no,a.nm,PILL[a.no])); return; }
@@ -2297,9 +2364,9 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   });
   body.innerHTML=out.join('');
   }
-  paint();
+  paintRows();
   /* 실시간 운영에서 표결이 마감될 때마다 결과 칸을 다시 그린다 */
-  if(window.OC) OC.onDone=paint;
+  if(window.OC) OC.onDone=paintRows;
 
   /* 의안명 → 주주별 행사 내역 상세 */
   body.addEventListener('click',function(e){

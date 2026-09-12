@@ -29,6 +29,7 @@
   .extbl{width:100%;min-width:1420px;border-collapse:separate;border-spacing:0;font-size:14px;letter-spacing:-.01em}
   .extbl th,.extbl td{height:46px;padding:0 16px;white-space:nowrap;text-align:right;border-right:1px solid rgba(24,29,31,.12);border-bottom:1px solid #E5E5E5;background:#fff}
   .extbl th{height:48px;position:sticky;top:0;z-index:2;background:#FAFAFA;font-weight:500;color:#737373}
+  .extbl th.fic{position:relative}
   .extbl th:last-child,.extbl td:last-child{border-right:none}
   .extbl td{color:#171717;font-variant-numeric:tabular-nums}
   .extbl .l{text-align:left}.extbl .c{text-align:center}
@@ -37,7 +38,10 @@
   .exh{display:inline-flex;align-items:center;gap:4px}
   .exh svg{width:16px;height:16px;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
   .exh.for svg{stroke:#0071F3}.exh.ag svg{stroke:#E9081B}.exh.ab svg{stroke:#171717}.exh.nt svg{stroke:#737373}
-  .exfic{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:1.6;stroke-linecap:round;vertical-align:-3px;margin-left:6px;cursor:pointer}
+  /* 정렬 아이콘은 헤더 오른쪽 끝에 고정한다. 글자 뒤에 붙이면 헤더 글자가 밀려
+     아래 셀 글자와 시작점이 어긋난다. */
+  .extbl th.fic{padding-right:34px}
+  .exfic{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;margin:0;fill:none;stroke:#737373;stroke-width:1.6;stroke-linecap:round;cursor:pointer}
   .exchip{display:inline-flex;align-items:center;padding:2px 8px;background:#F5F5F5;border-radius:26px;font-size:12px;line-height:16px;font-weight:500;color:#171717}
   .exchip.b{background:#EEF5FF;color:#0071F3}
   .exi{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
@@ -177,9 +181,9 @@
       <div class="exd-grid">
         <div class="exd-scroll"><table class="extbl">
           <thead><tr>
-            <th class="l" style="width:110px">투표권자<svg class="exfic" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></th>
-            <th class="l" style="min-width:220px">주주명<svg class="exfic" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></th>
-            <th class="l" style="width:120px">행사방식<svg class="exfic" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></th>
+            <th class="l fic" style="width:110px">투표권자<svg class="exfic" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></th>
+            <th class="l fic" style="min-width:220px">주주명<svg class="exfic" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></th>
+            <th class="l fic" style="width:120px">행사방식<svg class="exfic" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></th>
             <th style="width:130px">행사가능의결권</th>
             <th style="width:120px">미행사의결권</th>
             <th style="width:120px">행사의결권</th>
