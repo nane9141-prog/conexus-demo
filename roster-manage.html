@@ -10,20 +10,25 @@
 
   .rmcards{display:flex;align-items:stretch;gap:12px}
   .rmsum{flex:1;min-width:0;display:flex;background:#FAFAFA;border:1px solid #E5E5E5;border-radius:14px}
-  .rmsum .cell{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:8px;padding:20px 16px}
+  .rmsum .cell{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:8px;padding:16px}
   .rmsum .cell+.cell{border-left:1px solid #E5E5E5}
   .rmsum .k{display:flex;align-items:center;gap:8px;font-size:14px;line-height:20px;font-weight:500;letter-spacing:-.01em;color:#737373}
   .rmsum .k .sp{margin-left:auto}
   .rmsum .v{font-size:18px;line-height:28px;font-weight:700;color:#0A0A0A;text-align:right;font-variant-numeric:tabular-nums}
-  .rmlink{box-sizing:border-box;width:400px;flex:none;display:flex;flex-direction:column;gap:8px;padding:16px;background:#FAFAFA;border:1px solid #E5E5E5;border-radius:14px}
-  .rmlink .h{display:flex;align-items:center;gap:8px;font-size:14px;line-height:20px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A}
+  .rmcards>*{min-height:106px}
+  .rmlink{box-sizing:border-box;width:400px;flex:none;display:flex;flex-direction:column;justify-content:space-between;
+    gap:8px;padding:16px;background:#FAFAFA;border:1px solid #E5E5E5;border-radius:14px}
+  .rmlink .top{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:24px}
+  .rmlink .h{font-size:14px;line-height:20px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A}
   .rmlink .b{display:flex;align-items:center;gap:8px}
-  .rmlink .nm{flex:1;min-width:0;font-size:16px;line-height:24px;font-weight:700;letter-spacing:-.01em;color:#737373;overflow:hidden;text-overflow:ellipsis}
+  .rmlink .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+  .rmlink .nm{font-size:16px;line-height:24px;font-weight:700;letter-spacing:-.01em;color:#737373;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .rmlink .nm.on{color:#0A0A0A}
-  .rmlink .sub{font-size:12px;line-height:16px;color:#737373}
-  .rmlink .desc{font-size:12px;line-height:16px;color:#737373}
-  .rmlink .stg{display:inline-flex;align-items:center;gap:6px;font-size:12px;line-height:16px;font-weight:500;color:#171717}
-  .rmlink .stg i{width:6px;height:6px;border-radius:50%;background:#0071F3;display:block;flex:none}
+  .rmlink .stg{font-size:12px;line-height:16px;color:#171717}
+  /* 연결을 끊는 버튼은 붉게 — 카드 안에서 한 번 더 확인을 받는다 */
+  .rmfree{height:24px;padding:0 10px;border:0;border-radius:8px;background:rgba(220,38,38,.1);
+    font-family:inherit;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#E9081B;cursor:pointer}
+  .rmfree[hidden]{display:none}
   .fbtn[disabled]{opacity:.5;cursor:default}
   /* 회색 정보 상자 — 해제 전 무엇이 걸려 있는지 보여 준다 */
   .rmbox{display:flex;flex-direction:column;gap:4px;width:100%;box-sizing:border-box;padding:8px;background:#F5F5F5;border-radius:8px}
@@ -96,7 +101,7 @@
 
     <div class="lnb-content show exp-only" data-tabpanel="set">
       <div class="grp"><div class="grp-label">주주총회 설정</div><div class="nav">
-        <a class="nav-item active" href="shareholders.html">주주명부 설정</a>
+        <a class="nav-item" href="shareholders.html">주주명부 설정</a>
         <a class="nav-item" href="meeting-settings.html">주주총회 설정</a>
         <a class="nav-item" href="voting-restriction.html">의결권제한 설정</a>
       </div></div>
@@ -192,12 +197,13 @@
               <div class="v" id="rmHolders">0</div></div>
           </div>
           <div class="rmlink">
-            <div class="h">주주총회 연결</div>
-            <div class="desc">이 명부를 기준으로 의결권을 계산할 주주총회입니다.</div>
-            <div class="b"><div class="nm on" id="rmMeeting">제10기 정기주주총회</div>
-              <button class="fbtn" type="button" id="rmUnlink">명부 연결해제</button></div>
-            <div class="stg" id="rmStage"><i></i><span></span></div>
-            <div class="sub" id="rmLinkSub">명부확정 · 2026-02-02 · 강하나</div>
+            <div class="top"><div class="h">주주총회 연결</div>
+              <button class="rmfree" type="button" id="rmFree" hidden>명부 연결해제</button></div>
+            <div class="b">
+              <div class="t"><div class="nm on" id="rmMeeting">제10기 정기주주총회</div>
+                <div class="stg" id="rmStage"></div></div>
+              <button class="fbtn" type="button" id="rmUnlink"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round"><path d="M9.5 14.5 6.8 17.2a3.8 3.8 0 0 1-5.4-5.4l2.7-2.7M14.5 9.5l2.7-2.7a3.8 3.8 0 0 1 5.4 5.4l-2.7 2.7"/><path d="M4 4 2.5 2.5M20 20l1.5 1.5"/></svg>연결해제</button>
+            </div>
           </div>
         </div>
 
@@ -383,14 +389,11 @@
     /* 연결 해제는 설정 단계에서만 — 그 뒤로는 의결권 계산이 이미 걸려 있다 */
     var st = STAGE[r.stage] || STAGE.set, canFree = linked && r.stage === 'set';
     var btn = document.getElementById('rmUnlink');
-    btn.textContent = linked ? '명부 연결해제' : '주주총회 연결';
+    btn.lastChild.nodeValue = linked ? '연결해제' : '주주총회 연결';
     btn.disabled = linked && !canFree;
     btn.title = btn.disabled ? '주주총회 설정 단계에서만 명부 연결을 해제할 수 있습니다.' : '';
-    var stg = document.getElementById('rmStage');
-    stg.style.display = linked ? 'inline-flex' : 'none';
-    stg.querySelector('span').textContent = st[0] + ' · ' + st[1];
-    document.getElementById('rmLinkSub').textContent = linked
-      ? '명부확정 · ' + r.reg + ' · ' + r.by
+    document.getElementById('rmStage').textContent = linked
+      ? st[1]
       : '연결하면 이 명부를 기준으로 의결권이 계산됩니다.';
     cur = r;
 

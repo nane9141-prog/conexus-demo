@@ -225,6 +225,8 @@ body{font-family:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-s
   .qitem{flex:1 1 0;min-width:0;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:4px;padding:6px 2px;
     border-radius:var(--r-md);font-size:12px;color:var(--muted-fg);white-space:nowrap}
   .qitem:hover{background:var(--muted);color:var(--fg)}
+  /* 눌러서 생긴 초점 테두리는 보이지 않게 — 키보드 이동일 때만 남긴다 */
+  .qitem:focus:not(:focus-visible),.railbtn:focus:not(:focus-visible),.nav-item:focus:not(:focus-visible){outline:none}
   .qitem svg{width:14px;height:14px}
 
   /* collapsed logo mark + icon rail */
@@ -803,6 +805,16 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 .frow .hl{font-weight:700;color:#0071F3}
 .fdiv{height:0;border-top:1px solid #E5E5E5}
 /* 빠른 메뉴가 링크가 되면서 필요한 것들 */
+/* 드롭다운 — 브라우저마다 다른 기본 상자 대신 한 가지 모양만 쓴다.
+   요소 선택자라 .fsel 처럼 따로 꾸민 곳은 그대로 남는다. */
+select{appearance:none;-webkit-appearance:none;box-sizing:border-box;height:28px;padding:0 26px 0 10px;
+  border:1px solid var(--border);border-radius:8px;color:#0a0a0a;cursor:pointer;
+  font-family:inherit;font-size:12px;line-height:16px;letter-spacing:-.01em;
+  background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") no-repeat right 8px center/12px 12px}
+select:hover{background-color:#fafafa}
+select:focus{outline:none;border-color:#a3a3a3}
+select::-ms-expand{display:none}
+
 .qitem{text-decoration:none;cursor:pointer}
 .qitem.cur,.railbtn.cur{background:var(--muted);color:var(--fg)}
 /* 확인 팝업 — 현장 제어에만 있던 것을 관리 페이지에서도 쓴다 */
