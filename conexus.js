@@ -500,8 +500,8 @@
    페이지마다 같은 .foot-btn 하나뿐이라 여기서 한 번만 달아 둔다. */
 (function () {
   var GROUPS = [
-    ['내 정보', '비밀번호 변경', '알림 설정'],
-    ['이용 가이드', '로그아웃']
+    [['회사 정보', ''], ['담당자 관리', 'staff-manage.html'], ['로그 관리', '']],
+    [['개인정보', ''], ['로그아웃', '']]
   ];
   var pop = null, owner = null;
 
@@ -509,14 +509,16 @@
     pop = document.createElement('div');
     pop.className = 'profmenu';
     pop.innerHTML = GROUPS.map(function (g) {
-      return '<div class="grp">' + g.map(function (t) {
-        return '<button type="button">' + t + '</button>';
+      return '<div class="grp">' + g.map(function (it) {
+        return '<button type="button" data-go="' + it[1] + '">' + it[0] + '</button>';
       }).join('') + '</div>';
     }).join('<hr>');
     document.body.appendChild(pop);
     pop.addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
       hide();
+      var go = b.getAttribute('data-go');
+      if (go) { location.href = go; return; }        /* 화면이 있는 항목은 그리로 간다 */
       if (window.cxToast) {
         cxToast(b.textContent === '로그아웃' ? '로그아웃했습니다.' : b.textContent + ' 화면을 준비 중입니다.');
       }
