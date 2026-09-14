@@ -489,15 +489,6 @@
   .mc-btn.dark{background:#171717;border-color:#171717;color:#FAFAFA}
   .ovl{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:1000}
   .ovl.on{display:flex}
-  .adlg{box-sizing:border-box;width:400px;max-width:calc(100vw - 32px);background:#fff;border:1px solid rgba(10,10,10,.08);border-radius:16px;padding:24px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.08)}
-  .adlg-ic{width:56px;height:56px;border-radius:14px;background:#FEE2E2;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
-  .adlg-ic svg{width:28px;height:28px;fill:none;stroke:#E11D48;stroke-width:2;stroke-linecap:round}
-  .adlg-tt{font-size:18px;font-weight:600;color:#171717;margin-bottom:12px}
-  .adlg-ds{font-size:14px;line-height:1.5;color:#A3A3A3;margin-bottom:24px}
-  .adlg-f{display:flex;gap:12px;width:100%}
-  .adlg-btn{flex:1;height:44px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer}
-  .adlg-btn.cancel{background:#fff;border:1px solid #E5E5E5;color:#171717}
-  .adlg-btn.danger{background:#FEE2E2;border:1px solid #FEE2E2;color:#E11D48}
   .dlg{box-sizing:border-box;width:480px;max-width:calc(100vw - 32px);background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;display:flex;flex-direction:column;position:relative;box-shadow:0 8px 24px rgba(0,0,0,.08)}
   .dlg-h{display:flex;flex-direction:column;gap:8px;padding:16px}
   .dlg-h .tt{font-size:16px;font-weight:600;color:#171717}
@@ -510,7 +501,8 @@
   .dlg-tabs{display:flex;padding:3px;background:#F5F5F5;border-radius:10px}
   .dlg-tabs button{flex:1;height:26px;border:none;background:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:500;color:#737373;cursor:pointer}
   .dlg-tabs button.on{background:#fff;color:#0A0A0A;box-shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1)}
-  .dlg-f{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px 16px}
+  .dlg-f{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:8px;padding:12px 16px 16px}
+  .dlg-f .ckrow{flex:1 0 100%;margin-right:0}
   .dlg-btn{padding:8px 12px;border:1px solid #E5E5E5;border-radius:10px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;color:#171717;cursor:pointer}
   .dlg-btn.dark{background:#171717;border-color:#171717;color:#FAFAFA}
   .dlg-btn[disabled],.adlg-f button[disabled]{opacity:.5;cursor:default}
@@ -524,6 +516,15 @@
   .dlg-field .lb{margin-bottom:0}
   .dlg-ds{font-size:14px;line-height:20px;letter-spacing:-.01em;color:#737373}
   /* 시각 입력 — 아이콘을 상자 안에 둔다 */
+  .dlg-when{display:flex;gap:8px}
+  .dlg-when .dlg-time{flex:1}
+  .dlg-tp{display:flex;align-items:center;gap:4px;height:32px;padding:0 10px;border:1px solid #E5E5E5;
+    border-radius:10px;background:#fff}
+  .dlg-tp svg{width:16px;height:16px;flex:none;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round}
+  .dlg-tp select{appearance:none;-webkit-appearance:none;border:0;outline:none;background:none;padding:0 2px;
+    font-family:inherit;font-size:14px;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer}
+  .dlg-tp select.ap{font-weight:500;color:#171717;margin-right:2px}
+  .dlg-tp .cl{font-size:14px;color:#A3A3A3}
   .dlg-time{display:flex;align-items:center;gap:8px;height:32px;padding:0 10px;border:1px solid #E5E5E5;border-radius:10px;background:#fff}
   .dlg-time svg{width:16px;height:16px;flex:none;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round}
   .dlg-time input{flex:1;min-width:0;border:none;outline:none;background:none;font-family:inherit;font-size:14px;letter-spacing:-.01em;color:#0A0A0A}
@@ -616,6 +617,8 @@
   .adlg-ic svg{width:24px;height:24px;fill:none;stroke:#E9081B;stroke-width:1.5;stroke-linecap:round}
   .adlg-t{font-size:16px;font-weight:600;line-height:24px;letter-spacing:-.01em;text-align:center;color:#0A0A0A}
   .adlg-d{font-size:14px;line-height:20px;letter-spacing:-.01em;text-align:center;color:#737373}
+  .adlg-ck{padding:12px 16px 0}
+  .adlg-ck .ckrow{margin-right:0}
   .adlg-f{display:flex;align-items:center;gap:8px;padding:12px 16px 16px}
   .adlg-f button{flex:1;height:32px;border:1px solid #E5E5E5;border-radius:10px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer}
   .adlg-f button.danger{border-color:transparent;background:rgba(220,38,38,.1);color:#E9081B}
@@ -1056,7 +1059,7 @@
 
     <div class="lnb-content  exp-only" data-tabpanel="set">
       <div class="grp"><div class="grp-label">주주총회 설정</div><div class="nav">
-        <a class="nav-item" href="shareholders.html">주주명부 확정</a>
+        <a class="nav-item" href="shareholders.html">주주명부 설정</a>
         <a class="nav-item" href="meeting-settings.html">주주총회 설정</a>
         <a class="nav-item" href="voting-restriction.html">의결권제한 설정</a>
       </div></div>
@@ -1393,22 +1396,29 @@
 <div class="ovl" id="dlyOvl">
   <div class="dlg">
     <button class="dlg-x" id="dlyClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-    <div class="dlg-h"><div class="tt" id="dlyTt">총회 지연</div><div class="ds" id="dlyDs">현장 화면과 온라인 참석 주주에게 진행 상황을 안내합니다.</div></div>
+    <div class="dlg-h"><div class="tt" id="dlyTt">총회 정회</div><div class="ds" id="dlyDs">현장 화면과 온라인 참석 주주에게 진행 상황을 안내합니다.</div></div>
     <div class="dlg-c">
-      <div class="dlg-tabs" id="dlyTabs" style="width:117px;flex:none">
-        <button type="button" class="on" data-v="delay">지연</button>
-        <button type="button" data-v="resume">속개</button>
-        <button type="button" data-v="end">종료</button>
+      <div class="dlg-tabs" id="dlyTabs" style="width:180px;flex:none">
+        <button type="button" class="on" data-v="recess">정회</button>
+        <button type="button" data-v="adjourn">휴회</button>
+        <button type="button" data-v="postpone">연기</button>
       </div>
       <div class="dlg-field" id="dlyTimeF">
         <div class="lb" id="dlyTimeLb">재개 예정 시각</div>
-        <div class="dlg-time"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg><input id="dlyTime" type="time" value="10:30"></div>
+        <div class="dlg-when">
+          <div class="dlg-time" id="dlyDateW"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></svg><input id="dlyDate" type="date" value="2026-03-27"></div>
+          <div class="dlg-tp">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>
+            <select class="ap" id="dlyAp"><option value="0">오전</option><option value="12">오후</option></select>
+            <select id="dlyHh"></select><span class="cl">:</span><select id="dlyMm"></select>
+          </div>
+        </div>
       </div>
       <div class="dlg-field">
         <div class="lb">안내 문구</div>
         <textarea class="dlg-ta" id="dlyBody" style="min-height:137px"></textarea>
       </div>
-      <div class="palert" id="dlyWarn" style="display:none"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>종료를 안내하면 현장·온라인 투표가 더 이상 접수되지 않습니다.</div>
+      <div class="palert" id="dlyWarn" style="display:none"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg><span id="dlyWarnT"></span></div>
     </div>
     <div class="dlg-f">
       <label class="ckrow" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 내용을 확인했으며 현장 화면과 온라인에 전송합니다.</label>
@@ -1427,7 +1437,9 @@
         <div class="adlg-t">총회를 종료하시겠습니까?</div>
         <div class="adlg-d">종료하면 모든 채널의 의결권 행사가 마감되고 집계가 확정됩니다. 종료 후에는 되돌릴 수 없습니다.</div>
       </div>
-      <label class="ckrow" data-ck id="endAgree" style="margin-right:0;width:100%"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>모든 의안의 표결이 마감된 것을 확인했습니다.</label>
+    </div>
+    <div class="adlg-ck">
+      <label class="ckrow" data-ck id="endAgree"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>모든 의안의 표결이 마감된 것을 확인했습니다.</label>
     </div>
     <div class="adlg-f">
       <button type="button" data-close="endOvl">취소</button>
@@ -3615,7 +3627,7 @@ if(window.OC&&OC.fire) OC.fire();
   [['btnBeacon', 'bcnOvl'], ['btnNoVote', 'nvOvl'], ['btnNotice', 'ntcOvl']].forEach(function (p) {
     var b = $(p[0]); if (b) b.addEventListener('click', function () { open(p[1]); });
   });
-  var pause = $('btnPause'); if (pause) pause.addEventListener('click', function () { setDly('delay'); open('dlyOvl'); });
+  var pause = $('btnPause'); if (pause) pause.addEventListener('click', function () { setDly('recess'); open('dlyOvl'); });
   var cls = $('btnClose'); if (cls) cls.addEventListener('click', function () { open('endOvl'); });
   $('endGo').addEventListener('click', function () { window.location.href = 'closing.html'; });
 
@@ -3651,31 +3663,47 @@ if(window.OC&&OC.fire) OC.fire();
       : '행사하지 않은 주주를 불참으로 처리해 출석 의결권에서 제외합니다.';
   });
 
-  /* 지연 · 속개 · 종료 — 한 팝업에서 문구와 버튼만 바뀐다 */
+  /* 정회 · 휴회 · 연기 — 멈추는 길이만 다르고, 안내하는 자리는 하나다 */
   var DLY = {
-    delay: { tt: '총회 지연', lb: '재개 예정 시각', btn: '화면 전송', red: 0, time: 1,
-             body: '총회 진행이 지연되고 있습니다. 재개 예정 시각에 맞춰 다시 안내드리겠습니다.' },
-    resume: { tt: '총회 속개', lb: '속개 시각', btn: '화면 전송', red: 0, time: 1,
-             body: '잠시 후 총회를 속개합니다. 자리에 착석해 주시기 바랍니다.' },
-    end: { tt: '총회 종료 안내', lb: '', btn: '종료 안내', red: 1, time: 0,
-             body: '모든 의안의 표결이 마감되었습니다. 오늘 총회를 마치겠습니다. 참석해 주셔서 감사합니다.' }
+    recess: { tt: '총회 정회', lb: '재개 예정 시각', date: 0,
+      body: '총회를 잠시 정회합니다. 재개 예정 시각에 맞춰 다시 안내드리겠습니다.' },
+    adjourn: { tt: '총회 휴회', lb: '속개 예정 일시', date: 1,
+      warn: '휴회하면 속개 전까지 현장·온라인 투표가 접수되지 않습니다.',
+      body: '오늘 의사일정을 여기서 멈추고 총회를 휴회합니다. 속개 일시에 맞춰 다시 안내드리겠습니다.' },
+    postpone: { tt: '총회 연기', lb: '연기 후 개최 예정일', date: 1,
+      warn: '연기를 안내하면 오늘 접수된 투표는 마감되고 다음 총회에서 다시 행사해야 합니다.',
+      body: '오늘 총회를 연기합니다. 변경된 개최 일시는 공시와 개별 통지로 다시 안내드리겠습니다.' }
   };
+  /* 시·분은 직접 고른다 — 브라우저마다 다른 시간 입력을 쓰지 않는다 */
+  (function () {
+    var hh = $('dlyHh'), mm = $('dlyMm'); if (!hh || !mm) return;
+    var i, o;
+    for (i = 1; i <= 12; i++) { o = document.createElement('option'); o.value = i; o.textContent = i; hh.appendChild(o); }
+    for (i = 0; i < 60; i += 5) {
+      o = document.createElement('option'); o.value = i;
+      o.textContent = (i < 10 ? '0' : '') + i; mm.appendChild(o);
+    }
+    hh.value = 10; mm.value = 30;
+  })();
   function setDly(v) {
     var m = DLY[v]; if (!m) return;
     $('dlyTt').textContent = m.tt;
-    $('dlyTimeF').style.display = m.time ? '' : 'none';
-    if (m.time) $('dlyTimeLb').textContent = m.lb;
+    $('dlyTimeLb').textContent = m.lb;
+    $('dlyDateW').style.display = m.date ? '' : 'none';
     $('dlyBody').value = m.body;
-    $('dlyWarn').style.display = m.red ? '' : 'none';
-    var ok = $('dlyOk'); ok.textContent = m.btn;
-    ok.classList.toggle('dark', !m.red); ok.classList.toggle('red', !!m.red);
+    $('dlyWarn').style.display = m.warn ? '' : 'none';
+    if (m.warn) $('dlyWarnT').textContent = m.warn;
     $('dlyTabs').querySelectorAll('button').forEach(function (b) {
       b.classList.toggle('on', b.getAttribute('data-v') === v);
     });
   }
   tabs('dlyTabs', setDly);
-  setDly('delay');
-  $('dlyOk').addEventListener('click', function () { close('dlyOvl'); });
+  setDly('recess');
+  $('dlyOk').addEventListener('click', function () {
+    var t = $('dlyTt').textContent;
+    close('dlyOvl');
+    if (window.cxToast) cxToast(t + ' 안내를 현장 화면과 온라인에 전송했습니다.');
+  });
 
   /* 공지 — 등록하면 목록 맨 위에 쌓인다 */
   var NTC = [

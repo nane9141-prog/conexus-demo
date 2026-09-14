@@ -330,6 +330,9 @@
       var rl = rule(lb);
       var cells = rows.map(function (r) { return r.cells[idx]; }).filter(Boolean);
 
+      /* 머리글이 빈 칸은 버튼·체크박스 자리다 — 표가 정한 정렬을 건드리지 않는다 */
+      if (!lb) return;
+
       /* dot 뱃지가 든 칸은 왼쪽으로 */
       var al = rl.al;
       if (cells.some(function (c) { return c.querySelector('.qmdot,.stbadge,.dotbadge'); })) al = L;

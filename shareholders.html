@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CONEXUS · 주주명부 확정</title>
+<title>CONEXUS · 주주명부 설정</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 <link rel="stylesheet" href="conexus.css">
 <style>
@@ -91,7 +91,7 @@
 
     <div class="lnb-content show exp-only" data-tabpanel="set">
       <div class="grp"><div class="grp-label">주주총회 설정</div><div class="nav">
-        <a class="nav-item active" href="shareholders.html">주주명부 확정</a>
+        <a class="nav-item active" href="shareholders.html">주주명부 설정</a>
         <a class="nav-item" href="meeting-settings.html">주주총회 설정</a>
         <a class="nav-item" href="voting-restriction.html">의결권제한 설정</a>
       </div></div>
@@ -136,7 +136,7 @@
         <button class="iconbtn sm" id="toggleLnb" title="사이드바"><i class="ph ph-sidebar-simple" style="font-size:16px"></i></button>
         <span class="vsep"></span>
         <div style="display:flex;align-items:center;gap:8px">
-          <span class="crumb">주주명부 확정</span>
+          <span class="crumb">주주명부 설정</span>
         </div>
       </div>
       <button class="iconbtn md" title="변경이력"><i class="ph ph-clock-counter-clockwise" style="font-size:16px"></i></button>
@@ -378,8 +378,11 @@
         #mgList .mm .s{color:#737373;font-size:12px}
         #mgRepMenu{position:absolute;left:0;right:0;top:36px;z-index:5;max-height:200px;overflow:auto}
         /* 통합·해제 grouped table */
-        .mg-caret{display:inline-flex;width:16px;height:16px;margin-right:4px;color:#737373;transition:transform .15s;cursor:pointer;vertical-align:middle}
+        .mg-caret{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;flex:none;
+          border-radius:6px;color:#737373;transition:transform .15s,background .12s;cursor:pointer}
+        .mg-caret:hover{background:#f0f0f0;color:#171717}
         .mg-caret svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+        .mg-mflex{gap:6px}
         table.mg-tbl tr.mg-grp{cursor:pointer}
         table.mg-tbl tr.mg-grp.open .mg-caret{transform:rotate(90deg)}
         table.mg-tbl tr.mg-grp:hover td{background:#fafafa}
@@ -388,7 +391,7 @@
         table.mg-tbl tr.mg-child td.cname:before{content:"";position:absolute;left:16px;top:50%;width:8px;height:1px;background:#d4d4d4}
         .mbadge.auto,.mbadge.manual{background:#f4f4f5;color:#18181b}
         .mg-tv{color:#0a0a0a;font-weight:600}
-        .mg-mflex{display:inline-flex;align-items:center}
+        .mg-mflex{display:inline-flex;align-items:center;gap:6px}
         .btn.danger{color:var(--red600);border-color:#f3c0c4;width:100%;justify-content:center;height:32px}
         .btn.danger:hover{background:#fff5f6}
         .btn.danger.hide{display:none}
@@ -405,17 +408,17 @@
           <div class="ms-sh-top">
             <div class="ms-sh-l">
               <div class="ms-title-row">
-                <h1>주주명부 확정</h1>
+                <h1>주주명부 설정</h1>
                 <span class="ms-chip hide" id="msChip"><span class="k">주주명부</span><span class="v" id="msChipDate">2025.12.31</span></span>
               </div>
-              <div class="ms-desc">투표권자 설정, 투표권자 통합·해제 설정 후 주주명부 확정을 진행해 주세요.</div>
+              <div class="ms-desc">투표권자 설정, 투표권자 통합·해제 설정 후 주주명부 설정을 진행해 주세요.</div>
             </div>
             <div class="ms-sh-actions">
               <button class="btn" id="msRegister"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>주주명부 등록</button>
               <button class="btn primary" id="msLoad"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>주주명부 불러오기</button>
               <button class="btn primary hidden" id="msNext"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>저장하고 다음</button>
               <span class="last-mod hidden" id="cfLastMod">마지막 수정 2026-07-17 15:58 · 박지용</span>
-              <button class="btn primary hidden" id="cfTopBtn"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>주주명부 확정</button>
+              <button class="btn primary hidden" id="cfTopBtn"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>주주명부 설정</button>
             </div>
           </div>
         </div>
@@ -523,8 +526,8 @@
             </div>
             <div class="mtbl-wrap">
               <table class="mtbl mg-tbl">
-                <colgroup><col style="width:130px"><col style="width:88px"><col style="width:120px"><col style="width:150px"><col style="width:150px"><col style="width:120px"><col style="width:88px"><col style="width:96px"></colgroup>
-                <thead><tr><th>통합방법</th><th class="c">주식종류</th><th>투표권자</th><th>주주명</th><th>주주번호</th><th style="text-align:right">보유주식</th><th style="text-align:right">지분율</th><th class="c">통합내역</th></tr></thead>
+                <colgroup><col style="width:14%"><col style="width:9%"><col style="width:13%"><col style="width:16%"><col style="width:16%"><col style="width:13%"><col style="width:9%"><col style="width:10%"></colgroup>
+                <thead><tr><th>통합방법</th><th>주식종류</th><th>투표권자</th><th>주주명</th><th>주주번호</th><th>보유주식</th><th>지분율</th><th>통합내역</th></tr></thead>
                 <tbody id="mgBody"></tbody>
               </table>
             </div>
@@ -558,8 +561,8 @@
                 <span data-cx-tools></span></div></div>
             <div class="cf-tbl-wrap">
               <table class="mtbl">
-                <colgroup><col style="width:150px"><col style="width:200px"><col><col style="width:150px"><col style="width:110px"></colgroup>
-                <thead><tr><th>통합내역</th><th>투표권자명</th><th>주주명</th><th style="text-align:right">보유주식</th><th style="text-align:right">지분율</th></tr></thead>
+                <colgroup><col style="width:14%"><col style="width:20%"><col style="width:34%"><col style="width:18%"><col style="width:14%"></colgroup>
+                <thead><tr><th>통합내역</th><th>투표권자명</th><th>주주명</th><th>보유주식</th><th>지분율</th></tr></thead>
                 <tbody id="cfBody"></tbody>
               </table>
             </div>
@@ -843,6 +846,8 @@
                 });
               });
               mgBody.querySelectorAll('.mg-edit').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();openMergeSheet(b.dataset.gid);});});
+              /* 칸을 채운 뒤 정렬 규칙을 다시 태운다 — 빈 표에 맞춰진 머리글이 남지 않게 */
+              if(window.cxTable) window.cxTable.apply(mgBody.closest('table'));
             }
 
             // ----- 변경/통합 시트 -----
@@ -903,7 +908,7 @@
             renderAll();
           }
 
-          // 설정내역 확인 — 확정 명세 렌더 + 주주명부 확정
+          // 설정내역 확인 — 확정 명세 렌더 + 주주명부 설정
           var cfConfirmed=false;
           function renderConfirm(){
             var body=document.getElementById('cfBody'); if(!body) return;
@@ -948,6 +953,7 @@
               html+='<tr><td class="mut">-</td><td>'+voter+'</td><td class="name">'+name+'</td><td class="r">'+sh+'</td><td class="r sub">'+rate+'</td></tr>';
             }); }
             body.innerHTML=html;
+            if(window.cxTable) window.cxTable.apply(body.closest('table'));
             body.querySelectorAll('tr.cf-grp').forEach(function(g){
               g.addEventListener('click',function(){var id=g.dataset.cg,open=g.classList.toggle('open');body.querySelectorAll('tr.cf-child[data-cg="'+id+'"]').forEach(function(c){c.hidden=!open;});});
             });
@@ -959,14 +965,14 @@
             cfBtn.classList.toggle('primary', !cfConfirmed);
             cfBtn.innerHTML = cfConfirmed
               ? '<i class="ph ph-pencil-simple" style="font-size:16px"></i>주주명부 변경'
-              : '<svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>주주명부 확정';
+              : '<svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>주주명부 설정';
           }
           if(cfBtn&&cfDlg){ cfBtn.addEventListener('click',function(){
             if(cfConfirmed){ cfConfirmed=false; updateCfBtn(); if(cfLastMod) cfLastMod.classList.add('hidden'); toast('주주명부 변경','주주명부를 다시 수정할 수 있습니다. 수정 후 다시 확정해 주세요.'); }
             else { cfDlg.classList.remove('hidden'); }
           }); }
           var cfYes=document.getElementById('cfConfirmYes');
-          if(cfYes){ cfYes.addEventListener('click',function(){ cfDlg.classList.add('hidden'); cfConfirmed=true; updateCfBtn(); if(cfLastMod) cfLastMod.classList.remove('hidden'); toast('주주명부 확정','주주명부가 확정되었습니다. 이후 전자투표·현장 집계의 기준 명부로 사용됩니다.'); }); }
+          if(cfYes){ cfYes.addEventListener('click',function(){ cfDlg.classList.add('hidden'); cfConfirmed=true; updateCfBtn(); if(cfLastMod) cfLastMod.classList.remove('hidden'); toast('주주명부 설정','주주명부가 확정되었습니다. 이후 전자투표·현장 집계의 기준 명부로 사용됩니다.'); }); }
 
           // shareholder tooltip (주주번호 · 실질 계좌번호 · 주소)
           var tip=document.getElementById('shTip');
