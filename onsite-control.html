@@ -1677,7 +1677,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(OC.stage<2) return 0;
     if(OC.stage>=3) return [0,0,0.5,0.85,1][OC.stage]||0;
     var onlFull=CX.channels[2].w||1;
-    var p=(OC.siteN/(SITE_TOT||1) + OC.onlW/onlFull)/2;
+    var p=(siteNow()/(SITE_TOT||1) + onlNow()/onlFull)/2;
     return 0.5*Math.min(1,Math.max(0,p));
   }
   /* 예상 판정 — 발행주식총수 기준과 출석의결권 기준을 모두 넘어야 가결 예상.
@@ -1770,6 +1770,12 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   var CHFIX='<span class="chst fix">확정</span>',
       CHUNF='<span class="chst info">미확정</span>',
       CHNON='<span class="chst none">-</span>';
+  /* 투표를 닫으면 현장 앱과 온라인은 더 들어올 것이 없다 —
+     집계에 들어간 순간부터 전원 집계된 값으로 보여 준다. */
+  function siteClosed(){ return OC.stage>=3; }
+  function siteNow(){ return siteClosed() ? SITE_TOT : OC.siteN; }
+  function siteWNow(){ return siteClosed() ? Math.round(CX.channels[1].w*0.875) : OC.siteW; }
+  function onlNow(){ return siteClosed() ? CX.channels[2].w : OC.onlW; }
   function chanRows(){
     var pre=CX.channels[0].w, onsite=CX.channels[1].w, online=CX.channels[2].w, st=OC.stage;
     var paperShare=(st>=4?1:0.6);                 /* 집계중엔 현장 서면이 일부만 들어온다 */
@@ -1777,12 +1783,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     return [
       { nm:'전자투표 (사전)', w:Math.round(pre*0.8), full:Math.round(pre*0.8), ready:true, badge:CHFIX },
       { nm:'서면투표 (사전)', w:Math.round(pre*0.2), full:Math.round(pre*0.2), ready:true, badge:CHFIX },
-      { nm:'현장투표 앱',     w:OC.siteW,            full:Math.round(onsite*0.875), ready:st>=2,
-        badge: st>=4 ? CHFIX : '<span class="chst info">'+OC.siteN+'/'+SITE_TOT+'</span>' },
+      { nm:'현장투표 앱',     w:siteWNow(),          full:Math.round(onsite*0.875), ready:st>=2,
+        /* 집계에 들어가면 전원 집계 — 숫자는 그대로 두고 파란 배지로 바뀐다 */
+        badge: '<span class="chst '+(st>=3?'fix':'info')+'">'+siteNow()+'/'+SITE_TOT+'</span>' },
       { nm:'현장투표 서면',   w:Math.round(onsite*0.125*paperShare), full:Math.round(onsite*0.125), ready:st>=3,
         badge: st>=4 ? CHFIX : (st>=3 ? CHUNF : CHNON) },
-      { nm:'온라인 투표',     w:(st>=4?online:OC.onlW), full:online, ready:st>=2,
-        badge: st>=4 ? CHFIX : (st>=2 ? CHUNF : CHNON) }
+      { nm:'온라인 투표',     w:onlNow(),            full:online, ready:st>=2,
+        badge: st>=3 ? CHFIX : (st>=2 ? CHUNF : CHNON) }
     ];
   }
   /* 아직 안 들어온 의결권 — 채널이 마감 때 갖게 될 양에서 지금 값을 뺀다 */
@@ -1941,7 +1948,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     set('mAgNo', i); set('mAgTot', CX.votingUnits.length);
     set('mAgSub', OC.agenda ? CX.util.chip(OC.agenda)+' '+STAGES[OC.stage].name : '');
     /* 현장 표결 — 의안별. 투표 중에만 움직이고 투표 종료 시 그대로 굳는다. */
-    set('mSiteN', OC.siteN); set('mSiteTot', SITE_TOT); set('mSiteW', comma(OC.siteW));
+    set('mSiteN', siteNow()); set('mSiteTot', SITE_TOT); set('mSiteW', comma(siteWNow()));
 
     var m=document.getElementById('mAgSt'); if(!m) return;
     var kr=keptRes(OC.agenda)||'가결';
