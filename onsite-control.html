@@ -239,6 +239,17 @@
   .iabtn.dark{background:#171717;border-color:#171717;color:#FAFAFA}
   .iabtn.red{background:rgba(220,38,38,.1);border-color:transparent;color:#E9081B}
   .iabtn.ic{padding:0;width:28px;height:28px}
+  .iabtn:disabled{background:#F5F5F5;border-color:#EEEEEE;color:#BDBDBD;cursor:default}
+  .iabtn.dark:disabled{background:#F5F5F5;border-color:#EEEEEE;color:#BDBDBD}
+  /* 더보기 — 마감한 표결을 다시 여는 길만 둔다 */
+  .ctrl-more{position:relative}
+  .ctrl-menu{display:none;position:absolute;right:0;top:34px;z-index:40;min-width:132px;padding:4px;
+    background:#fff;border:1px solid #E5E5E5;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+  .ctrl-more.open .ctrl-menu{display:block}
+  .ctrl-menu button{display:flex;align-items:center;width:100%;height:34px;padding:0 10px;border:0;
+    border-radius:8px;background:none;font-family:inherit;font-size:12px;font-weight:600;
+    letter-spacing:-.01em;color:#E9081B;text-align:left;cursor:pointer;white-space:nowrap}
+  .ctrl-menu button:hover{background:#FEF2F2}
   .iabtn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .iatimer{font-size:14px;color:#171717;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
   .iacat{box-sizing:border-box;display:inline-flex;align-items:center;gap:4px;padding:2px 6px;height:20px;background:#F5F5F5;border-radius:6px;font-size:12px;font-weight:500;letter-spacing:-.01em;color:#525252}
@@ -1540,12 +1551,15 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   var DOTS='<i class="ph ph-dots-three-vertical" style="font-size:16px"></i>';
   var CK='<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM10.6 16 6.8 12.2l1.4-1.4 2.4 2.4 5-5 1.4 1.4z"/></svg>';
   var CENTER=CX.center;
+  /* 컨트롤 바는 늘 두 자리다. 왼쪽은 지금 할 일, 오른쪽은 표결 마감 —
+     마감할 수 없는 동안에는 자리만 지키고 눌리지 않는다. */
+  var LOCK={t:'표결 마감',c:'dark',dis:1};
   var STAGES=[
-    {cls:'',name:'의안 상정 대기중',right:[{t:'의안 상정',c:'',go:1}]},
-    {cls:'',name:'의안 상정 중',right:[{t:'투표 시작',c:'dark',go:2}]},
-    {cls:'ia-voting',name:'투표 진행 중',red:1,sub:'출석·미투표 주주',sel:1,timer:1,right:[{t:'투표 종료',c:'red',go:3}]},
+    {cls:'',name:'의안 상정 대기중',right:[{t:'의안 상정',c:'',go:1},LOCK]},
+    {cls:'',name:'의안 상정 중',right:[{t:'투표 시작',c:'dark',go:2},LOCK]},
+    {cls:'ia-voting',name:'투표 진행 중',red:1,sub:'출석·미투표 주주',sel:1,timer:1,right:[{t:'투표 종료',c:'red',go:3},LOCK]},
     {cls:'ia-fill',name:'결과 확인 중',sub:'출석·미투표 주주',sel:1,timer:1,right:[{t:'투표 재개',c:'play',go:2},{t:'표결 마감',c:'dark',go:4}]},
-    {cls:'ia-wait',name:'표결 마감',sub:'출석 · 미투표',selStatic:'기권 처리',timer:1,right:[{t:'',c:'dots'}]}
+    {cls:'ia-wait',name:'표결 마감',sub:'출석 · 미투표',selStatic:'기권 처리',timer:1,right:[{t:'결과 공표',c:'dark',act:'declare'},{t:'',c:'dots'}]}
   ];
   /* done — 표결 마감(4단계)까지 간 의안. 의결권 행사현황의 결과 칸이 이걸 본다. */
   var OC={agenda:'제1호',stage:0,preEx:false,decided:null,exclTab:null,chanOpen:true,siteN:0,siteW:0,loading:false,done:{},res:{}};
@@ -1587,16 +1601,33 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(m.timer) l+='<span class="ctimer" id="vTimer">'+fmt(voteSec)+'</span>';
     var r='<div class="ctrl-btns">';
     st.right.forEach(function(b){
-      if(b.c==='dots') r+='<button class="iabtn ic">'+DOTS+'</button>';
-      else if(b.c==='play') r+='<button class="iabtn" data-go="'+b.go+'">'+PLAY+b.t+'</button>';
-      else r+='<button class="iabtn'+(b.c?' '+b.c:'')+'" data-go="'+b.go+'">'+b.t+'</button>';
+      if(b.c==='dots'){
+        r+='<span class="ctrl-more" id="ctrlMore"><button class="iabtn ic" type="button" data-more="1">'+DOTS+'</button>'
+          +'<span class="ctrl-menu"><button type="button" data-go="2">표결 재개</button></span></span>';
+        return;
+      }
+      var dis=b.dis?' disabled':'';
+      var go=b.go!=null?' data-go="'+b.go+'"':(b.act?' data-act="'+b.act+'"':'');
+      if(b.c==='play') r+='<button class="iabtn" type="button"'+go+dis+'>'+PLAY+b.t+'</button>';
+      else r+='<button class="iabtn'+(b.c?' '+b.c:'')+'" type="button"'+go+dis+'>'+b.t+'</button>';
     });
     r+='</div>';
     el.className='ctrlbar '+m.key;
     el.innerHTML=l+r;
-    el.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click',function(){
+    el.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click',function(e){
+      e.stopPropagation();
+      var mo=document.getElementById('ctrlMore'); if(mo) mo.classList.remove('open');
       goStage(+b.getAttribute('data-go'));
     }); });
+    var more=el.querySelector('[data-more]');
+    if(more) more.addEventListener('click',function(e){
+      e.stopPropagation(); document.getElementById('ctrlMore').classList.toggle('open');
+    });
+    var dec=el.querySelector('[data-act="declare"]');
+    if(dec) dec.addEventListener('click',function(){
+      /* 결과 공표 — 보는 화면들에 판정이 이미 실려 있으므로 알림만 남긴다 */
+      if(window.cxToast) cxToast(CX.util.chip(OC.agenda)+' 표결 결과를 공표했습니다.');
+    });
     OC.fire();                            /* 다른 탭들이 같은 단계·진행률을 본다 */
     if(OC.stage===2){ if(!ticker){ ticker=setInterval(function(){ voteSec++; var t=document.getElementById('vTimer'); if(t) t.textContent=fmt(voteSec); bumpSite(); },1000); } }
     else if(ticker){ clearInterval(ticker); ticker=null; }
@@ -1610,6 +1641,9 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     }
     OC.stage=to; renderStage(); renderAll();
   }
+  document.addEventListener('click',function(){
+    var mo=document.getElementById('ctrlMore'); if(mo) mo.classList.remove('open');
+  });
   OC.go=goStage; OC.STAGES=STAGES; OC.STMETA=STMETA;
   /* 진행 상황을 보는 화면들(표결 관리 컨트롤 바 · 의결권 행사현황)이 여기에 붙는다 */
   OC.hooks=[];
