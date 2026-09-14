@@ -823,6 +823,8 @@
   .mvtbl th{position:sticky;top:0;background:#FAFAFA;font-weight:500;color:#737373;z-index:1;height:42px}
   .mvtbl tr:last-child td{border-bottom:none}
   .mvtbl .l{text-align:left}.mvtbl .c{text-align:center}
+  /* 의안명은 길다 — 줄을 바꿔 표가 옆으로 넘치지 않게 한다 */
+  .mvtbl td.l{white-space:normal;line-height:20px;padding-top:8px;padding-bottom:8px}
   .mvtbl td{color:#171717;font-variant-numeric:tabular-nums}
   .mvtbl td.mut{color:#737373}
   .mvtbl tr.done td{background:#FAFAFA;color:#737373}
@@ -2560,10 +2562,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
         <th class="l" style="min-width:300px">의안명</th>
         <th style="width:120px">제한의결권</th>
         <th style="width:130px">미행사의결권</th>
-        <th class="c" style="width:70px">찬성</th>
-        <th class="c" style="width:70px">반대</th>
-        <th class="c" style="width:70px">기권</th>
-        <th class="c" style="width:70px">중립</th>
+        <th class="c" style="width:84px">찬성</th>
+        <th class="c" style="width:84px">반대</th>
+        <th class="c" style="width:84px">기권</th>
+        <th class="c" style="width:84px">중립</th>
         <th class="c" style="width:110px">행사여부</th>
       </tr></thead><tbody id="mvBody"></tbody></table></div>
     </div>
