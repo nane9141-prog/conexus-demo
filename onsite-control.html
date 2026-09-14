@@ -1548,7 +1548,9 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     {cls:'ia-wait',name:'표결 마감',sub:'출석 · 미투표',selStatic:'기권 처리',timer:1,right:[{t:'',c:'dots'}]}
   ];
   /* done — 표결 마감(4단계)까지 간 의안. 의결권 행사현황의 결과 칸이 이걸 본다. */
-  var OC={agenda:'제1호',stage:0,preEx:false,decided:null,exclTab:null,chanOpen:true,siteN:0,siteW:0,loading:false,done:{}};
+  var OC={agenda:'제1호',stage:0,preEx:false,decided:null,exclTab:null,chanOpen:true,siteN:0,siteW:0,loading:false,done:{},res:{}};
+  /* OC.res — 마감한 의안의 결과와 현장 집계를 의안별로 담아 둔다. 다음 의안으로 넘어가도
+     지우지 않으므로 되돌아오면 그대로 다시 보이고, 화면을 새로 열면 비어 처음부터 다시 돌린다. */
   var voteSec=0, ticker=null, autoAdv=null, el=document.getElementById('agStage');
   function selectNextAgenda(){ var tree=document.getElementById('agTree'); if(!tree) return; var nodes=Array.prototype.slice.call(tree.querySelectorAll('.selnode')); var ci=-1; for(var i=0;i<nodes.length;i++){ if(nodes[i].classList.contains('sel')){ci=i;break;} } if(ci>=0 && ci<nodes.length-1){ nodes[ci+1].click(); } }
   function fmt(x){var m=Math.floor(x/60),ss=x%60;return (m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;}
@@ -1574,8 +1576,11 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(OC.stage===4){
       if(OC.agenda==='제3호') OC.decided='회사';
       /* 새로 마감된 순간에만 알린다 — renderStage 는 자주 다시 도는 함수다 */
+      var fresh=!OC.done[OC.agenda];
       OC.done[OC.agenda]=true;
-      autoAdv=setTimeout(selectNextAgenda,1600);
+      if(fresh) OC.res[OC.agenda]={r:resOf(OC.agenda),sec:voteSec,siteN:OC.siteN,siteW:OC.siteW};
+      /* 마감한 의안을 다시 들여다볼 때는 넘어가지 않는다 */
+      if(fresh) autoAdv=setTimeout(selectNextAgenda,1600);
     }
     var st=STAGES[OC.stage], m=STMETA[OC.stage];
     var l='<span class="cst '+m.tone+'">'+(m.noDot?'':'<span class="d"></span>')+m.badge+'</span>';
@@ -1790,24 +1795,44 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(st===1) return '<span class="stt ready"><span class="d"></span>상정중</span>';
     return '';
   }
+  /* 마감 시점의 판정 — 그때의 진행률(lf=1)로 한 번만 셈하고 그 값을 보관한다 */
+  function resOf(no){
+    var d=CENTER[no];
+    if(!d) return '가결';
+    if(d.type==='집중투표'||d.type==='양립불가') return '가결';
+    return predOf(d);
+  }
+  function resBadgeL(r){
+    return '<span class="rst '+(r==='가결'?'pass':'fail')+'">'+r+'</span>';
+  }
+  function keptRes(no){ return OC.res[no] ? OC.res[no].r : null; }
   function persistBadge(no){
     if(!OC.decided) return null;
     if(OC.decided==='회사'&&no==='제4-2호') return '<span class="rst drop">폐기</span>';
     if(OC.decided==='주주'&&no==='제4-1호') return '<span class="rst drop">폐기</span>';
     return null;
   }
+  function listBadge(card, no){
+    if(card.classList.contains('sel')){
+      /* 보고 있는 의안 — 마감 뒤에는 보관한 판정을 그대로 */
+      if(OC.stage>=4) return resBadgeL(keptRes(no)||resOf(no));
+      return statusBadge(OC.stage,false);
+    }
+    var r=keptRes(no);
+    return r ? resBadgeL(r) : '';
+  }
   function repaintList(){
     document.querySelectorAll('#agTree .arow.selnode').forEach(function(card){
       var no=card.dataset.no, ast=card.querySelector('.astatus'); if(!ast) return;
       var pb=persistBadge(no);
       if(pb!=null){ ast.innerHTML=pb; return; }
-      ast.innerHTML=card.classList.contains('sel')?statusBadge(OC.stage,false):'';
+      ast.innerHTML=listBadge(card,no);
     });
   }
   function updateLeft(){
     var node=document.querySelector('#agTree .selnode.sel'); if(!node) return;
     var ast=node.querySelector('.astatus'); if(!ast) return;
-    ast.innerHTML=statusBadge(OC.stage,false);
+    ast.innerHTML=listBadge(node,node.dataset.no);
   }
   var SITE_TOT=8;   /* 현장 표결 대상 수 — 데모 고정값 */
   function updateMetric(){
@@ -1822,7 +1847,9 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     set('mSiteN', OC.siteN); set('mSiteTot', SITE_TOT); set('mSiteW', comma(OC.siteW));
 
     var m=document.getElementById('mAgSt'); if(!m) return;
-    var map={1:['상정중','gray'],2:['투표중','blue'],3:['집계중','rose'],4:['가결','blue']}, v=map[OC.stage];
+    var kr=keptRes(OC.agenda)||'가결';
+    var map={1:['상정중','gray'],2:['투표중','blue'],3:['집계중','rose'],
+             4:[kr, kr==='가결'?'blue':'rose']}, v=map[OC.stage];
     if(!v){ m.style.display='none'; return; }
     m.style.display=''; m.className='stbadge '+v[1]; m.innerHTML='<span class="d"></span>'+v[0];
   }
@@ -1848,7 +1875,14 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     else { if(box) box.innerHTML=vizNormal(d); }
     renderChan(d); renderFooter(); repaintList(); updateMetric();
   }
-  OC.select=function(no){ OC.agenda=no; OC.stage=0; voteSec=0; OC.siteN=0; OC.siteW=0; renderStage(); renderAll(); };
+  OC.select=function(no){
+    OC.agenda=no;
+    var r=OC.res[no];
+    /* 이미 마감한 의안이면 그때의 단계와 현장 집계를 되살린다 */
+    if(r){ OC.stage=4; voteSec=r.sec; OC.siteN=r.siteN; OC.siteW=r.siteW; }
+    else  { OC.stage=0; voteSec=0; OC.siteN=0; OC.siteW=0; }
+    renderStage(); renderAll();
+  };
   // 의장용 뷰: 단계 매칭 없이 chair-view.html 오픈 (anchor href 사용)
   window.OC=OC;
   var sw=document.querySelector('.cag [data-sw]');
