@@ -319,6 +319,8 @@
     if (!hrow || !tb) return;
     var t = tbl.__cx;
     if (!t) { t = tbl.__cx = { tbl: tbl, tb: tb, filters: {}, draft: {}, rowh: 0 }; }
+    /* colgroup으로 칸 너비를 이미 정한 표 — 너비를 다시 쓰면 칸이 무너진다 */
+    var fixed = getComputedStyle(tbl).tableLayout === 'fixed';
     t.tb = tb;
     t.ths = Array.prototype.slice.call(hrow.cells);
     var rows = bodyRows(tb);
@@ -351,11 +353,11 @@
       });
 
       /* 칸 너비 — 글자 길이에 맞춰 좁히고, 투표권자·의안명이 남는 자리를 가져간다 */
-      if (lb) {
+      if (lb && !fixed) {
         th.style.width = rl.flex ? 'auto' : '1%';
         th.style.whiteSpace = 'nowrap';
       }
-      cells.forEach(function (c) { c.style.whiteSpace = rl.flex ? '' : 'nowrap'; });
+      if (!fixed) cells.forEach(function (c) { c.style.whiteSpace = rl.flex ? '' : 'nowrap'; });
 
       /* 정렬 — 표시는 없다 */
       var grouped = !!tb.querySelector('tr [colspan]');   /* 소계·그룹 줄이 있는 표 */
