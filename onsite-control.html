@@ -1632,8 +1632,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       var fresh=!OC.done[OC.agenda];
       OC.done[OC.agenda]=true;
       if(fresh) OC.res[OC.agenda]={r:resOf(OC.agenda),sec:voteSec,siteN:OC.siteN,siteW:OC.siteW,onlW:OC.onlW};
-      /* 마감한 의안을 다시 들여다볼 때는 넘어가지 않는다 */
-      if(fresh) autoAdv=setTimeout(selectNextAgenda,1600);
+      /* 넘어가는 것은 결과를 공표한 뒤다 — 마감만으로는 자리를 옮기지 않는다 */
     }
     var st=STAGES[OC.stage], m=STMETA[OC.stage];
     /* 공표를 마치면 더 할 일이 없다 — 점을 떼고 더보기만 남긴다 */
@@ -1672,6 +1671,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       OC.res[OC.agenda].said=true;
       renderStage();
       if(window.cxToast) cxToast(CX.util.chip(OC.agenda)+' 표결 결과를 공표했습니다.');
+      autoAdv=setTimeout(selectNextAgenda,1600);   /* 공표까지 끝났으니 다음 의안으로 */
     });
     OC.fire();                            /* 다른 탭들이 같은 단계·진행률을 본다 */
     if(OC.stage===2){ if(!ticker){ ticker=setInterval(function(){ voteSec++; var t=document.getElementById('vTimer'); if(t) t.textContent=fmt(voteSec); bumpSite(); },1000); } }
@@ -2505,24 +2505,29 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     <button class="dlg-x" id="bulkClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     <div class="dlg-h"><div class="tt">일괄 투표</div><div class="ds" id="bulkAg">대상 의안 · 제1호 재무제표 승인의 건</div></div>
     <div class="dlg-c">
-      <div>
+      <div class="dlg-field">
+        <div class="lb">대상 의안</div>
+        <select class="dlg-sel" id="bulkAgSel"></select>
+      </div>
+      <div class="dlg-field">
         <div class="lb">일괄 처리 범위</div>
-        <div class="prad" id="bulkScope">
-          <label data-sc="all"><span class="dot"></span><span><b style="font-weight:500">현장 참석자 전체</b><span class="ds">현장에 참석한 모든 주주를 대상으로 처리합니다.</span></span></label>
-          <label class="on" data-sc="noapp"><span class="dot"></span><span><b style="font-weight:500">앱 미사용자만</b><span class="ds">앱으로 투표할 수 없는 주주만 골라 처리합니다.</span></span></label>
-          <label data-sc="novote"><span class="dot"></span><span><b style="font-weight:500">미투표자만</b><span class="ds">아직 의결권을 행사하지 않은 주주만 처리합니다.</span></span></label>
-        </div>
+        <select class="dlg-sel" id="bulkScope">
+          <option value="noapp">앱 미사용자만</option>
+          <option value="novote">미투표자만</option>
+          <option value="all">현장 참석자 전체</option>
+        </select>
       </div>
       <div class="palert" id="bulkWarn" style="display:none"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="#E9081B" stroke="none"/></svg>기존 투표 여부와 관계없이 모든 참석 주주를 처리합니다.</div>
-      <div>
-        <div class="lb">처리할 의사</div>
+      <div class="dlg-field">
+        <div class="lb">투표 결과</div>
         <div class="dlg-tabs" id="bulkVote"><button class="on" data-v="찬성" type="button">찬성</button><button data-v="반대" type="button">반대</button></div>
+        <div class="dlg-ds" id="bulkDs">고른 범위의 주주가 모두 같은 결과로 기록됩니다.</div>
       </div>
     </div>
     <div class="dlg-f">
       <label class="ckrow" data-ck id="bulkAgree"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>처리 범위를 확인했으며 일괄 처리에 동의합니다.</label>
       <button class="dlg-btn" id="bulkCancel" type="button">취소</button>
-      <button class="dlg-btn dark" id="bulkOk" type="button">일괄 처리</button>
+      <button class="dlg-btn dark" id="bulkOk" type="button">확인</button>
     </div>
   </div>
 </div>
@@ -2755,7 +2760,11 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   /* 일괄 투표 */
   var bo=document.getElementById('bulkOvl'), warn=document.getElementById('bulkWarn');
   function bulkOpen(){
-    document.getElementById('bulkAg').textContent='대상 의안 · '+cur()+' '+(C[cur()]?C[cur()].name:'');
+    var sel=document.getElementById('bulkAgSel');
+    sel.innerHTML=CX.votingUnits.map(function(no){
+      return '<option value="'+no+'"'+(no===cur()?' selected':'')+'>'+no+' '+((C[no]&&C[no].name)||'')+'</option>';
+    }).join('');
+    document.getElementById('bulkAg').textContent='고른 범위의 주주를 한 번에 처리합니다.';
     bo.classList.add('on');
   }
   function bulkClose(){ bo.classList.remove('on'); }
@@ -2766,10 +2775,9 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     bulkClose(); load.classList.add('on'); setTimeout(function(){ load.classList.remove('on'); },1000);
   });
   bo.addEventListener('click',function(e){ if(e.target===bo) bulkClose(); });
-  document.getElementById('bulkScope').addEventListener('click',function(e){
-    var l=e.target.closest('label[data-sc]'); if(!l) return;
-    this.querySelectorAll('label').forEach(function(x){ x.classList.toggle('on',x===l); });
-    warn.style.display = l.dataset.sc==='all' ? 'flex' : 'none';
+  document.getElementById('bulkScope').addEventListener('change',function(){
+    /* 전체를 고르면 이미 행사한 표까지 덮어쓴다 — 그 사실을 붉게 알린다 */
+    warn.style.display = this.value==='all' ? 'flex' : 'none';
   });
   document.getElementById('bulkVote').addEventListener('click',function(e){
     var b=e.target.closest('button[data-v]'); if(!b) return;
@@ -3848,14 +3856,12 @@ if(window.OC&&OC.fire) OC.fire();
   var DLY = { delay: '총회 지연', resume: '총회 속개', end: '총회 종료' };
   on('dlyOk', function () {
     var t = document.querySelector('#dlyTabs button.on');
-    var k = t ? t.getAttribute('data-v') : 'delay';
-    say(DLY[k] + ' 안내를 현장 화면과 온라인에 전송했습니다.');
+    say((t ? t.textContent : '정회') + ' 안내를 현장 화면과 온라인에 전송했습니다.');
   });
 
   on('bulkOk', function () {
-    var sc = document.querySelector('#bulkScope label.on'),
-        vt = document.querySelector('#bulkVote button.on');
-    var who = sc ? sc.querySelector('b').textContent : '현장 참석자';
+    var sc = $('bulkScope'), vt = document.querySelector('#bulkVote button.on');
+    var who = sc ? sc.options[sc.selectedIndex].textContent : '현장 참석자';
     say(josa(who, '을 ', '를 ') + josa(vt ? vt.textContent : '찬성', '으로', '로') + ' 일괄 처리했습니다.');
   });
 
