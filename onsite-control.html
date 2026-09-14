@@ -883,6 +883,8 @@
   .cag-head .cag-nm{margin-top:0;flex:1}
   #agStage{margin:0 -12px 12px}
   #cVizBox{margin-top:16px}
+  /* 폐기된 의안 — 수치는 남기되 더 볼 필요가 없다는 것을 흐림으로 알린다 */
+  #cVizBox.drop,#cChanWrap.drop{opacity:.5;pointer-events:none}
   .typebadge{display:inline-flex;align-items:center;height:20px;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;flex:none}
   .typebadge.normal{background:#EEF5FF;color:#0071F3}
   .typebadge.special{background:#FFF1F2;color:#E9081B}
@@ -1627,7 +1629,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     }
     if(autoAdv){ clearTimeout(autoAdv); autoAdv=null; }
     if(OC.stage===4){
-      if(OC.agenda==='제3호') OC.decided='회사';
+      if(OC.agenda==='제3호' && !OC.decided){
+        OC.decided='회사';
+        if(window.QADROP) QADROP();      /* 폐기된 의안의 대기열을 비운다 */
+      }
       /* 새로 마감된 순간에만 알린다 — renderStage 는 자주 다시 도는 함수다 */
       var fresh=!OC.done[OC.agenda];
       OC.done[OC.agenda]=true;
@@ -2034,13 +2039,21 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var types=d.type==='집중투표'?['보통결의','집중투표']:(d.type==='양립불가'?['보통결의','양립불가']:(d.method?[d.type,d.method]:[d.type]));
     var ct=document.getElementById('cTypes'); if(ct) ct.innerHTML=types.map(function(t,i){ return (i?'<span class="atsep">·</span>':'')+'<span class="tp">'+t+'</span>'; }).join('');
     var single=(d.type!=='집중투표'&&d.type!=='양립불가');
+    var gone=!!persistBadge(OC.agenda);
     var cp=document.getElementById('cPred');
-    if(cp){ if(!single){ cp.innerHTML=''; } else { var res=predOf(d); cp.innerHTML=OC.stage>=4?opinionBadge(res):predBadge(res); } }
+    if(cp){
+      if(gone) cp.innerHTML='<span class="rst drop">폐기</span>';
+      else if(!single) cp.innerHTML='';
+      else { var res=predOf(d); cp.innerHTML=OC.stage>=4?opinionBadge(res):predBadge(res); }
+    }
     var box=document.getElementById('cVizBox');
     if(d.type==='집중투표'){ if(box) box.innerHTML=vizCumul(d); }
     else if(d.type==='양립불가'){ if(box) box.innerHTML=vizExclusive(d); }
     else { if(box) box.innerHTML=vizNormal(d); }
     renderChan(d); renderFooter(); repaintList(); updateMetric();
+    ['cVizBox','cChanWrap'].forEach(function(id){
+      var e=document.getElementById(id); if(e) e.classList.toggle('drop',gone);
+    });
   }
   OC.select=function(no){
     OC.agenda=no;
@@ -2110,6 +2123,12 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 
   /* 밖에서 질의가 들어오면 이 화면도 다시 그린다 */
   (window.QAREPAINT=window.QAREPAINT||[]).push(function(){ render(); });
+  /* 의안이 폐기되면 그 의안으로 잡아 둔 발언 순서는 사라진다 */
+  window.QADROP=function(){
+    var gone=SPEECHES.filter(function(x){ return CX.util.discarded(x.ag||''); }).map(function(x){ return x.id; });
+    queue=queue.filter(function(id){ return gone.indexOf(id)<0; });
+    render(); renderAcc();
+  };
   function rows(){
     if(mode==='q') return QUESTIONS;      /* 사전 질의도 같이 본다 — 표시로만 구분 */
     if(mode==='s') return SPEECHES;
