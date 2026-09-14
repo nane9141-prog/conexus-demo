@@ -16,9 +16,9 @@
     '.pv{height:100%;display:flex;flex-direction:column}',
     '.pv-ct{flex:1;min-height:0;display:flex;align-items:stretch;padding:32px;gap:24px;position:relative}',
     /* 식순 세로 탭 */
-    '.pv-left{width:44px;flex:none;display:flex;flex-direction:column;gap:10px;overflow:auto}',
+    '.pv-left{width:auto;min-width:44px;flex:none;display:flex;flex-direction:column;gap:10px;overflow:auto}',
     '.pv-left::-webkit-scrollbar{display:none}',
-    '.pv-vt{width:44px;height:32px;flex:none;display:flex;align-items:center;justify-content:center;padding:4px 8px;',
+    '.pv-vt{min-width:44px;height:32px;flex:none;display:flex;align-items:center;justify-content:center;padding:4px 8px;white-space:nowrap;',
     '  border:1px solid transparent;border-radius:8px;background:none;cursor:pointer;',
     "  font-family:inherit;font-size:16px;line-height:24px;font-weight:500;letter-spacing:-.01em;color:#A3A3A3}",
     '.pv-vt:hover{color:#E5E5E5}',
@@ -49,7 +49,8 @@
     /* 스크립트 */
     '.pv-body{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:32px}',
     '.pv-body::-webkit-scrollbar{width:0}',
-    '.pv-scr{font-size:32px;line-height:1.62;font-weight:700;letter-spacing:-.01em;color:#0071F3;white-space:pre-line}',
+    '.pv-scr{font-size:32px;line-height:1.62;font-weight:700;letter-spacing:-.01em;color:#FAFAFA;white-space:pre-line}',
+    '.pv-scr .v{color:#0071F3}',
     '.pv-scr[contenteditable="true"]{outline:1px dashed rgba(255,255,255,.35);border-radius:10px;padding:10px 12px;cursor:text}',
     '.pv-mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center}',
     '.pv-big{font-size:64px;line-height:1.2;font-weight:700;letter-spacing:-.01em;color:#E5E5E5}',
@@ -115,6 +116,43 @@
 
   /* ---------- 대본 ---------- */
   var TEMPLATES = ['주총 선언문', '의안 상정문', '표결 선포문', '질의 안내문', '폐회문'];
+  /* 템플릿은 값을 채우기 전의 원문이다. 변수 자리는 {{ }} 로 남겨 두어
+     어디를 채워야 하는지 한눈에 보이게 한다. */
+  var TPLBODY = {
+    '주총 선언문':
+      '{{기준일}} 기준 당사의 총 발행 주식수는 {{발행주식총수}} 이며, 총 주주수는 {{총 주주수}} 입니다.\n\n'
+      + '이중 의결권 있는 주식수는 {{의결권 있는 주식수}} 입니다.\n\n'
+      + '{{총회 일시}} 현재 참석 주식수는 {{참석 주식수}} 이며, 참석 주주수는 {{참석 주주수}} 입니다.\n\n'
+      + '당사의 의결권 있는 주식의 총수인 {{의결권 있는 주식수}} 의 {{출석률}} 가 출석하였음을 보고 드리며, '
+      + '본 총회가 적법하게 성립되었음을 선언합니다.',
+    '의안 상정문':
+      '{{의안 번호}} 의안\n{{의안명}} 을 상정합니다.\n\n'
+      + '본 의안은 {{결의 요건}} 요건이 적용되는 의안으로, {{결의 요건 계산식}} 이 필요합니다.\n\n'
+      + '표결에 앞서 본 안건에 대해 질문이나 의견이 있으신 주주께서는 발언 신청 버튼을 눌러 주시기 바랍니다.\n\n'
+      + '신청해 주신 주주님께 순서대로 발언권을 부여해 드리겠으며, 발언이 끝난 후 표결을 진행하겠습니다.',
+    '표결 선포문':
+      '{{의안 번호}} 에 대한 표결 결과를 말씀드리겠습니다.\n'
+      + '본 의안은 {{결의 요건}} 요건이 적용되는 의안으로, {{결의 요건 계산식}} 이 필요합니다.\n\n'
+      + '오늘 주주총회장에서 참석한 의결권 있는 주식은 총 {{참석 주식수(중복투표 주식수 제외)}} 이며, '
+      + '집계 결과는 다음과 같습니다.\n\n'
+      + '찬성하는 주식수는 총 {{(중립 분배 후) 찬성 주식수}}\n'
+      + '반대하는 주식수는 총 {{(중립 분배 후) 반대 주식수}}\n'
+      + '기권하는 주식수는 총 {{(중립 분배 후) 기권 주식수}} 로\n\n'
+      + '찬성 주식수는 출석한 의결권수 대비 {{출석 의결권 대비 찬성률}} 이며, '
+      + '의결권 있는 발행주식 총수 대비 {{총 의결권 대비 찬성률}} 로 집계되었습니다.\n\n'
+      + '이에 {{의안 번호}} 은 {{가결 여부}} 되었음을 선포합니다.',
+    '질의 안내문':
+      '{{의안 번호}} 에 대해 질문이나 의견이 있으신 주주께서는 발언 신청 버튼을 눌러 주시기 바랍니다.\n\n'
+      + '신청 순서에 따라 발언권을 드리며, 발언 시간은 한 분당 {{발언 제한 시간}} 이내로 부탁드립니다.\n\n'
+      + '접수된 질의는 {{질의 접수 건수}} 이며, 순서대로 의장님께 전달해 드리겠습니다.',
+    '폐회문':
+      '오늘 상정된 {{총 의안 수}} 의안에 대한 표결이 모두 종료되었습니다.\n\n'
+      + '바쁘신 가운데 끝까지 참석해 주신 주주 여러분의 협조에 진심으로 감사드립니다.\n\n'
+      + '이것으로 {{주주총회명}} 의 폐회를 선언합니다. 감사합니다.'
+  };
+  /* 값을 채운 자리 — 화면에서 파랗게 보인다 */
+  var V0 = '\u0001', V1 = '\u0002';
+  function V(x) { return V0 + x + V1; }
 
   function thrText(d) {
     return (d.thrLabel || '').indexOf('2/3') >= 0
@@ -124,51 +162,53 @@
   function chip(no) { return String(no).replace('제', '제 '); }
   function cand(name) { return String(name).replace('사외이사 후보 ', ''); }
 
-  /* 의장 — 의안별 상정문 · 표결 선포문 */
+  /* 의장 — 의안별 상정문 · 표결문 */
   function chairAgenda(no) {
     var d = CX.center[no] || {}, nm = d.name || '', ty = d.type || '보통결의';
-    var open = chip(no) + ' 의안\n' + nm + ' 을 상정합니다.\n\n'
-      + '본 의안은 ' + ty + ' 요건이 적용되는 의안으로, ' + thrText(d) + ' 이 필요합니다.\n\n'
+    var open = V(chip(no)) + ' 의안\n' + V(nm) + ' 을 상정합니다.\n\n'
+      + '본 의안은 ' + V(ty) + ' 요건이 적용되는 의안으로, ' + V(thrText(d)) + ' 이 필요합니다.\n\n'
       + '표결에 앞서 본 안건에 대해 질문이나 의견이 있으신 주주께서는 발언 신청 버튼을 눌러 주시기 바랍니다.\n\n'
       + '신청해 주신 주주님께 순서대로 발언권을 부여해 드리겠으며, 발언이 끝난 후 표결을 진행하겠습니다.';
     var close;
     if (d.cands) {
       var el = d.cands.filter(function (c) { return c.elected; });
-      close = chip(no) + ' 의안 에 대한 표결 결과를 말씀드리겠습니다.\n\n'
+      close = V(chip(no)) + ' 의안 에 대한 표결 결과를 말씀드리겠습니다.\n\n'
         + '본 의안은 집중투표 방식으로 진행되었으며, 후보자별 득표수는 다음과 같습니다.\n\n'
-        + d.cands.map(function (c) { return cand(c.name) + ' 후보 ' + cm(c.votes) + ' 표'; }).join('\n')
-        + '\n\n이에 다득표 순으로 ' + el.map(function (c) { return cand(c.name); }).join(' · ')
+        + d.cands.map(function (c) { return V(cand(c.name)) + ' 후보 ' + V(cm(c.votes) + ' 표'); }).join('\n')
+        + '\n\n이에 다득표 순으로 ' + V(el.map(function (c) { return cand(c.name); }).join(' · '))
         + ' 후보가 사외이사로 선임되었음을 선포합니다.';
     } else if (d.options) {
       var won = d.options.filter(function (o) { return o.result === '가결'; })[0] || d.options[0];
-      close = chip(no) + ' 의안 에 대한 표결 결과를 말씀드리겠습니다.\n\n'
+      close = V(chip(no)) + ' 의안 에 대한 표결 결과를 말씀드리겠습니다.\n\n'
         + d.options.map(function (o) {
-            return o.name + '\n찬성 ' + cm(o['for']) + ' 주 · 반대 ' + cm(o.against) + ' 주 → ' + o.result;
+            return V(o.name) + '\n찬성 ' + V(cm(o['for']) + ' 주') + ' · 반대 ' + V(cm(o.against) + ' 주')
+              + ' → ' + V(o.result);
           }).join('\n\n')
-        + '\n\n이에 ' + won.name + ' 이 가결되었음을 선포합니다.';
+        + '\n\n이에 ' + V(won.name) + ' 이 가결되었음을 선포합니다.';
     } else {
       var present = (d['for'] || 0) + (d.against || 0) + (d.abs || 0);
       var r1 = present ? ((d['for'] / present) * 100).toFixed(2) : '0.00';
       var r2 = ((d['for'] || 0) / M.sharesIssued * 100).toFixed(2);
-      close = chip(no) + ' 의안 에 대한 표결 결과를 말씀드리겠습니다.\n'
-        + '본 의안은 ' + ty + ' 요건이 적용되는 의안으로, ' + thrText(d) + ' 이 필요합니다.\n\n'
-        + '오늘 주주총회에 참석한 의결권 있는 주식은 총 ' + cm(present) + ' 주 이며, 집계 결과는 다음과 같습니다.\n\n'
-        + '찬성하는 주식수는 총 ' + cm(d['for']) + ' 주\n'
-        + '반대하는 주식수는 총 ' + cm(d.against) + ' 주\n'
-        + '기권하는 주식수는 총 ' + cm(d.abs) + ' 주로\n\n'
-        + '찬성 주식수는 출석한 의결권수 대비 ' + r1 + ' % 이며, 의결권 있는 발행주식 총수 대비 ' + r2 + ' % 로 집계되었습니다.\n\n'
-        + '이에 ' + chip(no) + ' 의안 은 가결 되었음을 선포합니다.';
+      close = V(chip(no)) + ' 의안 에 대한 표결 결과를 말씀드리겠습니다.\n'
+        + '본 의안은 ' + V(ty) + ' 요건이 적용되는 의안으로, ' + V(thrText(d)) + ' 이 필요합니다.\n\n'
+        + '오늘 주주총회에 참석한 의결권 있는 주식은 총 ' + V(cm(present) + ' 주') + ' 이며, 집계 결과는 다음과 같습니다.\n\n'
+        + '찬성하는 주식수는 총 ' + V(cm(d['for']) + ' 주') + '\n'
+        + '반대하는 주식수는 총 ' + V(cm(d.against) + ' 주') + '\n'
+        + '기권하는 주식수는 총 ' + V(cm(d.abs) + ' 주') + '로\n\n'
+        + '찬성 주식수는 출석한 의결권수 대비 ' + V(r1 + ' %') + ' 이며, 의결권 있는 발행주식 총수 대비 '
+        + V(r2 + ' %') + ' 로 집계되었습니다.\n\n'
+        + '이에 ' + V(chip(no)) + ' 의안 은 ' + V('가결') + ' 되었음을 선포합니다.';
     }
-    return [{ t: '의안 상정문', s: open }, { t: '표결 선포문', s: close }];
+    return [{ t: '상정문', s: open }, { t: '표결문', s: close }];
   }
 
   /* 사회자 — 의안별 진행 안내 */
   function mcAgenda(no) {
     var d = CX.center[no] || {}, nm = d.name || '';
     return [
-      { t: '상정 안내', s: '이어서 ' + chip(no) + ' 의안, ' + nm + ' 을 상정하겠습니다.\n\n의장님의 상정 말씀이 있겠습니다. 주주 여러분께서는 화면 안내를 참고해 주시기 바랍니다.' },
+      { t: '상정 안내', s: '이어서 ' + V(chip(no)) + ' 의안, ' + V(nm) + ' 을 상정하겠습니다.\n\n의장님의 상정 말씀이 있겠습니다. 주주 여러분께서는 화면 안내를 참고해 주시기 바랍니다.' },
       { t: '발언 신청 안내', s: '상정된 의안에 대해 질문이나 의견이 있으신 주주님께서는 화면 하단의 발언 신청 버튼을 눌러 발언 취지를 작성해 주시기 바랍니다.\n\n신청 순서에 따라 발언권을 부여해 드리며, 원활한 진행을 위해 발언 시간은 한 분당 4분 이내로 부탁드립니다.' },
-      { t: '표결 안내', s: '이제 ' + chip(no) + ' 의안의 표결을 진행하겠습니다.\n\n화면의 안내에 따라 찬성 · 반대 · 기권 중 하나를 선택해 주시기 바랍니다.\n\n집계가 완료되면 의장님께서 결과를 선포하실 예정입니다.' }
+      { t: '표결 안내', s: '이제 ' + V(chip(no)) + ' 의안의 표결을 진행하겠습니다.\n\n화면의 안내에 따라 찬성 · 반대 · 기권 중 하나를 선택해 주시기 바랍니다.\n\n집계가 완료되면 의장님께서 결과를 선포하실 예정입니다.' }
     ];
   }
 
@@ -177,12 +217,12 @@
     var list = [];
     list.push({ key: 'open', lb: '개회', tabs: chair
       ? [{ t: '주총 선언문', s:
-          '2026년 3월 27일 기준일 현재 당사의 총 발행 주식수는 ' + cm(M.sharesIssued) + ' 주 이며, 총 주주수는 ' + cm(M.holdersTotal) + ' 명입니다.\n\n'
-          + '이중 의결권 있는 주식수는 ' + cm(M.sharesVoting) + ' 주 입니다.\n\n'
-          + M.dateText + ' ' + M.time + ' 현재 참석 주식수는 ' + cm(M.attendShares) + ' 주이며, 참석 주주수는 ' + cm(M.attendHolders) + ' 명입니다.\n\n'
-          + '당사의 의결권 있는 주식의 총수인 ' + cm(M.sharesVoting) + ' 주의 '
-          + (M.attendShares / M.sharesVoting * 100).toFixed(1) + ' % 가 출석하였음을 보고 드리며, 본 총회가 적법하게 성립되었음을 선언합니다.' }]
-      : [{ t: '개회 안내', s: '주주 여러분, 안녕하십니까. ' + M.org + ' ' + M.name + ' 진행을 맡은 사회자입니다.\n\n잠시 후 의장님의 개회 선언으로 총회를 시작하겠습니다.\n\n원활한 진행을 위해 휴대전화는 무음으로 설정해 주시고, 화면 안내에 따라 협조해 주시기 바랍니다.' },
+          V('2026년 3월 27일') + ' 기준일 현재 당사의 총 발행 주식수는 ' + V(cm(M.sharesIssued) + ' 주') + ' 이며, 총 주주수는 ' + V(cm(M.holdersTotal) + ' 명') + ' 입니다.\n\n'
+          + '이중 의결권 있는 주식수는 ' + V(cm(M.sharesVoting) + ' 주') + ' 입니다.\n\n'
+          + V(M.dateText + ' ' + M.time) + ' 현재 참석 주식수는 ' + V(cm(M.attendShares) + ' 주') + ' 이며, 참석 주주수는 ' + V(cm(M.attendHolders) + ' 명') + ' 입니다.\n\n'
+          + '당사의 의결권 있는 주식의 총수인 ' + V(cm(M.sharesVoting) + ' 주') + ' 의 '
+          + V((M.attendShares / M.sharesVoting * 100).toFixed(1) + ' %') + ' 가 출석하였음을 보고 드리며, 본 총회가 적법하게 성립되었음을 선언합니다.' }]
+      : [{ t: '개회 안내', s: '주주 여러분, 안녕하십니까. ' + V(M.org + ' ' + M.name) + ' 진행을 맡은 사회자입니다.\n\n잠시 후 의장님의 개회 선언으로 총회를 시작하겠습니다.\n\n원활한 진행을 위해 휴대전화는 무음으로 설정해 주시고, 화면 안내에 따라 협조해 주시기 바랍니다.' },
          { t: '진행 안내', s: '본격적인 의안 심의에 앞서 오늘 진행 순서를 간략히 안내해 드리겠습니다.\n\n각 의안은 의장님의 상정 말씀 이후, 주주 발언과 표결 순으로 진행됩니다.\n\n표결과 결과 선포는 의장님께서 직접 진행하시니 화면 안내를 참고해 주시기 바랍니다.' }] });
     /* 식순은 표결 단위 그대로 — 현장 제어의 '의안 진행' 과 같은 기준이다.
        양립불가로 폐기된 의안도 의장이 폐기를 선포하므로 남겨 둔다. */
@@ -193,7 +233,7 @@
       ? [{ t: '폐회문', s:
           '오늘 상정된 모든 의안에 대한 표결이 종료되었습니다.\n\n'
           + '바쁘신 가운데 끝까지 참석해 주신 주주 여러분의 협조에 진심으로 감사드립니다.\n\n'
-          + '이것으로 ' + M.name + ' 의 폐회를 선언합니다. 감사합니다.' }]
+          + '이것으로 ' + V(M.name) + ' 의 폐회를 선언합니다. 감사합니다.' }]
       : [{ t: '폐회 안내', s: '오늘 예정된 모든 의안 심의가 마무리되었습니다.\n\n잠시 후 의장님의 폐회 선언이 있겠습니다.\n\n끝까지 참석해 주신 주주 여러분께 진심으로 감사드립니다.' }] });
     return list;
   }
@@ -224,6 +264,13 @@
         ctrl = root.querySelector('#pvCtrl'), body = root.querySelector('#pvBody'), mt = root.querySelector('#pvMt');
 
     function esc(t) { return String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    /* 표시만 걷어 낸 글 — 고쳐 쓸 때는 표시가 보이면 안 된다 */
+    function plain(t) { return String(t == null ? '' : t).split(V0).join('').split(V1).join(''); }
+    /* 채워 넣은 값과 아직 채우지 않은 {{ }} 를 같은 파란색으로 */
+    function marked(t) {
+      return esc(t).split(V0).join('<span class="v">').split(V1).join('</span>')
+        .replace(/\{\{[^{}]*\}\}/g, function (m) { return '<span class="v">' + m + '</span>'; });
+    }
     function cur() { return ORDER[st.oi] || ORDER[0]; }
     function tabList() { return st.editing ? st.edit : cur().tabs; }
 
@@ -303,7 +350,8 @@
           + '<div class="pv-e2">등록된 템플릿을 선택하거나 스크립트 내용을 직접 입력 할 수 있습니다.</div></div>';
         return;
       }
-      body.innerHTML = '<div class="pv-scr" id="pvScr"' + (st.editing ? ' contenteditable="true"' : '') + ' style="font-size:' + st.fs + 'px">' + esc(t.s) + '</div>';
+      body.innerHTML = '<div class="pv-scr" id="pvScr"' + (st.editing ? ' contenteditable="true"' : '') + ' style="font-size:' + st.fs + 'px">'
+        + (st.editing ? esc(plain(t.s)) : marked(t.s)) + '</div>';
       if (st.editing) {
         var scr = document.getElementById('pvScr');
         scr.addEventListener('input', function () { st.edit[st.ti].s = scr.innerText; });
@@ -318,13 +366,19 @@
       var pos = 1; units.forEach(function (o, i) { if (o.ag === ag) pos = i + 1; });
       var d = CX.center[ag] || {};
       var stName = ['상정 대기', '상정중', '투표중', '집계중', '표결 마감'][L.stage == null ? 0 : L.stage];
+      /* 현장 제어가 보내 준 값이 있으면 그대로 쓴다 — 같은 화면을 보는 사람끼리 숫자가 어긋나지 않도록 */
+      var K = L.kpi || {};
+      var num = function (v, unit) { return cm(v) + '<span class="sub">' + unit + '</span>'; };
       var cards = [
-        ['의안 진행', pos + '<span class="sub"> / ' + units.length + '</span>', chip(ag) + ' ' + stName],
-        ['의결정족수', esc(d.thrLabel || ('출석의결권 ' + M.quorum.normalAttend)), cm(M.sharesIssued) + '주 기준'],
-        ['출석 주주수', cm(M.attendHolders) + '명', '출석의결권 ' + cm(M.attendShares) + '주'],
-        ['현장 참석', cm(M.onsiteHolders) + '명', cm(M.onsiteShares) + '주'],
-        ['현장 표결', (L.stage >= 4 ? pos : Math.max(0, pos - 1)) + '<span class="sub"> / ' + units.length + '</span>', cm(M.onsiteShares) + '주'],
-        ['온라인 참석', cm(M.onlineHolders) + '명', cm(M.onlineShares) + '주']
+        ['의안 진행', (K.i != null ? K.i : pos) + '<span class="sub"> / ' + (K.tot || units.length) + '</span>',
+          K.sub || (chip(ag) + ' ' + stName)],
+        ['출석률', K.rate || ((M.attendShares / M.sharesIssued * 100).toFixed(1) + '%'),
+          cm(M.sharesIssued) + '주 기준'],
+        ['전체 출석 주주수', num(M.attendHolders, '명'), '출석의결권 ' + cm(M.attendShares) + '주'],
+        ['현장 참석', num(M.onsiteHolders, '명'), cm(M.onsiteShares) + '주 행사 가능'],
+        ['현장 표결', (K.siteN || 0) + '<span class="sub"> / ' + (K.siteTot || 30) + '</span>',
+          cm(K.siteW || 0) + '주 행사'],
+        ['온라인 참석', num(M.onlineHolders, '명'), cm(M.onlineShares) + '주']
       ];
       mt.innerHTML = cards.map(function (c) {
         return '<div class="pv-card"><div class="pv-ck">' + c[0] + '</div><div class="pv-cv">' + c[1] + '</div><div class="pv-cs">' + c[2] + '</div></div>';
@@ -369,7 +423,8 @@
       var b = e.target.closest('[data-tpl]'); if (!b) return;
       menu.classList.remove('on');
       st.edit[st.ti].t = b.getAttribute('data-tpl');
-      st.edit[st.ti].s = '템플릿 · ' + b.getAttribute('data-tpl') + ' 의 내용을 불러왔습니다.\n필요한 부분을 직접 고쳐 주세요.';
+      var tpl = b.getAttribute('data-tpl');
+      st.edit[st.ti].s = TPLBODY[tpl] || ('템플릿 · ' + tpl + ' 의 내용을 불러왔습니다.\n필요한 부분을 직접 고쳐 주세요.');
       drawTabs(); drawBody();
     });
     document.addEventListener('click', function (e) { if (!e.target.closest('#pvTpl') && !menu.contains(e.target)) menu.classList.remove('on'); });
@@ -422,7 +477,7 @@
       if (s.ag === 'closing' || s.ag === '폐회') oi = ORDER.length - 1;
       if (oi >= 0) st.oi = oi;
       var c = CAST[stage];
-      st.live = { ts: s.ts, ag: (oi >= 0 ? ORDER[oi].ag : s.ag), stage: stage, sec: s.sec, cast: c || null };
+      st.live = { ts: s.ts, ag: (oi >= 0 ? ORDER[oi].ag : s.ag), stage: stage, sec: s.sec, cast: c || null, kpi: s.kpi };
       if (!c) st.ti = (stage >= 4 && cur().tabs.length > 1) ? cur().tabs.length - 1 : 0;
       render();
     }

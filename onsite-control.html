@@ -1667,11 +1667,19 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(OC.decided==='주주') m['제4-1호']='폐기';
     return m;
   }
+  /* 하단 지표 — 의장·사회자 화면이 같은 숫자를 보도록 그대로 보낸다 */
+  function kpiNow(){
+    var i=0; CX.votingUnits.forEach(function(no,n){ if(no===OC.agenda) i=n+1; });
+    return { i:i, tot:CX.votingUnits.length,
+      sub:(OC.agenda ? CX.util.chip(OC.agenda)+' '+STAGES[OC.stage].name : ''),
+      rate:CX.util.pct(CX.meeting.attendShares, CX.meeting.sharesIssued).toFixed(1)+'%',
+      siteN:siteNow(), siteTot:SITE_TOT, siteW:siteWNow() };
+  }
   OC.fire=function(){
     OC.hooks.forEach(function(f){ try{ f(); }catch(e){} });
     /* 의장·사회자 화면은 이 신호만 보고 따라 넘어간다 */
     if(window.cxSync) cxSync.set({ag:OC.agenda, stage:(OC.loading?2:OC.stage), sec:voteSec,
-      cast:null, done:resMap()});
+      cast:null, done:resMap(), kpi:kpiNow()});
   };
   /* 단계별 진행률 — 실시간 운영의 채널 표와 같은 값을 쓴다 */
   OC.frac=function(no){
