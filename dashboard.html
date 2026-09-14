@@ -62,13 +62,7 @@
   .db-leg .sw{width:6px;height:6px;flex:none}
   .db-leg .vv{flex:1;min-width:0;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
   /* 회색 상자 안의 수치 줄 */
-  .db-box{display:flex;flex-direction:column;gap:4px;padding:12px;background:#FAFAFA;border-radius:10px}
-  .db-box .d{display:flex;align-items:center;justify-content:space-between;gap:8px;height:16px;
     font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em}
-  .db-box .d .lb{color:#737373}
-  .db-box .d .vl{display:flex;align-items:center;gap:8px;text-align:right}
-  .db-box .d .vl b{font-weight:700;color:#0A0A0A}
-  .db-box .d .vl span{color:#737373}
   /* 진행 단계 */
   .db-prog{height:4px;border-radius:9999px;background:rgba(0,113,243,.12);overflow:hidden}
   .db-prog i{display:block;height:100%;background:#0071F3;border-radius:9999px}
@@ -85,15 +79,65 @@
     border:1px solid #D4E8FF;border-radius:10px;font-size:12px;line-height:16px;letter-spacing:-.01em;color:#0071F3}
   .db-alert svg{width:16px;height:16px;flex:none;fill:none;stroke:#0071F3;stroke-width:1.33;stroke-linecap:round}
   /* 결의 요건 · 의안 수 */
-  .db-req .d{display:flex;align-items:center;gap:8px;height:16px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em}
-  .db-req .d .lb{width:100px;flex:none;color:#737373}
-  .db-req .d .vl{flex:1;min-width:0;color:#0A0A0A}
-  .db-cnt{box-sizing:border-box;flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:16px;
     background:#fff;border:1px solid #E5E5E5;border-radius:10px}
-  .db-cnt .k{font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A}
-  .db-cnt .v{font-size:18px;line-height:28px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
-  .db-cnt .v.up{color:#0071F3}
-  .db-cnt .v.dn{color:#E9081B}
+  /* 요약 카드 작은 판 — 설정 · 현장 탭 */
+  .db-kpi.sm .c{padding:16px;border-radius:10px}
+  .db-kpi.sm .c .k{color:#737373}
+  .db-kpi.sm .c .v{font-size:18px;line-height:1}
+  /* 라벨 · 값 회색 상자 */
+  .db-gbox{display:flex;flex-direction:column;gap:6px;padding:12px;background:#FAFAFA;border-radius:10px}
+  .db-gbox .d{display:flex;align-items:flex-start;gap:12px;font-size:12px;line-height:16px;letter-spacing:-.01em}
+  .db-gbox .d .lb{width:100px;flex:none;font-weight:500;color:#737373}
+  .db-gbox .d .vl{flex:1;min-width:0;color:#0A0A0A}
+  .db-gbox .d .vl.hl{font-weight:500;color:#0071F3}
+  /* 사용 서비스 타일 */
+  .db-svcs{display:flex;flex-direction:column;gap:8px;flex:1;justify-content:center}
+  .db-svcs .r{display:flex;gap:8px}
+  .db-svc-t{box-sizing:border-box;flex:1;min-width:0;height:40px;display:flex;align-items:center;justify-content:space-between;
+    gap:8px;padding:12px;background:#FAFAFA;border-radius:8px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em}
+  .db-svc-t .lb{color:#737373;white-space:nowrap}
+  .db-svc-t .vl{color:#0A0A0A;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .db-tg{display:inline-flex;align-items:center;justify-content:center;padding:2px 6px;border-radius:6px;
+    font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em}
+  .db-tg.on{background:#EEF5FF;color:#0071F3}
+  .db-tg.off{background:#F5F5F5;color:#525252}
+  /* 변경 법안 안내 카드 */
+  .db-law2 .hd{display:flex;align-items:center;gap:4px}
+  .db-law2 .cnt{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;
+    border-radius:9999px;background:#F5F5F5;font-size:12px;line-height:16px;font-weight:500;color:#737373}
+  .db-law2 .nm{font-size:14px;line-height:20px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* 참석 현황 */
+  .db-att2{display:flex;align-items:center;justify-content:center;gap:10px}
+  .db-att2 .k{font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#737373}
+  .db-att2 .v{font-size:18px;line-height:28px;font-weight:700;color:#171717;font-variant-numeric:tabular-nums}
+  .db-att2 .sep{width:1px;height:12px;background:#E5E5E5}
+  .db-chgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+  .db-chc2{box-sizing:border-box;display:flex;flex-direction:column;gap:8px;padding:16px;background:#fff;
+    border:1px solid #E5E5E5;border-radius:10px;box-shadow:0 1px 2px rgba(0,0,0,.05);min-width:0}
+  .db-chc2 .lb{display:flex;align-items:center;gap:6px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;
+    color:#737373;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .db-chc2 .sw{width:6px;height:6px;flex:none}
+  .db-chc2 .v{font-size:18px;line-height:1;font-weight:600;color:#0A0A0A;font-variant-numeric:tabular-nums}
+  .db-chc2 .s{font-size:14px;line-height:1;font-weight:500;letter-spacing:-.01em;color:#737373;font-variant-numeric:tabular-nums}
+  .db-stack{display:flex;height:24px;gap:2px;background:#FAFAFA;border-radius:9999px;overflow:hidden}
+  .db-stack i{display:block;height:100%;border-radius:9999px}
+  /* 현장 — 표 위 작은 통계 세 칸 */
+  .db-sec-h.row{flex-direction:row;align-items:flex-start;gap:10px}
+  .db-sec-h.row .l{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+  .db-sec-t.with{display:flex;align-items:center;gap:8px}
+  .db-sbtn{box-sizing:border-box;height:24px;display:inline-flex;align-items:center;gap:4px;padding:0 8px;
+    border:1px solid #E5E5E5;border-radius:8px;background:#fff;font-family:inherit;font-size:12px;line-height:16px;
+    font-weight:500;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer}
+  .db-sbtn:hover{background:#FAFAFA}
+  .db-sbtn svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+  .db-mini3{display:flex;gap:8px;flex:none}
+  .db-m3{box-sizing:border-box;min-width:193px;display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:12px;background:#fff;border:1px solid #E5E5E5;border-radius:10px;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+  .db-m3 .k{font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#737373;white-space:nowrap}
+  .db-m3 .v{display:flex;align-items:center;gap:4px;font-size:18px;line-height:28px;font-weight:700;color:#0A0A0A;
+    font-variant-numeric:tabular-nums}
+  .db-m3 .v small{font-size:12px;font-weight:500;color:#737373}
   /* 의안별 행사 현황 표 */
   .db-tblc{box-sizing:border-box;padding:16px;background:#fff;border:1px solid #E5E5E5;border-radius:14px;
     box-shadow:0 1px 3px rgba(0,0,0,.1);overflow:auto}
@@ -111,6 +155,8 @@
     font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em}
   .db-rb.pass{background:#EEF5FF;color:#0071F3}
   .db-rb.fail{background:#FFF5F7;color:#E9081B}
+  .db-rb.wait{background:#F5F5F5;color:#525252}
+  .db-rb.count{background:#FEF5E7;color:#EA580C}
   .db-panel{display:none;flex-direction:column;gap:16px}
   .db-panel.active{display:flex}
   /* section card */
@@ -120,17 +166,6 @@
   .db-card-d{font-size:12px;color:#a3a3a3;margin-top:2px;font-weight:400}
   .db-grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .db-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-  /* summary cards */
-  .db-sum{display:grid;gap:16px}
-  .db-sum.n2{grid-template-columns:1fr 1fr}
-  .db-sum.n3{grid-template-columns:repeat(3,1fr)}
-  .db-sc{border:1px solid var(--border);border-radius:14px;background:#fff;padding:18px 20px}
-  .db-sc .k{font-size:13px;color:#525252;font-weight:500}
-  .db-sc .v{font-size:26px;font-weight:700;color:#0a0a0a;margin-top:8px;font-variant-numeric:tabular-nums}
-  .db-sc .v .u{font-size:15px;font-weight:600;margin-left:2px}
-  .db-sc .s{font-size:12px;color:#a3a3a3;margin-top:6px}
-  .db-sc.hl{background:#0a0a0a;border-color:#0a0a0a}
-  .db-sc.hl .k{color:#d4d4d4}.db-sc.hl .v{color:#fff}.db-sc.hl .s{color:#a3a3a3}
   /* law banner */
   .db-law{border:1px solid var(--border);border-radius:14px;background:#fff;overflow:hidden}
   .db-law-h{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer}
@@ -150,80 +185,7 @@
   .db-law-desc{font-size:13px;color:#525252;line-height:1.6}
   .db-law-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
   .db-chip{font-size:12px;color:#0a0a0a;background:#f4f4f5;border:1px solid var(--border);border-radius:9999px;padding:3px 10px}
-  /* info list */
-  .db-info{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px}
-  .db-info .row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #f4f4f5;font-size:13px}
-  .db-info .row .lb{color:#737373}.db-info .row .vl{color:#0a0a0a;font-weight:500;text-align:right}
-  /* service status */
-  .db-svc{display:flex;flex-direction:column;gap:10px}
-  .db-svc .row{display:flex;align-items:center;justify-content:space-between;font-size:13px}
-  .db-svc .row .lb{color:#404040}
-  .db-svc .tag{font-size:12px;font-weight:600;padding:3px 10px;border-radius:9999px}
-  .db-svc .tag.on{background:#eff4ff;color:#0071f3}
-  .db-svc .tag.off{background:#f4f4f5;color:#a3a3a3}
-  .db-svc .tag.prov{background:#f0fdf4;color:#16a34a}
-  /* prep steps */
-  .db-prep-h{display:flex;align-items:center;gap:10px;margin-bottom:4px}
-  .db-prep-rate{font-size:13px;color:#737373}
-  .db-prep-rate b{color:#0a0a0a}
-  .db-steps{display:flex;flex-direction:column}
-  .db-step{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #f4f4f5;font-size:13px}
-  .db-step:last-child{border-bottom:none}
-  .db-step .ic{width:20px;height:20px;flex:none;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
-  .db-step .ic.ok{background:#0a0a0a;color:#fff}
-  .db-step .ic.wait{background:#f4f4f5;color:#a3a3a3}
-  .db-step .ic.no{background:#fff3e0;color:#ea580c;border:1px solid #fdba74}
-  .db-step .nm{flex:1;color:#404040}
-  .db-step .st{font-size:12px;color:#a3a3a3}
-  .db-step.todo .nm{color:#0a0a0a;font-weight:600}
-  .db-step.todo .st{color:#ea580c;font-weight:600}
-  /* quorum */
-  .db-q{border:1px solid var(--border);border-radius:12px;padding:16px;background:#fafafa}
-  .db-q .qt{font-size:13px;font-weight:600;color:#0a0a0a;display:flex;align-items:center;gap:6px}
-  .db-q .qt .bd{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:#eef2ff;color:#4f46e5}
-  .db-q .qt .bd.sp{background:#faf5ff;color:#9333ea}
-  .db-q .cond{font-size:12px;color:#525252;margin-top:10px;line-height:1.7}
-  .db-q .need{margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);font-size:12px;color:#737373}
-  .db-q .need b{font-size:16px;color:#0a0a0a;font-variant-numeric:tabular-nums}
   /* agenda table */
-  .db-legend{display:flex;align-items:center;gap:16px;font-size:12px;color:#525252;flex-wrap:wrap}
-  .db-legend .lg{display:inline-flex;align-items:center;gap:5px}
-  .db-legend .sw{width:11px;height:11px;border-radius:3px}
-  .db-est{display:flex;gap:10px}
-  .db-estc{border:1px solid var(--border);border-radius:12px;padding:12px 16px;flex:1;text-align:center}
-  .db-estc .en{font-size:12px;color:#737373}
-  .db-estc .ev{font-size:22px;font-weight:700;margin-top:4px}
-  .db-estc.pass .ev{color:#0071f3}.db-estc.fail .ev{color:#ef4444}
-  .db-estc.wait2 .ev{color:#ca8a04}.db-estc.count .ev{color:#7c3aed}.db-estc.done .ev{color:#16a34a}
-  table.db-atbl{width:100%;border-collapse:collapse;font-size:13px}
-  table.db-atbl thead th{position:sticky;top:0;background:#fafafa;padding:10px 12px;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;white-space:nowrap;border-bottom:1px solid var(--border)}
-  table.db-atbl td{padding:12px;border-bottom:1px solid #f0f0f0;vertical-align:middle}
-  table.db-atbl td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-  table.db-atbl td.c{text-align:center}
-  table.db-atbl tr.grp td{background:#fbfbfc;font-weight:600;color:#0a0a0a}
-  .db-atag{font-size:11px;font-weight:600;padding:2px 7px;border-radius:6px;background:#f1f5f9;color:#475569;margin-left:6px}
-  .db-bar{position:relative;height:22px;background:#f1f3f5;border-radius:6px;overflow:hidden;min-width:120px}
-  .db-bar .fill{position:absolute;left:0;top:0;bottom:0;background:#0071f3;border-radius:5px}
-  .db-bar .fill.rej{background:#ef4444}
-  .db-barwrap{position:relative;min-width:150px}
-  .db-line{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed #0a0a0a;z-index:1}
-  .db-pct{font-size:12px;font-weight:600;color:#0a0a0a;margin-top:3px;font-variant-numeric:tabular-nums}
-  .db-res{font-size:12px;font-weight:600;padding:3px 10px;border-radius:9999px;display:inline-block}
-  .db-res.pass{background:#eff4ff;color:#0071f3}
-  .db-res.fail{background:#fef2f2;color:#ef4444}
-  .db-res.wait{background:#f4f4f5;color:#737373}
-  .db-res.count{background:#f5f3ff;color:#7c3aed}
-  /* attendee cards + ratio */
-  .db-att{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-  .db-attc{border:1px solid var(--border);border-radius:12px;padding:14px}
-  .db-attc .an{font-size:12px;color:#737373;font-weight:500}
-  .db-attc .av{font-size:18px;font-weight:700;color:#0a0a0a;margin-top:6px;font-variant-numeric:tabular-nums}
-  .db-attc .as{font-size:12px;color:#a3a3a3;margin-top:3px}
-  .db-ratio{display:flex;height:36px;border-radius:8px;overflow:hidden;margin-top:4px;border:1px solid var(--border)}
-  .db-ratio .seg{display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:600;min-width:0;box-shadow:inset -1px 0 0 rgba(255,255,255,.35);white-space:nowrap;overflow:hidden}
-  .db-rlegend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:#525252}
-  .db-rlegend .lg{display:inline-flex;align-items:center;gap:5px}
-  .db-rlegend .sw{width:11px;height:11px;border-radius:3px}
   /* memo panel */
   .memo-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none}
   .memo-ov.show{display:block}
@@ -367,6 +329,21 @@
         </div>
 
         <div class="db-panel active" data-dp="set">
+          <div class="db-kpi sm">
+            <div class="c"><div class="k">총 발행주식수</div><div class="v">476,821,940주</div>
+              <div class="s">의결권있는 총주식수 동일</div></div>
+            <div class="c"><div class="k">총 행사가능 의결권</div><div class="v">461,090,220주</div>
+              <div class="s">자사주, 상호주, 무효주 제외</div></div>
+            <div class="c db-law2" style="padding:12px 16px;gap:4px">
+              <div class="hd"><span class="k">변경법안 안내</span><span class="cnt">3</span>
+                <button class="db-ext" id="lawMore" type="button" style="color:#737373">더보기<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></button></div>
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <div class="nm">독립이사 의무 선임 비율 확대 및 합산 3%룰 전면 확대</div>
+                <div class="s">2026.7.23 시행</div>
+              </div>
+            </div>
+          </div>
+
           <div class="db-law" id="lawBanner">
             <div class="db-law-h" id="lawTrig">
               <div class="db-law-ic"><i class="ph ph-megaphone"></i></div>
@@ -402,61 +379,69 @@
             </div>
           </div>
 
-          <div class="db-sum n2">
-            <div class="db-sc"><div class="k">총발행주식수</div><div class="v">476,821,940<span class="u">주</span></div><div class="s">의결권 있는 총주식수 기준</div></div>
-            <div class="db-sc"><div class="k">총행사가능의결권</div><div class="v">461,090,220<span class="u">주</span></div><div class="s">자사주·상호주·무효주 제외</div></div>
-          </div>
+          <div class="db-sec">
+            <div class="db-sec-h"><div class="db-sec-t">주주명부 기준</div></div>
+            <div class="db-row">
+              <div class="db-c" style="flex:1;min-width:0">
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div class="crow"><span class="ct">진행단계</span><span class="db-tg on" style="margin-left:auto">사전투표</span></div>
+                  <div class="db-prog"><i style="width:25%"></i></div>
+                </div>
+                <div class="db-steps">
+                  <div class="d"><span class="nm">주주명부 확정</span><span class="db-st done">완료</span></div>
+                  <div class="d"><span class="nm">주주총회 설정</span><span class="db-st done">완료</span></div>
+                  <div class="d"><span class="nm">의결권 제한 설정</span><span class="db-st now"><i class="dot"></i>진행중</span></div>
+                  <div class="d"><span class="nm">전자투표·위임장</span><span class="db-st wait">대기</span></div>
+                  <div class="d"><span class="nm">서면투표·위임장</span><span class="db-st wait">대기</span></div>
+                </div>
+              </div>
 
-          <div class="db-grid2">
-            <div class="db-card">
-              <div class="db-card-h"><div><div class="db-card-t">주주총회 기본 정보</div></div></div>
-              <div class="db-info">
-                <div class="row"><span class="lb">행사명</span><span class="vl">제10기 정기주주총회</span></div>
-                <div class="row"><span class="lb">자산총액</span><span class="vl">54조 8,210억 원</span></div>
-                <div class="row"><span class="lb">주주총회 일시</span><span class="vl">2026-08-28 10:00</span></div>
-                <div class="row"><span class="lb">주주명부 기준일</span><span class="vl">2026-06-30</span></div>
-                <div class="row" style="grid-column:1 / -1"><span class="lb">주주총회 장소</span><span class="vl">서울 영등포구 국제금융로8길 카카오뱅크 본사 대강당</span></div>
+              <div class="db-c" style="flex:1;min-width:0;gap:12px">
+                <div class="ct">사용 서비스</div>
+                <div class="db-svcs">
+                  <div class="r"><div class="db-svc-t"><span class="lb">전자투표/위임장</span><span class="vl">IR큐더스</span></div></div>
+                  <div class="r">
+                    <div class="db-svc-t"><span class="lb">전자주주총회</span><span class="db-tg off">미사용</span></div>
+                    <div class="db-svc-t"><span class="lb">집중투표관리</span><span class="db-tg off">미사용</span></div>
+                  </div>
+                  <div class="r">
+                    <div class="db-svc-t"><span class="lb">의결권 권유</span><span class="db-tg on">사용</span></div>
+                    <div class="db-svc-t"><span class="lb">현장 APP</span><span class="db-tg on">사용</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="db-c" style="width:511px;flex:none;gap:12px">
+                <div class="ct">주주총회 기본정보</div>
+                <div class="db-gbox">
+                  <div class="d"><span class="lb">자산총액</span><span class="vl">2조원 이상 (54조 8,210억 원)</span></div>
+                  <div class="d"><span class="lb">주주명부 기준일</span><span class="vl">2026-06-30</span></div>
+                  <div class="d"><span class="lb">주주총회 기수</span><span class="vl">제10기 정기주주총회</span></div>
+                  <div class="d"><span class="lb">주주총회 일시</span><span class="vl">2026-08-28 10:00</span></div>
+                  <div class="d"><span class="lb">주주총회 장소</span><span class="vl">서울 영등포구 국제금융로8길 카카오뱅크 본사 대강당</span></div>
+                </div>
               </div>
             </div>
-            <div class="db-card">
-              <div class="db-card-h"><div><div class="db-card-t">서비스 현황</div><div class="db-card-d">서비스 설정에서 선택한 값과 연동됩니다</div></div></div>
-              <div class="db-svc">
-                <div class="row"><span class="lb">전자투표/위임장</span><span class="tag prov">IR큐더스</span></div>
-                <div class="row"><span class="lb">의결권 권유</span><span class="tag on">사용</span></div>
-                <div class="row"><span class="lb">집중 투표 관리</span><span class="tag on">사용</span></div>
-                <div class="row"><span class="lb">현장 APP</span><span class="tag on">사용</span></div>
-                <div class="row"><span class="lb">전자주주총회</span><span class="tag on">사용</span></div>
-              </div>
-            </div>
           </div>
 
-          <div class="db-card">
-            <div class="db-card-h">
-              <div class="db-prep-h"><div class="db-card-t">준비 단계</div></div>
-              <div class="db-prep-rate"><b>5</b>/6 완료</div>
-            </div>
-            <div class="db-steps">
-              <div class="db-step"><span class="ic ok"><i class="ph ph-check"></i></span><span class="nm">주주명부 확정</span><span class="st">확정 완료</span></div>
-              <div class="db-step"><span class="ic ok"><i class="ph ph-check"></i></span><span class="nm">서비스 설정</span><span class="st">설정 완료</span></div>
-              <div class="db-step todo"><span class="ic no">!</span><span class="nm">의결권 제한 설정</span><span class="st">미완료 · 설정 필요</span></div>
-              <div class="db-step"><span class="ic ok"><i class="ph ph-check"></i></span><span class="nm">전자투표/위임장</span><span class="st">IR큐더스 수집 중</span></div>
-              <div class="db-step"><span class="ic ok"><i class="ph ph-check"></i></span><span class="nm">서면투표</span><span class="st">업로드 완료</span></div>
-              <div class="db-step"><span class="ic ok"><i class="ph ph-check"></i></span><span class="nm">서면위임장</span><span class="st">업로드 완료</span></div>
-            </div>
-          </div>
-
-          <div class="db-card">
-            <div class="db-card-h"><div><div class="db-card-t">의결권 수집 목표</div><div class="db-card-d">정관 조건 설정에 따라 수치가 변동될 수 있습니다</div></div></div>
-            <div class="db-grid2">
-              <div class="db-q">
-                <div class="qt"><span class="bd">보통결의</span> 가결 기준</div>
-                <div class="cond">① 전체 행사가능 기준 : 총행사가능의결권의 <b>1/4(25%)</b> 이상 찬성<br>② 출석 의결권 기준 : 출석 의결권 <b>과반수(&gt;50%)</b> 찬성</div>
-                <div class="need">최소 필요 의결권 <b>115,272,555</b> 주</div>
+          <div class="db-sec">
+            <div class="db-sec-h"><div class="db-sec-t">결의 요건</div></div>
+            <div class="db-row">
+              <div class="db-c" style="flex:1;min-width:0;gap:8px">
+                <div class="ct">보통결의</div>
+                <div class="db-gbox">
+                  <div class="d"><span class="lb">발행주식총수</span><span class="vl">총행사가능의결권의 1/4(25%) 이상 찬성</span></div>
+                  <div class="d"><span class="lb">출석의결권</span><span class="vl">출석 의결권 과반수(&gt;50%) 찬성</span></div>
+                  <div class="d"><span class="lb">최소 필요 의결권</span><span class="vl hl">115,272,555주</span></div>
+                </div>
               </div>
-              <div class="db-q">
-                <div class="qt"><span class="bd sp">특별결의</span> 가결 기준</div>
-                <div class="cond">① 전체 행사가능 기준 : 총행사가능의결권의 <b>1/3(33.33%)</b> 이상 찬성<br>② 출석 의결권 기준 : 출석 의결권 <b>2/3(66.67%)</b> 이상 찬성</div>
-                <div class="need">최소 필요 의결권 <b>153,696,740</b> 주</div>
+              <div class="db-c" style="flex:1;min-width:0;gap:8px">
+                <div class="ct">특별결의</div>
+                <div class="db-gbox">
+                  <div class="d"><span class="lb">발행주식총수</span><span class="vl">총행사가능의결권의 1/3(33.33%) 이상 찬성</span></div>
+                  <div class="d"><span class="lb">출석의결권</span><span class="vl">출석 의결권 2/3(66.67%) 이상 찬성</span></div>
+                  <div class="d"><span class="lb">최소 필요 의결권</span><span class="vl hl">153,696,740주</span></div>
+                </div>
               </div>
             </div>
           </div>
@@ -475,7 +460,7 @@
           <div class="db-sec">
             <div class="db-sec-h"><div class="db-sec-t">사전투표 현황</div></div>
             <div class="db-row">
-              <div class="db-c" style="width:520px;flex:none">
+              <div class="db-c" style="flex:1.6;min-width:0">
                 <div class="ch"><div class="ct">사전투표 현황(채널별)</div>
                   <div class="cd">행사의결권 기준으로 제공되며, 중복 투표한 주주는 집계에서 제외됩니다.</div></div>
                 <div class="db-donut">
@@ -484,30 +469,30 @@
                 </div>
               </div>
 
-              <div class="db-col" style="width:328px;flex:none">
+              <div class="db-col" style="flex:1;min-width:0">
                 <div class="db-c" style="gap:8px;flex:1">
                   <div class="ch"><div class="ct">중복의결권 현황</div>
                     <div class="crow"><span class="cd">처리 필요 3건</span>
                       <a class="db-ext" href="dup-voting.html">중복 의결권 관리<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div></div>
-                  <div class="db-box">
-                    <div class="d"><span class="lb">미처리 주주</span><span class="vl"><b>2</b><span>명</span></span></div>
-                    <div class="d"><span class="lb">미처리 주식수</span><span class="vl"><b>80,000</b><span>주</span></span></div>
+                  <div class="db-gbox">
+                    <div class="d"><span class="lb">미처리 주주</span><span class="vl">2명</span></div>
+                    <div class="d"><span class="lb">미처리 주식수</span><span class="vl">80,000주</span></div>
                   </div>
                 </div>
                 <div class="db-c" style="gap:8px;flex:1">
                   <div class="ch"><div class="ct">집중투표 분배현황</div>
                     <div class="crow"><span class="cd">미분배 1건</span>
                       <a class="db-ext" href="cumulative-voting.html">집중투표 관리<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div></div>
-                  <div class="db-box">
-                    <div class="d"><span class="lb">분배 그룹 (자사 / 타사)</span><span class="vl"><b>2 / 1</b></span></div>
-                    <div class="d"><span class="lb">미분배 그룹 (자사 / 타사)</span><span class="vl"><b>1 / 0</b></span></div>
+                  <div class="db-gbox">
+                    <div class="d"><span class="lb">분배 그룹</span><span class="vl">자사 2 · 타사 1</span></div>
+                    <div class="d"><span class="lb">미분배 그룹</span><span class="vl">자사 1 · 타사 0</span></div>
                   </div>
                 </div>
               </div>
 
-              <div class="db-c" style="width:328px;flex:none">
+              <div class="db-c" style="flex:1;min-width:0">
                 <div style="display:flex;flex-direction:column;gap:8px">
-                  <div class="crow"><span class="cd" style="font-weight:500">진행단계</span>
+                  <div class="crow"><span class="ct">진행단계</span>
                     <span class="db-badge" style="margin-left:auto">사전투표</span></div>
                   <div class="db-prog"><i style="width:25%"></i></div>
                 </div>
@@ -528,23 +513,25 @@
           <div class="db-sec">
             <div class="db-sec-h"><div class="db-sec-t">결의 요건</div></div>
             <div class="db-row">
-              <div class="db-c" style="flex:1;gap:8px">
+              <div class="db-c" style="flex:1;min-width:0;gap:8px">
                 <div class="ct">보통결의</div>
-                <div class="db-box db-req">
+                <div class="db-gbox">
                   <div class="d"><span class="lb">발행주식총수</span><span class="vl">총행사가능의결권의 1/4(25%) 이상 찬성</span></div>
                   <div class="d"><span class="lb">출석의결권</span><span class="vl">출석 의결권 과반수(&gt;50%) 찬성</span></div>
+                  <div class="d"><span class="lb">최소 필요 의결권</span><span class="vl hl">115,272,555주</span></div>
                 </div>
               </div>
-              <div class="db-c" style="flex:1;gap:8px">
+              <div class="db-c" style="flex:1;min-width:0;gap:8px">
                 <div class="ct">특별결의</div>
-                <div class="db-box db-req">
+                <div class="db-gbox">
                   <div class="d"><span class="lb">발행주식총수</span><span class="vl">총행사가능의결권의 1/3(33.33%) 이상 찬성</span></div>
                   <div class="d"><span class="lb">출석의결권</span><span class="vl">출석 의결권 2/3(66.67%) 이상 찬성</span></div>
+                  <div class="d"><span class="lb">최소 필요 의결권</span><span class="vl hl">153,696,740주</span></div>
                 </div>
               </div>
-              <div class="db-col" style="width:271px;flex:none">
-                <div class="db-cnt"><span class="k">가결 예상</span><span class="v up" id="dbPass">0</span></div>
-                <div class="db-cnt"><span class="k">부결 예상</span><span class="v dn" id="dbFail">0</span></div>
+              <div class="db-mini3" style="flex-direction:column;width:271px">
+                <div class="db-m3"><span class="k">가결 예상</span><span class="v" id="dbPass" style="color:#0071F3">0</span></div>
+                <div class="db-m3"><span class="k">부결 예상</span><span class="v" id="dbFail" style="color:#E9081B">0</span></div>
               </div>
             </div>
           </div>
@@ -570,72 +557,57 @@
         </div>
 
         <div class="db-panel" data-dp="day">
-          <div class="db-sum n3">
-            <div class="db-sc"><div class="k">총발행주식수</div><div class="v">476,821,940<span class="u">주</span></div><div class="s">의결권 있는 총주식수 기준</div></div>
-            <div class="db-sc"><div class="k">총행사가능의결권</div><div class="v">461,090,220<span class="u">주</span></div><div class="s">자사주·상호주·무효주 제외</div></div>
-            <div class="db-sc hl"><div class="k">참석 의결권</div><div class="v">354,312,880<span class="u">주</span></div><div class="s">총행사가능의결권 대비 76.8% · 중복 제외</div></div>
+          <div class="db-kpi sm">
+            <div class="c"><div class="k">총 발행주식수</div><div class="v">476,821,940주</div>
+              <div class="s">의결권있는 총주식수 동일</div></div>
+            <div class="c"><div class="k">총 행사가능 의결권</div><div class="v">461,090,220주</div>
+              <div class="s">자사주, 상호주, 무효주 제외</div></div>
+            <div class="c"><div class="k">참석 의결권</div><div class="v">354,312,880주</div>
+              <div class="s">총행사가능의결권 대비 76.8% · 중복 제외</div></div>
           </div>
 
-          <div class="db-card">
-            <div class="db-card-h"><div><div class="db-card-t">참석자 현황</div><div class="db-card-d">현장은 투표 전이므로 참석주식수 기준, 주주수는 계좌 수 기준</div></div></div>
-            <div class="db-att">
-              <div class="db-attc"><div class="an">전자투표/위임장</div><div class="av">152,300,000<span style="font-size:12px;font-weight:600">주</span></div><div class="as">행사 · 41,220명</div></div>
-              <div class="db-attc"><div class="an">서면위임 (자사)</div><div class="av">68,400,000<span style="font-size:12px;font-weight:600">주</span></div><div class="as">행사 · 512명</div></div>
-              <div class="db-attc"><div class="an">서면위임 (타사)</div><div class="av">22,100,000<span style="font-size:12px;font-weight:600">주</span></div><div class="as">행사 · 138명</div></div>
-              <div class="db-attc"><div class="an">서면투표</div><div class="av">9,800,000<span style="font-size:12px;font-weight:600">주</span></div><div class="as">행사 · 1,240명</div></div>
-              <div class="db-attc"><div class="an">현장</div><div class="av">48,900,000<span style="font-size:12px;font-weight:600">주</span></div><div class="as">참석 · 86명</div></div>
-              <div class="db-attc"><div class="an">전자주주총회</div><div class="av">52,812,880<span style="font-size:12px;font-weight:600">주</span></div><div class="as">참석 · 5,410명</div></div>
-            </div>
-            <div class="db-ratio" style="margin-top:16px">
-              <div class="seg" style="width:43.0%;background:#0071f3">43%</div>
-              <div class="seg" style="width:19.3%;background:#3b9dff">19%</div>
-              <div class="seg" style="width:6.2%;background:#7cc0ff;color:#0a0a0a">6%</div>
-              <div class="seg" style="width:2.8%;background:#b9dcff;color:#0a0a0a"></div>
-              <div class="seg" style="width:13.8%;background:#16a34a">14%</div>
-              <div class="seg" style="width:14.9%;background:#22c55e">15%</div>
-            </div>
-            <div class="db-rlegend">
-              <span class="lg"><span class="sw" style="background:#0071f3"></span>전자투표/위임장</span>
-              <span class="lg"><span class="sw" style="background:#3b9dff"></span>서면위임(자사)</span>
-              <span class="lg"><span class="sw" style="background:#7cc0ff"></span>서면위임(타사)</span>
-              <span class="lg"><span class="sw" style="background:#b9dcff"></span>서면투표</span>
-              <span class="lg"><span class="sw" style="background:#16a34a"></span>현장</span>
-              <span class="lg"><span class="sw" style="background:#22c55e"></span>전자주주총회</span>
+          <div class="db-sec">
+            <div class="db-sec-h"><div class="db-sec-t">참석 현황</div></div>
+            <div class="db-c" style="padding:24px 16px;gap:20px">
+              <div class="db-att2">
+                <span class="k">전체 주주수</span><span class="v">300,000명</span>
+                <span class="sep"></span>
+                <span class="k">참석 주주수</span><span class="v" id="dbAttN">0명</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div class="db-chgrid" id="dbAttG"></div>
+                <div class="db-stack" id="dbAttBar"></div>
+              </div>
             </div>
           </div>
 
-          <div class="db-card">
-            <div class="db-card-h">
-              <div><div class="db-card-t">의안별 행사 현황</div><div class="db-card-d">새로고침 시 현장 참석 주주 표가 집계에 반영되어 실시간으로 확인 가능합니다</div></div>
-              <button class="db-memo-btn" id="dayRefresh"><i class="ph ph-arrows-clockwise" style="font-size:15px"></i>새로고침</button>
+          <div class="db-sec">
+            <div class="db-sec-h row">
+              <div class="l">
+                <div class="db-sec-t with">의안별 행사 현황
+                  <button class="db-sbtn" id="dbRefresh" type="button"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 1 2.3 5.6"/><path d="M4 20v-5h5"/></svg>새로고침</button></div>
+                <div class="db-sec-d">현장 참석 주주수에 따라 결과가 달라질 수 있습니다.</div>
+              </div>
+              <div class="db-mini3">
+                <div class="db-m3"><span class="k">전체 의안</span><span class="v" id="dbDayTot">0</span></div>
+                <div class="db-m3"><span class="k">진행 중</span><span class="v" id="dbDayRun">0</span></div>
+                <div class="db-m3"><span class="k">표결 마감</span>
+                  <span class="v"><span id="dbDayDone">0</span><small id="dbDayDoneSub"></small></span></div>
+              </div>
             </div>
-            <div class="db-est" style="margin-bottom:14px">
-              <div class="db-estc wait2"><div class="en">대기</div><div class="ev">2</div></div>
-              <div class="db-estc count"><div class="en">집계중</div><div class="ev">1</div></div>
-              <div class="db-estc done"><div class="en">종료</div><div class="ev">3</div><div class="en" style="margin-top:2px">가결 2 · 부결 1</div></div>
-            </div>
-            <div class="db-legend" style="margin-bottom:14px">
-              <span class="lg"><span class="sw" style="background:#0071f3"></span>찬성</span>
-              <span class="lg"><span class="sw" style="background:#ef4444"></span>반대</span>
-              <span class="lg"><span class="sw" style="background:#d4d4d8"></span>기권/기타</span>
-              <span class="lg"><span style="border-left:2px dashed #0a0a0a;height:12px;display:inline-block"></span> 가결 기준선</span>
-            </div>
-            <div style="overflow:auto">
-            <table class="db-atbl">
-              <thead><tr>
-                <th>의안번호</th><th>의안명 (투표유형)</th><th class="n">총 행사가능의결권</th><th class="n">행사주주</th><th class="n">행사의결권</th>
-                <th style="min-width:170px">찬성률 (총행사가능 기준)</th><th class="n">찬성률 (총행사 기준)</th><th class="c">결과</th>
-              </tr></thead>
-              <tbody>
-                <tr><td class="c">제1호</td><td>재무제표 승인의 건<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">156,880</td><td class="n">341,200,110</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:74.0%"></div><div class="db-line" style="left:25.00%"></div></div><div class="db-pct">74.0%</div></div></td><td class="n">96.4%</td><td class="c"><span class="db-res pass">가결</span></td></tr>
-                <tr class="grp"><td class="c">제2호</td><td>이사 선임의 건<span class="db-atag">일부선임</span></td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td>—</td><td class="n">—</td><td class="c">—</td></tr>
-                <tr><td class="c">제2-1호</td><td>사내이사 홍준표 선임<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">—</td><td class="n">—</td><td><div style="color:#a3a3a3;font-size:12px">집계 전</div></td><td class="n">—</td><td class="c"><span class="db-res wait">대기</span></td></tr>
-                <tr><td class="c">제2-2호</td><td>사외이사 김서연 선임<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">—</td><td class="n">—</td><td><div style="color:#a3a3a3;font-size:12px">집계 전</div></td><td class="n">—</td><td class="c"><span class="db-res wait">대기</span></td></tr>
-                <tr><td class="c">제3호</td><td>감사위원 사외이사 선임의 건<span class="db-atag">보통·합산3%룰</span></td><td class="n">461,090,220</td><td class="n">120,110</td><td class="n">98,700,220</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill rej" style="width:21.4%"></div><div class="db-line" style="left:25.00%"></div></div><div class="db-pct">21.4%</div></div></td><td class="n">70.1%</td><td class="c"><span class="db-res fail">종료 · 부결</span></td></tr>
-                <tr><td class="c">제4호</td><td>정관 일부 변경의 건<span class="db-atag">특별</span></td><td class="n">461,090,220</td><td class="n">—</td><td class="n">—</td><td><div style="color:#7c3aed;font-size:12px">집계 중…</div></td><td class="n">—</td><td class="c"><span class="db-res count">집계중</span></td></tr>
-                <tr><td class="c">제5호</td><td>이사 보수한도 승인의 건<span class="db-atag">보통</span></td><td class="n">461,090,220</td><td class="n">157,020</td><td class="n">332,900,540</td><td><div class="db-barwrap"><div class="db-bar"><div class="fill" style="width:72.2%"></div><div class="db-line" style="left:25.00%"></div></div><div class="db-pct">72.2%</div></div></td><td class="n">94.8%</td><td class="c"><span class="db-res pass">가결</span></td></tr>
-              </tbody>
-            </table>
+            <div class="db-tblc">
+              <table class="db-ft">
+                <thead><tr>
+                  <th style="width:66px">번호</th><th>의안명</th>
+                  <th class="n" style="width:160px">총 행사가능의결권</th>
+                  <th class="n" style="width:90px">행사주주</th>
+                  <th class="n" style="width:160px">행사의결권</th>
+                  <th class="n" style="width:160px">찬성률 (총행사가능)</th>
+                  <th class="n" style="width:160px">찬성률 (총행사)</th>
+                  <th class="c" style="width:100px">결과</th>
+                </tr></thead>
+                <tbody id="dbDayBody"></tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -695,7 +667,12 @@
     });
   });
   // 변경 법안 알림 배너 펼침/접힘
-  (function(){ var b=document.getElementById('lawBanner'), h=document.getElementById('lawTrig'); if(h){h.addEventListener('click',function(){b.classList.toggle('open');});} })();
+  (function(){
+    var b=document.getElementById('lawBanner'), h=document.getElementById('lawTrig'), m=document.getElementById('lawMore');
+    if(h) h.addEventListener('click',function(){ b.classList.toggle('open'); });
+    /* 요약 카드의 '더보기' 도 같은 배너를 연다 */
+    if(m) m.addEventListener('click',function(){ b.classList.add('open'); b.scrollIntoView({block:'nearest'}); });
+  })();
   // 메모 패널
   (function(){
     var ov=document.getElementById('memoOv'), op=document.getElementById('memoOpen'), cl=document.getElementById('memoClose');
@@ -744,6 +721,72 @@
         + '<span class="vv">' + cm(x.w) + '주</span></div>';
     }).join('');
   }
+
+  /* 현장 — 참석 채널 여섯 칸과 누적 막대 */
+  var ATT = [
+    { nm: '전자투표/위임장(국내)', c: '#0071F3', n: 21121,  w: 152300000 },
+    { nm: '전자투표/위임장(해외)', c: '#0066DF', n: 4820,   w: 52812880 },
+    { nm: '서면위임(자사)',        c: '#82BBFF', n: 512,    w: 68400000 },
+    { nm: '서면위임(타사)',        c: '#D4E8FF', n: 138,    w: 22100000 },
+    { nm: '서면투표',              c: '#EBF4FF', n: 1240,   w: 9800000 },
+    { nm: '현장 참석',             c: '#003A7F', n: 129189, w: 48900000 }
+  ];
+  (function () {
+    var g = document.getElementById('dbAttG'), bar = document.getElementById('dbAttBar');
+    if (!g || !bar) return;
+    var tw = ATT.reduce(function (a, x) { return a + x.w; }, 0);
+    var tn = ATT.reduce(function (a, x) { return a + x.n; }, 0);
+    document.getElementById('dbAttN').textContent = cm(tn) + '명';
+    g.innerHTML = ATT.map(function (x) {
+      return '<div class="db-chc2"><div class="lb"><span class="sw" style="background:' + x.c + '"></span>' + x.nm + '</div>'
+        + '<div class="v">' + cm(x.n) + '명</div><div class="s">' + cm(x.w) + '주</div></div>';
+    }).join('');
+    bar.innerHTML = ATT.map(function (x) {
+      return '<i style="width:' + (x.w / tw * 100).toFixed(2) + '%;background:' + x.c + '"></i>';
+    }).join('');
+  })();
+
+  /* 현장 의안 표 — 결과와 요약 세 칸을 같은 데이터에서 뽑는다 */
+  var DAY = [
+    { no: '제1호',   nm: '재무제표 승인의 건',         cat: '보통',     ex: 156880, w: 341200110, r2: 96.4, st: 'done' },
+    { no: '제2호',   nm: '이사 선임의 건',             cat: '일부선임', grp: true },
+    { no: '제2-1호', nm: '사내이사 홍준표 선임',       cat: '보통',     st: 'wait' },
+    { no: '제2-2호', nm: '사외이사 김서연 선임',       cat: '보통',     st: 'wait' },
+    { no: '제3호',   nm: '감사위원 사외이사 선임의 건', cat: '합산3%룰', ex: 120110, w: 98700220,  r2: 70.1, st: 'done' },
+    { no: '제4호',   nm: '정관 일부 변경의 건',        cat: '특별',     st: 'count', sp: true },
+    { no: '제5호',   nm: '이사 보수한도 승인의 건',    cat: '보통',     ex: 157020, w: 332900540, r2: 94.8, st: 'done' }
+  ];
+  (function () {
+    var body = document.getElementById('dbDayBody'); if (!body) return;
+    var leaf = DAY.filter(function (a) { return !a.grp; });
+    var pass = 0, fail = 0, run = 0;
+    body.innerHTML = DAY.map(function (a) {
+      if (a.grp) {
+        return '<tr class="grp"><td>' + a.no + '</td><td>' + a.nm + '<span class="db-cat">' + a.cat + '</span></td>'
+          + '<td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="c">—</td></tr>';
+      }
+      if (a.st !== 'done') {
+        run++;
+        var lb = a.st === 'count' ? '집계중' : '대기';
+        return '<tr><td>' + a.no + '</td><td>' + a.nm + '<span class="db-cat">' + a.cat + '</span></td>'
+          + '<td class="n">' + cm(AV) + '</td><td class="n">—</td><td class="n">—</td>'
+          + '<td class="n">—</td><td class="n">—</td>'
+          + '<td class="c"><span class="db-rb ' + (a.st === 'count' ? 'count' : 'wait') + '">' + lb + '</span></td></tr>';
+      }
+      var r1 = a.w / AV * 100, ok = r1 >= (a.sp ? 33.33 : 25);
+      if (ok) pass++; else fail++;
+      return '<tr><td>' + a.no + '</td><td>' + a.nm + '<span class="db-cat">' + a.cat + '</span></td>'
+        + '<td class="n">' + cm(AV) + '</td><td class="n">' + cm(a.ex) + '</td><td class="n">' + cm(a.w) + '</td>'
+        + '<td class="n">' + r1.toFixed(1) + '%</td><td class="n">' + a.r2.toFixed(1) + '%</td>'
+        + '<td class="c"><span class="db-rb ' + (ok ? 'pass' : 'fail') + '">' + (ok ? '가결' : '부결') + '</span></td></tr>';
+    }).join('');
+    document.getElementById('dbDayTot').textContent = leaf.length;
+    document.getElementById('dbDayRun').textContent = run;
+    document.getElementById('dbDayDone').textContent = pass + fail;
+    document.getElementById('dbDayDoneSub').textContent = '(가결 ' + pass + ' · 부결 ' + fail + ')';
+    var rf = document.getElementById('dbRefresh');
+    if (rf) rf.addEventListener('click', function () { if (window.cxToast) cxToast('현장 집계를 새로 불러왔습니다.'); });
+  })();
 
   /* 의안 표 — 가결·부결 예상은 여기서 세어 카드에 그대로 넘긴다 */
   var body = document.getElementById('dbAgBody');
