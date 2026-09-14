@@ -3233,7 +3233,16 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     document.querySelectorAll('#ansVis button').forEach(function(b){ b.addEventListener('click',function(){ setVis(b.getAttribute('data-v')); }); });
     document.getElementById('ansSubmit').addEventListener('click',function(){ if(!pend) return; var it=Q.filter(function(x){return x.id===pend;})[0]; if(it){ it.a=taD.value; it.st='완료'; it.pub=(vis==='pub'); } closeDlg(); selId=null; editId=null; render(); });
   }
-  document.querySelectorAll('.qtabs button').forEach(function(b){ b.addEventListener('click',function(){ qt=b.getAttribute('data-qt'); selId=null; document.querySelectorAll('.qtabs button').forEach(function(x){x.classList.toggle('on',x===b);}); render(); }); });
+  /* 왼쪽에서 고른 의안을 그대로 가져온다 — 두 곳이 다른 의안을 보고 있으면 헷갈린다 */
+  function followAgenda(){
+    var no=(window.OC&&OC.agenda)||'';
+    if(!no || no===spAgenda) return false;
+    if(CX.votingUnits.indexOf(no)<0) return false;
+    spAgenda=no; selId=null; return true;
+  }
+  document.querySelectorAll('.qtabs button').forEach(function(b){ b.addEventListener('click',function(){ qt=b.getAttribute('data-qt'); selId=null; followAgenda(); document.querySelectorAll('.qtabs button').forEach(function(x){x.classList.toggle('on',x===b);}); render(); }); });
+  /* 왼쪽에서 의안을 바꾸면 질의·발언도 따라 넘어간다 */
+  if(window.OC&&OC.on) OC.on(function(){ if(followAgenda()) render(); });
   (function(){
     var seg=document.querySelector('.seg2'); if(!seg) return;
     seg.addEventListener('click',function(e){
