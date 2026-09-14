@@ -267,10 +267,14 @@
     /* 표시만 걷어 낸 글 — 고쳐 쓸 때는 표시가 보이면 안 된다 */
     function plain(t) { return String(t == null ? '' : t).split(V0).join('').split(V1).join(''); }
     /* 채워 넣은 값과 아직 채우지 않은 {{ }} 를 같은 파란색으로 */
-    function marked(t) {
-      return esc(t).split(V0).join('<span class="v">').split(V1).join('</span>')
-        .replace(/\{\{[^{}]*\}\}/g, function (m) { return '<span class="v">' + m + '</span>'; });
+    function hi(h) {
+      return h.replace(/\{\{[^{}]*\}\}/g, function (m) { return '<span class="v">' + m + '</span>'; });
     }
+    function marked(t) {
+      return hi(esc(t).split(V0).join('<span class="v">').split(V1).join('</span>'));
+    }
+    /* 고쳐 쓸 때도 {{ }} 는 파란색 — 보이지 않는 표시만 걷어 낸다 */
+    function markedEdit(t) { return hi(esc(plain(t))); }
     function cur() { return ORDER[st.oi] || ORDER[0]; }
     function tabList() { return st.editing ? st.edit : cur().tabs; }
 
@@ -351,7 +355,7 @@
         return;
       }
       body.innerHTML = '<div class="pv-scr" id="pvScr"' + (st.editing ? ' contenteditable="true"' : '') + ' style="font-size:' + st.fs + 'px">'
-        + (st.editing ? esc(plain(t.s)) : marked(t.s)) + '</div>';
+        + (st.editing ? markedEdit(t.s) : marked(t.s)) + '</div>';
       if (st.editing) {
         var scr = document.getElementById('pvScr');
         scr.addEventListener('input', function () { st.edit[st.ti].s = scr.innerText; });
