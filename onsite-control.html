@@ -664,6 +664,7 @@
   .qmdot.blue{color:#0071F3}.qmdot.blue i{background:#0071F3}
   .qmdot.violet{color:#7C3AED}.qmdot.violet i{background:#7C3AED}
   .qmdot.amber{color:#EA580C}.qmdot.amber i{background:#EA580C}
+  .qmdot.red{color:#E9081B}.qmdot.red i{background:#E9081B}
   /* 공개 여부 — info 배경 뱃지. 비공개는 같은 뱃지를 반투명하게 둔다. */
   .qmpub{display:inline-flex;align-items:center;padding:2px 6px;border-radius:6px;background:#EEF5FF;color:#0071F3;font-size:12px;line-height:16px;font-weight:500}
   .qmpub.off{opacity:.5}
@@ -710,9 +711,16 @@
   .qmacc-b{display:none;flex-direction:column;gap:8px;padding:12px}
   .qmacc.on .qmacc-b{display:flex}
   .qmqrow{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #E5E5E5;border-radius:10px;background:#FAFAFA}
-  .qmqrow.live{background:#fff;border-color:#171717}
+  .qmqrow.live{background:#fff;border-color:#E9081B}
+  .qmqrow.live .qmqnm{color:#E9081B}
+  /* 지금 말하고 있는 사람 — 붉은 점으로 알린다 */
+  .qmqlive{display:inline-flex;align-items:center;gap:4px;font-size:12px;line-height:16px;
+    font-weight:600;color:#E9081B}
+  .qmqlive i{width:6px;height:6px;border-radius:50%;background:#E9081B;display:block;
+    animation:qmblink 1.2s infinite}
+  @keyframes qmblink{50%{opacity:.25}}
   .qmqno{width:20px;height:20px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;background:rgba(255,255,255,.8);border:1px solid #E5E5E5;font-size:12px;color:#171717}
-  .qmqrow.live .qmqno{background:#171717;border-color:#171717;color:#FAFAFA}
+  .qmqrow.live .qmqno{background:#E9081B;border-color:#E9081B;color:#FAFAFA}
   .qmqnm{font-size:14px;font-weight:500;letter-spacing:-.01em;color:#171717}
   .qmqag{font-size:12px;font-weight:500;color:#737373}
   .qmqrow .sp{margin-left:auto}
@@ -2089,8 +2097,9 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     return '<span class="qmpub'+(x.pub?'':' off')+'">'+(x.pub?'전체공개':'비공개')+'</span>';
   }
   function spDot(st){
-    if(st==='대기') return '<span class="qmdot violet"><i></i>대기열</span>';
-    if(st==='완료') return '<span class="qmdot violet"><i></i>대기열</span>';
+    /* 대기열은 주황 — 곧 마이크가 갈 사람이라 눈에 걸려야 한다 */
+    if(st==='대기') return '<span class="qmdot amber"><i></i>대기열</span>';
+    if(st==='완료') return '<span class="qmdot amber"><i></i>대기열</span>';
     if(st==='반려') return '<span class="qmdot" style="opacity:.5"><i></i>반려</span>';
     return '<span class="qmdot"><i></i>접수</span>';
   }
@@ -2159,7 +2168,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var seq=same.indexOf(x)+1;
     var amend=(x.kind==='수정동의');
     var acts = isQ
-      ? '<button class="dlg-btn" type="button">취소</button><button class="dlg-btn dark" type="button">답변 등록</button>'
+      ? '<button class="dlg-btn" type="button" data-act="clear">취소</button><button class="dlg-btn dark" type="button" data-act="ans">답변 등록</button>'
       : '<button class="dlg-btn'+(amend?' warn':'')+'" type="button" data-act="rej">반려</button>'
         + (amend ? '<button class="dlg-btn dark" type="button" data-act="amend">수정동의 상정</button>'
                  : '<button class="dlg-btn dark" type="button" data-act="add">대기열 등록</button>');
@@ -2192,6 +2201,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     return '<div class="qmqrow'+(live?' live':'')+(pick?' pick':'')+'" data-pick="'+x.id+'">'
       +'<span class="qmqno">'+(i+1)+'</span><span class="qmqnm">'+esc(x.name)+'</span>'
       +'<span class="qmqag">'+agOf(x)+'</span><span class="sp"></span>'
+      +(live?'<span class="qmqlive"><i></i>발언 중</span>':'')
       +(live?'<button class="qmqbtn" data-fin="'+x.id+'" type="button">발언 종료</button>':'')
       +'<button class="qmqbtn rm" data-q="'+x.id+'" type="button">제거</button></div>';
   }
@@ -2289,6 +2299,24 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       if(ta){ ta.value=tplOf(mode==='q')[+c.getAttribute('data-tpl')].t; ta.focus(); }
       return; }
     var a=e.target.closest('[data-act]'); if(!a) return;
+    var ta=document.getElementById('qmTa');
+    if(a.dataset.act==='clear'){ if(ta) ta.value=''; return; }
+    /* 답변 등록 — 실시간 운영과 같은 모달에서 공개 범위까지 고른다 */
+    if(a.dataset.act==='ans' && selId){
+      if(!ta || !ta.value.trim()){ if(window.cxToast) cxToast('답변 내용을 입력해 주세요.'); return; }
+      if(window.cxAnswer) window.cxAnswer(selId, ta.value.trim(), render);
+      return;
+    }
+    /* 반려 — 사유를 적어 두고 목록에서 흐리게 둔다. 대기열에 있었다면 뺀다. */
+    if(a.dataset.act==='rej' && selId){
+      var f=null; SPEECHES.forEach(function(y){ if(y.id===selId) f=y; });
+      if(!f) return;
+      f.st='반려'; f.inq=false; f.reason=(ta&&ta.value.trim())||'';
+      queue=queue.filter(function(x){ return x!==selId; });
+      render(); renderAcc();
+      if(window.cxToast) cxToast(f.name+' 님의 발언 신청을 반려했습니다.');
+      return;
+    }
     if(a.dataset.act==='add' && selId){ toggleQ(selId); return; }
     if(a.dataset.act==='amend' && selId && window.openAmend){
       var f=null; SPEECHES.forEach(function(y){ if(y.id===selId) f=y; });
@@ -3225,13 +3253,24 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     setVis(it.pub?'pub':'priv'); ovl.classList.add('on');
     document.getElementById('ansSubmit').focus();
   }
-  function closeDlg(){ ovl.classList.remove('on'); pend=null; }
+  function closeDlg(){ ovl.classList.remove('on'); pend=null; ansAfter=null; }
+  /* 질의·발언 관리 표도 같은 모달을 쓴다 — 답변은 한 곳에서만 등록한다 */
+  var ansAfter=null;
+  window.cxAnswer=function(id,text,after){ ansAfter=after||null; openDlg(id,text); };
   if(ovl){
     document.getElementById('ansCancel').addEventListener('click',closeDlg);
     document.getElementById('ansClose').addEventListener('click',closeDlg);
     ovl.addEventListener('click',function(e){ if(e.target===ovl) closeDlg(); });
     document.querySelectorAll('#ansVis button').forEach(function(b){ b.addEventListener('click',function(){ setVis(b.getAttribute('data-v')); }); });
-    document.getElementById('ansSubmit').addEventListener('click',function(){ if(!pend) return; var it=Q.filter(function(x){return x.id===pend;})[0]; if(it){ it.a=taD.value; it.st='완료'; it.pub=(vis==='pub'); } closeDlg(); selId=null; editId=null; render(); });
+    document.getElementById('ansSubmit').addEventListener('click',function(){
+      if(!pend) return;
+      var it=Q.filter(function(x){return x.id===pend;})[0];
+      if(it){ it.a=taD.value; it.st='완료'; it.pub=(vis==='pub'); }
+      var after=ansAfter;
+      closeDlg(); selId=null; editId=null; render();
+      if(after) after();
+      if(window.cxToast) cxToast('답변을 등록했습니다.');
+    });
   }
   /* 왼쪽에서 고른 의안을 그대로 가져온다 — 두 곳이 다른 의안을 보고 있으면 헷갈린다 */
   function followAgenda(){
