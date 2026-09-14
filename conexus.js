@@ -367,7 +367,7 @@
         });
       }
 
-      /* 필터 — 칸이 좁으면 달지 않는다 */
+      /* 필터 — 칸이 좁으면 달지 않는다. 달 수 있어도 글자를 덮으면 fitFilter 가 감춘다. */
       var w = th.getBoundingClientRect().width;
       /* 채널 칸이 표기라면 목록으로 고를 수 있게 해 준다 — 수치면 거를 것이 없다 */
       var ft = rl.ft || (rl.auto && !allNum ? 'list' : 0);
@@ -386,12 +386,14 @@
         th.appendChild(b);
       } else if (!canFilter) {
         var f = th.querySelector('.cx-fbtn'); if (f) f.remove();
-        th.classList.remove('cx-filterable');
+        th.classList.remove('cx-filterable', 'cx-tight');
       }
+      fitFilter(th);
     });
 
     applyFilters(t);
     tools(tbl, t);
+    watchFit(t, tbl);
 
     /* 본문을 다시 그리는 표가 많다 — 새 줄에도 같은 규칙이 붙도록 지켜본다 */
     if (!t.watch) {
@@ -402,6 +404,42 @@
       t.watch.observe(tb, { childList: true });
     }
   }
+
+  /* 아이콘이 헤더 글자와 겹치는지 재어 본다. 겹치면 cx-tight 를 달아 평소에는 감춘다. */
+  function fitFilter(th) {
+    if (!th.querySelector('.cx-fbtn')) return;
+    var cs = getComputedStyle(th);
+    var inner = th.getBoundingClientRect().width
+      - parseFloat(cs.paddingLeft || 0) - parseFloat(cs.paddingRight || 0);
+    /* 아직 자리가 잡히지 않았으면(숨은 표 등) 판단을 미룬다 — 섣불리 감추지 않는다 */
+    if (!inner) { th.classList.remove('cx-tight'); return; }
+    var tw = 0, r = document.createRange();
+    for (var i = 0; i < th.childNodes.length; i++) {
+      var n = th.childNodes[i];
+      if (n.nodeType === 3 && n.textContent.trim()) { r.selectNodeContents(n); tw = r.getBoundingClientRect().width; break; }
+    }
+    /* 아이콘 20px + 글자와의 사이 6px */
+    th.classList.toggle('cx-tight', tw + 26 > inner);
+  }
+  /* 칸 너비가 바뀔 때마다 다시 잰다 — 창 크기, 감춰 둔 표가 드러날 때, 컬럼을 숨겼을 때.
+     처음 그릴 때는 표가 숨어 있어 너비가 0 이라, 이 자리에서 다시 재지 않으면 잘못 판단한다. */
+  function watchFit(t, tbl) {
+    if (t.ro || !window.ResizeObserver) return;
+    t.ro = new ResizeObserver(function () { (t.ths || []).forEach(fitFilter); });
+    t.ro.observe(tbl);
+  }
+  /* 탭을 갈아 끼우면 그제야 칸 너비가 잡힌다. 누른 뒤 한 박자 쉬고 모두 다시 잰다. */
+  function refit() {
+    Array.prototype.forEach.call(document.querySelectorAll('th.cx-filterable'), fitFilter);
+  }
+  function refitSoon() {
+    requestAnimationFrame(function () { requestAnimationFrame(refit); });
+    setTimeout(refit, 120);
+  }
+  document.addEventListener('click', refitSoon, true);
+  /* 첫 화면은 글꼴이 내려오고 나서야 글자 폭이 확정된다 */
+  window.addEventListener('load', refitSoon);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(refitSoon);
 
   /* ── 표 위 도구 — 줄 간격 · 컬럼 표시 ──────────────────────────────────
      표 위 어딘가에 <span data-cx-tools></span> 만 두면 두 버튼이 그려진다.

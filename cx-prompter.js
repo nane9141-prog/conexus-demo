@@ -154,6 +154,46 @@
   /* 값을 채운 자리 — 화면에서 파랗게 보인다 */
   var V0 = '\u0001', V1 = '\u0002';
   function V(x) { return V0 + x + V1; }
+  /* {{변수}} 가 가리키는 값. 의안에 딸린 값은 지금 보고 있는 의안에서 가져온다. */
+  function varsOf(no) {
+    var d = (no && CX.center[no]) || {}, ty = d.type || '보통결의';
+    var present = (d['for'] || 0) + (d.against || 0) + (d.abs || 0);
+    var r1 = present ? ((d['for'] / present) * 100).toFixed(2) : '0.00';
+    var r2 = ((d['for'] || 0) / M.sharesIssued * 100).toFixed(2);
+    return {
+      '기준일': '2026년 3월 27일',
+      '발행주식총수': cm(M.sharesIssued) + ' 주',
+      '총 주주수': cm(M.holdersTotal) + ' 명',
+      '의결권 있는 주식수': cm(M.sharesVoting) + ' 주',
+      '총회 일시': M.dateText + ' ' + M.time,
+      '참석 주식수': cm(M.attendShares) + ' 주',
+      '참석 주주수': cm(M.attendHolders) + ' 명',
+      '출석률': (M.attendShares / M.sharesVoting * 100).toFixed(1) + ' %',
+      '주주총회명': M.org + ' ' + M.name,
+      '총 의안 수': CX.votingUnits.length + ' 건',
+      '의안 번호': no ? chip(no) + ' 의안' : '',
+      '의안명': d.name || '',
+      '결의 요건': ty,
+      '결의 요건 계산식': thrText(d),
+      '참석 주식수(중복투표 주식수 제외)': cm(present) + ' 주',
+      '(중립 분배 후) 찬성 주식수': cm(d['for'] || 0) + ' 주',
+      '(중립 분배 후) 반대 주식수': cm(d.against || 0) + ' 주',
+      '(중립 분배 후) 기권 주식수': cm(d.abs || 0) + ' 주',
+      '출석 의결권 대비 찬성률': r1 + ' %',
+      '총 의결권 대비 찬성률': r2 + ' %',
+      '가결 여부': '가결',
+      '발언 제한 시간': '4분',
+      '질의 접수 건수': ((window.QUESTIONS && window.QUESTIONS.length) || 0) + ' 건'
+    };
+  }
+  /* 저장할 때 한 번 — 아는 이름은 값으로 바꾸고, 모르는 이름은 그대로 둔다 */
+  function fillVars(text, no) {
+    var map = varsOf(no);
+    return String(text || '').replace(/\{\{([^{}]*)\}\}/g, function (m, key) {
+      var k = String(key).trim();
+      return (k in map) ? V(map[k]) : m;
+    });
+  }
 
   function thrText(d) {
     return (d.thrLabel || '').indexOf('2/3') >= 0
@@ -274,8 +314,7 @@
     function marked(t) {
       return hi(esc(t).split(V0).join('<span class="v">').split(V1).join('</span>'));
     }
-    /* 고쳐 쓸 때도 {{ }} 는 파란색 — 보이지 않는 표시만 걷어 낸다 */
-    function markedEdit(t) { return hi(esc(plain(t))); }
+    /* 고쳐 쓸 때도 같은 규칙으로 칠한다 — 표시는 스팬으로 바뀌어 글자로는 남지 않는다 */
     function cur() { return ORDER[st.oi] || ORDER[0]; }
     function tabList() { return st.editing ? st.edit : cur().tabs; }
 
@@ -356,7 +395,7 @@
         return;
       }
       body.innerHTML = '<div class="pv-scr" id="pvScr"' + (st.editing ? ' contenteditable="true"' : '') + ' style="font-size:' + st.fs + 'px">'
-        + (st.editing ? markedEdit(t.s) : marked(t.s)) + '</div>';
+        + marked(t.s) + '</div>';
       if (st.editing) {
         var scr = document.getElementById('pvScr');
         scr.addEventListener('input', function () { st.edit[st.ti].s = scr.innerText; });
@@ -459,7 +498,13 @@
       else if (id === 'pvWide') { st.wide = !st.wide; root.classList.toggle('wide', st.wide); }
       else if (id === 'pvEdit') { st.editing = true; st.edit = cur().tabs.map(function (x) { return { t: x.t, s: x.s }; }); render(); }
       else if (id === 'pvCancel') { st.editing = false; st.edit = null; st.ti = 0; render(); }
-      else if (id === 'pvSave') { cur().tabs = st.edit; st.editing = false; st.edit = null; st.ti = Math.min(st.ti, cur().tabs.length - 1); render(); if (global.cxToast) global.cxToast('스크립트를 저장했습니다.'); }
+      else if (id === 'pvSave') {
+        /* 불러온 템플릿의 {{ }} 자리를 이 의안의 값으로 채워 둔다 */
+        var ag = cur().ag;
+        cur().tabs = st.edit.map(function (x) { return { t: x.t, s: fillVars(x.s, ag) }; });
+        st.editing = false; st.edit = null; st.ti = Math.min(st.ti, cur().tabs.length - 1);
+        render(); if (global.cxToast) global.cxToast('스크립트를 저장했습니다.');
+      }
       else if (id === 'pvTpl') openTpl(btn);
     });
     document.addEventListener('keydown', function (e) {
