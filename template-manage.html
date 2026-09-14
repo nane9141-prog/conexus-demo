@@ -17,8 +17,23 @@
   .tpbase{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
   .tpbase .hint{font-size:12px;line-height:16px;letter-spacing:-.01em;color:#737373}
   .ffield .lb .cnt{margin-left:6px;font-weight:400;color:#A3A3A3}
+  .ffield .lb .opt{margin-left:4px;font-weight:400;color:#737373}
+  /* 드롭다운 — 열린 모습은 디자인 시스템의 .selpop 을 그대로 쓴다 */
+  .fselb{display:flex;align-items:center;gap:8px;cursor:pointer;text-align:left}
+  .fselb span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .fselb svg{width:16px;height:16px;flex:none;fill:none;stroke:#737373;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+  .fselb.open{border-color:#0A0A0A}
+  .fselb.open svg{transform:rotate(180deg)}
   /* 쓸 수 없는 조건의 드롭다운은 흐리게 둔다 */
-  .fsel:disabled{background:#F5F5F5;color:#A3A3A3;cursor:not-allowed}
+  .fselb:disabled{background:#F5F5F5;color:#A3A3A3;cursor:not-allowed}
+  .selpop.tpop{max-height:360px;overflow:auto;display:flex;flex-direction:column;gap:2px}
+  .tphelp{font-size:12px;line-height:16px;letter-spacing:-.01em;color:#737373}
+  .selgh{padding:6px 10px 2px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#737373}
+  /* 보기 모드 — 본문은 읽고 스크롤할 수 있게 두고 나머지는 손대지 못하게 한다 */
+  #tpEdit.locked .tpleft,#tpEdit.locked .tpvar{pointer-events:none}
+  #tpEdit.locked .tpwrap{pointer-events:auto}
+  #tpEdit.locked .fselb,#tpEdit.locked .finp{background:#F5F5F5;color:#737373}
+  #tpEdit.locked .fselb svg{opacity:.4}
   .tpbody{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px}
   .tpbox{box-sizing:border-box;flex:1;min-height:320px;display:flex;flex-direction:column;gap:20px;padding:20px;background:#fff;border:1px solid #E5E5E5;border-radius:14px}
   .tptools{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
@@ -203,6 +218,7 @@
         <div class="phead" style="padding-bottom:12px">
           <div class="l"><h1 id="tpTt" style="font-size:16px;line-height:24px">템플릿 등록</h1></div>
           <div class="acts">
+            <button class="fbtn" type="button" id="tpBack"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>목록</button>
             <button class="fbtn" type="button" id="tpPreview"><svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg>템플릿 미리보기</button>
             <button class="fbtn dark" type="button" id="tpSave">저장</button>
           </div>
@@ -216,38 +232,37 @@
             </div>
 
             <div class="tprow">
-              <div class="ffield"><div class="lb">템플릿 유형*</div>
-                <select class="fsel" id="tpKind"></select></div>
-              <div class="ffield"><div class="lb">전달 대상*</div>
+              <div class="ffield"><div class="lb">템플릿 유형</div>
+                <button class="fsel fselb" type="button" id="tpKind" data-v="개회사"><span>개회사</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
+              <div class="ffield"><div class="lb">전달 대상</div>
                 <div style="display:flex;align-items:center;gap:16px;height:32px" id="tpTo">
                   <label class="fchk on" data-rd data-v="의장"><span class="bx" style="border-radius:9999px"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>의장</label>
                   <label class="fchk" data-rd data-v="사회자"><span class="bx" style="border-radius:9999px"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>사회자</label>
                 </div></div>
             </div>
 
-            <div class="tprow">
-              <div class="ffield wide2"><div class="lb">의안 유형</div>
-                <select class="fsel" id="tpAgType" disabled></select></div>
-              <div class="ffield"><div class="lb">행사방식</div>
-                <select class="fsel" id="tpMethod" disabled><option>일반투표</option><option>양립불가</option><option>집중투표</option><option>일부선임</option></select></div>
-              <div class="ffield"><div class="lb">가결여부</div>
-                <select class="fsel" id="tpPass" disabled><option>가결</option><option>부결</option></select></div>
+            <div class="tprow" id="tpCond">
+              <div class="ffield wide2"><div class="lb">의안 유형<span class="opt">(선택)</span></div>
+                <button class="fsel fselb" type="button" id="tpAgType" data-v="재무제표 승인" disabled><span>재무제표 승인</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
+              <div class="ffield" id="tpMethodF" hidden><div class="lb">행사방식<span class="opt">(선택)</span></div>
+                <button class="fsel fselb" type="button" id="tpMethod" data-v="일반투표"><span>일반투표</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
             </div>
 
-            <div class="ffield"><div class="lb">제목*<span class="cnt" id="tpTtCnt">0/100</span></div>
+            <div class="ffield"><div class="lb">제목<span class="cnt" id="tpTtCnt">0/100</span></div>
               <input class="finp" id="tpTitle" type="text" maxlength="100" placeholder="제목을 입력하세요"></div>
 
             <div class="tpbody">
-              <div class="lb" style="font-size:14px;font-weight:500">본문*</div>
+              <div class="lb" style="font-size:14px;font-weight:500">본문</div>
               <div class="tpbox">
                 <div class="tptools">
                   <div class="bgrp"><button type="button" data-fs="-">−</button><button type="button" id="tpFs">14</button><button type="button" data-fs="+">+</button></div>
-                  <div class="bgrp" id="tpStyle">
-                    <button type="button" data-st="b" style="font-weight:700">굵게</button>
-                    <button type="button" data-st="i" style="font-style:italic">기울임</button>
-                    <button type="button" data-st="u" style="text-decoration:underline">밑줄</button>
-                    <button type="button" data-st="s" style="text-decoration:line-through">취소선</button>
+                  <div class="bgrp" id="tpView">
+                    <button type="button" data-vw="PC" class="on">PC</button>
+                    <button type="button" data-vw="태블릿">태블릿</button>
+                    <button type="button" data-vw="프롬프트">프롬프트</button>
+                    <button type="button" data-vw="큰화면">큰화면</button>
                   </div>
+                  <span class="tphelp">글자 크기는 화면별로 따로 저장됩니다.</span>
                   <span style="margin-left:auto"></span>
                   <button class="fbtn" type="button" id="tpUndo"><svg viewBox="0 0 24 24"><path d="M3 8h12a5 5 0 0 1 0 10h-4"/><path d="m7 4-4 4 4 4"/></svg>되돌리기</button>
                 </div>
@@ -268,6 +283,8 @@
     </div>
   </main>
 </div>
+
+<div class="selpop tpop hidden" id="tpPop"></div>
 
 <!-- 템플릿 미리보기 -->
 <div class="ovl" id="tpPvOv">
@@ -293,31 +310,35 @@
     { k: '의안 표결문', ag: true,  vote: true  },
     { k: '폐회사',     ag: false, vote: false }
   ];
+  var METHODS = ['일반투표', '양립불가', '집중투표', '일부선임'];
+  /* 본문을 내보내는 화면마다 읽는 거리가 달라서 글자 크기를 따로 둔다 */
+  var FS = { 'PC': 14, '태블릿': 18, '프롬프트': 32, '큰화면': 44 };
+  function copyFs(o) { var r = {}; for (var k in FS) r[k] = (o && o[k]) || FS[k]; return r; }
   function kindOf(k) { return KINDS.filter(function (x) { return x.k === k; })[0] || KINDS[0]; }
   /* 의안 유형은 주총 설정과 같은 목록(CX.agTypes)을 쓴다 */
   var AG_TYPES = CX.agTypes.reduce(function (a, g) { return a.concat(g[1]); }, []);
 
   var ROWS = [
-    { id: 1, base: 1, kind: '개회사', ag: '', method: '', pass: '', to: '사회자',
+    { id: 1, base: 1, kind: '개회사', ag: '', method: '', to: '사회자',
       nm: '개회 인사 및 성원 보고', vars: 4, d: '2026-01-08', by: '강하나' },
-    { id: 2, base: 1, kind: '주총 선언문', ag: '', method: '', pass: '', to: '의장',
+    { id: 2, base: 1, kind: '주총 선언문', ag: '', method: '', to: '의장',
       nm: '주주총회 개회 선언문', vars: 5, d: '2026-01-08', by: '강하나' },
-    { id: 3, base: 1, kind: '의안 상정문', ag: '재무제표 승인', method: '', pass: '', to: '의장',
+    { id: 3, base: 1, kind: '의안 상정문', ag: '재무제표 승인', method: '', to: '의장',
       nm: '재무제표 승인의 건 상정문', vars: 4, d: '2026-01-12', by: '박지용' },
-    { id: 4, base: 0, kind: '의안 상정문', ag: '이사선임', method: '', pass: '', to: '사회자',
+    { id: 4, base: 0, kind: '의안 상정문', ag: '이사선임', method: '', to: '사회자',
       nm: '이사 선임의 건 상정 안내', vars: 3, d: '2026-01-12', by: '박지용' },
-    { id: 5, base: 1, kind: '의안 표결문', ag: '정관변경', method: '일반투표', pass: '가결', to: '의장',
+    { id: 5, base: 1, kind: '의안 표결문', ag: '정관변경', method: '일반투표', to: '의장',
       nm: '정관 변경의 건 가결 선포문', vars: 6, d: '2026-01-10', by: '이수민' },
-    { id: 6, base: 0, kind: '의안 표결문', ag: '이사선임', method: '집중투표', pass: '가결', to: '의장',
+    { id: 6, base: 0, kind: '의안 표결문', ag: '이사선임', method: '집중투표', to: '의장',
       nm: '집중투표 선임 결과 선포문', vars: 6, d: '2025-12-20', by: '이수민' },
-    { id: 7, base: 1, kind: '폐회사', ag: '', method: '', pass: '', to: '사회자',
+    { id: 7, base: 1, kind: '폐회사', ag: '', method: '', to: '사회자',
       nm: '폐회 안내 및 귀가 안내', vars: 2, d: '2025-12-02', by: '박지용' }
   ];
 
   function draw() {
     $('tpBody').innerHTML = ROWS.map(function (r) {
-      /* 표결문은 행사방식·가결여부까지 붙여야 어떤 대본인지 구분된다 */
-      var cond = [r.ag, r.method, r.pass].filter(Boolean).join(' · ');
+      /* 표결문은 행사방식까지 붙여야 어떤 대본인지 구분된다 */
+      var cond = [r.ag, r.method].filter(Boolean).join(' · ');
       return '<tr><td class="c"><span class="sbadge' + (r.base ? ' b' : '') + '">' + (r.base ? '기본' : '추가') + '</span></td>'
         + '<td class="c mut">' + r.kind + '</td>'
         + '<td class="mut">' + (cond ? esc(cond) : '-') + '</td>'
@@ -437,60 +458,110 @@
   $('tpTa').addEventListener('input', hl);
   $('tpTa').addEventListener('scroll', hl);
 
-  $('tpKind').innerHTML = KINDS.map(function (x) { return '<option>' + x.k + '</option>'; }).join('');
-  $('tpAgType').innerHTML = CX.agTypes.map(function (g) {
-    return '<optgroup label="' + g[0] + '">'
-      + g[1].map(function (t) { return '<option>' + t + '</option>'; }).join('') + '</optgroup>';
-  }).join('');
-
-  /* 템플릿 유형이 정하는 것 — 의안 유형은 상정문·표결문에서만,
-     행사방식·가결여부는 표결문에서만 고를 수 있다. */
-  function syncKind() {
-    var k = kindOf($('tpKind').value);
-    $('tpAgType').disabled = !k.ag;
-    $('tpMethod').disabled = $('tpPass').disabled = !k.vote;
+  /* 드롭다운 — 고르는 목록만 넘기고, 열린 모습은 .selpop 이 맡는다.
+     groups 는 [묶음이름 또는 '', [항목…]] 의 배열이다. */
+  var pop = $('tpPop');
+  function selVal(b) { return b.getAttribute('data-v'); }
+  function selSet(b, v) { b.setAttribute('data-v', v); b.querySelector('span').textContent = v; }
+  function selClose() {
+    pop.classList.add('hidden');
+    document.querySelectorAll('.fselb.open').forEach(function (x) { x.classList.remove('open'); });
   }
-  $('tpKind').addEventListener('change', syncKind);
+  function selOpen(b, groups) {
+    var cur = selVal(b);
+    pop.innerHTML = groups.map(function (g) {
+      return (g[0] ? '<div class="selgh">' + g[0] + '</div>' : '')
+        + g[1].map(function (t) {
+            return '<button class="selopt' + (t === cur ? ' sel' : '') + '" type="button" data-t="' + t + '">'
+              + '<span class="sc">' + t + '</span>'
+              + '<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>';
+          }).join('');
+    }).join('');
+    pop.classList.remove('hidden'); b.classList.add('open');
+    var r = b.getBoundingClientRect();
+    pop.style.minWidth = r.width + 'px';
+    pop.style.left = Math.max(8, Math.min(r.left, window.innerWidth - pop.offsetWidth - 8)) + 'px';
+    var top = r.bottom + 6;
+    if (top + pop.offsetHeight > window.innerHeight - 8) top = Math.max(8, r.top - 6 - pop.offsetHeight);
+    pop.style.top = top + 'px';
+  }
+  function selBind(id, groups, after) {
+    var b = $(id);
+    b.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (b.disabled) return;
+      var wasOpen = b.classList.contains('open');
+      selClose();
+      if (wasOpen) return;
+      selOpen(b, groups);
+      pop.onclick = function (ev) {
+        ev.stopPropagation();
+        var o = ev.target.closest('[data-t]'); if (!o) return;
+        selSet(b, o.getAttribute('data-t')); selClose();
+        if (after) after();
+      };
+    });
+  }
+  document.addEventListener('click', selClose);
+  window.addEventListener('resize', selClose);
+
+  selBind('tpKind', [['', KINDS.map(function (x) { return x.k; })]], syncKind);
+  selBind('tpAgType', CX.agTypes);
+  selBind('tpMethod', [['', METHODS]]);
+
+  /* 템플릿 유형이 정하는 것 — 의안 유형은 상정문·표결문에서만 고를 수 있고,
+     행사방식은 표결문일 때만 나온다. */
+  function syncKind() {
+    var k = kindOf(selVal($('tpKind')));
+    $('tpAgType').disabled = !k.ag;
+    $('tpMethodF').hidden = !k.vote;
+  }
 
   /* 제목은 100자까지 */
   function syncTitle() { $('tpTtCnt').textContent = $('tpTitle').value.length + '/100'; }
   $('tpTitle').addEventListener('input', syncTitle);
 
-  /* 편집기 도구 — 시연이라 글자 크기와 강조만 실제로 먹인다 */
-  $('tpTa').style.fontSize = '14px';
-  document.querySelector('.tptools').addEventListener('click', function (e) {
-    var f = e.target.closest('[data-fs]');
-    if (f) {
-      var n = +$('tpFs').textContent + (f.getAttribute('data-fs') === '+' ? 1 : -1);
-      n = Math.max(12, Math.min(22, n));
-      $('tpFs').textContent = n;
-      $('tpTa').style.fontSize = $('tpHl').style.fontSize = n + 'px';
-      return;
-    }
-    var st = e.target.closest('[data-st]');
-    if (!st) return;
-    st.classList.toggle('on');
-    var ta = $('tpTa'), on = function (k) { return $('tpStyle').querySelector('[data-st="' + k + '"]').classList.contains('on'); };
-    [ta, $('tpHl')].forEach(function (el) {
-      el.style.fontWeight = on('b') ? '700' : '400';
-      el.style.fontStyle = on('i') ? 'italic' : 'normal';
-      el.style.textDecoration = (on('u') ? 'underline ' : '') + (on('s') ? 'line-through' : '') || 'none';
+  /* 편집기 도구 — 글자 크기는 보고 있는 화면 탭의 값이다 */
+  var view = 'PC', fs = copyFs(null);
+  function applyFs() {
+    $('tpFs').textContent = fs[view];
+    $('tpTa').style.fontSize = $('tpHl').style.fontSize = fs[view] + 'px';
+  }
+  function markView() {
+    $('tpView').querySelectorAll('[data-vw]').forEach(function (b) {
+      b.classList.toggle('on', b.getAttribute('data-vw') === view);
     });
+  }
+  $('tpView').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-vw]'); if (!b) return;
+    view = b.getAttribute('data-vw'); markView(); applyFs();
+  });
+  document.querySelector('.tptools').addEventListener('click', function (e) {
+    var f = e.target.closest('[data-fs]'); if (!f) return;
+    var n = fs[view] + (f.getAttribute('data-fs') === '+' ? 1 : -1);
+    fs[view] = Math.max(12, Math.min(72, n));
+    applyFs();
   });
   $('tpUndo').addEventListener('click', function () {
     $('tpTa').focus(); document.execCommand('undo'); hl();
   });
 
-  /* 목록 ↔ 편집기 */
-  var editing = null;
+  /* 목록 ↔ 편집기. 저장한 뒤에는 목록으로 튕기지 않고 그대로 잠근다. */
+  var editing = null, locked = false;
+  function setLocked(v) {
+    locked = v;
+    $('tpEdit').classList.toggle('locked', v);
+    $('tpTitle').readOnly = $('tpTa').readOnly = v;
+    $('tpSave').textContent = v ? '변경하기' : '저장';
+    $('tpTt').textContent = v ? '템플릿 상세' : (editing ? '템플릿 수정' : '템플릿 등록');
+  }
   function openEdit(r) {
     editing = r || null;
-    $('tpTt').textContent = r ? '템플릿 수정' : '템플릿 등록';
     $('tpTitle').value = r ? r.nm : '';
-    $('tpKind').value = r ? r.kind : KINDS[0].k;
-    $('tpAgType').value = (r && r.ag) || AG_TYPES[0];
-    $('tpMethod').value = (r && r.method) || '일반투표';
-    $('tpPass').value = (r && r.pass) || '가결';
+    selSet($('tpKind'), r ? r.kind : KINDS[0].k);
+    selSet($('tpAgType'), (r && r.ag) || AG_TYPES[0]);
+    selSet($('tpMethod'), (r && r.method) || METHODS[0]);
+    view = 'PC'; fs = copyFs(r && r.fs); markView(); applyFs();
     $('tpTo').querySelectorAll('[data-rd]').forEach(function (x) {
       x.classList.toggle('on', x.getAttribute('data-v') === ((r && r.to) || '의장'));
     });
@@ -503,12 +574,14 @@
       : '';
     hl();
     drawVars(-1);   /* 처음엔 전체목록 */
+    setLocked(!!r);  /* 목록에서 들어오면 우선 보기만 — 변경하기를 눌러야 고칠 수 있다 */
     $('tpList').style.display = 'none';
     $('tpEdit').style.display = 'flex';
   }
   function backToList() { $('tpEdit').style.display = 'none'; $('tpList').style.display = 'flex'; }
 
   $('tpAdd').addEventListener('click', function () { openEdit(null); });
+  $('tpBack').addEventListener('click', backToList);
   $('tpTbl').addEventListener('click', function (e) {
     var ed = e.target.closest('[data-edit]');
     if (ed) { openEdit(ROWS.filter(function (r) { return r.id === +ed.getAttribute('data-edit'); })[0]); return; }
@@ -520,14 +593,15 @@
     if (window.cxToast) cxToast('템플릿을 삭제했습니다.');
   });
   $('tpSave').addEventListener('click', function () {
-    var k = kindOf($('tpKind').value);
+    if (locked) { setLocked(false); return; }   /* 변경하기 */
+    var k = kindOf(selVal($('tpKind')));
     var row = {
       id: editing ? editing.id : Date.now(),
       base: $('tpBase').classList.contains('on') ? 1 : 0,
       kind: k.k,
-      ag: k.ag ? $('tpAgType').value : '',
-      method: k.vote ? $('tpMethod').value : '',
-      pass: k.vote ? $('tpPass').value : '',
+      ag: k.ag ? selVal($('tpAgType')) : '',
+      method: k.vote ? selVal($('tpMethod')) : '',
+      fs: copyFs(fs),
       to: $('tpTo').querySelector('.on').getAttribute('data-v'),
       nm: $('tpTitle').value.trim() || '이름 없는 템플릿',
       vars: ($('tpTa').value.match(/\{\{[^}]+\}\}/g) || []).length,
@@ -539,10 +613,11 @@
         if (x.id !== row.id && x.kind === row.kind && x.ag === row.ag) x.base = 0;
       });
     }
+    var isNew = !editing;
     if (editing) { for (var f in row) editing[f] = row[f]; }
-    else ROWS.push(row);
-    draw(); backToList();
-    if (window.cxToast) cxToast(editing ? '템플릿을 수정했습니다.' : '템플릿을 등록했습니다.');
+    else { ROWS.push(row); editing = row; }
+    draw(); setLocked(true);
+    if (window.cxToast) cxToast(isNew ? '템플릿을 등록했습니다.' : '템플릿을 수정했습니다.');
   });
   /* 미리보기 — 변수를 실제 값으로 바꿔 그대로 보여 준다.
      수치는 시연용 표본이고, 뽑을 수 있는 값은 CX 에서 그대로 가져온다. */
