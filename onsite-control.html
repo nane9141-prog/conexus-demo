@@ -1671,7 +1671,15 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(OC.done[no]) return 1;
     return (no===OC.agenda) ? ([0,0,0.5,0.85,1][OC.stage]||0) : 0;
   };
-  function liveFrac(){ return [0,0,0.5,0.85,1][OC.stage]||0; }
+  /* 투표 중에는 실제로 들어온 만큼만 반영한다. 단계가 바뀌는 순간 수치가 튀지 않도록,
+     현장 참여와 온라인 집계가 차오르는 속도를 그대로 따라간다. */
+  function liveFrac(){
+    if(OC.stage<2) return 0;
+    if(OC.stage>=3) return [0,0,0.5,0.85,1][OC.stage]||0;
+    var onlFull=CX.channels[2].w||1;
+    var p=(OC.siteN/(SITE_TOT||1) + OC.onlW/onlFull)/2;
+    return 0.5*Math.min(1,Math.max(0,p));
+  }
   /* 예상 판정 — 발행주식총수 기준과 출석의결권 기준을 모두 넘어야 가결 예상.
      하나라도 미달이면 부결 예상. (그래프의 두 기준선과 같은 계산) */
   function predOf(d){
@@ -1785,13 +1793,20 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   }
   function chanChannels(F,A,AB){
     var chans=chanRows();
-    var base=chans.reduce(function(a,c){return a+c.w;},0) || 1;
+    /* 사전 두 채널은 총회 전에 닫힌 표라 단계가 바뀌어도 값이 변하지 않는다.
+       현장·온라인만 표결이 열린 뒤 차오른다. */
+    var f=0.8+0.2*liveFrac(), preR=f?0.8/f:1;
+    var pre={f:F*preR, a:A*preR, ab:AB*preR};
+    var live={f:F-pre.f, a:A-pre.a, ab:AB-pre.ab};
+    var preBase=chans[0].w+chans[1].w || 1;
+    var liveBase=chans.slice(2).reduce(function(a,c){return a+(c.ready?c.w:0);},0) || 1;
     var sum={w:0,f:0,a:0,ab:0};
     /* 미행사분은 칸마다 적지 않고 헤더에 한 번만 총량으로 보여준다 */
     function wcell(w){ return '<td>'+comma(w)+'</td>'; }
-    var rows=chans.map(function(c){
-      var sh=c.ready?(c.w/base):0;
-      var w=c.ready?c.w:0, cf=Math.round(F*sh), ca=Math.round(A*sh), cab=Math.round(AB*sh);
+    var rows=chans.map(function(c,i){
+      var early=(i<2), src=early?pre:live;
+      var sh=early ? (c.w/preBase) : (c.ready?(c.w/liveBase):0);
+      var w=c.ready?c.w:0, cf=Math.round(src.f*sh), ca=Math.round(src.a*sh), cab=Math.round(src.ab*sh);
       sum.w+=w; sum.f+=cf; sum.a+=ca; sum.ab+=cab;
       var stt = c.badge;
       return '<tr><td class="l">'+c.nm+'</td>'+wcell(w)+'<td>'+comma(cf)+'</td><td>'+comma(ca)+'</td><td>'+comma(cab)+'</td><td class="c">'+stt+'</td></tr>';
@@ -1939,13 +1954,15 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function bumpSite(){
     if(OC.stage!==2) return;
     var moved=false;
-    if(OC.siteN<SITE_TOT && Math.random()<0.7){
+    /* 30명이 3분 남짓에 걸쳐 들어오는 속도 — 시연에서 눈으로 따라갈 수 있을 만큼 */
+    if(OC.siteN<SITE_TOT && Math.random()<0.18){
       OC.siteN++; OC.siteW+=800+Math.round(Math.random()*900); moved=true;
     }
-    /* 온라인 투표도 표결이 열린 동안 의결권이 쌓인다 */
+    /* 온라인 투표도 표결이 열린 동안 천천히 쌓인다 — 2분쯤에 다 들어온다 */
     var onlFull=CX.channels[2].w;
     if(OC.onlW<onlFull){
-      OC.onlW=Math.min(onlFull, OC.onlW+Math.round(onlFull/22)); moved=true;
+      OC.onlW=Math.min(onlFull, OC.onlW+Math.round(onlFull/120*(0.6+Math.random()*0.8)));
+      moved=true;
     }
     if(!moved) return;
     updateMetric();
