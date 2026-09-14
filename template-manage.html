@@ -17,7 +17,6 @@
   .tpbase{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
   .tpbase .hint{font-size:12px;line-height:16px;letter-spacing:-.01em;color:#737373}
   .ffield .lb .cnt{margin-left:6px;font-weight:400;color:#A3A3A3}
-  .ffield .lb .opt{margin-left:4px;font-weight:400;color:#737373}
   /* 드롭다운 — 열린 모습은 디자인 시스템의 .selpop 을 그대로 쓴다 */
   .fselb{display:flex;align-items:center;gap:8px;cursor:pointer;text-align:left}
   .fselb span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -242,10 +241,10 @@
             </div>
 
             <div class="tprow" id="tpCond">
-              <div class="ffield wide2"><div class="lb">의안 유형<span class="opt">(선택)</span></div>
+              <div class="ffield wide2"><div class="lb">의안 유형</div>
                 <button class="fsel fselb" type="button" id="tpAgType" data-v="재무제표 승인" disabled><span>재무제표 승인</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
-              <div class="ffield" id="tpMethodF" hidden><div class="lb">행사방식<span class="opt">(선택)</span></div>
-                <button class="fsel fselb" type="button" id="tpMethod" data-v="일반투표"><span>일반투표</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
+              <div class="ffield"><div class="lb">행사방식</div>
+                <button class="fsel fselb" type="button" id="tpMethod" data-v="일반투표" disabled><span>일반투표</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div>
             </div>
 
             <div class="ffield"><div class="lb">제목<span class="cnt" id="tpTtCnt">0/100</span></div>
@@ -514,7 +513,7 @@
   function syncKind() {
     var k = kindOf(selVal($('tpKind')));
     $('tpAgType').disabled = !k.ag;
-    $('tpMethodF').hidden = !k.vote;
+    $('tpMethod').disabled = !k.vote;
   }
 
   /* 제목은 100자까지 */
