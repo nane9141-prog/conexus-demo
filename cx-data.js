@@ -78,6 +78,21 @@
     ] }
   ];
 
+  /* ---------- 3-1) 의안 유형 (주총 설정·대본 템플릿 공용) ----------
+   * 시스템이 제공하는 전체 목록. 의안을 등록할 때와 대본 템플릿을 만들 때
+   * 같은 목록을 골라야 하므로 여기 한 곳에 둔다. */
+  var agTypes = [
+    ['결산 및 배당(재무관련)', ['재무제표 승인', '이익배당']],
+    ['정관 변경', ['정관변경', '정관변경(집중투표 배제 및 해지)']],
+    ['임원 선임 및 해임(지배구조)', ['이사선임', '이사해임', '감사선임', '감사해임',
+      '감사위원회 감사위원 선임(사외이사)', '감사위원회 감사위원 선임(독립이사)', '감사위원회 감사위원 선임(일반)',
+      '감사위원회 감사위원 해임(사외이사)', '감사위원회 감사위원 해임(독립이사)', '감사위원회 감사위원 해임(일반)']],
+    ['임원 보수', ['이사 보수한도 승인', '감사 보수한도 승인']],
+    ['기업 재편', ['합병계약서의 승인', '분할계획서의 승인', '분할합병계약서의 승인',
+      '영업의 양도/양수 및 포괄적 계약 체결 승인']],
+    ['기타', ['기타']]
+  ];
+
   /* ---------- 4) 의안별 표결 상세 (현장 제어·집계·행사현황 공용) ---------- */
   var center = {
     '제1호':   { cat: '제1호', type: '보통결의', name: '재무제표 승인의 건',
@@ -158,7 +173,7 @@
     discarded: function (no) { return DISCARD[decided] === no; }
   };
 
-  global.CX = { meeting: meeting, channels: channels, agenda: agenda, center: center, votingUnits: votingUnits, decided: decided,
+  global.CX = { meeting: meeting, channels: channels, agenda: agenda, agTypes: agTypes, center: center, votingUnits: votingUnits, decided: decided,
                 answerTpl: answerTpl, rejectTpl: rejectTpl, chairTags: chairTags, util: util };
   if (typeof module !== 'undefined' && module.exports) module.exports = global.CX;
 
