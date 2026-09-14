@@ -319,8 +319,14 @@
     if (!hrow || !tb) return;
     var t = tbl.__cx;
     if (!t) { t = tbl.__cx = { tbl: tbl, tb: tb, filters: {}, draft: {}, rowh: 0 }; }
-    /* colgroup으로 칸 너비를 이미 정한 표 — 너비를 다시 쓰면 칸이 무너진다 */
+    /* colgroup 으로 칸 너비를 직접 적어 둔 표 — 너비를 다시 쓰면 칸이 무너진다 */
     var fixed = getComputedStyle(tbl).tableLayout === 'fixed';
+    /* 너비를 적어 두지도 않고 fixed 로 둔 표는 칸이 균등분할된다 —
+       글자 길이에 맞춰 줄이려면 auto 로 두어야 한다 */
+    if (fixed && !tbl.querySelector('col[style*="width"],col[width]')) {
+      tbl.style.tableLayout = 'auto';
+      fixed = false;
+    }
     t.tb = tb;
     t.ths = Array.prototype.slice.call(hrow.cells);
     var rows = bodyRows(tb);
@@ -342,12 +348,16 @@
       /* 찬반 칸은 표마다 다르다 — 집계 수치면 오른쪽, 체크 표기면 가운데.
          헤더는 본문을 따라가야 글자가 어긋나지 않는다. */
       function isNum(c) { var v = txt(c); return v !== '' && !isNaN(num(v)); }
-      var allNum = cells.length > 0 && cells.every(isNum);
+      /* 빈 칸은 세지 않는다 — 한 줄이 비었다고 머리글이 가운데로 튀면 글자가 어긋난다 */
+      var filled = cells.filter(function (c) { return txt(c) !== ''; });
+      var allNum = filled.length > 0 && filled.every(isNum);
       if (rl.vote) voteHead(th, lb);
-      if (lb) { th.style.textAlign = rl.vote ? C : (rl.auto ? (allNum ? R : C) : al); }
+      if (lb) { th.style.textAlign = (rl.vote || rl.auto) ? (allNum ? R : C) : al; }
+      /* 왼쪽 맞춤 칸은 필터 버튼을 글자 옆에 둔다 — 칸이 넓으면 오른쪽 끝은 너무 멀다 */
+      th.classList.toggle('cx-al-l', !!lb && !rl.vote && !rl.auto && al === L);
       cells.forEach(function (c) {
         c.style.textAlign = (rl.vote || rl.auto)
-          ? ((c.querySelector('input') || isNum(c)) ? R : C)
+          ? ((c.querySelector('input') || isNum(c) || txt(c) === '') ? (allNum ? R : C) : C)
           : al;
         if (rl.bold) c.style.fontWeight = '600';
       });

@@ -82,6 +82,61 @@
   .vr-panel.active{display:block}
   @media(max-width:1000px){.vr-kpi{grid-template-columns:repeat(2,1fr)}.vr-grid2{grid-template-columns:1fr}}
 
+  /* 권유 — 목표와 현황을 한 장에서 */
+  .gcard{position:relative;display:flex;align-items:flex-start;gap:24px;padding:16px;background:#fff;
+    border:1px solid var(--border);box-shadow:0 1px 2px rgba(0,0,0,.05);border-radius:10px;margin-bottom:16px}
+  .gcard .gl{display:flex;flex-direction:column;gap:24px;width:460px;flex:none}
+  .gcard .gt{font-size:18px;line-height:28px;font-weight:600;color:#0a0a0a}
+  .gcard .gnote{font-size:12px;line-height:16px;color:#737373}
+  .gsep{width:1px;align-self:stretch;background:var(--border);flex:none}
+  .gblk{display:flex;flex-direction:column;gap:12px}
+  .gblk>.k{font-size:14px;line-height:1;font-weight:600;color:#737373}
+  .gbar{display:flex;flex-direction:column;gap:8px}
+  .gbar .r{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .gbar .l{display:flex;align-items:center;gap:8px;font-size:14px;line-height:1;font-weight:600;color:#0a0a0a}
+  .gbar .l .mut{color:#737373}
+  .gbar .l .vs{width:1px;height:14px;background:var(--border)}
+  .gbar .p{font-size:18px;line-height:1;font-weight:600;color:#0071f3}
+  .gbar .p.dark{color:#0a0a0a}
+  .gbar .t{height:24px;border-radius:4px;background:#f5f5f5;overflow:hidden}
+  .gbar .t i{display:block;height:100%;background:linear-gradient(90deg,#82bbff,#0071f3)}
+  .gbar .t.ink i{background:linear-gradient(90deg,#737373,#171717)}
+  .gright{flex:1;min-width:0;display:flex;align-items:flex-start;gap:24px;padding:6px 0}
+  .gnum{display:flex;flex-direction:column;gap:16px;width:320px;flex:none}
+  .gnum>.k{font-size:14px;line-height:1;font-weight:600;color:#737373}
+  .gsum{display:flex;flex-direction:column;gap:8px;padding:14px;background:#fff;border-radius:8px}
+  .gsum .a{font-size:16px;line-height:1;font-weight:600;color:#0a0a0a}
+  .gsum .b{font-size:12px;line-height:1;font-weight:500;color:#737373}
+  .glegend{display:flex;flex-direction:column;gap:12px}
+  .glegend .row{display:flex;align-items:center;gap:6px;padding:0 2px;font-size:14px;line-height:20px;color:#0a0a0a}
+  .glegend .sq{width:12px;height:12px;border-radius:2px;flex:none}
+  .glegend .v{margin-left:auto;font-weight:600;color:#171717}
+  .glegend .v.mut{color:#737373}
+  .glegend .hr{height:1px;background:var(--border)}
+  .gedit{width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;
+    border:1px solid var(--border);border-radius:8px;background:#fff;color:#171717;cursor:pointer;padding:0}
+  .gedit svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
+  .gin{width:120px;height:24px;margin-left:auto;padding:0 8px;border:1px solid #a3a3a3;border-radius:8px;
+    font-family:inherit;font-size:14px;font-weight:600;text-align:right;color:#171717;outline:none}
+  .gpie{position:relative;flex:1;min-width:232px;display:flex;align-items:center;justify-content:center}
+  .gpie .d{width:232px;height:232px;border-radius:50%}
+  .gpie .d:after{content:"";position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;
+    background:#fff;border-radius:50%}
+  .gpie .c{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1;
+    font-size:18px;line-height:1;font-weight:600;color:#0a0a0a}
+  .gdl{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 10px;
+    border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;
+    font-weight:500;color:#171717;cursor:pointer}
+  .gcard>.gdl{position:absolute;right:16px;top:16px}
+  .gdl svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round}
+  .gdate{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 10px;border:1px solid var(--border);
+    border-radius:10px;background:#fff;font-size:14px;color:#0a0a0a}
+  .gdate svg{width:16px;height:16px;fill:none;stroke:#0a0a0a;stroke-width:1.5;stroke-linecap:round}
+  .solfoot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px;
+    border-top:1px solid var(--border);background:#fafafa;font-size:12px;color:#1f1c18}
+  .solfoot .pg{color:#525252}
+  @media(max-width:1200px){.gcard{flex-direction:column}.gcard .gl{width:auto}.gsep{display:none}}
+
   /* 권유대행 현황 */
   .sol-meta{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted-fg);margin-bottom:12px}
   .sol-meta .rst{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border:1px solid var(--border);border-radius:8px;background:#fff;color:#171717;font-weight:500;cursor:pointer}
@@ -211,6 +266,40 @@
       if(t.dataset.vt==='solicit') t.addEventListener('click',function(){ setTimeout(initChart,60); });
     });
     if(document.querySelector('.vr-panel[data-vp="solicit"].active')) setTimeout(initChart,120);
+    // 목표 및 현황 — 회사가 직접 확보한 몫만 고쳐 가며 본다
+    (function(){
+      var IRK=118000000, GOAL=160000000, co=24800000;
+      function cm(n){ return Math.round(n).toLocaleString('en-US'); }
+      function set(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; }
+      function draw(){
+        var got=IRK+co, left=Math.max(0,GOAL-got);
+        var p1=Math.min(100,got/GOAL*100), p2=Math.min(100,IRK/GOAL*100);
+        set('gHold',cm(got)); set('gGoal1',cm(GOAL)); set('gHoldP',p1.toFixed(1)+'%');
+        set('gVote',cm(IRK)); set('gGoal2',cm(GOAL)); set('gVoteP',p2.toFixed(1)+'%');
+        document.getElementById('gHoldB').style.width=p1+'%';
+        document.getElementById('gVoteB').style.width=p2+'%';
+        set('gSumA',cm(got)); set('gSumB',cm(GOAL));
+        set('gLegIrk',cm(IRK)); set('gLegCo',cm(co)); set('gLegLeft',cm(left));
+        set('gPieV',p1.toFixed(1)+'%');
+        var a=IRK/GOAL*100, b=Math.min(co/GOAL*100,100-a);
+        document.getElementById('gPie').style.background=
+          'conic-gradient(#171717 0 '+a+'%,#0071f3 '+a+'% '+(a+b)+'%,#e5e5e5 '+(a+b)+'% 100%)';
+      }
+      var btn=document.getElementById('gEdit'), inp=document.getElementById('gCoIn'), out=document.getElementById('gLegCo');
+      if(btn&&inp&&out){
+        btn.addEventListener('click',function(){
+          inp.value=cm(co); out.hidden=true; inp.hidden=false; inp.focus(); inp.select();
+        });
+        var done=function(){
+          var v=parseInt((inp.value||'').replace(/[^0-9]/g,''),10);
+          if(!isNaN(v)) co=Math.max(0,v);
+          inp.hidden=true; out.hidden=false; draw();
+        };
+        inp.addEventListener('blur',done);
+        inp.addEventListener('keydown',function(e){ if(e.key==='Enter') inp.blur(); });
+        draw();
+      }
+    })();
     // slider
     var irk=118000000, trend=30000000, target=160000000;
     var sl=document.getElementById('simSlider');
@@ -419,31 +508,20 @@
           </div>
 
           <div class="card tblcard" style="padding:0">
-            <div class="sec-head"><div class="h">의안별 행사 현황</div><div class="d">사전 행사 의결권 262,140,000주 기준 · 찬성률은 확정 개표와 동일한 기준을 적용한 예상치입니다.</div></div>
+            <div class="sec-head"><div class="h">의안별 행사 현황</div><div class="d">현장 참석 주주수에 따라 결과가 달라질 수 있습니다.</div></div>
             <div class="tbl-wrap" style="border:none;border-top:1px solid var(--border);border-radius:0">
-              <table class="tbl agex">
+              <table class="tbl agex" id="vrAgTbl">
                 <thead><tr>
-                  <th style="width:78px">의안번호</th>
+                  <th>번호</th>
                   <th>의안명</th>
                   <th class="num">총 행사가능의결권</th>
-                  <th class="num">행사의결권</th>
                   <th class="num">행사주주</th>
-                  <th class="num">발행총주식수<br><span style="font-weight:400;color:var(--muted-fg);font-size:11px">찬성률</span></th>
-                  <th class="num">총행사의결권<br><span style="font-weight:400;color:var(--muted-fg);font-size:11px">찬성률</span></th>
-                  <th style="width:96px">예상</th>
+                  <th class="num">행사의결권</th>
+                  <th class="num">찬성률 (총행사가능)</th>
+                  <th class="num">찬성률 (총행사)</th>
+                  <th class="c">예상</th>
                 </tr></thead>
-                <tbody>
-                  <tr><td>제1호</td><td>재무제표 승인의 건</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">44.4%</td><td class="num">80.6%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
-                  <tr><td>제2-1호</td><td>집중투표제 배제 조항 삭제의 건</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">31.9%</td><td class="num">57.9%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
-                  <tr><td>제2-2호</td><td>전자주주총회 도입 관련 변경</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">44.1%</td><td class="num">80.2%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
-                  <tr><td>제2-3호</td><td>의결권 대리행사 수단 확대</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">44.1%</td><td class="num">80.2%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
-                  <tr><td>제3-1호</td><td>집중투표 후보 4인 중 2인 선임의 건 <span class="ubadge secondary" style="margin-left:4px">집중투표</span></td><td class="num">952,423,928</td><td class="num">524,280,000</td><td class="num">18,450명</td><td class="num"></td><td class="num"></td><td></td></tr>
-                  <tr><td>제3-1-1호</td><td>사외이사 김근수 선임의 건</td><td class="num vr-mut">-</td><td class="num">410,471,124</td><td class="num vr-mut">-</td><td class="num" colspan="2">68.4%</td><td><span class="badge-exp elect">선임 예상</span></td></tr>
-                  <tr><td>제3-1-2호</td><td>사외이사 진웅섭 선임의 건</td><td class="num vr-mut">-</td><td class="num">121,475,008</td><td class="num vr-mut">-</td><td class="num" colspan="2">20.2%</td><td><span class="badge-exp elect">선임 예상</span></td></tr>
-                  <tr><td>제3-1-3호</td><td>사외이사 남상일 선임의 건</td><td class="num vr-mut">-</td><td class="num">58,810,427</td><td class="num vr-mut">-</td><td class="num" colspan="2">9.8%</td><td><span class="badge-exp rej">부결 예상</span></td></tr>
-                  <tr><td>제3-1-4호</td><td>사외이사 박선화 선임의 건</td><td class="num vr-mut">-</td><td class="num">9,243,441</td><td class="num vr-mut">-</td><td class="num" colspan="2">1.6%</td><td><span class="badge-exp rej">부결 예상</span></td></tr>
-                  <tr><td>제3-2호</td><td>감사위원이 되는 사외이사 선임의 건</td><td class="num">476,211,964</td><td class="num">262,140,000</td><td class="num">18,450명</td><td class="num">43.8%</td><td class="num">79.6%</td><td><span class="badge-exp pass">가결 예상</span></td></tr>
-                </tbody>
+                <tbody id="vrAgBody"></tbody>
               </table>
             </div>
           </div>
@@ -451,66 +529,83 @@
 
         <!-- ===== 의결권 권유대행 현황 ===== -->
         <div class="vr-panel" data-vp="solicit">
-          <div class="vr-kpi" style="margin-bottom:16px">
-            <div class="kcard"><div class="kk">누적 확보 (IR큐더스)</div><div class="kv">142,800,000<span class="unit">주</span></div><div class="kd">기준 목표의 89.3% 달성</div></div>
-            <div class="kcard"><div class="kk">의결정족수 기준 목표</div><div class="kv">160,000,000<span class="unit">주</span></div><div class="kd">2026-03-19 마감</div></div>
-            <div class="kcard"><div class="kk">확보 주주수</div><div class="kv">8,420<span class="unit">명</span></div><div class="kd">전체 650,000명</div></div>
-            <div class="kcard"><div class="kk">일평균 확보</div><div class="kv">20,400,000<span class="unit">주</span></div><div class="kd" style="color:#ea580c">최근 7일 기준</div></div>
+          <div class="gcard">
+            <button class="gdl" type="button"><svg viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16"/></svg>다운로드</button>
+            <div class="gl">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div class="gt">목표 및 현황</div>
+                <div class="gnote">※ 의결권 제한 설정에 따라 확보한 보유주식과 행사가능 의결권의 차이가 있을 수 있습니다.<br>※ 정확한 데이터 확인을 위해 회사 직접 확보 의결권을 입력·수정해 주세요.</div>
+              </div>
+              <div class="gblk">
+                <div class="k">보유주식 확보 현황</div>
+                <div class="gbar">
+                  <div class="r"><div class="l"><span>확보 <b id="gHold">0</b>주</span><span class="vs"></span><span class="mut">목표 <b id="gGoal1">0</b>주</span></div>
+                    <div class="p" id="gHoldP">0%</div></div>
+                  <div class="t"><i id="gHoldB" style="width:0%"></i></div>
+                </div>
+              </div>
+              <div class="gblk">
+                <div class="k">행사가능 의결권 확보 현황</div>
+                <div class="gbar">
+                  <div class="r"><div class="l"><span>확보 <b id="gVote">0</b>주</span><span class="vs"></span><span class="mut">목표 <b id="gGoal2">0</b>주</span></div>
+                    <div class="p dark" id="gVoteP">0%</div></div>
+                  <div class="t ink"><i id="gVoteB" style="width:0%"></i></div>
+                </div>
+              </div>
+            </div>
+            <div class="gsep"></div>
+            <div class="gright">
+              <div class="gnum">
+                <div class="k">확보 현황 수치</div>
+                <div class="gsum"><div class="a">확보 <span id="gSumA">0</span>주</div><div class="b">의결정족수 <span id="gSumB">0</span>주</div></div>
+                <div class="glegend">
+                  <div class="row"><span class="sq" style="background:#171717"></span>IR큐더스<span class="v" id="gLegIrk">0</span></div>
+                  <div class="hr"></div>
+                  <div class="row"><span class="sq" style="background:#0071f3"></span>회사 직접 확보
+                    <button class="gedit" id="gEdit" type="button" title="회사 직접 확보 수정"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg></button>
+                    <span class="v" id="gLegCo">0</span>
+                    <input class="gin" id="gCoIn" type="text" hidden></div>
+                  <div class="hr"></div>
+                  <div class="row"><span class="sq" style="background:#e5e5e5"></span>잔여<span class="v mut" id="gLegLeft">0</span></div>
+                </div>
+              </div>
+              <div class="gpie"><div class="d" id="gPie"></div><div class="c" id="gPieV">0%</div></div>
+            </div>
           </div>
 
           <div class="card" style="margin-bottom:16px">
-            <div class="ttl-row"><span class="cardttl">IR큐더스 수집 현황</span><span style="font-size:12px;color:var(--muted-fg)">2026-01-01 ~ 2026-01-07</span></div>
+            <div class="ttl-row"><span class="cardttl">IR큐더스 수집 현황</span>
+              <span style="display:flex;align-items:center;gap:8px">
+                <span class="gdate"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></svg>2026-01-01 ~ 2026-01-07</span>
+                <select id="irkRange"><option>일</option><option>주</option><option>월</option></select>
+              </span></div>
             <div class="chart-box"><canvas id="irkChart"></canvas></div>
           </div>
 
-          <div class="card" style="margin-bottom:16px">
-            <div class="cardttl" style="margin-bottom:14px">목표 시뮬레이션</div>
-            <div class="sim-grid">
-              <div>
-                <div class="sim-list">
-                  <div class="sim-row"><span class="sq" style="background:#171717"></span>현재 누적 확보(IRK)<span class="rv">118,000,000</span></div>
-                  <div class="sim-row"><span class="sq" style="background:#71717a"></span>현재 추세 추가 확보 예상<span class="rv">30,000,000</span></div>
-                  <div class="sim-row"><span class="sq" style="background:#82bbff"></span>회사 직접 확보(시뮬레이션)<span class="rv" id="simCompany" style="color:#82bbff">0</span></div>
-                  <div class="sim-row"><span class="sq" style="background:#d4d4d8"></span>잔여<span class="rv" id="simRemain">12,000,000</span></div>
-                  <div class="sim-sep"></div>
-                  <div class="sim-row" style="font-weight:600">목표(합계)<span class="rv" id="simTarget">160,000,000</span></div>
-                </div>
-                <div class="sim-note">※ 정확한 데이터 확인을 위해 회사 직접 확보 주식을 입력·조정해 주세요.</div>
-              </div>
-              <div>
-                <div class="sim-info">
-                  <div class="ic-box"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
-                  <div><div class="t" id="simStatT">기준 미달 · 12,000,000주 부족</div><div class="d" id="simStatD">회사가 우호 지분을 더 확보하거나, 일 수집 달성을 더 늘려야 합니다.</div></div>
-                </div>
-                <div class="sim-bar" id="simBar"></div>
-                <div class="sim-box">
-                  <div class="in-row"><span class="lab">회사 직접 확보 주식</span><span class="val" id="simVal">0</span></div>
-                  <input type="range" id="simSlider" min="0" max="30000000" step="1000000" value="0">
-                  <div class="scale"><span>0</span><span>30,000,000</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
 
           <div class="card tblcard" style="padding:0">
-            <div class="sec-head"><div class="h">실시간 주주 확보 현황</div></div>
+            <div class="sec-head" style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <div class="h">실시간 주주 확보 현황</div>
+              <button class="gdl" type="button"><svg viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16"/></svg>다운로드</button>
+            </div>
             <div class="tbl-wrap" style="border:none;border-top:1px solid var(--border);border-radius:0">
               <table class="tbl agex">
-                <thead><tr><th>수집일시</th><th>주주명</th><th class="num">보유주식수</th><th class="c">생년월일</th><th class="num">나이</th><th class="c">1</th><th class="c">2-1</th><th class="c">2-2</th><th class="c">2-3</th><th class="c">3-1</th><th class="c">3-2</th></tr></thead>
+                <thead><tr><th>수집일시</th><th>주주명</th><th class="num">보유주식수</th><th class="c">생년월일</th><th class="num">나이</th><th class="c">1</th><th class="c">2-1</th><th class="c">2-2</th><th class="c">3</th><th class="num">4-1</th><th class="num">4-2</th></tr></thead>
                 <tbody>
-                <tr><td class="mut">03-22 10:14</td><td>김*수</td><td class="num">19,961,925주</td><td class="mut c">19680511</td><td class="num">58</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
-                <tr><td class="mut">03-22 11:40</td><td>진*섭</td><td class="num">12,480,300주</td><td class="mut c">19701203</td><td class="num">56</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
-                <tr><td class="mut">03-23 09:02</td><td>나*한</td><td class="num">9,963,921주</td><td class="mut c">19800401</td><td class="num">46</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c diff"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
-                <tr><td class="mut">03-23 21:37</td><td>젠*박</td><td class="num">8,005,912주</td><td class="mut c">19880411</td><td class="num">38</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c diff"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td></tr>
-                <tr><td class="mut">03-24 03:11</td><td>이*호</td><td class="num">6,017,919주</td><td class="mut c">19600101</td><td class="num">66</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
-                <tr><td class="mut">03-20 13:55</td><td>천*민</td><td class="num">6,015,923주</td><td class="mut c">19640922</td><td class="num">62</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
-                <tr><td class="mut">03-24 15:20</td><td>박*호</td><td class="num">5,240,110주</td><td class="mut c">19770714</td><td class="num">49</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
-                <tr><td class="mut">03-21 08:33</td><td>남*일</td><td class="num">4,120,880주</td><td class="mut c">19830417</td><td class="num">43</td><td class="c diff"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
-                <tr><td class="mut">03-25 08:48</td><td>유*지</td><td class="num">3,003,977주</td><td class="mut c">19700201</td><td class="num">56</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td></tr>
-                <tr><td class="mut">03-25 19:07</td><td>박*화</td><td class="num">2,510,440주</td><td class="mut c">19910330</td><td class="num">35</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c diff"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td></tr>
+                <tr><td class="mut">03-22 10:14</td><td>김*수</td><td class="num">19,961,925주</td><td class="mut c">19680511</td><td class="num">58</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="num">39,923,850</td><td class="num">39,923,850</td></tr>
+                <tr><td class="mut">03-22 11:40</td><td>진*섭</td><td class="num">12,480,300주</td><td class="mut c">19701203</td><td class="num">56</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">24,960,600</td><td class="num">24,960,600</td></tr>
+                <tr><td class="mut">03-23 09:02</td><td>나*한</td><td class="num">9,963,921주</td><td class="mut c">19800401</td><td class="num">46</td><td class="c"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">19,927,842</td><td class="num">19,927,842</td></tr>
+                <tr><td class="mut">03-23 21:37</td><td>젠*박</td><td class="num">8,005,912주</td><td class="mut c">19880411</td><td class="num">38</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">16,011,824</td><td class="num">16,011,824</td></tr>
+                <tr><td class="mut">03-24 03:11</td><td>이*호</td><td class="num">6,017,919주</td><td class="mut c">19600101</td><td class="num">66</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="num">12,035,838</td><td class="num">12,035,838</td></tr>
+                <tr><td class="mut">03-20 13:55</td><td>천*민</td><td class="num">6,015,923주</td><td class="mut c">19640922</td><td class="num">62</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">12,031,846</td><td class="num">12,031,846</td></tr>
+                <tr><td class="mut">03-24 15:20</td><td>박*호</td><td class="num">5,240,110주</td><td class="mut c">19770714</td><td class="num">49</td><td class="c"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">10,480,220</td><td class="num">10,480,220</td></tr>
+                <tr><td class="mut">03-21 08:33</td><td>남*일</td><td class="num">4,120,880주</td><td class="mut c">19830417</td><td class="num">43</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="num">8,241,760</td><td class="num">8,241,760</td></tr>
+                <tr><td class="mut">03-25 08:48</td><td>유*지</td><td class="num">3,003,977주</td><td class="mut c">19700201</td><td class="num">56</td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">6,007,954</td><td class="num">6,007,954</td></tr>
+                <tr><td class="mut">03-25 19:07</td><td>박*화</td><td class="num">2,510,440주</td><td class="mut c">19910330</td><td class="num">35</td><td class="c"><span class="opb against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="c"><span class="opb for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></td><td class="num">5,020,880</td><td class="num">5,020,880</td></tr>
                 </tbody>
               </table>
             </div>
+            <div class="solfoot"><span>총 2,261건</span><span class="pg">1 / 1</span></div>
           </div>
         </div>
       </div>
@@ -564,6 +659,48 @@
     var cr=e.target.closest('.chk-row'); if(cr){cr.classList.toggle('on');}
     var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
   });
+  /* 의안별 행사 현황 — 대시보드 사전 탭과 같은 출처·같은 계산을 쓴다 */
+  (function(){
+    var body=document.getElementById('vrAgBody'); if(!body||!window.CX) return;
+    var AV=CX.meeting.sharesVoting, HOLDERS=CX.meeting.attendHolders;
+    function cm(n){ return Math.round(n).toLocaleString('en-US'); }
+    function pct(v){ return v==null?'':v.toFixed(1)+'%'; }
+    function rows(){
+      return CX.agenda.map(function(a){
+        var d=CX.center[a.no];
+        var r={no:a.no, nm:a.nm, cat:(a.types||[]).join(' · '), grp:!!a.header||!d};
+        if(r.grp) return r;
+        r.sp=(d.thrLabel||'').indexOf('2/3')>=0;
+        r.dis=CX.util.discarded(a.no);
+        if(d.cands){
+          r.w=d.cands.reduce(function(t,c){return t+c.votes;},0);
+          r.cum=d.cands.filter(function(c){return c.elected;}).length;
+        } else {
+          var v=d.options ? (d.options.filter(function(o){return o.result==='가결';})[0]||d.options[0]) : d;
+          r.yes=v['for']; r.w=v['for']+v.against+(v.abs||0);
+        }
+        return r;
+      });
+    }
+    function head(a){
+      var cat=a.cat?'<span class="ubadge secondary" style="margin-left:6px">'+a.cat+'</span>':'';
+      return '<td>'+a.no+'</td><td>'+a.nm+cat+'</td>';
+    }
+    var EMPTY='<td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="c"></td>';
+    body.innerHTML=rows().map(function(a){
+      if(a.grp) return '<tr class="grp">'+head(a)+EMPTY+'</tr>';
+      var r1=a.cum?null:a.yes/AV*100;
+      var ok=a.cum?true:r1>=(a.sp?33.33:25);
+      return '<tr>'+head(a)
+        +'<td class="num">'+cm(AV)+'</td><td class="num">'+cm(HOLDERS)+'</td>'
+        +'<td class="num">'+cm(a.w)+'</td>'
+        +'<td class="num">'+pct(r1)+'</td>'
+        +'<td class="num">'+pct(a.yes==null?null:a.yes/a.w*100)+'</td>'
+        +'<td class="c"><span class="badge-exp '+(ok?'pass':'rej')+'">'+(ok?'가결 예상':'부결 예상')+'</span></td></tr>';
+    }).join('');
+    if(window.cxTable) window.cxTable.apply(document.getElementById('vrAgTbl'));
+  })();
+
   // 사전 의결권 현황 tabs
   document.querySelectorAll('.vr-tab').forEach(function(t){
     t.addEventListener('click',function(){
