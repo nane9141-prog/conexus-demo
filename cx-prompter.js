@@ -184,8 +184,9 @@
           + (M.attendShares / M.sharesVoting * 100).toFixed(1) + ' % 가 출석하였음을 보고 드리며, 본 총회가 적법하게 성립되었음을 선언합니다.' }]
       : [{ t: '개회 안내', s: '주주 여러분, 안녕하십니까. ' + M.org + ' ' + M.name + ' 진행을 맡은 사회자입니다.\n\n잠시 후 의장님의 개회 선언으로 총회를 시작하겠습니다.\n\n원활한 진행을 위해 휴대전화는 무음으로 설정해 주시고, 화면 안내에 따라 협조해 주시기 바랍니다.' },
          { t: '진행 안내', s: '본격적인 의안 심의에 앞서 오늘 진행 순서를 간략히 안내해 드리겠습니다.\n\n각 의안은 의장님의 상정 말씀 이후, 주주 발언과 표결 순으로 진행됩니다.\n\n표결과 결과 선포는 의장님께서 직접 진행하시니 화면 안내를 참고해 주시기 바랍니다.' }] });
+    /* 식순은 표결 단위 그대로 — 현장 제어의 '의안 진행' 과 같은 기준이다.
+       양립불가로 폐기된 의안도 의장이 폐기를 선포하므로 남겨 둔다. */
     CX.votingUnits.forEach(function (no) {
-      if (CX.util.discarded(no)) return;               /* 양립불가로 폐기된 의안은 식순에서 뺀다 */
       list.push({ key: no, lb: no.replace('제', '').replace('호', ''), ag: no, tabs: chair ? chairAgenda(no) : mcAgenda(no) });
     });
     list.push({ key: 'close', lb: '폐회', tabs: chair
