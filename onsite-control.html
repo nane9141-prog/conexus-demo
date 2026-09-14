@@ -1950,6 +1950,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     };
   });
 
+  /* 밖에서 질의가 들어오면 이 화면도 다시 그린다 */
+  (window.QAREPAINT=window.QAREPAINT||[]).push(function(){ render(); });
   function rows(){
     if(mode==='q') return QUESTIONS;      /* 사전 질의도 같이 본다 — 표시로만 구분 */
     if(mode==='s') return SPEECHES;
@@ -2821,6 +2823,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   /* inq: 대기열 등재 여부 · seq: 접수 순서. 대기열은 S 배열 순서를 바꾸므로
      카드 목록은 seq 로 다시 세운다 — 순서 조정이 목록을 흔들지 않는다. */
   var qt='q', qf='all', selId=null, editId=null, spAgenda='제1호', speakingId=null, noteId=null;
+  (window.QAREPAINT=window.QAREPAINT||[]).push(function(){ render(); });
   /* 호스트 권한 — active(제어 가능) · locked(위임 중) · connecting · sub(서브 호스트) · proxy(대행) */
   var hostState='active', speakSec=0, speakTick=null, openRow=null;
   /* 의장 전달 메시지 빠른 태그 */
@@ -3376,7 +3379,33 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 </script>
 <script src="conexus.js"></script>
 <script>/* 칸이 열린 뒤에야 내보낼 수 있으므로, 화면을 연 순간의 상태를 여기서 한 번 알린다 */
-if(window.OC&&OC.fire) OC.fire();</script>
+if(window.OC&&OC.fire) OC.fire();
+/* 주주PASS 시청 화면에서 올라온 질의를 받아 목록 맨 앞에 얹는다 */
+(function(){
+  var CH='cx.qna';
+  /* 시청 화면은 표결 단위로 보내고, 이 화면의 목록은 옛 번호 체계를 쓴다 */
+  var MAP={'제1호':['1',''],'제2-1호':['2','2-1'],'제2-2호':['2','2-2'],
+           '제3호':['3',''],'제4-1호':['3','3-1'],'제4-2호':['3','3-2']};
+  var seen={};
+  (window.QUESTIONS||[]).forEach(function(x){ seen[x.id]=1; });
+  function take(){
+    var s={};
+    try{ s=JSON.parse(localStorage.getItem(CH)||'{}'); }catch(e){}
+    var got=0;
+    (s.list||[]).forEach(function(x){
+      if(!x || !x.id || seen[x.id]) return;
+      seen[x.id]=1;
+      var m=MAP[x.ag]||['1',''];
+      var q=x.kind ? '['+x.kind+(x.amtype?' · '+x.amtype:'')+'] '+x.q : x.q;
+      window.QUESTIONS.unshift({id:x.id, ag:m[0], sub:m[1], name:x.name, t:x.t||'개인',
+        sh:x.sh||0, tm:x.tm, pub:true, st:'미답변', q:q, a:null});
+      got++;
+    });
+    if(got) (window.QAREPAINT||[]).forEach(function(f){ try{ f(); }catch(e){} });
+  }
+  window.addEventListener('storage',function(e){ if(e.key===CH) take(); });
+  take();
+})();</script>
 <script>
 /* 총회 제어 드롭다운 — 지연/종료를 한 버튼으로 묶는다.
    항목의 id(btnPause/btnClose)는 그대로라 기존 핸들러가 계속 붙는다. */
