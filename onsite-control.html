@@ -949,7 +949,7 @@
   .cst.ready{color:#525252}.cst.ready .d{background:#525252}
   .cst.vote{color:#0071F3}.cst.vote .d{background:#0071F3}
   .cst.agg{color:#EA580C}.cst.agg .d{background:#EA580C}
-  .cst.done{color:#525252}
+  .cst.done{color:#525252}.cst.done .d{background:#525252}
   .ctrlbar.default .cst{opacity:.5}
   .ctimer{font-size:14px;font-weight:600;color:#0a0a0a;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
   .ctrlbar.agg .ctimer,.ctrlbar.finish .ctimer{color:#737373}
@@ -1577,7 +1577,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     1:{key:'ready',badge:'상정중',tone:'ready'},
     2:{key:'vote',badge:'투표중',tone:'vote',timer:true},
     3:{key:'agg',badge:'집계중',tone:'agg',timer:true},
-    4:{key:'finish',badge:'표결 마감',tone:'done',timer:true,noDot:true}
+    4:{key:'finish',badge:'표결 마감',tone:'done',timer:true}
   };
   function renderStage(){
     if(!el) return;
@@ -1601,10 +1601,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       if(fresh) autoAdv=setTimeout(selectNextAgenda,1600);
     }
     var st=STAGES[OC.stage], m=STMETA[OC.stage];
-    var l='<span class="cst '+m.tone+'">'+(m.noDot?'':'<span class="d"></span>')+m.badge+'</span>';
+    /* 공표를 마치면 더 할 일이 없다 — 점을 떼고 더보기만 남긴다 */
+    var said=(OC.stage===4 && declared(OC.agenda));
+    var l='<span class="cst '+m.tone+'">'+((m.noDot||said)?'':'<span class="d"></span>')
+      +(said?'공표 완료':m.badge)+'</span>';
     if(m.timer) l+='<span class="ctimer" id="vTimer">'+fmt(voteSec)+'</span>';
     var r='<div class="ctrl-btns">';
-    st.right.forEach(function(b){
+    (said?[{t:'',c:'dots'}]:st.right).forEach(function(b){
       if(b.c==='dots'){
         r+='<span class="ctrl-more" id="ctrlMore"><button class="iabtn ic" type="button" data-more="1">'+DOTS+'</button>'
           +'<span class="ctrl-menu"><button type="button" data-go="2">표결 재개</button></span></span>';
@@ -1629,7 +1632,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     });
     var dec=el.querySelector('[data-act="declare"]');
     if(dec) dec.addEventListener('click',function(){
-      /* 결과 공표 — 보는 화면들에 판정이 이미 실려 있으므로 알림만 남긴다 */
+      /* 결과 공표 — 보는 화면들에 판정이 이미 실려 있으므로 상태만 한 걸음 옮긴다 */
+      if(!OC.res[OC.agenda]) OC.res[OC.agenda]={r:resOf(OC.agenda),sec:voteSec,siteN:OC.siteN,siteW:OC.siteW,onlW:OC.onlW};
+      OC.res[OC.agenda].said=true;
+      renderStage();
       if(window.cxToast) cxToast(CX.util.chip(OC.agenda)+' 표결 결과를 공표했습니다.');
     });
     OC.fire();                            /* 다른 탭들이 같은 단계·진행률을 본다 */
@@ -1638,6 +1644,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   }
   /* 단계 이동 — 실시간 운영 컨트롤 바와 표결 관리 탭이 같이 쓴다 */
   function goStage(to){
+    if(to===2 && OC.res[OC.agenda]) OC.res[OC.agenda].said=false;
     if(OC.stage===2 && to===3){          /* 집계로 넘어갈 때만 대기 화면을 거친다 */
       OC.loading=true; renderStage();
       setTimeout(function(){ OC.loading=false; OC.stage=3; renderStage(); renderAll(); },1000);
@@ -1910,6 +1917,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     return '<span class="rst '+(r==='가결'?'pass':'fail')+'">'+r+'</span>';
   }
   function keptRes(no){ return OC.res[no] ? OC.res[no].r : null; }
+  /* 결과를 공표했는지 — 의안별로 담아 두고, 표결을 다시 열면 지운다 */
+  function declared(no){ return !!(OC.res[no] && OC.res[no].said); }
   function persistBadge(no){
     if(!OC.decided) return null;
     if(OC.decided==='회사'&&no==='제4-2호') return '<span class="rst drop">폐기</span>';
