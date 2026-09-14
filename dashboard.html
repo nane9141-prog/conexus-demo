@@ -146,9 +146,10 @@
     border-bottom:1px solid #E5E5E5}
   table.db-ft td{height:40px;padding:8px;color:#171717;border-bottom:1px solid #E5E5E5}
   table.db-ft tbody tr:last-child td{border-bottom:none}
-  table.db-ft .n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;color:#0A0A0A}
+  table.db-ft .n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  table.db-ft td.n{color:#0A0A0A}          /* 숫자 칸만 진하게 — 헤더는 th 규칙 하나로 */
   table.db-ft .c{text-align:center}
-  table.db-ft tr.grp td{color:#737373}
+  table.db-ft tr.grp td{font-weight:500}    /* 상위 의안은 굵기로만 구분한다 */
   .db-cat{display:inline-flex;align-items:center;justify-content:center;padding:2px 6px;margin-left:8px;border-radius:6px;
     background:#F5F5F5;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#525252}
   .db-rb{display:inline-flex;align-items:center;justify-content:center;padding:2px 6px;border-radius:6px;
@@ -330,9 +331,9 @@
 
         <div class="db-panel active" data-dp="set">
           <div class="db-kpi sm">
-            <div class="c"><div class="k">총 발행주식수</div><div class="v">476,821,940주</div>
+            <div class="c"><div class="k">총 발행주식수</div><div class="v">476,211,964주</div>
               <div class="s">의결권있는 총주식수 동일</div></div>
-            <div class="c"><div class="k">총 행사가능 의결권</div><div class="v">461,090,220주</div>
+            <div class="c"><div class="k">총 행사가능 의결권</div><div class="v">471,661,174주</div>
               <div class="s">자사주, 상호주, 무효주 제외</div></div>
             <div class="c db-law2" style="padding:12px 16px;gap:4px">
               <div class="hd"><span class="k">변경법안 안내</span><span class="cnt">3</span>
@@ -449,12 +450,12 @@
 
         <div class="db-panel" data-dp="pre">
           <div class="db-kpi">
-            <div class="c"><div class="k">총 발행주식수</div><div class="v">476,821,940주</div>
+            <div class="c"><div class="k">총 발행주식수</div><div class="v">476,211,964주</div>
               <div class="s">의결권 있는 총 주식수와 동일</div></div>
-            <div class="c"><div class="k">총 행사가능의결권</div><div class="v">461,090,220주</div>
+            <div class="c"><div class="k">총 행사가능의결권</div><div class="v">471,661,174주</div>
               <div class="s">자사주, 상호주, 무효주 제외</div></div>
             <div class="c"><div class="k">참석 의결권</div><div class="v">305,412,880주</div>
-              <div class="s">총행사가능의결권 대비 66.2% · 중복 제외</div></div>
+              <div class="s">총행사가능의결권 대비 64.8% · 중복 제외</div></div>
           </div>
 
           <div class="db-sec">
@@ -558,12 +559,12 @@
 
         <div class="db-panel" data-dp="day">
           <div class="db-kpi sm">
-            <div class="c"><div class="k">총 발행주식수</div><div class="v">476,821,940주</div>
+            <div class="c"><div class="k">총 발행주식수</div><div class="v">476,211,964주</div>
               <div class="s">의결권있는 총주식수 동일</div></div>
-            <div class="c"><div class="k">총 행사가능 의결권</div><div class="v">461,090,220주</div>
+            <div class="c"><div class="k">총 행사가능 의결권</div><div class="v">471,661,174주</div>
               <div class="s">자사주, 상호주, 무효주 제외</div></div>
             <div class="c"><div class="k">참석 의결권</div><div class="v">354,312,880주</div>
-              <div class="s">총행사가능의결권 대비 76.8% · 중복 제외</div></div>
+              <div class="s">총행사가능의결권 대비 75.1% · 중복 제외</div></div>
           </div>
 
           <div class="db-sec">
@@ -680,8 +681,6 @@
     if(cl)cl.addEventListener('click',function(){ov.classList.remove('show');});
     if(ov)ov.addEventListener('click',function(e){ if(e.target===ov) ov.classList.remove('show'); });
   })();
-  // 현장 새로고침
-  (function(){ var r=document.getElementById('dayRefresh'); if(r)r.addEventListener('click',function(){ if(window.cxToast)cxToast('의안별 행사 현황을 업데이트했습니다.'); }); })();
 </script>
 <script>
 /* 사전 대시보드 — 도넛 · 의안 표 · 예상 건수를 한 데이터에서 그린다. */
@@ -695,16 +694,37 @@
     { nm: '서면위임(타사)',        w: 22100000,  c: '#D4E8FF' },
     { nm: '서면투표',              w: 9800000,   c: '#EBF4FF' }
   ];
-  var AV = 461090220;   /* 총 행사가능의결권 */
-  var AG = [
-    { no: '제1호',   nm: '재무제표 승인의 건',        cat: '보통',  ex: 124411, w: 292800110, r2: 95.9 },
-    { no: '제2호',   nm: '이사 선임의 건',            cat: '일부선임', grp: true },
-    { no: '제2-1호', nm: '사내이사 홍준표 선임',      cat: '보통',  ex: 123880, w: 267900300, r2: 89.4 },
-    { no: '제2-2호', nm: '사외이사 김서연 선임',      cat: '보통',  ex: 123120, w: 255400880, r2: 86.1 },
-    { no: '제3호',   nm: '감사위원 사외이사 선임의 건', cat: '합산3%룰', ex: 118240, w: 100520140, r2: 71.2 },
-    { no: '제4호',   nm: '정관 일부 변경의 건',       cat: '특별',  ex: 124010, w: 277600410, r2: 90.9, sp: true },
-    { no: '제5호',   nm: '이사 보수한도 승인의 건',   cat: '보통',  ex: 124290, w: 284500220, r2: 93.2 }
-  ];
+  var AV = CX.meeting.sharesVoting;          /* 총 행사가능의결권 */
+  var HOLDERS = CX.meeting.attendHolders;    /* 행사(출석) 주주수 */
+
+  /* 의안 목록은 현장 제어와 같은 출처(CX.agenda · CX.center)에서 만든다.
+     제2호 · 제4호처럼 표결하지 않는 상위 의안은 값 칸을 비워 둔다. */
+  function agendaRows() {
+    return CX.agenda.map(function (a) {
+      var d = CX.center[a.no];
+      var r = { no: a.no, nm: a.nm, cat: (a.types || []).join(' · '), grp: !!a.header || !d };
+      if (r.grp) return r;
+      r.sp = (d.thrLabel || '').indexOf('2/3') >= 0;
+      r.dis = CX.util.discarded(a.no);
+      if (d.cands) {                           /* 집중투표 — 후보 득표 합계 */
+        r.w = d.cands.reduce(function (t, c) { return t + c.votes; }, 0);
+        r.cum = d.cands.filter(function (c) { return c.elected; }).length;
+      } else {
+        var v = d.options
+          ? (d.options.filter(function (o) { return o.result === '가결'; })[0] || d.options[0])
+          : d;
+        r.yes = v['for']; r.w = v['for'] + v.against + (v.abs || 0);
+      }
+      return r;
+    });
+  }
+  function rowHead(a) {
+    return '<td>' + a.no + '</td><td>' + a.nm
+      + (a.cat ? '<span class="db-cat">' + a.cat + '</span>' : '') + '</td>';
+  }
+  var EMPTY = '<td class="n"></td><td class="n"></td><td class="n"></td>'
+            + '<td class="n"></td><td class="n"></td><td class="c"></td>';
+  function pct(v) { return v == null ? '' : v.toFixed(1) + '%'; }
 
   /* 도넛 — 조각 비율을 conic-gradient 로 잇는다 */
   var pie = document.getElementById('dbPie'), leg = document.getElementById('dbLeg');
@@ -746,72 +766,66 @@
     }).join('');
   })();
 
-  /* 현장 의안 표 — 결과와 요약 세 칸을 같은 데이터에서 뽑는다 */
-  var DAY = [
-    { no: '제1호',   nm: '재무제표 승인의 건',         cat: '보통',     ex: 156880, w: 341200110, r2: 96.4, st: 'done' },
-    { no: '제2호',   nm: '이사 선임의 건',             cat: '일부선임', grp: true },
-    { no: '제2-1호', nm: '사내이사 홍준표 선임',       cat: '보통',     st: 'wait' },
-    { no: '제2-2호', nm: '사외이사 김서연 선임',       cat: '보통',     st: 'wait' },
-    { no: '제3호',   nm: '감사위원 사외이사 선임의 건', cat: '합산3%룰', ex: 120110, w: 98700220,  r2: 70.1, st: 'done' },
-    { no: '제4호',   nm: '정관 일부 변경의 건',        cat: '특별',     st: 'count', sp: true },
-    { no: '제5호',   nm: '이사 보수한도 승인의 건',    cat: '보통',     ex: 157020, w: 332900540, r2: 94.8, st: 'done' }
-  ];
+  /* 현장 의안 표 — 진행 상태만 얹고, 목록과 수치는 사전과 같은 출처를 쓴다 */
+  var DAY_ST = { '제1호': 'done', '제2-1호': 'done', '제2-2호': 'wait',
+                 '제3호': 'count', '제4-1호': 'done' };
   (function () {
     var body = document.getElementById('dbDayBody'); if (!body) return;
-    var leaf = DAY.filter(function (a) { return !a.grp; });
-    var pass = 0, fail = 0, run = 0;
-    body.innerHTML = DAY.map(function (a) {
-      if (a.grp) {
-        return '<tr class="grp"><td>' + a.no + '</td><td>' + a.nm + '<span class="db-cat">' + a.cat + '</span></td>'
-          + '<td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="c">—</td></tr>';
+    var tot = 0, run = 0, pass = 0, fail = 0, drop = 0;
+    body.innerHTML = agendaRows().map(function (a) {
+      if (a.grp) return '<tr class="grp">' + rowHead(a) + EMPTY + '</tr>';
+      tot++;
+      var st = a.dis ? 'drop' : (DAY_ST[a.no] || 'wait');
+      if (st !== 'done') {
+        if (st === 'drop') drop++; else run++;
+        return '<tr>' + rowHead(a)
+          + '<td class="n">' + cm(AV) + '</td><td class="n"></td><td class="n"></td>'
+          + '<td class="n"></td><td class="n"></td>'
+          + '<td class="c"><span class="db-rb ' + (st === 'count' ? 'count' : 'wait') + '">'
+          + { wait: '대기', count: '집계중', drop: '폐기' }[st] + '</span></td></tr>';
       }
-      if (a.st !== 'done') {
-        run++;
-        var lb = a.st === 'count' ? '집계중' : '대기';
-        return '<tr><td>' + a.no + '</td><td>' + a.nm + '<span class="db-cat">' + a.cat + '</span></td>'
-          + '<td class="n">' + cm(AV) + '</td><td class="n">—</td><td class="n">—</td>'
-          + '<td class="n">—</td><td class="n">—</td>'
-          + '<td class="c"><span class="db-rb ' + (a.st === 'count' ? 'count' : 'wait') + '">' + lb + '</span></td></tr>';
-      }
-      var r1 = a.w / AV * 100, ok = r1 >= (a.sp ? 33.33 : 25);
+      var r1 = a.cum ? null : a.yes / AV * 100;
+      var ok = a.cum ? true : r1 >= (a.sp ? 33.33 : 25);
       if (ok) pass++; else fail++;
-      return '<tr><td>' + a.no + '</td><td>' + a.nm + '<span class="db-cat">' + a.cat + '</span></td>'
-        + '<td class="n">' + cm(AV) + '</td><td class="n">' + cm(a.ex) + '</td><td class="n">' + cm(a.w) + '</td>'
-        + '<td class="n">' + r1.toFixed(1) + '%</td><td class="n">' + a.r2.toFixed(1) + '%</td>'
-        + '<td class="c"><span class="db-rb ' + (ok ? 'pass' : 'fail') + '">' + (ok ? '가결' : '부결') + '</span></td></tr>';
+      return '<tr>' + rowHead(a)
+        + '<td class="n">' + cm(AV) + '</td><td class="n">' + cm(HOLDERS) + '</td>'
+        + '<td class="n">' + cm(a.w) + '</td>'
+        + '<td class="n">' + pct(r1) + '</td>'
+        + '<td class="n">' + pct(a.yes == null ? null : a.yes / a.w * 100) + '</td>'
+        + '<td class="c"><span class="db-rb ' + (ok ? 'pass' : 'fail') + '">'
+        + (ok ? '가결' : '부결') + '</span></td></tr>';
     }).join('');
-    document.getElementById('dbDayTot').textContent = leaf.length;
+    var note = ['가결 ' + pass];
+    if (fail) note.push('부결 ' + fail);
+    if (drop) note.push('폐기 ' + drop);
+    document.getElementById('dbDayTot').textContent = tot;
     document.getElementById('dbDayRun').textContent = run;
-    document.getElementById('dbDayDone').textContent = pass + fail;
-    document.getElementById('dbDayDoneSub').textContent = '(가결 ' + pass + ' · 부결 ' + fail + ')';
+    document.getElementById('dbDayDone').textContent = pass + fail + drop;
+    document.getElementById('dbDayDoneSub').textContent = '(' + note.join(' · ') + ')';
     var rf = document.getElementById('dbRefresh');
     if (rf) rf.addEventListener('click', function () { if (window.cxToast) cxToast('현장 집계를 새로 불러왔습니다.'); });
   })();
 
-  /* 의안 표 — 가결·부결 예상은 여기서 세어 카드에 그대로 넘긴다 */
-  var body = document.getElementById('dbAgBody');
-  if (body) {
+  /* 사전 의안 표 — 가결·부결 예상은 여기서 세어 카드에 그대로 넘긴다 */
+  (function () {
+    var body = document.getElementById('dbAgBody'); if (!body) return;
     var pass = 0, fail = 0;
-    body.innerHTML = AG.map(function (a) {
-      if (a.grp) {
-        return '<tr class="grp"><td>' + a.no + '</td><td>' + a.nm
-          + '<span class="db-cat">' + a.cat + '</span></td>'
-          + '<td class="n">—</td><td class="n">—</td><td class="n">—</td>'
-          + '<td class="n">—</td><td class="n">—</td><td class="c">—</td></tr>';
-      }
-      var r1 = a.w / AV * 100;
-      var ok = r1 >= (a.sp ? 33.33 : 25);
+    body.innerHTML = agendaRows().map(function (a) {
+      if (a.grp) return '<tr class="grp">' + rowHead(a) + EMPTY + '</tr>';
+      var r1 = a.cum ? null : a.yes / AV * 100;
+      var ok = a.cum ? true : r1 >= (a.sp ? 33.33 : 25);
       if (ok) pass++; else fail++;
-      return '<tr><td>' + a.no + '</td><td>' + a.nm + '<span class="db-cat">' + a.cat + '</span></td>'
-        + '<td class="n">' + cm(AV) + '</td><td class="n">' + cm(a.ex) + '</td>'
+      return '<tr>' + rowHead(a)
+        + '<td class="n">' + cm(AV) + '</td><td class="n">' + cm(HOLDERS) + '</td>'
         + '<td class="n">' + cm(a.w) + '</td>'
-        + '<td class="n">' + r1.toFixed(1) + '%</td><td class="n">' + a.r2.toFixed(1) + '%</td>'
+        + '<td class="n">' + pct(r1) + '</td>'
+        + '<td class="n">' + pct(a.yes == null ? null : a.yes / a.w * 100) + '</td>'
         + '<td class="c"><span class="db-rb ' + (ok ? 'pass' : 'fail') + '">'
         + (ok ? '가결 예상' : '부결 예상') + '</span></td></tr>';
     }).join('');
     document.getElementById('dbPass').textContent = pass;
     document.getElementById('dbFail').textContent = fail;
-  }
+  })();
 })();
 </script>
 <script src="conexus.js"></script>
