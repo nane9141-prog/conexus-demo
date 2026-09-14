@@ -548,8 +548,11 @@
 
 /* 현장 제어 ↔ 의장·사회자 화면 — 같은 브라우저의 다른 탭끼리 상태를 나눈다.
    localStorage 한 칸에 쓰고, storage 이벤트로 받는다(같은 탭에는 즉시 호출). */
-window.cxSync = (function () {
-  var K = 'cx.live', subs = [];
+/* 화면끼리 주고받는 칸. 같은 호스트에서 연 창이면 다른 탭·다른 페이지에도 닿는다.
+   cx.live 는 의안·표결 상태, cx.clock 은 시계와 영상 위치다. 시계는 몇 초마다
+   바뀌므로 같은 칸에 두면 표결 상태만 보는 화면(프롬퍼터 등)이 헛되이 다시 그려진다. */
+function cxChannel(K) {
+  var subs = [];
   function get() { try { return JSON.parse(localStorage.getItem(K) || '{}'); } catch (e) { return {}; } }
   function fire(s) { subs.forEach(function (f) { try { f(s); } catch (e) {} }); }
   window.addEventListener('storage', function (e) { if (e.key === K) fire(get()); });
@@ -564,4 +567,6 @@ window.cxSync = (function () {
     },
     on: function (f) { subs.push(f); f(get()); }
   };
-})();
+}
+window.cxSync = cxChannel('cx.live');
+window.cxClock = cxChannel('cx.clock');

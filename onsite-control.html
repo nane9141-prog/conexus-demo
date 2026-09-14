@@ -1503,7 +1503,24 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   t=parse('00:10:12');
   function paint(){ var h=Math.floor(t/3600),m=Math.floor(t%3600/60),s=t%60; var v=[h,m,s].map(function(n){return (n<10?'0':'')+n;}).join(':'); hh.textContent=v; if(hh2)hh2.textContent=v; }
   setInterval(function(){ if(running){ t++; paint(); } },1000); paint();
-  document.getElementById('btnPause').addEventListener('click',function(){ running=!running; this.classList.toggle('gray',true); });
+
+  /* 시청 화면(주주PASS)이 같은 지점을 보도록 시계와 영상 위치를 함께 내보낸다.
+     보낸 시각(tAt)을 같이 실어야 받는 쪽에서 그동안 흐른 만큼 더할 수 있다. */
+  var vid=document.getElementById('pipVid');
+  function castClock(){
+    if(!window.cxClock) return;
+    cxClock.set({ t:t, run:running, at:Date.now(),
+                  vt: vid?vid.currentTime:0, vdur: (vid&&vid.duration)||0,
+                  vpaused: vid?vid.paused:true });
+  }
+  setInterval(castClock, 5000); castClock();
+  if(vid) ['play','pause','seeked','loadedmetadata'].forEach(function(ev){ vid.addEventListener(ev, castClock); });
+
+  document.getElementById('btnPause').addEventListener('click',function(){
+    running=!running; this.classList.toggle('gray',true);
+    if(vid){ if(running) vid.play(); else vid.pause(); }
+    castClock();
+  });
 })();
 </script>
 <script>
