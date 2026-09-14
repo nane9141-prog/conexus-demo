@@ -51,7 +51,8 @@
     '.pv-body::-webkit-scrollbar{width:0}',
     '.pv-scr{font-size:32px;line-height:1.62;font-weight:700;letter-spacing:-.01em;color:#FAFAFA;white-space:pre-line}',
     '.pv-scr .v{color:#0071F3}',
-    '.pv-scr[contenteditable="true"]{outline:1px dashed rgba(255,255,255,.35);border-radius:10px;padding:10px 12px;cursor:text}',
+    /* 고쳐 쓰는 동안에도 글자리가 그대로여야 한다 — 테두리나 안여백을 더하지 않는다 */
+    '.pv-scr[contenteditable="true"]{outline:none;cursor:text}',
     '.pv-mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center}',
     '.pv-big{font-size:64px;line-height:1.2;font-weight:700;letter-spacing:-.01em;color:#E5E5E5}',
     '.pv-tm{font-size:36px;font-weight:600;color:#A3A3A3;font-variant-numeric:tabular-nums}',
