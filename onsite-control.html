@@ -1614,10 +1614,19 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   /* 진행 상황을 보는 화면들(표결 관리 컨트롤 바 · 의결권 행사현황)이 여기에 붙는다 */
   OC.hooks=[];
   OC.on=function(fn){ OC.hooks.push(fn); };
+  /* 마감한 의안의 판정만 추려 함께 보낸다 — 보는 화면이 지난 결과를 스스로 셈하지 않도록 */
+  function resMap(){
+    var m={};
+    for(var k in OC.res) m[k]=OC.res[k].r;
+    if(OC.decided==='회사') m['제4-2호']='폐기';
+    if(OC.decided==='주주') m['제4-1호']='폐기';
+    return m;
+  }
   OC.fire=function(){
     OC.hooks.forEach(function(f){ try{ f(); }catch(e){} });
     /* 의장·사회자 화면은 이 신호만 보고 따라 넘어간다 */
-    if(window.cxSync) cxSync.set({ag:OC.agenda, stage:(OC.loading?2:OC.stage), sec:voteSec, cast:null});
+    if(window.cxSync) cxSync.set({ag:OC.agenda, stage:(OC.loading?2:OC.stage), sec:voteSec,
+      cast:null, done:resMap()});
   };
   /* 단계별 진행률 — 실시간 운영의 채널 표와 같은 값을 쓴다 */
   OC.frac=function(no){
@@ -3366,6 +3375,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 })();
 </script>
 <script src="conexus.js"></script>
+<script>/* 칸이 열린 뒤에야 내보낼 수 있으므로, 화면을 연 순간의 상태를 여기서 한 번 알린다 */
+if(window.OC&&OC.fire) OC.fire();</script>
 <script>
 /* 총회 제어 드롭다운 — 지연/종료를 한 버튼으로 묶는다.
    항목의 id(btnPause/btnClose)는 그대로라 기존 핸들러가 계속 붙는다. */
