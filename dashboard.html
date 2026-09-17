@@ -739,18 +739,12 @@
   /* 도넛 — 조각 비율을 conic-gradient 로 잇는다 */
   var pie = document.getElementById('dbPie'), leg = document.getElementById('dbLeg');
   if (pie && leg) {
-    var tot = CH.reduce(function (a, x) { return a + x.w; }, 0);
-    var CIRC = 2 * Math.PI * 52, acc = 0, gap = 10;
-    var segs = CH.map(function (x) {
-      var len = x.w / tot * CIRC, draw = Math.max(2, len - gap);
-      var s = '<circle cx="60" cy="60" r="52" fill="none" stroke="' + x.c + '" stroke-width="16" stroke-linecap="round"'
-            + ' stroke-dasharray="' + draw.toFixed(2) + ' ' + (CIRC - draw).toFixed(2) + '"'
-            + ' stroke-dashoffset="' + (-acc).toFixed(2) + '"/>';
-      acc += len; return s;
-    }).join('');
-    pie.style.background = 'none';
-    pie.insertAdjacentHTML('afterbegin',
-      '<svg viewBox="0 0 120 120" style="position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)">' + segs + '</svg>');
+    var tot = CH.reduce(function (a, x) { return a + x.w; }, 0), acc = 0, stops = [];
+    CH.forEach(function (x) {
+      var from = acc / tot * 100; acc += x.w; var to = acc / tot * 100;
+      stops.push(x.c + ' ' + from.toFixed(2) + '% ' + to.toFixed(2) + '%');
+    });
+    pie.style.background = 'conic-gradient(' + stops.join(',') + ')';
     document.getElementById('dbPieV').textContent = cm(tot / 10000) + '만';
     leg.innerHTML = CH.map(function (x) {
       return '<div class="r"><span class="sw" style="background:' + x.c + '"></span><span class="nm">' + x.nm
