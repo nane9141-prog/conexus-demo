@@ -543,13 +543,13 @@
             <div class="db-tblc">
               <table class="db-ft">
                 <thead><tr>
-                  <th style="width:64px">번호</th><th>의안명</th>
-                  <th class="n" style="width:132px">총 행사가능의결권</th>
-                  <th class="n" style="width:76px">행사주주</th>
-                  <th class="n" style="width:124px">행사의결권</th>
-                  <th class="n" style="width:116px">찬성률 (총행사가능)</th>
-                  <th class="n" style="width:104px">찬성률 (총행사)</th>
-                  <th class="c" style="width:76px">예상</th>
+                  <th style="width:6%">번호</th><th style="width:20%">의안명</th>
+                  <th class="n" style="width:15%">총 행사가능의결권 ①</th>
+                  <th class="n" style="width:8%">행사주주</th>
+                  <th class="n" style="width:15%">총 행사의결권 ②</th>
+                  <th class="n" style="width:15%">① 찬성(률)</th>
+                  <th class="n" style="width:15%">② 찬성(률)</th>
+                  <th class="c" style="width:6%">예상</th>
                 </tr></thead>
                 <tbody id="dbAgBody"></tbody>
               </table>
@@ -599,13 +599,13 @@
             <div class="db-tblc">
               <table class="db-ft">
                 <thead><tr>
-                  <th style="width:64px">번호</th><th>의안명</th>
-                  <th class="n" style="width:132px">총 행사가능의결권</th>
-                  <th class="n" style="width:76px">행사주주</th>
-                  <th class="n" style="width:124px">행사의결권</th>
-                  <th class="n" style="width:116px">찬성률 (총행사가능)</th>
-                  <th class="n" style="width:104px">찬성률 (총행사)</th>
-                  <th class="c" style="width:76px">결과</th>
+                  <th style="width:6%">번호</th><th style="width:20%">의안명</th>
+                  <th class="n" style="width:15%">총 행사가능의결권 ①</th>
+                  <th class="n" style="width:8%">행사주주</th>
+                  <th class="n" style="width:15%">총 행사의결권 ②</th>
+                  <th class="n" style="width:15%">① 찬성(률)</th>
+                  <th class="n" style="width:15%">② 찬성(률)</th>
+                  <th class="c" style="width:6%">결과</th>
                 </tr></thead>
                 <tbody id="dbDayBody"></tbody>
               </table>
@@ -734,6 +734,7 @@
   var EMPTY = '<td class="n"></td><td class="n"></td><td class="n"></td>'
             + '<td class="n"></td><td class="n"></td><td class="c"></td>';
   function pct(v) { return v == null ? '' : v.toFixed(1) + '%'; }
+  function yesPct(y, dn) { return (y == null || dn == null || !dn) ? '' : cm(y) + ' (' + (y / dn * 100).toFixed(1) + '%)'; }
 
   /* 도넛 — 조각 비율을 conic-gradient 로 잇는다 */
   var pie = document.getElementById('dbPie'), leg = document.getElementById('dbLeg');
@@ -805,8 +806,8 @@
       return '<tr>' + rowHead(a)
         + '<td class="n">' + cm(AV) + '</td><td class="n">' + cm(HOLDERS) + '</td>'
         + '<td class="n">' + cm(a.w) + '</td>'
-        + '<td class="n">' + pct(r1) + '</td>'
-        + '<td class="n">' + pct(a.yes == null ? null : a.yes / a.w * 100) + '</td>'
+        + '<td class="n">' + yesPct(a.yes, AV) + '</td>'
+        + '<td class="n">' + yesPct(a.yes, a.w) + '</td>'
         + '<td class="c"><span class="db-rb ' + (ok ? 'pass' : 'fail') + '">'
         + (ok ? '가결' : '부결') + '</span></td></tr>';
     }).join('');
@@ -833,8 +834,8 @@
       return '<tr>' + rowHead(a)
         + '<td class="n">' + cm(AV) + '</td><td class="n">' + cm(HOLDERS) + '</td>'
         + '<td class="n">' + cm(a.w) + '</td>'
-        + '<td class="n">' + pct(r1) + '</td>'
-        + '<td class="n">' + pct(a.yes == null ? null : a.yes / a.w * 100) + '</td>'
+        + '<td class="n">' + yesPct(a.yes, AV) + '</td>'
+        + '<td class="n">' + yesPct(a.yes, a.w) + '</td>'
         + '<td class="c"><span class="db-rb ' + (ok ? 'pass' : 'fail') + '">'
         + (ok ? '가결 예상' : '부결 예상') + '</span></td></tr>';
     }).join('');
