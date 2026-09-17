@@ -52,6 +52,14 @@
   .db-ext svg{width:12px;height:12px;flex:none;fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
   /* 도넛 */
   .db-donut{flex:1;display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap}
+  .pie-seg{cursor:pointer;transition:opacity .12s}
+  .db-pie svg:hover .pie-seg{opacity:.4}
+  .db-pie svg .pie-seg:hover{opacity:1}
+  .pie-tip{position:fixed;z-index:300;pointer-events:none;display:none;background:#fff;border:1px solid #EEF0F2;border-radius:12px;box-shadow:0 8px 24px rgba(16,24,40,.14);padding:12px 14px;min-width:180px}
+  .pie-tip .nm{font-size:14px;font-weight:700;color:#0a0a0a;margin-bottom:8px}
+  .pie-tip .row{display:flex;align-items:center;justify-content:space-between;gap:24px;font-size:13px;line-height:20px}
+  .pie-tip .row span{color:#737373}
+  .pie-tip .row b{color:#0a0a0a;font-weight:700;font-variant-numeric:tabular-nums}
   .db-pie{position:relative;width:192px;height:192px;flex:none;border-radius:50%}
   .db-pie::after{content:'';position:absolute;inset:30px;background:#fff;border-radius:50%}
   .db-pie .ctr{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
@@ -745,11 +753,11 @@
   function cm(n) { return Math.round(n).toLocaleString('en-US'); }
   /* 채널 — 색은 Figma 팔레트 순서 그대로 */
   var CH = [
-    { nm: '전자투표/위임(국내)',   w: 112041882, c: '#0071F3' },
-    { nm: '전자투표/위임(해외)',   w: 72041882,  c: '#0056BD' },
-    { nm: '서면위임(자사)',        w: 2041882,   c: '#82BBFF' },
-    { nm: '서면위임(타사)',        w: 2041882,   c: '#D4E8FF' },
-    { nm: '서면투표',              w: 541882,    c: '#EBF4FF' }
+    { nm: '전자투표/위임(국내)',   w: 112041882, n: 1204, c: '#0071F3' },
+    { nm: '전자투표/위임(해외)',   w: 72041882,  n: 318,  c: '#0056BD' },
+    { nm: '서면위임(자사)',        w: 2041882,   n: 46,   c: '#82BBFF' },
+    { nm: '서면위임(타사)',        w: 2041882,   n: 33,   c: '#D4E8FF' },
+    { nm: '서면투표',              w: 541882,    n: 12,   c: '#EBF4FF' }
   ];
   var AV = CX.meeting.sharesVoting;          /* 총 행사가능의결권 */
   var HOLDERS = CX.meeting.attendHolders;    /* 행사(출석) 주주수 */
@@ -787,17 +795,38 @@
   /* 도넛 — 조각 비율을 conic-gradient 로 잇는다 */
   var pie = document.getElementById('dbPie'), leg = document.getElementById('dbLeg');
   if (pie && leg) {
-    var tot = CH.reduce(function (a, x) { return a + x.w; }, 0), acc = 0, stops = [];
-    CH.forEach(function (x) {
-      var from = acc / tot * 100; acc += x.w; var to = acc / tot * 100;
-      stops.push(x.c + ' ' + from.toFixed(2) + '% ' + to.toFixed(2) + '%');
-    });
-    pie.style.background = 'conic-gradient(' + stops.join(',') + ')';
+    var tot = CH.reduce(function (a, x) { return a + x.w; }, 0);
+    var CIRC = 2 * Math.PI * 52, acc = 0;
+    var segs = CH.map(function (x, i) {
+      var len = x.w / tot * CIRC;
+      var s = '<circle class="pie-seg" data-i="' + i + '" cx="60" cy="60" r="52" fill="none" stroke="' + x.c + '" stroke-width="16"'
+            + ' stroke-dasharray="' + len.toFixed(3) + ' ' + (CIRC - len).toFixed(3) + '" stroke-dashoffset="' + (-acc).toFixed(3) + '"/>';
+      acc += len; return s;
+    }).join('');
+    pie.style.background = 'none';
+    pie.insertAdjacentHTML('afterbegin',
+      '<svg viewBox="0 0 120 120" style="position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)">' + segs + '</svg>');
     document.getElementById('dbPieV').textContent = cm(tot / 10000) + '만';
     leg.innerHTML = CH.map(function (x) {
       return '<div class="r"><span class="sw" style="background:' + x.c + '"></span><span class="nm">' + x.nm
         + '</span><span class="vv">' + cm(x.w) + '주</span></div>';
     }).join('');
+    // 마우스 오버 툴팁 (채널명 · 주주수 · 의결권수)
+    var tip = document.getElementById('pieTip');
+    if (!tip) { tip = document.createElement('div'); tip.id = 'pieTip'; tip.className = 'pie-tip'; document.body.appendChild(tip); }
+    pie.querySelectorAll('.pie-seg').forEach(function (seg) {
+      seg.addEventListener('mouseenter', function () {
+        var x = CH[+seg.dataset.i];
+        tip.innerHTML = '<div class="nm">' + x.nm + '</div>'
+          + '<div class="row"><span>주주수</span><b>' + cm(x.n) + '명</b></div>'
+          + '<div class="row"><span>의결권수</span><b>' + cm(x.w) + '주</b></div>';
+        tip.style.display = 'block';
+      });
+      seg.addEventListener('mousemove', function (e) {
+        tip.style.left = (e.clientX + 14) + 'px'; tip.style.top = (e.clientY + 14) + 'px';
+      });
+      seg.addEventListener('mouseleave', function () { tip.style.display = 'none'; });
+    });
   }
 
   /* 현장 — 참석 채널 여섯 칸과 누적 막대 */
