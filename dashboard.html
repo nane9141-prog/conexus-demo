@@ -64,10 +64,10 @@
   .db-leg .r .nm{white-space:nowrap}
   .db-leg .vv{margin-left:auto;white-space:nowrap;font-weight:700;font-variant-numeric:tabular-nums}
   /* 진행 단계 */
-  .db-prog{flex:1;height:6px;border-radius:9999px;background:rgba(0,113,243,.12);overflow:hidden}
+  .db-prog{height:6px;border-radius:9999px;background:rgba(0,113,243,.12);overflow:hidden}
   .db-prog i{display:block;height:100%;background:#0071F3;border-radius:9999px}
-  .db-progrow{display:flex;align-items:center;gap:8px}
-  .db-progpct{flex:none;font-size:12px;line-height:1;font-weight:700;color:#0071F3;font-variant-numeric:tabular-nums}
+  .db-cnt{display:inline-flex;align-items:center;justify-content:center;padding:2px 8px;border-radius:6px;font-size:12px;line-height:16px;font-weight:600;letter-spacing:-.01em;background:#F3F4F6;color:#6B7078;font-variant-numeric:tabular-nums}
+  .db-cnt.done{background:#EEF5FF;color:#0071F3}  /* 전체 완료 시 blue */
   .db-steps{display:flex;flex-direction:column;justify-content:center;gap:4px}
   .db-steps .d{display:flex;align-items:center;gap:8px;height:20px}
   .db-steps .d .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#171717}
@@ -391,8 +391,8 @@
             <div class="db-row">
               <div class="db-c" style="flex:1;min-width:0">
                 <div style="display:flex;flex-direction:column;gap:8px">
-                  <div class="crow"><span class="ct">진행단계</span><span class="db-tg on" style="margin-left:auto">설정중</span></div>
-                  <div class="db-progrow"><div class="db-prog"><i style="width:40%"></i></div><span class="db-progpct">40%</span></div>
+                  <div class="crow"><span class="ct">진행단계</span><span class="db-cnt" style="margin-left:auto">2/5</span></div>
+                  <div class="db-prog"><i style="width:40%"></i></div>
                 </div>
                 <div class="db-steps">
                   <div class="d"><span class="nm">주주명부 설정</span><span class="db-st done">완료</span><a class="db-ext" href="shareholders.html">바로가기<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div>
@@ -499,8 +499,8 @@
 
               <div class="db-c" style="flex:1;min-width:0">
                 <div style="display:flex;flex-direction:column;gap:8px">
-                  <div class="crow"><span class="ct">진행단계</span><span class="db-tg on" style="margin-left:auto">설정중</span></div>
-                  <div class="db-progrow"><div class="db-prog"><i style="width:75%"></i></div><span class="db-progpct">75%</span></div>
+                  <div class="crow"><span class="ct">진행단계</span><span class="db-cnt" style="margin-left:auto">4/6</span></div>
+                  <div class="db-prog"><i style="width:75%"></i></div>
                 </div>
                 <div class="db-steps">
                   <div class="d"><span class="nm">주주명부 관리</span><span class="db-st done">완료</span><a class="db-ext" href="shareholders.html">바로가기<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div>
