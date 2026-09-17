@@ -146,10 +146,10 @@
   /* 의안별 행사 현황 표 */
   .db-tblc{box-sizing:border-box;padding:16px;background:#fff;border:1px solid #E5E5E5;border-radius:14px;
     box-shadow:0 1px 3px rgba(0,0,0,.1);overflow:auto}
-  table.db-ft{width:100%;border-collapse:collapse;font-size:14px;line-height:20px;letter-spacing:-.01em}
-  table.db-ft th{height:40px;padding:0 8px;text-align:left;font-weight:500;color:#737373;white-space:nowrap;
+  table.db-ft{width:100%;table-layout:fixed;border-collapse:collapse;font-size:14px;line-height:20px;letter-spacing:-.01em}
+  table.db-ft th{height:40px;padding:6px 8px;text-align:left;font-weight:500;color:#737373;vertical-align:middle;
     border-bottom:1px solid #E5E5E5}
-  table.db-ft td{height:40px;padding:8px;color:#171717;border-bottom:1px solid #E5E5E5}
+  table.db-ft td{height:40px;padding:8px;color:#171717;border-bottom:1px solid #E5E5E5;overflow:hidden;text-overflow:ellipsis}
   table.db-ft tbody tr:last-child td{border-bottom:none}
   table.db-ft .n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
   table.db-ft td.n{color:#0A0A0A}          /* 숫자 칸만 진하게 — 헤더는 th 규칙 하나로 */
@@ -543,13 +543,13 @@
             <div class="db-tblc">
               <table class="db-ft">
                 <thead><tr>
-                  <th style="width:66px">번호</th><th>의안명</th>
-                  <th class="n" style="width:160px">총 행사가능의결권</th>
-                  <th class="n" style="width:90px">행사주주</th>
-                  <th class="n" style="width:160px">행사의결권</th>
-                  <th class="n" style="width:160px">찬성률 (총행사가능)</th>
-                  <th class="n" style="width:160px">찬성률 (총행사)</th>
-                  <th class="c" style="width:100px">예상</th>
+                  <th style="width:64px">번호</th><th>의안명</th>
+                  <th class="n" style="width:132px">총 행사가능의결권</th>
+                  <th class="n" style="width:76px">행사주주</th>
+                  <th class="n" style="width:124px">행사의결권</th>
+                  <th class="n" style="width:116px">찬성률 (총행사가능)</th>
+                  <th class="n" style="width:104px">찬성률 (총행사)</th>
+                  <th class="c" style="width:76px">예상</th>
                 </tr></thead>
                 <tbody id="dbAgBody"></tbody>
               </table>
@@ -599,13 +599,13 @@
             <div class="db-tblc">
               <table class="db-ft">
                 <thead><tr>
-                  <th style="width:66px">번호</th><th>의안명</th>
-                  <th class="n" style="width:160px">총 행사가능의결권</th>
-                  <th class="n" style="width:90px">행사주주</th>
-                  <th class="n" style="width:160px">행사의결권</th>
-                  <th class="n" style="width:160px">찬성률 (총행사가능)</th>
-                  <th class="n" style="width:160px">찬성률 (총행사)</th>
-                  <th class="c" style="width:100px">결과</th>
+                  <th style="width:64px">번호</th><th>의안명</th>
+                  <th class="n" style="width:132px">총 행사가능의결권</th>
+                  <th class="n" style="width:76px">행사주주</th>
+                  <th class="n" style="width:124px">행사의결권</th>
+                  <th class="n" style="width:116px">찬성률 (총행사가능)</th>
+                  <th class="n" style="width:104px">찬성률 (총행사)</th>
+                  <th class="c" style="width:76px">결과</th>
                 </tr></thead>
                 <tbody id="dbDayBody"></tbody>
               </table>
