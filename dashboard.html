@@ -51,16 +51,17 @@
     cursor:pointer;text-decoration:none;white-space:nowrap}
   .db-ext svg{width:12px;height:12px;flex:none;fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
   /* 도넛 */
-  .db-donut{flex:1;display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap}
+  .db-donut{flex:1;display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap}
   .db-pie{position:relative;width:192px;height:192px;flex:none;border-radius:50%}
   .db-pie::after{content:'';position:absolute;inset:30px;background:#fff;border-radius:50%}
   .db-pie .ctr{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
   .db-pie .ctr b{font-size:24px;line-height:32px;font-weight:700;color:#0A0A0A;font-variant-numeric:tabular-nums}
   .db-pie .ctr span{font-size:12px;line-height:16px;letter-spacing:-.01em;color:#737373}
-  .db-leg{flex:1;min-width:220px;display:flex;flex-direction:column;justify-content:center;gap:16px}
-  .db-leg .r{display:flex;align-items:center;gap:6px;font-size:14px;line-height:1;letter-spacing:-.01em;color:#0A0A0A}
-  .db-leg .sw{width:6px;height:6px;flex:none}
-  .db-leg .vv{flex:1;min-width:0;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+  .db-leg{flex:1;min-width:248px;display:flex;flex-direction:column;justify-content:center;gap:16px}
+  .db-leg .r{display:flex;align-items:center;gap:8px;font-size:14px;line-height:1;letter-spacing:-.01em;color:#0A0A0A}
+  .db-leg .sw{width:8px;height:8px;flex:none;border-radius:2px}
+  .db-leg .r .nm{white-space:nowrap}
+  .db-leg .vv{margin-left:auto;white-space:nowrap;font-weight:700;font-variant-numeric:tabular-nums}
   /* 회색 상자 안의 수치 줄 */
     font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em}
   /* 진행 단계 */
@@ -71,6 +72,8 @@
   .db-steps .d .nm{width:100px;flex:none;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#171717}
   .db-steps .d .db-ext{color:#A3A3A3}
   .db-steps .d .db-ext:hover{color:#0071F3}
+  .db-steps .d .db-st{margin-left:auto}
+  .db-steps .d .db-ext{margin-left:8px}
   .db-st{display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:2px 6px;border-radius:6px;
     font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em}
   .db-st .dot{width:6px;height:6px;flex:none;border-radius:50%;background:currentColor}
@@ -476,7 +479,7 @@
                     <div class="crow"><span class="cd">처리 필요 3건</span>
                       <a class="db-ext" href="dup-voting.html">중복 의결권 관리<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div></div>
                   <div class="db-gbox">
-                    <div class="d"><span class="lb">미처리 주주</span><span class="vl">2명</span></div>
+                    <div class="d"><span class="lb">미처리 주주수</span><span class="vl">2명</span></div>
                     <div class="d"><span class="lb">미처리 주식수</span><span class="vl">80,000주</span></div>
                   </div>
                 </div>
@@ -485,8 +488,8 @@
                     <div class="crow"><span class="cd">미분배 1건</span>
                       <a class="db-ext" href="cumulative-voting.html">집중투표 관리<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div></div>
                   <div class="db-gbox">
-                    <div class="d"><span class="lb">분배 그룹</span><span class="vl">자사 2 · 타사 1</span></div>
-                    <div class="d"><span class="lb">미분배 그룹</span><span class="vl">자사 1 · 타사 0</span></div>
+                    <div class="d"><span class="lb">미분배 주주수</span><span class="vl">1명</span></div>
+                    <div class="d"><span class="lb">미분배 주식수</span><span class="vl">40,000주</span></div>
                   </div>
                 </div>
               </div>
@@ -694,8 +697,8 @@
   function cm(n) { return Math.round(n).toLocaleString('en-US'); }
   /* 채널 — 색은 Figma 팔레트 순서 그대로 */
   var CH = [
-    { nm: '아이알큐더스',          w: 112041882, c: '#0071F3' },
-    { nm: '전자투표/위임장(해외)', w: 72041882,  c: '#0056BD' },
+    { nm: '전자투표/위임(국내)',   w: 112041882, c: '#0071F3' },
+    { nm: '전자투표/위임(해외)',   w: 72041882,  c: '#0056BD' },
     { nm: '서면위임(자사)',        w: 2041882,   c: '#82BBFF' },
     { nm: '서면위임(타사)',        w: 2041882,   c: '#D4E8FF' },
     { nm: '서면투표',              w: 541882,    c: '#EBF4FF' }
@@ -735,16 +738,22 @@
   /* 도넛 — 조각 비율을 conic-gradient 로 잇는다 */
   var pie = document.getElementById('dbPie'), leg = document.getElementById('dbLeg');
   if (pie && leg) {
-    var tot = CH.reduce(function (a, x) { return a + x.w; }, 0), acc = 0, stops = [];
-    CH.forEach(function (x) {
-      var from = acc / tot * 100; acc += x.w; var to = acc / tot * 100;
-      stops.push(x.c + ' ' + from.toFixed(2) + '% ' + to.toFixed(2) + '%');
-    });
-    pie.style.background = 'conic-gradient(' + stops.join(',') + ')';
+    var tot = CH.reduce(function (a, x) { return a + x.w; }, 0);
+    var CIRC = 2 * Math.PI * 52, acc = 0, gap = 10;
+    var segs = CH.map(function (x) {
+      var len = x.w / tot * CIRC, draw = Math.max(2, len - gap);
+      var s = '<circle cx="60" cy="60" r="52" fill="none" stroke="' + x.c + '" stroke-width="16" stroke-linecap="round"'
+            + ' stroke-dasharray="' + draw.toFixed(2) + ' ' + (CIRC - draw).toFixed(2) + '"'
+            + ' stroke-dashoffset="' + (-acc).toFixed(2) + '"/>';
+      acc += len; return s;
+    }).join('');
+    pie.style.background = 'none';
+    pie.insertAdjacentHTML('afterbegin',
+      '<svg viewBox="0 0 120 120" style="position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)">' + segs + '</svg>');
     document.getElementById('dbPieV').textContent = cm(tot / 10000) + '만';
     leg.innerHTML = CH.map(function (x) {
-      return '<div class="r"><span class="sw" style="background:' + x.c + '"></span>' + x.nm
-        + '<span class="vv">' + cm(x.w) + '주</span></div>';
+      return '<div class="r"><span class="sw" style="background:' + x.c + '"></span><span class="nm">' + x.nm
+        + '</span><span class="vv">' + cm(x.w) + '주</span></div>';
     }).join('');
   }
 
