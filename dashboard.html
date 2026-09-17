@@ -774,7 +774,7 @@
         var total = d.cands.reduce(function (t, c) { return t + c.votes; }, 0);
         out.push({ no: a.no, nm: a.nm, cat: (a.types || []).join(' · '), cumParent: true });
         d.cands.forEach(function (c) {
-          out.push({ no: c.no, nm: c.name, cand: true, votes: c.votes, elected: c.elected, total: total });
+          out.push({ no: c.no, nm: c.name, cand: true, votes: c.votes, elected: c.elected, total: total, parentNo: a.no });
         });
         return;
       }
@@ -796,9 +796,12 @@
       + '<td class="n">' + cm(AV) + '</td><td class="n">' + cm(HOLDERS) + '</td>'
       + '<td class="n"></td><td class="n"></td><td class="n"></td><td class="c"></td></tr>';
   }
-  function candRow(a, expect) {                 /* 집중투표 후보 하위행 */
-    var lbl = a.elected ? (expect ? '가결 예상' : '가결') : (expect ? '부결 예상' : '부결');
-    var badge = '<span class="db-rb ' + (a.elected ? 'pass' : 'fail') + '">' + lbl + '</span>';
+  function candRow(a, st) {                      /* 집중투표 후보 하위행 (상태별) */
+    var badge;
+    if (st === 'drop') badge = '<span class="db-rb wait">폐기</span>';
+    else if (st === 'count') badge = '<span class="db-rb count">집계중</span>';
+    else if (st === 'done') badge = '<span class="db-rb ' + (a.elected ? 'pass' : 'fail') + '">' + (a.elected ? '가결' : '부결') + '</span>';
+    else badge = '<span class="db-rb ' + (a.elected ? 'pass' : 'fail') + '">' + (a.elected ? '가결 예상' : '부결 예상') + '</span>';
     return '<tr>' + rowHead(a)
       + '<td class="n"></td><td class="n"></td>'
       + '<td class="n">' + cm(a.total) + '</td>'
@@ -873,44 +876,47 @@
   })();
 
   /* 현장 의안 표 — 진행 상태만 얹고, 목록과 수치는 사전과 같은 출처를 쓴다 */
-  var DAY_ST = { '제1호': 'done', '제2-1호': 'done', '제2-2호': 'wait',
-                 '제3호': 'count', '제4-1호': 'done' };
+  /* 현장 의안별 행사 현황 — 기본은 '예상'(표결 전), 현장제어 진행상태(localStorage.cxDayState)에 따라 반영 */
+  function readDayState() { try { return JSON.parse(localStorage.getItem('cxDayState') || '{}') || {}; } catch (e) { return {}; } }
   (function () {
     var body = document.getElementById('dbDayBody'); if (!body) return;
-    var waitN = 0, countN = 0, pass = 0, fail = 0, drop = 0;
-    body.innerHTML = agendaRows().map(function (a) {
-      if (a.grp) return '<tr class="grp">' + rowHead(a) + EMPTY + '</tr>';
-      if (a.cumParent) return cumParentRow(a);
-      if (a.cand) return candRow(a, false);
-      var st = a.dis ? 'drop' : (DAY_ST[a.no] || 'wait');
-      if (st !== 'done') {
-        if (st === 'drop') drop++; else if (st === 'count') countN++; else waitN++;
+    function renderDay() {
+      var STATE = readDayState();
+      var waitN = 0, countN = 0, pass = 0, fail = 0, drop = 0;
+      body.innerHTML = agendaRows().map(function (a) {
+        if (a.grp) return '<tr class="grp">' + rowHead(a) + EMPTY + '</tr>';
+        if (a.cumParent) return cumParentRow(a);
+        if (a.cand) return candRow(a, STATE[a.parentNo] || 'wait');
+        var st = a.dis ? 'drop' : (STATE[a.no] || 'wait');
+        if (st === 'drop') {
+          drop++;
+          return '<tr>' + rowHead(a)
+            + '<td class="n">' + cm(AV) + '</td><td class="n"></td><td class="n"></td><td class="n"></td><td class="n"></td>'
+            + '<td class="c"><span class="db-rb wait">폐기</span></td></tr>';
+        }
+        var r1 = a.yes / AV * 100, ok = r1 >= (a.sp ? 33.33 : 25), badge;
+        if (st === 'count') { countN++; badge = '<span class="db-rb count">집계중</span>'; }
+        else if (st === 'done') { if (ok) pass++; else fail++; badge = '<span class="db-rb ' + (ok ? 'pass' : 'fail') + '">' + (ok ? '가결' : '부결') + '</span>'; }
+        else { waitN++; badge = '<span class="db-rb ' + (ok ? 'pass' : 'fail') + '">' + (ok ? '가결 예상' : '부결 예상') + '</span>'; }
         return '<tr>' + rowHead(a)
-          + '<td class="n">' + cm(AV) + '</td><td class="n"></td><td class="n"></td>'
-          + '<td class="n"></td><td class="n"></td>'
-          + '<td class="c"><span class="db-rb ' + (st === 'count' ? 'count' : 'wait') + '">'
-          + { wait: '대기', count: '집계중', drop: '폐기' }[st] + '</span></td></tr>';
-      }
-      var r1 = a.yes / AV * 100;
-      var ok = r1 >= (a.sp ? 33.33 : 25);
-      if (ok) pass++; else fail++;
-      return '<tr>' + rowHead(a)
-        + '<td class="n">' + cm(AV) + '</td><td class="n">' + cm(HOLDERS) + '</td>'
-        + '<td class="n">' + cm(a.w) + '</td>'
-        + '<td class="n">' + yesPct(a.yes, AV) + '</td>'
-        + '<td class="n">' + yesPct(a.yes, a.w) + '</td>'
-        + '<td class="c"><span class="db-rb ' + (ok ? 'pass' : 'fail') + '">'
-        + (ok ? '가결' : '부결') + '</span></td></tr>';
-    }).join('');
-    var noteHtml = '가결 <b style="color:#0071F3">' + pass + '</b>';
-    if (fail) noteHtml += ' · 부결 <b style="color:#E9081B">' + fail + '</b>';
-    if (drop) noteHtml += ' · 폐기 <b style="color:#8a8a8f">' + drop + '</b>';
-    document.getElementById('dbDayWait').textContent = waitN;
-    document.getElementById('dbDayCount').textContent = countN;
-    document.getElementById('dbDayDone').textContent = pass + fail + drop;
-    document.getElementById('dbDayDoneSub').innerHTML = ' (' + noteHtml + ')';
+          + '<td class="n">' + cm(AV) + '</td><td class="n">' + cm(HOLDERS) + '</td>'
+          + '<td class="n">' + cm(a.w) + '</td>'
+          + '<td class="n">' + yesPct(a.yes, AV) + '</td>'
+          + '<td class="n">' + yesPct(a.yes, a.w) + '</td>'
+          + '<td class="c">' + badge + '</td></tr>';
+      }).join('');
+      var noteHtml = '가결 <b style="color:#0071F3">' + pass + '</b>';
+      if (fail) noteHtml += ' · 부결 <b style="color:#E9081B">' + fail + '</b>';
+      if (drop) noteHtml += ' · 폐기 <b style="color:#8a8a8f">' + drop + '</b>';
+      document.getElementById('dbDayWait').textContent = waitN;
+      document.getElementById('dbDayCount').textContent = countN;
+      document.getElementById('dbDayDone').textContent = pass + fail + drop;
+      document.getElementById('dbDayDoneSub').innerHTML = ' (' + noteHtml + ')';
+    }
+    renderDay();
     var rf = document.getElementById('dbRefresh');
-    if (rf) rf.addEventListener('click', function () { if (window.cxToast) cxToast('현장 집계를 새로 불러왔습니다.'); });
+    if (rf) rf.addEventListener('click', function () { renderDay(); if (window.cxToast) cxToast('현장 집계를 새로 불러왔습니다.'); });
+    window.addEventListener('storage', function (e) { if (e.key === 'cxDayState') renderDay(); });
   })();
 
   /* 사전 의안 표 — 가결·부결 예상은 여기서 세어 카드에 그대로 넘긴다 */
@@ -920,7 +926,7 @@
     body.innerHTML = agendaRows().map(function (a) {
       if (a.grp) return '<tr class="grp">' + rowHead(a) + EMPTY + '</tr>';
       if (a.cumParent) return cumParentRow(a);
-      if (a.cand) return candRow(a, true);
+      if (a.cand) return candRow(a, 'wait');
       var r1 = a.yes / AV * 100;
       var ok = r1 >= (a.sp ? 33.33 : 25);
       if (ok) pass++; else fail++;
