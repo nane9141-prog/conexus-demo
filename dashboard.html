@@ -217,19 +217,34 @@
   /* memo panel */
   .memo-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none}
   .memo-ov.show{display:block}
-  .memo-p{position:fixed;top:0;right:0;bottom:0;width:400px;max-width:92vw;background:#fff;box-shadow:-2px 0 12px rgba(0,0,0,.06);border-left:1px solid var(--border);transform:translateX(100%);transition:transform .25s ease;display:flex;flex-direction:column}
+  .memo-p{position:fixed;top:0;right:0;bottom:0;width:440px;max-width:94vw;background:#fff;box-shadow:-2px 0 12px rgba(0,0,0,.06);border-left:1px solid var(--border);transform:translateX(100%);transition:transform .25s ease;display:flex;flex-direction:column}
   .memo-ov.show .memo-p{transform:translateX(0)}
-  .memo-h{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border)}
-  .memo-h .t{font-size:16px;font-weight:600}
-  .memo-x{width:28px;height:28px;border:none;background:none;cursor:pointer;color:#0a0a0a;border-radius:7px;display:flex;align-items:center;justify-content:center}
+  .memo-h{display:flex;align-items:flex-start;justify-content:space-between;padding:20px 20px 12px}
+  .memo-h .t{font-size:20px;font-weight:700;line-height:1.2}
+  .memo-h .memo-sub{font-size:13px;color:#737373;margin-top:6px}
+  .memo-x{width:28px;height:28px;border:none;background:none;cursor:pointer;color:#0a0a0a;border-radius:7px;display:flex;align-items:center;justify-content:center;flex:none}
   .memo-x:hover{background:var(--muted)}
-  .memo-b{flex:1;overflow:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px}
-  .memo-guide{font-size:12px;color:#a3a3a3}
-  .memo-cnt{font-size:12px;color:#737373;display:flex;align-items:center;justify-content:space-between}
-  .memo-cnt button{border:1px solid var(--border);background:#fff;border-radius:8px;height:28px;padding:0 12px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer}
-  .memo-item{border:1px solid var(--border);border-radius:12px;padding:14px;background:#fafafa}
-  .memo-item .mt{font-size:13px;color:#0a0a0a;line-height:1.6;white-space:pre-wrap}
-  .memo-item .mm{font-size:11px;color:#a3a3a3;margin-top:10px}
+  .memo-b{flex:1;overflow:auto;padding:8px 20px 16px}
+  .memo-cnt{display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:700;color:#0a0a0a}
+  .memo-add{border:0;background:#171717;color:#fff;border-radius:9px;height:34px;padding:0 14px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer}
+  .memo-list{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+  .memo-item{border:1px solid #EEF0F2;border-radius:12px;padding:14px}
+  .memo-item .mt{font-size:14px;color:#0a0a0a;line-height:1.55;white-space:pre-wrap}
+  .memo-item .mm{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:#a3a3a3;margin-top:10px}
+  .memo-item .memo-act{display:flex;align-items:center;gap:6px;flex:none;color:#737373}
+  .memo-item .memo-act a{cursor:pointer}
+  .memo-item .memo-act .sep{color:#d4d4d4}
+  .memo-wlabel{font-size:14px;font-weight:600;color:#0a0a0a;margin:6px 0 8px}
+  .memo-ta{width:100%;min-height:300px;box-sizing:border-box;border:1px solid #EEF0F2;border-radius:10px;padding:14px;font-family:inherit;font-size:14px;line-height:1.5;resize:vertical;color:#0a0a0a}
+  .memo-ta::placeholder{color:#a7aab1}
+  .memo-wact{display:flex;gap:8px;margin-top:12px}
+  .memo-wact .wc{border:1px solid #EEF0F2;background:#fff;border-radius:9px;height:38px;padding:0 18px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer}
+  .memo-wact .ws{border:0;background:#171717;color:#fff;border-radius:9px;height:38px;padding:0 20px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer}
+  .memo-f{display:flex;gap:10px;padding:12px 20px}
+  .memo-f button{flex:1;height:46px;border-radius:11px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}
+  .memo-f .mfc{border:1px solid #EEF0F2;background:#fff;color:#0a0a0a}
+  .memo-f .mfs{border:0;background:#9a9a9a;color:#fff}
+  .memo-last{padding:0 20px 16px;text-align:center;font-size:12px;color:#a3a3a3}
 </style>
 <script src="cx-data.js"></script>
 </head>
@@ -605,13 +620,30 @@
 
 <div class="memo-ov" id="memoOv">
   <div class="memo-p">
-    <div class="memo-h"><div class="t">메모</div><button class="memo-x" id="memoClose"><i class="ph ph-x" style="font-size:18px"></i></button></div>
-    <div class="memo-b">
-      <div class="memo-guide">제10기 정기주주총회에 대한 메모를 등록해 주세요.</div>
-      <div class="memo-cnt"><span>전체 <b>2</b>건</span><button id="memoAdd">등록</button></div>
-      <div class="memo-item"><div class="mt">의결권 제한 설정 아직 미완료 — 감사위원 분리선출 건 합산 3%룰 반영 후 재확인 필요.</div><div class="mm">마지막 변경 2026-08-11 14:20 · 박선화</div></div>
-      <div class="memo-item"><div class="mt">현장 리허설 8/26 15:00, 전자주총 접속 테스트 병행 예정.</div><div class="mm">마지막 변경 2026-08-10 09:42 · 강하나</div></div>
+    <div class="memo-h">
+      <div><div class="t">메모</div><div class="memo-sub">제10기 정기주주총회에 대한 메모를 등록합니다.</div></div>
+      <button class="memo-x" id="memoClose"><i class="ph ph-x" style="font-size:18px"></i></button>
     </div>
+    <div class="memo-b">
+      <div id="memoListView">
+        <div class="memo-cnt"><span>전체 <b id="memoCount">3</b>건</span><button class="memo-add" id="memoAdd" type="button">메모등록</button></div>
+        <div class="memo-list" id="memoList">
+          <div class="memo-item"><div class="mt">현장 접수 데스크 2번창구 인력 1명 추가 배치 요청드립니다</div><div class="mm"><span>2026-07-17 15:58 · 박선화</span><span class="memo-act"><a>변경</a><span class="sep">|</span><a>삭제</a></span></div></div>
+          <div class="memo-item"><div class="mt">중복 의결권 3건 처리 후 사전 집계 재확인 필요. 제2-1호 찬성률 변동 가능성 있음.</div><div class="mm"><span>2026-07-17 15:58 · 김지만</span><span class="memo-act"><a>변경</a><span class="sep">|</span><a>삭제</a></span></div></div>
+          <div class="memo-item"><div class="mt">의결권 제한 설정 미완료 상태입니다. 감사위원 선임 건 3% 룰 적용 여부 확인 부탁드립니다.</div><div class="mm"><span>2026-07-17 15:58 · 김지만</span><span class="memo-act"><a>변경</a><span class="sep">|</span><a>삭제</a></span></div></div>
+        </div>
+      </div>
+      <div id="memoWriteView" style="display:none">
+        <div class="memo-wlabel">메모작성</div>
+        <textarea class="memo-ta" id="memoTa" placeholder="내용을 입력해 주세요"></textarea>
+        <div class="memo-wact"><button class="wc" id="memoWCancel" type="button">취소</button><button class="ws" id="memoWSubmit" type="button">등록</button></div>
+      </div>
+    </div>
+    <div class="memo-f">
+      <button class="mfc" id="memoCancel" type="button">취소</button>
+      <button class="mfs" id="memoSave" type="button">저장</button>
+    </div>
+    <div class="memo-last">마지막 변경 2026-07-17 15:58 · 박지용</div>
   </div>
 </div>
 
@@ -670,12 +702,41 @@
       if(e.target===ov || (e.target && e.target.id==='lawDlgOk')) ov.classList.remove('show');
     });
   })();
-  // 메모 패널
+  // 메모 패널 (목록 / 작성 전환)
   (function(){
     var ov=document.getElementById('memoOv'), op=document.getElementById('memoOpen'), cl=document.getElementById('memoClose');
-    if(op)op.addEventListener('click',function(){ov.classList.add('show');});
-    if(cl)cl.addEventListener('click',function(){ov.classList.remove('show');});
-    if(ov)ov.addEventListener('click',function(e){ if(e.target===ov) ov.classList.remove('show'); });
+    var listV=document.getElementById('memoListView'), writeV=document.getElementById('memoWriteView');
+    var add=document.getElementById('memoAdd'), wc=document.getElementById('memoWCancel'), ws=document.getElementById('memoWSubmit');
+    var cancel=document.getElementById('memoCancel'), save=document.getElementById('memoSave');
+    var ta=document.getElementById('memoTa'), list=document.getElementById('memoList'), cnt=document.getElementById('memoCount');
+    function showList(){ if(listV)listV.style.display=''; if(writeV)writeV.style.display='none'; }
+    function showWrite(){ if(listV)listV.style.display='none'; if(writeV)writeV.style.display=''; if(ta){ta.value='';try{ta.focus();}catch(e){}} }
+    function open(){ ov.classList.add('show'); showList(); }
+    function close(){ ov.classList.remove('show'); }
+    if(op)op.addEventListener('click',open);
+    if(cl)cl.addEventListener('click',close);
+    if(cancel)cancel.addEventListener('click',close);
+    if(save)save.addEventListener('click',close);
+    if(add)add.addEventListener('click',showWrite);
+    if(wc)wc.addEventListener('click',showList);
+    if(ws)ws.addEventListener('click',function(){
+      var v=(ta.value||'').trim(); if(!v){ showList(); return; }
+      var now=new Date(), pad=function(n){return(n<10?'0':'')+n;};
+      var ds=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+' '+pad(now.getHours())+':'+pad(now.getMinutes());
+      var el=document.createElement('div'); el.className='memo-item';
+      el.innerHTML='<div class="mt"></div><div class="mm"><span></span><span class="memo-act"><a>변경</a><span class="sep">|</span><a>삭제</a></span></div>';
+      el.querySelector('.mt').textContent=v;
+      el.querySelector('.mm span').textContent=ds+' · 박지용';
+      list.insertBefore(el, list.firstChild);
+      if(cnt) cnt.textContent=list.querySelectorAll('.memo-item').length;
+      showList();
+    });
+    if(list)list.addEventListener('click',function(e){
+      if(e.target.tagName==='A' && e.target.textContent==='삭제'){
+        var it=e.target.closest('.memo-item'); if(it){ it.remove(); if(cnt)cnt.textContent=list.querySelectorAll('.memo-item').length; }
+      }
+    });
+    if(ov)ov.addEventListener('click',function(e){ if(e.target===ov) close(); });
   })();
 </script>
 <script>
