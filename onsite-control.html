@@ -1722,6 +1722,16 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     /* 의장·사회자 화면은 이 신호만 보고 따라 넘어간다 */
     if(window.cxSync) cxSync.set({ag:OC.agenda, stage:(OC.loading?2:OC.stage), sec:voteSec,
       cast:null, done:resMap(), kpi:kpiNow()});
+    /* 대시보드 현장 의안별 행사 현황 반영용 상태 기록 */
+    try {
+      var ds = {};
+      Object.keys(OC.done).forEach(function(no){ if(OC.done[no]) ds[no]='done'; });
+      if(OC.agenda && !ds[OC.agenda]){
+        var s = OC.loading ? 3 : OC.stage;
+        ds[OC.agenda] = (s>=4) ? 'done' : (s>=3) ? 'count' : 'wait';
+      }
+      localStorage.setItem('cxDayState', JSON.stringify(ds));
+    } catch(e){}
   };
   /* 단계별 진행률 — 실시간 운영의 채널 표와 같은 값을 쓴다 */
   OC.frac=function(no){
