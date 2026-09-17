@@ -667,6 +667,15 @@
       var sc=document.querySelector('.scroll'); if(sc) sc.scrollTop=0;
     });
   });
+  // URL ?tab= 초기 진입 (예: dashboard.html?tab=pre → 사전 패널)
+  (function(){
+    var q=new URLSearchParams(location.search).get('tab');
+    if(!q) return;
+    var bt=document.querySelector('.db-tab[data-dt="'+q+'"]');
+    if(bt) bt.click();
+    var lt=document.querySelector('.t[data-tab="'+q+'"]');
+    if(lt){ document.querySelectorAll('.t[data-tab]').forEach(function(x){x.classList.toggle('active',x===lt);}); }
+  })();
   // 변경 법안 알림 배너 펼침/접힘
   (function(){
     var b=document.getElementById('lawBanner'), h=document.getElementById('lawTrig'), m=document.getElementById('lawMore');
