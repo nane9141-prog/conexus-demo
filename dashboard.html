@@ -191,6 +191,18 @@
   .db-ltag{font-size:11px;color:#525252;background:#f4f4f5;border-radius:6px;padding:2px 8px}
   .db-law-cnt{margin-left:auto;flex:none;font-size:12px;color:#737373;display:flex;align-items:center;gap:8px}
   .db-law-cnt .ph{transition:transform .18s}
+  /* 변경법안 안내 모달 */
+  .lawdlg-ov{position:fixed;inset:0;background:rgba(10,12,20,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+  .lawdlg-ov.show{display:flex}
+  .lawdlg{width:520px;max-width:94vw;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;overflow:hidden;box-shadow:0 10px 34px rgba(16,24,40,.14)}
+  .lawdlg-h{padding:16px;font-size:16px;line-height:1;font-weight:600;color:#0A0A0A}
+  .lawdlg-b{padding:0 16px 8px;display:flex;flex-direction:column;gap:20px;max-height:60vh;overflow:auto}
+  .lawdlg-item{display:flex;flex-direction:column;gap:6px}
+  .lawdlg-badge{align-self:flex-start;display:inline-flex;align-items:center;padding:2px 6px;border-radius:6px;background:#F5F5F5;color:#525252;font-size:12px;line-height:16px;font-weight:500}
+  .lawdlg-t{font-size:14px;line-height:20px;font-weight:600;color:#0A0A0A}
+  .lawdlg-d{font-size:12px;line-height:16px;color:#737373}
+  .lawdlg-f{padding:12px 16px 16px}
+  .lawdlg-ok{width:100%;height:32px;border:0;border-radius:10px;background:#171717;color:#FAFAFA;font-size:14px;font-weight:500;cursor:pointer}
   .db-law.open .db-law-cnt .ph{transform:rotate(180deg)}
   .db-law-body{display:none;border-top:1px solid #f0f0f0;padding:6px 18px 14px}
   .db-law.open .db-law-body{display:block}
@@ -350,45 +362,10 @@
               <div class="s">자사주, 상호주, 무효주 제외</div></div>
             <div class="c db-law2" style="padding:12px 16px;gap:4px">
               <div class="hd"><span class="k">변경법안 안내</span><span class="cnt">3</span>
-                <button class="db-ext" id="lawMore" type="button" style="color:#737373">더보기<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></button></div>
+                <button class="db-ext" id="lawMore" type="button" style="color:#737373">자세히<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></button></div>
               <div style="display:flex;flex-direction:column;gap:4px">
                 <div class="nm">독립이사 의무 선임 비율 확대 및 합산 3%룰 전면 확대</div>
                 <div class="s">2026.7.23 시행</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="db-law" id="lawBanner">
-            <div class="db-law-h" id="lawTrig">
-              <div class="db-law-ic"><i class="ph ph-megaphone"></i></div>
-              <div>
-                <div class="db-law-tt">시행 예정·시행 법안 변경 사항</div>
-                <div class="db-law-tags">
-                  <span class="db-ltag">2026.7.23 독립이사 합산 3%룰</span>
-                  <span class="db-ltag">2026.9.10 집중투표 의무화</span>
-                  <span class="db-ltag">2027.1.1 전자주주총회 의무화</span>
-                </div>
-              </div>
-              <div class="db-law-cnt">3건<i class="ph ph-caret-down" style="font-size:16px"></i></div>
-            </div>
-            <div class="db-law-body">
-              <div class="db-law-item">
-                <div class="db-law-date">2026.7.23 시행</div>
-                <div class="db-law-name">독립이사 의무 선임 비율 확대 · 합산 3%룰 전면 확대</div>
-                <div class="db-law-desc">감사위원 분리선출 시 최대주주와 특수관계인의 의결권을 합산하여 3%로 제한합니다. 사외이사 중 독립이사를 1명 이상 반드시 선임해야 합니다.</div>
-                <div class="db-law-chips"><span class="db-chip">독립이사 1명 이상</span><span class="db-chip">합산 3%룰 적용</span></div>
-              </div>
-              <div class="db-law-item">
-                <div class="db-law-date">2026.9.10 시행</div>
-                <div class="db-law-name">자산 2조원 이상 상장사 집중투표제 단계적 의무화</div>
-                <div class="db-law-desc">2인 이상 이사 선임 시 집중투표 청구가 있으면 집중투표 방식으로 표결해야 하며, 정관으로 배제할 수 없습니다.</div>
-                <div class="db-law-chips"><span class="db-chip">2인 이상 이사 선임</span><span class="db-chip">정관 배제 불가</span></div>
-              </div>
-              <div class="db-law-item">
-                <div class="db-law-date">2027.1.1 시행</div>
-                <div class="db-law-name">일정 규모 이상 상장사 전자주주총회 병행 개최 의무화</div>
-                <div class="db-law-desc">현장 총회와 함께 전자적 방법의 출석·의결권 행사를 병행 제공해야 합니다.</div>
-                <div class="db-law-chips"><span class="db-chip">전자출석 병행</span><span class="db-chip">실시간 의결권 행사</span></div>
               </div>
             </div>
           </div>
@@ -684,12 +661,12 @@
     var lt=document.querySelector('.t[data-tab="'+q+'"]');
     if(lt){ document.querySelectorAll('.t[data-tab]').forEach(function(x){x.classList.toggle('active',x===lt);}); }
   })();
-  // 변경 법안 알림 배너 펼침/접힘
+  // 변경법안 안내 — '자세히' 클릭 시 모달
   (function(){
-    var b=document.getElementById('lawBanner'), h=document.getElementById('lawTrig'), m=document.getElementById('lawMore');
-    if(h) h.addEventListener('click',function(){ b.classList.toggle('open'); });
-    /* 요약 카드의 '더보기' 도 같은 배너를 연다 */
-    if(m) m.addEventListener('click',function(){ b.classList.add('open'); b.scrollIntoView({block:'nearest'}); });
+    var m=document.getElementById('lawMore'), ov=document.getElementById('lawDlg'), ok=document.getElementById('lawDlgOk');
+    if(m&&ov) m.addEventListener('click',function(){ ov.classList.add('show'); });
+    if(ok&&ov) ok.addEventListener('click',function(){ ov.classList.remove('show'); });
+    if(ov) ov.addEventListener('click',function(e){ if(e.target===ov) ov.classList.remove('show'); });
   })();
   // 메모 패널
   (function(){
@@ -856,5 +833,28 @@
   });
 })();
 </script>
+<div class="lawdlg-ov" id="lawDlg">
+  <div class="lawdlg">
+    <div class="lawdlg-h">변경법안 안내</div>
+    <div class="lawdlg-b">
+      <div class="lawdlg-item">
+        <span class="lawdlg-badge">2026.7.23 시행</span>
+        <div class="lawdlg-t">독립이사 의무 선임 비율 확대 · 합산 3%룰 전면 확대</div>
+        <div class="lawdlg-d">사외이사 명칭이 독립이사로 변경되며, 감사위원 선임 시 합산 3%룰이 독립이사 포함 전면 적용됩니다. (자산총액 2조원 이상)</div>
+      </div>
+      <div class="lawdlg-item">
+        <span class="lawdlg-badge">2026.9.10 시행</span>
+        <div class="lawdlg-t">집중투표제 의무화</div>
+        <div class="lawdlg-d">자산총액 2조원 이상 상장사는 집중투표제 도입이 의무화됩니다.</div>
+      </div>
+      <div class="lawdlg-item">
+        <span class="lawdlg-badge">2027.1.1 시행</span>
+        <div class="lawdlg-t">전자주주총회 의무화</div>
+        <div class="lawdlg-d">자산총액 2조원 이상 상장사는 전자주주총회 개최가 의무화됩니다.</div>
+      </div>
+    </div>
+    <div class="lawdlg-f"><button class="lawdlg-ok" id="lawDlgOk" type="button">확인</button></div>
+  </div>
+</div>
 </body>
 </html>
