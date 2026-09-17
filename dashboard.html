@@ -129,7 +129,7 @@
   .db-law2 .nm{font-size:14px;line-height:20px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   /* 참석 현황 */
-  .db-att2{display:flex;align-items:center;justify-content:center;gap:10px}
+  .db-att2{display:flex;align-items:center;justify-content:flex-start;gap:10px}
   .db-att2 .k{font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#737373}
   .db-att2 .v{font-size:18px;line-height:28px;font-weight:700;color:#171717;font-variant-numeric:tabular-nums}
   .db-att2 .sep{width:1px;height:12px;background:#E5E5E5}
@@ -846,7 +846,7 @@
     document.getElementById('dbAttN').textContent = cm(tn) + '명';
     g.innerHTML = ATT.map(function (x) {
       return '<div class="db-chc2"><div class="lb"><span class="sw" style="background:' + x.c + '"></span>' + x.nm + '</div>'
-        + '<div class="v">' + cm(x.n) + '명</div><div class="s">' + cm(x.w) + '주</div></div>';
+        + '<div class="v">' + cm(x.w) + '주</div><div class="s">' + cm(x.n) + '명</div></div>';
     }).join('');
     bar.innerHTML = ATT.map(function (x) {
       return '<i style="width:' + (x.w / tw * 100).toFixed(2) + '%;background:' + x.c + '"></i>';
