@@ -121,7 +121,7 @@
   .db-chc2{box-sizing:border-box;display:flex;flex-direction:column;gap:8px;padding:16px;background:#fff;
     border:1px solid #E5E5E5;border-radius:10px;box-shadow:0 1px 2px rgba(0,0,0,.05);min-width:0}
   .db-chc2 .lb{display:flex;align-items:center;gap:6px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;
-    color:#737373;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    color:#737373;min-width:0;word-break:keep-all}
   .db-chc2 .sw{width:6px;height:6px;flex:none}
   .db-chc2 .v{font-size:18px;line-height:1;font-weight:600;color:#0A0A0A;font-variant-numeric:tabular-nums}
   .db-chc2 .s{font-size:14px;line-height:1;font-weight:500;letter-spacing:-.01em;color:#737373;font-variant-numeric:tabular-nums}
@@ -759,8 +759,8 @@
 
   /* 현장 — 참석 채널 여섯 칸과 누적 막대 */
   var ATT = [
-    { nm: '전자투표/위임장(국내)', c: '#0071F3', n: 21121,  w: 152300000 },
-    { nm: '전자투표/위임장(해외)', c: '#0066DF', n: 4820,   w: 52812880 },
+    { nm: '전자투표/위임(국내)',   c: '#0071F3', n: 21121,  w: 152300000 },
+    { nm: '전자투표/위임(해외)',   c: '#0066DF', n: 4820,   w: 52812880 },
     { nm: '서면위임(자사)',        c: '#82BBFF', n: 512,    w: 68400000 },
     { nm: '서면위임(타사)',        c: '#D4E8FF', n: 138,    w: 22100000 },
     { nm: '서면투표',              c: '#EBF4FF', n: 1240,   w: 9800000 },
