@@ -96,6 +96,13 @@
   .db-gbox .d .lb{width:100px;flex:none;font-weight:500;color:#737373}
   .db-gbox .d .vl{flex:1;min-width:0;color:#0A0A0A}
   .db-gbox .d .vl.hl{font-weight:500;color:#0071F3}
+  .db-gbox2{display:flex;flex-direction:column;gap:8px;padding:12px;background:#FAFAFA;border-radius:10px}
+  .db-gbox2 .d{display:flex;align-items:center;gap:8px;font-size:12px;line-height:16px;letter-spacing:-.01em}
+  .db-gbox2 .lb{flex:1;min-width:0;font-weight:500;color:#737373}
+  .db-gbox2 .v1{flex:none;min-width:52px;text-align:right;font-weight:700;color:#0A0A0A;font-variant-numeric:tabular-nums}
+  .db-gbox2 .v2{flex:none;min-width:64px;text-align:right;color:#737373;font-variant-numeric:tabular-nums}
+  .db-ilink{display:inline-flex;align-items:center;gap:3px;color:#0071F3;font-weight:600;text-decoration:none;white-space:nowrap;vertical-align:middle}
+  .db-ilink svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
   /* 사용 서비스 타일 */
   .db-svcs{display:flex;flex-direction:column;gap:8px;flex:1;justify-content:center}
   .db-svcs .r{display:flex;gap:8px}
@@ -479,20 +486,18 @@
               <div class="db-col" style="flex:1;min-width:0">
                 <div class="db-c" style="gap:8px;flex:1">
                   <div class="ch"><div class="ct">중복의결권 현황</div>
-                    <div class="crow"><span class="cd">처리 필요 3건</span>
-                      <a class="db-ext" href="dup-voting.html">중복 의결권 관리<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div></div>
-                  <div class="db-gbox">
-                    <div class="d"><span class="lb">미처리 주주수</span><span class="vl">2명</span></div>
-                    <div class="d"><span class="lb">미처리 주식수</span><span class="vl">80,000주</span></div>
+                    <div class="cd">중복 주주는 <a class="db-ilink" href="dup-voting.html"><svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg>중복의결권 관리</a> 에서 처리해 주세요.</div></div>
+                  <div class="db-gbox2">
+                    <div class="d"><span class="lb">중복 주주</span><span class="v1">3명</span><span class="v2">695주</span></div>
+                    <div class="d"><span class="lb">중복 미처리</span><span class="v1">1명</span><span class="v2">255주</span></div>
                   </div>
                 </div>
                 <div class="db-c" style="gap:8px;flex:1">
                   <div class="ch"><div class="ct">집중투표 분배현황</div>
-                    <div class="crow"><span class="cd">미분배 1건</span>
-                      <a class="db-ext" href="cumulative-voting.html">집중투표 관리<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div></div>
-                  <div class="db-gbox">
-                    <div class="d"><span class="lb">미분배 주주수</span><span class="vl">1명</span></div>
-                    <div class="d"><span class="lb">미분배 주식수</span><span class="vl">40,000주</span></div>
+                    <div class="cd">미분배 그룹은 <a class="db-ilink" href="cumulative-voting.html"><svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg>집중투표 관리</a> 에서 처리해 주세요.</div></div>
+                  <div class="db-gbox2">
+                    <div class="d"><span class="lb">분배 대상 그룹(자사/타사)</span><span class="v1">2건</span><span class="v2">2건</span></div>
+                    <div class="d"><span class="lb">미분배 그룹(자사/타사)</span><span class="v1">-</span><span class="v2">-</span></div>
                   </div>
                 </div>
               </div>
@@ -503,11 +508,11 @@
                   <div class="db-prog"><i style="width:75%"></i></div>
                 </div>
                 <div class="db-steps">
-                  <div class="d"><span class="nm">주주명부 관리</span><span class="db-st done">완료</span><a class="db-ext" href="shareholders.html">바로가기<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div>
-                  <div class="d"><span class="nm">주주명부 설정</span><span class="db-st now"><i class="dot"></i>설정중</span><a class="db-ext" href="roster.html">바로가기<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div>
+                  <div class="d"><span class="nm">주주명부 관리</span><span class="db-st done">완료</span><a class="db-ext" href="roster-manage.html">바로가기<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div>
+                  <div class="d"><span class="nm">주주명부 설정</span><span class="db-st now"><i class="dot"></i>설정중</span><a class="db-ext" href="shareholders.html">바로가기<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div>
                   <div class="d"><span class="nm">주주총회 설정</span><span class="db-st done">완료</span><a class="db-ext" href="meeting-settings.html">바로가기<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div>
                   <div class="d"><span class="nm">의결권제한 설정</span><span class="db-st done">완료</span><a class="db-ext" href="voting-restriction.html">바로가기<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div>
-                  <div class="d"><span class="nm">전자투표/위임장</span><span class="db-st done">완료</span><a class="db-ext" href="electronic-meeting.html">바로가기<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div>
+                  <div class="d"><span class="nm">전자투표/위임장</span><span class="db-st done">완료</span><a class="db-ext" href="evote-records.html">바로가기<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div>
                   <div class="d"><span class="nm">서면투표/위임장</span><span class="db-st now"><i class="dot"></i>설정중</span><a class="db-ext" href="paper-records.html">바로가기<svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg></a></div>
                 </div>
                 <div class="db-alert"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5"/><circle cx="12" cy="16.4" r=".8" fill="#0071F3" stroke="none"/></svg>
