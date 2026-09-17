@@ -546,7 +546,8 @@
           </div>
 
           <div class="db-sec">
-            <div class="db-sec-h"><div class="db-sec-t">의안별 행사 현황</div>
+            <div class="db-sec-h"><div class="db-sec-t with">의안별 행사 현황
+                <button class="db-sbtn" id="dbRefreshPre" type="button"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 1 2.3 5.6"/><path d="M4 20v-5h5"/></svg>새로고침</button></div>
               <div class="db-sec-d">현장 참석 주주수에 따라 결과가 달라질 수 있습니다.</div></div>
             <div class="db-tblc">
               <table class="db-ft">
@@ -598,9 +599,9 @@
                 <div class="db-sec-d">현장 참석 주주수에 따라 결과가 달라질 수 있습니다.</div>
               </div>
               <div class="db-mini3">
-                <div class="db-m3"><span class="k">전체 의안</span><span class="v" id="dbDayTot">0</span></div>
-                <div class="db-m3"><span class="k">진행 중</span><span class="v" id="dbDayRun">0</span></div>
-                <div class="db-m3"><span class="k">표결 마감</span>
+                <div class="db-m3"><span class="k">대기 의안</span><span class="v" id="dbDayWait">0</span></div>
+                <div class="db-m3"><span class="k">집계중</span><span class="v" id="dbDayCount">0</span></div>
+                <div class="db-m3"><span class="k">종료 의안</span>
                   <span class="v"><span id="dbDayDone">0</span><small id="dbDayDoneSub"></small></span></div>
               </div>
             </div>
@@ -796,7 +797,7 @@
       + '<td class="n"></td><td class="n"></td><td class="n"></td><td class="c"></td></tr>';
   }
   function candRow(a, expect) {                 /* 집중투표 후보 하위행 */
-    var lbl = a.elected ? (expect ? '선임 예상' : '선임') : (expect ? '미선임 예상' : '미선임');
+    var lbl = a.elected ? (expect ? '가결 예상' : '가결') : (expect ? '부결 예상' : '부결');
     var badge = '<span class="db-rb ' + (a.elected ? 'pass' : 'fail') + '">' + lbl + '</span>';
     return '<tr>' + rowHead(a)
       + '<td class="n"></td><td class="n"></td>'
@@ -876,15 +877,14 @@
                  '제3호': 'count', '제4-1호': 'done' };
   (function () {
     var body = document.getElementById('dbDayBody'); if (!body) return;
-    var tot = 0, run = 0, pass = 0, fail = 0, drop = 0;
+    var waitN = 0, countN = 0, pass = 0, fail = 0, drop = 0;
     body.innerHTML = agendaRows().map(function (a) {
       if (a.grp) return '<tr class="grp">' + rowHead(a) + EMPTY + '</tr>';
-      if (a.cumParent) { tot++; return cumParentRow(a); }
+      if (a.cumParent) return cumParentRow(a);
       if (a.cand) return candRow(a, false);
-      tot++;
       var st = a.dis ? 'drop' : (DAY_ST[a.no] || 'wait');
       if (st !== 'done') {
-        if (st === 'drop') drop++; else run++;
+        if (st === 'drop') drop++; else if (st === 'count') countN++; else waitN++;
         return '<tr>' + rowHead(a)
           + '<td class="n">' + cm(AV) + '</td><td class="n"></td><td class="n"></td>'
           + '<td class="n"></td><td class="n"></td>'
@@ -902,13 +902,13 @@
         + '<td class="c"><span class="db-rb ' + (ok ? 'pass' : 'fail') + '">'
         + (ok ? '가결' : '부결') + '</span></td></tr>';
     }).join('');
-    var note = ['가결 ' + pass];
-    if (fail) note.push('부결 ' + fail);
-    if (drop) note.push('폐기 ' + drop);
-    document.getElementById('dbDayTot').textContent = tot;
-    document.getElementById('dbDayRun').textContent = run;
+    var noteHtml = '가결 <b style="color:#0071F3">' + pass + '</b>';
+    if (fail) noteHtml += ' · 부결 <b style="color:#E9081B">' + fail + '</b>';
+    if (drop) noteHtml += ' · 폐기 <b style="color:#8a8a8f">' + drop + '</b>';
+    document.getElementById('dbDayWait').textContent = waitN;
+    document.getElementById('dbDayCount').textContent = countN;
     document.getElementById('dbDayDone').textContent = pass + fail + drop;
-    document.getElementById('dbDayDoneSub').textContent = '(' + note.join(' · ') + ')';
+    document.getElementById('dbDayDoneSub').innerHTML = ' (' + noteHtml + ')';
     var rf = document.getElementById('dbRefresh');
     if (rf) rf.addEventListener('click', function () { if (window.cxToast) cxToast('현장 집계를 새로 불러왔습니다.'); });
   })();
@@ -934,6 +934,8 @@
     }).join('');
     document.getElementById('dbPass').textContent = pass;
     document.getElementById('dbFail').textContent = fail;
+    var rfp = document.getElementById('dbRefreshPre');
+    if (rfp) rfp.addEventListener('click', function () { if (window.cxToast) cxToast('사전 집계를 새로 불러왔습니다.'); });
   })();
 })();
 </script>
