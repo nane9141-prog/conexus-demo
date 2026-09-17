@@ -765,27 +765,45 @@
   /* 의안 목록은 현장 제어와 같은 출처(CX.agenda · CX.center)에서 만든다.
      제2호 · 제4호처럼 표결하지 않는 상위 의안은 값 칸을 비워 둔다. */
   function agendaRows() {
-    return CX.agenda.map(function (a) {
+    var out = [];
+    CX.agenda.forEach(function (a) {
       var d = CX.center[a.no];
-      var r = { no: a.no, nm: a.nm, cat: (a.types || []).join(' · '), grp: !!a.header || !d };
-      if (r.grp) return r;
+      if (!!a.header || !d) { out.push({ no: a.no, nm: a.nm, cat: (a.types || []).join(' · '), grp: true }); return; }
+      if (d.cands) {                           /* 집중투표 — 부모행 + 후보 하위행 */
+        var total = d.cands.reduce(function (t, c) { return t + c.votes; }, 0);
+        out.push({ no: a.no, nm: a.nm, cat: (a.types || []).join(' · '), cumParent: true });
+        d.cands.forEach(function (c) {
+          out.push({ no: c.no, nm: c.name, cand: true, votes: c.votes, elected: c.elected, total: total });
+        });
+        return;
+      }
+      var r = { no: a.no, nm: a.nm, cat: (a.types || []).join(' · ') };
       r.sp = (d.thrLabel || '').indexOf('2/3') >= 0;
       r.dis = CX.util.discarded(a.no);
-      if (d.cands) {                           /* 집중투표 — 후보 득표 합계 */
-        r.w = d.cands.reduce(function (t, c) { return t + c.votes; }, 0);
-        r.cum = d.cands.filter(function (c) { return c.elected; }).length;
-      } else {
-        var v = d.options
-          ? (d.options.filter(function (o) { return o.result === '가결'; })[0] || d.options[0])
-          : d;
-        r.yes = v['for']; r.w = v['for'] + v.against + (v.abs || 0);
-      }
-      return r;
+      var v = d.options ? (d.options.filter(function (o) { return o.result === '가결'; })[0] || d.options[0]) : d;
+      r.yes = v['for']; r.w = v['for'] + v.against + (v.abs || 0);
+      out.push(r);
     });
+    return out;
   }
   function rowHead(a) {
-    return '<td>' + a.no + '</td><td>' + a.nm
+    return '<td>' + String(a.no).replace(/제|호/g, '') + '</td><td>' + a.nm
       + (a.cat ? '<span class="db-cat">' + a.cat + '</span>' : '') + '</td>';
+  }
+  function cumParentRow(a) {                    /* 집중투표 부모행: 총 행사가능의결권 + 행사주주만 */
+    return '<tr>' + rowHead(a)
+      + '<td class="n">' + cm(AV) + '</td><td class="n">' + cm(HOLDERS) + '</td>'
+      + '<td class="n"></td><td class="n"></td><td class="n"></td><td class="c"></td></tr>';
+  }
+  function candRow(a, expect) {                 /* 집중투표 후보 하위행 */
+    var lbl = a.elected ? (expect ? '선임 예상' : '선임') : (expect ? '미선임 예상' : '미선임');
+    var badge = '<span class="db-rb ' + (a.elected ? 'pass' : 'fail') + '">' + lbl + '</span>';
+    return '<tr>' + rowHead(a)
+      + '<td class="n"></td><td class="n"></td>'
+      + '<td class="n">' + cm(a.total) + '</td>'
+      + '<td class="n">' + yesPct(a.votes, AV) + '</td>'
+      + '<td class="n">' + yesPct(a.votes, a.total) + '</td>'
+      + '<td class="c">' + badge + '</td></tr>';
   }
   var EMPTY = '<td class="n"></td><td class="n"></td><td class="n"></td>'
             + '<td class="n"></td><td class="n"></td><td class="c"></td>';
@@ -861,6 +879,8 @@
     var tot = 0, run = 0, pass = 0, fail = 0, drop = 0;
     body.innerHTML = agendaRows().map(function (a) {
       if (a.grp) return '<tr class="grp">' + rowHead(a) + EMPTY + '</tr>';
+      if (a.cumParent) { tot++; return cumParentRow(a); }
+      if (a.cand) return candRow(a, false);
       tot++;
       var st = a.dis ? 'drop' : (DAY_ST[a.no] || 'wait');
       if (st !== 'done') {
@@ -871,8 +891,8 @@
           + '<td class="c"><span class="db-rb ' + (st === 'count' ? 'count' : 'wait') + '">'
           + { wait: '대기', count: '집계중', drop: '폐기' }[st] + '</span></td></tr>';
       }
-      var r1 = a.cum ? null : a.yes / AV * 100;
-      var ok = a.cum ? true : r1 >= (a.sp ? 33.33 : 25);
+      var r1 = a.yes / AV * 100;
+      var ok = r1 >= (a.sp ? 33.33 : 25);
       if (ok) pass++; else fail++;
       return '<tr>' + rowHead(a)
         + '<td class="n">' + cm(AV) + '</td><td class="n">' + cm(HOLDERS) + '</td>'
@@ -899,8 +919,10 @@
     var pass = 0, fail = 0;
     body.innerHTML = agendaRows().map(function (a) {
       if (a.grp) return '<tr class="grp">' + rowHead(a) + EMPTY + '</tr>';
-      var r1 = a.cum ? null : a.yes / AV * 100;
-      var ok = a.cum ? true : r1 >= (a.sp ? 33.33 : 25);
+      if (a.cumParent) return cumParentRow(a);
+      if (a.cand) return candRow(a, true);
+      var r1 = a.yes / AV * 100;
+      var ok = r1 >= (a.sp ? 33.33 : 25);
       if (ok) pass++; else fail++;
       return '<tr>' + rowHead(a)
         + '<td class="n">' + cm(AV) + '</td><td class="n">' + cm(HOLDERS) + '</td>'
