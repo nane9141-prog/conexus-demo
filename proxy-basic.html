@@ -35,79 +35,133 @@
   .stat .d{font-size:12px;margin-top:4px}
   .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
-  /* 기본 설정 페이지 */
-  .pb-wrap{max-width:600px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:20px}
-  .pb-head{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding-bottom:4px}
-  .pb-mod{font-size:12px;color:#737373}
-  .pb-save{height:32px;padding:0 14px;border-radius:10px;background:#171717;color:#fafafa;border:none;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer}
-  .pb-item{box-sizing:border-box;border:1px solid var(--border);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:16px}
-  .pb-sec-t{font-size:16px;font-weight:600;color:#0a0a0a;letter-spacing:-.01em}
-  .pb-box{background:#fafafa;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:16px}
+  /* 기본 설정 페이지 (Figma 의결권 권유 설정 / 기본 설정) */
+  .pb-form{max-width:600px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:20px;letter-spacing:-.01em}
+  .pb-head{display:flex;align-items:flex-start;gap:24px;padding-bottom:12px}
+  .pb-head .pb-ttl{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+  .pb-title{font-size:18px;font-weight:600;line-height:28px;color:#0a0a0a;letter-spacing:0}
+  .pb-desc{font-size:12px;line-height:16px;color:#737373}
+  .pb-acts{display:flex;align-items:center;gap:8px;flex:none}
+  .pb-mod{font-size:12px;line-height:16px;color:#737373;white-space:nowrap}
+  .pb-btn{height:32px;padding:0 10px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:500;letter-spacing:-.01em;cursor:pointer;white-space:nowrap}
+  .pb-btn.primary{background:#171717;color:#fafafa;border:none}
+  .pb-btn.primary:disabled{opacity:.5;cursor:default}
+  .pb-btn.outline{background:#fff;border:1px solid #e5e5e5;color:#0a0a0a}
+  .pb-btn.outline:hover{background:#f5f5f5}
+  .pb-items{display:flex;flex-direction:column;gap:12px}
+  .pb-item{box-sizing:border-box;border:1px solid #e5e5e5;border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:24px}
+  .pb-item.g16{gap:16px}
+  .pb-ih{display:flex;flex-direction:column;gap:8px}
+  .pb-it{font-size:16px;font-weight:600;line-height:24px;color:#0a0a0a}
+  .pb-id{font-size:12px;line-height:16px;color:#737373}
   .pb-row{display:flex;gap:16px}
-  .pb-fld{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0}
-  .pb-fld>label{font-size:14px;font-weight:500;color:#0a0a0a}
+  .pb-fld{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+  .pb-fld>label{font-size:14px;font-weight:500;line-height:20px;color:#0a0a0a}
   .pb-dt{display:flex;gap:4px}
-  .pb-inp{box-sizing:border-box;height:32px;border:1px solid var(--border);border-radius:10px;padding:0 10px;background:#fff;font-family:inherit;font-size:14px;color:#0a0a0a;display:flex;align-items:center;gap:8px}
-  .pb-inp.date{flex:1}.pb-inp.time{width:96px;justify-content:center}
-  .pb-cal{display:inline-flex;align-items:center;color:#737373;margin-left:auto}
-  .pb-inp .val{flex:1}.pb-inp .cal{color:#737373;display:inline-flex}
-  .pb-imgblk{display:flex;flex-direction:column;gap:8px}
-  .pb-ib-t{font-size:12px;font-weight:600;color:#0a0a0a}
-  .pb-ib-d{font-size:12px;color:#737373;margin-top:6px;line-height:1.6}
-  .pb-attach{box-sizing:border-box;display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:14px;padding:8px 10px;background:#fff}
-  .pb-fico{width:32px;height:32px;flex:none;border-radius:8px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;color:#0a0a0a}
-  .pb-fbody{flex:1;min-width:0;display:flex;flex-direction:column}
-  .pb-fbody .n{font-size:14px;font-weight:500;color:#0a0a0a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .pb-fbody .m{font-size:12px;color:#737373}
-  .pb-fx{border:none;background:none;color:#0a0a0a;cursor:pointer;display:flex;padding:0;width:14px;height:14px}
-  .pb-prev{border:1px solid var(--border);border-radius:14px;box-shadow:0 0 8px rgba(0,0,0,.12);overflow:hidden;background:#fff;height:180px;display:flex;align-items:center;justify-content:center}
-  .pb-prev.logo{height:120px}
-  .pb-prev img{width:100%;height:100%;object-fit:cover;display:block}
+  .pb-inp{box-sizing:border-box;height:32px;border:1px solid #e5e5e5;border-radius:10px;padding:4px 10px;background:#fff;display:flex;align-items:center;gap:8px;font-family:inherit;font-size:14px;line-height:20px;color:#0a0a0a;letter-spacing:-.01em}
+  .pb-date{flex:1;min-width:0;position:relative;padding-right:34px;cursor:pointer;text-align:left}
+  .pb-date .v{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pb-date .ph{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:14px}
+  .pb-time{width:96px;flex:none}
+  .pb-time .ph{font-size:16px;flex:none}
+  .pb-time input{flex:1;min-width:0;width:100%;border:none;outline:none;background:none;font:inherit;color:inherit;letter-spacing:inherit;padding:0}
+  .pb-form.view .pb-date,.pb-form.view .pb-time{pointer-events:none}
+  .pb-box{background:#fafafa;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px}
+  .pb-box.r14{border-radius:14px}
+  .pb-imgs{display:flex;flex-direction:column;gap:8px}
+  .pb-fh{display:flex;align-items:flex-start;gap:8px}
+  .pb-fh.mid{align-items:center}
+  .pb-fh.pb16{padding-bottom:8px}
+  .pb-fl{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;font-size:12px}
+  .pb-fl .t{font-weight:600;line-height:1;color:#0a0a0a}
+  .pb-fl .d{line-height:16px;color:#737373}
+  .pb-pick{box-sizing:border-box;height:28px;padding:0 10px;border:1px solid #e5e5e5;border-radius:8px;background:#fff;display:inline-flex;align-items:center;gap:4px;font-family:inherit;font-size:12px;font-weight:500;line-height:16px;letter-spacing:-.01em;color:#0a0a0a;cursor:pointer;flex:none}
+  .pb-pick:hover{background:#f5f5f5}
+  .pb-pick .ph{font-size:14px}
+  .pb-form.view .pb-pick{display:none}
+  .pb-form.view .pb-fx{visibility:hidden}
+  .pb-empty{box-sizing:border-box;height:52px;background:#fff;border:1px dashed #e5e5e5;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:8px;color:#737373}
+  .pb-empty>*{opacity:.6}
+  .pb-empty .ph{font-size:24px;color:#0a0a0a}
+  .pb-empty span{font-size:12px;font-weight:600;line-height:16px}
+  /* 첨부 파일 행 */
+  .pb-file{box-sizing:border-box;border:1px solid #e5e5e5;background:#fff;border-radius:10px;padding:8px 10px;display:flex;align-items:center;gap:8px;min-width:0}
+  .pb-file.att{border-radius:14px}
+  .pb-fico{flex:none;border-radius:8px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;color:#0a0a0a;width:28px;height:28px}
+  .pb-fico .ph{font-size:14px}
+  .pb-file.att .pb-fico{width:32px;height:32px}
+  .pb-file.att .pb-fico .ph{font-size:16px}
+  .pb-fn{flex:1;min-width:0;display:flex;align-items:center;gap:4px}
+  .pb-file.att .pb-fn{flex-direction:column;align-items:flex-start;gap:0}
+  .pb-fn .n{flex:1;min-width:0;max-width:100%;font-size:14px;font-weight:500;line-height:20px;color:#0a0a0a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pb-fn .m{font-size:12px;line-height:16px;color:#737373;white-space:nowrap}
+  .pb-fx{flex:none;width:14px;height:14px;padding:0;border:none;background:none;color:#0a0a0a;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .pb-fx .ph{font-size:14px}
+  .pb-prev{box-sizing:border-box;border:1px solid #e5e5e5;border-radius:14px;box-shadow:0 0 8px rgba(0,0,0,.15);overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}
+  .pb-prev.logo{aspect-ratio:600/520}
+  .pb-prev.card{height:289px}
+  .pb-prev img{width:100%;height:100%;object-fit:contain;display:block}
+  .pb-noprev{display:flex;flex-direction:column;align-items:center;gap:12px;opacity:.6}
+  .pb-noprev .ph{font-size:24px;color:#0a0a0a}
+  .pb-noprev span{font-size:12px;font-weight:600;line-height:16px;color:#737373}
+  /* 캘린더 (공통 .cal 스타일 사용) */
+  .cal-day:disabled{color:#d4d4d4;cursor:default;background:none}
+  /* 확인 모달 — 시트 위로 */
+  .adlg-ov{z-index:300}
+  .adlg-foot button{font-family:inherit;letter-spacing:-.01em}
+  .adlg-media .ph{font-size:24px;color:#0a0a0a}
   /* FAQ 설정 */
-  .fa-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
-  .fa-t{font-size:18px;font-weight:600;color:#0a0a0a;line-height:1.4}
-  .fa-d{font-size:13px;color:#737373;margin-top:4px}
-  .fa-sec-h{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .fa-sec-t{font-size:16px;font-weight:600;color:#0a0a0a}
-  .fa-reg{height:32px;padding:0 14px;border-radius:10px;border:1px solid var(--border);background:#fff;font-family:inherit;font-size:14px;font-weight:500;color:#0a0a0a;cursor:pointer}
-  .fa-tbl{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:12px}
-  table.faqtbl{width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed}
-  table.faqtbl thead th{background:#fafafa;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;padding:12px 16px;border-bottom:1px solid var(--border);white-space:nowrap}
-  table.faqtbl thead th.act{width:80px}
-  table.faqtbl tbody td{padding:14px 16px;border-bottom:1px solid #f2f2f2;color:#0a0a0a;vertical-align:middle}
+  .fa-sec-h{display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+  .fa-sec-t{font-size:16px;font-weight:600;line-height:24px;color:#0a0a0a}
+  .fa-tbl{border:1px solid #e5e5e5;border-radius:14px;overflow:hidden;margin-top:12px}
+  table.faqtbl{width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed;letter-spacing:-.01em}
+  table.faqtbl th,table.faqtbl td{padding:0 8px;text-align:left}
+  table.faqtbl th:first-child,table.faqtbl td:first-child{padding-left:24px}
+  table.faqtbl th:last-child,table.faqtbl td:last-child{padding-right:16px}
+  table.faqtbl thead th{height:48px;background:#fafafa;font-weight:500;color:#737373;border-bottom:1px solid #e5e5e5;white-space:nowrap}
+  table.faqtbl tbody td{height:46px;border-bottom:1px solid #e5e5e5;color:#0a0a0a;line-height:20px}
   table.faqtbl tbody tr:last-child td{border-bottom:none}
-  table.faqtbl td.q{font-weight:500;color:#0a0a0a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  table.faqtbl td.q{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   table.faqtbl td.a{color:#737373;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   table.faqtbl td.act{text-align:right;white-space:nowrap}
-  .faq-ic{width:28px;height:28px;border:none;background:none;cursor:pointer;color:#737373;border-radius:6px;display:inline-flex;align-items:center;justify-content:center}
-  .faq-ic:hover{background:#f5f5f5;color:#0a0a0a}
+  .faq-ic{width:28px;height:28px;border:none;background:none;cursor:pointer;color:#0a0a0a;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle}
+  .faq-ic:hover{background:#f5f5f5}
+  .fa-empty{margin-top:12px;box-sizing:border-box;height:160px;background:#fafafa;border:1px dashed #e5e5e5;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#737373}
+  .fa-empty[hidden]{display:none}
+  .fa-empty .ph{font-size:24px}
+  .fa-empty span{font-size:12px;font-weight:600;line-height:16px}
   /* FAQ 등록 상세 시트 */
-  .faq-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none}
+  .faq-ov{position:fixed;inset:0;background:transparent;z-index:200;display:none}
   .faq-ov.show{display:block}
-  .faq-sh{position:absolute;top:0;right:0;height:100%;width:640px;max-width:94vw;background:#fff;border-left:1px solid var(--border);box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);display:flex;flex-direction:column;padding:16px;gap:16px;box-sizing:border-box;transform:translateX(100%);transition:transform .25s}
+  .faq-sh{position:absolute;top:0;right:0;height:100%;width:500px;max-width:94vw;background:#fff;border-left:1px solid #e5e5e5;box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);display:flex;flex-direction:column;padding:16px;gap:16px;box-sizing:border-box;transform:translateX(100%);transition:transform .25s;letter-spacing:-.01em}
   .faq-ov.show .faq-sh{transform:translateX(0)}
-  .faq-x{position:absolute;top:16px;right:16px;width:24px;height:24px;border:none;background:none;cursor:pointer;color:#0a0a0a;display:flex;align-items:center;justify-content:center}.faq-x i{font-size:16px}
+  .faq-x{position:absolute;top:16px;right:16px;width:16px;height:16px;padding:0;border:none;background:none;cursor:pointer;color:#0a0a0a;opacity:.7;display:flex;align-items:center;justify-content:center}.faq-x i{font-size:16px}
+  .faq-x:hover{opacity:1}
   .faq-hd{display:flex;flex-direction:column;gap:2px;padding-right:32px}
-  .faq-hd .t{font-size:16px;font-weight:600;color:#0a0a0a}
-  .faq-hd .d{font-size:12px;color:#737373}
-  .faq-body{flex:1;overflow:auto;display:flex;flex-direction:column;gap:20px}
+  .faq-hd .t{font-size:16px;font-weight:600;line-height:24px;color:#0a0a0a}
+  .faq-hd .d{font-size:12px;line-height:16px;color:#737373}
+  .faq-body{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:24px}
   .faq-fld{display:flex;flex-direction:column;gap:8px}
-  .faq-fld>label{font-size:14px;font-weight:500;color:#0a0a0a}
-  .faq-input{box-sizing:border-box;width:100%;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:14px;color:#0a0a0a;outline:none;resize:none;line-height:1.5}
+  .faq-fld>label{font-size:14px;font-weight:500;line-height:20px;color:#0a0a0a}
+  .faq-input{box-sizing:border-box;width:100%;border:1px solid #e5e5e5;border-radius:10px;padding:8px 10px;font-family:inherit;font-size:14px;color:#0a0a0a;outline:none;resize:none;line-height:20px;letter-spacing:inherit}
+  .faq-input::placeholder,.faq-ta::placeholder{color:#737373}
   .faq-input:focus{border-color:#a3a3a3}
-  .faq-q{min-height:72px}
-  .faq-editor{border:1px solid var(--border);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:420px}
-  .faq-toolbar{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid var(--border);color:#525252;flex-wrap:wrap}
-  .faq-toolbar .tb{width:26px;height:26px;border:none;background:none;border-radius:6px;color:#525252;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
-  .faq-toolbar .tb:hover{background:#f5f5f5;color:#0a0a0a}
-  .faq-toolbar .sep{width:1px;height:16px;background:var(--border);margin:0 2px}
-  .faq-ta{flex:1;border:none;outline:none;resize:none;padding:12px;font-family:inherit;font-size:14px;color:#0a0a0a;line-height:1.6}
+  .faq-q{min-height:64px}
+  .faq-editor{border:1px solid #e5e5e5;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;height:408px;flex:none}
+  .faq-toolbar{display:flex;align-items:center;gap:2px;padding:2px 6px;border-bottom:1px solid #e5e5e5;color:#0a0a0a;flex-wrap:wrap}
+  .faq-toolbar .tb{height:24px;min-width:24px;padding:0 3px;border:none;background:none;border-radius:6px;color:#0a0a0a;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:1px}
+  .faq-toolbar .tb:hover{background:#f5f5f5}
+  .faq-toolbar .tb i{font-size:14px}
+  .faq-toolbar .sp{width:10px}
+  .faq-ta{flex:1;border:none;outline:none;resize:none;padding:8px 10px;font-family:inherit;font-size:14px;color:#0a0a0a;line-height:20px;letter-spacing:inherit}
+  .faq-foot{display:flex;flex-direction:column;gap:12px}
   .faq-ft{display:flex;gap:8px}
-  .faq-ft button{flex:1;height:36px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer}
-  .faq-cancel{background:#fff;border:1px solid var(--border);color:#0a0a0a}
+  .faq-ft button{flex:1;height:32px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:500;letter-spacing:inherit;cursor:pointer}
+  .faq-cancel{background:#fff;border:1px solid #e5e5e5;color:#0a0a0a}
+  .faq-cancel:hover{background:#f5f5f5}
   .faq-okb{background:#171717;border:none;color:#fafafa}
-  .faq-okb:disabled{opacity:.5;cursor:not-allowed}
-  .faq-mod{text-align:right;font-size:12px;color:#737373}
+  .faq-okb:disabled{opacity:.5;cursor:default}
+  .faq-mod{text-align:center;font-size:12px;line-height:16px;color:#737373}
 </style>
 <script src="cx-data.js"></script>
 </head>
@@ -208,8 +262,8 @@
       <div class="left">
         <button class="iconbtn sm" id="toggleLnb" title="사이드바"><i class="ph ph-sidebar-simple" style="font-size:16px"></i></button>
         <span class="vsep"></span>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="crumb">기본 설정</span>
+        <div style="display:flex;align-items:center;gap:10px" id="pbCrumb">
+          <span class="crumb" style="color:var(--muted-fg)">의결권 권유 설정</span><i class="ph ph-caret-right" style="font-size:15px;color:#0a0a0a"></i><span class="crumb" id="pbCrumbCur">기본 설정</span>
         </div>
       </div>
       <button class="iconbtn md" title="변경이력"><i class="ph ph-clock-counter-clockwise" style="font-size:16px"></i></button>
@@ -217,62 +271,86 @@
     <div class="scroll">
       <div class="settings">
         <nav class="st-nav" id="stNav">
-          <button class="st-item active" data-tab="basic"><span class="st-lbl">기본 설정</span><svg class="ic st-chk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></button>
-          <button class="st-item" data-tab="faq"><span class="st-lbl">FAQ 설정</span><svg class="ic st-chk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></button>
+          <button class="st-item active" data-tab="basic" data-crumb="기본 설정"><span class="st-lbl">기본설정</span><svg class="ic st-chk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></button>
+          <button class="st-item" data-tab="faq" data-crumb="FAQ 설정"><span class="st-lbl">FAQ 설정</span><svg class="ic st-chk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></button>
         </nav>
         <div class="st-body">
           <div class="st-tab active" data-panel="basic">
-            <div class="st-form">
-              <div class="fa-head"><div><div class="fa-t">기본 설정</div></div><div style="display:flex;align-items:center;gap:10px"><span class="pb-mod">마지막 수정 2026-07-17 15:58 · 박지용</span><button class="pb-save" type="button">저장</button></div></div>
-              <div class="pb-item">
-              <div class="pb-sec-t">권유기간 설정</div>
-              <div class="pb-box">
-                <div class="pb-row">
-                  <div class="pb-fld"><label>시작 일시</label><div class="pb-dt"><div class="pb-inp date"><span class="val">2026-08-15</span><span class="pb-cal"><i class="ph ph-calendar-blank" style="font-size:14px"></i></span></div><div class="pb-inp time"><span class="val">09:00</span></div></div></div>
-                  <div class="pb-fld"><label>행사 종료일</label><div class="pb-dt"><div class="pb-inp date"><span class="val">2026-08-30</span><span class="pb-cal"><i class="ph ph-calendar-blank" style="font-size:14px"></i></span></div><div class="pb-inp time"><span class="val">17:00</span></div></div></div>
+            <div class="pb-form" id="pbForm">
+              <div class="pb-head">
+                <div class="pb-ttl"><div class="pb-title">기본 설정</div></div>
+                <div class="pb-acts"><span class="pb-mod" id="pbMod" hidden>마지막 변경 2026-07-17 15:58 · 박지용</span><button class="pb-btn primary" id="pbSave" type="button" disabled>저장</button><button class="pb-btn primary" id="pbEdit" type="button" hidden>변경하기</button></div>
+              </div>
+              <div class="pb-items">
+                <div class="pb-item">
+                  <div class="pb-ih"><div class="pb-it">권유기간 설정</div><div class="pb-id">권유 종료일은 주총 당일까지 설정 가능하며, 권유기간 수정은 DART나 공시사이트의 정정 공고 후 진행해 주세요.</div></div>
+                  <div class="pb-row">
+                    <div class="pb-fld"><label>권유시작 일시</label><div class="pb-dt"><button class="pb-inp pb-date" type="button" data-date="sd"><span class="v">날짜 선택</span><i class="ph ph-calendar-blank"></i></button><label class="pb-inp pb-time"><i class="ph ph-clock"></i><input type="text" data-time="st" value="10:30" maxlength="5" inputmode="numeric"></label></div></div>
+                    <div class="pb-fld"><label>권유종료 일시</label><div class="pb-dt"><button class="pb-inp pb-date" type="button" data-date="ed"><span class="v">날짜 선택</span><i class="ph ph-calendar-blank"></i></button><label class="pb-inp pb-time"><i class="ph ph-clock"></i><input type="text" data-time="et" value="10:30" maxlength="5" inputmode="numeric"></label></div></div>
+                  </div>
+                </div>
+                <div class="pb-item g16">
+                  <div class="pb-ih"><div class="pb-it">위임장 양식 등록</div><div class="pb-id">권유자가 주주로부터 수기 서명을 받을 때 사용할 위임장 양식을 등록합니다.</div></div>
+                  <div class="pb-box" data-slot="proxy">
+                    <div class="pb-fh mid"><div class="pb-fl"><div class="t">위임장 양식</div><div class="d">파일 업로드: pdf (최대 50mb)</div></div><button class="pb-pick" type="button"><i class="ph ph-upload-simple"></i>파일 선택</button></div>
+                    <div class="pb-slot"></div>
+                  </div>
+                </div>
+                <div class="pb-item">
+                  <div class="pb-ih"><div class="pb-it">이미지 등록</div><div class="pb-id">주주통신문 등 주주에게 안내하기 위한 이미지를 등록합니다.</div></div>
+                  <div class="pb-imgs">
+                    <div class="pb-box r14" data-slot="logo">
+                      <div class="pb-fh pb16"><div class="pb-fl"><div class="t">회사 로고 이미지</div><div class="d">파일 업로드: png (최대 10mb) / 1,000×1,000px 이상</div></div><button class="pb-pick" type="button"><i class="ph ph-upload-simple"></i>파일 선택</button></div>
+                      <div class="pb-slot"></div>
+                    </div>
+                    <div class="pb-box r14" data-slot="card">
+                      <div class="pb-fh pb16"><div class="pb-fl"><div class="t">담당자 명함(선택)</div><div class="d">파일 업로드: jpg, png, pdf (최대 10mb) / 1080×600px 이상</div></div><button class="pb-pick" type="button"><i class="ph ph-upload-simple"></i>파일 선택</button></div>
+                      <div class="pb-slot"></div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="pb-item">
-              <div class="pb-sec-t">파일 첨부</div>
-              <div class="pb-imgblk">
-                <div><div class="pb-ib-t">권유 참고 자료</div><div class="pb-ib-d">파일 업로드: PDF, XLSX, XLS, DOCX (최대 50MB)</div></div>
-                <div class="pb-attach"><span class="pb-fico"><i class="ph ph-file" style="font-size:16px"></i></span><div class="pb-fbody"><div class="n">의결권대행권유_참고자료.pdf</div><div class="m">pdf・12KB</div></div><button class="pb-fx" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
-              </div>
-            </div>
-            <div class="pb-item">
-              <div class="pb-sec-t">배너 / 로고 이미지</div>
-              <div class="pb-imgblk">
-                <div><div class="pb-ib-t">메인 배너 이미지 (모바일)</div><div class="pb-ib-d">파일 업로드: png (최대 10MB) / 1,000×1,000px 이상</div></div>
-                <div class="pb-attach"><span class="pb-fico"><i class="ph ph-file" style="font-size:16px"></i></span><div class="pb-fbody"><div class="n">banner-mobile.png</div><div class="m">png・320KB</div></div><button class="pb-fx" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
-                <div class="pb-prev"><img src="introduction-img.png" alt="메인 배너"></div>
-              </div>
-              <div class="pb-imgblk">
-                <div><div class="pb-ib-t">로고 이미지 (국문/가로형)</div><div class="pb-ib-d">파일 업로드: jpg, png, pdf (최대 10MB) / 1080×600px 이상</div></div>
-                <div class="pb-attach"><span class="pb-fico"><i class="ph ph-file" style="font-size:16px"></i></span><div class="pb-fbody"><div class="n">logo-ko.png</div><div class="m">png・48KB</div></div><button class="pb-fx" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
-                <div class="pb-prev logo"><img src="KakaoBank_logo.svg" alt="로고 국문"></div>
-              </div>
-            </div>
+              <input type="file" id="pbFile" hidden>
             </div>
           </div>
           <div class="st-tab" data-panel="faq">
-            <div class="st-full">
-              <div class="fa-head">
-                <div><div class="fa-t">FAQ 설정</div><div class="fa-d">의결권 대리행사 모집인 교육자료 및 주주통신문 제작 시 사용할 FAQ를 등록합니다.</div></div>
-                <button class="pb-save" type="button">저장</button>
+            <div class="pb-form" style="gap:24px">
+              <div class="pb-head">
+                <div class="pb-ttl"><div class="pb-title">FAQ 설정</div><div class="pb-desc">의결권 대리행사 모집인 교육자료 및 주주통신문 제작 시 사용할 FAQ를 등록합니다.</div></div>
               </div>
               <div>
-                <div class="fa-sec-h"><div class="fa-sec-t">FAQ 등록</div><button class="fa-reg" id="faqAdd" type="button">등록</button></div>
-                <div class="fa-tbl"><table class="faqtbl"><colgroup><col style="width:32%"><col style="width:56%"><col style="width:12%"></colgroup>
+                <div class="fa-sec-h"><div class="fa-sec-t">FAQ 등록</div><button class="pb-btn outline" id="faqAdd" type="button">등록</button></div>
+                <div class="fa-tbl" id="faqTbl"><table class="faqtbl"><colgroup><col style="width:44%"><col><col style="width:88px"></colgroup>
                   <thead><tr><th>질문</th><th>답변</th><th class="act"></th></tr></thead>
                   <tbody id="faqBody"></tbody>
                 </table></div>
+                <div class="fa-empty" id="faqEmpty" hidden><i class="ph ph-file-dashed"></i><span>등록된 FAQ가 없습니다</span></div>
               </div>
             </div>
-          </div></div>
+          </div>
+        </div>
       </div>
     </div>
   </main>
+</div>
+<!-- 캘린더 팝오버 -->
+<div class="cal hidden" id="pbCal">
+  <div class="cal-head"><button class="cal-nav" type="button" data-cal="-1"><i class="ph ph-caret-left" style="font-size:16px"></i></button><span class="cm" id="pbCalM"></span><button class="cal-nav" type="button" data-cal="1"><i class="ph ph-caret-right" style="font-size:16px"></i></button></div>
+  <div class="cal-grid" id="pbCalGrid"></div>
+</div>
+<!-- 권유기간 변경 확인 -->
+<div class="adlg-ov hidden" id="dlgPeriod">
+  <div class="adlg">
+    <div class="adlg-head"><div class="adlg-media"><i class="ph ph-check-circle"></i></div><div class="adlg-txt"><div class="adlg-title">권유기간을 변경하시겠습니까?</div><div class="adlg-desc">권유기간 변경은 정정 공고 확인 후 진행해 주세요.<br>변경 시 앱 수집현황, 대시보드 등 연관 데이터에 즉시 반영됩니다.</div></div></div>
+    <div class="adlg-foot"><button class="cancel" type="button" data-dlg="no">취소</button><button class="confirm" type="button" data-dlg="ok">변경</button></div>
+  </div>
+</div>
+<!-- 변경사항 / 작성내용 이탈 확인 -->
+<div class="adlg-ov hidden" id="dlgLeave">
+  <div class="adlg">
+    <div class="adlg-head"><div class="adlg-media"><i class="ph ph-warning-circle"></i></div><div class="adlg-txt"><div class="adlg-title" id="dlgLeaveT">변경사항이 있습니다</div><div class="adlg-desc" id="dlgLeaveD">저장하지 않으면 변경 내용이 사라집니다.</div></div></div>
+    <div class="adlg-foot"><button class="cancel" type="button" data-dlg="ok">저장 안 함</button><button class="confirm" type="button" data-dlg="no">계속 편집</button></div>
+  </div>
 </div>
 <script>
   // LNB tab switching (설정/사전/당일)
@@ -302,102 +380,210 @@
     document.addEventListener('click',function(){mp.classList.add('hidden');});
     mp.addEventListener('click',function(e){e.stopPropagation();});
   })();
-  // settings tab switching (in-page st-nav)
-  document.querySelectorAll('.st-nav').forEach(function(nav){
-    nav.querySelectorAll('.st-item').forEach(function(item){
-      item.addEventListener('click',function(){
-        var tab=item.dataset.tab;
-        nav.querySelectorAll('.st-item').forEach(function(i){i.classList.toggle('active',i===item);});
-        var body=nav.parentElement.querySelector('.st-body')||document;
-        body.querySelectorAll('.st-tab').forEach(function(p){p.classList.toggle('active',p.dataset.panel===tab);});
-      });
-    });
-  });
 
-  // 저장 -> 현재 단계 완료 체크 + 다음 단계 이동 (전자주주총회 관리와 동일 구성)
-  var PB_TABS=['basic','faq'];
-  function pbSwitch(id){
-    var nav=document.querySelector('.st-nav'); if(!nav) return;
-    nav.querySelectorAll('.st-item').forEach(function(i){i.classList.toggle('active',i.dataset.tab===id);});
-    var body=nav.parentElement.querySelector('.st-body')||document;
-    body.querySelectorAll('.st-tab').forEach(function(p){p.classList.toggle('active',p.dataset.panel===id);});
-    var sc=document.querySelector('.scroll'); if(sc) sc.scrollTop=0;
+  /* 공용: 확인 모달 (오버레이 클릭으로는 닫지 않음) */
+  function pbAsk(id,onOk,t,d){
+    var ov=document.getElementById(id);
+    if(t) document.getElementById('dlgLeaveT').textContent=t;
+    if(d) document.getElementById('dlgLeaveD').textContent=d;
+    ov.classList.remove('hidden');
+    ov.onclick=function(e){ e.stopPropagation(); var b=e.target.closest('[data-dlg]'); if(!b) return; ov.classList.add('hidden'); if(b.dataset.dlg==='ok') onOk(); };
   }
-  document.querySelectorAll('.pb-save').forEach(function(b){
-    if(b.textContent.trim()!=='저장') return;
-    b.addEventListener('click',function(){
-      var nav=document.querySelector('.st-nav'); if(!nav) return;
-      var cur=nav.querySelector('.st-item.active'); if(cur) cur.classList.add('done');
-      if(window.cxToast)cxToast('저장되었습니다.');
-      var idx=cur?PB_TABS.indexOf(cur.dataset.tab):-1;
-      if(idx>=0&&idx<PB_TABS.length-1){ pbSwitch(PB_TABS[idx+1]); }
+
+  /* ── 기본 설정 ────────────────────────────────────────────────
+     편집모드(저장) ↔ 보기모드(변경하기). 하나라도 입력하면 저장 활성화.
+     등록 후 권유기간을 다시 누르면 '권유기간 변경' 확인 모달. */
+  var PB=(function(){
+    var form=document.getElementById('pbForm'), saveB=document.getElementById('pbSave'), editB=document.getElementById('pbEdit'), modEl=document.getElementById('pbMod'), fileIn=document.getElementById('pbFile');
+    var SPEC={proxy:{ext:['pdf'],mb:50,att:false},logo:{ext:['png'],mb:10,att:true},card:{ext:['jpg','jpeg','png','pdf'],mb:10,att:true}};
+    var S={sd:'',st:'10:30',ed:'',et:'10:30',proxy:null,logo:null,card:null};
+    var saved=null, periodOk=false, pickSlot=null;
+    var LAST=(window.CX&&CX.meeting&&CX.meeting.date)||'2026-03-27';   // 주총 당일 이후 선택 불가
+    function snap(){ return JSON.stringify(S); }
+    function dirty(){ return snap()!==(saved||JSON.stringify({sd:'',st:'10:30',ed:'',et:'10:30',proxy:null,logo:null,card:null})); }
+    function isView(){ return form.classList.contains('view'); }
+    function fmtD(v){ if(!v) return '날짜 선택'; var p=v.split('-'); return p[0]+'년 '+(+p[1])+'월 '+(+p[2])+'일'; }
+    function fmtSize(b){ return b>=1048576?(b/1048576).toFixed(1)+'MB':Math.max(1,Math.round(b/1024))+'KB'; }
+    function esc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    function fileRow(f,att){
+      var x='<button class="pb-fx" type="button" data-fx title="삭제"><i class="ph ph-x"></i></button>';
+      if(!att) return '<div class="pb-file"><span class="pb-fico"><i class="ph ph-file"></i></span><div class="pb-fn"><span class="n">'+esc(f.name)+'</span><span class="m">'+fmtSize(f.size)+'</span></div>'+x+'</div>';
+      return '<div class="pb-file att"><span class="pb-fico"><i class="ph ph-file"></i></span><div class="pb-fn"><span class="n">'+esc(f.name)+'</span><span class="m">'+f.ext+'・'+fmtSize(f.size)+'</span></div>'+x+'</div>';
+    }
+    function render(){
+      form.querySelectorAll('[data-date]').forEach(function(b){ b.querySelector('.v').textContent=fmtD(S[b.dataset.date]); });
+      form.querySelectorAll('[data-time]').forEach(function(i){ i.value=S[i.dataset.time]; });
+      form.querySelectorAll('[data-slot]').forEach(function(box){
+        var k=box.dataset.slot, f=S[k], spec=SPEC[k], slot=box.querySelector('.pb-slot'), h='';
+        if(!spec.att){ h=f?fileRow(f,false):''; }
+        else if(!f){ h='<div class="pb-empty"><i class="ph ph-image"></i><span>등록된 이미지가 없습니다</span></div>'; }
+        else {
+          h=fileRow(f,true)+(f.ext==='pdf'
+            ? '<div class="pb-prev card"><div class="pb-noprev"><i class="ph ph-file-pdf"></i><span>미리보기를 제공하지 않는 파일입니다.</span></div></div>'
+            : '<div class="pb-prev '+(k==='logo'?'logo':'card')+'"><img src="'+f.url+'" alt=""></div>');
+        }
+        slot.innerHTML=h; slot.hidden=!h;
+      });
+      sync();
+    }
+    function sync(){ saveB.disabled=!dirty(); }
+    function setMode(view){
+      form.classList.toggle('view',view);
+      saveB.hidden=view; editB.hidden=!view; modEl.hidden=!saved;
+      if(!view) periodOk=!saved;   // 최초 등록 중에는 확인 모달 없이 입력
+      sync();
+    }
+    // 권유기간 입력: 등록 후 편집이면 먼저 확인 모달
+    function guardPeriod(go){ if(periodOk) return go(); pbAsk('dlgPeriod',function(){ periodOk=true; go(); }); }
+    form.addEventListener('click',function(e){
+      var d=e.target.closest('[data-date]'); if(d){ e.stopPropagation(); guardPeriod(function(){ openCal(d); }); return; }
+      var t=e.target.closest('.pb-time'); if(t && !periodOk){ e.preventDefault(); t.querySelector('input').blur(); guardPeriod(function(){ t.querySelector('input').focus(); }); return; }
+      var p=e.target.closest('.pb-pick'); if(p){ pickSlot=p.closest('[data-slot]').dataset.slot; fileIn.accept=SPEC[pickSlot].ext.map(function(x){return '.'+x;}).join(','); fileIn.value=''; fileIn.click(); return; }
+      var x=e.target.closest('[data-fx]'); if(x){ var k=x.closest('[data-slot]').dataset.slot; S[k]=null; render(); return; }  // 삭제 시 안내 없이 업로드 전 화면으로
     });
-  });
-  // toggles + subtabs
-  document.addEventListener('click',function(e){
-    var sw=e.target.closest('[data-sw]'); if(sw){sw.classList.toggle('on');}
-    var cb=e.target.closest('[data-cbx]'); if(cb){cb.classList.toggle('on');}
-    var rd=e.target.closest('[data-rad]'); if(rd){var g=rd.closest('[data-radgrp]')||rd.parentElement;g.querySelectorAll('[data-rad]').forEach(function(r){r.classList.toggle('on',r===rd);});}
-    var cr=e.target.closest('.chk-row'); if(cr){cr.classList.toggle('on');}
-    var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
-  });
+    form.addEventListener('input',function(e){
+      var i=e.target.closest('[data-time]'); if(!i) return;
+      var v=i.value.replace(/[^0-9]/g,'').slice(0,4); if(v.length>2) v=v.slice(0,2)+':'+v.slice(2);
+      i.value=v; S[i.dataset.time]=v; sync();
+    });
+    form.addEventListener('focusout',function(e){
+      var i=e.target.closest('[data-time]'); if(!i) return;
+      var m=/^(\d{1,2}):?(\d{2})$/.exec(i.value), ok=m&&+m[1]<24&&+m[2]<60;
+      S[i.dataset.time]=ok?String(+m[1]).padStart(2,'0')+':'+m[2]:'10:30'; i.value=S[i.dataset.time]; sync();
+    });
+    fileIn.addEventListener('change',function(){
+      var f=fileIn.files&&fileIn.files[0]; if(!f||!pickSlot) return;
+      var spec=SPEC[pickSlot], ext=(f.name.split('.').pop()||'').toLowerCase();
+      if(spec.ext.indexOf(ext)<0){ cxToast('지원하지 않는 파일 형식입니다.'); return; }
+      if(f.size>spec.mb*1048576){ cxToast('파일 용량이 '+spec.mb+'mb를 초과했습니다.'); return; }
+      S[pickSlot]={name:f.name,size:f.size,ext:ext==='jpeg'?'jpg':ext,url:ext==='pdf'?'':URL.createObjectURL(f)};   // 새 파일 등록 시 이전 파일 대체
+      render();
+    });
+    saveB.addEventListener('click',function(){
+      if(saveB.disabled) return;
+      saved=snap(); setMode(true);
+      document.querySelector('.st-item[data-tab="basic"]').classList.add('done');
+      cxToast('저장되었습니다.');
+    });
+    editB.addEventListener('click',function(){ setMode(false); });
+
+    /* 캘린더 */
+    var cal=document.getElementById('pbCal'), calM=document.getElementById('pbCalM'), grid=document.getElementById('pbCalGrid'), tgt=null, cy=2026, cm=0;
+    function renderCal(){
+      calM.textContent=cy+'년 '+(cm+1)+'월';
+      var h='일월화수목금토'.split('').map(function(d){return '<div class="cal-dow">'+d+'</div>';}).join('');
+      var first=new Date(cy,cm,1).getDay(), days=new Date(cy,cm+1,0).getDate(), cur=S[tgt.dataset.date];
+      for(var i=0;i<first;i++) h+='<div class="cal-day empty"></div>';
+      for(var d=1;d<=days;d++){
+        var v=cy+'-'+String(cm+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+        h+='<button class="cal-day'+(v===cur?' sel':'')+'" type="button" data-v="'+v+'"'+(v>LAST?' disabled':'')+'>'+d+'</button>';
+      }
+      grid.innerHTML=h;
+    }
+    function openCal(btn){
+      tgt=btn; var v=S[btn.dataset.date]||S.sd||LAST, p=v.split('-'); cy=+p[0]; cm=+p[1]-1; renderCal();
+      var r=btn.getBoundingClientRect(), left=Math.min(r.left,innerWidth-288), top=r.bottom+6;
+      if(top+320>innerHeight-8) top=r.top-326;
+      cal.style.left=left+'px'; cal.style.top=top+'px'; cal.classList.remove('hidden');
+    }
+    function closeCal(){ cal.classList.add('hidden'); tgt=null; }
+    cal.addEventListener('click',function(e){
+      e.stopPropagation();
+      var n=e.target.closest('[data-cal]'); if(n){ cm+=+n.dataset.cal; if(cm<0){cm=11;cy--;} if(cm>11){cm=0;cy++;} renderCal(); return; }
+      var d=e.target.closest('.cal-day[data-v]'); if(d&&!d.disabled){ S[tgt.dataset.date]=d.dataset.v; closeCal(); render(); }
+    });
+    document.addEventListener('click',function(){ if(tgt) closeCal(); });
+    window.addEventListener('scroll',function(){ if(tgt) closeCal(); },true);
+
+    render(); setMode(false);
+    return {
+      dirty:function(){ return !isView() && dirty(); },
+      revert:function(){ var o=saved?JSON.parse(saved):{sd:'',st:'10:30',ed:'',et:'10:30',proxy:null,logo:null,card:null}; Object.keys(o).forEach(function(k){S[k]=o[k];}); render(); if(saved) setMode(true); }
+    };
+  })();
+
+  /* 좌측 단계 메뉴 — 편집 중 변경사항이 있으면 이탈 확인 */
+  (function(){
+    var nav=document.getElementById('stNav');
+    function go(tab){
+      nav.querySelectorAll('.st-item').forEach(function(i){ var on=i.dataset.tab===tab; i.classList.toggle('active',on); if(on) document.getElementById('pbCrumbCur').textContent=i.dataset.crumb; });
+      document.querySelectorAll('.st-body .st-tab').forEach(function(p){ p.classList.toggle('active',p.dataset.panel===tab); });
+      var sc=document.querySelector('.scroll'); if(sc) sc.scrollTop=0;
+    }
+    nav.addEventListener('click',function(e){
+      var it=e.target.closest('.st-item'); if(!it||it.classList.contains('active')) return;
+      if(it.dataset.tab!=='basic' && PB.dirty()){ pbAsk('dlgLeave',function(){ PB.revert(); go(it.dataset.tab); },'변경사항이 있습니다','저장하지 않으면 변경 내용이 사라집니다.'); return; }
+      go(it.dataset.tab);
+    });
+    if(location.hash==='#faq') go('faq');
+  })();
 </script>
 <div class="faq-ov" id="faqSheet">
   <aside class="faq-sh" role="dialog" aria-label="FAQ 등록 상세">
     <button class="faq-x" data-faq-close type="button"><i class="ph ph-x"></i></button>
-    <div class="faq-hd"><div class="t" id="faqSheetT">FAQ 등록 상세</div><div class="d">질문과 답변을 등록합니다.</div></div>
+    <div class="faq-hd"><div class="t">FAQ 등록 상세</div><div class="d">질문과 답변을 등록합니다.</div></div>
     <div class="faq-body">
-      <div class="faq-fld"><label>질문</label><textarea class="faq-input faq-q" id="faqQ" placeholder="질문을 입력하세요"></textarea></div>
-      <div class="faq-fld" style="flex:1"><label>답변</label>
-        <div class="faq-editor"><div class="faq-toolbar"><button class="tb" type="button"><i class="ph ph-text-aa" style="font-size:15px"></i></button><button class="tb" type="button"><i class="ph ph-text-t" style="font-size:15px"></i></button><span class="sep"></span><button class="tb" type="button"><b style="font-size:14px">B</b></button><button class="tb" type="button"><i class="ph ph-text-aa-bold" style="font-size:15px"></i></button><span class="sep"></span><button class="tb" type="button"><i class="ph ph-link" style="font-size:15px"></i></button><button class="tb" type="button"><i class="ph ph-table" style="font-size:15px"></i></button><button class="tb" type="button"><i class="ph ph-text-align-left" style="font-size:15px"></i></button><button class="tb" type="button"><i class="ph ph-paragraph" style="font-size:15px"></i></button><span class="sep"></span><button class="tb" type="button"><i class="ph ph-arrows-out-simple" style="font-size:15px"></i></button></div><textarea class="faq-ta" id="faqA" placeholder="답변을 입력하세요"></textarea></div>
+      <div class="faq-fld"><label for="faqQ">질문</label><textarea class="faq-input faq-q" id="faqQ" placeholder="질문을 입력하세요"></textarea></div>
+      <div class="faq-fld"><label for="faqA">답변</label>
+        <div class="faq-editor"><div class="faq-toolbar"><button class="tb" type="button" title="글자 크기"><i class="ph ph-text-aa"></i><i class="ph ph-caret-down" style="font-size:9px"></i></button><button class="tb" type="button" title="글자 색"><i class="ph ph-drop-half-bottom"></i></button><button class="tb" type="button" title="굵게"><i class="ph ph-text-b"></i></button><button class="tb" type="button" title="서식"><i class="ph ph-text-t"></i></button><span class="sp"></span><button class="tb" type="button" title="링크"><i class="ph ph-link"></i></button><button class="tb" type="button" title="표"><i class="ph ph-table"></i></button><span class="sp"></span><button class="tb" type="button" title="정렬"><i class="ph ph-text-align-left"></i></button><button class="tb" type="button" title="문단"><i class="ph ph-paragraph"></i></button><span class="sp"></span><button class="tb" type="button" title="전체화면"><i class="ph ph-corners-out"></i></button></div><textarea class="faq-ta" id="faqA" placeholder="답변을 입력하세요"></textarea></div>
       </div>
     </div>
-    <div class="faq-ft"><button class="faq-cancel" data-faq-close type="button">취소</button><button class="faq-okb" id="faqOk" type="button" disabled>등록</button></div>
-    <div class="faq-mod">마지막 변경 2026-07-17 15:58 · 박지용</div>
+    <div class="faq-foot">
+      <div class="faq-ft"><button class="faq-cancel" data-faq-close type="button">취소</button><button class="faq-okb" id="faqOk" type="button" disabled>등록</button></div>
+      <div class="faq-mod">마지막 변경 2026-07-17 15:58 · 박지용</div>
+    </div>
   </aside>
 </div>
 <script>
 (function(){
   var FAQ=[
-    {q:'수집 수수료는 언제 지급되나요?',a:'수집 수수료는 주주총회 종료 후 위임장 정산이 완료된 다음 영업일에 일괄 지급됩니다.'},
-    {q:'리워드는 어떤 기준으로 적립되나요?',a:'제출하신 위임장이 시스템 유효성 검수를 통과한 건에 한해 리워드가 적립됩니다.'},
-    {q:'차감 내역은 어디서 확인할 수 있나요?',a:'마이페이지 > 리워드/정산 내역 메뉴에서 적립·차감 내역을 확인할 수 있습니다.'},
-    {q:'배정 기준은 어떻게 되나요?',a:'권유자별 담당 지역, 배정된 주주명부 범위와 실적을 종합해 배정됩니다.'},
-    {q:'[주주통신문] 주주총회 당일 현장 참석이 어려우면 어떻게 하나요?',a:'현장 참석이 어려우신 경우 아래 3가지(전자투표·서면위임·대리인 위임) 방법으로 의결권을 행사하실 수 있습니다.'}
+    {q:'수집 수수료는 언제 지급되나요?',a:'수집 수수료는 주주총회 종료 후 위임장 최종 검수가 완료되면 일괄 정산되어 지급됩니다.'},
+    {q:'리워드는 어떤 기준으로 적립되나요?',a:'제출하신 위임장이 시스템 유효성 검수를 통과하여 최종 승인될 때마다 건당 지정된 금액이 적립됩니다.'},
+    {q:'차감 내역은 어디서 확인할 수 있나요?',a:'마이페이지 > 리워드/정산 내역 메뉴의 상세 내역에서 차감 사유와 함께 확인하실 수 있습니다.'},
+    {q:'배정 기준은 어떻게 되나요?',a:'권유자별 담당 지역, 배정된 주주명부 범위 및 기존 목표 달성률을 종합적으로 고려하여 배정됩니다.'},
+    {q:'[주주통신문] 주주총회 당일 현장 참석이 어려운 경우 의결권을 행사하는 방법은 무엇인가요?',a:'현장 참석이 어려우신 경우 아래 3가지 방법으로 의결권을 행사하실 수 있습니다.\n1. 전자투표: 전자투표 시스템([URL 입력])에 접속하여 본인 인증 후 의안별 투표 (기간: O월 O일 ~ O월 O일)\n2. 서면투표: 발송해 드린 서면투표용지에 찬반을 표시하여 동봉된 회신용 봉투로 우편 발송 (O월 O일 도착분까지 유효)\n3. 대리행사 위임: 위임장에 의안별 찬반을 표시 및 서명/날인하신 후, 대리인에게 전달하여 주주총회 당일 현장 제출'}
   ];
   var body=document.getElementById('faqBody'); if(!body) return;
-  var ov=document.getElementById('faqSheet'), qEl=document.getElementById('faqQ'), aEl=document.getElementById('faqA'), okB=document.getElementById('faqOk'), titleEl=document.getElementById('faqSheetT');
+  var tbl=document.getElementById('faqTbl'), empty=document.getElementById('faqEmpty');
+  var ov=document.getElementById('faqSheet'), qEl=document.getElementById('faqQ'), aEl=document.getElementById('faqA'), okB=document.getElementById('faqOk');
   var editIdx=-1;
   function esc(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
   function render(){
+    tbl.hidden=!FAQ.length; empty.hidden=!!FAQ.length;
     body.innerHTML=FAQ.map(function(x,i){
-      return '<tr data-i="'+i+'"><td class="q" title="'+esc(x.q)+'">'+esc(x.q)+'</td><td class="a" title="'+esc(x.a)+'">'+esc(x.a)+'</td>'
-        +'<td class="act"><button class="faq-ic" data-edit="'+i+'" title="수정"><i class="ph ph-pencil-simple" style="font-size:16px"></i></button>'
-        +'<button class="faq-ic" data-del="'+i+'" title="삭제"><i class="ph ph-trash" style="font-size:16px"></i></button></td></tr>';
+      var a=x.a.split('\n')[0];
+      return '<tr data-i="'+i+'"><td class="q" title="'+esc(x.q)+'">'+esc(x.q)+'</td><td class="a" title="'+esc(a)+'">'+esc(a)+'</td>'
+        +'<td class="act"><button class="faq-ic" type="button" data-edit="'+i+'" title="변경"><i class="ph ph-pencil-simple" style="font-size:16px"></i></button>'
+        +'<button class="faq-ic" type="button" data-del="'+i+'" title="삭제"><i class="ph ph-trash" style="font-size:16px"></i></button></td></tr>';
     }).join('');
   }
-  function syncOk(){ okB.disabled=!(qEl.value.trim() && aEl.value.trim()); }
+  function orig(){ return editIdx<0?{q:'',a:''}:FAQ[editIdx]; }
+  function changed(){ var o=orig(); return qEl.value.trim()!==o.q || aEl.value.trim()!==o.a; }
+  function syncOk(){ okB.disabled=!(qEl.value.trim() && aEl.value.trim() && changed()); }
   function openSheet(i){
     editIdx=(i==null?-1:i);
-    titleEl.textContent=(editIdx<0)?'FAQ 등록 상세':'FAQ 수정';
-    qEl.value=editIdx<0?'':FAQ[editIdx].q;
-    aEl.value=editIdx<0?'':FAQ[editIdx].a;
-    okB.textContent=editIdx<0?'등록':'저장';
+    qEl.value=orig().q; aEl.value=orig().a;
+    okB.textContent=editIdx<0?'등록':'변경';
     syncOk(); ov.classList.add('show'); setTimeout(function(){qEl.focus();},50);
   }
   function close(){ ov.classList.remove('show'); }
-  document.getElementById('faqAdd').addEventListener('click',function(){ openSheet(null); });
+  // '등록' 버튼은 시트를 여는 버튼이라 공통 '등록되었습니다.' 토스트가 뜨지 않게 막는다
+  document.getElementById('faqAdd').addEventListener('click',function(e){ e.stopPropagation(); openSheet(null); });
   body.addEventListener('click',function(e){
     var ed=e.target.closest('[data-edit]'); if(ed){ openSheet(+ed.dataset.edit); return; }
-    var dl=e.target.closest('[data-del]'); if(dl){ FAQ.splice(+dl.dataset.del,1); render(); if(window.cxToast)cxToast('삭제되었습니다.'); return; }
+    var dl=e.target.closest('[data-del]'); if(dl){ FAQ.splice(+dl.dataset.del,1); render(); cxToast('FAQ가 삭제됐습니다.'); return; }   // 삭제는 별도 모달 없이
   });
   qEl.addEventListener('input',syncOk); aEl.addEventListener('input',syncOk);
-  ov.addEventListener('click',function(e){ if(e.target.closest('[data-faq-close]')) close(); });
+  ov.addEventListener('click',function(e){
+    if(!e.target.closest('[data-faq-close]')) return;
+    if(changed()) pbAsk('dlgLeave',close,'작성내용이 있습니다','등록하지 않으면 작성 내용이 사라집니다.'); else close();
+  });
   okB.addEventListener('click',function(){
     if(okB.disabled) return;
-    var item={q:qEl.value.trim(),a:aEl.value.trim()};
-    if(editIdx<0) FAQ.push(item); else FAQ[editIdx]=item;
-    render(); close(); if(window.cxToast)cxToast(editIdx<0?'등록되었습니다.':'저장되었습니다.');
+    var item={q:qEl.value.trim(),a:aEl.value.trim()}, isNew=editIdx<0;
+    if(isNew) FAQ.push(item); else FAQ[editIdx]=item;
+    render(); close(); cxToast(isNew?'FAQ를 등록했습니다.':'FAQ를 변경했습니다.');
+    document.querySelector('.st-item[data-tab="faq"]').classList.add('done');
   });
   render();
 })();
