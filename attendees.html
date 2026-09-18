@@ -481,8 +481,9 @@
       var pre=r.pre||[];   /* 사전의결권 행사 내역 — cx-roster SSOT */
       var site=r.site||['미참석','참석','일부 참석','참석','미참석'][i%5];
       if(!r.site && site==='참석' && pre.length && i%3===0) site='철회 후 참석';   /* 사전행사 철회 후 현장 참석(데모) */
+      if(!r.site && site==='참석' && pre.length && i%3===1) site='참관';          /* 사전행사 유지 · 참관 참석(데모) */
       var ppl=(i%6===1)?2:1;                                 /* 주주+대리인 / 대리인 다수 */
-      var app=site==='미참석'?'미사용':(ppl>1?['사용','일부 사용','미사용'][i%3]:(i%4===3?'미사용':'사용'));
+      var app=(site==='미참석'||site==='참관')?'미사용':(ppl>1?['사용','일부 사용','미사용'][i%3]:(i%4===3?'미사용':'사용'));
       var lim=(i%7===3)?LIMIT[i%LIMIT.length]:'-';
       var o={ac:r.ac, voter:(i%150===75)?'-':r.nm, name:r.nm, no:no, pre:pre, hold:r.sh,
         attend:site==='일부 참석'?Math.round(r.sh*0.6):0, ratio:r.rt.toFixed(2)+'%', site:site, app:app,
@@ -708,7 +709,9 @@
       if(e.target.closest('#pvChk')){ e.preventDefault(); pvChk.classList.toggle('on'); pvOk.disabled=!pvChk.classList.contains('on'); return; }
       if(e.target.closest('#pvOk') && !pvOk.disabled){
         pv.classList.remove('show');
-        if(pvMode()==='keep'){ if(window.cxToast) cxToast('사전행사를 유지하고 참관으로 등록했습니다.'); return; }
+        if(pvMode()==='keep'){   /* 사전행사 유지 — 현장 참석 상태 '참관'(보라), 앱 미사용 */
+          var kx=curRows[+pvTr.dataset.k]; if(kx){ kx.site='참관'; kx.app='미사용'; kx.attend=0; (kx.members||[]).forEach(function(m){ m.attend=0; }); render(); }
+          if(window.cxToast) cxToast('사전행사를 유지하고 참관으로 등록했습니다.'); return; }
         pvPass=true; pvTr.cells[2].click(); pvPass=false;   /* 철회 후 현장 참석 — 등록 시트로 */
       }
     });
