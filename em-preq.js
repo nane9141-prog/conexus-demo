@@ -31,7 +31,7 @@
   function voter(r) { var g = (CX.rosterGroups || []).filter(function (g) { return g.members.indexOf(r) >= 0; })[0]; return g ? g.voter : r.nm; }
 
   /* ---------- 표 ---------- */
-  var COLS = [['상태', 90, 'c'], ['접수일', 120, 'c'], ['작성자', 120, 'c'], ['의안번호', 80], ['질의 내용', 0], ['담당자', 100, 'c'], ['답변일', 120, 'c']];
+  var COLS = [['상태', 90, 'c'], ['접수일', 120, 'c'], ['작성자', 120], ['의안번호', 80, 'c', 'c'], ['질의 내용', 0], ['담당자', 100, 'c'], ['답변일', 120, 'c']];
   function val(x, c) {
     switch (c) {
       case '상태': return st(x); case '접수일': return x.at.slice(0, 10); case '작성자': return x.r.nm; case '의안번호': return x.lbl;
@@ -50,7 +50,7 @@
     '<div class="lc-hd"><h2>사전 질의 관리</h2><p>주주가 총회 전 등록한 질의를 확인하고 답변을 관리합니다. 등록한 답변은 주주 사이트의 질의 내역에 노출됩니다.</p></div>' +
     '<div class="lc-bar"><div class="lc-chips" id="pqChips"></div><span data-cx-tools></span></div>' +
     '<div class="lc-wrap"><div class="lc-scroll"><table class="lctbl" id="pqTbl"><colgroup>' + COLS.map(function (c) { return c[1] ? '<col style="width:' + c[1] + 'px">' : '<col>'; }).join('') + '</colgroup>' +
-      '<thead><tr>' + COLS.map(function (c) { return '<th' + (c[2] ? ' class="' + c[2] + '"' : '') + '>' + c[0] + '</th>'; }).join('') + '</tr></thead><tbody id="pqBody"></tbody></table></div>' +
+      '<thead><tr>' + COLS.map(function (c) { return '<th' + (c[2] ? ' class="' + c[2] + '"' : '') + (c[3] ? ' data-al="' + c[3] + '"' : '') + '>' + c[0] + '</th>'; }).join('') + '</tr></thead><tbody id="pqBody"></tbody></table></div>' +
       '<div class="lc-foot"><span class="cnt" id="pqCount"></span><span class="lc-pg">페이지당 <select id="pqSize"><option>20</option><option>50</option><option>100</option></select><span class="lc-pages" id="pqPager"></span></span></div>' +
     '</div></div>' +
     '<div class="sheet-ov lc-sheet" id="pqSheet"><div class="sheet"><button class="sheet-x" data-sx aria-label="닫기"><i class="ph ph-x" style="font-size:16px"></i></button>' +
