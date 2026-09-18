@@ -422,14 +422,19 @@
   function agB(ag){ return ag?'<span class="atb red attip" data-tip="제한 의안: '+ag.join(', ')+'">제한</span>':mu('-'); }
   function voterCell(x,gid){
     if(x.sub && /통합/.test(x.sub)){
-      return '<div class="voter"><button class="tw-chevron collapsed" data-toggle="'+gid+'"><svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button><span>'+x.voter+'</span><span class="tag">'+x.sub+'</span></div>';
+      return '<div class="voter"><button class="tw-chevron collapsed" data-toggle="'+gid+'"><svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button><span>'+x.voter+'</span></div>';
     }
     var sub=x.sub?'<span class="tag">'+x.sub+'</span>':'';
     return '<div class="voter"><span>'+x.voter+'</span>'+sub+'</div>';
   }
+  /* 주주명 칸 — 통합기관은 '통합 N건' 뱃지를 주주명 옆에 */
+  function nameCell(x){
+    if(!(x.sub && /통합/.test(x.sub))) return x.name;
+    return '<div class="voter" style="max-width:100%"><span class="atnm" style="overflow:hidden;text-overflow:ellipsis">'+x.name+'</span><span class="tag">'+x.sub+'</span></div>';
+  }
   function childRows(gid,x){
     return (x.members||[]).map(function(m){
-      return '<tr class="atchild hidden" data-child="'+gid+'"><td></td><td>'+m.name+'</td><td>'+m.no+'</td><td></td><td></td><td></td><td class="n">'+cm(m.hold)+'</td><td class="n">'+m.ratio+'</td><td></td><td></td><td></td></tr>';
+      return '<tr class="atchild hidden" data-child="'+gid+'"><td></td><td>'+m.name+'</td><td>'+m.no+'</td><td class="c">'+preB(x.pre)+'</td><td class="c">'+siteB(x.site)+'</td><td class="c">'+appB(x.app)+'</td><td class="n">'+cm(m.hold)+'</td><td class="n">'+m.ratio+'</td><td></td><td></td><td></td></tr>';
     }).join('');
   }
   /* 세 탭 공통 항목 */
@@ -437,7 +442,7 @@
   var COLS={reg:C,evote:C,all:C};
   var NC=[6,7,8], CC=[3,4,5,10];
   function rowFor(tab,x,gid){
-    return '<td>'+voterCell(x,gid)+'</td><td>'+x.name+'</td><td>'+x.no+'</td><td class="c">'+preB(x.pre)+'</td><td class="c">'+siteB(x.site)+'</td><td class="c">'+appB(x.app)+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+x.ratio+'</td><td class="n">'+(x.attend?cm(x.attend):mu('-'))+'</td><td>'+(x.limit==='-'?mu('-'):'<span title="'+x.limit+'">'+x.limit+'</span>')+'</td><td class="c">'+agB(x.ag)+'</td>';
+    return '<td>'+voterCell(x,gid)+'</td><td>'+nameCell(x)+'</td><td>'+x.no+'</td><td class="c">'+preB(x.pre)+'</td><td class="c">'+siteB(x.site)+'</td><td class="c">'+appB(x.app)+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+x.ratio+'</td><td class="n">'+(x.attend?cm(x.attend):mu('-'))+'</td><td>'+(x.limit==='-'?mu('-'):'<span title="'+x.limit+'">'+x.limit+'</span>')+'</td><td class="c">'+agB(x.ag)+'</td>';
   }
   var cur='reg', headTab=null, page=1, pageSize=20, lastTotal=0;
   var CW={'주주명':140,'주주번호':124,'사전투표':116,'현장 참석':90,'앱 사용':84,'보유주식':110,'지분율':72,'참석주식수':104,'의결권 제한':150,'의안별 제한':92};
@@ -510,7 +515,7 @@
       if(cur!=='reg') return; var tr=e.target.closest('tr'); if(!tr) return;
       var tds=tr.querySelectorAll('td'); if(tds.length<3) return;
       document.getElementById('asVoter').textContent=(tds[0].textContent||'').trim();
-      document.getElementById('asName').textContent=(tds[1].textContent||'').trim();
+      document.getElementById('asName').textContent=((tds[1].querySelector('.atnm')||tds[1]).textContent||'').trim();
       document.getElementById('asNo').textContent=(tds[2].textContent||'').trim();
       var s=document.getElementById('asSec'); if(s) s.classList.remove('collapsed');
       ['asPartQty1','asPartQty2'].forEach(function(id){var pq=document.getElementById(id); if(pq){pq.style.display='none'; pq.value='';}});
