@@ -961,9 +961,9 @@ th.cx-tight .cx-fbtn.cx-act{opacity:1;pointer-events:auto}
 /* 표 도구 — 컬럼 표시 아이콘(Phosphor)은 면 채움 */
 .cx-tbtn svg{width:16px;height:16px}
 .cx-tbtn svg.cx-ph{fill:#171717;stroke:none}
-/* 줄 간격 — 좁게 36px · 넓게 60px (패딩째 조정해야 실제로 바뀐다) */
-table.cx-rh-s tbody td{height:36px;padding-top:2px!important;padding-bottom:2px!important}
-table.cx-rh-l tbody td{height:60px;padding-top:16px!important;padding-bottom:16px!important}
+/* 줄 간격 — 좁게 36px · 넓게 60px (패딩째 조정해야 실제로 바뀐다. 페이지별 td 높이보다 우선하도록 !important) */
+table.cx-rh-s tbody td{height:36px!important;padding-top:2px!important;padding-bottom:2px!important}
+table.cx-rh-l tbody td{height:60px!important;padding-top:16px!important;padding-bottom:16px!important}
 
 
 /* 페이지당 드롭다운(conexus.js pageSelect) — 필터 드롭다운 박스와 같은 모양 */
