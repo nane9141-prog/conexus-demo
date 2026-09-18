@@ -27,23 +27,23 @@
       email: 'sh' + r.i + '@naver.com', phone: '010-' + (2000 + i * 131) + '-' + (4000 + i * 97)
     });
   }
-  function st(x) { return x.ans ? '답변완료' : '미답변'; }
+  function st(x) { return x.ans ? '답변완료' : '대기'; }
   function voter(r) { var g = (CX.rosterGroups || []).filter(function (g) { return g.members.indexOf(r) >= 0; })[0]; return g ? g.voter : r.nm; }
 
   /* ---------- 표 ---------- */
-  var COLS = [['상태', 90, 'c'], ['작성일', 120, 'c'], ['작성자', 120, 'c'], ['질의 제목/내용', 0], ['답변자', 100, 'c'], ['답변일', 120, 'c']];
+  var COLS = [['상태', 90, 'c'], ['접수일', 120, 'c'], ['작성자', 120, 'c'], ['질의 내용', 0], ['담당자', 100, 'c'], ['답변일', 120, 'c']];
   function val(x, c) {
     switch (c) {
-      case '상태': return st(x); case '작성일': return x.at.slice(0, 10); case '작성자': return x.r.nm;
-      case '질의 제목/내용': return x.title + ' ' + x.body; case '답변자': return x.by || '-'; case '답변일': return x.ansAt ? x.ansAt.slice(0, 10) : '-';
+      case '상태': return st(x); case '접수일': return x.at.slice(0, 10); case '작성자': return x.r.nm;
+      case '질의 내용': return x.title + ' ' + x.body; case '담당자': return x.by || '-'; case '답변일': return x.ansAt ? x.ansAt.slice(0, 10) : '-';
     }
     return '';
   }
   function cell(x, c) {
     if (c === '상태') return '<span class="lc-b ' + (x.ans ? 'blue' : 'gray') + '">' + st(x) + '</span>';
-    if (c === '질의 제목/내용') return '<div class="pq-q"><span class="lbl">' + esc(x.lbl) + '</span><span class="tt">' + esc(x.title) + '</span><span class="bd">' + esc(x.body) + '</span></div>';
+    if (c === '질의 내용') return '<div class="pq-q"><span class="lbl">' + esc(x.lbl) + '</span><span class="tt">' + esc(x.title) + '</span><span class="bd">' + esc(x.body) + '</span></div>';
     var t = val(x, c);
-    return (c === '작성일' || c === '답변일' || t === '-') ? '<span class="mu">' + esc(t) + '</span>' : esc(t);
+    return (c === '접수일' || c === '답변일' || t === '-') ? '<span class="mu">' + esc(t) + '</span>' : esc(t);
   }
 
   root.innerHTML = '<div class="lc">' +
@@ -70,7 +70,7 @@
   }
   function render() {
     var n = L.filter(function (x) { return x.ans; }).length;
-    document.getElementById('pqChips').innerHTML = [['all', '전체', L.length], ['답변완료', '답변완료', n], ['미답변', '미답변', L.length - n]].map(function (c) {
+    document.getElementById('pqChips').innerHTML = [['all', '전체', L.length], ['대기', '답변대기', L.length - n], ['답변완료', '답변완료', n]].map(function (c) {
       return '<button type="button" class="lc-chip' + (c[0] === chip ? ' on' : '') + '" data-chip="' + c[0] + '">' + c[1] + '<span class="c">' + c[2] + '</span></button>';
     }).join('');
     var r = rows(); lastTotal = r.length;
@@ -119,7 +119,7 @@
       x.ans = document.getElementById('pqTa').value.trim(); x.by = ME; x.ansAt = EM.now(); mod[x.k] = [x.ansAt, ME];
       var was = editing; editing = false; render(); paint(); EM.toast(was ? '답변을 수정했습니다.' : '답변을 등록했습니다.');
     } else if (act === 'del') {
-      EM.alertDlg({ ic: 'trash', t: '답변을 삭제하시겠습니까?', d: '삭제하면 주주 사이트에서도 답변이 사라지고 미답변 상태로 돌아갑니다.', cancel: 1, ok: '삭제', danger: 1 }, function () {
+      EM.alertDlg({ ic: 'trash', t: '답변을 삭제하시겠습니까?', d: '삭제하면 주주 사이트에서도 답변이 사라지고 답변대기 상태로 돌아갑니다.', cancel: 1, ok: '삭제', danger: 1 }, function () {
         x.ans = ''; x.by = ''; x.ansAt = ''; mod[x.k] = [EM.now(), ME]; render(); paint(); EM.toast('답변을 삭제했습니다.');
       });
     }
