@@ -227,6 +227,22 @@
   .search2{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;min-width:300px}
   .search2 svg{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:2}
   .search2 input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
+  /* 필터 칩 — 현장참석 · 전자참석 · 비주주 (여러 개 선택 시 하나라도 해당하면 표시) */
+  .at-chips{display:flex;align-items:center;gap:6px}
+  .at-chip{box-sizing:border-box;height:32px;display:inline-flex;align-items:center;gap:6px;padding:0 12px;border:1px solid #E5E5E5;border-radius:9999px;background:#fff;font-family:inherit;font-size:13px;font-weight:500;letter-spacing:-.01em;color:#525252;cursor:pointer;white-space:nowrap}
+  .at-chip:hover{background:#FAFAFA}
+  .at-chip b{font-weight:600;color:#a3a3a3;font-variant-numeric:tabular-nums}
+  .at-chip.on{background:#171717;border-color:#171717;color:#fff}
+  .at-chip.on b{color:#d4d4d4}
+  /* 더보기(⋯) 메뉴 — 가이드: 128 · padding 4 · item 28 · r8 */
+  .at-more{width:28px;height:28px;padding:0;border:none;border-radius:8px;background:none;color:#737373;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+  .at-more:hover,.at-more.on{background:#F5F5F5;color:#0A0A0A}
+  .at-more i{font-size:18px}
+  .at-menu{position:fixed;z-index:400;display:none;box-sizing:border-box;width:128px;padding:4px;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:10px;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1)}
+  .at-menu.on{display:block}
+  .at-menu button{box-sizing:border-box;width:100%;height:28px;display:flex;align-items:center;gap:6px;padding:4px 6px;border:none;border-radius:8px;background:none;font-family:inherit;font-size:14px;line-height:20px;letter-spacing:-.01em;color:#E9081B;cursor:pointer;text-align:left}
+  .at-menu button:hover{background:#FFF5F7}
+  .at-menu button:disabled{opacity:.5;cursor:not-allowed;background:none}
   .at-tb-r{display:flex;align-items:center;gap:6px}
   .abtn{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border:1px solid var(--border);border-radius:9px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap}
   .abtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -420,6 +436,7 @@
           <div class="at-tb-l">
             <div class="selbox"><span>투표권자</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
             <div class="search2"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="atSearch" placeholder="투표권자를 검색해 주세요"></div>
+            <div class="at-chips" id="atChips"><button type="button" class="at-chip" data-chip="site">현장참석 <b></b></button><button type="button" class="at-chip" data-chip="e">전자참석 <b></b></button><button type="button" class="at-chip" data-chip="non">비주주 <b></b></button></div>
           </div>
           <div class="at-tb-r">
             <button class="abtn regonly"><i class="ph ph-user-plus" style="font-size:16px"></i>대리인 · 위임주주 등록</button>
@@ -536,6 +553,7 @@
 <script>
 (function(){
   /* 참석자 목록 — cx-roster.js(SSOT) 에서 파생. 상태값은 데모용으로 결정적으로 배정 */
+  function nonSh(nm,kind){ return {nonsh:1, kind:kind, proxy:'-', voter:nm, name:nm, no:'-', pre:[], hold:0, attend:0, ratio:'0.00%', site:'참관', app:'미사용', evote:'미참석', limit:'-', ag:null, key:nm+kind}; }
   var D=(function(){
     var R=(window.CX&&CX.roster)?CX.roster:[];
     /* 사전투표: 미행사(기본) · 단일 채널 7종 · 중복행사(채널 2개 이상) */
@@ -553,7 +571,8 @@
       var ppl=(i%6===1)?2:1;                                 /* 주주+대리인 / 대리인 다수 */
       var app=(site==='미참석'||site==='참관')?'미사용':(ppl>1?['사용','일부 사용','미사용'][i%3]:(i%4===3?'미사용':'사용'));
       var lim=(i%7===3)?LIMIT[i%LIMIT.length]:'-';
-      var o={ac:r.ac, voter:(i%150===75)?'-':r.nm, name:r.nm, no:no, pre:pre, hold:r.sh,
+      var PXN=['김민준','이서연','박지호','최유나','정도윤','한예린'];
+      var o={proxy:(site!=='미참석'&&site!=='참관'&&r.i%4===1)?PXN[r.i%6]:'-', ac:r.ac, voter:(i%150===75)?'-':r.nm, name:r.nm, no:no, pre:pre, hold:r.sh,
         attend:site==='일부 참석'?Math.round(r.sh*0.6):0, ratio:r.rt.toFixed(2)+'%', site:site, app:app,
         code:code, evote:['참석','미참석','일부참석'][i%3], limit:lim, ag:(lim!=='-'&&i%2)?AG[i%AG.length]:null};
       o.ri=r.i; o.key=o.voter+o.name+o.no;
@@ -571,7 +590,10 @@
       lead.key=g.voter+mem.map(function(m){return m.name+m.no;}).join('');
       rows.push(lead);
     });
-    return rows.filter(function(x){return !x.grouped;}).sort(function(a,b){return b.hold-a.hold;});
+    rows=rows.filter(function(x){return !x.grouped;}).sort(function(a,b){return b.hold-a.hold;});
+    /* 비주주(참관인 등) — 의결권 없음, 현장 참관 */
+    [['정다은','참관인'],['오민석','감사인'],['최하린','공증인']].forEach(function(n){ rows.push(nonSh(n[0],n[1])); });
+    return rows;
   })();
   function cm(n){return (n||0).toLocaleString('en-US');}
   function mu(t){return '<span class="atmut">'+t+'</span>';}
@@ -595,21 +617,47 @@
   }
   function childRows(gid,x){
     return (x.members||[]).map(function(m){
-      return '<tr class="atchild hidden" data-child="'+gid+'"><td class="tcell"><span class="cv"></span></td><td>'+m.name+'</td><td>'+m.no+'</td><td class="c">'+preB(x.pre)+'</td><td class="n">'+cm(m.hold)+'</td><td class="n">'+m.ratio+'</td><td class="n">'+(m.attend?cm(m.attend):mu('-'))+'</td><td class="c">'+siteB(x.site)+'</td><td class="c">'+appB(x.app)+'</td><td></td><td></td></tr>';
+      return '<tr class="atchild hidden" data-child="'+gid+'">'+COLS[cur].map(function(c){
+        var v='';
+        if(c==='투표권자') return '<td class="tcell"><span class="cv"></span></td>';
+        if(c==='주주명') v=m.name; else if(c==='주주번호') v=m.no;
+        else if(c==='사전투표') v=preB(x.pre); else if(c==='현장 참석') v=siteB(x.site); else if(c==='앱 사용') v=appB(x.app);
+        else if(c==='보유주식') v=cm(m.hold); else if(c==='지분율') v=m.ratio; else if(c==='참석주식수') v=m.attend?cm(m.attend):mu('-');
+        return '<td'+cls(c)+'>'+v+'</td>';
+      }).join('')+'</tr>';
     }).join('');
   }
   /* 세 탭 공통 항목 */
   var C=['투표권자','주주명','주주번호','사전투표','보유주식','지분율','참석주식수','현장 참석','앱 사용','의결권 제한','의안별 제한'];
-  var COLS={reg:C,evote:C,all:C};
-  var NC=[4,5,6], CC=[3,7,8,9,10];
-  function rowFor(tab,x,gid){
-    return '<td>'+voterCell(x,gid)+'</td><td>'+nameCell(x)+'</td><td>'+x.no+'</td><td class="c">'+preB(x.pre)+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+x.ratio+'</td><td class="n">'+(x.attend?cm(x.attend):mu('-'))+'</td><td class="c">'+siteB(x.site)+'</td><td class="c">'+appB(x.app)+'</td><td class="c">'+(x.limit==='-'?mu('-'):'<span title="'+x.limit+'">'+x.limit+'</span>')+'</td><td class="c">'+agB(x.ag)+'</td>';
+  /* 전체 탭 — 주주번호 오른쪽 '대리인', 맨 뒤 더보기(⋯). 헤더가 빈 칸은 표 도구가 정렬·필터를 달지 않는다 */
+  var CA=C.slice(0,3).concat(['대리인']).concat(C.slice(3)).concat(['']);
+  var COLS={reg:C,evote:C,all:CA};
+  var NUMC=['보유주식','지분율','참석주식수'], CENC=['사전투표','현장 참석','앱 사용','의결권 제한','의안별 제한',''];
+  function cls(c){ return NUMC.indexOf(c)>=0?' class="n"':(CENC.indexOf(c)>=0?' class="c"':''); }
+  function cellHTML(x,c,gid,k){
+    switch(c){
+      case '투표권자': return voterCell(x,gid);
+      case '주주명': return nameCell(x);
+      case '주주번호': return x.no;
+      case '대리인': return (x.proxy&&x.proxy!=='-')?x.proxy:mu('-');
+      case '사전투표': return preB(x.pre);
+      case '보유주식': return cm(x.hold);
+      case '지분율': return x.ratio;
+      case '참석주식수': return x.attend?cm(x.attend):mu('-');
+      case '현장 참석': return siteB(x.site);
+      case '앱 사용': return appB(x.app);
+      case '의결권 제한': return x.limit==='-'?mu('-'):'<span title="'+x.limit+'">'+x.limit+'</span>';
+      case '의안별 제한': return agB(x.ag);
+      case '': return '<button type="button" class="at-more" data-more="'+k+'" aria-label="더보기"><i class="ph ph-dots-three"></i></button>';
+    }
+    return '';
   }
+  function rowFor(tab,x,gid,k){ return COLS[tab].map(function(c){ return '<td'+cls(c)+'>'+cellHTML(x,c,gid,k)+'</td>'; }).join(''); }
   var curRows=[], cur='reg', headTab=null, page=1, pageSize=20, lastTotal=0, sortSt=null;
   /* 컬럼 정렬 — 화면의 한 페이지가 아니라 전체 데이터(D) 기준. 통합기관은 대표 줄 값으로 정렬되고 계좌 줄은 함께 그려진다 */
   function sortVal(x,c){
     switch(c){
-      case '투표권자': return x.voter; case '주주명': return x.name; case '주주번호': return x.no;
+      case '투표권자': return x.voter; case '주주명': return x.name; case '주주번호': return x.no; case '대리인': return x.proxy||'-';
       case '사전투표': return !x.pre.length?'미행사':(x.pre.length>1?'중복행사':x.pre[0]);
       case '현장 참석': return x.site; case '앱 사용': return x.app;
       case '보유주식': return x.hold; case '지분율': return parseFloat(x.ratio); case '참석주식수': return x.attend;
@@ -620,7 +668,7 @@
   /* 칸 글자 — 컬럼 필터가 전체 데이터에서 거르고 목록을 만들 때 쓴다(화면 표기와 같게) */
   function cellText(x,c){
     switch(c){
-      case '투표권자': return x.voter; case '주주명': return x.name; case '주주번호': return x.no;
+      case '투표권자': return x.voter; case '주주명': return x.name; case '주주번호': return x.no; case '대리인': return x.proxy||'-';
       case '사전투표': return !x.pre.length?'미행사':(x.pre.length>1?'중복행사':x.pre[0]);
       case '현장 참석': return x.site; case '앱 사용': return x.app;
       case '보유주식': return cm(x.hold); case '지분율': return x.ratio; case '참석주식수': return x.attend?cm(x.attend):'-';
@@ -638,24 +686,30 @@
       var r=(typeof p==='number'&&typeof q==='number')?p-q:String(p).localeCompare(String(q),'ko');
       return r?d*r:a._o-b._o; });
   }
-  var CW={'주주명':140,'주주번호':140,'사전투표':116,'현장 참석':110,'앱 사용':84,'보유주식':110,'지분율':72,'참석주식수':104,'의결권 제한':150,'의안별 제한':92};
+  var CW={'대리인':96,'주주명':140,'주주번호':140,'사전투표':116,'현장 참석':110,'앱 사용':84,'보유주식':110,'지분율':72,'참석주식수':104,'의결권 제한':150,'의안별 제한':92};
   /* 검색은 항상 전체 데이터(D) 기준. reg 탭은 검색 전엔 목록을 감춘다(null 반환) */
+  var chips={};
+  function chipHit(x,k){ return k==='site'?(x.site!=='미참석'):k==='e'?(x.evote==='참석'||x.evote==='일부참석'):!!x.nonsh; }
   function filteredRows(){
-    var q=(document.getElementById('atSearch').value||'').trim();
-    if(cur==='reg' && !q) return null;
-    return q ? D.filter(function(x){return (x.key||(x.voter+x.name+x.no)).indexOf(q)>=0;}) : D.slice();
+    var q=(document.getElementById('atSearch').value||'').trim(), on=Object.keys(chips).filter(function(k){ return chips[k]; });
+    if(cur==='reg' && !q && !on.length) return null;
+    var r=q ? D.filter(function(x){return (x.key||(x.voter+x.name+x.no)).indexOf(q)>=0;}) : D.slice();
+    if(on.length) r=r.filter(function(x){ return on.some(function(k){ return chipHit(x,k); }); });
+    return r;
   }
+  function chipCounts(){ document.querySelectorAll('#atChips .at-chip').forEach(function(b){ var k=b.dataset.chip; b.querySelector('b').textContent=D.filter(function(x){ return chipHit(x,k); }).length; }); }
   function render(){
     var head=document.getElementById('atHead'), body=document.getElementById('atBody');
-    var cols=COLS[cur], nc=NC, cc=CC;
+    var cols=COLS[cur];
     /* 헤더·콜그룹은 탭이 바뀔 때만 다시 그린다 — 검색마다 다시 그리면 conexus 필터 아이콘이 사라졌다 붙어 흔들린다 */
     if(headTab!==cur){
       var cg=document.getElementById('atCols');
-      if(cg) cg.innerHTML=cols.map(function(c){return '<col style="width:'+(c==='투표권자'?220:(CW[c]||100))+'px">';}).join('');
-      head.innerHTML='<tr>'+cols.map(function(c,i){var cl=nc.indexOf(i)>=0?' class="n"':(cc.indexOf(i)>=0?' class="c"':'');return '<th'+cl+'>'+c+'</th>';}).join('')+'</tr>';
+      if(cg) cg.innerHTML=cols.map(function(c){return '<col style="width:'+(c==='투표권자'?220:(c===''?48:(CW[c]||100)))+'px">';}).join('');
+      head.innerHTML='<tr>'+cols.map(function(c){return '<th'+cls(c)+'>'+c+'</th>';}).join('')+'</tr>';
       headTab=cur; sortSt=null; filtPred=null;
       var tb=document.querySelector('table.attbl'); if(tb.__cx){ tb.__cx.filters={}; tb.__cx.draft={}; }   /* 탭이 바뀌면 컬럼 필터도 초기화 */
     }
+    chipCounts();
     var rows=filteredRows();
     if(rows && filtPred){ var cs=COLS[cur]; rows=rows.filter(function(x){ return filtPred(function(i){ return cellText(x,cs[i]); }); }); }
     if(rows) rows=sortRows(rows);
@@ -666,7 +720,7 @@
     if(page>pages)page=pages; if(page<1)page=1;
     var start=(page-1)*pageSize;
     var pageRows=rows.slice(start, start+pageSize); curRows=pageRows;
-    body.innerHTML=pageRows.map(function(x,i){var gid='g'+(start+i);return '<tr data-k="'+i+'" data-ac="'+(x.ac||'')+'" data-hold="'+x.hold+'">'+rowFor(cur,x,gid)+'</tr>'+childRows(gid,x,cols.length);}).join('');
+    body.innerHTML=pageRows.map(function(x,i){var gid='g'+(start+i);return '<tr data-k="'+i+'" data-ac="'+(x.ac||'')+'" data-hold="'+x.hold+'">'+rowFor(cur,x,gid,i)+'</tr>'+childRows(gid,x,cols.length);}).join('');
     var sum=rows.reduce(function(a,x){return a+(x.hold||0);},0);
     setCount(total,sum); updatePager(total);
   }
@@ -685,6 +739,30 @@
   }
   document.querySelectorAll('.at-tab').forEach(function(t){ t.addEventListener('click',function(){ cur=t.dataset.at; page=1; document.querySelectorAll('.at-tab').forEach(function(x){x.classList.toggle('on',x===t);}); document.querySelectorAll('.regonly').forEach(function(b){b.style.display=(cur==='reg')?'':'none';}); render(); }); });
   document.getElementById('atSearch').addEventListener('input',function(){ page=1; render(); });
+  document.getElementById('atChips').addEventListener('click',function(e){ var b=e.target.closest('.at-chip'); if(!b) return; chips[b.dataset.chip]=!chips[b.dataset.chip]; b.classList.toggle('on',!!chips[b.dataset.chip]); page=1; render(); });
+  /* 더보기(⋯) — 참석 취소 */
+  (function(){
+    var menu=document.createElement('div'); menu.className='at-menu'; menu.innerHTML='<button type="button" data-cancel><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m16.5 16.5 5 5"/><path d="M2 21a8 8 0 0 1 11.531-7.18"/><path d="m21.5 16.5-5 5"/><circle cx="10" cy="8" r="5"/></svg>참석 취소</button>'; document.body.appendChild(menu);
+    var target=null, owner=null;
+    function hideM(){ menu.classList.remove('on'); if(owner) owner.classList.remove('on'); owner=null; }
+    document.getElementById('atBody').addEventListener('click',function(e){
+      var b=e.target.closest('.at-more'); if(!b) return; e.stopPropagation();
+      if(owner===b){ hideM(); return; } hideM();
+      target=curRows[+b.dataset.more]; owner=b; b.classList.add('on');
+      menu.querySelector('[data-cancel]').disabled=!target||target.site==='미참석';
+      var r=b.getBoundingClientRect(); menu.classList.add('on');
+      menu.style.left=Math.max(8,r.right-menu.offsetWidth)+'px';
+      menu.style.top=(r.bottom+4+menu.offsetHeight>window.innerHeight?r.top-4-menu.offsetHeight:r.bottom+4)+'px';
+    });
+    menu.addEventListener('click',function(e){
+      if(!e.target.closest('[data-cancel]')||!target) return;
+      if(target.nonsh){ D.splice(D.indexOf(target),1); }
+      else { target.site='미참석'; target.app='미사용'; target.attend=0; target.proxy='-'; (target.members||[]).forEach(function(m){ m.attend=0; }); }
+      hideM(); render(); if(window.cxToast) cxToast('참석을 취소했습니다.');
+    });
+    document.addEventListener('click',function(e){ if(!e.target.closest('.at-menu')) hideM(); });
+    window.addEventListener('scroll',hideM,true);
+  })();
   /* 컬럼 필터 — 전체 데이터 기준(목록 항목도 전체에서) */
   (function(){ var tb=document.querySelector('table.attbl');
     tb.cxFilter=function(pred){ filtPred=pred; page=1; render(); };
@@ -754,7 +832,7 @@
       if(e.target.closest('#nsKind')){ var on=!dd.classList.contains('on'); dd.classList.toggle('on',on); sel.classList.toggle('open',on); return; }
       var k=e.target.closest('[data-kind]');
       if(k){ kind=k.dataset.kind; paintKind(); dd.classList.remove('on'); sel.classList.remove('open'); check(); $('nsName').focus(); return; }
-      if(e.target.closest('#nsOk') && !ok.disabled){ dlg.classList.remove('show'); if(window.cxToast) cxToast('비주주 등록을 완료했습니다.'); return; }
+      if(e.target.closest('#nsOk') && !ok.disabled){ D.push(nonSh($('nsName').value.trim(), kind)); render(); dlg.classList.remove('show'); if(window.cxToast) cxToast('비주주 등록을 완료했습니다.'); return; }
       if(!e.target.closest('.px-find')){ dd.classList.remove('on'); sel.classList.remove('open'); }
     });
   })();
@@ -834,7 +912,8 @@
       if(e.target.closest('[data-del-proxy]')){ proxy=null; paint(); return; }
       if((t=e.target.closest('[data-del]'))){ holders.splice(+t.dataset.del,1); paint(); return; }
       if(e.target.closest('#pxOk') && !document.getElementById('pxOk').disabled){
-        holders.forEach(function(x){ if(x.site==='미참석') x.site='참석'; });
+        var pn=kind()==='ext'?document.getElementById('pxExtName').value.trim():proxy.name;
+        holders.forEach(function(x){ if(x.site==='미참석') x.site='참석'; x.proxy=pn; });
         dlg.classList.remove('show'); render();
         if(window.cxToast) cxToast('대리인 · 위임주주 등록을 완료했습니다.');
         return;
@@ -852,9 +931,9 @@
     /* 현장 참석 등록된 주주 — 데모용 등록 내용(주주별로 고정) */
     var PX=['김민준','이서연','박지호','최유나','정도윤','한예린'];
     function fill(x, hold){
-      var k=x.ri||0, proxy=(k%4===1);
+      var k=x.ri||0, proxy=!!(x.proxy&&x.proxy!=='-');
       pickV('who', proxy?'proxy':'self'); who(proxy?'proxy':'self');
-      if(proxy){ val('asProxyName', PX[k%PX.length]); val('asBirth', (70+k%25)+('0'+(k%12+1)).slice(-2)+('0'+(k%28+1)).slice(-2)+(k%2?'1':'2')); }
+      if(proxy){ val('asProxyName', x.proxy); val('asBirth', (70+k%25)+('0'+(k%12+1)).slice(-2)+('0'+(k%28+1)).slice(-2)+(k%2?'1':'2')); }
       val('asPhone','010-'+(1000+(k*37)%9000)+'-'+(1000+(k*53)%9000));
       val('asSeat', 'ABCDEF'.charAt(k%6)+'-'+(k%40+1));
       var part=(x.site==='일부 참석');
@@ -946,7 +1025,7 @@
     function pick(el){ var g=el.dataset.rg; ov.querySelectorAll('[data-rg="'+g+'"]').forEach(function(r){r.classList.toggle('on',r===el);}); }
     document.getElementById('atBody').addEventListener('click',function(e){
       if(cur!=='reg') return; var tr=e.target.closest('tr'); if(!tr||tr.classList.contains('atchild')) return;
-      var px=curRows[+tr.dataset.k];
+      var px=curRows[+tr.dataset.k]; if(px&&px.nonsh) return;
       if(!pvPass && px && px.pre.length && px.site==='미참석' && !e.target.closest('.tw-chevron')){ pvOpen(tr, px); return; }
       if(e.target.closest('.tw-chevron')) return;
       var tds=tr.querySelectorAll('td'); if(tds.length<3) return;
