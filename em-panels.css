@@ -147,3 +147,33 @@ input.pg-in[type=time]{width:110px}
 #atRoot tr.child td{color:#737373}
 #atRoot td.tcell{position:relative}
 #atRoot td.tcell .cv{position:absolute;left:28px;top:0;bottom:0;width:1px;background:#e0e0e0}
+
+/* 진행 설정 날짜·시간 피커 — DS ui-calendar 규격 */
+.pk-tr{display:inline-flex;align-items:center;gap:8px;width:140px;cursor:pointer;text-align:left}
+.pk-tr.t{width:104px}
+.pk-tr i{font-size:16px;color:#737373;flex:none}
+.pk-tr span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pk-tr .ph-t{color:#737373}
+.pk-tr:hover{background:#FAFAFA}
+.pk-tr.open{border-color:#A3A3A3}
+.pk-pop{position:fixed;z-index:200;display:none;background:#fff;border:1px solid #E5E5E5;border-radius:10px;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);padding:8px;font-size:14px;letter-spacing:-.01em;color:#0A0A0A}
+.pk-pop.on{display:block}
+.pk-pop button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit;padding:0}
+.pk-pop .cap{display:flex;align-items:center;justify-content:space-between;height:28px;margin-bottom:16px}
+.pk-pop .cap b{font-size:14px;font-weight:500}
+.pk-pop .nav{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.pk-pop .nav:hover{background:#F5F5F5}
+.pk-pop .nav i{font-size:16px}
+.pk-pop .wd,.pk-pop .wk{display:grid;grid-template-columns:repeat(7,28px)}
+.pk-pop .wd span{height:20px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#737373}
+.pk-pop .wk{margin-top:8px}
+.pk-pop .wk button{width:28px;height:28px;border-radius:8px;font-size:14px}
+.pk-pop .wk button:hover{background:#F5F5F5}
+.pk-pop .wk .out{color:#737373}
+.pk-pop .wk .today{background:#F5F5F5}
+.pk-pop .wk .on,.pk-pop .col .on{background:#171717;color:#FAFAFA}
+.pk-pop .tm{display:flex;gap:4px}
+.pk-pop .col{width:48px;height:224px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;scrollbar-width:none}
+.pk-pop .col::-webkit-scrollbar{display:none}
+.pk-pop .col button{flex:none;height:28px;border-radius:8px;font-size:14px;font-variant-numeric:tabular-nums}
+.pk-pop .col button:hover:not(.on){background:#F5F5F5}

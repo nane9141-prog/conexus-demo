@@ -13,7 +13,10 @@
     return '<section class="pg-card' + (on === false ? ' off' : '') + '" data-card="' + k + '"><div class="pg-top"><div><div class="pg-t">' + t + '</div><div class="pg-d">' + d + '</div></div>' + (on == null ? '' : sw(k, on)) + '</div>' + (inner ? '<div class="pg-body">' + inner + '</div>' : '') + '</section>';
   }
   function dt(id, lb, d, t, hint) {
-    return '<div class="pg-f" data-dt="' + id + '"><label>' + lb + '</label><div class="pg-dt"><input type="date" class="pg-in" id="' + id + 'D" value="' + (d || '') + '"><input type="time" class="pg-in" id="' + id + 'T" value="' + (t || '') + '"></div>' + (hint ? '<div class="hint">' + hint + '</div>' : '') + '<div class="err" hidden></div></div>';
+    return '<div class="pg-f" data-dt="' + id + '"><label>' + lb + '</label><div class="pg-dt">' +
+      '<button type="button" class="pg-in pk-tr" data-pk="date" data-for="' + id + 'D"><i class="ph ph-calendar-blank"></i><span></span></button><input type="hidden" id="' + id + 'D" value="' + (d || '') + '">' +
+      '<button type="button" class="pg-in pk-tr t" data-pk="time" data-for="' + id + 'T"><i class="ph ph-clock"></i><span></span></button><input type="hidden" id="' + id + 'T" value="' + (t || '') + '">' +
+      '</div>' + (hint ? '<div class="hint">' + hint + '</div>' : '') + '<div class="err" hidden></div></div>';
   }
   function inp(id, lb, v, ph, w) { return '<div class="pg-f"' + (w ? ' style="width:' + w + 'px"' : ' style="flex:1"') + '><label for="' + id + '">' + lb + '</label><input class="pg-in" id="' + id + '" value="' + (v || '') + '" placeholder="' + (ph || '') + '"></div>'; }
   function unit(id, lb, v, u) { return '<div class="pg-f" style="flex:1"><label for="' + id + '">' + lb + '</label><div class="pg-unit"><input id="' + id + '" inputmode="numeric" value="' + v + '"><span>' + u + '</span></div></div>'; }
@@ -29,25 +32,25 @@
       '<div class="pg-rad">' + rad('pgOpen', 'now', '즉시 공개') + rad('pgOpen', 'rsv', '예약 공개', 1) + '</div><div class="pg-row" id="pgOpenAt">' + dt('pgOpenT', '공개 일시', '2026-03-02', '10:30') + '</div>') +
     card('late', '전자주주총회 중도입장 허용', '개회 후에도 주주가 온라인으로 입장할 수 있습니다. 끄면 개회 이후 시청 버튼이 비활성화됩니다.', '', true) +
     card('apply', '사전 참석 신청', '주총 당일 온라인 참석을 위해 미리 신청받는 기간입니다. 끄면 신청 없이 누구나 입장할 수 있습니다.',
-      '<div class="pg-row">' + dt('pgApS', '신청 시작 일시', '2026-03-09', '09:00') + dt('pgApE', '신청 종료 일시', PREV, '23:59', '총회 전날 24:00까지 설정할 수 있습니다.') + '</div><div class="pg-row">' + unit('pgApN', '참석 인원 제한', '1,000', '명') + '</div>', true) +
+      '<div class="pg-row">' + dt('pgApS', '신청 시작 일시', '2026-03-09', '09:00') + dt('pgApE', '신청 종료 일시', PREV, '23:59', '총회 전날 24:00까지 설정할 수 있습니다.') + '</div><div class="pg-row">' + unit('pgApN', '참석 인원 제한 (선택)', '1,000', '명').replace('flex:1', 'width:268px') + '</div>', true) +
     card('proxy', '대리인 신청 기간', '주주가 대리인을 지정해 참석·의결권 행사를 맡길 수 있도록 신청받는 기간입니다.',
       '<div class="pg-row">' + dt('pgPxS', '지정 시작 일시', '2026-03-09', '09:00', '사전 참석 신청 시작 이후로 설정해 주세요.') + dt('pgPxE', '지정 종료 일시', PREV, '18:00') + '</div>', true) +
     card('preq', '사전 질의 운영 설정', '총회 전 지정한 기간 동안 주주가 질의를 등록·수정할 수 있습니다.',
       '<div class="pg-row">' + dt('pgPqS', '질의 시작 일시', '2026-03-09', '09:00') + dt('pgPqE', '질의 종료 일시', PREV, '23:59', '총회 전날 24:00까지 설정할 수 있습니다.') + '</div>' +
-      '<div class="pg-row">' + unit('pgPqN', '1인당 질의 횟수', '3', '회').replace('flex:1', 'width:270px') + unit('pgPqL', '질의 글자 수 제한', '1,000', '자').replace('flex:1', 'width:270px') + '</div>' +
-      '<div class="pg-row">' + inp('pgPqNote', '사전질의 주의사항', '', '주주에게 안내할 주의사항을 입력해 주세요') + '</div><div class="pg-hr"></div>' +
-      '<div class="pg-f"><span class="pg-lb">주주 권한 설정</span><div class="pg-chk">' + chk('pqAuth', '질의 수정 허용', 1) + chk('pqAuth', '질의 삭제 허용', 1) + chk('pqAuth', '다른 주주 질의 열람') + '</div></div>' +
+      '<div class="pg-row">' + unit('pgPqN', '질의 횟수', '3', '회') + unit('pgPqL', '작성 분량', '1,000', '자') + '</div>' +
+      '<div class="pg-row">' + inp('pgPqNote', '사전질의 주의사항 (선택)', '', '주주에게 안내할 주의사항을 입력해 주세요') + '</div><div class="pg-hr"></div>' +
+      '<div class="pg-f"><span class="pg-lb">주주 권한 설정</span><div class="pg-chk">' + chk('pqAuth', '질의 수정 허용', 1) + chk('pqAuth', '질의 삭제 허용', 1) + '</div></div>' +
       '<div class="pg-f"><span class="pg-lb">관리자 알림 설정</span><div class="pg-chk">' + chk('pqNoti', '신규 질의 등록 시 알림 받기', 1) + '</div><div class="pg-row">' + inp('pgPqMail', '수신 이메일', 'ir@kakaobank.com', 'name@example.com') + inp('pgPqTel', '수신 휴대폰번호', '010-2345-6789', '010-0000-0000') + '</div></div>', true) +
-    card('ask', '온라인 질의 설정', '총회 당일 라이브 중 주주가 텍스트로 질의하는 규칙입니다. 당일 발언과 둘 다 끌 수는 없습니다.',
+    card('ask', '당일 질의 규칙', '전자주주총회 진행 중 텍스트 질의 등록 시 적용되는 제한 규칙을 설정합니다.',
       '<div class="pg-f"><label for="pgAskBy">질의 기준</label>' + sel('pgAskBy', ['의안별', '주총 전체'], 200) + '</div>' +
       '<div class="pg-chk">' + chk('askOnlyCur', '진행 중인 의안에만 질의 허용', 1) + '</div>' +
       '<div class="pg-row">' + unit('pgAskN', '1인당 질의 횟수', '3', '회') + unit('pgAskL', '질의 글자 수 제한', '500', '자') + unit('pgAskGap', '질의 간격', '30', '초') + '</div>' +
-      '<div class="pg-f"><span class="pg-lb">주주 권한 설정</span><div class="pg-chk">' + chk('askAuth', '질의 수정 허용') + chk('askAuth', '질의 삭제 허용', 1) + '</div></div>' +
-      '<div class="pg-f"><span class="pg-lb">질의 공개 범위</span><div class="pg-rad">' + rad('askOpen', 'all', '전체 주주에게 공개', 1) + rad('askOpen', 'admin', '관리자에게만 공개') + '</div></div>', true) +
+      '<div class="pg-f"><span class="pg-lb">주주 권한 설정</span><div class="pg-chk">' + chk('askAuth', '수정 허용') + chk('askAuth', '삭제 허용', 1) + chk('askAuth', '질의 취소 시 횟수 차감 제외') + '</div></div>' +
+      '<div class="pg-f"><span class="pg-lb">질의 공개 범위</span><div class="pg-rad">' + rad('askOpen', 'all', '전체 공개', 1) + rad('askOpen', 'me', '비공개(작성자 본인만 확인)') + '</div></div>', true) +
     card('speak', '당일 발언 규칙', '총회 당일 주주가 음성으로 발언을 신청하는 규칙입니다.',
-      '<div class="pg-f"><label for="pgSpBy">발언 기준</label>' + sel('pgSpBy', ['의안별', '주총 전체'], 176) + '</div>' +
-      '<div class="pg-row">' + unit('pgSpN', '1인당 발언 횟수', '1', '회') + unit('pgSpT', '1회 발언 시간', '3', '분') + '</div>' +
-      '<div class="pg-chk">' + chk('spAuth', '발언 신청 시 의장 승인 후 연결', 1) + chk('spAuth', '대기 순번 주주에게 공개') + '</div>', true) +
+      '<div class="pg-row"><div class="pg-f" style="flex:1"><label for="pgSpBy">발언 기준</label>' + sel('pgSpBy', ['의안별', '주총 전체'], 176).replace('width:176px', 'width:100%') + '</div>' +
+        unit('pgSpN', '1인당 발언 횟수', '1', '회') + unit('pgSpT', '1회 발언 시간', '3', '분') + '</div>' +
+      '<div class="pg-chk">' + chk('spAuth', '질의 취소 시 횟수 차감 제외') + chk('spAuth', '발언신청 삭제 허용', 1) + '</div>', true) +
     card('cc', 'AI 자막 언어 설정', '라이브 화면에 노출할 AI 실시간 자막 언어를 선택합니다.',
       '<div class="pg-chk">' + chk('cc', '한국어', 1) + chk('cc', '영어', 1) + chk('cc', '일본어') + chk('cc', '중국어') + '</div>') +
     '</div>';
@@ -81,7 +84,7 @@
     var s = e.target.closest('[data-pgsw]'); if (!s) return;
     var k = s.dataset.pgsw, next = !s.classList.contains('on');
     if (!next && (k === 'ask' || k === 'speak') && !on(k === 'ask' ? 'speak' : 'ask')) {
-      return EM.alertDlg({ ic: 'info', t: '질의와 발언을 모두 끌 수 없습니다', d: '온라인 질의 또는 당일 발언 중 하나 이상은 켜 두어야 합니다.' });
+      return EM.alertDlg({ ic: 'info', t: '질의와 발언을 모두 끌 수 없습니다', d: '당일 질의 또는 당일 발언 중 하나 이상은 켜 두어야 합니다.' });
     }
     s.classList.toggle('on', next); s.setAttribute('aria-checked', next);
     s.closest('.pg-card').classList.toggle('off', !next);
@@ -96,5 +99,62 @@
     if (!validate()) return;
     EM.setDirty('progress', false); EM.markDone('progress'); EM.toast('저장되었습니다');
   });
+  /* ---------- 날짜 · 시간 피커 (DS Calendar 규격: 셀 28 · nav 28 · 오늘 muted · 선택 primary) ---------- */
+  var pop = document.createElement('div'); pop.className = 'pk-pop'; document.body.appendChild(pop);
+  var pkBtn = null, pkMonth = null, TODAY = (function () { var d = new Date(); return d.getFullYear() + '-' + EM.p2(d.getMonth() + 1) + '-' + EM.p2(d.getDate()); })();
+  function paintTr(b) {
+    var v = $(b.dataset.for).value, sp = b.querySelector('span');
+    sp.textContent = v ? (b.dataset.pk === 'date' ? v.replace(/-/g, '. ') + '.' : v) : (b.dataset.pk === 'date' ? '날짜 선택' : '시간 선택');
+    sp.className = v ? '' : 'ph-t';
+  }
+  root.querySelectorAll('.pk-tr').forEach(paintTr);
+  function setVal(v) { $(pkBtn.dataset.for).value = v; paintTr(pkBtn); touch(); }
+  function calHtml() {
+    var y = pkMonth.getFullYear(), m = pkMonth.getMonth(), first = new Date(y, m, 1), start = new Date(y, m, 1 - first.getDay()), sel = $(pkBtn.dataset.for).value, h = '';
+    for (var i = 0; i < 42; i++) {
+      var d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i), k = d.getFullYear() + '-' + EM.p2(d.getMonth() + 1) + '-' + EM.p2(d.getDate());
+      if (i % 7 === 0) h += '<div class="wk">';
+      h += '<button type="button" data-day="' + k + '" class="' + (d.getMonth() !== m ? 'out ' : '') + (k === TODAY ? 'today ' : '') + (k === sel ? 'on' : '') + '">' + d.getDate() + '</button>';
+      if (i % 7 === 6) h += '</div>';
+    }
+    return '<div class="cap"><button type="button" class="nav" data-mv="-1" aria-label="이전 달"><i class="ph ph-caret-left"></i></button><b>' + y + '년 ' + (m + 1) + '월</b><button type="button" class="nav" data-mv="1" aria-label="다음 달"><i class="ph ph-caret-right"></i></button></div>' +
+      '<div class="wd">' + ['일', '월', '화', '수', '목', '금', '토'].map(function (w) { return '<span>' + w + '</span>'; }).join('') + '</div>' + h;
+  }
+  function timeHtml() {
+    var v = ($(pkBtn.dataset.for).value || '').split(':');
+    function col(n, cur, k) { var h = ''; for (var i = 0; i < n; i++) { var t = EM.p2(i); h += '<button type="button" data-' + k + '="' + t + '"' + (t === cur ? ' class="on"' : '') + '>' + t + '</button>'; } return '<div class="col">' + h + '</div>'; }
+    return '<div class="tm">' + col(24, v[0], 'hh') + col(60, v[1], 'mm') + '</div>';
+  }
+  function paintPop() {
+    pop.className = 'pk-pop on ' + pkBtn.dataset.pk;
+    pop.innerHTML = pkBtn.dataset.pk === 'date' ? calHtml() : timeHtml();
+    pop.querySelectorAll('.col .on').forEach(function (b) { var c = b.parentNode; c.scrollTop = b.offsetTop - c.offsetTop - (c.clientHeight - b.offsetHeight) / 2; });
+  }
+  function closePk() { pop.className = 'pk-pop'; if (pkBtn) pkBtn.classList.remove('open'); pkBtn = null; }
+  root.addEventListener('click', function (e) {
+    var b = e.target.closest('.pk-tr'); if (!b) return;
+    if (pkBtn === b) return closePk();
+    closePk(); pkBtn = b; b.classList.add('open');
+    var v = $(b.dataset.for).value; pkMonth = v && b.dataset.pk === 'date' ? new Date(v + 'T00:00:00') : new Date(); pkMonth.setDate(1);
+    paintPop();
+    var r = b.getBoundingClientRect(), top = r.bottom + 4;
+    if (top + pop.offsetHeight > innerHeight - 8) top = r.top - 4 - pop.offsetHeight;
+    pop.style.left = r.left + 'px'; pop.style.top = top + 'px';
+    e.stopPropagation();
+  });
+  pop.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    e.stopPropagation();
+    if (b.dataset.mv) { pkMonth.setMonth(pkMonth.getMonth() + +b.dataset.mv); return paintPop(); }
+    if (b.dataset.day) { setVal(b.dataset.day); return closePk(); }
+    var v = ($(pkBtn.dataset.for).value || '00:00').split(':');
+    if (b.dataset.hh) v[0] = b.dataset.hh; else v[1] = b.dataset.mm;
+    setVal(v[0] + ':' + v[1]);
+    [].forEach.call(b.parentNode.children, function (x) { x.classList.toggle('on', x === b); });
+    if (b.dataset.mm) closePk();
+  });
+  document.addEventListener('click', function (e) { if (pkBtn && !e.target.closest('.pk-pop')) closePk(); });
+  window.addEventListener('scroll', function (e) { if (pkBtn && !pop.contains(e.target)) closePk(); }, true);
+
   validate();
 })();
