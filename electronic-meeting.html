@@ -9,6 +9,10 @@
 <style>
   /* page-local content helpers (LNB styling comes from conexus.css) */
   .scroll{flex:1;overflow-y:auto}
+/* 표 화면(로그인코드·참가자 현황) — .settings가 스크롤 영역 바닥까지 채우고 표 본문이 남은 높이를 차지 */
+.settings:has(.st-tab.active .lc){height:100%}
+.settings:has(.st-tab.active .lc) .st-body,.st-tab.active:has(.lc),.st-tab.active .st-full:has(.lc),.st-tab.active .lc,.st-tab.active .lc-wrap{display:flex;flex-direction:column;flex:1;min-height:0}
+.st-tab.active .lc-scroll{flex:1;max-height:none}
   .ic{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .tbl-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
   table.tbl{width:100%;border-collapse:collapse;font-size:14px}
@@ -491,7 +495,7 @@
 <script src="em-site.js?v=2"></script>
 <script src="em-progress.js?v=1"></script>
 <script src="em-design.js?v=1"></script>
-<script src="em-attendee.js?v=3"></script>
+<script src="em-attendee.js?v=4"></script>
 <script src="em-preq.js?v=7"></script>
 <script src="conexus.js?v=fwu"></script>
 </body>

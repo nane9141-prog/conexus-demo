@@ -1,6 +1,6 @@
 /* 전자주주총회 관리 · 참가자 현황 — 사전 등록된 참가자 조회 전용
    주주 탭: 명부 기준(통합 그룹은 펼침), 사전투표·참석 신청·출석·시청을 각각 독립 표시
-   비주주 탭: 유형·연락처·시청·질의권·메모 */
+   비주주 탭: 유형·연락처·소속·질의권·메모 (칩 없음) */
 (function () {
   var root = document.getElementById('atRoot');
   if (!root || !window.CX || !CX.roster || !window.EM) return;
@@ -50,7 +50,7 @@
   /* ---------- 컬럼 ---------- */
   var COLS = {
     sh: [['투표권자', 220], ['주주명', 0], ['주주번호', 140], ['참석 유형', 104, 'c'], ['사전투표', 96, 'c'], ['보유주식수', 120, 'n'], ['지분율', 90, 'n'], ['참석주식수', 120, 'n'], ['참석 신청', 96, 'c'], ['출석', 96, 'c'], ['시청', 84, 'c'], ['로그인코드', 130], ['등록 경로', 104, 'c']],
-    ns: [['유형', 100, 'c'], ['이름', 140], ['이메일', 220], ['휴대폰번호', 140], ['소속', 0], ['직급', 120], ['시청', 84, 'c'], ['질의권', 90, 'c'], ['메모', 200], ['로그인코드', 130], ['', 44, 'c']]
+    ns: [['유형', 100, 'c'], ['이름', 140], ['이메일', 220], ['휴대폰번호', 140], ['소속', 0], ['직급', 120], ['질의권', 90, 'c'], ['메모', 200], ['로그인코드', 130], ['', 44, 'c']]
   };
   var LEFT = { sh: 1, ns: 2 };
   function val(x, c) {
@@ -104,7 +104,7 @@
   var CHIPS = {
     sh: [['all', '전체'], ['apply', '참석 신청', function (x) { return x.apply === '신청'; }], ['noapply', '참석 미신청', function (x) { return x.apply === '미신청'; }],
       ['in', '참석', function (x) { return x.attend === '참석'; }], ['part', '일부참석', function (x) { return x.attend === '일부참석'; }], ['out', '미참석', function (x) { return x.attend === '미참석'; }]],
-    ns: [['all', '전체'], ['watch', '시청', function (x) { return x.watch; }], ['ask', '질의권 부여', function (x) { return x.ask; }]]
+    ns: []
   };
   function list() { return cur === 'sh' ? SH : NS; }
   function chipFn() { var c = CHIPS[cur].filter(function (c) { return c[0] === chip; })[0]; return c && c[2]; }
