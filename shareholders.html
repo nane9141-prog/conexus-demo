@@ -37,7 +37,7 @@
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
 </style>
 <script src="cx-data.js"></script>
-<script src="cx-roster.js?v=r5"></script>
+<script src="cx-roster.js?v=r6"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -1194,6 +1194,6 @@
     var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
   });
 </script>
-<script src="conexus.js?v=fwm"></script>
+<script src="conexus.js?v=fwn"></script>
 </body>
 </html>

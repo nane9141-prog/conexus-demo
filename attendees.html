@@ -214,7 +214,7 @@
   .decl-text{width:100%;box-sizing:border-box;background:#fafafa;border:1px solid var(--border);border-radius:14px;padding:20px;font-family:inherit;font-size:18px;line-height:28px;color:#0a0a0a;resize:none;outline:none}
 </style>
 <script src="cx-data.js"></script>
-<script src="cx-roster.js?v=r5"></script>
+<script src="cx-roster.js?v=r6"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -441,7 +441,6 @@
   var D=(function(){
     var R=(window.CX&&CX.roster)?CX.roster:[];
     /* 사전투표: 미행사(기본) · 단일 채널 7종 · 중복행사(채널 2개 이상) */
-    var CH=['전자투표(국내)','전자투표(해외)','전자위임(국내)','전자위임(해외)','서면위임(자사)','서면위임(타사)','서면투표'];
     var LIMIT=['자사주','상호주','무효주','최대주주','공익법인(3% 모수 포함)','공익법인(3% 모수 제외)','금융보험사','최대주주 특수관계인','공익법인 특수관계인','금융보험사 특수관계인'];
     var AG=[['제2-1호','제2-2호'],['제3호'],['제2-1호','제3-1호','제3-2호'],['제4-1호']];
     var rows=R.slice().sort(function(a,b){return b.sh-a.sh;}).map(function(r,i){
@@ -449,7 +448,7 @@
       /* 주주번호(대시 없음, 뒷자리 *): 개인 생년월일+성별+******, 외국인 개인 식별번호 12자리(뒤 6자리 *), 기관·법인 사업자번호(뒤 5자리 *) */
       var no=(r.gb==='개인'&&r.fr==='외국인')?('00000'+(r.i*982451653)%1e12).slice(-12,-6)+'******'
         :r.id.replace(/-/g,'').replace(/^(\d{7})\*+$/,'$1******');
-      var k=i%11, pre=r.pre?r.pre:(k<4?[]:(k===10?[CH[i%7],CH[(i+3)%7]]:[CH[i%7]]));
+      var pre=r.pre||[];   /* 사전의결권 행사 내역 — cx-roster SSOT */
       var site=r.site||['미참석','참석','일부 참석','참석','미참석'][i%5];
       if(!r.site && site==='참석' && pre.length && i%3===0) site='철회 후 참석';   /* 사전행사 철회 후 현장 참석(데모) */
       var ppl=(i%6===1)?2:1;                                 /* 주주+대리인 / 대리인 다수 */
@@ -695,6 +694,6 @@
 })();
 </script>
 
-<script src="conexus.js?v=fwm"></script>
+<script src="conexus.js?v=fwn"></script>
 </body>
 </html>

@@ -33,7 +33,9 @@
     if(e.ctrlKey||e.metaKey||e.altKey) return;
     if(e.key && e.key.length===1 && /\S/.test(e.key)){   // 인쇄 가능한 글자 입력 시
       var si=findSearchInput();
-      if(si){ si.focus(); }
+      if(!si) return;
+      if(e.key==='/'){ e.preventDefault(); si.focus(); return; }   // '/' 는 검색창으로 이동만(글자는 입력하지 않음)
+      si.focus();
     }
   });
 })();

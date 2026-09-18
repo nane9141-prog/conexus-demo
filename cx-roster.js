@@ -937,6 +937,15 @@
   CX.rosterGroups = G.map(function (g, k) {
     return { id: 'rg' + (k + 1), voter: g[0], members: g[1].map(function (i) { return byI[i]; }).filter(Boolean) };
   });
+  /* 사전의결권 행사 내역(주주별 행사 채널) · 투표권자 설정 여부 — 명부 SSOT.
+     레코드에 pre 가 적혀 있으면 그대로 쓰고, 없으면 보유주식 순위로 결정적 배정한다.
+     참석자 관리 · 전자/서면 행사 내역이 모두 이 값을 본다. */
+  CX.PRE_CH = ['전자투표(국내)', '전자투표(해외)', '전자위임(국내)', '전자위임(해외)', '서면위임(자사)', '서면위임(타사)', '서면투표'];
+  R.slice().sort(function (a, b) { return b.sh - a.sh; }).forEach(function (r, i) {
+    var k = i % 11, CH = CX.PRE_CH;
+    if (!r.pre) r.pre = k < 4 ? [] : (k === 10 ? [CH[i % 7], CH[(i + 3) % 7]] : [CH[i % 7]]);
+    r.voterSet = (i % 150 !== 75);          /* 주주명부관리의 '미설정 투표권자'와 같은 규칙 */
+  });
   CX.rosterTop = function (n) { return R.slice().sort(function (a, b) { return b.sh - a.sh; }).slice(0, n || 10); };
   CX.rosterBy = function (opt) {
     opt = opt || {};
