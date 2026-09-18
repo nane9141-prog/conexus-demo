@@ -326,7 +326,7 @@
           <div class="at-head-r"><span class="at-tag">현장투표 태그 ID <span class="tagid unset" id="tagId">미설정</span></span><a class="abtn dark" href="declaration.html" style="text-decoration:none">주총선언문</a></div>
         </div>
         <div class="at-tabs">
-          <button class="at-tab on" data-at="reg">현장 참석자</button>
+          <button class="at-tab on" data-at="reg">현장 참석자 등록</button>
           <button class="at-tab" data-at="evote">전자주총 참석자 <span class="cnt">99+</span></button>
           <button class="at-tab" data-at="all">전체 <span class="cnt">99+</span></button>
         </div>
@@ -407,7 +407,7 @@
   <button class="dx" id="tagClose">✕</button>
   <div class="dh"><div class="dt">현장투표 태그 ID 설정</div><div class="dd">현장투표 앱 사용을 위해 실물 NFC와 동일한 태그 ID를 선택해 주세요.</div></div>
   <div class="dc">
-    <div class="fl"><div class="fll">태그 ID</div><div class="selfull" id="tagSel"><span id="tagSelTxt" class="ph">실물 태그와 동일한 ID 선택</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div></div>
+    <div class="fl" style="position:relative"><div class="fll">태그 ID</div><div class="selfull" id="tagSel" role="button" aria-haspopup="listbox"><span id="tagSelTxt" class="ph">실물 태그와 동일한 ID 선택</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div><div class="tagdd" id="tagList" role="listbox"></div></div>
     <div class="warn"><i class="ph ph-info" style="font-size:16px"></i><span>선택한 ID와 소지하신 실물 태그 ID가 일치하지 않을 경우, 타인의 의결권이 잘못 전송됩니다. 설정 전 반드시 동일 여부를 확인해 주세요.</span></div>
   </div>
   <div class="df"><label class="cbrow" id="tagChk"><span class="cb"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>실물 태그 ID와 일치합니다.</label><button class="dbtn" id="tagCancel">취소</button><button class="dbtn dark" id="tagOk" disabled>현장투표 태그 ID 설정</button></div>
@@ -423,6 +423,15 @@
   .dlg2 .dc{padding:8px 20px 4px;display:flex;flex-direction:column;gap:14px}
   .fll{font-size:14px;font-weight:600;color:#0a0a0a;margin-bottom:8px}
   .selfull{display:flex;justify-content:space-between;align-items:center;height:42px;padding:0 14px;border:1px solid var(--border);border-radius:10px;cursor:pointer}
+  /* 태그 ID 드롭다운 — 필터 메뉴와 같은 목록 모양 */
+  .selfull.open{border-color:#a3a3a3}
+  .selfull.open svg{transform:rotate(180deg)}
+  .tagdd{display:none;position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:5;max-height:240px;overflow:auto;padding:4px;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:10px;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1)}
+  .tagdd.on{display:block}
+  .tagdd .it{display:flex;align-items:center;justify-content:space-between;width:100%;box-sizing:border-box;padding:6px 8px;border:none;border-radius:8px;background:none;font-family:inherit;font-size:14px;line-height:20px;color:#0a0a0a;cursor:pointer;text-align:left}
+  .tagdd .it:hover{background:#f5f5f5}
+  .tagdd .it i{visibility:hidden;font-size:16px}
+  .tagdd .it.on i{visibility:visible}
   .selfull .ph{color:#a3a3a3;font-size:14px}.selfull svg{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:2}
   .warn{display:flex;gap:8px;padding:12px 14px;background:#fff1f2;border-radius:10px;font-size:13px;line-height:19px;color:#e11d48}
   .warn svg{width:18px;height:18px;flex:none;fill:none;stroke:#e11d48;stroke-width:2;margin-top:1px}
@@ -587,9 +596,20 @@
   document.getElementById('tagCancel').addEventListener('click',function(){to.classList.remove('on');});
   to.addEventListener('click',function(e){ if(e.target===to) to.classList.remove('on'); });
   var sel=document.getElementById('tagSel'), selT=document.getElementById('tagSelTxt'), chk=document.getElementById('tagChk'), ok=document.getElementById('tagOk');
-  sel.addEventListener('click',function(){ selT.textContent='NFC-1001'; selT.classList.remove('ph'); });
+  /* 태그 ID 목록 NFC-1001 ~ NFC-1008 */
+  var tagList=document.getElementById('tagList'), tagPick='';
+  tagList.innerHTML=[1,2,3,4,5,6,7,8].map(function(n){ var id='NFC-100'+n; return '<button type="button" class="it" role="option" data-tag="'+id+'">'+id+'<i class="ph ph-check"></i></button>'; }).join('');
+  function tagOpen(v){ tagList.classList.toggle('on',v); sel.classList.toggle('open',v); }
+  sel.addEventListener('click',function(e){ e.stopPropagation(); tagOpen(!tagList.classList.contains('on')); });
+  tagList.addEventListener('click',function(e){
+    var it=e.target.closest('[data-tag]'); if(!it) return; e.stopPropagation();
+    tagPick=it.dataset.tag; selT.textContent=tagPick; selT.classList.remove('ph');
+    tagList.querySelectorAll('.it').forEach(function(x){ x.classList.toggle('on',x===it); });
+    tagOpen(false); ok.disabled=!chk.classList.contains('on');
+  });
+  to.addEventListener('click',function(e){ if(!e.target.closest('#tagSel,#tagList')) tagOpen(false); });
   chk.addEventListener('click',function(){ chk.classList.toggle('on'); ok.disabled=!(chk.classList.contains('on')&&!selT.classList.contains('ph')); });
-  ok.addEventListener('click',function(){ var t=document.getElementById('tagId'); t.textContent='NFC-1001'; t.className='tagid set'; to.classList.remove('on'); });
+  ok.addEventListener('click',function(){ if(!tagPick) return; var t=document.getElementById('tagId'); t.textContent=tagPick; t.className='tagid set'; to.classList.remove('on'); });
   // 현장 참석자 등록 시트
   (function(){
     var ov=document.getElementById('asSheet'); if(!ov) return;
