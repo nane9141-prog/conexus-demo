@@ -72,6 +72,26 @@
   .as-inl{display:flex;align-items:center;gap:12px}
   .as-il{width:130px;font-size:14px;line-height:20px;font-weight:500;color:#737373}
   .as-foot{display:flex;flex-direction:column;gap:12px}
+  /* 사전행사 내역 알림 — 가이드: Alert Dialog 320 · r14 */
+  .pv-ov{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center}
+  .pv-ov.show{display:flex}
+  .pv-dlg{box-sizing:border-box;width:320px;max-width:calc(100vw - 32px);background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;display:flex;flex-direction:column;letter-spacing:-.01em;box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1)}
+  .pv-h{display:flex;flex-direction:column;align-items:center;gap:16px;padding:16px 16px 8px}
+  .pv-media{width:40px;height:40px;border-radius:8px;background:#FDE6E8;color:#E9081B;display:flex;align-items:center;justify-content:center;font-size:24px}
+  .pv-txt{display:flex;flex-direction:column;gap:6px;text-align:center;align-self:stretch}
+  .pv-t{font-size:16px;line-height:24px;font-weight:600;color:#0A0A0A}
+  .pv-d{font-size:14px;line-height:20px;color:#0A0A0A}
+  .pv-opts{display:flex;flex-direction:column;gap:8px;align-self:stretch}
+  .pv-opts .as-rcard{flex:none}
+  .pv-chk{display:flex;align-items:center;gap:8px;align-self:stretch;font-size:14px;line-height:14px;color:#0A0A0A;cursor:pointer;user-select:none}
+  .pv-chk .cbx i{visibility:hidden}
+  .pv-chk.on .cbx{background:#171717;border-color:#171717;box-shadow:none}
+  .pv-chk.on .cbx i{visibility:visible}
+  .pv-f{display:flex;gap:8px;padding:12px 16px 16px}
+  .pv-f button{flex:1;height:32px;padding:8px 10px;border-radius:10px;font-family:inherit;font-size:14px;line-height:16px;font-weight:500;letter-spacing:-.01em;cursor:pointer}
+  .pv-cancel{background:#fff;border:1px solid #E5E5E5;color:#0A0A0A}
+  .pv-ok{background:rgba(220,38,38,.1);border:none;color:#E9081B}
+  .pv-ok:disabled{opacity:.5;cursor:not-allowed}
   /* 현장투표 앱 태깅 다이얼로그 — 가이드: 480 · r14 · border rgba(10,10,10,.1) */
   .nfc-ov{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center}
   .nfc-ov.show{display:flex}
@@ -354,6 +374,7 @@
   </main>
 </div>
 <div class="assheet-ov" id="asSheet"><div class="assheet"><span class="as-grip"></span><button class="as-x" data-as-close aria-label="닫기"><i class="ph ph-x"></i></button><div class="as-hd"><div class="as-t">현장 참석자 등록</div><div class="as-d">현장 참석 정보를 입력해 등록합니다.</div></div><div class="as-body"><div class="as-card" id="asCard"><div class="as-f"><div class="k">투표권자</div><div class="v" id="asVoter">-</div></div><div class="as-f"><div class="k">주주명</div><div class="v" id="asName">-</div></div><div class="as-f"><div class="k">주주번호</div><div class="v" id="asNo">-</div></div><div class="as-f"><div class="k">보유주식</div><div class="v" id="asHold">-</div></div><div class="as-f full"><div class="k">실질계좌번호</div><div class="v" id="asAcct">-</div></div></div><div class="as-grp"><div class="as-gt">참석자 구분</div><div class="as-radios"><label class="as-radio on" data-rg="who" data-v="self"><span class="rd"></span>본인</label><label class="as-radio" data-rg="who" data-v="proxy"><span class="rd"></span>대리인</label></div></div><div class="as-sec"><div class="as-sec-h" id="asSecLbl">참석자 정보</div><div class="as-box"><div class="as-row2" id="asProxyRow" style="display:none"><div class="as-field"><label>대리인 성명</label><input class="as-inp" id="asProxyName" placeholder="대리인 성명"></div><div class="as-field"><label>생년월일 + 성별</label><input class="as-inp" id="asBirth" inputmode="numeric" maxlength="7" placeholder="'-' 제외 숫자만 입력 (9003041)"></div></div><div class="as-row2"><div class="as-field"><label>전화번호</label><input class="as-inp" id="asPhone" inputmode="numeric" maxlength="13" placeholder="010-0000-0000"></div><div class="as-field"><label>좌석번호</label><input class="as-inp" id="asSeat" placeholder="예: A-12"></div></div><div class="as-field" id="asShares"><label>참석 주식수</label><div class="as-rcards"><div class="as-rcard on" data-rg="shares" data-v="all"><span class="rd"></span><div class="as-rc"><b>보유주식으로 참석</b><span id="asAllDesc">보유주식 전체로 참석</span></div></div><div class="as-rcard" data-rg="shares" data-v="part"><span class="rd"></span><div class="as-rc"><b>일부 주식으로 참석</b><span>참석 주식수를 직접 입력</span></div></div></div><input class="as-inp" id="asPartQty" inputmode="numeric" placeholder="참석 주식수를 입력해 주세요" style="display:none"></div><div class="as-inl"><span class="as-il">현장투표 앱 사용</span><div class="as-radios g12"><label class="as-radio on" data-rg="app1" data-v="use"><span class="rd"></span>사용</label><label class="as-radio" data-rg="app1" data-v="no"><span class="rd"></span>미사용</label></div></div></div></div><div class="as-accts" id="asAccts" style="display:none"><div class="as-sec-h">참석계좌 선택</div><div id="asAcctList" class="as-accts"></div></div></div><div class="as-foot"><div class="as-ft"><button class="as-cancel" data-as-close>취소</button><button class="as-ok" id="asOk">현장 참석 등록</button></div><div class="as-mod" id="asMod" style="display:none"></div></div></div></div>
+<div class="pv-ov" id="pvDlg"><div class="pv-dlg" role="alertdialog" aria-modal="true" aria-labelledby="pvTitle"><div class="pv-h"><div class="pv-media"><i class="ph ph-warning-circle"></i></div><div class="pv-txt"><div class="pv-t" id="pvTitle">-</div><div class="pv-d">처리 방법을 선택해 주세요.</div></div><div class="pv-opts"><div class="as-rcard on" data-pv="withdraw"><span class="rd"></span><div class="as-rc"><b>사전행사 철회 후 현장 참석</b><span>사전 행사를 철회하고 현장에서 행사합니다</span></div></div><div class="as-rcard" data-pv="keep"><span class="rd"></span><div class="as-rc"><b>사전행사 유지 (참관 참석)</b><span>사전 행사 결과를 유지하고 참관합니다</span></div></div></div><label class="pv-chk" id="pvChk"><span class="cbx"><i class="ph ph-check"></i></span>주주에게 처리 방법을 안내했습니다.</label></div><div class="pv-f"><button class="pv-cancel" data-pv-close>취소</button><button class="pv-ok" id="pvOk" disabled>철회 후 등록</button></div></div></div>
 <div class="nfc-ov" id="nfcDlg"><div class="nfc-dlg" role="dialog" aria-modal="true" aria-labelledby="nfcTitle"><div class="nfc-h" id="nfcTitle">현장투표 앱 태깅</div><div class="nfc-c"><div class="nfc-who"><span>태깅 대상</span><b id="nfcName">-</b></div><div class="nfc-g"><div class="nfc-t">NFC 기기와 참석자의 휴대폰 뒷면을 태깅해주세요</div><div class="nfc-s">주주총회장 영역을 벗어나면 투표가 불가능하다는 점을 안내해 주세요.</div><div class="nfc-img"><img src="nfc-tag.png" alt="NFC 태그에 휴대폰을 대는 모습"></div></div></div><div class="nfc-f"><button class="nfc-b" data-nfc="skip">현장 참석자 등록</button><button class="nfc-b dark" data-nfc="done">태깅 완료</button></div></div></div>
 <script>
   // LNB tab switching (설정/사전/당일)
@@ -671,9 +692,31 @@
       var b=e.target.closest('[data-nfc]'); if(!b) return;
       done(b.dataset.nfc==='done'?'태깅이 완료되어 현장 참석이 등록되었습니다.':'현장 참석이 등록되었습니다. 앱 태깅은 나중에 진행해 주세요.');
     });
+    /* 사전행사 내역 알림 — 철회 후 현장 참석(등록 시트로) / 사전행사 유지(참관 등록) */
+    var pv=document.getElementById('pvDlg'), pvOk=document.getElementById('pvOk'), pvChk=document.getElementById('pvChk'), pvTr=null, pvPass=false;
+    function pvMode(){ return pv.querySelector('[data-pv].on').dataset.pv; }
+    function pvOpen(tr, x){
+      pvTr=tr; document.getElementById('pvTitle').textContent=x.voter+'님의 사전의결권 행사내역이 존재합니다';
+      pv.querySelectorAll('[data-pv]').forEach(function(c,i){ c.classList.toggle('on',i===0); });
+      pvChk.classList.remove('on'); pvOk.disabled=true; pvOk.textContent='철회 후 등록';
+      pv.classList.add('show');
+    }
+    pv.addEventListener('click',function(e){
+      if(e.target===pv || e.target.closest('[data-pv-close]')){ pv.classList.remove('show'); return; }
+      var c=e.target.closest('[data-pv]');
+      if(c){ pv.querySelectorAll('[data-pv]').forEach(function(x){ x.classList.toggle('on',x===c); }); pvOk.textContent=c.dataset.pv==='keep'?'참관으로 등록':'철회 후 등록'; return; }
+      if(e.target.closest('#pvChk')){ e.preventDefault(); pvChk.classList.toggle('on'); pvOk.disabled=!pvChk.classList.contains('on'); return; }
+      if(e.target.closest('#pvOk') && !pvOk.disabled){
+        pv.classList.remove('show');
+        if(pvMode()==='keep'){ if(window.cxToast) cxToast('사전행사를 유지하고 참관으로 등록했습니다.'); return; }
+        pvPass=true; pvTr.cells[2].click(); pvPass=false;   /* 철회 후 현장 참석 — 등록 시트로 */
+      }
+    });
     function pick(el){ var g=el.dataset.rg; ov.querySelectorAll('[data-rg="'+g+'"]').forEach(function(r){r.classList.toggle('on',r===el);}); }
     document.getElementById('atBody').addEventListener('click',function(e){
       if(cur!=='reg') return; var tr=e.target.closest('tr'); if(!tr||tr.classList.contains('atchild')) return;
+      var px=curRows[+tr.dataset.k];
+      if(!pvPass && px && px.pre.length && px.site==='미참석' && !e.target.closest('.tw-chevron')){ pvOpen(tr, px); return; }
       if(e.target.closest('.tw-chevron')) return;
       var tds=tr.querySelectorAll('td'); if(tds.length<3) return;
       var nmT=tds[1].querySelector('[data-nm]'), hold=+tr.dataset.hold||0, gx=curRows[+tr.dataset.k];
