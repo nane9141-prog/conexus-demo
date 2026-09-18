@@ -415,6 +415,7 @@
     applyFilters(t);
     tools(tbl, t);
     watchFit(t, tbl);
+    freezeWidths(t, tbl, fixed);
 
     /* 본문을 다시 그리는 표가 많다 — 새 줄에도 같은 규칙이 붙도록 지켜본다 */
     if (!t.watch) {
@@ -424,6 +425,28 @@
       });
       t.watch.observe(tb, { childList: true });
     }
+  }
+
+  /* 컬럼 폭 고정 — 검색·필터·정렬로 행이 바뀌어도 폭이 움직이지 않게 한다.
+     내용맞춤(auto)으로 잰 자연 폭을 '단조 최대'로 확정: 한번 넓어진 칸은 다시 줄지 않는다.
+     이름·의안명(flex)만 남는 자리를 가져가 말줄임/줄바꿈으로 흡수한다.
+     colgroup 등으로 폭을 직접 짜 둔 표(fixed)는 그대로 존중한다. */
+  function freezeWidths(t, tbl, fixed) {
+    if (fixed) return;
+    if (!tbl.offsetWidth) return;                 /* 숨겨진 표는 보일 때 다시 잡는다 */
+    var ths = t.ths || []; if (!ths.length) return;
+    tbl.style.tableLayout = 'auto';               /* 자연 폭 측정 */
+    t.colW = t.colW || [];
+    var flex = [], meas = ths.map(function (th, i) {
+      var rl = rule(label(th)); flex[i] = !!(rl && rl.flex);
+      return th.getBoundingClientRect().width;
+    });
+    ths.forEach(function (th, i) {
+      if (flex[i]) { th.style.width = 'auto'; return; }
+      var w = Math.max(t.colW[i] || 0, Math.ceil(meas[i]));
+      t.colW[i] = w; th.style.width = w + 'px';
+    });
+    tbl.style.tableLayout = 'fixed';
   }
 
   /* 아이콘이 헤더 글자와 겹치는지 재어 본다. 겹치면 cx-tight 를 달아 평소에는 감춘다. */
