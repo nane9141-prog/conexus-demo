@@ -517,7 +517,8 @@
     return '';
   }
   function sortRows(rows){
-    if(!sortSt||!sortSt.dir) return rows;
+    /* 기본 정렬 — 전자주총 참석자·전체 탭은 주주명 가나다 순(현장 참석자는 검색 결과 순서 그대로) */
+    if(!sortSt||!sortSt.dir) return cur==='reg'?rows:rows.sort(function(a,b){ return String(a.name).localeCompare(String(b.name),'ko'); });
     var c=COLS[cur][sortSt.idx], d=sortSt.dir;
     rows.forEach(function(x,i){x._o=i;});
     return rows.sort(function(a,b){ var p=sortVal(a,c), q=sortVal(b,c);
