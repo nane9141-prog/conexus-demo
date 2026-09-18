@@ -178,6 +178,7 @@
       '<div class="lc-shft"><div class="sheet-ft" id="lcShFt"></div><div class="lc-mod" id="lcShMod"></div></div></div></div>' +
     '<div class="lc-ov" id="lcAlert"><div class="lc-al" role="alertdialog" aria-modal="true"><div class="ah"><div class="am"><i class="ph"></i></div><div style="width:100%"><div class="at"></div><div class="ad"></div></div></div><div class="af"></div></div></div>' +
     '<div class="lc-ov" id="lcAsk"><div class="lc-dl" role="dialog" aria-modal="true"><button class="lc-x" data-x aria-label="닫기"><i class="ph ph-x"></i></button><div class="dh"><div class="lc-dt"></div></div><div class="dc"><div class="lc-dd"></div><div class="lb"></div><textarea></textarea><div class="dn"></div></div><div class="df"><button class="btn" data-x>취소</button><button class="btn dark" data-ok disabled></button></div></div></div>' +
+    '<div class="lc-ov" id="lcPickDlg"><div class="lc-dl w480" role="dialog" aria-modal="true"><button class="lc-x" data-x aria-label="닫기"><i class="ph ph-x"></i></button><div class="dh"><div class="lc-dt">로그인코드 발급</div></div><div class="dc"><div class="lc-dd">발급 대상을 선택해 주세요.</div><div id="lcPickForm"></div></div><div class="df"><button class="btn" data-x>취소</button><button class="btn dark" data-ok>발급정보 입력</button></div></div></div>' +
     '<div class="lc-ov" id="lcIssueDlg"><div class="lc-map lc-iss" role="dialog" aria-modal="true"><button class="lc-x" data-x aria-label="닫기"><i class="ph ph-x"></i></button>' +
       '<div class="mh"><div class="lc-dt">로그인코드 발급</div><div class="lc-dd">발급 대상을 선택해 주세요.</div></div>' +
       '<div class="mc"><div class="ml" id="lcIssL"></div><div class="mr" id="lcIssR"></div></div>' +
@@ -435,7 +436,29 @@
     var v = iss.v;
     issueOk.disabled = !(v.lciName && /.+@.+\..+/.test(v.lciMail || '') && v.lciPhone && (iss.ns ? iss.kind : iss.picked.length));
   }
-  document.getElementById('lcIssue').addEventListener('click', function () { iss = issNew(cur === 'ns'); issPaint(); issueEl.classList.add('show'); });
+  /* 첫 진입: 발급 대상(주주/비주주)과 유형을 고르는 작은 모달 */
+  var pickEl = document.getElementById('lcPickDlg'), pickOk = pickEl.querySelector('[data-ok]'), pk = null;
+  function rad(name, v, lb, on) { return '<label><input type="radio" name="' + name + '" value="' + v + '"' + (on ? ' checked' : '') + '>' + lb + '</label>'; }
+  function pickPaint() {
+    document.getElementById('lcPickForm').innerHTML = '<div class="lc-f"><label>발급 대상</label><div class="lc-rad">' + rad('lcpTgt', 'sh', '주주', !pk.ns) + rad('lcpTgt', 'ns', '비주주', pk.ns) + '</div></div>' +
+      (pk.ns
+        ? '<div class="lc-f"><label for="lcpKind">비주주 유형</label><select class="lc-sel" id="lcpKind" style="width:100%"><option value="" disabled' + (pk.kind ? '' : ' selected') + '>유형을 선택해 주세요</option>' + NSK.map(function (k) { return '<option' + (k === pk.kind ? ' selected' : '') + '>' + k + '</option>'; }).join('') + '</select></div>'
+        : '<div class="lc-f"><label>주주 유형</label><div class="lc-rad">' + rad('lcpCorp', '1', '해외(법인)', pk.corp) + rad('lcpCorp', '', '해외(개인)', !pk.corp) + '</div></div>');
+    pickOk.disabled = pk.ns && !pk.kind;
+  }
+  document.getElementById('lcIssue').addEventListener('click', function () { pk = { ns: cur === 'ns', corp: true, kind: '' }; pickPaint(); pickEl.classList.add('show'); });
+  pickEl.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.name === 'lcpTgt') { pk.ns = t.value === 'ns'; pickPaint(); }
+    else if (t.name === 'lcpCorp') pk.corp = !!t.value;
+    else if (t.id === 'lcpKind') { pk.kind = t.value; pickOk.disabled = false; }
+  });
+  pickEl.addEventListener('click', function (e) {
+    if (e.target.closest('[data-x]')) { pickEl.classList.remove('show'); return; }
+    if (!e.target.closest('[data-ok]') || pickOk.disabled) return;
+    pickEl.classList.remove('show');
+    iss = issNew(pk.ns); iss.corp = pk.corp; iss.kind = pk.kind; issPaint(); issueEl.classList.add('show');
+  });
   issueEl.addEventListener('input', function (e) {
     var t = e.target;
     if (t.id === 'lcIssQ') { iss.q = t.value; issList(); return; }
@@ -449,7 +472,7 @@
   issueEl.addEventListener('click', function (e) {
     var t = e.target, b;
     if (t.closest('[data-x]')) { issueEl.classList.remove('show'); return; }
-    if (t.closest('[data-reset]')) { iss = issNew(iss.ns); issPaint(); return; }
+    if (t.closest('[data-reset]')) { var o = iss; iss = issNew(o.ns); iss.corp = o.corp; iss.kind = o.kind; issPaint(); return; }
     if ((b = t.closest('[data-tgt]'))) { if ((b.dataset.tgt === 'ns') !== iss.ns) { iss.ns = !iss.ns; issPaint(); } return; }
     if ((b = t.closest('[data-corp]'))) { iss.corp = !!b.dataset.corp; issPaint(); return; }
     if ((b = t.closest('[data-kind]'))) { iss.kind = b.dataset.kind; [].forEach.call(b.parentNode.children, function (x) { x.classList.toggle('on', x === b); }); issCheck(); return; }
