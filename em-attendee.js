@@ -19,7 +19,7 @@
     return {
       k: 'p' + r.i, r: r, voter: r.nm, name: r.nm, id: r.id, ac: r.ac, sh: r.sh, rt: r.rt,
       type: k % 6 === 2 ? '대리인' : '본인', pre: preOf(r),
-      apply: apply ? '신청' : '미신청', attend: attend ? '출석' : '미출석', watch: attend || k % 4 === 0,
+      apply: apply ? '신청' : '미신청', attend: attend ? '참석' : '미참석', watch: attend || k % 4 === 0,
       att: attend ? r.sh : 0, code: code, revoked: !!code && k % 9 === 4,
       route: code ? (k % 3 ? '직접 신청' : '관리자 등록') : '직접 신청',
       email: foreign ? r.nm.toLowerCase().replace(/[^a-z]+/g, '.').replace(/^\.|\.$/g, '') + '@gmail.com' : 'sh' + r.i + '@naver.com'
@@ -29,14 +29,14 @@
   var groups = (CX.rosterGroups || []).slice(0, 12).map(function (g, gi) {
     var kids = g.members.map(function (m, j) { inGroup[m.i] = 1; var p = person(m, gi * 3 + j); p.voter = g.voter; return p; });
     function agg(f) { var s = {}; kids.forEach(function (c) { s[c[f]] = 1; }); return Object.keys(s); }
-    var types = agg('type'), pres = agg('pre'), att = kids.filter(function (c) { return c.attend === '출석'; }).length;
+    var types = agg('type'), pres = agg('pre'), att = kids.filter(function (c) { return c.attend === '참석'; }).length;
     return {
       k: 'g' + g.id, grp: true, kids: kids, voter: g.voter, name: '통합 ' + kids.length + '건', id: '-', ac: '-',
       sh: kids.reduce(function (a, c) { return a + c.sh; }, 0), rt: kids.reduce(function (a, c) { return a + c.rt; }, 0),
       att: kids.reduce(function (a, c) { return a + c.att; }, 0),
       type: types.length > 1 ? '본인·대리인' : types[0], pre: pres.length > 1 ? '중복행사' : pres[0],
       apply: kids.some(function (c) { return c.apply === '신청'; }) ? '신청' : '미신청',
-      attend: att === kids.length ? '출석' : att ? '일부참석' : '미출석',
+      attend: att === kids.length ? '참석' : att ? '일부참석' : '미참석',
       watch: kids.some(function (c) { return c.watch; }), code: '', route: kids[0].route, email: '-'
     };
   });
@@ -49,10 +49,10 @@
 
   /* ---------- 컬럼 ---------- */
   var COLS = {
-    sh: [['', 38, 'c'], ['투표권자', 200], ['주주명', 0], ['주주번호', 140], ['참석 유형', 104, 'c'], ['사전투표', 96, 'c'], ['보유주식수', 120, 'n'], ['지분율', 90, 'n'], ['참석주식수', 120, 'n'], ['참석 신청', 96, 'c'], ['출석', 96, 'c'], ['시청', 84, 'c'], ['로그인코드', 130], ['등록 경로', 104, 'c']],
+    sh: [['투표권자', 220], ['주주명', 0], ['주주번호', 140], ['참석 유형', 104, 'c'], ['사전투표', 96, 'c'], ['보유주식수', 120, 'n'], ['지분율', 90, 'n'], ['참석주식수', 120, 'n'], ['참석 신청', 96, 'c'], ['출석', 96, 'c'], ['시청', 84, 'c'], ['로그인코드', 130], ['등록 경로', 104, 'c']],
     ns: [['유형', 100, 'c'], ['이름', 140], ['이메일', 220], ['휴대폰번호', 140], ['소속', 0], ['직급', 120], ['시청', 84, 'c'], ['질의권', 90, 'c'], ['메모', 200], ['로그인코드', 130], ['', 44, 'c']]
   };
-  var LEFT = { sh: 2, ns: 2 };
+  var LEFT = { sh: 1, ns: 2 };
   function val(x, c) {
     switch (c) {
       case '투표권자': return x.voter; case '주주명': return x.name; case '주주번호': return x.id;
@@ -71,11 +71,14 @@
   function cell(x, c, child) {
     if (c === '') {
       if (cur === 'ns') return '<button type="button" class="lc-more" aria-label="더보기"><i class="ph ph-dots-three"></i></button>';
-      return x.grp ? '<button type="button" class="lc-chev' + (open[x.k] ? ' open' : '') + '" aria-label="펼치기"><i class="ph ph-caret-right"></i></button>' : '';
+      return '';
     }
+    /* 통합기관 — 참석자 관리와 같은 모양: 투표권자 칸 원형 chevron, 주주명 칸 '통합 N건' 뱃지, 계좌 줄은 세로선 */
+    if (c === '투표권자' && x.grp) return '<div class="voter"><button type="button" class="tw-chevron' + (open[x.k] ? '' : ' collapsed') + '" aria-label="펼치기"><svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button><span>' + esc(x.voter) + '</span></div>';
+    if (c === '투표권자' && child) return '<span class="cv"></span>';
     if (c === '시청') return x.watch ? '<span class="lc-b blue">시청</span>' : '<span class="lc-b dim">미시청</span>';
     if (c === '로그인코드') return x.code ? '<span class="lc-code' + (x.revoked ? ' off' : '') + '">' + x.code + '</span>' : '<span class="mu">-</span>';
-    if (c === '주주명' && x.grp) return '<span class="lc-grp">' + esc(x.name) + '</span>';
+    if (c === '주주명' && x.grp) return '<span class="tag">' + esc(x.name) + '</span>';
     if (c === '메모') return '<span class="lc-memo" title="' + esc(x.memo || '') + '">' + esc(x.memo || '-') + '</span>';
     var t = txt(x, c);
     return t === '-' ? '<span class="mu">-</span>' : esc(t);
@@ -99,7 +102,8 @@
   var tbl = document.getElementById('atTbl'), body = document.getElementById('atBody');
   var cur = 'sh', chip = 'all', page = 1, pageSize = 20, lastTotal = 0, sortSt = null, filtPred = null, open = {};
   var CHIPS = {
-    sh: [['all', '전체'], ['apply', '참석 신청', function (x) { return x.apply === '신청'; }], ['attend', '출석', function (x) { return x.attend !== '미출석'; }], ['watch', '시청', function (x) { return x.watch; }], ['pre', '사전투표', function (x) { return x.pre !== '미행사'; }]],
+    sh: [['all', '전체'], ['apply', '참석 신청', function (x) { return x.apply === '신청'; }], ['noapply', '참석 미신청', function (x) { return x.apply === '미신청'; }],
+      ['in', '참석', function (x) { return x.attend === '참석'; }], ['part', '일부참석', function (x) { return x.attend === '일부참석'; }], ['out', '미참석', function (x) { return x.attend === '미참석'; }]],
     ns: [['all', '전체'], ['watch', '시청', function (x) { return x.watch; }], ['ask', '질의권 부여', function (x) { return x.ask; }]]
   };
   function list() { return cur === 'sh' ? SH : NS; }
@@ -120,7 +124,7 @@
     if (cur === 'ns' && i === cs.length - 1) return ' data-st="r" style="right:0"';
     return '';
   }
-  function cls(c, child) { var a = c[2] ? [c[2]] : []; if (c[0] === '투표권자' || c[0] === '이름') a.push('b'); return a.length ? ' class="' + a.join(' ') + '"' : ''; }
+  function cls(c, child) { var a = c[2] ? [c[2]] : []; if (c[0] === '투표권자' || c[0] === '이름') a.push('b'); if (child && c[0] === '투표권자') a.push('tcell'); return a.length ? ' class="' + a.join(' ') + '"' : ''; }
   function head() {
     var cs = COLS[cur], min = 0;
     cs.forEach(function (c) { min += c[1] || 180; });
@@ -128,7 +132,7 @@
     document.getElementById('atCols').innerHTML = cs.map(function (c) { return c[1] ? '<col style="width:' + c[1] + 'px">' : '<col>'; }).join('');
     document.getElementById('atHead').innerHTML = '<tr>' + cs.map(function (c, i) { return '<th' + stick(i) + (c[2] ? ' class="' + c[2] + '"' : '') + '>' + c[0] + '</th>'; }).join('') + '</tr>';
   }
-  function tr(x, child) { var cs = COLS[cur]; return '<tr data-k="' + x.k + '"' + (child ? ' class="child"' : '') + '>' + cs.map(function (c, j) { return '<td' + stick(j) + cls(c) + '>' + cell(x, c[0], child) + '</td>'; }).join('') + '</tr>'; }
+  function tr(x, child) { var cs = COLS[cur]; return '<tr data-k="' + x.k + '"' + (child ? ' class="child"' : '') + '>' + cs.map(function (c, j) { return '<td' + stick(j) + cls(c, child) + '>' + cell(x, c[0], child) + '</td>'; }).join('') + '</tr>'; }
   function render() {
     var base = list();
     document.getElementById('atChips').innerHTML = CHIPS[cur].map(function (c) {
@@ -171,7 +175,7 @@
   body.addEventListener('click', function (e) {
     var row = e.target.closest('tr[data-k]'); if (!row) return;
     var x = byK(row.dataset.k);
-    if (e.target.closest('.lc-chev') || (x && x.grp)) { open[x.k] = !open[x.k]; render(); return; }
+    if (e.target.closest('.tw-chevron') && x && x.grp) { open[x.k] = !open[x.k]; render(); return; }
     var m = e.target.closest('.lc-more');
     if (m && x) {
       menuX = x;

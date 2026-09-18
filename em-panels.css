@@ -137,3 +137,13 @@ input.pg-in[type=time]{width:110px}
 .ns-pv .pt{font-size:16px;line-height:24px;font-weight:600;color:#0A0A0A}
 .ns-pv .pb{font-size:14px;line-height:20px;color:#0A0A0A;white-space:pre-line;max-height:360px;overflow:auto}
 .ns-pv .df .btn{flex:1}
+/* 참가자 현황 통합기관 — 참석자 관리와 같은 chevron · 뱃지 · 계좌 줄 */
+#atRoot .voter{display:inline-flex;align-items:center;gap:8px;min-width:0}
+#atRoot .voter>span{overflow:hidden;text-overflow:ellipsis}
+#atRoot .tw-chevron{width:24px;height:24px;flex:none;border:1px solid #E5E5E5;border-radius:9999px;background:#fff;display:flex;align-items:center;justify-content:center;color:#171717;cursor:pointer;padding:0}
+#atRoot .tw-chevron svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;transition:transform .15s}
+#atRoot .tw-chevron.collapsed svg{transform:rotate(180deg)}
+#atRoot .tag{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:#f4f4f5;color:#737373;font-size:12px;font-weight:500;flex:none}
+#atRoot tr.child td{color:#737373}
+#atRoot td.tcell{position:relative}
+#atRoot td.tcell .cv{position:absolute;left:28px;top:0;bottom:0;width:1px;background:#e0e0e0}
