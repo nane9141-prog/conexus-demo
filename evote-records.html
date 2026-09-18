@@ -339,11 +339,11 @@
         <div class="ev-head">
           <div class="ev-title"><div class="page-title">전자투표/위임 내역</div><div class="ev-org"><span>전자투표관리기관</span><b>한국예탁결제원</b></div></div>
           <span class="spacer"></span>
-          <button class="btn-primary" id="btnConfirm" style="display:none"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>확정하기</button>
+          <button class="btn-primary" id="btnConfirm" style="display:inline-flex"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>확정하기</button>
         </div>
 
-        <!-- EMPTY 상태 -->
-        <div id="evEmpty">
+        <!-- EMPTY 상태 — 처음 진입은 파일 등록된 상태(FILLED)로 시작 -->
+        <div id="evEmpty" style="display:none">
           <div class="evbar">
             <div class="evtabs"><span class="evtab active" data-cnt="14,000" data-shr="150,000,000">국내 주주</span><span class="evtab" data-cnt="3,500" data-shr="90,000,000">해외 주주</span></div>
             <div class="hbtns"><button class="tbtn js-upload"><i class="ph ph-upload-simple" style="font-size:16px"></i>파일 등록</button></div>
@@ -356,7 +356,7 @@
         </div>
 
         <!-- FILLED 상태 -->
-        <div id="evFilled" style="display:none">
+        <div id="evFilled">
           <div class="evbar">
             <div class="evtabs"><span class="evtab active" data-cnt="14,000" data-shr="150,000,000">국내 주주</span><span class="evtab" data-cnt="3,500" data-shr="90,000,000">해외 주주</span></div>
             <div class="hbtns">
