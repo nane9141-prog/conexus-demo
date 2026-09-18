@@ -108,8 +108,8 @@
     });
   });
   /* 비주주 — 담당자가 직접 발급(의결권 없음) */
-  var NS = [['김하늘', '삼일회계법인', '회계사', '감사인', '외부감사인 참관'], ['이준호', '법무법인 세종', '변호사', '변호사', '법률 자문 · 의사진행 검토'], ['박민지', '한국예탁결제원', '과장', '기타', ''], ['정우성', '연합뉴스', '기자', '언론/기자', '취재'], ['최서윤', '카카오뱅크', 'IR팀 매니저', '임직원', '사내 참관'], ['한지훈', '대신경제연구소', '연구원', '기타', '의결권 자문사 참관'], ['Michael Grant', 'ISS', 'Analyst', '외국인', ''], ['윤가람', '카카오뱅크', '경영지원팀 대리', '임직원', '현장 지원']];
-  var NSM = ['sky.kim@samil.com', 'jh.lee@shinkim.com', 'mj.park@ksd.or.kr', 'ws.jung@yna.co.kr', 'sy.choi@kakaobank.com', 'jh.han@daishin.com', 'm.grant@issgovernance.com', 'gr.yoon@kakaobank.com'];
+  var NS = [['김하늘', '삼일회계법인', '회계사', '감사인', '외부감사인 참관'], ['이준호', '법무법인 세종', '변호사', '변호사', '법률 자문 · 의사진행 검토'], ['박민지', '한국예탁결제원', '과장', '기타', ''], ['정우성', '연합뉴스', '기자', '언론/기자', '취재'], ['최서윤', '카카오뱅크', 'IR팀 매니저', '임직원', '사내 참관'], ['한지훈', '대신경제연구소', '연구원', '기타', '의결권 자문사 참관'], ['윤가람', '카카오뱅크', '경영지원팀 대리', '임직원', '현장 지원']];
+  var NSM = ['sky.kim@samil.com', 'jh.lee@shinkim.com', 'mj.park@ksd.or.kr', 'ws.jung@yna.co.kr', 'sy.choi@kakaobank.com', 'jh.han@daishin.com', 'gr.yoon@kakaobank.com'];
   NS.forEach(function (n, i) {
     mk({ ns: true, name: n[0], org: n[1], pos: n[2], kind: n[3], memo: n[4], qna: i % 3 !== 2, route: '관리자 등록', st: i === 3 || i === 6 ? '로그인코드 회수' : '로그인코드 발급', codeAt: '', mailAt: dt(8, 20 + i % 6, 10 + i % 7, (i * 9) % 60), code: newCode(), phone: '010-' + (2000 + i * 731) + '-' + (4000 + i * 377), email: NSM[i] });
   });
@@ -184,8 +184,8 @@
       '<div class="mc"><div class="ml" id="lcMapL"></div><div class="mr"><div class="lc-sh">주주명부 목록</div>' +
         '<div class="mbar"><select class="lc-sel" id="lcMapF" aria-label="검색 기준"><option value="vt">투표권자</option><option value="nm">주주명</option><option value="id">주주번호</option><option value="ac">실질계좌번호</option></select><label class="lc-search"><i class="ph ph-magnifying-glass"></i><input id="lcMapQ" placeholder="검색어를 입력하세요"></label></div>' +
         '<div class="lc-ml" id="lcMapList"></div></div></div>' +
-      '<div class="mf"><button class="btn" data-x>취소</button><button class="btn dark" id="lcMapOk" disabled>확인</button></div></div></div>' +
-    '<div class="lc-ov" id="lcConfirm"><div class="lc-dl w480" role="dialog" aria-modal="true"><button class="lc-x" data-x aria-label="닫기"><i class="ph ph-x"></i></button><div class="dh"><div class="lc-dt" id="lcCfT">주주 매핑 확인</div></div><div class="dc"><div class="lc-sum" id="lcCfBody"></div><div class="lc-dd" style="margin-top:8px">승인하면 주주확인이 완료되고 투표권자에게 주총 참여 권한이 부여됩니다. 승인 후에는 취소할 수 없으며, 표결 시작 전까지 매핑 변경만 가능합니다.</div></div><div class="df"><button class="btn" data-x>취소</button><button class="btn dark" data-ok id="lcCfOk">매핑 승인하기</button></div></div></div>';
+      '<div class="mf"><button class="btn" data-x>취소</button><button class="btn dark" id="lcMapOk" disabled>주주 매핑</button></div></div></div>' +
+    '<div class="lc-ov" id="lcConfirm"><div class="lc-dl w480" role="dialog" aria-modal="true"><button class="lc-x" data-x aria-label="닫기"><i class="ph ph-x"></i></button><div class="dh"><div class="lc-dt" id="lcCfT">주주 매핑 확인</div></div><div class="dc"><div id="lcCfBody"></div><div class="lc-cfacct" id="lcCfAcct"></div><div class="lc-dd">승인하면 투표권자에게 주총 참여 권한이 부여되며, 표결 시작 전까지 매핑 변경만 가능합니다.</div></div><div class="df"><button class="btn" data-x>취소</button><button class="btn dark" data-ok id="lcCfOk">승인하기</button></div></div></div>';
 
   var body = document.getElementById('lcBody'), tbl = document.getElementById('lcTbl');
   var cur = 'sh', chip = 'all', page = 1, pageSize = 20, lastTotal = 0, sortSt = null, filtPred = null, shX = null;
@@ -388,7 +388,7 @@
     var ns = cur === 'ns';
     document.getElementById('lcIssueDesc').textContent = ns ? '비주주(의결권 없음) 참석자에게 로그인코드를 발급합니다. 발급 즉시 입력한 이메일로 코드가 발송됩니다.' : '본인인증이 불가한 해외 주주에게 로그인코드를 직접 발급합니다. 발급 즉시 입력한 이메일로 코드가 발송됩니다.';
     document.getElementById('lcIssueForm').innerHTML = ns
-      ? '<div class="lc-f"><label for="lciKind">유형</label><select class="lc-sel" id="lciKind" style="width:100%"><option>임직원</option><option>언론/기자</option><option>감사인</option><option>변호사</option><option>외국인</option><option>기타</option></select></div>' +
+      ? '<div class="lc-f"><label for="lciKind">유형</label><select class="lc-sel" id="lciKind" style="width:100%"><option>임직원</option><option>언론/기자</option><option>감사인</option><option>변호사</option><option>기타</option></select></div>' +
         '<div class="lc-row2">' + fld('lciName', '이름', '이름', 1) + fld('lciPhone', '휴대폰번호', '010-0000-0000', 0, ' inputmode="numeric" maxlength="13"') + '</div>' +
         fld('lciMail', '이메일', 'name@example.com', 1) +
         '<div class="lc-row2">' + fld('lciOrg', '소속', '소속') + fld('lciPos', '직급', '직급') + '</div>' +
@@ -471,7 +471,7 @@
     var l = kv('구분', x.corp ? '해외 법인' : '해외 개인') + kv(x.corp ? '법인(기관)명' : '이름', esc(x.name)) + (x.corp ? kv('담당자명', esc(x.mgr)) : '') + kv('휴대폰번호', esc(x.phone)) + kv('이메일', esc(x.email)) + kv('로그인코드', '<span class="lc-code">' + x.code + '</span>') +
       kv('주주번호', esc(x.idNo) + ' <span class="mu">(' + x.idType + ')</span>') + (x.corp ? kv('상임대리인코드', x.agent) : '') + kv('보유주식수량', cm(x.decl) + '주 · 계좌 ' + x.accts.length + '건');
     document.getElementById('lcMapL').innerHTML = sec('주주 신청 정보', l) + (x.accts.length ? sec('신고 계좌', acctCards(x)) : '') + sec('제출 서류', files(x));
-    mapOk.textContent = x.st === '주주확인 완료' ? '변경하기' : '확인';
+    mapOk.textContent = x.st === '주주확인 완료' ? '변경하기' : '주주 매핑';
     paintMap(); mapEl.classList.add('show'); setTimeout(function () { mapQ.focus(); }, 30);
   }
   function paintMap() {
@@ -503,10 +503,12 @@
       paintMap(); return;
     }
     if (e.target.closest('#lcMapOk') && !mapOk.disabled) {
-      var chg = mapX.st === '주주확인 완료', tot = picked.reduce(function (a, y) { return a + y.sh; }, 0);
+      var chg = mapX.st === '주주확인 완료';
       document.getElementById('lcCfT').textContent = chg ? '주주 매핑 변경 확인' : '주주 매핑 확인';
       document.getElementById('lcCfOk').textContent = chg ? '변경하기' : '승인하기';
-      document.getElementById('lcCfBody').innerHTML = kv('신청자', esc(mapX.name)) + (chg ? kv('기존 투표권자', esc(mapX.voters.map(voterOf).join(', '))) : '') + kv('투표권자', esc(picked.map(voterOf).join(', '))) + '<div class="lc-kv"><span class="k">보유주식</span><span class="v b">' + cm(tot) + '주</span></div>';
+      /* 확인 다이얼로그 — 신청자 · 투표권자 · 연결 계좌 수, 아래 회색 박스에 계좌별 보유주식 */
+      document.getElementById('lcCfBody').innerHTML = kv('신청자', esc(mapX.name)) + (chg ? kv('기존 투표권자', esc(mapX.voters.map(voterOf).join(', '))) : '') + kv('투표권자', esc(picked.map(voterOf).join(', '))) + kv('연결 계좌 수', picked.length + '개');
+      document.getElementById('lcCfAcct').innerHTML = picked.map(function (r, i) { return '<div class="it"><div class="h">' + (picked.length > 1 ? '계좌 ' + (i + 1) : '계좌') + '</div><div class="r"><span>보유주식</span><b>' + cm(r.sh) + '주</b></div></div>'; }).join('');
       document.getElementById('lcConfirm').classList.add('show');
     }
   });

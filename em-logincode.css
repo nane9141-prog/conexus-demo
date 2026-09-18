@@ -177,3 +177,10 @@ table.lctbl .lc-empty{padding:72px 16px;text-align:center;color:#737373;cursor:d
 .lc-mempty{padding:24px;text-align:center;font-size:14px;font-weight:500;color:#737373}
 .lc-sum{background:#F5F5F5;border-radius:10px;padding:10px 12px}
 .lc-sum .lc-kv .v.b{font-weight:700;text-align:right}
+/* 주주 매핑 확인 — 계좌 박스(가이드: #F5F5F5 · r10 · p10, 계좌 N 14/600, 라벨 12/600 #737373 · 값 14/700 우측) */
+.lc-cfacct{display:flex;flex-direction:column;gap:12px;padding:10px;background:#F5F5F5;border-radius:10px}
+.lc-cfacct .it{display:flex;flex-direction:column;gap:8px}
+.lc-cfacct .h{font-size:14px;line-height:14px;font-weight:600;color:#0A0A0A}
+.lc-cfacct .r{display:flex;align-items:center;gap:4px;padding:2px 0}
+.lc-cfacct .r span{width:65px;flex:none;font-size:12px;line-height:16px;font-weight:600;color:#737373}
+.lc-cfacct .r b{flex:1;text-align:right;font-size:14px;line-height:20px;font-weight:700;color:#0A0A0A}
