@@ -178,7 +178,10 @@
       '<div class="lc-shft"><div class="sheet-ft" id="lcShFt"></div><div class="lc-mod" id="lcShMod"></div></div></div></div>' +
     '<div class="lc-ov" id="lcAlert"><div class="lc-al" role="alertdialog" aria-modal="true"><div class="ah"><div class="am"><i class="ph"></i></div><div style="width:100%"><div class="at"></div><div class="ad"></div></div></div><div class="af"></div></div></div>' +
     '<div class="lc-ov" id="lcAsk"><div class="lc-dl" role="dialog" aria-modal="true"><button class="lc-x" data-x aria-label="닫기"><i class="ph ph-x"></i></button><div class="dh"><div class="lc-dt"></div></div><div class="dc"><div class="lc-dd"></div><div class="lb"></div><textarea></textarea><div class="dn"></div></div><div class="df"><button class="btn" data-x>취소</button><button class="btn dark" data-ok disabled></button></div></div></div>' +
-    '<div class="lc-ov" id="lcIssueDlg"><div class="lc-dl w480" role="dialog" aria-modal="true"><button class="lc-x" data-x aria-label="닫기"><i class="ph ph-x"></i></button><div class="dh"><div class="lc-dt">로그인코드 발급</div></div><div class="dc"><div class="lc-dd" id="lcIssueDesc"></div><div id="lcIssueForm"></div></div><div class="df"><button class="btn" data-x>취소</button><button class="btn dark" data-ok disabled>발급하기</button></div></div></div>' +
+    '<div class="lc-ov" id="lcIssueDlg"><div class="lc-map lc-iss" role="dialog" aria-modal="true"><button class="lc-x" data-x aria-label="닫기"><i class="ph ph-x"></i></button>' +
+      '<div class="mh"><div class="lc-dt">로그인코드 발급</div><div class="lc-dd">발급 대상을 선택해 주세요.</div></div>' +
+      '<div class="mc"><div class="ml" id="lcIssL"></div><div class="mr" id="lcIssR"></div></div>' +
+      '<div class="mf"><button class="btn" data-reset style="width:72px">초기화</button><span class="lc-iss-d">참석자 등록 시, 입력하신 이메일로 접속 아이디와 비밀번호가 자동 발송됩니다.</span><button class="btn" data-x>취소</button><button class="btn dark" data-ok disabled style="width:108px">로그인코드 발급</button></div></div></div>' +
     '<div class="lc-ov" id="lcMap"><div class="lc-map" role="dialog" aria-modal="true"><button class="lc-x" data-x aria-label="닫기"><i class="ph ph-x"></i></button>' +
       '<div class="mh"><div class="lc-dt">주주 매핑</div><div class="lc-dd">주주가 제출한 정보를 주주명부와 대조해 투표권자를 연결합니다. 연결하면 주주확인이 완료되고 주총 참여 권한이 부여됩니다.</div></div>' +
       '<div class="mc"><div class="ml" id="lcMapL"></div><div class="mr"><div class="lc-sh">주주명부 목록</div>' +
@@ -385,60 +388,109 @@
   /* 필수는 표시 없음, 선택 입력만 라벨에 (선택) */
   function fld(id, lb, ph, req, extra) { return '<div class="lc-f"><label for="' + id + '">' + lb + (req ? '' : ' (선택)') + '</label><input class="lc-in" id="' + id + '" placeholder="' + ph + '"' + (extra || '') + '></div>'; }
   function fv(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
-  /* 1단계: 발급 대상(주주/비주주)·유형 선택 → 2단계: 발급정보 입력 */
-  var iss = null, issDesc = document.getElementById('lcIssueDesc'), issForm = document.getElementById('lcIssueForm');
+  /* 좌: 발급정보 입력 · 우: 발급 대상(주주/비주주) → 주주는 주주 유형 + 주주명부에서 투표권자 선택, 비주주는 유형 카드 */
+  var iss = null, issL = document.getElementById('lcIssL'), issR = document.getElementById('lcIssR');
   var NSK = ['임직원', '감사인', '변호사', '언론/기자', '외국인', '기타'];
-  function rad(name, v, lb, on) { return '<label><input type="radio" name="' + name + '" value="' + v + '"' + (on ? ' checked' : '') + '>' + lb + '</label>'; }
-  function issStep1() {
-    iss.step = 1;
-    issDesc.textContent = '발급 대상을 선택해 주세요.';
-    issForm.innerHTML = '<div class="lc-f"><label>발급 대상</label><div class="lc-rad">' + rad('lciTgt', 'sh', '주주', !iss.ns) + rad('lciTgt', 'ns', '비주주', iss.ns) + '</div></div>' +
-      (iss.ns
-        ? '<div class="lc-f"><label for="lciKind">비주주 유형</label><select class="lc-sel" id="lciKind" style="width:100%"><option value="" disabled' + (iss.kind ? '' : ' selected') + '>유형을 선택해 주세요</option>' + NSK.map(function (k) { return '<option' + (k === iss.kind ? ' selected' : '') + '>' + k + '</option>'; }).join('') + '</select></div>'
-        : '<div class="lc-f"><label>주주 유형</label><div class="lc-rad">' + rad('lciCorp', 'corp', '해외(법인)', iss.corp) + rad('lciCorp', 'ind', '해외(개인)', !iss.corp) + '</div></div>');
-    issueOk.textContent = '발급정보 입력'; issueOk.disabled = iss.ns && !iss.kind;
+  function tg(k, v, lb, on) { return '<button type="button" data-' + k + '="' + v + '"' + (on ? ' class="on"' : '') + '>' + lb + '</button>'; }
+  function issNew(ns) { return { ns: ns, corp: true, kind: '', picked: [], q: '', f: 'vt', v: {} }; }
+  /* 이미 이용자로 등록된 투표권자는 목록에서 제외 */
+  function taken(r) { return L.some(function (x) { return x.voters.indexOf(r) >= 0; }); }
+  function issPaint() {
+    var v = iss.v, ns = iss.ns;
+    function f(id, lb, ph, req, ex) { return fld(id, lb, ph, req, ex).replace('placeholder=', 'value="' + esc(v[id] || '') + '" placeholder='); }
+    var row2 = '<div class="lc-row2">' + f('lciOrg', ns ? '부서' : '소속', ns ? '부서' : '소속') + f('lciPos', '직급', '직급') + '</div>';
+    var mail = f('lciMail', '이메일', 'name@example.com', 1), phone = f('lciPhone', '휴대폰번호', ns ? '010-0000-0000' : '+1-212-000-0000', 1, ns ? ' inputmode="numeric" maxlength="13"' : '');
+    issL.innerHTML = '<div class="lc-sh">발급 정보 입력</div>' + f('lciName', '이름', ns ? '이름' : iss.corp ? '법인(기관)명' : '성명', 1) +
+      (ns ? row2 + mail + phone : mail + phone + row2) +
+      '<div class="lc-f"><label for="lciMemo">메모 (선택)</label><textarea class="lc-in" id="lciMemo" placeholder="참석 목적 등 메모를 입력해 주세요">' + esc(v.lciMemo || '') + '</textarea></div>' +
+      (ns ? '<div class="lc-f"><label>이용 기능</label><label class="lc-chk"><input type="checkbox" id="lciAsk"' + (v.lciAsk ? ' checked' : '') + '>질의권 부여</label></div>' : '');
+    issR.innerHTML = '<div class="lc-tgrow"><div class="lc-tgw"><div class="lc-sh">발급대상</div><div class="lc-tg">' + tg('tgt', 'sh', '주주', !ns) + tg('tgt', 'ns', '비주주', ns) + '</div></div>' +
+      (ns ? '' : '<div class="lc-tgw"><div class="lc-sh">주주 유형</div><div class="lc-tg">' + tg('corp', '1', '해외(법인)', iss.corp) + tg('corp', '', '해외(개인)', !iss.corp) + '</div></div>') + '</div>' +
+      (ns ? '<div class="lc-f"><label>유형 선택</label><div class="lc-tg lc-kgrid">' + NSK.map(function (k) { return tg('kind', k, k, iss.kind === k); }).join('') + '</div></div>'
+        : '<div class="lc-iss-roster"><div class="lc-sh"><span>주주명부 목록</span><span class="lc-iss-sum" id="lcIssSum"></span></div>' +
+          '<div class="mbar"><select class="lc-sel" id="lcIssF" aria-label="검색 기준">' + [['vt', '투표권자'], ['nm', '주주명'], ['id', '주주번호'], ['ac', '실질계좌번호']].map(function (o) { return '<option value="' + o[0] + '"' + (o[0] === iss.f ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select>' +
+          '<label class="lc-search"><i class="ph ph-magnifying-glass"></i><input id="lcIssQ" placeholder="검색어를 입력하세요" value="' + esc(iss.q) + '"></label></div><div class="lc-ml" id="lcIssList"></div></div>');
+    if (!ns) issList();
+    issCheck();
   }
-  function issStep2() {
-    iss.step = 2;
-    issDesc.textContent = iss.ns ? '비주주(의결권 없음) 참석자에게 로그인코드를 발급합니다. 발급 즉시 입력한 이메일로 코드가 발송됩니다.' : '본인인증이 불가한 해외 주주에게 로그인코드를 직접 발급합니다. 발급 즉시 입력한 이메일로 코드가 발송됩니다.';
-    issForm.innerHTML = iss.ns
-      ? '<div class="lc-row2">' + fld('lciName', '이름', '이름', 1) + fld('lciPhone', '휴대폰번호', '010-0000-0000', 0, ' inputmode="numeric" maxlength="13"') + '</div>' +
-        fld('lciMail', '이메일', 'name@example.com', 1) +
-        '<div class="lc-row2">' + fld('lciOrg', '소속', '소속') + fld('lciPos', '직급', '직급') + '</div>' +
-        '<div class="lc-f"><label for="lciMemo">메모 (선택)</label><textarea id="lciMemo" placeholder="참석 목적 등 메모를 입력해 주세요" style="height:64px"></textarea></div>'
-      : fld('lciName', '이름', iss.corp ? '법인(기관)명' : '성명', 1) +
-        '<div class="lc-row2">' + fld('lciMail', '이메일', 'name@example.com', 1) + fld('lciPhone', '휴대폰번호', '+1-212-000-0000') + '</div>';
-    issueOk.textContent = '발급하기'; issueOk.disabled = true;
+  function issRows() {
+    var s = iss.q.trim().toLowerCase(), k = iss.f;
+    /* 검색 전에는 외국인 주주부터 — 본인인증이 안 되는 해외 주주가 발급 대상 */
+    var res = CX.roster.filter(function (r) { return !taken(r) && (s ? String(k === 'vt' ? voterOf(r) : r[k]).toLowerCase().indexOf(s) >= 0 : r.fr === '외국인'); }).slice(0, 60);
+    iss.picked.forEach(function (r) { if (res.indexOf(r) < 0) res.unshift(r); });
+    return res;
   }
-  document.getElementById('lcIssue').addEventListener('click', function () {
-    iss = { ns: cur === 'ns', kind: '', corp: true }; issStep1(); issueEl.classList.add('show');
+  function issList() {
+    var res = issRows(), all = res.length && res.every(function (r) { return iss.picked.indexOf(r) >= 0; });
+    document.getElementById('lcIssList').innerHTML = '<div class="lc-mrow hd"><span><input type="checkbox" data-all' + (all ? ' checked' : '') + ' aria-label="전체 선택"></span><span>투표권자명</span><span>주주명</span><span>주주번호</span><span class="n">보유주식</span><span style="text-align:center">통합내역</span></div>' +
+      (res.length ? res.map(function (r) {
+        var on = iss.picked.indexOf(r) >= 0, g = GROUP_OF[r.i];
+        return '<div class="lc-mrow' + (on ? ' on' : '') + '" data-i="' + r.i + '" title="주주번호 ' + r.id + '&#10;실질계좌번호 ' + r.ac + '"><span><input type="checkbox"' + (on ? ' checked' : '') + ' aria-label="선택"></span><span class="vt">' + esc(voterOf(r)) + '</span><span class="mu">' + esc(r.nm) + '</span><span class="mu">' + r.id + '</span><span class="n">' + cm(r.sh) + '</span>' +
+          '<span style="text-align:center">' + (g ? '<button type="button" class="mini" data-grp="' + g.id + '">보기</button>' : '<span class="mu">-</span>') + '</span></div>';
+      }).join('') : '<div class="lc-mempty">검색 결과가 없습니다.</div>');
+    var p = iss.picked;
+    document.getElementById('lcIssSum').textContent = p.length ? '선택 ' + p.length + '건 · ' + cm(p.reduce(function (a, r) { return a + r.sh; }, 0)) + '주' : '';
+  }
+  function issCheck() {
+    var v = iss.v;
+    issueOk.disabled = !(v.lciName && /.+@.+\..+/.test(v.lciMail || '') && v.lciPhone && (iss.ns ? iss.kind : iss.picked.length));
+  }
+  document.getElementById('lcIssue').addEventListener('click', function () { iss = issNew(cur === 'ns'); issPaint(); issueEl.classList.add('show'); });
+  issueEl.addEventListener('input', function (e) {
+    var t = e.target;
+    if (t.id === 'lcIssQ') { iss.q = t.value; issList(); return; }
+    if (t.id === 'lciPhone' && iss.ns) { var d = t.value.replace(/\D/g, '').slice(0, 11); t.value = d.length < 4 ? d : d.length < 8 ? d.slice(0, 3) + '-' + d.slice(3) : d.slice(0, 3) + '-' + d.slice(3, 7) + '-' + d.slice(7); }
+    if (/^lci/.test(t.id)) { iss.v[t.id] = t.type === 'checkbox' ? t.checked : t.value.trim(); issCheck(); }
   });
   issueEl.addEventListener('change', function (e) {
-    if (iss.step !== 1) return;
-    if (e.target.name === 'lciTgt') { iss.ns = e.target.value === 'ns'; issStep1(); }
-    else if (e.target.name === 'lciCorp') iss.corp = e.target.value === 'corp';
-    else if (e.target.id === 'lciKind') { iss.kind = e.target.value; issueOk.disabled = false; }
-  });
-  issueEl.addEventListener('input', function (e) {
-    if (iss.step !== 2) return;
-    if (e.target.id === 'lciPhone' && iss.ns) { var d = e.target.value.replace(/\D/g, '').slice(0, 11); e.target.value = d.length < 4 ? d : d.length < 8 ? d.slice(0, 3) + '-' + d.slice(3) : d.slice(0, 3) + '-' + d.slice(3, 7) + '-' + d.slice(7); }
-    issueOk.disabled = !(fv('lciName') && /.+@.+\..+/.test(fv('lciMail')));
+    if (e.target.id === 'lcIssF') { iss.f = e.target.value; issList(); }
+    else if (e.target.id === 'lciAsk') iss.v.lciAsk = e.target.checked;
   });
   issueEl.addEventListener('click', function (e) {
-    if (e.target.closest('[data-x]')) { issueEl.classList.remove('show'); return; }
-    if (!e.target.closest('[data-ok]') || issueOk.disabled) return;
-    if (iss.step === 1) return issStep2();
-    var ns = iss.ns, t = now();
-    var x = { k: uid++, ns: ns, voters: [], files: [], accts: [], supp: 0, reAt: '', cfAt: '', rej: '', mapAt: '', mapBy: '', route: '관리자 등록', st: '로그인코드 발급', codeAt: '', mailAt: t, code: newCode(), name: fv('lciName'), email: fv('lciMail'), phone: fv('lciPhone') || '-' };
-    if (ns) { x.qna = true; x.kind = iss.kind; x.org = fv('lciOrg') || '-'; x.pos = fv('lciPos') || '-'; x.memo = fv('lciMemo'); }
-    else { x.corp = iss.corp; x.trust = '-'; x.mgr = '-'; x.dept = '-'; x.pos = '-'; }
+    var t = e.target, b;
+    if (t.closest('[data-x]')) { issueEl.classList.remove('show'); return; }
+    if (t.closest('[data-reset]')) { iss = issNew(iss.ns); issPaint(); return; }
+    if ((b = t.closest('[data-tgt]'))) { if ((b.dataset.tgt === 'ns') !== iss.ns) { iss.ns = !iss.ns; issPaint(); } return; }
+    if ((b = t.closest('[data-corp]'))) { iss.corp = !!b.dataset.corp; issPaint(); return; }
+    if ((b = t.closest('[data-kind]'))) { iss.kind = b.dataset.kind; [].forEach.call(b.parentNode.children, function (x) { x.classList.toggle('on', x === b); }); issCheck(); return; }
+    if ((b = t.closest('[data-grp]'))) {
+      var g = (CX.rosterGroups || []).filter(function (y) { return y.id === b.dataset.grp; })[0];
+      return alertDlg({ ic: 'check', t: g.voter + ' 통합내역', d: g.members.map(function (m) { return m.nm + ' · ' + cm(m.sh) + '주'; }).join('\n') });
+    }
+    if (t.closest('[data-all]')) {
+      var on = t.checked;
+      issRows().forEach(function (r) { var at = iss.picked.indexOf(r); if (on && at < 0) iss.picked.push(r); if (!on && at >= 0) iss.picked.splice(at, 1); });
+      issPicked(); return;
+    }
+    var row = t.closest('#lcIssList .lc-mrow[data-i]');
+    if (row) {
+      var r = CX.roster.filter(function (y) { return y.i === +row.dataset.i; })[0], at = iss.picked.indexOf(r);
+      if (at >= 0) iss.picked.splice(at, 1); else iss.picked.push(r);
+      issPicked(); return;
+    }
+    if (t.closest('[data-ok]') && !issueOk.disabled) issDo();
+  });
+  /* 선택한 투표권자 이름을 비어 있는 이름 칸에 채운다 */
+  function issPicked() {
+    if (iss.picked.length && !iss.v.lciName) { iss.v.lciName = voterOf(iss.picked[0]); document.getElementById('lciName').value = iss.v.lciName; }
+    issList(); issCheck();
+  }
+  function issDo() {
+    var ns = iss.ns, v = iss.v, t = now();
+    var x = { k: uid++, ns: ns, voters: [], files: [], accts: [], supp: 0, reAt: '', cfAt: '', rej: '', mapAt: '', mapBy: '', route: '관리자 등록', st: '로그인코드 발급', codeAt: '', mailAt: t, code: newCode(), name: v.lciName, email: v.lciMail, phone: v.lciPhone, org: v.lciOrg || '-', pos: v.lciPos || '-', memo: v.lciMemo || '' };
     x.hist = [{ at: t, t: '로그인코드 발급 · 이메일 발송', by: ME }];
+    if (ns) { x.kind = iss.kind; x.qna = !!v.lciAsk; }
+    else {
+      /* 주주명부에서 고른 투표권자로 바로 연결 — 셀프 신청의 주주확인 단계를 거치지 않는다 */
+      x.corp = iss.corp; x.trust = '-'; x.mgr = '-'; x.dept = '-';
+      x.voters = iss.picked.slice(); x.st = '주주확인 완료'; x.mapAt = t; x.mapBy = ME;
+      x.hist.unshift({ at: t, t: '주주명부 선택 · 투표권자 ' + x.voters.map(voterOf).join(', ') + ' 연결', by: ME });
+    }
     L.unshift(x); issueEl.classList.remove('show');
-    /* 발급한 대상의 탭으로 이동해 새 행을 보여준다 */
     if ((ns ? 'ns' : 'sh') !== cur) document.querySelector('#lcTabs [data-t="' + (ns ? 'ns' : 'sh') + '"]').click();
     chip = 'all'; page = 1; sortSt = null; render();
-    alertDlg({ ic: 'check', t: '로그인코드를 발급했습니다', d: x.name + '님의 로그인코드 ' + x.code + '를\n' + x.email + '(으)로 보냈습니다.' });
-  });
+    alertDlg({ ic: 'check', t: '로그인코드를 발급했습니다', d: '로그인코드 ' + x.code + '\n' + x.name + '님의 이메일(' + x.email + ')로 접속 정보를 보냈습니다.' });
+  }
 
   /* ---------- 상세 패널 ---------- */
   var sheet = document.getElementById('lcSheet');

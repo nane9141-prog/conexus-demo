@@ -184,3 +184,22 @@ table.lctbl .lc-empty{padding:72px 16px;text-align:center;color:#737373;cursor:d
 .lc-cfacct .r{display:flex;align-items:center;gap:4px;padding:2px 0}
 .lc-cfacct .r span{width:65px;flex:none;font-size:12px;line-height:16px;font-weight:600;color:#737373}
 .lc-cfacct .r b{flex:1;text-align:right;font-size:14px;line-height:20px;font-weight:700;color:#0A0A0A}
+
+/* 로그인코드 발급 — 주주 매핑과 같은 1080 · 좌 320 레이아웃 */
+.lc-iss{height:630px}
+.lc-iss .ml .lc-f{margin-bottom:0;gap:4px}
+.lc-iss .ml textarea{height:64px;padding:8px 10px;line-height:20px;resize:vertical}
+.lc-iss .mr{gap:20px}
+.lc-iss .mf{align-items:center}
+.lc-iss-d{flex:1;min-width:0;font-size:14px;line-height:20px;letter-spacing:-.01em;color:#737373}
+.lc-iss-roster{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px}
+.lc-iss-sum{font-size:12px;font-weight:500;color:#737373}
+.lc-tgrow{display:flex;gap:20px}
+.lc-tgw{width:294px;display:flex;flex-direction:column;gap:12px}
+.lc-tg{display:flex;gap:8px}
+.lc-tg button{flex:1;height:28px;padding:0 10px;border:1px solid #E5E5E5;border-radius:8px;background:#fff;font-family:inherit;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer}
+.lc-tg button:hover{background:#FAFAFA}
+.lc-tg button.on{background:#F5F5F5;border-color:#A3A3A3}
+.lc-kgrid{display:grid;grid-template-columns:repeat(3,1fr)}
+.lc-chk{display:flex;align-items:center;gap:8px;font-size:14px;line-height:14px;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer}
+.lc-chk input{width:16px;height:16px;margin:0;accent-color:#171717}
