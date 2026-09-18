@@ -2470,7 +2470,6 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   [[o1,'amClose','amCancel'],[o2,'amvClose','amvCancel'],[o3,null,'amcCancel']].forEach(function(t){
     if(t[1]) document.getElementById(t[1]).addEventListener('click',function(){ close(t[0]); });
     document.getElementById(t[2]).addEventListener('click',function(){ close(t[0]); });
-    t[0].addEventListener('click',function(e){ if(e.target===t[0]) close(t[0]); });
   });
   document.querySelectorAll('#amvAgree,#amcAgree').forEach(function(l){
     l.addEventListener('click',function(){ l.classList.toggle('on'); });
@@ -2805,7 +2804,6 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   document.getElementById('bulkOk').addEventListener('click',function(){
     bulkClose(); load.classList.add('on'); setTimeout(function(){ load.classList.remove('on'); },1000);
   });
-  bo.addEventListener('click',function(e){ if(e.target===bo) bulkClose(); });
   document.getElementById('bulkScope').addEventListener('change',function(){
     /* 전체를 고르면 이미 행사한 표까지 덮어쓴다 — 그 사실을 붉게 알린다 */
     warn.style.display = this.value==='all' ? 'flex' : 'none';
@@ -2880,7 +2878,6 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   document.getElementById('mvCancel').addEventListener('click',mvClose);
   document.getElementById('mvOk').addEventListener('click',mvClose);
   mo.addEventListener('click',function(e){
-    if(e.target===mo){ mvClose(); return; }
     var sw=e.target.closest('#mvSplit'); if(sw){ sw.classList.toggle('on'); return; }
     /* 같은 의안 안에서는 하나만 — 라디오처럼 동작 */
     var ck=e.target.closest('.mvck:not(.ro)'); if(!ck) return;
@@ -3052,7 +3049,6 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   document.getElementById('discClose').addEventListener('click',close);
   document.getElementById('discCancel').addEventListener('click',close);
   document.getElementById('discOk').addEventListener('click',close);
-  ov.addEventListener('click',function(e){ if(e.target===ov) close(); });
   opts.addEventListener('click',function(e){
     var c=e.target.closest('.dscc'); if(!c) return;
     var v=+c.dataset.lv; if(v===1) return;
@@ -3359,7 +3355,6 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   if(ovl){
     document.getElementById('ansCancel').addEventListener('click',closeDlg);
     document.getElementById('ansClose').addEventListener('click',closeDlg);
-    ovl.addEventListener('click',function(e){ if(e.target===ovl) closeDlg(); });
     document.querySelectorAll('#ansVis button').forEach(function(b){ b.addEventListener('click',function(){ setVis(b.getAttribute('data-v')); }); });
     document.getElementById('ansSubmit').addEventListener('click',function(){
       if(!pend) return;
@@ -3533,7 +3528,6 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   });
   document.getElementById('hostCancel').addEventListener('click',close);
   document.getElementById('hostClose').addEventListener('click',close);
-  ovl.addEventListener('click',function(e){ if(e.target===ovl) close(); });
   save.addEventListener('click',function(){
     if(!ok) return;
     STAFF.forEach(function(u,i){ u.role=draft[i].role; });
@@ -3727,7 +3721,6 @@ if(window.OC&&OC.fire) OC.fire();
   });
   ['bcnOvl', 'nvOvl', 'ntcOvl', 'dlyOvl', 'endOvl'].forEach(function (id) {
     var o = $(id); if (!o) return;
-    o.addEventListener('click', function (e) { if (e.target === o) close(id); });
   });
 
   /* 체크박스 · 탭 */

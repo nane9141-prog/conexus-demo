@@ -1123,7 +1123,6 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     adlgOv.classList.add('hidden');
   });
   document.getElementById('adlgCancel').addEventListener('click',()=>adlgOv.classList.add('hidden'));
-  adlgOv.addEventListener('click',e=>{if(e.target===adlgOv)adlgOv.classList.add('hidden');});
   document.querySelectorAll('.tbtn[data-exempt]').forEach(btn=>{
     btn.addEventListener('click',e=>{e.stopPropagation();openExemptDlg(btn);});
   });
@@ -1159,7 +1158,6 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 
   // overlay close (backdrop + data-close)
   document.querySelectorAll('.overlay').forEach(ov=>{
-    ov.addEventListener('click',e=>{if(e.target===ov)ov.classList.add('hidden');});
     ov.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>ov.classList.add('hidden')));
   });
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.overlay').forEach(o=>o.classList.add('hidden'));adlgOv.classList.add('hidden');}});
@@ -1183,7 +1181,7 @@ document.querySelectorAll('.lnb-tabs .t').forEach(function(t){t.addEventListener
         ov.classList.add('show');
       });
     });
-    ov.addEventListener('click',function(e){ if(e.target===ov||e.target.closest('[data-agset-close]')) ov.classList.remove('show'); });
+    ov.addEventListener('click',function(e){ if(e.target.closest('[data-agset-close]')) ov.classList.remove('show'); });
     var sv=document.getElementById('agsetSave'); if(sv)sv.addEventListener('click',function(){ ov.classList.remove('show'); if(window.cxToast)cxToast('저장되었습니다.'); });
   })();
 </script>

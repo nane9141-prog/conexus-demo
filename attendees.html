@@ -782,7 +782,7 @@
     var dlg=document.getElementById('wdDlg'), tx=null, after=null;
     function vname(x){ return (x.voter&&x.voter!=='-')?x.voter:x.name; }
     dlg.addEventListener('click',function(e){
-      if(e.target===dlg || e.target.closest('[data-wd-close]')){ dlg.classList.remove('show'); return; }
+      if(e.target.closest('[data-wd-close]')){ dlg.classList.remove('show'); return; }
       if(!e.target.closest('#wdOk')||!tx) return;
       if(tx.nonsh) D.splice(D.indexOf(tx),1);
       else { tx.site='미참석'; tx.app='미사용'; tx.attend=0; tx.proxy='-'; (tx.members||[]).forEach(function(m){ m.attend=0; }); }
@@ -838,7 +838,6 @@
   document.getElementById('tagId').addEventListener('click',function(){ to.classList.add('on'); });
   document.getElementById('tagClose').addEventListener('click',function(){to.classList.remove('on');});
   document.getElementById('tagCancel').addEventListener('click',function(){to.classList.remove('on');});
-  to.addEventListener('click',function(e){ if(e.target===to) to.classList.remove('on'); });
   var sel=document.getElementById('tagSel'), selT=document.getElementById('tagSelTxt'), chk=document.getElementById('tagChk'), ok=document.getElementById('tagOk');
   /* 태그 ID 목록 NFC-1001 ~ NFC-1008 */
   var tagList=document.getElementById('tagList'), tagPick='';
@@ -877,7 +876,7 @@
       check();
     });
     dlg.addEventListener('click',function(e){
-      if(e.target===dlg || e.target.closest('[data-ns-close]')){ dlg.classList.remove('show'); return; }
+      if(e.target.closest('[data-ns-close]')){ dlg.classList.remove('show'); return; }
       if(e.target.closest('#nsKind')){ var on=!dd.classList.contains('on'); dd.classList.toggle('on',on); sel.classList.toggle('open',on); return; }
       var k=e.target.closest('[data-kind]');
       if(k){ kind=k.dataset.kind; paintKind(); dd.classList.remove('on'); sel.classList.remove('open'); check(); $('nsName').focus(); return; }
@@ -943,7 +942,7 @@
       var first=f.querySelector('[data-dd].on .it'); if(first) first.click();
     });
     dlg.addEventListener('click',function(e){
-      if(e.target===dlg || e.target.closest('[data-px-close]')){ dlg.classList.remove('show'); return; }
+      if(e.target.closest('[data-px-close]')){ dlg.classList.remove('show'); return; }
       var t;
       if((t=e.target.closest('[data-pk]'))){ dlg.querySelectorAll('[data-pk]').forEach(function(c){ c.classList.toggle('on',c===t); }); proxy=null; paint(); return; }
       if((t=e.target.closest('.px-sel'))){
@@ -1059,7 +1058,7 @@
       pv.classList.add('show');
     }
     pv.addEventListener('click',function(e){
-      if(e.target===pv || e.target.closest('[data-pv-close]')){ pv.classList.remove('show'); return; }
+      if(e.target.closest('[data-pv-close]')){ pv.classList.remove('show'); return; }
       var c=e.target.closest('[data-pv]');
       if(c){ pv.querySelectorAll('[data-pv]').forEach(function(x){ x.classList.toggle('on',x===c); }); pvOk.textContent=c.dataset.pv==='keep'?'참관으로 등록':'철회 후 등록'; return; }
       if(e.target.closest('#pvChk')){ e.preventDefault(); pvChk.classList.toggle('on'); pvOk.disabled=!pvChk.classList.contains('on'); return; }
@@ -1114,7 +1113,7 @@
     /* 생년월일+성별 — 숫자 7자리만 */
     document.getElementById('asBirth').addEventListener('input',function(){ this.value=this.value.replace(/\D/g,'').slice(0,7); });
     ov.addEventListener('click',function(e){
-      if(e.target===ov || e.target.closest('[data-as-close]')){ ov.classList.remove('show'); return; }
+      if(e.target.closest('[data-as-close]')){ ov.classList.remove('show'); return; }
       if(e.target.closest('#asOk')){ submit(); return; }
       var ac=e.target.closest('.as-acct'); if(ac && !e.target.closest('input')){ ac.classList.toggle('on'); return; }
       var el=e.target.closest('[data-rg]'); if(!el) return;

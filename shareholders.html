@@ -723,7 +723,6 @@
         (function(){
           function closeOv(ov){ov.classList.add('hidden');}
           document.querySelectorAll('.dlg-ov').forEach(function(ov){
-            ov.addEventListener('click',function(e){if(e.target===ov)closeOv(ov);});
             ov.querySelectorAll('[data-dlg-close]').forEach(function(b){b.addEventListener('click',function(){closeOv(ov);});});
           });
           var sonner=document.getElementById('sonner'),snT=document.getElementById('snT'),snD=document.getElementById('snD'),snTimer;
@@ -914,7 +913,6 @@
               renderSheet();
               mSheet.classList.remove('hidden');
             }
-            mSheet.addEventListener('click',function(e){if(e.target===mSheet)mSheet.classList.add('hidden');});
             mSheet.querySelectorAll('[data-vshclose]').forEach(function(b){b.addEventListener('click',function(){mSheet.classList.add('hidden');});});
             document.getElementById('mgConfirm').addEventListener('click',function(){
               if(editMembers.length<2){ toast('통합 불가','통합하려면 2건 이상의 계좌가 필요합니다.'); return; }
@@ -1118,7 +1116,6 @@
             setMethod('num');
             vSheet.classList.remove('hidden');
           }
-          vSheet.addEventListener('click',function(e){if(e.target===vSheet)vSheet.classList.add('hidden');});
           vSheet.querySelectorAll('[data-vshclose]').forEach(function(b){b.addEventListener('click',function(){vSheet.classList.add('hidden');});});
           tbody.querySelectorAll('.tbtn2').forEach(function(btn){ btn.addEventListener('click',function(){var tr=btn.closest('tr'); if(tr) openVoterSheet(tr);}); });
           document.getElementById('vsSave').addEventListener('click',function(){

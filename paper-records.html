@@ -620,7 +620,6 @@
     document.querySelectorAll('.js-upload').forEach(function(b){b.addEventListener('click', openDlg);});
     document.getElementById('dlgX').addEventListener('click', closeDlg);
     cancel.addEventListener('click', closeDlg);
-    ov.addEventListener('click', function(e){ if(e.target===ov) closeDlg(); });
     pick.addEventListener('click', function(e){ e.stopPropagation(); attach(); });
     drop.addEventListener('click', attach);
     rm.addEventListener('click', function(){ attached=false; drop.style.display='flex'; att.style.display='none'; render(); });
@@ -750,7 +749,6 @@
   btn.addEventListener("click",function(){ if(confirmed){ setConfirmed(false); } else { ov.classList.add("show"); } });
   chk.addEventListener("click",function(){ chk.classList.toggle("on"); ok.disabled=!chk.classList.contains("on"); });
   ok.addEventListener("click",function(){ if(!chk.classList.contains("on")) return; closeCfm(); setConfirmed(true); });
-  ov.addEventListener("click",function(e){ if(e.target===ov) closeCfm(); });
   ov.querySelectorAll("[data-cfm-close]").forEach(function(b){ b.addEventListener("click",closeCfm); });
 })();
 </script>

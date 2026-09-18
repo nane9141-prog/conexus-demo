@@ -689,7 +689,7 @@
     $('tpPvOv').classList.add('on');
   });
   $('tpPvOv').addEventListener('click', function (e) {
-    if (e.target === $('tpPvOv') || e.target.id === 'tpPvClose') $('tpPvOv').classList.remove('on');
+    if (e.target.id === 'tpPvClose') $('tpPvOv').classList.remove('on');
   });
 
   /* 체크 · 라디오 */

@@ -748,7 +748,7 @@
     if(m) m.addEventListener('click',function(){ var ov=document.getElementById('lawDlg'); if(ov) ov.classList.add('show'); });
     document.addEventListener('click',function(e){
       var ov=document.getElementById('lawDlg'); if(!ov) return;
-      if(e.target===ov || (e.target && e.target.id==='lawDlgOk')) ov.classList.remove('show');
+      if((e.target && e.target.id==='lawDlgOk')) ov.classList.remove('show');
     });
   })();
   // 메모 패널 (목록 / 작성 전환)
@@ -808,8 +808,6 @@
       if(pendingDel){ pendingDel.remove(); if(cnt)cnt.textContent=list.querySelectorAll('.memo-item').length; }
       closeDel();
     });
-    if(delOv)delOv.addEventListener('click',function(e){ if(e.target===delOv) closeDel(); });
-    if(ov)ov.addEventListener('click',function(e){ if(e.target===ov) close(); });
   })();
 </script>
 <script>

@@ -756,7 +756,6 @@
     var SUB={ev:'전자주주총회',gm:'주주총회',ev2:'전자투표/위임'};
     if(open)open.addEventListener('click',function(){ov.classList.add('show');});
     if(x)x.addEventListener('click',function(){ov.classList.remove('show');});
-    if(ov)ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('show');});
     /* ev  : 기준 정보 + 요약 + 집중투표 소그룹
        gm  : 위 내용에 소그룹 블록을 더 얹는다
        ev2 : 기준 정보·요약 없이 의안 표만 담는 축약본 */
@@ -786,7 +785,7 @@
       });
     });
     ov.addEventListener('click',function(e){
-      if(e.target===ov||e.target.id==='dlCancel'){ close(ov); return; }
+      if(e.target.id==='dlCancel'){ close(ov); return; }
       var r=e.target.closest('.cxrad');
       if(r){ pick=r.dataset.pick; ov.querySelectorAll('.cxrad').forEach(function(x){x.classList.toggle('on',x===r);}); return; }
       if(e.target.id==='dlGo'){
@@ -804,7 +803,7 @@
     }
     rsn.addEventListener('input',guard);
     rsn.addEventListener('click',function(e){
-      if(e.target===rsn||e.target.id==='dlRsnCancel'){ close(rsn); return; }
+      if(e.target.id==='dlRsnCancel'){ close(rsn); return; }
       if(e.target.closest('#dlAgree')){ document.getElementById('dlAgree').classList.toggle('on'); guard(); return; }
       if(e.target.id==='dlRsnGo'){ close(rsn); if(window.cxToast)cxToast('주주별 집계 결과를 다운로드했습니다.'); }
     });
@@ -814,7 +813,7 @@
     var ov=document.getElementById('reOv'), pend=null;
     window.__fracConfirm=function(fn){ pend=fn; ov.classList.add('on'); };
     ov.addEventListener('click',function(e){
-      if(e.target===ov||e.target.id==='reCancel'){ ov.classList.remove('on'); pend=null; return; }
+      if(e.target.id==='reCancel'){ ov.classList.remove('on'); pend=null; return; }
       if(e.target.id==='reGo'){ ov.classList.remove('on'); if(pend){ pend(); pend=null; } }
     });
   })();

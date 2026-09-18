@@ -379,7 +379,7 @@
     }
     ov.classList.add("show");
   }
-  ov.addEventListener("click",function(e){ if(e.target===ov||e.target.closest("[data-spl-close]")) ov.classList.remove("show"); });
+  ov.addEventListener("click",function(e){ if(e.target.closest("[data-spl-close]")) ov.classList.remove("show"); });
   ok.addEventListener("click",function(){
     if(targetRow){
       var td0=targetRow.querySelector("td");

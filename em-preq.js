@@ -110,7 +110,7 @@
   body.addEventListener('click', function (e) { var tr = e.target.closest('tr[data-k]'); if (!tr) return; cx = L[+tr.dataset.k]; editing = false; paint(); sheet.classList.add('show'); });
   sheet.addEventListener('input', function (e) { if (e.target.id === 'pqTa') { var s = sheet.querySelector('[data-a=save]'); if (s) s.disabled = !e.target.value.trim(); } });
   sheet.addEventListener('click', function (e) {
-    if (e.target === sheet || e.target.closest('[data-sx]')) return close();
+    if (e.target.closest('[data-sx]')) return close();
     var a = e.target.closest('[data-a]'); if (!a || a.disabled || !cx) return;
     var x = cx, act = a.dataset.a;
     if (act === 'cancel') { if (editing) { editing = false; paint(); } else close(); }

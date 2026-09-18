@@ -105,7 +105,7 @@
   }
   function openPv(k, x) { pvX = x; $('pvT').textContent = NAME[k] + ' 미리보기'; $('pvTabs').style.display = langEn ? '' : 'none'; paintPv('ko'); pv.classList.add('show'); }
   pv.addEventListener('click', function (e) {
-    if (e.target === pv || e.target.closest('[data-x]')) return pv.classList.remove('show');
+    if (e.target.closest('[data-x]')) return pv.classList.remove('show');
     var t = e.target.closest('[data-l]'); if (t) paintPv(t.dataset.l);
   });
 

@@ -392,7 +392,7 @@
     var dl=e.target.closest('[data-del]'); if(dl){ FAQ.splice(+dl.dataset.del,1); render(); if(window.cxToast)cxToast('삭제되었습니다.'); return; }
   });
   qEl.addEventListener('input',syncOk); aEl.addEventListener('input',syncOk);
-  ov.addEventListener('click',function(e){ if(e.target===ov||e.target.closest('[data-faq-close]')) close(); });
+  ov.addEventListener('click',function(e){ if(e.target.closest('[data-faq-close]')) close(); });
   okB.addEventListener('click',function(){
     if(okB.disabled) return;
     var item={q:qEl.value.trim(),a:aEl.value.trim()};

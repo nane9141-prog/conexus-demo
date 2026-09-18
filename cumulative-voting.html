@@ -483,7 +483,6 @@
   dmBtn.addEventListener('click',openDlg);
   document.getElementById('dmX').addEventListener('click',closeDlg);
   document.getElementById('dmCancel').addEventListener('click',closeDlg);
-  dlg.addEventListener('click',function(e){if(e.target===dlg)closeDlg();});
   expBtn.addEventListener('click',function(){
     var open=prev.classList.toggle('show');
     expTxt.textContent=open?'예시 닫기':'예시 보기';
@@ -532,7 +531,6 @@
   function closeSheet(){csOv.classList.remove('show');}
   document.getElementById('csX').addEventListener('click',closeSheet);
   document.getElementById('csCancel').addEventListener('click',closeSheet);
-  csOv.addEventListener('click',function(e){if(e.target===csOv)closeSheet();});
   var toast=document.getElementById('csToast');
   document.getElementById('csSave').addEventListener('click',function(){
     closeSheet(); toast.textContent='집중투표 표 분배가 저장되었습니다.';

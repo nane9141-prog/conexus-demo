@@ -27,7 +27,7 @@
       el.innerHTML = '<div class="lc-al" role="alertdialog" aria-modal="true"><div class="ah"><div class="am"><i class="ph"></i></div><div style="width:100%"><div class="at"></div><div class="ad"></div></div></div><div class="af"></div></div>';
       document.body.appendChild(el);
       el.addEventListener('click', function (e) {
-        if (e.target === el || e.target.closest('[data-x]')) { el.classList.remove('show'); var c = cancelCb; cancelCb = cb = null; if (c) c(); return; }
+        if (e.target.closest('[data-x]')) { el.classList.remove('show'); var c = cancelCb; cancelCb = cb = null; if (c) c(); return; }
         if (e.target.closest('[data-ok]')) { el.classList.remove('show'); var f = cb; cb = cancelCb = null; if (f) f(); }
       });
     }

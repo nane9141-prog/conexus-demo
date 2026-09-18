@@ -297,7 +297,7 @@
   document.addEventListener("click",function(e){
     var cdo=document.getElementById("closeDlg"); if(!cdo) return;
     if(e.target.closest("#closeConfirm")){ cdo.classList.remove("show"); window.location.href="tally.html"; return; }
-    if(e.target===cdo||e.target.closest("[data-cd-close]")){ cdo.classList.remove("show"); }
+    if(e.target.closest("[data-cd-close]")){ cdo.classList.remove("show"); }
   });
   var pv=document.getElementById("decPreview");
   if(pv) pv.addEventListener("click",function(){ window.open("chair-view.html?ag=closing&st=closing","_blank","noopener"); });

@@ -320,7 +320,7 @@
   dlg.innerHTML='<div class="dap" role="alertdialog" aria-modal="true"><div class="dap-h"><div class="dap-m"><i class="ph ph-warning-circle"></i></div><div><div class="dap-t">수정내역을 의장 대본에 반영하시겠어요?</div><div class="dap-d">의장 화면에 실시간으로 반영됩니다. (이번 주주총회에만 적용되며, 원본 템플릿은 변경되지 않습니다)</div><div class="dap-note">반영한 뒤에도 다시 수정해 반영할 수 있습니다.</div></div></div><div class="dap-f"><button class="c" data-x>취소</button><button class="o" data-ok>대본에 반영하기</button></div></div>';
   document.body.appendChild(dlg);
   dlg.addEventListener('click',function(e){
-    if(e.target===dlg||e.target.closest('[data-x]')){ dlg.classList.remove('show'); return; }
+    if(e.target.closest('[data-x]')){ dlg.classList.remove('show'); return; }
     if(!e.target.closest('[data-ok]')) return;
     try{ localStorage.setItem(KEY,toScript(sc.innerHTML)); localStorage.setItem(KEY+'.html',sc.innerHTML); }catch(err){}
     dlg.classList.remove('show'); syncRevert();
@@ -335,7 +335,7 @@
   function syncRevert(){ pvw.querySelector('[data-revert]').disabled=(sc.innerHTML===ORIG); }
   function paintPv(){ document.getElementById('dpvTxt').textContent=toScript(sc.innerHTML).replace(/[\u0001\u0002]/g,''); syncRevert(); }
   pvw.addEventListener('click',function(e){
-    if(e.target===pvw||e.target.closest('[data-close]')){ pvw.classList.remove('show'); return; }
+    if(e.target.closest('[data-close]')){ pvw.classList.remove('show'); return; }
     if(e.target.closest('[data-revert]')){ sc.innerHTML=ORIG; try{ localStorage.removeItem(KEY); localStorage.removeItem(KEY+'.html'); }catch(err){} paintPv(); if(window.cxToast) cxToast('템플릿 원문으로 되돌렸습니다.'); }
   });
   var pv=document.getElementById("decPreview");

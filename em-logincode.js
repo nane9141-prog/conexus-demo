@@ -324,7 +324,7 @@
     alertCb = cb || null; alertEl.classList.add('show');
   }
   alertEl.addEventListener('click', function (e) {
-    if (e.target === alertEl || e.target.closest('[data-x]')) { alertEl.classList.remove('show'); return; }
+    if (e.target.closest('[data-x]')) { alertEl.classList.remove('show'); return; }
     if (e.target.closest('[data-ok]')) { alertEl.classList.remove('show'); var f = alertCb; alertCb = null; if (f) f(); }
   });
   var askEl = document.getElementById('lcAsk'), askCb = null, askTa = askEl.querySelector('textarea'), askOk = askEl.querySelector('[data-ok]');
@@ -337,7 +337,7 @@
   }
   askTa.addEventListener('input', function () { askOk.disabled = !askTa.value.trim(); });
   askEl.addEventListener('click', function (e) {
-    if (e.target === askEl || e.target.closest('[data-x]')) { askEl.classList.remove('show'); return; }
+    if (e.target.closest('[data-x]')) { askEl.classList.remove('show'); return; }
     if (e.target.closest('[data-ok]') && !askOk.disabled) { askEl.classList.remove('show'); askCb(askTa.value.trim()); }
   });
   /* 임시비밀번호 · 재발급 — 1분 동안 비활성(남은 시간은 표시하지 않음) */
@@ -399,7 +399,7 @@
     issueOk.disabled = !(fv('lciName') && /.+@.+\..+/.test(fv('lciMail')));
   });
   issueEl.addEventListener('click', function (e) {
-    if (e.target === issueEl || e.target.closest('[data-x]')) { issueEl.classList.remove('show'); return; }
+    if (e.target.closest('[data-x]')) { issueEl.classList.remove('show'); return; }
     if (!e.target.closest('[data-ok]') || issueOk.disabled) return;
     var ns = cur === 'ns', t = now();
     var x = { k: uid++, ns: ns, voters: [], files: [], accts: [], supp: 0, reAt: '', cfAt: '', rej: '', mapAt: '', mapBy: '', route: '관리자 등록', st: '로그인코드 발급', codeAt: '', mailAt: t, code: newCode(), name: fv('lciName'), email: fv('lciMail'), phone: fv('lciPhone') || '-' };
@@ -455,7 +455,7 @@
   function openSheet(x) { shX = x; paintSheet(); sheet.classList.add('show'); }
   function closeSheet() { shX = null; sheet.classList.remove('show'); }
   sheet.addEventListener('click', function (e) {
-    if (e.target === sheet || e.target.closest('[data-sx]')) { closeSheet(); return; }
+    if (e.target.closest('[data-sx]')) { closeSheet(); return; }
     if (e.target.closest('[data-dl]')) { toast('파일을 다운로드합니다.'); return; }
     var a = e.target.closest('[data-a]'); if (a && !a.disabled && shX) act(a.dataset.a, shX);
   });
@@ -487,7 +487,7 @@
   }
   mapQ.addEventListener('input', paintMap); mapF.addEventListener('change', paintMap);
   mapEl.addEventListener('click', function (e) {
-    if (e.target === mapEl || e.target.closest('[data-x]')) { mapEl.classList.remove('show'); return; }
+    if (e.target.closest('[data-x]')) { mapEl.classList.remove('show'); return; }
     var gb = e.target.closest('[data-grp]');
     if (gb) {
       var g = (CX.rosterGroups || []).filter(function (y) { return y.id === gb.dataset.grp; })[0];
@@ -509,7 +509,7 @@
   });
   document.getElementById('lcConfirm').addEventListener('click', function (e) {
     var el = this;
-    if (e.target === el || e.target.closest('[data-x]')) { el.classList.remove('show'); return; }
+    if (e.target.closest('[data-x]')) { el.classList.remove('show'); return; }
     if (!e.target.closest('[data-ok]')) return;
     var x = mapX, chg = x.st === '주주확인 완료';
     x.voters = picked.slice(); x.st = '주주확인 완료'; x.mapAt = now(); x.mapBy = ME;

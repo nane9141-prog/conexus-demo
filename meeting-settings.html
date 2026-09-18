@@ -1359,7 +1359,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   pmPop.addEventListener('click',function(e){e.stopPropagation();});
   document.addEventListener('click',function(){pmPop.classList.add('hidden');});
   document.getElementById('loadApply').addEventListener('click',()=>{const a=document.getElementById('addrInp');if(a){a.value='서울특별시 강남구 테헤란로 123';}const z=document.getElementById('zipInp');if(z){z.value='06234';}loadOverlay.classList.add('hidden');showToast('이전 설정을 불러왔습니다');});
-  document.querySelectorAll('.overlay').forEach(ov=>{ov.addEventListener('click',e=>{if(e.target===ov)ov.classList.add('hidden');});ov.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>ov.classList.add('hidden')));});
+  document.querySelectorAll('.overlay').forEach(ov=>{ov.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>ov.classList.add('hidden')));});
 
   document.addEventListener('click',()=>{closeMpop();closeKind();closeCal();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMpop();closeKind();closeCal();document.querySelectorAll('.overlay').forEach(o=>o.classList.add('hidden'));}});

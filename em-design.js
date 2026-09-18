@@ -95,7 +95,7 @@
   var pv = document.createElement('div'); pv.className = 'lc-ov';
   pv.innerHTML = '<div class="lc-dl dz-prev" role="dialog" aria-modal="true"><button class="lc-x" data-x aria-label="닫기"><i class="ph ph-x"></i></button><div class="dh"><div class="lc-dt">디자인 미리보기</div></div><div class="dz-site" id="dzSite"></div><div class="df"><button class="btn dark" data-x>닫기</button></div></div>';
   document.body.appendChild(pv);
-  pv.addEventListener('click', function (e) { if (e.target === pv || e.target.closest('[data-x]')) pv.classList.remove('show'); });
+  pv.addEventListener('click', function (e) { if (e.target.closest('[data-x]')) pv.classList.remove('show'); });
   var pvBtn = [].filter.call(dp.querySelectorAll('.st-head .btn'), function (b) { return /미리보기/.test(b.textContent); })[0];
   if (pvBtn) {
     pvBtn.innerHTML = '<i class="ph ph-eye" style="font-size:16px"></i>디자인 미리보기';

@@ -288,7 +288,7 @@
 
   $('rsAdd').addEventListener('click', function () { openSheet(null); });
   sheet.addEventListener('click', function (e) {
-    if (e.target === sheet || e.target.closest('[data-sclose]')) closeSheet();
+    if (e.target.closest('[data-sclose]')) closeSheet();
   });
   $('rsSave').addEventListener('click', function () {
     var v = $('rsCond').querySelector('label.on').getAttribute('data-v');
@@ -324,7 +324,6 @@
     draw(); delOvl.classList.remove('on');
     if (window.cxToast) cxToast('결의기준을 삭제했습니다.');
   });
-  delOvl.addEventListener('click', function (e) { if (e.target === delOvl) delOvl.classList.remove('on'); });
   document.addEventListener('click', function (e) {
     var ck = e.target.closest('[data-ck]'); if (ck) { e.preventDefault(); ck.classList.toggle('on'); }
   });

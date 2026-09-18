@@ -411,7 +411,7 @@
       var sel=document.getElementById('dmSel'); if(sel){ sel.innerHTML=chs.map(function(c){return '<option>'+c+'</option>';}).join(''); var onRow=modal.querySelector('#dupModal tbody tr.on[data-drow]'); var onc=onRow&&onRow.querySelector('[data-ch]'); sel.value=onc?onc.dataset.ch:(chs[0]||''); }
       var dmM=document.getElementById('dmMethods'); if(dmM&&chs.length) dmM.textContent=chs.join(' · ');
       resetReg(); modal.classList.add('show'); return; }
-    if(e.target===modal || e.target.closest('[data-dm-close]')){ modal.classList.remove('show'); return; }
+    if(e.target.closest('[data-dm-close]')){ modal.classList.remove('show'); return; }
     var rd=e.target.closest('#dupModal tr[data-drow]');
     if(rd){ modal.querySelectorAll('tr[data-drow]').forEach(function(r){r.classList.toggle('on',r===rd);});
       var ch=rd.querySelector('[data-ch]'); var sel=document.getElementById('dmSel'); if(ch&&sel) sel.value=ch.dataset.ch; return; }
@@ -422,7 +422,7 @@
 
     // 일괄 설정 모달
     if(e.target.closest('#bulkOpen')){ bulk.classList.add('show'); return; }
-    if(e.target===bulk || e.target.closest('[data-bm-close]')){ bulk.classList.remove('show'); return; }
+    if(e.target.closest('[data-bm-close]')){ bulk.classList.remove('show'); return; }
     if(e.target.closest('#bmChk')){ document.getElementById('bmChk').classList.toggle('on'); return; }
     if(e.target.closest('#bmOk')){
       if(!document.getElementById('bmChk').classList.contains('on')) return;
@@ -441,7 +441,7 @@
     function setC(v){ confirmed=v; btn.className=v?'mbtn rev':'mbtn dark'; btn.innerHTML=v?'<i class="ph ph-arrow-u-up-left" style="font-size:16px"></i>철회하기':'<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>확정하기'; }
     btn.addEventListener('click',function(){ if(confirmed){ setC(false); } else { ov.classList.add('show'); } });
     document.getElementById('cfmConfirm').addEventListener('click',function(){ ov.classList.remove('show'); setC(true); });
-    ov.addEventListener('click',function(e){ if(e.target===ov||e.target.closest('[data-cfm-cancel]')) ov.classList.remove('show'); });
+    ov.addEventListener('click',function(e){ if(e.target.closest('[data-cfm-cancel]')) ov.classList.remove('show'); });
   })();
   // 중복 처리 드롭박스 -> 라디오 동기화
   (function(){ var sel=document.getElementById('dmSel'); if(!sel) return;
