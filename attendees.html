@@ -437,7 +437,7 @@
         <div class="at-tabs">
           <button class="at-tab on" data-at="reg">현장 참석자 등록</button>
           <button class="at-tab" data-at="evote">전자주총 참석자 <span class="cnt">99+</span></button>
-          <button class="at-tab" data-at="all">현장 참석자 <span class="cnt">99+</span></button>
+          <button class="at-tab" data-at="all">현장 참석자 <span class="cnt">50</span></button>
         </div>
         <div class="at-tb">
           <div class="at-tb-l">
@@ -599,6 +599,13 @@
       rows.push(lead);
     });
     rows=rows.filter(function(x){return !x.grouped;}).sort(function(a,b){return b.hold-a.hold;});
+    /* 현장 참석 등록 50명(비주주 3 포함) — 보유주식 상위 47명만 참석, 나머지는 미참석 */
+    var siteN=0;
+    rows.forEach(function(x){
+      if(x.site==='미참석' || ++siteN<=47) return;
+      x.site='미참석'; x.app='미사용'; x.proxy='-'; x.attend=0;
+      (x.members||[]).forEach(function(m){ m.attend=0; });
+    });
     /* 비주주(참관인 등) — 의결권 없음, 현장 참관 */
     [['정다은','참관인'],['오민석','감사인'],['최하린','공증인']].forEach(function(n){ rows.push(nonSh(n[0],n[1])); });
     return rows;
