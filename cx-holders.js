@@ -68,7 +68,7 @@
       var sum = { i: u.members[0].i, sh: u.sh };
       var h = '<tr class="grp"><td><div class="voter"><button class="tw-chevron collapsed" data-toggle="' + gid + '" aria-label="통합 계좌 펼치기">' + CHEV + '</button><span>' + u.voter + '</span></div></td>'
         + '<td><span class="tag">통합 ' + u.members.length + '건</span></td>' + cells(sum, x.method, f) + '</tr>';
-      u.members.forEach(function (m) { h += '<tr class="child hidden" data-child="' + gid + '"><td></td><td>' + m.nm + '</td>' + cells(m, x.method, f) + '</tr>'; });
+      u.members.forEach(function (m) { h += '<tr class="child hidden" data-child="' + gid + '"><td class="tcell"><span class="cv"></span></td><td>' + m.nm + '</td>' + cells(m, x.method, f) + '</tr>'; });
       return h;
     }
     function sortVal(x, label) {

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 참석자 관리</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=g8">
+<link rel="stylesheet" href="conexus.css?v=g9">
 <style>
   /* page-local content helpers (LNB styling comes from conexus.css) */
   .scroll{flex:1;overflow-y:auto}
@@ -495,7 +495,7 @@
   }
   function childRows(gid,x){
     return (x.members||[]).map(function(m){
-      return '<tr class="atchild hidden" data-child="'+gid+'"><td></td><td>'+m.name+'</td><td>'+m.no+'</td><td class="c">'+preB(x.pre)+'</td><td class="c">'+siteB(x.site)+'</td><td class="c">'+appB(x.app)+'</td><td class="n">'+cm(m.hold)+'</td><td class="n">'+m.ratio+'</td><td class="n">'+(m.attend?cm(m.attend):mu('-'))+'</td><td></td><td></td></tr>';
+      return '<tr class="atchild hidden" data-child="'+gid+'"><td class="tcell"><span class="cv"></span></td><td>'+m.name+'</td><td>'+m.no+'</td><td class="c">'+preB(x.pre)+'</td><td class="c">'+siteB(x.site)+'</td><td class="c">'+appB(x.app)+'</td><td class="n">'+cm(m.hold)+'</td><td class="n">'+m.ratio+'</td><td class="n">'+(m.attend?cm(m.attend):mu('-'))+'</td><td></td><td></td></tr>';
     }).join('');
   }
   /* 세 탭 공통 항목 */

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 주주명부 설정</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=g8">
+<link rel="stylesheet" href="conexus.css?v=g9">
 <style>
   /* page-local content helpers (LNB styling comes from conexus.css) */
   .scroll{flex:1;overflow-y:auto}
@@ -398,6 +398,7 @@
         table.mtbl .tw-chevron{width:24px;height:24px;flex:none;border:1px solid var(--border);border-radius:9999px;background:#fff;display:flex;align-items:center;justify-content:center;color:#171717;cursor:pointer;padding:0}
         table.mtbl .tw-chevron svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;transition:transform .15s;transform:rotate(180deg)}
         table.mtbl tr.open .tw-chevron svg{transform:none}
+        table.mtbl td.tcell .cv{left:28px}   /* 칸 여백 16px — 펼침 버튼 중심선 */
         table.mtbl .tag{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:#f4f4f5;color:#737373;font-size:12px;font-weight:500}
         .btn.danger{color:var(--red600);border-color:#f3c0c4;width:100%;justify-content:center;height:32px}
         .btn.danger:hover{background:#fff5f6}
@@ -849,7 +850,7 @@
                 +'<td class="c"><button class="tbtn2 mg-edit" data-gid="'+gid+'">변경</button></td></tr>';
               g.members.forEach(function(m){
                 html+='<tr class="mg-child" data-gid="'+gid+'" hidden>'
-                  +'<td></td><td class="c">'+g.kind+'</td><td></td>'
+                  +'<td></td><td class="c">'+g.kind+'</td><td class="tcell"><span class="cv"></span></td>'
                   +'<td class="cname">'+m.name+'</td><td class="mut">'+m.no+'</td>'
                   +'<td class="r">'+fmt(m.sh)+'</td><td class="r sub">'+m.rate.toFixed(1)+'%</td><td></td></tr>';
               });
@@ -963,7 +964,7 @@
                 +'<td class="r">'+sumSh.toLocaleString()+'</td>'
                 +'<td class="r sub">'+sumRate.toFixed(1)+'%</td></tr>';
               g.members.forEach(function(m){
-                html+='<tr class="cf-child" data-cg="'+id+'" hidden><td></td><td></td><td class="cname">'+m.name+'</td><td class="r">'+m.sh+'</td><td class="r sub">'+m.rate+'</td></tr>';
+                html+='<tr class="cf-child" data-cg="'+id+'" hidden><td></td><td class="tcell"><span class="cv"></span></td><td class="cname">'+m.name+'</td><td class="r">'+m.sh+'</td><td class="r sub">'+m.rate+'</td></tr>';
               });
             });
             var src=document.querySelector('.upanel[data-upanel="set"] table.mtbl tbody');

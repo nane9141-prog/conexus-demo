@@ -973,3 +973,7 @@ table.cx-rh-l tbody td{height:60px;padding-top:16px!important;padding-bottom:16p
 .cx-sel:hover{background:#FAFAFA}
 .cx-sel.on{border-color:#A3A3A3}
 .cx-sel svg{width:14px;height:14px;flex:none;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* 통합 계좌 줄 트리 연결선(의결권 제한 설정 기준) — 펼침 버튼 중심 아래로 세로선 */
+td.tcell{position:relative}
+td.tcell .cv{position:absolute;left:26px;top:0;bottom:0;width:1px;background:#e0e0e0}
