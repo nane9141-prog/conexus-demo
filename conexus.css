@@ -965,3 +965,11 @@ th.cx-tight .cx-fbtn.cx-act{opacity:1;pointer-events:auto}
 table.cx-rh-s tbody td{height:36px;padding-top:2px!important;padding-bottom:2px!important}
 table.cx-rh-l tbody td{height:60px;padding-top:16px!important;padding-bottom:16px!important}
 
+
+/* 페이지당 드롭다운(conexus.js pageSelect) — 필터 드롭다운 박스와 같은 모양 */
+.cx-sel{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:space-between;gap:6px;min-width:64px;height:28px;
+  padding:0 6px 0 10px;border:1px solid #E5E5E5;border-radius:8px;background:#fff;font-family:inherit;font-size:13px;
+  letter-spacing:-.01em;color:#0A0A0A;cursor:pointer;vertical-align:middle}
+.cx-sel:hover{background:#FAFAFA}
+.cx-sel.on{border-color:#A3A3A3}
+.cx-sel svg{width:14px;height:14px;flex:none;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}

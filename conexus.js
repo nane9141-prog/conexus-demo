@@ -153,6 +153,7 @@
     var m = menu();
     if (popOwner === anchor) { hide(); return; }
     hide();
+    m.style.width = m.style.minWidth = '';
     m.innerHTML = html;
     m.classList.add('on');
     popOwner = anchor; anchor.classList.add('on');
@@ -615,7 +616,43 @@
     });
   }
 
-  function run() { Array.prototype.forEach.call(document.querySelectorAll('table'), apply); }
+  /* 페이지당 선택 — 시스템 select 대신 필터 메뉴와 같은 드롭다운.
+     select 는 숨겨 값의 원본으로 두고, 고르면 change 를 보내 페이지 코드가 그대로 동작한다. */
+  function pageSelect(sel) {
+    if (sel.__cxs) return;
+    sel.__cxs = 1;
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'cx-sel';
+    var h = sel.offsetHeight, cs = getComputedStyle(sel);
+    if (h) b.style.height = h + 'px';
+    b.style.fontSize = cs.fontSize;
+    function paint() { var o = sel.options[sel.selectedIndex]; b.innerHTML = '<span>' + esc(o ? o.text : '') + '</span>' + CHEV; }
+    paint();
+    sel.style.display = 'none';
+    sel.parentNode.insertBefore(b, sel.nextSibling);
+    sel.addEventListener('change', paint);
+    b.addEventListener('click', function (e) {
+      e.stopPropagation();
+      show(b, Array.prototype.map.call(sel.options, function (o) {
+        return '<button class="it' + (o.selected ? ' on' : '') + '" type="button" data-v="' + esc(o.value) + '">'
+          + '<span class="tx">' + esc(o.text) + '</span>' + CHECK + '</button>';
+      }).join(''), function (m) {
+        m.style.width = m.style.minWidth = Math.max(b.offsetWidth, 72) + 'px';
+        m.addEventListener('click', function (ev) {
+          var it = ev.target.closest('[data-v]'); if (!it) return;
+          sel.value = it.getAttribute('data-v');
+          sel.dispatchEvent(new Event('change', { bubbles: true }));
+          hide();
+        });
+      });
+    });
+  }
+  function run() {
+    Array.prototype.forEach.call(document.querySelectorAll('table'), apply);
+    Array.prototype.forEach.call(document.querySelectorAll('select'), function (s) {
+      if (s.parentElement && /페이지당/.test(s.parentElement.textContent)) pageSelect(s);
+    });
+  }
   window.cxTable = { apply: apply, run: run };
 
   /* 좌상단 로고·'대시보드' 메뉴 → 설정 대시보드(dashboard.html?tab=set) */
