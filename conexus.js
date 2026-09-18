@@ -420,10 +420,9 @@
 
     /* 본문을 다시 그리는 표가 많다 — 새 줄에도 같은 규칙이 붙도록 지켜본다 */
     if (!t.watch) {
-      t.watch = new MutationObserver(function () {
-        clearTimeout(t.timer);
-        t.timer = setTimeout(function () { apply(tbl); }, 60);
-      });
+      /* 다시 그린 그 프레임 안에서(그리기 전에) 바로 적용한다 — 지연을 두면 정렬·필터 아이콘이
+         붙기 전 모습이 한 번 보였다가 움직인다 */
+      t.watch = new MutationObserver(function () { apply(tbl); });
       t.watch.observe(tb, { childList: true });
     }
   }

@@ -440,9 +440,9 @@
   /* 세 탭 공통 항목 */
   var C=['투표권자','주주명','주주번호','사전투표','현장 참석','앱 사용','보유주식','지분율','참석주식수','의결권 제한','의안별 제한'];
   var COLS={reg:C,evote:C,all:C};
-  var NC=[6,7,8], CC=[3,4,5,10];
+  var NC=[6,7,8], CC=[3,4,5,9,10];
   function rowFor(tab,x,gid){
-    return '<td>'+voterCell(x,gid)+'</td><td>'+nameCell(x)+'</td><td>'+x.no+'</td><td class="c">'+preB(x.pre)+'</td><td class="c">'+siteB(x.site)+'</td><td class="c">'+appB(x.app)+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+x.ratio+'</td><td class="n">'+(x.attend?cm(x.attend):mu('-'))+'</td><td>'+(x.limit==='-'?mu('-'):'<span title="'+x.limit+'">'+x.limit+'</span>')+'</td><td class="c">'+agB(x.ag)+'</td>';
+    return '<td>'+voterCell(x,gid)+'</td><td>'+nameCell(x)+'</td><td>'+x.no+'</td><td class="c">'+preB(x.pre)+'</td><td class="c">'+siteB(x.site)+'</td><td class="c">'+appB(x.app)+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+x.ratio+'</td><td class="n">'+(x.attend?cm(x.attend):mu('-'))+'</td><td class="c">'+(x.limit==='-'?mu('-'):'<span title="'+x.limit+'">'+x.limit+'</span>')+'</td><td class="c">'+agB(x.ag)+'</td>';
   }
   var cur='reg', headTab=null, page=1, pageSize=20, lastTotal=0;
   var CW={'주주명':140,'주주번호':124,'사전투표':116,'현장 참석':90,'앱 사용':84,'보유주식':110,'지분율':72,'참석주식수':104,'의결권 제한':150,'의안별 제한':92};
@@ -540,6 +540,6 @@
 })();
 </script>
 
-<script src="conexus.js?v=fwe"></script>
+<script src="conexus.js?v=fwf"></script>
 </body>
 </html>
