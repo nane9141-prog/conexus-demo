@@ -567,16 +567,22 @@
   })();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
 
-  /* FOUC 방지 노출 — 표 보정(run)·페이지 렌더가 끝난 뒤, 아이콘 폰트까지 준비되면(최대 400ms) 한 번에 보여준다 */
+  /* FOUC 방지 노출 — 페이지 렌더·글꼴이 끝난 뒤 표 폭 보정을 '최종 내용' 기준으로 한 번 더 끝내고,
+     한 프레임 쉬었다가 노출한다. (컬럼 fit 재계산으로 가로폭이 흔들리는 깜빡임 제거) */
   (function () {
     var shown = false;
-    function reveal() { if (shown) return; shown = true; document.documentElement.classList.add('cx-ready'); }
+    function finalizeAndShow() {
+      if (shown) return; shown = true;
+      try { if (window.cxTable && window.cxTable.run) window.cxTable.run(); } catch (e) {}  /* 최종 DOM 기준 폭 확정 */
+      requestAnimationFrame(function () { document.documentElement.classList.add('cx-ready'); });
+    }
+    function afterRender() { requestAnimationFrame(function () { setTimeout(finalizeAndShow, 0); }); }
     function schedule() {
       if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(reveal);
-        setTimeout(reveal, 400);          /* 폰트가 늦어도 화면은 막지 않는다 */
-      } else { reveal(); }
-      window.addEventListener('load', reveal);   /* 최후 보루 */
+        document.fonts.ready.then(afterRender);
+        setTimeout(afterRender, 500);        /* 글꼴이 늦어도 화면은 막지 않는다 */
+      } else { afterRender(); }
+      window.addEventListener('load', finalizeAndShow);   /* 최후 보루 */
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', schedule); else schedule();
   })();
