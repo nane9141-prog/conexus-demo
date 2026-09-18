@@ -255,6 +255,16 @@
   .memo-f .mfc{border:1px solid #EEF0F2;background:#fff;color:#0a0a0a}
   .memo-f .mfs{border:0;background:#9a9a9a;color:#fff}
   .memo-last{padding:0 20px 16px;text-align:center;font-size:12px;color:#a3a3a3}
+  .mdel-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:220;display:none;align-items:center;justify-content:center}
+  .mdel-ov.show{display:flex}
+  .mdel{width:320px;max-width:90vw;background:#fff;border-radius:16px;padding:28px 20px 20px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.18)}
+  .mdel-ic{width:52px;height:52px;margin:0 auto 18px;border-radius:14px;background:#FDECEC;display:flex;align-items:center;justify-content:center;color:#E9081B;font-size:26px}
+  .mdel-t{font-size:17px;font-weight:700;color:#0a0a0a;letter-spacing:-.01em}
+  .mdel-s{font-size:13px;color:#a3a3a3;margin-top:8px}
+  .mdel-b{display:flex;gap:10px;margin-top:22px}
+  .mdel-b button{flex:1;height:46px;border-radius:12px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}
+  .mdel-b .mdc{border:1px solid #E5E5E5;background:#fff;color:#0a0a0a}
+  .mdel-b .mdd{border:0;background:#FDECEC;color:#E9081B}
 </style>
 <script src="cx-data.js"></script>
 </head>
@@ -650,11 +660,15 @@
         <div class="memo-wact"><button class="wc" id="memoWCancel" type="button">취소</button><button class="ws" id="memoWSubmit" type="button">등록</button></div>
       </div>
     </div>
-    <div class="memo-f">
-      <button class="mfc" id="memoCancel" type="button">취소</button>
-      <button class="mfs" id="memoSave" type="button">저장</button>
-    </div>
-    <div class="memo-last">마지막 변경 2026-07-17 15:58 · 박지용</div>
+  </div>
+</div>
+
+<div class="mdel-ov" id="memoDelOv">
+  <div class="mdel">
+    <div class="mdel-ic"><i class="ph ph-trash"></i></div>
+    <div class="mdel-t">메모를 삭제하시겠습니까?</div>
+    <div class="mdel-s">삭제 후에는 복구할 수 없습니다.</div>
+    <div class="mdel-b"><button class="mdc" id="memoDelCancel" type="button">취소</button><button class="mdd" id="memoDelOk" type="button">삭제</button></div>
   </div>
 </div>
 
@@ -759,9 +773,18 @@
     if(list)list.addEventListener('click',function(e){
       if(e.target.tagName!=='A') return;
       var it=e.target.closest('.memo-item'); if(!it) return;
-      if(e.target.textContent==='삭제'){ it.remove(); if(cnt)cnt.textContent=list.querySelectorAll('.memo-item').length; }
+      if(e.target.textContent==='삭제'){ pendingDel=it; if(delOv)delOv.classList.add('show'); }
       else if(e.target.textContent==='변경'){ showWrite(it); }
     });
+    var delOv=document.getElementById('memoDelOv'), delCancel=document.getElementById('memoDelCancel'), delOk=document.getElementById('memoDelOk');
+    var pendingDel=null;
+    function closeDel(){ if(delOv)delOv.classList.remove('show'); pendingDel=null; }
+    if(delCancel)delCancel.addEventListener('click',closeDel);
+    if(delOk)delOk.addEventListener('click',function(){
+      if(pendingDel){ pendingDel.remove(); if(cnt)cnt.textContent=list.querySelectorAll('.memo-item').length; }
+      closeDel();
+    });
+    if(delOv)delOv.addEventListener('click',function(e){ if(e.target===delOv) closeDel(); });
     if(ov)ov.addEventListener('click',function(e){ if(e.target===ov) close(); });
   })();
 </script>
