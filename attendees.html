@@ -153,7 +153,7 @@
   .decl-text{width:100%;box-sizing:border-box;background:#fafafa;border:1px solid var(--border);border-radius:14px;padding:20px;font-family:inherit;font-size:18px;line-height:28px;color:#0a0a0a;resize:none;outline:none}
 </style>
 <script src="cx-data.js"></script>
-<script src="cx-roster.js?v=r2"></script>
+<script src="cx-roster.js?v=r3"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -387,8 +387,8 @@
       /* 주주번호(대시 없음, 뒷자리 *): 개인 생년월일+성별+******, 외국인 개인 식별번호 12자리(뒤 6자리 *), 기관·법인 사업자번호(뒤 5자리 *) */
       var no=(r.gb==='개인'&&r.fr==='외국인')?('00000'+(r.i*982451653)%1e12).slice(-12,-6)+'******'
         :r.id.replace(/-/g,'').replace(/^(\d{7})\*+$/,'$1******');
-      var k=i%11, pre=k<4?[]:(k===10?[CH[i%7],CH[(i+3)%7]]:[CH[i%7]]);
-      var site=['미참석','참석','일부 참석','참석','미참석'][i%5];
+      var k=i%11, pre=r.pre?r.pre:(k<4?[]:(k===10?[CH[i%7],CH[(i+3)%7]]:[CH[i%7]]));
+      var site=r.site||['미참석','참석','일부 참석','참석','미참석'][i%5];
       var ppl=(i%6===1)?2:1;                                 /* 주주+대리인 / 대리인 다수 */
       var app=site==='미참석'?'미사용':(ppl>1?['사용','일부 사용','미사용'][i%3]:(i%4===3?'미사용':'사용'));
       var lim=(i%7===3)?LIMIT[i%LIMIT.length]:'-';
