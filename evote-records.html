@@ -116,6 +116,17 @@
   .attach .rm{border:none;background:none;cursor:pointer;padding:0;width:14px;height:14px}
   .attach .rm svg{width:14px;height:14px;stroke:#171717;fill:none;stroke-width:2;stroke-linecap:round}
   .dlg-f{padding:12px 16px 16px;display:flex;justify-content:flex-end;gap:8px}
+  .adlg{width:320px;max-width:calc(100vw - 32px);background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;display:flex;flex-direction:column}
+  .adlg .ah{display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 8px;text-align:center}
+  .adlg .am{width:40px;height:40px;border-radius:8px;background:#FDE6E8;display:flex;align-items:center;justify-content:center;color:#E9081B}
+  .adlg .am i{font-size:24px}
+  .adlg .at{font-size:16px;line-height:24px;font-weight:600;color:#0A0A0A}
+  .adlg .ad{font-size:14px;line-height:20px;color:#737373;margin-top:6px}
+  .adlg .ai{align-self:stretch;display:flex;justify-content:space-between;gap:10px;padding:8px 12px;background:#F5F5F5;border-radius:8px;font-size:14px;line-height:20px;color:#151419}
+  .adlg .ai b{font-weight:700}
+  .adlg .af{display:flex;gap:8px;padding:12px 16px 16px}
+  .adlg .af button{flex:1}
+  .btn-dng{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 10px;background:rgba(220,38,38,.1);border:none;border-radius:10px;font-size:14px;font-weight:500;color:#E9081B;cursor:pointer;font-family:inherit}
   .btn-out{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 10px;background:#fff;border:1px solid #e5e5e5;border-radius:10px;font-size:14px;font-weight:500;color:#171717;cursor:pointer;font-family:inherit}
   .btn-dark{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 12px;background:#171717;border:none;border-radius:10px;font-size:14px;font-weight:500;color:#fafafa;cursor:pointer;font-family:inherit}
   .btn-dark:disabled{opacity:.5;cursor:not-allowed}
@@ -373,7 +384,7 @@
             <div class="hbtns">
               <button class="tbtn js-verify"><i class="ph ph-check-square" style="font-size:16px"></i>검증 정보</button>
               <button class="tbtn js-upload"><i class="ph ph-upload-simple" style="font-size:16px"></i>파일 등록</button>
-              <button class="tbtn"><i class="ph ph-trash" style="font-size:16px"></i>내역 삭제</button>
+              <button class="tbtn" id="evDelBtn" style="display:none"><i class="ph ph-trash" style="font-size:16px"></i>내역 삭제</button>
             </div>
           </div>
           <div class="evk">
@@ -653,6 +664,7 @@
     document.querySelectorAll('.evtabs').forEach(function(g){
       g.querySelectorAll('.evtab').forEach(function(t){
         t.addEventListener('click', function(){ g.querySelectorAll('.evtab').forEach(function(x){x.classList.toggle('active',x===t);});
+          document.getElementById('evDelBtn').style.display=/해외/.test(t.textContent)?'':'none';   /* 내역 삭제는 해외 주주만 */
           document.getElementById('evOrg').style.visibility=/해외/.test(t.textContent)?'hidden':'';   /* 전자투표관리기관은 국내 주주에서만 표기 — 자리는 남겨 타이틀이 움직이지 않게 */ });
       });
     });
@@ -735,6 +747,14 @@
     var act=document.querySelector('#evFilled .evtab.active[data-cnt]'); if(act) setCnt(act);
   })();
 </script>
+<div class="dlg-ov" id="evDelAlert">
+  <div class="adlg" role="alertdialog" aria-modal="true">
+    <div class="ah"><div class="am"><i class="ph ph-trash"></i></div>
+      <div><div class="at">전자투표/위임 내역을 삭제하시겠습니까?</div><div class="ad">삭제된 데이터는 복구할 수 없습니다.</div></div>
+      <div class="ai"><span>해외 주주</span><b id="evDelCnt">0명</b></div></div>
+    <div class="af"><button class="btn-out" data-evdel-x>취소</button><button class="btn-dng" id="evDelDo">삭제하기</button></div>
+  </div>
+</div>
 <div class="dlg-ov" id="cfmOv">
   <div class="dlg cfm">
     <div class="dlg-h"><div class="t">전자투표 · 전자위임 내역을 확정 하시겠습니까?</div><div class="d">아래 수치를 확인한 뒤 확정을 완료하세요.</div><button class="dlg-x" data-cfm-close><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
@@ -765,5 +785,21 @@
 })();
 </script>
 <script src="conexus.js?v=fwv"></script>
+<script>
+/* 해외 주주 내역 삭제 — 확인 알림 후 해외 탭 데이터를 비운다(빈 표 · KPI 0) */
+(function(){
+  var al=document.getElementById('evDelAlert');
+  function tab(){ return document.querySelector('#evFilled .evtab.active'); }
+  document.getElementById('evDelBtn').addEventListener('click',function(){
+    document.getElementById('evDelCnt').textContent=(tab().dataset.cnt||'0')+'명'; al.classList.add('show');
+  });
+  al.addEventListener('click',function(e){ if(e.target.closest('[data-evdel-x]')) al.classList.remove('show'); });
+  document.getElementById('evDelDo').addEventListener('click',function(){
+    var t=tab(); al.classList.remove('show');
+    t.dataset.cnt='0'; t.dataset.shr='0'; t.click();
+    if(window.cxToast) cxToast('해외 주주 내역을 삭제했습니다.');
+  });
+})();
+</script>
 </body>
 </html>
