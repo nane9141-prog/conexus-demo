@@ -304,6 +304,10 @@
     var dir = th.__d === 1 ? -1 : (th.__d === -1 ? 0 : 1);
     t.ths.forEach(function (o) { if (o !== th) o.__d = 0; });
     th.__d = dir;
+    /* 페이지로 나눠 그리는 표는 화면에 있는 줄만이 아니라 전체 데이터로 정렬해야 한다.
+       'cxsort' 를 막으면(preventDefault) 표가 직접 정렬하고, 아니면 여기서 줄을 옮긴 뒤 'cxsorted' 로 알린다. */
+    var ev = new CustomEvent('cxsort', { bubbles: true, cancelable: true, detail: { idx: idx, dir: dir, label: label(th) } });
+    if (!t.tbl.dispatchEvent(ev)) return;
     bs.sort(function (a, b) {
       if (!dir) return a.lead.__i - b.lead.__i;
       var x = txt(a.lead.cells[idx]), y = txt(b.lead.cells[idx]);
@@ -311,6 +315,7 @@
       return dir * ((!isNaN(nx) && !isNaN(ny)) ? nx - ny : x.localeCompare(y, 'ko'));
     });
     bs.forEach(function (b) { b.rows.forEach(function (r) { t.tb.appendChild(r); }); });
+    t.tbl.dispatchEvent(new CustomEvent('cxsorted', { bubbles: true, detail: { idx: idx, dir: dir } }));
   }
 
   function headRow(tbl) {

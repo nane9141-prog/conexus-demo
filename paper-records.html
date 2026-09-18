@@ -690,7 +690,11 @@
   (function(){
     var wrap=document.getElementById('viewHolder'); if(!wrap) return;
     var rows=[].slice.call(wrap.querySelectorAll('tbody tr'));
-    var units=[]; rows.forEach(function(r){ if(r.classList.contains('child')){ units[units.length-1].rows.push(r);} else { units.push({head:r,rows:[r]});} });
+    var units=[];
+    function build(){ units=[]; [].slice.call(wrap.querySelectorAll('tbody tr')).forEach(function(r){ if(r.classList.contains('child')){ units[units.length-1].rows.push(r);} else { units.push({head:r,rows:[r]});} }); }
+    build();
+    /* 컬럼 정렬은 전체 줄 기준 — 정렬된 순서로 페이지를 다시 나누고 첫 페이지로 */
+    wrap.addEventListener('cxsorted',function(){ build(); page=1; apply(); });
     var members=rows.filter(function(r){return !r.classList.contains('grp');}).length;
     var pageSize=15, page=1, pages=Math.max(1,Math.ceil(units.length/pageSize));
     var prev=document.getElementById('pgPrev'),next=document.getElementById('pgNext'),ind=document.getElementById('pgInd'),tot=document.getElementById('pgTotal');
@@ -808,6 +812,6 @@
   ov.querySelectorAll("[data-cfm-close]").forEach(function(b){ b.addEventListener("click",closeCfm); });
 })();
 </script>
-<script src="conexus.js?v=fwf"></script>
+<script src="conexus.js?v=fwg"></script>
 </body>
 </html>
