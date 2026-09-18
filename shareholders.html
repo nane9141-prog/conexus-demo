@@ -393,6 +393,12 @@
         .mbadge.auto,.mbadge.manual{background:#f4f4f5;color:#18181b}
         .mg-tv{color:#0a0a0a;font-weight:600}
         .mg-mflex{display:inline-flex;align-items:center;gap:6px}
+        /* 통합기관 표시 — 참석자 관리와 동일: 투표권자 칸 펼침 버튼, 주주명 칸 '통합 N건' 뱃지 */
+        table.mtbl .voter{display:inline-flex;align-items:center;gap:8px}
+        table.mtbl .tw-chevron{width:24px;height:24px;flex:none;border:1px solid var(--border);border-radius:9999px;background:#fff;display:flex;align-items:center;justify-content:center;color:#171717;cursor:pointer;padding:0}
+        table.mtbl .tw-chevron svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;transition:transform .15s;transform:rotate(180deg)}
+        table.mtbl tr.open .tw-chevron svg{transform:none}
+        table.mtbl .tag{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:#f4f4f5;color:#737373;font-size:12px;font-weight:500}
         .btn.danger{color:var(--red600);border-color:#f3c0c4;width:100%;justify-content:center;height:32px}
         .btn.danger:hover{background:#fff5f6}
         .btn.danger.hide{display:none}
@@ -831,20 +837,19 @@
               var sumRate=g.members.reduce(function(a,m){return a+m.rate;},0);
               var rep=g.members[0]||{no:'-'};
               var repM=g.members.filter(function(m){return m.name===g.voter;})[0]||g.members[0]||{no:'-'};
-              var mb=g.method==='auto'?'<span class="mbadge auto">자동 '+g.members.length+'건</span>':'<span class="mbadge manual">수동 '+g.members.length+'건</span>';
-              var nm=g.voter+(g.members.length>1?' 외 '+(g.members.length-1):'');
+              var mb=g.method==='auto'?'<span class="mbadge auto">자동</span>':'<span class="mbadge manual">수동</span>';
               var html='<tr class="mg-grp" data-gid="'+gid+'">'
-                +'<td><span class="mg-mflex"><span class="mg-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>'+mb+'</span></td>'
+                +'<td>'+mb+'</td>'
                 +'<td class="c">'+g.kind+'</td>'
-                +'<td><span class="mg-tv">'+g.voter+'</span></td>'
-                +'<td class="name">'+nm+'</td>'
+                +'<td><div class="voter"><button type="button" class="tw-chevron" aria-label="통합 계좌 펼치기"><svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button><span class="mg-tv">'+g.voter+'</span></div></td>'
+                +'<td class="name"><span class="tag">통합 '+g.members.length+'건</span></td>'
                 +'<td class="mut">'+repM.no+'</td>'
                 +'<td class="r">'+fmt(sumSh)+'</td>'
                 +'<td class="r sub">'+sumRate.toFixed(1)+'%</td>'
                 +'<td class="c"><button class="tbtn2 mg-edit" data-gid="'+gid+'">변경</button></td></tr>';
               g.members.forEach(function(m){
                 html+='<tr class="mg-child" data-gid="'+gid+'" hidden>'
-                  +'<td></td><td class="c">'+g.kind+'</td><td class="mut">-</td>'
+                  +'<td></td><td class="c">'+g.kind+'</td><td></td>'
                   +'<td class="cname">'+m.name+'</td><td class="mut">'+m.no+'</td>'
                   +'<td class="r">'+fmt(m.sh)+'</td><td class="r sub">'+m.rate.toFixed(1)+'%</td><td></td></tr>';
               });
@@ -951,15 +956,14 @@
               var id='cg'+gi;
               var sumSh=g.members.reduce(function(a,m){return a+pnum(m.sh);},0);
               var sumRate=g.members.reduce(function(a,m){return a+(parseFloat(m.rate)||0);},0);
-              var nm=g.members[0].name+(g.members.length>1?' 외 '+(g.members.length-1):'');
               html+='<tr class="cf-grp" data-cg="'+id+'">'
-                +'<td><span class="mg-mflex"><span class="mg-caret"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span><span class="mbadge auto">통합 '+g.members.length+'건</span></span></td>'
-                +'<td><span class="voter-set">'+g.voter+'</span></td>'
-                +'<td class="name">'+nm+'</td>'
+                +'<td><span class="mbadge auto">통합</span></td>'
+                +'<td><div class="voter"><button type="button" class="tw-chevron" aria-label="통합 계좌 펼치기"><svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button><span class="voter-set">'+g.voter+'</span></div></td>'
+                +'<td class="name"><span class="tag">통합 '+g.members.length+'건</span></td>'
                 +'<td class="r">'+sumSh.toLocaleString()+'</td>'
                 +'<td class="r sub">'+sumRate.toFixed(1)+'%</td></tr>';
               g.members.forEach(function(m){
-                html+='<tr class="cf-child" data-cg="'+id+'" hidden><td></td><td class="mut">-</td><td class="cname">'+m.name+'</td><td class="r">'+m.sh+'</td><td class="r sub">'+m.rate+'</td></tr>';
+                html+='<tr class="cf-child" data-cg="'+id+'" hidden><td></td><td></td><td class="cname">'+m.name+'</td><td class="r">'+m.sh+'</td><td class="r sub">'+m.rate+'</td></tr>';
               });
             });
             var src=document.querySelector('.upanel[data-upanel="set"] table.mtbl tbody');
