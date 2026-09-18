@@ -62,13 +62,15 @@
       for (var c = 0; c < 4; c++) h += '<td class="c">' + OP[vote(r, c)] + '</td>';
       return h + '<td class="num">' + cm(r.sh * 2 * f) + '</td><td class="num">' + cm(r.sh * 2 * f) + '</td>';
     }
+    /* 이름은 칸 폭을 넘으면 말줄임 — 의안 칸이 늘어도 가로 스크롤이 생기지 않게 */
+    function nm(t) { return '<span class="hn" title="' + String(t).replace(/"/g, '&quot;') + '">' + t + '</span>'; }
     function rowHTML(x, gid, f) {
       var u = x.u;
-      if (!u.grp) return '<tr><td><div class="voter"><span>' + u.voter + '</span></div></td><td>' + u.name + '</td>' + cells(u.members[0], x.method, f) + '</tr>';
+      if (!u.grp) return '<tr><td><div class="voter">' + nm(u.voter) + '</div></td><td>' + nm(u.name) + '</td>' + cells(u.members[0], x.method, f) + '</tr>';
       var sum = { i: u.members[0].i, sh: u.sh };
-      var h = '<tr class="grp"><td><div class="voter"><button class="tw-chevron collapsed" data-toggle="' + gid + '" aria-label="통합 계좌 펼치기">' + CHEV + '</button><span>' + u.voter + '</span></div></td>'
+      var h = '<tr class="grp"><td><div class="voter"><button class="tw-chevron collapsed" data-toggle="' + gid + '" aria-label="통합 계좌 펼치기">' + CHEV + '</button>' + nm(u.voter) + '</div></td>'
         + '<td><span class="tag">통합 ' + u.members.length + '건</span></td>' + cells(sum, x.method, f) + '</tr>';
-      u.members.forEach(function (m) { h += '<tr class="child hidden" data-child="' + gid + '"><td class="tcell"><span class="cv"></span></td><td>' + m.nm + '</td>' + cells(m, x.method, f) + '</tr>'; });
+      u.members.forEach(function (m) { h += '<tr class="child hidden" data-child="' + gid + '"><td class="tcell"><span class="cv"></span></td><td>' + nm(m.nm) + '</td>' + cells(m, x.method, f) + '</tr>'; });
       return h;
     }
     function sortVal(x, label) {

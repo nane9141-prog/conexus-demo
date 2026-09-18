@@ -182,6 +182,11 @@
   #viewAgenda tbody td:nth-child(6),#viewHolder td.mi{color:var(--muted-fg)}   /* 미행사의결권 — muted, 막대 없이 수치만 */
   #viewAgenda tbody td:nth-child(2),#viewHolder tbody td:nth-child(2){font-weight:400}   /* 의안명 · 주주명 — 보통 굵기 */
   #viewAgenda tbody td:first-child{color:var(--muted-fg)}   /* 의안번호 */
+  /* 주주 기준 표 — 가로 스크롤 없이: 이름은 104px 말줄임, 칸 좌우 여백 8px */
+  #viewHolder th,#viewHolder td{padding-left:8px;padding-right:8px}
+  #viewHolder .hn{display:inline-block;max-width:104px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
+  #viewHolder th:first-child{width:auto !important}   /* 투표권자 칸이 남는 폭을 가져가 반올림 오차로 생기는 가로 스크롤을 흡수 */
+  #viewHolder td:first-child{overflow:hidden}
   #viewAgenda th:first-child{width:80px !important}   /* 의안번호 — 번호만 표기라 좁게(conexus.js 자동 폭 덮어쓰기) */
   .mbar{display:inline-block;width:28px;height:6px;border-radius:3px;background:linear-gradient(90deg,#737373 45%,#e5e5e5 45%);vertical-align:middle;margin-right:6px}
 
@@ -244,7 +249,7 @@
 </style>
 <script src="cx-data.js"></script>
 <script src="cx-roster.js?v=r6"></script>
-<script src="cx-holders.js?v=4"></script>
+<script src="cx-holders.js?v=5"></script>
 </head>
 <body>
 <div class="app" id="app">
