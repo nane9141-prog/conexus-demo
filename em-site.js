@@ -65,7 +65,7 @@
 
   /* ---------- 등록 · 수정 화면 ---------- */
   function editor(id, lb, v) {
-    return '<div class="pg-f" style="flex:1"><label for="' + id + '">' + lb + '<span style="color:#E9081B">*</span></label><div class="ns-ed"><div class="tb" aria-hidden="true">' +
+    return '<div class="pg-f" style="flex:1"><label for="' + id + '">' + lb + '</label><div class="ns-ed"><div class="tb" aria-hidden="true">' +
       ['text-b', 'text-italic', 'text-underline', 'text-strikethrough', '|', 'list-bullets', 'list-numbers', '|', 'link-simple', 'image'].map(function (i) { return i === '|' ? '<span class="sep"></span>' : '<button type="button" tabindex="-1"><i class="ph ph-' + i + '"></i></button>'; }).join('') +
       '</div><textarea id="' + id + '" placeholder="내용을 입력해 주세요">' + esc(v || '') + '</textarea></div></div>';
   }
@@ -76,12 +76,12 @@
     root.innerHTML = '<div class="lc ns-form">' +
       '<div class="pg-hd" style="padding-bottom:0;align-items:center"><div style="display:flex;align-items:center;gap:8px"><button type="button" class="lc-more" id="fBack" aria-label="목록으로"><i class="ph ph-arrow-left"></i></button><span style="font-size:16px;line-height:24px;font-weight:600;color:#0A0A0A">' + NAME[k] + ' ' + (f.x ? '수정' : '등록') + '</span></div><button type="button" class="btn dark" id="fSave" disabled>저장</button></div>' +
       (k === 'notice' ? '<div class="pg-chk"><label><input type="checkbox" id="fPin"' + (x.pin ? ' checked' : '') + '>상단 고정</label></div>' : '') +
-      '<div class="pg-row"><div class="pg-f" style="width:200px"><label for="fS">노출 시작일<span style="color:#E9081B">*</span></label><input type="date" class="pg-in" id="fS" style="width:200px" value="' + (x.s || TODAY) + '"><div class="hint">시작일 0시부터 노출됩니다.</div></div>' +
-        '<div class="pg-f" style="width:200px"><label for="fE">노출 종료일<span style="color:#E9081B">*</span></label><input type="date" class="pg-in" id="fE" style="width:200px" value="' + (x.e || '') + '"><div class="err" id="fErr" hidden></div></div></div>' +
+      '<div class="pg-row"><div class="pg-f" style="width:200px"><label for="fS">노출 시작일</label><input type="date" class="pg-in" id="fS" style="width:200px" value="' + (x.s || TODAY) + '"><div class="hint">시작일 0시부터 노출됩니다.</div></div>' +
+        '<div class="pg-f" style="width:200px"><label for="fE">노출 종료일</label><input type="date" class="pg-in" id="fE" style="width:200px" value="' + (x.e || '') + '"><div class="err" id="fErr" hidden></div></div></div>' +
       ttl + bdy + '</div>';
     check();
   }
-  function fld(id, lb, v) { return '<div class="pg-f"><label for="' + id + '">' + lb + '<span style="color:#E9081B">*</span></label><input class="pg-in" id="' + id + '" value="' + esc(v || '') + '" placeholder="제목을 입력해 주세요"></div>'; }
+  function fld(id, lb, v) { return '<div class="pg-f"><label for="' + id + '">' + lb + '</label><input class="pg-in" id="' + id + '" value="' + esc(v || '') + '" placeholder="제목을 입력해 주세요"></div>'; }
   function $(id) { return document.getElementById(id); }
   function v(id) { var e = $(id); return e ? e.value.trim() : ''; }
   function check() {

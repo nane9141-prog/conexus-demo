@@ -378,18 +378,19 @@
 
   /* ---------- 로그인코드 발급(관리자 등록) ---------- */
   var issueEl = document.getElementById('lcIssueDlg'), issueOk = issueEl.querySelector('[data-ok]');
-  function fld(id, lb, ph, req, extra) { return '<div class="lc-f"><label for="' + id + '">' + lb + (req ? '<em>*</em>' : '') + '</label><input class="lc-in" id="' + id + '" placeholder="' + ph + '"' + (extra || '') + '></div>'; }
+  /* 필수는 표시 없음, 선택 입력만 라벨에 (선택) */
+  function fld(id, lb, ph, req, extra) { return '<div class="lc-f"><label for="' + id + '">' + lb + (req ? '' : ' (선택)') + '</label><input class="lc-in" id="' + id + '" placeholder="' + ph + '"' + (extra || '') + '></div>'; }
   function fv(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
   document.getElementById('lcIssue').addEventListener('click', function () {
     var ns = cur === 'ns';
     document.getElementById('lcIssueDesc').textContent = ns ? '비주주(의결권 없음) 참석자에게 로그인코드를 발급합니다. 발급 즉시 입력한 이메일로 코드가 발송됩니다.' : '본인인증이 불가한 해외 주주에게 로그인코드를 직접 발급합니다. 발급 즉시 입력한 이메일로 코드가 발송됩니다.';
     document.getElementById('lcIssueForm').innerHTML = ns
-      ? '<div class="lc-f"><label for="lciKind">유형<em>*</em></label><select class="lc-sel" id="lciKind" style="width:100%"><option>임직원</option><option>언론/기자</option><option>감사인</option><option>변호사</option><option>외국인</option><option>기타</option></select></div>' +
+      ? '<div class="lc-f"><label for="lciKind">유형</label><select class="lc-sel" id="lciKind" style="width:100%"><option>임직원</option><option>언론/기자</option><option>감사인</option><option>변호사</option><option>외국인</option><option>기타</option></select></div>' +
         '<div class="lc-row2">' + fld('lciName', '이름', '이름', 1) + fld('lciPhone', '휴대폰번호', '010-0000-0000', 0, ' inputmode="numeric" maxlength="13"') + '</div>' +
         fld('lciMail', '이메일', 'name@example.com', 1) +
-        '<div class="lc-row2">' + fld('lciOrg', '소속', '소속 (선택)') + fld('lciPos', '직급', '직급 (선택)') + '</div>' +
-        '<div class="lc-f"><label for="lciMemo">메모</label><textarea id="lciMemo" placeholder="참석 목적 등 메모를 입력해 주세요" style="height:64px"></textarea></div>'
-      : '<div class="lc-f"><label>구분<em>*</em></label><div class="lc-rad"><label><input type="radio" name="lciKind" value="corp" checked>해외 법인</label><label><input type="radio" name="lciKind" value="ind">해외 개인</label></div></div>' +
+        '<div class="lc-row2">' + fld('lciOrg', '소속', '소속') + fld('lciPos', '직급', '직급') + '</div>' +
+        '<div class="lc-f"><label for="lciMemo">메모 (선택)</label><textarea id="lciMemo" placeholder="참석 목적 등 메모를 입력해 주세요" style="height:64px"></textarea></div>'
+      : '<div class="lc-f"><label>구분</label><div class="lc-rad"><label><input type="radio" name="lciKind" value="corp" checked>해외 법인</label><label><input type="radio" name="lciKind" value="ind">해외 개인</label></div></div>' +
         fld('lciName', '이름', '법인(기관)명 또는 성명', 1) +
         '<div class="lc-row2">' + fld('lciMail', '이메일', 'name@example.com', 1) + fld('lciPhone', '휴대폰번호', '+1-212-000-0000') + '</div>';
     issueOk.disabled = true; issueEl.classList.add('show');
