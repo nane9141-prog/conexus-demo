@@ -24,6 +24,8 @@ table.lctbl tr.child td.b{font-weight:400;padding-left:28px}
 .pq-q .bd{flex:1;min-width:0;color:#737373;overflow:hidden;text-overflow:ellipsis}
 .pq-info{background:#F5F5F5;border-radius:10px;padding:12px}
 .pq-info .nm{font-size:14px;font-weight:700;color:#0A0A0A;padding-bottom:4px}
+/* 사전 질의 패널 — 섹션 제목(질의 내용·답변)과 아래 박스 사이 8px */
+#pqSheet .lc-sec{gap:8px}
 .pq-qbox{background:#F5F5F5;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px}
 .pq-qbox .tt{font-size:14px;font-weight:700;color:#0A0A0A}
 .pq-qbox .bd{font-size:14px;line-height:20px;color:#0A0A0A;white-space:pre-line}

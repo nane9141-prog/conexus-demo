@@ -31,7 +31,7 @@
   function voter(r) { var g = (CX.rosterGroups || []).filter(function (g) { return g.members.indexOf(r) >= 0; })[0]; return g ? g.voter : r.nm; }
 
   /* ---------- 표 ---------- */
-  var COLS = [['상태', 90, 'c'], ['접수일', 120, 'c'], ['작성자', 120], ['의안번호', 80, 'c', 'c'], ['질의 내용', 0], ['담당자', 100, 'c'], ['답변일', 120, 'c']];
+  var COLS = [['상태', 104, 'c'], ['접수일', 120, 'c'], ['작성자', 120], ['의안번호', 80, 'c', 'c'], ['질의 내용', 0], ['담당자', 100, 'c'], ['답변일', 120, 'c']];
   function val(x, c) {
     switch (c) {
       case '상태': return st(x); case '접수일': return x.at.slice(0, 10); case '작성자': return x.r.nm; case '의안번호': return x.lbl;
