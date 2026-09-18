@@ -958,3 +958,4 @@ th.cx-tight .cx-fbtn.cx-act{opacity:1;pointer-events:auto}
 /* 줄 간격 — 좁게 36px · 넓게 60px (패딩째 조정해야 실제로 바뀐다) */
 table.cx-rh-s tbody td{height:36px;padding-top:2px!important;padding-bottom:2px!important}
 table.cx-rh-l tbody td{height:60px;padding-top:16px!important;padding-bottom:16px!important}
+

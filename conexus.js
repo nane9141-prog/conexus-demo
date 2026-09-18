@@ -633,6 +633,68 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', schedule); else schedule();
   })();
   setTimeout(run, 400); setTimeout(run, 1200);
+
+  /* 오버레이 스크롤바 — 네이티브 스크롤바(Windows 15~17px)가 내용 폭을 잡아먹지 않게,
+     스크롤 영역은 네이티브 바를 감추고(.cx-ovs) 내용 위에 얇은 바를 띄운다.
+     휠·트랙패드 스크롤은 그대로, 바는 드래그로도 움직인다. 처리하지 못한 영역은 네이티브 바 유지. */
+  (function () {
+    var SKIP = { TEXTAREA: 1, SELECT: 1, INPUT: 1, HTML: 1, BODY: 1 };
+    /* conexus.css 를 싣지 않는 페이지도 있어 스타일을 여기서 넣는다 */
+    var st = document.createElement('style');
+    st.textContent = '.cx-ovs{scrollbar-width:none;scrollbar-gutter:auto!important}.cx-ovs::-webkit-scrollbar{display:none;width:0;height:0}.cx-sb{position:absolute;z-index:20;border-radius:9999px;background:rgba(0,0,0,.28);opacity:.55;transition:opacity .15s,background .15s;cursor:default;touch-action:none}.cx-sb-y{width:6px;margin-left:1px}.cx-sb-x{height:6px;margin-top:1px}.cx-ovs:hover>.cx-sb{opacity:1}.cx-sb:hover,.cx-sb.on{background:rgba(0,0,0,.45);opacity:1}';
+    document.head.appendChild(st);
+    function bar(el, ax) {
+      var b = document.createElement('div');
+      b.className = 'cx-sb cx-sb-' + ax;
+      b.addEventListener('pointerdown', function (e) {
+        e.preventDefault(); e.stopPropagation(); b.setPointerCapture(e.pointerId);
+        var p0 = ax === 'y' ? e.clientY : e.clientX, s0 = ax === 'y' ? el.scrollTop : el.scrollLeft;
+        var track = ax === 'y' ? el.clientHeight : el.clientWidth, full = ax === 'y' ? el.scrollHeight : el.scrollWidth;
+        function mv(ev) { var d = ((ax === 'y' ? ev.clientY : ev.clientX) - p0) * full / track;
+          if (ax === 'y') el.scrollTop = s0 + d; else el.scrollLeft = s0 + d; }
+        function up() { b.removeEventListener('pointermove', mv); b.removeEventListener('pointerup', up); b.classList.remove('on'); }
+        b.classList.add('on'); b.addEventListener('pointermove', mv); b.addEventListener('pointerup', up);
+      });
+      el.appendChild(b);
+      return b;
+    }
+    function paint(el) {
+      var o = el.__ovs, ch = el.clientHeight, cw = el.clientWidth, sh = el.scrollHeight, sw = el.scrollWidth;
+      var y = sh > ch + 1, x = sw > cw + 1;
+      o.y.style.display = y ? '' : 'none'; o.x.style.display = x ? '' : 'none';
+      if (y) { var h = Math.max(24, ch * ch / sh), t = el.scrollTop * (ch - h) / (sh - ch);
+        o.y.style.height = h + 'px'; o.y.style.top = (el.scrollTop + t) + 'px'; o.y.style.left = (el.scrollLeft + cw - 8) + 'px'; }
+      if (x) { var w = Math.max(24, cw * cw / sw), l = el.scrollLeft * (cw - w) / (sw - cw);
+        o.x.style.width = w + 'px'; o.x.style.left = (el.scrollLeft + l) + 'px'; o.x.style.top = (el.scrollTop + ch - 8) + 'px'; }
+    }
+    function adopt(el) {
+      if (el.__ovs || SKIP[el.tagName] || el.closest('[data-nocx-sb]')) return;
+      var cs = getComputedStyle(el);
+      if (!/(auto|scroll)/.test(cs.overflowY + cs.overflowX) || cs.scrollbarWidth === 'none') return;
+      if (cs.position === 'static') el.style.position = 'relative';
+      el.classList.add('cx-ovs');
+      el.__ovs = { y: bar(el, 'y'), x: bar(el, 'x') };
+      var p = function () { paint(el); };
+      el.addEventListener('scroll', p, { passive: true });
+      if (window.ResizeObserver) {
+        var ro = new ResizeObserver(p); ro.observe(el);
+        Array.prototype.forEach.call(el.children, function (c) { if (!c.classList.contains('cx-sb')) ro.observe(c); });
+        new MutationObserver(function () {
+          Array.prototype.forEach.call(el.children, function (c) { if (!c.classList.contains('cx-sb')) ro.observe(c); });
+          if (el.lastElementChild !== el.__ovs.x) { el.appendChild(el.__ovs.y); el.appendChild(el.__ovs.x); }
+          p();
+        }).observe(el, { childList: true });
+      }
+      p();
+    }
+    var tm;
+    function scan() { Array.prototype.forEach.call(document.querySelectorAll('body *'), adopt); }
+    function soon() { clearTimeout(tm); tm = setTimeout(scan, 150); }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scan); else scan();
+    window.addEventListener('load', soon);
+    document.addEventListener('click', soon, true);
+    setTimeout(scan, 1300);
+  })();
 })();
 
 /* 왼쪽 맨 아래 프로필 — 눌러서 계정 메뉴를 연다.
