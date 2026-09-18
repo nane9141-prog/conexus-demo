@@ -19,7 +19,7 @@
   function dtIn(id, d, t, attr) {
     return '<div class="pg-dt"' + (attr || '') + '>' +
       '<button type="button" class="pg-in pk-tr" data-pk="date" data-for="' + id + 'D"><i class="ph ph-calendar-blank"></i><span></span></button><input type="hidden" id="' + id + 'D" value="' + (d || '') + '">' +
-      '<button type="button" class="pg-in pk-tr t" data-pk="time" data-for="' + id + 'T"><i class="ph ph-clock"></i><span></span></button><input type="hidden" id="' + id + 'T" value="' + (t || '') + '"></div>';
+      '<label class="pg-in pk-tr t"><i class="ph ph-clock"></i><input id="' + id + 'T" value="' + (t || '') + '" placeholder="00:00" inputmode="numeric" maxlength="5" aria-label="시간"></label></div>';
   }
   function inp(id, lb, v, ph, w) { return '<div class="pg-f"' + (w ? ' style="width:' + w + 'px"' : ' style="flex:1"') + '><label for="' + id + '">' + lb + '</label><input class="pg-in" id="' + id + '" value="' + (v || '') + '" placeholder="' + (ph || '') + '"></div>'; }
   function unit(id, lb, v, u) { return '<div class="pg-f" style="flex:1"><label for="' + id + '">' + lb + '</label><div class="pg-unit"><input id="' + id + '" inputmode="numeric" value="' + v + '"><span>' + u + '</span></div></div>'; }
@@ -60,7 +60,7 @@
 
   var save = document.getElementById('pgSave');
   function $(id) { return document.getElementById(id); }
-  function at(id) { var d = $(id + 'D').value, t = $(id + 'T').value; return d && t ? d + 'T' + t : ''; }
+  function at(id) { var d = $(id + 'D').value, t = $(id + 'T').value; return d && /^([01]\d|2[0-3]):[0-5]\d$/.test(t) ? d + 'T' + t : ''; }
   function on(k) { var s = root.querySelector('[data-pgsw="' + k + '"]'); return !s || s.classList.contains('on'); }
   function err(id, m) {
     var f = root.querySelector('[data-dt="' + id + '"]'), e = f.querySelector('.err');
@@ -93,7 +93,12 @@
     s.closest('.pg-card').classList.toggle('off', !next);
     touch();
   });
-  root.addEventListener('input', touch);
+  root.addEventListener('input', function (e) {
+    /* 시간 직접 입력 — 숫자만 받아 HH:MM 으로 맞춘다 */
+    var t = e.target;
+    if (/T$/.test(t.id) && t.closest('.pk-tr')) { var d = t.value.replace(/\D/g, '').slice(0, 4); t.value = d.length > 2 ? d.slice(0, 2) + ':' + d.slice(2) : d; }
+    touch();
+  });
   root.addEventListener('change', function (e) {
     if (e.target.name === 'pgOpen') $('pgOpenAt').style.display = e.target.value === 'now' ? 'none' : '';
     touch();
@@ -102,15 +107,15 @@
     if (!validate()) return;
     EM.setDirty('progress', false); EM.markDone('progress'); EM.toast('저장되었습니다');
   });
-  /* ---------- 날짜 · 시간 피커 (DS Calendar 규격: 셀 28 · nav 28 · 오늘 muted · 선택 primary) ---------- */
+  /* ---------- 날짜 피커 (DS Calendar 규격: 셀 28 · nav 28 · 오늘 muted · 선택 primary) ---------- */
   var pop = document.createElement('div'); pop.className = 'pk-pop'; document.body.appendChild(pop);
   var pkBtn = null, pkMonth = null, TODAY = (function () { var d = new Date(); return d.getFullYear() + '-' + EM.p2(d.getMonth() + 1) + '-' + EM.p2(d.getDate()); })();
   function paintTr(b) {
     var v = $(b.dataset.for).value, sp = b.querySelector('span');
-    sp.textContent = v ? (b.dataset.pk === 'date' ? v.replace(/-/g, '. ') + '.' : v) : (b.dataset.pk === 'date' ? '날짜 선택' : '시간 선택');
+    sp.textContent = v ? v.replace(/-/g, '. ') + '.' : '날짜 선택';
     sp.className = v ? '' : 'ph-t';
   }
-  root.querySelectorAll('.pk-tr').forEach(paintTr);
+  root.querySelectorAll('[data-pk]').forEach(paintTr);
   function setVal(v) { $(pkBtn.dataset.for).value = v; paintTr(pkBtn); touch(); }
   function calHtml() {
     var y = pkMonth.getFullYear(), m = pkMonth.getMonth(), first = new Date(y, m, 1), start = new Date(y, m, 1 - first.getDay()), sel = $(pkBtn.dataset.for).value, h = '';
@@ -123,22 +128,16 @@
     return '<div class="cap"><button type="button" class="nav" data-mv="-1" aria-label="이전 달"><i class="ph ph-caret-left"></i></button><b>' + y + '년 ' + (m + 1) + '월</b><button type="button" class="nav" data-mv="1" aria-label="다음 달"><i class="ph ph-caret-right"></i></button></div>' +
       '<div class="wd">' + ['일', '월', '화', '수', '목', '금', '토'].map(function (w) { return '<span>' + w + '</span>'; }).join('') + '</div>' + h;
   }
-  function timeHtml() {
-    var v = ($(pkBtn.dataset.for).value || '').split(':');
-    function col(n, cur, k) { var h = ''; for (var i = 0; i < n; i++) { var t = EM.p2(i); h += '<button type="button" data-' + k + '="' + t + '"' + (t === cur ? ' class="on"' : '') + '>' + t + '</button>'; } return '<div class="col">' + h + '</div>'; }
-    return '<div class="tm">' + col(24, v[0], 'hh') + col(60, v[1], 'mm') + '</div>';
-  }
   function paintPop() {
     pop.className = 'pk-pop on ' + pkBtn.dataset.pk;
-    pop.innerHTML = pkBtn.dataset.pk === 'date' ? calHtml() : timeHtml();
-    pop.querySelectorAll('.col .on').forEach(function (b) { var c = b.parentNode; c.scrollTop = b.offsetTop - c.offsetTop - (c.clientHeight - b.offsetHeight) / 2; });
+    pop.innerHTML = calHtml();
   }
   function closePk() { pop.className = 'pk-pop'; if (pkBtn) pkBtn.classList.remove('open'); pkBtn = null; }
   root.addEventListener('click', function (e) {
-    var b = e.target.closest('.pk-tr'); if (!b) return;
+    var b = e.target.closest('[data-pk]'); if (!b) return;
     if (pkBtn === b) return closePk();
     closePk(); pkBtn = b; b.classList.add('open');
-    var v = $(b.dataset.for).value; pkMonth = v && b.dataset.pk === 'date' ? new Date(v + 'T00:00:00') : new Date(); pkMonth.setDate(1);
+    var v = $(b.dataset.for).value; pkMonth = v ? new Date(v + 'T00:00:00') : new Date(); pkMonth.setDate(1);
     paintPop();
     var r = b.getBoundingClientRect(), top = r.bottom + 4;
     if (top + pop.offsetHeight > innerHeight - 8) top = r.top - 4 - pop.offsetHeight;
@@ -149,12 +148,7 @@
     var b = e.target.closest('button'); if (!b) return;
     e.stopPropagation();
     if (b.dataset.mv) { pkMonth.setMonth(pkMonth.getMonth() + +b.dataset.mv); return paintPop(); }
-    if (b.dataset.day) { setVal(b.dataset.day); return closePk(); }
-    var v = ($(pkBtn.dataset.for).value || '00:00').split(':');
-    if (b.dataset.hh) v[0] = b.dataset.hh; else v[1] = b.dataset.mm;
-    setVal(v[0] + ':' + v[1]);
-    [].forEach.call(b.parentNode.children, function (x) { x.classList.toggle('on', x === b); });
-    if (b.dataset.mm) closePk();
+    if (b.dataset.day) { setVal(b.dataset.day); closePk(); }
   });
   document.addEventListener('click', function (e) { if (pkBtn && !e.target.closest('.pk-pop')) closePk(); });
   window.addEventListener('scroll', function (e) { if (pkBtn && !pop.contains(e.target)) closePk(); }, true);

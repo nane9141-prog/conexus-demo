@@ -171,12 +171,12 @@ input.pg-in[type=time]{width:110px}
 .pk-pop .wk button:hover{background:#F5F5F5}
 .pk-pop .wk .out{color:#737373}
 .pk-pop .wk .today{background:#F5F5F5}
-.pk-pop .wk .on,.pk-pop .col .on{background:#171717;color:#FAFAFA}
-.pk-pop .tm{display:flex;gap:4px}
-.pk-pop .col{width:48px;height:224px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;scrollbar-width:none}
-.pk-pop .col::-webkit-scrollbar{display:none}
-.pk-pop .col button{flex:none;height:28px;border-radius:8px;font-size:14px;font-variant-numeric:tabular-nums}
-.pk-pop .col button:hover:not(.on){background:#F5F5F5}
+.pk-pop .wk .on{background:#171717;color:#FAFAFA}
+label.pk-tr{cursor:text}
+label.pk-tr:hover{background:#fff}
+label.pk-tr:focus-within{border-color:#A3A3A3}
+.pk-tr input{flex:1;min-width:0;border:none;outline:none;background:none;padding:0;font-family:inherit;font-size:14px;letter-spacing:-.01em;color:#0A0A0A;font-variant-numeric:tabular-nums}
+.pk-tr input::placeholder{color:#737373}
 /* 진행 설정 드롭다운 — 입력 필드와 같은 32px · radius 10 */
 .pg .cx-sel{height:32px;border-radius:10px;padding:0 10px;font-size:14px}
 .pg .cx-sel svg{width:16px;height:16px}
