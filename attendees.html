@@ -109,16 +109,23 @@
   .atmut{color:#a3a3a3}
   table.attbl tbody td{overflow:hidden;text-overflow:ellipsis}
   .attip{cursor:help}
-  .at-tip{position:fixed;display:none;z-index:4000;padding:6px 10px;border-radius:8px;background:#171717;color:#fff;font-size:12px;line-height:17px;white-space:nowrap;pointer-events:none}
+  /* 툴팁 — 가이드: #171717 · r8 · 6/12 · text-xs normal #FAFAFA · 하단 화살표 */
+  .at-tip{position:fixed;display:none;z-index:4000;padding:6px 12px;border-radius:8px;background:#171717;color:#FAFAFA;font-size:12px;line-height:16px;font-weight:400;letter-spacing:-.01em;white-space:nowrap;max-width:384px;pointer-events:none}
+  .at-tip::after{content:"";position:absolute;left:calc(50% - 5px);bottom:-4px;width:10px;height:10px;background:#171717;transform:rotate(-45deg);border-radius:0 0 0 2px}
   .voter{display:inline-flex;align-items:center;gap:8px}
   .vcaret{width:20px;height:20px;border-radius:50%;background:#171717;color:#fff;display:inline-flex;align-items:center;justify-content:center;flex:none}
   .vcaret svg{width:11px;height:11px;fill:none;stroke:#fff;stroke-width:2.4}
   .atsub{display:inline-flex;align-items:center;height:20px;padding:0 8px;background:#f0f4ff;border-radius:6px;font-size:12px;font-weight:500;color:#4b6bfb}
-  .atb{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:600}
-  .atb.blue{background:var(--blue100);color:var(--blue700)}
-  .atb.gray{background:#f4f4f5;color:#737373}
+  /* 뱃지 — 가이드: h20 · padding 2/6 · r6 · text-xs medium(12/16, 500, -0.01em) */
+  .atb{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:4px;height:20px;padding:2px 6px;border-radius:6px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;white-space:nowrap}
+  .atb.blue{background:#EEF5FF;color:#0071F3}                 /* 참석 · 사용 */
+  .atb.gray{background:#F5F5F5;color:#525252}                 /* 일부 참석 · 일부 사용 */
+  .atb.off{background:#F5F5F5;color:#525252;opacity:.5}       /* 미참석 · 미사용 */
+  .atb.none{background:#F4F4F5;color:#52525B;opacity:.5}      /* 사전투표 미행사 */
+  .atb.orange{background:#FEF5E7;color:#EA580C}               /* 사전투표 채널 1개 */
+  .atb.rose{background:#FFF5F7;color:#E11D48}                 /* 중복행사 */
   .atb.red{color:#e11d48;background:none;font-weight:600}
-  .atb.purple{background:#F5F3FF;color:#7C3AED}
+  .atb.purple{background:#F5F3FF;color:#7C3AED}               /* 철회 후 참석 · 참관 */
   table.attbl thead th.c{text-align:center}
   table.attbl tbody td.c{text-align:center}
   .tw-chevron{width:24px;height:24px;flex:none;border:1px solid var(--border);border-radius:9999px;background:#fff;display:flex;align-items:center;justify-content:center;color:#171717;cursor:pointer;padding:0}
@@ -391,6 +398,7 @@
         :r.id.replace(/-/g,'').replace(/^(\d{7})\*+$/,'$1******');
       var k=i%11, pre=r.pre?r.pre:(k<4?[]:(k===10?[CH[i%7],CH[(i+3)%7]]:[CH[i%7]]));
       var site=r.site||['미참석','참석','일부 참석','참석','미참석'][i%5];
+      if(!r.site && site==='참석' && pre.length && i%3===0) site='철회 후 참석';   /* 사전행사 철회 후 현장 참석(데모) */
       var ppl=(i%6===1)?2:1;                                 /* 주주+대리인 / 대리인 다수 */
       var app=site==='미참석'?'미사용':(ppl>1?['사용','일부 사용','미사용'][i%3]:(i%4===3?'미사용':'사용'));
       var lim=(i%7===3)?LIMIT[i%LIMIT.length]:'-';
@@ -416,9 +424,10 @@
   })();
   function cm(n){return (n||0).toLocaleString('en-US');}
   function mu(t){return '<span class="atmut">'+t+'</span>';}
-  function preB(p){ if(!p.length) return '<span class="atb gray" style="opacity:.5">미행사</span>'; if(p.length>1) return '<span class="atb purple attip" data-tip="'+p.join(' · ')+'">중복행사</span>'; return '<span class="atb gray">'+p[0]+'</span>'; }
-  function siteB(s){ return s==='미참석'?'<span class="atb gray">미참석</span>':'<span class="atb blue">'+s+'</span>'; }
-  function appB(a){ return a==='미사용'?mu(a):a; }
+  function preB(p){ if(!p.length) return '<span class="atb none">미행사</span>'; if(p.length>1) return '<span class="atb rose attip" data-tip="'+p.join(', ')+'">중복행사</span>'; return '<span class="atb orange">'+p[0]+'</span>'; }
+  var SITE_C={'참석':'blue','일부 참석':'gray','미참석':'off','철회 후 참석':'purple','참관':'purple'};
+  function siteB(s){ return '<span class="atb '+(SITE_C[s]||'gray')+'">'+s+'</span>'; }
+  function appB(a){ return '<span class="atb '+(a==='사용'?'blue':a==='미사용'?'off':'gray')+'">'+a+'</span>'; }
   function agB(ag){ return ag?'<span class="atb red attip" data-tip="제한 의안: '+ag.join(', ')+'">제한</span>':mu('-'); }
   function voterCell(x,gid){
     if(x.sub && /통합/.test(x.sub)){
@@ -464,7 +473,7 @@
       var r=(typeof p==='number'&&typeof q==='number')?p-q:String(p).localeCompare(String(q),'ko');
       return r?d*r:a._o-b._o; });
   }
-  var CW={'주주명':140,'주주번호':124,'사전투표':116,'현장 참석':90,'앱 사용':84,'보유주식':110,'지분율':72,'참석주식수':104,'의결권 제한':150,'의안별 제한':92};
+  var CW={'주주명':140,'주주번호':124,'사전투표':116,'현장 참석':110,'앱 사용':84,'보유주식':110,'지분율':72,'참석주식수':104,'의결권 제한':150,'의안별 제한':92};
   /* 검색은 항상 전체 데이터(D) 기준. reg 탭은 검색 전엔 목록을 감춘다(null 반환) */
   function filteredRows(){
     var q=(document.getElementById('atSearch').value||'').trim();
