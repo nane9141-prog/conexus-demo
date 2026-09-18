@@ -49,7 +49,7 @@
 
   /* ---------- 컬럼 ---------- */
   var COLS = {
-    sh: [['투표권자', 220], ['주주명', 0], ['주주번호', 140], ['참석 유형', 104, 'c'], ['사전투표', 96, 'c'], ['보유주식수', 120, 'n'], ['지분율', 90, 'n'], ['참석주식수', 120, 'n'], ['참석 신청', 96, 'c'], ['출석', 96, 'c'], ['시청', 84, 'c'], ['로그인코드', 130], ['등록 경로', 104, 'c']],
+    sh: [['투표권자', 220], ['주주명', 0], ['주주번호', 140], ['참석 유형', 104, 'c'], ['사전투표', 96, 'c'], ['보유주식수', 120, 'n'], ['지분율', 90, 'n'], ['참석주식수', 120, 'n'], ['참석 신청', 96, 'c'], ['출석', 96, 'c'], ['로그인코드', 130], ['등록 경로', 104, 'c']],
     ns: [['유형', 100, 'c'], ['이름', 140], ['이메일', 220], ['휴대폰번호', 140], ['소속', 0], ['직급', 120], ['질의권', 90, 'c'], ['메모', 200], ['로그인코드', 130], ['', 44, 'c']]
   };
   var LEFT = { sh: 1, ns: 2 };
@@ -76,7 +76,9 @@
     /* 통합기관 — 참석자 관리와 같은 모양: 투표권자 칸 원형 chevron, 주주명 칸 '통합 N건' 뱃지, 계좌 줄은 세로선 */
     if (c === '투표권자' && x.grp) return '<div class="voter"><button type="button" class="tw-chevron' + (open[x.k] ? '' : ' collapsed') + '" aria-label="펼치기"><svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button><span>' + esc(x.voter) + '</span></div>';
     if (c === '투표권자' && child) return '<span class="cv"></span>';
-    if (c === '시청') return x.watch ? '<span class="lc-b blue">시청</span>' : '<span class="lc-b dim">미시청</span>';
+    /* 참석 신청: 신청 blue · 미신청 info 50% / 출석: 참석 blue · 일부참석 info · 미참석 info 50% */
+    if (c === '참석 신청' || c === '출석') { var t0 = val(x, c); return '<span class="lc-b ' + ({ '신청': 'blue', '참석': 'blue', '일부참석': 'gray' }[t0] || 'gray off') + '"><i></i>' + t0 + '</span>'; }
+    if (c === '등록 경로') return '<span class="mu">' + esc(x.route) + '</span>';
     if (c === '로그인코드') return x.code ? '<span class="lc-code' + (x.revoked ? ' off' : '') + '">' + x.code + '</span>' : '<span class="mu">-</span>';
     if (c === '주주명' && x.grp) return '<span class="tag">' + esc(x.name) + '</span>';
     if (c === '메모') return '<span class="lc-memo" title="' + esc(x.memo || '') + '">' + esc(x.memo || '-') + '</span>';
@@ -86,7 +88,7 @@
 
   /* ---------- 화면 ---------- */
   root.innerHTML = '<div class="lc">' +
-    '<div class="lc-hd"><h2>참가자 현황</h2><p>전자주주총회에 사전 등록된 참가자의 사전투표 · 참석 신청 · 출석 · 시청 현황을 확인합니다.</p></div>' +
+    '<div class="lc-hd"><h2>참가자 현황</h2><p>전자주주총회에 사전 등록된 참가자의 사전투표 · 참석 신청 · 출석 현황을 확인합니다.</p></div>' +
     '<div class="lc-bar">' +
       '<div class="lc-seg" id="atTabs"><button type="button" class="on" data-t="sh">주주</button><button type="button" data-t="ns">비주주</button></div>' +
       '<div class="lc-chips" id="atChips"></div>' +
