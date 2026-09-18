@@ -144,1007 +144,1028 @@
     </div>
     <div class="scroll">
       <style>
-        .ms-wrap{padding:20px;display:flex;flex-direction:column;gap:24px;width:100%}
-        .ms-sh{display:flex;flex-direction:column;gap:4px}
-        .ms-sh-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
-        .ms-sh-l{display:flex;flex-direction:column;gap:4px;min-width:0}
-        .ms-title-row{display:flex;align-items:center;gap:8px}
-        .ms-title-row h1{font-size:18px;font-weight:600;color:#0a0a0a;line-height:1.4}
-        .ms-chip{display:inline-flex;align-items:center;gap:4px;height:24px;padding:4px 8px;border:1px solid var(--border);border-radius:6px}
-        .ms-chip .k{font-size:12px;font-weight:500;color:#737373}
-        .ms-chip .v{font-size:12px;font-weight:600;color:#0a0a0a}
-        .ms-desc{font-size:14px;color:#737373;line-height:20px}
-        .ms-sh-actions{display:flex;align-items:center;gap:8px;flex:none}
+        .ms-wrap{padding:20px;display:flex;flex-direction:column;gap:16px;width:100%}
+        .ms-wrap .btn,.dlg .btn,.vsh .btn{height:32px;padding:0 10px;border-radius:10px;font-size:14px;cursor:pointer;justify-content:center}
         .btn.primary{background:#171717;color:#fafafa;border-color:#171717}
         .btn.primary:hover{background:#000}
-        .btn.hidden{display:none}
+        .btn[disabled]{opacity:.5;pointer-events:none}
+        .btn.hidden,.hidden{display:none!important}
+        .btn.soft-red{background:#fdecee;border-color:#fdecee;color:var(--red600)}
+        .btn.soft-red:hover{background:#fbdde0}
+        .hide{display:none!important}
+        /* page header */
+        .ms-sh-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+        .ms-sh-l{display:flex;flex-direction:column;gap:4px;min-width:0}
+        .ms-title-row{display:flex;align-items:center;gap:8px;min-height:20px}
+        .ms-title-row h1{font-size:18px;font-weight:600;color:#0a0a0a;line-height:1}
+        .ms-desc{font-size:14px;color:#737373;line-height:20px}
+        .ms-sh-actions{display:flex;align-items:center;gap:8px;flex:none}
+        .last-mod{font-size:12px;color:#737373;white-space:nowrap}
+        .ubadge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:500;line-height:16px}
+        .ubadge.secondary{background:#f4f4f5;color:#18181b}
+        .ubadge.success{background:#eef5ff;color:#0071f3}
+        /* info banner (변경 모드) */
+        .ms-banner{display:flex;gap:8px;padding:12px;border:1px solid #d4e8ff;background:#f5f9ff;border-radius:10px;color:#0071f3;font-size:14px;line-height:20px}
+        .ms-banner i{font-size:16px;margin-top:2px}
+        .ms-banner b{font-weight:500;display:block}
         /* empty */
-        .ms-empty2{background:#fafafa;border:1px dashed #e5e5e5;border-radius:10px;min-height:360px;display:flex;align-items:center;justify-content:center;padding:24px}
-        .ms-empty2 .inner{display:flex;flex-direction:column;align-items:center;gap:12px;opacity:.7;text-align:center;max-width:none;white-space:nowrap}
-        .ms-empty2 .inner .bico{width:24px;height:24px;color:#737373}
-        .ms-e-t{font-size:14px;font-weight:600;color:#737373;margin-bottom:8px}
-        .ms-e-d{font-size:12px;font-weight:300;color:#737373;line-height:16px}
-        /* underline tabs */
-        .utabs{display:flex;border-bottom:1px solid var(--border)}
+        .ms-empty2{background:#fafafa;border:1px dashed #e5e5e5;border-radius:10px;height:320px;display:flex;align-items:center;justify-content:center;padding:24px}
+        .ms-empty2 .inner{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+        .ms-empty2 .inner>i{font-size:24px;color:#0a0a0a}
+        .ms-e-t{font-size:12px;font-weight:600;color:#737373;line-height:16px}
+        .ms-e-d{font-size:12px;font-weight:300;color:#737373;line-height:16px;margin-top:2px}
+        /* underline tabs — 스크롤 시 상단 고정 */
+        .utabs{display:flex;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:6;background:#fff;margin:0 -20px;padding:4px 20px 0}
         .utab{height:34px;padding:4px 12px;font-size:14px;font-weight:500;color:#737373;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit;margin-bottom:-1px}
         .utab.active{color:#0a0a0a;border-bottom-color:#171717}
-        /* cards */
-        .ic3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-        .icard{border:1px solid var(--border);border-radius:14px;background:#fff;padding:16px;display:flex;flex-direction:column;gap:8px;min-height:88px;justify-content:center}
-        .icard .k{font-size:14px;font-weight:600;color:#0a0a0a;display:flex;align-items:center;gap:6px}
-        .icard .v{font-size:18px;font-weight:600;color:#0a0a0a;text-align:right}
-        .icard.warn{background:#fff5f7;border-color:#e5e5e5}
-        .icard.warn .v{color:var(--red600)}
-        .icard .info-i{width:16px;height:16px;color:#a3a3a3}
+        .ld-col{display:flex;flex-direction:column;gap:16px}
+        .upanel{display:flex;flex-direction:column;gap:16px}
+        /* summary cards */
+        .ic3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch}
+        .icard{border:1px solid var(--border);border-radius:14px;background:#fff;padding:16px;display:flex;flex-direction:column;gap:8px}
+        .icard .hd{display:flex;align-items:center;justify-content:space-between;gap:8px}
+        .icard .k{font-size:14px;font-weight:600;color:#0a0a0a;display:flex;align-items:center;gap:8px}
+        .icard .k .ph-info,.icard .k2 .ph-info{font-size:16px;color:#737373;font-weight:400;cursor:default}
+        .icard .v{font-size:20px;font-weight:700;color:#0a0a0a;text-align:right;line-height:28px}
+        .icard .v.red{color:var(--red600)}
+        .icard.big{justify-content:space-between;min-height:120px}
+        .kchip{height:24px;padding:0 8px;border:1px solid var(--border);border-radius:6px;background:#fff;font-size:12px;font-weight:500;color:#0a0a0a;cursor:pointer;font-family:inherit}
+        .kchip:hover{background:var(--muted)}
+        .kbox{background:#f5f5f5;border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;gap:4px;font-size:12px;line-height:16px}
+        .kbox .kr{display:grid;grid-template-columns:1fr auto;gap:24px;color:#737373}
+        .kbox .kr b{font-weight:500;color:#0a0a0a;text-align:right}
+        .kbox.cmp .kr{grid-template-columns:1fr 90px 90px}
+        .kbox.cmp .kr span+span{text-align:right}
+        .ic-col{display:flex;flex-direction:column;gap:8px}
+        .ic-col .icard{flex:1;flex-direction:row;align-items:center;justify-content:space-between}
+        .ic-col .icard.org{gap:24px}
+        .icard.org .k2{display:flex;align-items:center;gap:8px;font-size:14px;color:#737373;flex:1}
+        .icard.org .kl{display:inline-flex;align-items:center;gap:4px}
+        .icard.org .k2 b{font-size:14px;font-weight:600;color:#0a0a0a}
+        .icard.org .k2+.k2{justify-content:flex-end}
+        .ic3.open .ic-col .icard.unset{align-items:flex-start;flex-direction:column}
+        .ic3.open .ic-col .icard.unset .v{align-self:flex-end}
+        .ic3.open .icard.org{flex-direction:column;align-items:stretch;gap:12px}
+        .ic3.open .icard.org .k2{justify-content:space-between}
+        .cmpv{display:flex;justify-content:flex-end;gap:24px}
+        .cmpv .cc{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+        .cmpv .cc .lb{font-size:12px;color:#737373}
+        .cmpv .cc.c .lb{color:#0a0a0a}
+        .cmpv .cc .n{font-size:20px;font-weight:700;line-height:28px;color:#a3a3a3}
+        .cmpv .cc.c .n{color:#0a0a0a}
         /* toolbar */
-        .tfn{display:flex;justify-content:space-between;align-items:center;gap:24px;padding-bottom:12px}
-        .tfn-l{display:flex;align-items:center;gap:8px}
-        .sw-text{font-size:14px;font-weight:500;color:#0a0a0a}
-        .tfn-r{display:flex;align-items:center;gap:8px}
-        .iconbtn2{width:34px;height:32px;border:1px solid var(--border);border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;color:#171717;cursor:pointer}
-        .iconbtn2:hover{background:var(--muted)}
-        .iconbtn2 svg{width:14px;height:14px}
-        /* table */
+        .tfn{display:flex;justify-content:space-between;align-items:center;gap:24px}
+        .tfn-l,.tfn-r{display:flex;align-items:center;gap:8px}
+        .sw-text{font-size:14px;font-weight:500;color:#0a0a0a;display:inline-flex;align-items:center;gap:4px}
+        .sw-text .ph-info{font-size:14px;color:#737373}
+        /* tables */
+        .tbl-block{display:flex;flex-direction:column}
         .mtbl-wrap{border:1px solid var(--border);border-radius:10px 10px 0 0;overflow:hidden;border-bottom:none}
         table.mtbl{width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed}
         table.mtbl th{height:48px;background:#f5f5f5;text-align:left;font-weight:500;color:#737373;font-size:14px;padding:0 16px;border-bottom:1px solid var(--border);white-space:nowrap}
         table.mtbl td{height:46px;padding:0 16px;border-bottom:1px solid var(--border);color:#737373;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         table.mtbl tr:last-child td{border-bottom:none}
-        table.mtbl td.name{color:#0a0a0a;font-weight:600}
-        table.mtbl td.r{text-align:right;color:#0a0a0a}
-        table.mtbl td.r.sub{color:#737373}
+        table.mtbl td.name{color:#0a0a0a;font-weight:500}
+        table.mtbl td.r{text-align:right}
+        table.mtbl td.r.dk{color:#0a0a0a!important}
         table.mtbl td.c,table.mtbl th.c{text-align:center}
-        table.mtbl td.mut{color:#737373}
-        /* 공통 배지 (shadcn / Figma Badge_status) */
-        .ubadge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:500;line-height:16px;letter-spacing:-.01em}
-        .ubadge .dot{width:6px;height:6px;border-radius:9999px;background:currentColor;flex:none}
-        .ubadge.secondary{background:#f4f4f5;color:#18181b}
-        .ubadge.info{background:#f5f5f5;color:#525252}
-        .ubadge.success{background:#eef5ff;color:#0071f3}
-        .ubadge.warning{background:#fef5e7;color:#ea580c}
-        .ubadge.critical{background:#fff5f7;color:#e11d48}
-        .ubadge.purple{background:#f5f3ff;color:#7c3aed}
-        .ubadge.accent{background:#171717;color:#fff}
-        /* 카운트 배지: 분류 없음 → shadcn secondary */
-        .mbadge{display:inline-flex;align-items:center;height:20px;padding:2px 8px;border-radius:6px;background:#f4f4f5;color:#18181b;font-size:12px;font-weight:500}
-        .set-done{color:#0a0a0a;font-weight:500}
-        .set-none{color:var(--red600);font-weight:500}
-        .tbtn2{height:28px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:12px;font-weight:500;color:#0a0a0a;cursor:pointer}
+        table.mtbl td:has(>.tbtn2){padding:0 12px;overflow:visible}
+        table.mtbl td .voter-set{color:#0a0a0a;font-weight:600}
+        tbody.only-unset tr:not(.row-none){display:none}
+        .cbadge{display:inline-flex;align-items:center;height:20px;padding:0 6px;border-radius:6px;background:#f5f5f5;color:#171717;font-size:12px;font-weight:500!important}
+        .mbadge{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:6px;background:#f5f5f5;font-size:12px;font-weight:500;cursor:default}
+        .mbadge.auto{color:#737373}
+        .mbadge.manual,.mbadge.merged{color:#171717}
+        .mg-tv{color:#0a0a0a;font-weight:600}
+        .tbtn2{height:28px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:12px;font-weight:500;color:#0a0a0a;cursor:pointer;font-family:inherit}
         .tbtn2:hover{background:var(--muted)}
-        .chkbox{width:16px;height:16px;border:1.5px solid #a3a3a3;border-radius:4px;display:inline-block;vertical-align:middle}
+        .tbtn2.dis{color:#a3a3a3;background:#fff;cursor:not-allowed}
+        /* 펼침 버튼 — 접힘: 검은 사각, 펼침: 외곽선 원 */
+        .xp{width:18px;height:18px;border-radius:5px;background:#171717;border:none;color:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;vertical-align:middle}
+        .xp i{font-size:12px;font-weight:700}
+        tr.open .xp{background:#fff;border:1.5px solid #171717;border-radius:9999px;color:#171717}
+        tr.open .xp i{transform:rotate(180deg)}
+        tr.mg-grp,tr.cf-grp{cursor:pointer}
+        tr.mg-grp:hover td,tr.cf-grp:hover td{background:#fafafa}
+        tr.mg-child td,tr.cf-child td{background:#fafafa}
+        tr.mg-child td.xline,tr.cf-child td.xline{position:relative}
+        tr.mg-child td.xline:after,tr.cf-child td.xline:after{content:"";position:absolute;left:36px;top:0;bottom:0;width:1px;background:#d4d4d4}
         /* pagination */
         .mpag{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:#fafafa;border:1px solid var(--border);border-radius:0 0 10px 10px}
         .mpag .cnt{font-size:12px;color:#1f1c18}
         .mpag-r{display:flex;align-items:center;gap:16px}
         .mpag .psize{display:flex;align-items:center;gap:8px;font-size:12px;color:#737373}
-        .mpag .psel{display:flex;align-items:center;gap:4px;height:28px;padding:0 8px;border:1px solid var(--border);border-radius:6px;background:#fff;font-size:12px;color:#737373;cursor:pointer}
-        .mpag .psel svg{width:12px;height:12px}
-        .mpag .pctrl{display:flex;align-items:center;gap:8px}
-        .mpag .pb2{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:#737373;cursor:pointer}
-        .mpag .pb2:hover{background:var(--muted)}
-        .mpag .pb2 svg{width:14px;height:14px}
-        .mpag .pnum{font-size:12px;color:#1f1c18}
-        /* dialog */
-        .dlg-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:center;justify-content:center}
-        .dlg-ov.hidden{display:none}
-        .dlg{position:relative;width:384px;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px}
-        .dlg-head{padding:16px;display:flex;flex-direction:column;gap:8px}
-        .dlg-title{font-size:16px;font-weight:600;color:#0a0a0a;line-height:1}
+        .mpag .psel{display:flex;align-items:center;gap:4px;height:28px;padding:0 8px;border:1px solid var(--border);border-radius:6px;background:#fff;font-size:12px;color:#737373}
+        .mpag .pctrl{display:flex;align-items:center;gap:8px;color:#737373;font-size:14px}
+        .mpag .pnum{font-size:12px;color:#1f1c18;display:flex;align-items:center;gap:6px}
+        .mpag .pnum b{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;border:1px solid var(--border);border-radius:6px;background:#fff;font-weight:400}
+        /* dialogs */
+        .dlg-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:150;display:flex;align-items:center;justify-content:center}
+        .dlg{position:relative;width:480px;max-width:calc(100vw - 32px);background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:16px}
+        .dlg.sm{width:320px}
+        .dlg-head{display:flex;flex-direction:column;gap:6px;padding-right:24px}
+        .dlg-title{font-size:16px;font-weight:600;color:#0a0a0a;line-height:1.4}
         .dlg-desc{font-size:14px;color:#737373;line-height:20px}
-        .dlg-content{padding:0 16px 8px;display:flex;flex-direction:column;gap:8px}
         .dlg-field>label{font-size:14px;font-weight:500;color:#0a0a0a;display:block;margin-bottom:8px}
-        .dlg-select{display:flex;align-items:center;justify-content:space-between;gap:6px;height:32px;padding:8px 8px 8px 10px;border:1px solid var(--border);border-radius:10px;background:#fff;font-size:14px;color:#737373;cursor:pointer;width:100%;font-family:inherit;text-align:left}
-        .dlg-select.val{color:#0a0a0a}
-        .dlg-select svg{width:12px;height:12px;color:#737373;flex:none}
-        .dlg-menu{margin-top:4px;border:1px solid rgba(10,10,10,.1);border-radius:10px;box-shadow:var(--shadow-md);padding:4px;background:#fff}
-        .dlg-menu.hidden{display:none}
-        .dlg-mi{display:flex;align-items:center;height:28px;padding:4px 6px;border-radius:8px;font-size:14px;color:#0a0a0a;cursor:pointer;width:100%;text-align:left;background:none;border:none;font-family:inherit}
-        .dlg-mi:hover{background:var(--muted)}
-        .dlg-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px 16px}
-        .dlg-foot .btn{flex:1;justify-content:center;height:32px}
-        .dlg-x{position:absolute;top:16px;right:16px;width:16px;height:16px;opacity:.7;border:none;background:none;cursor:pointer;color:#000;display:flex}
+        .dlg-help{font-size:12px;color:#737373;margin-top:8px}
+        .dlg-foot{display:flex;justify-content:flex-end;gap:8px}
+        .dlg-foot.full .btn{flex:1}
+        .dlg-x{position:absolute;top:16px;right:16px;width:16px;height:16px;opacity:.7;border:none;background:none;cursor:pointer;color:#000;display:flex;padding:0}
         .dlg-x:hover{opacity:1}
-        .dlg-x svg{width:16px;height:16px}
+        .dlg-x i{font-size:16px}
+        .dlg-select{display:flex;align-items:center;justify-content:space-between;gap:6px;height:32px;padding:0 8px 0 10px;border:1px solid var(--border);border-radius:10px;background:#fff;font-size:14px;color:#737373;cursor:pointer;width:100%;font-family:inherit;text-align:left}
+        .dlg-select.val{color:#0a0a0a}
+        .dlg-select i{font-size:14px;color:#737373}
         .dlg-cbg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
         .dlg-cbx{display:flex;align-items:flex-start;gap:8px;padding:10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;user-select:none}
-        .dlg-cbx.on{background:rgba(23,23,23,.05);border-color:transparent}
-        .dlg-cbx .cb{width:16px;height:16px;border:1px solid #d4d4d4;border-radius:4px;display:flex;align-items:center;justify-content:center;flex:none;background:#fff}
+        .dlg-cbx.on{background:#f5f5f5;border-color:#a3a3a3}
+        .dlg-cbx .cb{width:16px;height:16px;border:1px solid #d4d4d4;border-radius:4px;display:flex;align-items:center;justify-content:center;flex:none;background:#fff;margin-top:1px}
         .dlg-cbx.on .cb{background:#171717;border-color:#171717}
-        .dlg-cbx .cb svg{width:12px;height:12px;color:#fafafa;display:none}
-        .dlg-cbx.on .cb svg{display:block}
-        .dlg-cbx .fc{display:flex;flex-direction:column;gap:6px;min-width:0}
-        .dlg-cbx .fc .l{font-size:14px;font-weight:500;color:#0a0a0a;line-height:1}
+        .dlg-cbx .cb i{font-size:11px;color:#fafafa;display:none;font-weight:700}
+        .dlg-cbx.on .cb i{display:block}
+        .dlg-cbx .cb.rd{border-radius:9999px}
+        .dlg-cbx.on .cb.rd{background:#fff;border:5px solid #171717}
+        .dlg-cbx.on .cb.rd i{display:none}
+        .dlg-cbx .fc{display:flex;flex-direction:column;gap:4px;min-width:0}
+        .dlg-cbx .fc .l{font-size:14px;font-weight:500;color:#0a0a0a;line-height:20px}
         .dlg-cbx .fc .d{font-size:12px;color:#737373;line-height:16px}
-        .dlg-foot.right .btn{flex:none}
-        .dlg-foot.right .btn.primary{min-width:96px;justify-content:center}
+        .ld-box{background:#f5f5f5;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:4px;font-size:14px;color:#0a0a0a;line-height:20px}
+        .ld-box .r{display:flex;justify-content:space-between}
+        .ld-box .r b{font-weight:600}
+        .dl-ta{width:100%;height:144px;border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-family:inherit;font-size:14px;resize:none;outline:none}
+        .dl-ta:focus{border-color:#a3a3a3}
+        /* combobox (검색 드롭다운) */
+        .cmb{position:relative}
+        .cb-pnl{position:absolute;left:0;right:0;top:36px;z-index:10;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:10px;box-shadow:var(--shadow-md);padding:4px}
+        .cb-pnl input{width:100%;height:32px;border:1px solid var(--border);background:#f5f5f5;border-radius:8px;padding:0 10px;font-family:inherit;font-size:14px;outline:none;margin-bottom:4px}
+        .cb-list{max-height:220px;overflow:auto}
+        .cb-it{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;padding:6px 8px;border:none;background:none;border-radius:8px;cursor:pointer;font-family:inherit;text-align:left}
+        .cb-it:hover{background:var(--muted)}
+        .cb-it .l{font-size:14px;color:#0a0a0a}
+        .cb-it .s{font-size:12px;color:#737373}
+        .cb-it .s.blue{color:#0071f3}
+        .cb-it.dis{cursor:not-allowed}
+        .cb-it.dis .l{color:#737373}
+        .cb-it.dis:hover{background:none}
+        .combo-empty{padding:16px;text-align:center;font-size:13px;color:#a3a3a3}
+        /* alert dialog */
+        .ad-body{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+        .ad-media{width:40px;height:40px;border-radius:8px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+        .ad-media i{font-size:22px;color:#171717}
+        .ad-media.red{background:#fdecee}
+        .ad-media.red i{color:var(--red600)}
+        .ad-body .dlg-desc b{color:#0a0a0a;font-weight:500}
+        .spin{animation:spin 1s linear infinite;display:inline-block}
+        @keyframes spin{to{transform:rotate(360deg)}}
         /* sonner toast */
-        .sonner{position:fixed;right:20px;bottom:20px;width:405px;max-width:calc(100vw - 40px);display:flex;align-items:center;gap:8px;padding:16px;background:rgba(245,245,245,.85);border:1px solid var(--border);backdrop-filter:blur(12.5px);-webkit-backdrop-filter:blur(12.5px);border-radius:8px;box-shadow:var(--shadow-md);z-index:120;transform:translateY(12px);opacity:0;transition:.2s;pointer-events:none}
+        .sonner{position:fixed;right:20px;bottom:20px;width:405px;max-width:calc(100vw - 40px);display:flex;align-items:center;gap:8px;padding:16px;background:rgba(245,245,245,.85);border:1px solid var(--border);backdrop-filter:blur(12.5px);-webkit-backdrop-filter:blur(12.5px);border-radius:8px;box-shadow:var(--shadow-md);z-index:160;transform:translateY(12px);opacity:0;transition:.2s;pointer-events:none}
         .sonner.show{transform:translateY(0);opacity:1;pointer-events:auto}
         .sonner .st{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
         .sonner .st .t{font-size:14px;font-weight:500;color:#0a0a0a}
         .sonner .st .d{font-size:14px;color:#737373;line-height:20px}
-        .sonner .undo{height:24px;padding:0 8px;background:#171717;color:#fafafa;border:none;border-radius:4px;font-size:12px;font-weight:500;cursor:pointer;box-shadow:var(--shadow-xs)}
-        .ld-col{display:flex;flex-direction:column;gap:24px}
-        .hide{display:none!important}
-        /* name tooltip trigger */
-        .tt-name{display:inline-flex;align-items:center;gap:4px;cursor:default}
-        .tt-name .qi{width:13px;height:13px;color:#a3a3a3}
-        /* shadcn tooltip (JS-positioned) */
-        #shTip{position:fixed;z-index:140;background:#171717;color:#fafafa;border-radius:8px;padding:8px 10px;
-          box-shadow:var(--shadow-md);font-size:12px;line-height:16px;pointer-events:none;opacity:0;transition:opacity .12s;max-width:360px}
+        .sonner .undo{height:24px;padding:0 8px;background:#171717;color:#fafafa;border:none;border-radius:4px;font-size:12px;font-weight:500;cursor:pointer;flex:none}
+        /* tooltips */
+        .tt-name{cursor:default}
+        #shTip{position:fixed;z-index:170;background:#fff;color:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:8px 10px;box-shadow:var(--shadow-md);font-size:12px;line-height:18px;pointer-events:none;opacity:0;transition:opacity .12s;max-width:420px}
         #shTip.show{opacity:1}
-        #shTip .r{display:flex;gap:8px}
-        #shTip .r+.r{margin-top:4px}
-        #shTip .k{color:#a3a3a3;min-width:80px}
-        #shTip .v{color:#fafafa;font-weight:500}
-        /* sortable headers (indicator hidden by default) */
-        table.mtbl th.sortable{cursor:pointer;user-select:none}
-        table.mtbl th.sortable:hover{color:#0a0a0a}
-        table.mtbl th .thl{display:inline-flex;align-items:center;gap:2px}
-        table.mtbl th[style*="right"] .thl{flex-direction:row-reverse}
-        table.mtbl th .sarrow{width:14px;height:14px;opacity:0;transition:opacity .1s,transform .1s;flex:none}
-        table.mtbl th.sorted{color:#0a0a0a}
-        table.mtbl th.sorted .sarrow{opacity:1}
-        table.mtbl th.sorted.desc .sarrow{transform:rotate(180deg)}
-        table.mtbl td .voter-set{color:#0a0a0a;font-weight:500}
-        /* right sheet (투표권자 설정) */
-        .vsh-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:130;display:flex;justify-content:flex-end}
-        .vsh-ov.hidden{display:none}
-        .vsh{position:relative;width:580px;max-width:100%;height:100%;background:#fff;border-left:1px solid var(--border);box-shadow:var(--shadow-lg);display:flex;flex-direction:column;padding:16px;gap:16px;animation:vsIn .2s ease}
+        #shTip .h{font-weight:500;margin-bottom:2px}
+        #shTip .r{display:flex;gap:12px}
+        #shTip .k{color:#737373;min-width:70px}
+        #cxTip{position:fixed;z-index:170;background:#171717;color:#fafafa;border-radius:8px;padding:6px 12px;font-size:12px;line-height:16px;pointer-events:none;opacity:0;transition:opacity .1s;white-space:nowrap}
+        #cxTip.show{opacity:1}
+        /* right sheet */
+        .vsh-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:130;display:flex;justify-content:flex-end}
+        .vsh{position:relative;width:500px;max-width:100%;height:100%;background:#fff;border-left:1px solid var(--border);box-shadow:var(--shadow-lg);display:flex;flex-direction:column;padding:16px;gap:16px;animation:vsIn .2s ease}
         @keyframes vsIn{from{transform:translateX(28px);opacity:.5}to{transform:none;opacity:1}}
         .vsh-head{display:flex;flex-direction:column;gap:2px;padding-right:24px}
         .vsh-title{font-size:16px;font-weight:600;color:#0a0a0a}
         .vsh-desc{font-size:12px;color:#737373;line-height:16px}
-        .vsh-body{flex:1;display:flex;flex-direction:column;gap:24px;overflow:auto}
+        .vsh-body{flex:1;display:flex;flex-direction:column;gap:24px;overflow:auto;margin:0 -4px;padding:0 4px}
         .vs-field{display:flex;flex-direction:column;gap:12px}
         .vs-field>label{font-size:14px;font-weight:500;color:#0a0a0a}
-        .rad-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+        .rad-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
         .rad{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:#0a0a0a;cursor:pointer}
-        .rad .dotc{width:16px;height:16px;border:1px solid var(--border);border-radius:9999px;position:relative;flex:none}
-        .rad.on .dotc{background:#171717;border-color:#171717}
-        .rad.on .dotc:after{content:"";position:absolute;width:8px;height:8px;background:#fafafa;border-radius:9999px;left:50%;top:50%;transform:translate(-50%,-50%)}
+        .rad .dotc{width:16px;height:16px;border:1px solid var(--border);border-radius:9999px;flex:none;background:#fff}
+        .rad.on .dotc{border:5px solid #171717}
+        .rad.on .dotc::after{display:none}
         .vs-alert{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:#f5f9ff;border:1px solid #d4e8ff;border-radius:10px;font-size:12px;color:#0071f3;line-height:16px}
-        .vs-alert.hide{display:none}
-        .vs-alert svg{width:16px;height:16px;flex:none;color:#0071f3;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-        .lbl-sub{font-size:12px;font-weight:400;color:#a3a3a3;margin-left:4px}
-        .combo{border:1px solid var(--border);border-radius:10px;overflow:hidden}
-        .combo-input{display:flex;align-items:center;gap:6px;height:36px;padding:0 10px;border-bottom:1px solid var(--border);background:rgba(229,229,229,.25)}
-        .combo-input svg{width:16px;height:16px;color:#737373;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-        .combo-input input{flex:1;border:none;outline:none;background:none;font-family:inherit;font-size:14px;color:#0a0a0a}
-        .combo-list{max-height:220px;overflow:auto;padding:4px}
-        .combo-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;cursor:pointer;font-size:14px;color:#0a0a0a}
-        .combo-item:hover{background:var(--muted)}
-        .combo-item.sel{background:#ebf4ff}
-        .combo-item .no{font-size:12px;color:#737373}
-        .combo-empty{padding:16px;text-align:center;font-size:13px;color:#a3a3a3}
-        .vs-field.hide{display:none!important}
-        .inp-grp{display:flex;align-items:center;height:36px;padding:0 10px;border:1px solid var(--border);border-radius:10px}
-        .inp-grp input{flex:1;border:none;outline:none;background:none;font-family:inherit;font-size:14px;color:#0a0a0a}
-        #vsSel[disabled]{opacity:.5;pointer-events:none;background:var(--muted)}
-        #vsMenu{position:absolute;left:0;right:0;top:36px;z-index:5}
-        .vsh-foot{display:flex;gap:8px}
-        .vsh-foot .btn{flex:1;justify-content:center;height:32px}
-        .vsh-x{position:absolute;top:16px;right:16px;width:16px;height:16px;border:none;background:none;cursor:pointer;color:#000;opacity:.7;display:flex}
+        .vs-alert i{font-size:16px;flex:none}
+        .vs-alert.b{font-weight:600}
+        .inp{width:100%;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px;color:#0a0a0a;outline:none;background:#fff}
+        .inp:focus{border-color:#a3a3a3}
+        .inp[readonly]{background:#fff}
+        .inp.err{border-color:var(--red600);color:var(--red600);box-shadow:0 0 0 3px rgba(233,8,27,.12)}
+        .err-t{font-size:12px;color:var(--red600);line-height:16px;margin-top:-4px}
+        .vsh-foot{display:flex;flex-direction:column;gap:12px}
+        .vsh-foot .bt{display:flex;gap:8px}
+        .vsh-foot .bt .btn{flex:1}
+        .vsh-meta{font-size:12px;color:#737373;text-align:center}
+        .vsh-x{position:absolute;top:16px;right:16px;width:16px;height:16px;border:none;background:none;cursor:pointer;color:#000;opacity:.7;display:flex;padding:0}
         .vsh-x:hover{opacity:1}
-        .vsh-x svg{width:16px;height:16px}
-        /* tabs panels + 통합·해제 + 확정 */
-        .upanel{display:flex;flex-direction:column;gap:24px}
-        .upanel.hide{display:none!important}
-        .mg-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
-        .mg-title{font-size:15px;font-weight:600;color:#0a0a0a}
-        .mg-desc{font-size:13px;color:#737373;margin-top:4px;line-height:18px;max-width:640px}
-        .mg-actions{display:flex;gap:8px;flex:none}
-        .mg-tools{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0;padding-bottom:12px}
-        .mg-tools-l,.mg-tools-r{display:flex;align-items:center;gap:8px}
-        .btn.icon{padding:0;width:34px;height:32px;justify-content:center}
-        .btn.icon svg{width:14px;height:14px}
+        /* 통합내역 상세 sheet */
+        .rep-card{background:#f5f5f5;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:4px}
+        .rep-card .n{font-size:14px;font-weight:600;color:#0a0a0a}
+        .rep-card .s{font-size:14px;color:#737373}
+        .ms-tools{display:flex;align-items:center;gap:8px}
+        .ms-tools .sp{flex:1}
+        .msf{position:relative}
+        .msf .dlg-select{width:100px;color:#0a0a0a}
+        .msf .cb-pnl{width:120px;right:auto}
+        .srch-in{position:relative;width:240px}
+        .srch-in i{position:absolute;left:10px;top:8px;font-size:16px;color:#737373}
+        .srch-in .inp{padding-left:32px}
+        .srch-in .cb-pnl{width:240px}
+        .ms-tbl-wrap{border:1px solid var(--border);border-radius:10px;overflow:hidden}
+        table.ms-tbl{width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed}
+        table.ms-tbl th{height:44px;background:#f5f5f5;color:#737373;font-weight:500;text-align:left;padding:0 10px;border-bottom:1px solid var(--border)}
+        table.ms-tbl td{height:46px;padding:0 10px;border-bottom:1px solid var(--border);color:#737373;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        table.ms-tbl tr:last-child td{border-bottom:none}
+        table.ms-tbl td.name{color:#0a0a0a;font-weight:500}
+        table.ms-tbl .r{text-align:right}
+        table.ms-tbl td.r.dk{color:#0a0a0a}
+        table.ms-tbl td.empty{text-align:center;height:78px;color:#737373}
         .mchk{width:16px;height:16px;border:1px solid #babbbc;border-radius:4px;display:inline-block;vertical-align:middle;cursor:pointer;position:relative;background:#fff}
         .mchk.on{background:#171717;border-color:#171717}
         .mchk.on:after{content:"";position:absolute;left:5px;top:2px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
-        table.mtbl td .mbadge.g{background:#ebf4ff;color:#0066df}
-        .cf-note{font-size:13px;color:#737373;line-height:20px;background:#fafafa;border:1px solid var(--border);border-radius:12px;padding:16px}
-        .cf-foot{display:flex;justify-content:flex-end}
-        .cf-cmp{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-        .cf-card{min-height:96px;justify-content:flex-start;gap:12px}
-        .cf-card .cf-vals{display:flex;justify-content:flex-end;gap:24px;margin-top:auto}
-        .cf-card.warn{background:#fff;border-color:var(--border)}
-        .cf-card.warn .v{margin-top:auto}
-        .cf-col{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
-        .cf-col .lb{font-size:12px;color:#737373}
-        .cf-col.o .num{font-size:18px;font-weight:600;color:#737373}
-        .cf-col.c .num{font-size:18px;font-weight:600;color:#0a0a0a}
-        .cf-sec-h{display:flex;align-items:center;justify-content:space-between;margin:16px 0 8px}
-        .cf-sec-h .t{font-size:14px;font-weight:600;color:#0a0a0a}
-        .cf-tbl-wrap{border:1px solid var(--border);border-radius:10px;overflow:hidden}
-        .cf-tbl-wrap table.mtbl{border:none}
-        .badge-st{display:inline-flex;align-items:center;padding:2px 8px;border-radius:9999px;font-size:12px;font-weight:500;line-height:16px}
-        .badge-st.green{background:#ecfdf3;color:#067647;border:1px solid #abefc6}
-        .badge-st.red{background:#fef3f2;color:#b42318;border:1px solid #fecdca}
-        .cf-note-in{font-size:12px;color:#737373;margin-right:auto}
-        .last-mod{font-size:12px;color:#737373;display:flex;align-items:center;white-space:nowrap}
-        table.mtbl tr.cf-grp{cursor:pointer}
-        table.mtbl tr.cf-grp .mg-caret{transition:transform .15s}
-        table.mtbl tr.cf-grp.open .mg-caret{transform:rotate(90deg)}
-        table.mtbl tr.cf-grp:hover td{background:#fafafa}
-        table.mtbl tr.cf-child td{background:#fcfcfc}
-        table.mtbl tr.cf-child td.cname{color:#0a0a0a;padding-left:30px;position:relative}
-        table.mtbl tr.cf-child td.cname:before{content:"";position:absolute;left:16px;top:50%;width:8px;height:1px;background:#d4d4d4}
-        .ad-body{padding:16px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
-        .ad-media{width:40px;height:40px;border-radius:8px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;flex:none}
-        .ad-media svg{width:24px;height:24px;color:#171717;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-        .ad-body .dlg-title{line-height:1.4}
-        .btn.lg{height:40px;padding:0 20px;font-size:14px}
-        #mgList{display:flex;flex-direction:column;gap:6px}
-        #mgList .mm{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--border);border-radius:10px;font-size:14px;color:#0a0a0a}
-        #mgList .mm .s{color:#737373;font-size:12px}
-        #mgRepMenu{position:absolute;left:0;right:0;top:36px;z-index:5;max-height:200px;overflow:auto}
-        /* 통합·해제 grouped table */
-        .mg-caret{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;flex:none;
-          border-radius:6px;color:#737373;transition:transform .15s,background .12s;cursor:pointer}
-        .mg-caret:hover{background:#f0f0f0;color:#171717}
-        .mg-caret svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-        .mg-mflex{gap:6px}
-        table.mg-tbl tr.mg-grp{cursor:pointer}
-        table.mg-tbl tr.mg-grp.open .mg-caret{transform:rotate(90deg)}
-        table.mg-tbl tr.mg-grp:hover td{background:#fafafa}
-        table.mg-tbl tr.mg-child td{background:#fcfcfc}
-        table.mg-tbl tr.mg-child td.cname{color:#0a0a0a;padding-left:30px;position:relative}
-        table.mg-tbl tr.mg-child td.cname:before{content:"";position:absolute;left:16px;top:50%;width:8px;height:1px;background:#d4d4d4}
-        .mbadge.auto,.mbadge.manual{background:#f4f4f5;color:#18181b}
-        .mg-tv{color:#0a0a0a;font-weight:600}
-        .mg-mflex{display:inline-flex;align-items:center;gap:6px}
-        /* 통합기관 표시 — 참석자 관리와 동일: 투표권자 칸 펼침 버튼, 주주명 칸 '통합 N건' 뱃지 */
-        table.mtbl .voter{display:inline-flex;align-items:center;gap:8px}
-        table.mtbl .tw-chevron{width:24px;height:24px;flex:none;border:1px solid var(--border);border-radius:9999px;background:#fff;display:flex;align-items:center;justify-content:center;color:#171717;cursor:pointer;padding:0}
-        table.mtbl .tw-chevron svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;transition:transform .15s;transform:rotate(180deg)}
-        table.mtbl tr.open .tw-chevron svg{transform:none}
-        table.mtbl td.tcell .cv{left:28px}   /* 칸 여백 16px — 펼침 버튼 중심선 */
-        table.mtbl .tag{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:#f4f4f5;color:#737373;font-size:12px;font-weight:500}
-        .btn.danger{color:var(--red600);border-color:#f3c0c4;width:100%;justify-content:center;height:32px}
-        .btn.danger:hover{background:#fff5f6}
-        .btn.danger.hide{display:none}
-        #mgList .mm .mm-info{display:flex;flex-direction:column;gap:2px}
-        #mgList .mm .mm-info .no{font-size:12px;color:#737373}
-        #mgList .mm .x{border:none;background:none;cursor:pointer;color:#a3a3a3;display:flex;padding:2px}
-        #mgList .mm .x:hover{color:var(--red600)}
-        #mgList .mm .x svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-        #mgSearchWrap .combo-list{max-height:160px}
+        @media(max-width:1100px){.ic3{grid-template-columns:1fr 1fr}.ic-col{grid-column:1/-1}}
       </style>
 
       <div class="ms-wrap">
-        <div class="ms-sh">
-          <div class="ms-sh-top">
-            <div class="ms-sh-l">
-              <div class="ms-title-row">
-                <h1>주주명부 설정</h1>
-                <span class="ms-chip hide" id="msChip"><span class="k">주주명부</span><span class="v" id="msChipDate">2025.12.31</span></span>
-              </div>
-              <div class="ms-desc">투표권자 설정, 투표권자 통합·해제 설정 후 주주명부 설정을 진행해 주세요.</div>
+        <div class="ms-sh-top">
+          <div class="ms-sh-l">
+            <div class="ms-title-row">
+              <h1 id="msTitle">주주명부 설정</h1>
+              <span class="ubadge secondary hide" id="msBadge">확정필요</span>
             </div>
-            <div class="ms-sh-actions">
-              <button class="btn" id="msRegister"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>주주명부 등록</button>
-              <button class="btn primary" id="msLoad"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>주주명부 불러오기</button>
-              <button class="btn primary hidden" id="msNext"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>저장하고 다음</button>
-              <span class="last-mod hidden" id="cfLastMod">마지막 수정 2026-07-17 15:58 · 박지용</span>
-              <button class="btn primary hidden" id="cfTopBtn"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>주주명부 설정</button>
-            </div>
+            <div class="ms-desc hide" id="msDesc"></div>
+          </div>
+          <div class="ms-sh-actions">
+            <button class="btn" id="msRegister">주주명부 등록</button>
+            <button class="btn primary" id="msLoad">주주명부 불러오기</button>
+            <span class="last-mod hidden" id="msLastMod"></span>
+            <button class="btn hidden" id="msNext">저장하고 다음</button>
+            <button class="btn primary hidden" id="msConfirm">주주명부 확정</button>
+            <button class="btn hidden" id="msChange">주주명부 변경</button>
           </div>
         </div>
 
         <!-- EMPTY STATE -->
-        <div id="emptyState">
-          <div class="ms-empty2">
-            <div class="inner">
-              <svg class="bico ic" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><circle cx="12" cy="9" r="2"/><path d="M15 13.5a3 3 0 0 0-6 0"/></svg>
-              <div>
-                <div class="ms-e-t">확정된 주주명부가 없습니다</div>
-                <div class="ms-e-d">우측 상단의 &lsquo;주주명부 불러오기&rsquo; 또는 &lsquo;주주명부 등록&rsquo;으로 명부를 준비해 주세요.</div>
-              </div>
-            </div>
+        <div id="emptyState" class="ms-empty2">
+          <div class="inner">
+            <i class="ph ph-address-book"></i>
+            <div><div class="ms-e-t">투표권자를 설정할 주주명부가 없습니다</div><div class="ms-e-d">주주명부 관리에서 주주명부를 등록하고 주주총회를 준비해 보세요</div></div>
           </div>
         </div>
 
         <!-- LOADED STATE -->
         <div id="loadedState" class="ld-col hide">
+          <div class="ms-banner hide" id="msBanner"><i class="ph ph-info"></i><div><b>주주명부 변경 유의사항</b>투표를 완료한 주주의 정보는 변경할 수 없습니다. 변경 완료 후 주주명부 확정 버튼을 반드시 눌러주세요.</div></div>
           <div class="utabs">
             <button class="utab active" data-utab="set">투표권자 설정</button>
             <button class="utab" data-utab="merge">통합·해제 설정</button>
             <button class="utab" data-utab="confirm">설정내역 확인</button>
           </div>
+
+          <!-- 1. 투표권자 설정 -->
           <div class="upanel" data-upanel="set">
-          <div class="ic3">
-            <div class="icard"><div class="k">총 주식수</div><div class="v">476,211,964</div></div>
-            <div class="icard"><div class="k">총 주주수</div><div class="v" id="shHolders">650,000</div></div>
-            <div class="icard warn" style="background:#fff"><div class="k">미설정 투표권자 <i class="ph ph-info" style="font-size:16px"></i></div><div class="v" id="unsetCount">6</div></div>
-          </div>
-          <div>
+            <div class="ic3" data-cards="set"></div>
             <div class="tfn">
-              <div class="tfn-l">
-                <span class="sw-text">미설정만 보기</span>
-                <span class="sw" id="swUnset"></span>
-              </div>
-              <div class="tfn-r">
-                <button class="btn"><i class="ph ph-download-simple" style="font-size:16px"></i>다운로드</button>
-                <span data-cx-tools></span>
-              </div>
+              <div class="tfn-l"><span class="sw-text">미설정 투표권자 보기</span><span class="sw" id="swUnset"></span></div>
+              <div class="tfn-r"><button class="btn" data-dl><i class="ph ph-download-simple" style="font-size:16px"></i>다운로드</button><span data-cx-tools></span></div>
             </div>
-            <div class="mtbl-wrap">
-              <table class="mtbl">
-                <colgroup><col style="width:96px"><col style="width:90px"><col style="width:150px"><col style="width:110px"><col style="width:130px"><col style="width:90px"><col style="width:150px"><col style="width:150px"><col style="width:110px"><col style="width:88px"></colgroup>
-                <thead><tr>
-                  <th class="c sortable" data-key="0" data-type="text"><span class="thl">주식종류</span></th>
-                  <th class="c sortable" data-key="1" data-type="text"><span class="thl">주주구분</span></th>
-                  <th class="sortable" data-key="2" data-type="text"><span class="thl">주주명</span></th>
-                  <th class="sortable" data-key="3" data-type="text"><span class="thl">주주번호</span></th>
-                  <th class="sortable" style="text-align:right" data-key="4" data-type="num"><span class="thl">보유주식</span></th>
-                  <th class="sortable" style="text-align:right" data-key="5" data-type="num"><span class="thl">지분율</span></th>
-                  <th class="sortable" data-key="6" data-type="text"><span class="thl">운용기관</span></th>
-                  <th class="sortable" data-key="7" data-type="text"><span class="thl">자금제공기관</span></th>
-                  <th class="sortable" data-key="8" data-type="text"><span class="thl">투표권자</span></th>
-                  <th class="c">설정</th>
-                </tr></thead>
-                <tbody id="shBody"></tbody>
-              </table>
-            </div>
-            <div class="mpag">
-              <div class="cnt">총 650,000명 · 476,211,964주</div>
-              <div class="mpag-r">
-                <div class="psize">페이지당 <span class="psel">30 <svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></div>
-                <div class="pctrl">
-                  <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m11 17-5-5 5-5M18 17l-5-5 5-5"/></svg></span>
-                  <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></span>
-                  <span class="pnum">1 / 30</span>
-                  <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
-                  <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m6 17 5-5-5-5M13 17l5-5-5-5"/></svg></span>
-                </div>
+            <div class="tbl-block">
+              <div class="mtbl-wrap">
+                <table class="mtbl" id="setTbl">
+                  <colgroup><col style="width:96px"><col style="width:120px"><col><col style="width:130px"><col style="width:130px"><col style="width:90px"><col style="width:110px"><col style="width:120px"><col style="width:150px"><col style="width:84px"></colgroup>
+                  <thead><tr><th>주식종류</th><th>주주구분</th><th>주주명</th><th>주주번호</th><th>보유주식</th><th>지분율</th><th>운용기관</th><th>자금제공기관</th><th>투표권자</th><th></th></tr></thead>
+                  <tbody id="shBody"></tbody>
+                </table>
               </div>
+              <div class="mpag" data-pag="set"></div>
             </div>
-          </div>
           </div>
 
+          <!-- 2. 통합·해제 설정 -->
           <div class="upanel hide" data-upanel="merge">
-            <div>
-            <div class="mg-tools">
-              <div class="mg-tools-l">
-                <button class="btn" id="mgKind">의결권 있는 주식 종류 변경</button>
-              </div>
-              <div class="mg-tools-r">
-                <button class="btn primary" id="mgNew">통합 주주 추가</button>
-                <button class="btn"><i class="ph ph-download-simple" style="font-size:16px"></i>다운로드</button>
-                <span data-cx-tools></span>
-              </div>
-            </div>
-            <div class="mtbl-wrap">
-              <table class="mtbl mg-tbl">
-                <colgroup><col style="width:14%"><col style="width:9%"><col style="width:13%"><col style="width:16%"><col style="width:16%"><col style="width:13%"><col style="width:9%"><col style="width:10%"></colgroup>
-                <thead><tr><th>통합방법</th><th>주식종류</th><th>투표권자</th><th>주주명</th><th>주주번호</th><th>보유주식</th><th>지분율</th><th>통합내역</th></tr></thead>
-                <tbody id="mgBody"></tbody>
-              </table>
-            </div>
-            <div class="mpag">
-              <div class="cnt">총 <span id="mgGrpCnt">2</span>건 · 통합 계좌 <span id="mgAcctCnt">4</span>개</div>
-              <div class="mpag-r">
-                <div class="psize">페이지당 <span class="psel">30 <svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></div>
-                <div class="pctrl">
-                  <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m11 17-5-5 5-5M18 17l-5-5 5-5"/></svg></span>
-                  <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></span>
-                  <span class="pnum">1 / 1</span>
-                  <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>
-                  <span class="pb2"><svg class="ic" viewBox="0 0 24 24"><path d="m6 17 5-5-5-5M13 17l5-5-5-5"/></svg></span>
+            <div class="ms-empty2 hide" data-gate="merge"><div class="inner"><i class="ph ph-address-book"></i><div><div class="ms-e-t">투표권자를 설정해야 볼 수 있는 화면입니다</div><div class="ms-e-d">투표권자 설정 단계를 저장하고 진행해 주세요.</div></div></div></div>
+            <div class="upanel" data-body="merge">
+              <div class="tfn">
+                <div class="tfn-l"><button class="btn" id="mgKind">의결권 있는 주식 종류 변경</button></div>
+                <div class="tfn-r">
+                  <button class="btn primary" id="mgNew">통합주주 추가</button>
+                  <button class="btn" data-dl><i class="ph ph-download-simple" style="font-size:16px"></i>다운로드</button>
+                  <span data-cx-tools></span>
                 </div>
               </div>
-            </div>
+              <div class="tbl-block">
+                <div class="mtbl-wrap">
+                  <table class="mtbl mg-tbl" id="mgTbl">
+                    <colgroup><col style="width:72px"><col style="width:100px"><col><col><col style="width:170px"><col style="width:150px"><col style="width:96px"><col style="width:90px"></colgroup>
+                    <thead><tr><th></th><th>통합방법</th><th>투표권자</th><th>주주명</th><th>주주번호</th><th>보유주식</th><th>지분율</th><th data-al="c">통합내역</th></tr></thead>
+                    <tbody id="mgBody"></tbody>
+                  </table>
+                </div>
+                <div class="mpag" data-pag="merge"></div>
+              </div>
             </div>
           </div>
 
+          <!-- 3. 설정내역 확인 -->
           <div class="upanel hide" data-upanel="confirm">
-            <div class="cf-cmp">
-              <div class="icard cf-card"><div class="k">총 주식수</div>
-                <div class="cf-vals"><div class="cf-col o"><span class="lb">원본</span><span class="num">476,211,964</span></div><div class="cf-col c"><span class="lb">확정</span><span class="num">476,211,964</span></div></div>
+            <div class="ms-empty2 hide" data-gate="confirm"><div class="inner"><i class="ph ph-address-book"></i><div><div class="ms-e-t">통합·해제 설정을 해야 볼 수 있는 화면입니다</div><div class="ms-e-d">통합·해제 설정을 저장하고 진행해 주세요.</div></div></div></div>
+            <div class="upanel" data-body="confirm">
+              <div class="ic3" data-cards="confirm"></div>
+              <div class="tfn">
+                <div class="tfn-l"><span class="sw-text">미설정 투표권자 보기 <i class="ph ph-info" data-tip="미설정 투표권자는 투표권자 설정 탭에서 설정 가능합니다."></i></span><span class="sw" id="swCfUnset"></span></div>
+                <div class="tfn-r"><button class="btn" data-dl><i class="ph ph-download-simple" style="font-size:16px"></i>다운로드</button><span data-cx-tools></span></div>
               </div>
-              <div class="icard cf-card"><div class="k">총 주주수</div>
-                <div class="cf-vals"><div class="cf-col o"><span class="lb">원본</span><span class="num">650,000</span></div><div class="cf-col c"><span class="lb">확정</span><span class="num" id="cfVoters">649,998</span></div></div>
+              <div class="tbl-block">
+                <div class="mtbl-wrap">
+                  <table class="mtbl" id="cfTbl">
+                    <colgroup><col style="width:72px"><col style="width:100px"><col><col><col style="width:170px"><col style="width:120px"></colgroup>
+                    <thead><tr><th></th><th>통합내역</th><th>투표권자명</th><th>주주명</th><th>보유주식</th><th>지분율</th></tr></thead>
+                    <tbody id="cfBody"></tbody>
+                  </table>
+                </div>
+                <div class="mpag" data-pag="confirm"></div>
               </div>
-              <div class="icard warn cf-card"><div class="k">미설정 투표권자 <i class="ph ph-info" style="font-size:16px"></i></div><div class="v" id="cfUnset">0</div></div>
             </div>
-            <div class="cf-sec-h"><span class="t">확정 명세</span><div class="tfn-r"><button class="btn"><i class="ph ph-download-simple" style="font-size:16px"></i>다운로드</button>
-                <span data-cx-tools></span></div></div>
-            <div class="cf-tbl-wrap">
-              <table class="mtbl">
-                <colgroup><col style="width:14%"><col style="width:20%"><col style="width:34%"><col style="width:18%"><col style="width:14%"></colgroup>
-                <thead><tr><th>통합내역</th><th>투표권자명</th><th>주주명</th><th>보유주식</th><th>지분율</th></tr></thead>
-                <tbody id="cfBody"></tbody>
-              </table>
-            </div>
-            <div class="cf-foot" style="margin-top:16px;justify-content:flex-start"><span class="cf-note-in">확정 이후에는 투표권자 정보를 수정할 수 없으며, 전자투표·현장 집계의 기준 명부로 사용됩니다.</span></div>
           </div>
         </div>
       </div>
 
-      <!-- 불러오기 dialog -->
+      <!-- 주주명부 불러오기 -->
       <div class="dlg-ov hidden" id="loadDlg">
         <div class="dlg">
-          <div class="dlg-head"><div class="dlg-title">주주명부 불러오기</div><div class="dlg-desc">불러올 명부 기준일을 선택해 주세요.</div></div>
-          <div class="dlg-content">
-            <div class="dlg-field">
-              <label>명부 기준일</label>
-              <div style="position:relative">
-                <button class="dlg-select" id="ldSel"><span>명부 기준일을 선택하세요</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
-                <div class="dlg-menu hidden" id="ldMenu">
-                  <button class="dlg-mi" data-date="2025.12.31">2025.12.31 (제10기 정기)</button>
-                  <button class="dlg-mi" data-date="2025.09.30">2025.09.30 (임시)</button>
-                  <button class="dlg-mi" data-date="2025.06.30">2025.06.30 (임시)</button>
-                  <button class="dlg-mi" data-date="2025.03.12">2025.03.12 (제9기 정기)</button>
-                </div>
-              </div>
+          <div class="dlg-head"><div class="dlg-title">주주명부 불러오기</div><div class="dlg-desc"><span data-mname></span>에 연결할 주주명부 선택해 주세요.</div></div>
+          <div class="dlg-field"><label>주주명부 기준일</label>
+            <div class="cmb" id="ldCombo">
+              <button type="button" class="dlg-select cb-trig"><span>주주명부 기준일 선택</span><i class="ph ph-caret-down"></i></button>
+              <div class="cb-pnl hidden"><input placeholder="검색"><div class="cb-list"></div></div>
             </div>
           </div>
-          <div class="dlg-foot"><button class="btn" data-dlg-close>취소</button><button class="btn primary" id="ldConfirm">불러오기</button></div>
-          <button class="dlg-x" data-dlg-close aria-label="닫기"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          <div class="dlg-foot full"><button class="btn" data-dlg-close>취소</button><button class="btn primary" id="ldConfirm" disabled>불러오기</button></div>
+          <button class="dlg-x" data-dlg-close aria-label="닫기"><i class="ph ph-x"></i></button>
         </div>
       </div>
 
-      <!-- sonner toast -->
-      <div class="sonner" id="sonner">
-        <div class="st"><div class="t" id="snT">불러오기 완료</div><div class="d" id="snD"></div></div>
-        <button class="undo" id="snUndo">실행취소</button>
+      <!-- 불러오기 완료 -->
+      <div class="dlg-ov hidden" id="loadDoneDlg">
+        <div class="dlg">
+          <div class="dlg-head"><div class="dlg-title">주주명부 불러오기 완료</div><div class="dlg-desc">총 주식수와 총 주주수가 일치하는지 확인해 주세요.</div></div>
+          <div class="ld-box" id="ldBox"></div>
+          <div class="dlg-foot"><button class="btn primary" id="ldDoneOk">확인</button></div>
+          <button class="dlg-x" id="ldDoneX" aria-label="닫기"><i class="ph ph-x"></i></button>
+        </div>
+      </div>
+
+      <!-- 의결권 있는 주식 종류 선택 -->
+      <div class="dlg-ov hidden" id="kindDlg">
+        <div class="dlg">
+          <div class="dlg-head"><div class="dlg-title">의결권 있는 주식 종류 선택</div><div class="dlg-desc">선택한 주식 종류만 의결권 행사가 가능하며, 선택한 주식 종류를 기준으로 동일 주주의 계좌가 자동 통합됩니다.</div></div>
+          <div class="dlg-cbg" id="kindList"></div>
+          <div class="dlg-foot"><button class="btn" data-dlg-close>취소</button><button class="btn primary" id="kindGo">투표권자 통합</button></div>
+          <button class="dlg-x" data-dlg-close aria-label="닫기"><i class="ph ph-x"></i></button>
+        </div>
+      </div>
+
+      <!-- 자동 통합 중 -->
+      <div class="dlg-ov hidden" id="mergingDlg">
+        <div class="dlg sm"><div class="ad-body">
+          <div class="ad-media"><i class="ph ph-circle-notch spin"></i></div>
+          <div class="dlg-title">자동 통합 중</div>
+          <div class="dlg-desc">개인은 주민등록번호, 법인은 투표권자 사업자번호 기준으로 자동 통합됩니다.</div>
+        </div></div>
+      </div>
+
+      <!-- 통합주주 추가 -->
+      <div class="dlg-ov hidden" id="addDlg">
+        <div class="dlg">
+          <div class="dlg-head"><div class="dlg-title">통합주주 추가</div><div class="dlg-desc" id="adDesc">주주유형을 선택해 주세요.</div></div>
+          <div class="dlg-cbg" id="adType">
+            <div class="dlg-cbx on" data-t="indiv"><span class="cb rd"></span><span class="fc"><span class="l">개인</span><span class="d">동일인 주주 추가 후 통합</span></span></div>
+            <div class="dlg-cbx" data-t="inst"><span class="cb rd"></span><span class="fc"><span class="l">기관</span><span class="d">투표권자 지정 후 기관계좌 통합</span></span></div>
+          </div>
+          <div class="dlg-field hide" id="adInst"><label>대표 투표권자</label>
+            <div class="cmb" id="adCombo">
+              <button type="button" class="dlg-select cb-trig"><span>투표권자 선택</span><i class="ph ph-caret-down"></i></button>
+              <div class="cb-pnl hidden"><input placeholder="투표권자를 검색해 주세요"><div class="cb-list"></div></div>
+            </div>
+            <div class="dlg-help">의결권을 행사할 투표권자를 지정합니다.</div>
+          </div>
+          <div class="dlg-foot"><button class="btn" data-dlg-close>취소</button><button class="btn primary" id="adGo">개인으로 통합</button></div>
+          <button class="dlg-x" data-dlg-close aria-label="닫기"><i class="ph ph-x"></i></button>
+        </div>
+      </div>
+
+      <!-- 주주명부 다운로드 -->
+      <div class="dlg-ov hidden" id="dlDlg">
+        <div class="dlg">
+          <div class="dlg-head"><div class="dlg-title">주주명부 다운로드</div></div>
+          <div><textarea class="dl-ta" id="dlReason" placeholder="사유를 입력해 주세요"></textarea><div class="dlg-help" style="margin-top:4px">개인정보가 포함된 파일입니다. 다운로드 사유를 입력해 주세요</div></div>
+          <div class="dlg-foot"><button class="btn" data-dlg-close>취소</button><button class="btn primary" id="dlGo" disabled>주주명부 다운로드</button></div>
+        </div>
+      </div>
+
+      <!-- 공용 알림 다이얼로그 -->
+      <div class="dlg-ov hidden" id="alertDlg">
+        <div class="dlg sm">
+          <div class="ad-body"><div class="ad-media" id="adIcon"><i></i></div><div class="dlg-title" id="adTitle"></div><div class="dlg-desc" id="adText"></div></div>
+          <div class="dlg-foot full"><button class="btn" id="adCancel">취소</button><button class="btn primary" id="adOk">확인</button></div>
+        </div>
       </div>
 
       <!-- 투표권자 설정 sheet -->
       <div class="vsh-ov hidden" id="voterSheet">
         <div class="vsh">
-          <div class="vsh-head">
-            <div class="vsh-title">투표권자 설정</div>
-            <div class="vsh-desc" id="vsSub">미설정 주주의 투표권자를 지정합니다.</div>
-          </div>
+          <div class="vsh-head"><div class="vsh-title">투표권자 설정</div><div class="vsh-desc">투표권자를 선택해 주세요.</div></div>
           <div class="vsh-body">
-            <div class="vs-field">
-              <label>투표권자 선택방법</label>
+            <div class="vs-field"><label>설정방법</label>
               <div class="rad-row" id="vsMethod">
-                <span class="rad on" data-m="num"><span class="dotc"></span>주주번호로 설정</span>
+                <span class="rad on" data-m="pick"><span class="dotc"></span>투표권자 선택</span>
                 <span class="rad" data-m="name"><span class="dotc"></span>주주명으로 설정</span>
                 <span class="rad" data-m="new"><span class="dotc"></span>신규 투표권자 등록</span>
-                <span class="rad" data-m="none"><span class="dotc"></span>지정안함</span>
+                <span class="rad" data-m="none"><span class="dotc"></span>미설정</span>
               </div>
             </div>
-            <div class="vs-field" id="vsPickField">
-              <label>투표권자 선택 <span class="lbl-sub">주주명부에서 검색</span></label>
-              <div class="combo">
-                <div class="combo-input"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="vsSearch" placeholder="주주명 또는 주주번호로 검색"></div>
-                <div class="combo-list" id="vsList"></div>
+            <div class="vs-field" data-vm="pick"><label>투표권자</label>
+              <div class="cmb" id="vsCombo">
+                <button type="button" class="dlg-select cb-trig"><span>투표권자 선택</span><i class="ph ph-caret-down"></i></button>
+                <div class="cb-pnl hidden"><input placeholder="주주명 또는 주주번호 검색"><div class="cb-list"></div></div>
               </div>
             </div>
-            <div class="vs-field hide" id="vsNewField">
-              <label>신규 투표권자명</label>
-              <div class="inp-grp"><input id="vsNewName" placeholder="투표권자명을 입력하세요"></div>
-              <label style="margin-top:4px">식별정보 (선택)</label>
-              <div class="inp-grp"><input id="vsNewId" placeholder="생년월일 또는 사업자등록번호"></div>
-            </div>
-            <div class="vs-alert" id="vsAlert"><i class="ph ph-info" style="font-size:16px"></i><span id="vsAlertT">‘주주번호로 설정'은 명부상 계좌 기준으로 투표권을 연동·합산합니다.</span></div>
+            <div class="vs-field hide" data-vm="name"><label>투표권자</label><input class="inp" id="vsNameInp" readonly>
+              <div class="vs-alert"><i class="ph ph-info"></i><span>'주주명으로 설정'은 단순 이름 매칭 방식으로, 계좌 합산이 지원되지 않습니다.</span></div></div>
+            <div class="vs-field hide" data-vm="new"><label>투표권자 유형</label>
+              <div class="rad-row" id="vsType"><span class="rad on" data-t="dom"><span class="dotc"></span>국내</span><span class="rad" data-t="ovs"><span class="dotc"></span>해외</span></div></div>
+            <div class="vs-field hide" data-vm="new"><label>주주번호</label><input class="inp" id="vsNo" placeholder="'-' 없이 숫자 10-20자리 입력"><div class="err-t hide" id="vsNoErr">해당 주주번호를 사용중인 투표권자가 있습니다. 주주번호를 다시 확인하거나 '투표권자 선택'에서 설정해 주세요.</div></div>
+            <div class="vs-field hide" data-vm="new"><label>투표권자명</label><input class="inp" id="vsNm" placeholder="투표권자명 입력"></div>
+            <div class="vs-alert hide" data-vm="none"><i class="ph ph-info"></i><span>'미설정' 적용 시 해당 주주의 전자투표/위임장 서비스 이용이 제한될 수 있습니다.</span></div>
           </div>
           <div class="vsh-foot">
-            <button class="btn" data-vshclose>취소</button>
-            <button class="btn primary" id="vsSave">저장</button>
+            <div class="bt"><button class="btn" data-vshclose>취소</button><button class="btn primary" id="vsSave" disabled>저장</button></div>
+            <div class="vsh-meta">마지막 변경 2026-07-17 15:58 · 박지용</div>
           </div>
-          <button class="vsh-x" data-vshclose aria-label="닫기"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          <button class="vsh-x" data-vshclose aria-label="닫기"><i class="ph ph-x"></i></button>
         </div>
       </div>
 
-      <!-- 투표권자 통합 sheet -->
-      <!-- 투표권자 통합 (통합내역) sheet -->
+      <!-- 통합내역 상세 sheet -->
       <div class="vsh-ov hidden" id="mergeSheet">
         <div class="vsh">
-          <div class="vsh-head"><div class="vsh-title" id="mgSheetTitle">투표권자 통합</div><div class="vsh-desc">통합 계좌를 추가·삭제하고 대표 투표권자를 지정합니다.</div></div>
-          <div class="vsh-body">
-            <div class="vs-field"><label>대표 투표권자</label>
-              <div style="position:relative">
-                <button class="dlg-select" id="mgRepSel"><span>대표 투표권자를 선택하세요</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
-                <div class="dlg-menu hidden" id="mgRepMenu"></div>
+          <div class="vsh-head"><div class="vsh-title">통합내역 상세</div><div class="vsh-desc">동일 투표권자로 설정할 주주를 추가하거나 해제해 주세요.</div></div>
+          <div class="vsh-body" style="gap:16px">
+            <div class="vs-field" id="msRep"><label>대표 투표권자</label>
+              <div class="rep-card"><span class="n" id="msRepName"></span><span class="s" id="msRepNo"></span></div>
+              <div><button class="btn" id="msRepChange">투표권자 변경</button></div>
+            </div>
+            <div class="vs-field" style="gap:8px"><label id="msListLbl">통합주주 목록</label>
+              <div class="ms-tools">
+                <div class="msf cmb" id="msField"><button type="button" class="dlg-select"><span>주주명</span><i class="ph ph-caret-down"></i></button>
+                  <div class="cb-pnl hidden"><button class="cb-it" data-f="nm"><span class="l">주주명</span></button><button class="cb-it" data-f="id"><span class="l">주주번호</span></button><button class="cb-it" data-f="ac"><span class="l">실질계좌번호</span></button></div></div>
+                <div class="srch-in cmb"><i class="ph ph-magnifying-glass"></i><input class="inp" id="msSearch" placeholder="주주명을 검색해 주세요" autocomplete="off"><div class="cb-pnl hidden" id="msResults" style="top:36px"></div></div>
+                <span class="sp"></span>
+                <button class="btn soft-red" id="msUnlink" disabled>통합해제</button>
               </div>
             </div>
-            <div class="vs-field" id="mgSearchWrap"><label>통합 계좌 추가 <span class="lbl-sub">주주명부에서 검색</span></label>
-              <div class="combo">
-                <div class="combo-input"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="mgSearch" placeholder="주주명 또는 주주번호로 검색"></div>
-                <div class="combo-list" id="mgSearchList"></div>
-              </div>
-            </div>
-            <div class="vs-field"><label>통합 대상 (<span id="mgCount">0</span>건)</label><div id="mgList"></div></div>
-            <div class="vs-alert"><i class="ph ph-info" style="font-size:16px"></i><span>통합 시 선택한 계좌의 의결권이 대표 투표권자 명의로 합산되어 행사됩니다. 통합은 2건 이상일 때 가능합니다.</span></div>
-            <button class="btn danger hide" id="mgDelete"><svg class="ic" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>통합 해제</button>
+            <div class="ms-tbl-wrap"><table class="ms-tbl" data-nocx><thead id="msHead"></thead><tbody id="msBody"></tbody></table></div>
+            <div class="vs-alert b" id="msNeed2"><i class="ph ph-info"></i><span>통합하시려면 둘 이상 주주를 선택해 주세요.</span></div>
           </div>
-          <div class="vsh-foot"><button class="btn" data-vshclose>취소</button><button class="btn primary" id="mgConfirm">저장</button></div>
-          <button class="vsh-x" data-vshclose aria-label="닫기"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          <div class="vsh-foot">
+            <div class="bt"><button class="btn" data-vshclose>취소</button><button class="btn primary" id="msSave" disabled>통합주주 추가</button></div>
+            <div class="vsh-meta">마지막 변경 2026-07-17 15:58 · 박지용</div>
+          </div>
+          <button class="vsh-x" data-vshclose aria-label="닫기"><i class="ph ph-x"></i></button>
         </div>
       </div>
 
-      <div class="dlg-ov hidden" id="cfDlg">
-        <div class="dlg" style="width:320px">
-          <div class="ad-body">
-            <div class="ad-media"><svg viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><circle cx="10" cy="8" r="2"/><path d="M14 15a3 3 0 0 0-6 0"/></svg></div>
-            <div>
-              <div class="dlg-title">주주명부를 확정할까요?</div>
-              <div class="dlg-desc" style="margin-top:6px">전자투표·위임 전까지 변경할 수 있으며, 투표가 진행 중인 경우 투표를 완료한 주주의 정보는 변경할 수 없습니다.</div>
-            </div>
-          </div>
-          <div class="dlg-foot"><button class="btn" data-dlg-close>취소</button><button class="btn primary" id="cfConfirmYes">확정</button></div>
-        </div>
-      </div>
+      <div class="sonner" id="sonner"><div class="st"><div class="t" id="snT"></div><div class="d" id="snD"></div></div><button class="undo" id="snBtn">닫기</button></div>
       <div id="shTip"></div>
-
-
-      <!-- 통합·해제 설정 이동 dialog -->
-      <div class="dlg-ov hidden" id="mergeDlg">
-        <div class="dlg" style="max-width:480px">
-          <button class="dlg-x" data-dlg-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-          <div class="dlg-head"><div class="dlg-title">의결권 있는 주식 종류 선택</div><div class="dlg-desc">선택한 주식 종류만 의결권 행사가 가능하며, 선택한 주식 종류를 기준으로 동일 주주의 계좌가 자동 통합됩니다.</div></div>
-          <div class="dlg-content">
-            <div class="dlg-cbg">
-              <label class="dlg-cbx on"><span class="cb"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6 9 17l-5-5"/></svg></span><span class="fc"><span class="l">보통주</span><span class="d">476,211,964주</span></span></label>
-              <label class="dlg-cbx"><span class="cb"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6 9 17l-5-5"/></svg></span><span class="fc"><span class="l">우선주</span><span class="d">12,000,000주</span></span></label>
-            </div>
-          </div>
-          <div class="dlg-foot right"><button class="btn" data-dlg-close>취소</button><button class="btn primary" id="mgProceed">투표권자 통합</button></div>
-        </div>
-      </div>
+      <div id="cxTip"></div>
 
       <script>
-      /* 주주명부 표 — cx-roster.js(SSOT) 에서 렌더 */
       (function(){
-        var body=document.getElementById('shBody');
-        if(!body||!window.CX||!CX.roster) return;
-        function cm(n){return Math.round(n).toLocaleString('en-US');}
-        function gbLabel(g){return g==='법인'?'일반법인':g;}
+        var $=function(id){return document.getElementById(id);};
+        function fmt(n){return Math.round(n).toLocaleString('en-US');}
         function pct(rt){return (rt>=0.01?rt.toFixed(2):(rt>0?'0.01':'0.00'))+'%';}
-        var rows=CX.roster.slice().sort(function(a,b){return b.sh-a.sh;});
-        var addr=CX.rosterAddr||'-', unset=0, html='';
-        rows.forEach(function(r,k){
-          var isUnset=(k%150===75);            /* 데모: 일부만 미설정 */
-          if(isUnset) unset++;
-          var voter=isUnset?'<span class="set-none">미설정</span>':'<span class="voter-set">'+r.nm+'</span>';
-          var btn=isUnset?'설정':'수정';
-          html+='<tr'+(isUnset?' class="row-none"':'')+' data-idx="'+k+'" data-no="'+r.id+'" data-acct="'+r.ac+'" data-addr="'+addr+'">'
-            +'<td class="c">'+r.st+'</td>'
-            +'<td class="c">'+gbLabel(r.gb)+(r.fr==='외국인'?' · 외국인':'')+'</td>'
-            +'<td class="name"><span class="tt-name">'+r.nm+'<i class="ph ph-info" style="font-size:16px"></i></span></td>'
-            +'<td class="mut">'+r.id+'</td>'
-            +'<td class="r">'+cm(r.sh)+'</td>'
-            +'<td class="r sub">'+pct(r.rt)+'</td>'
-            +'<td class="mut">-</td><td class="mut">-</td>'
-            +'<td class="voter">'+voter+'</td>'
-            +'<td class="c"><button class="tbtn2">'+btn+'</button></td></tr>';
+        function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+        function mname(){var m=$('mcurrent');return m?m.textContent.trim():'제10기 정기주주총회';}
+        var M=(window.CX&&CX.meeting)||{sharesIssued:476211964,sharesVoting:471661174,holdersTotal:650000};
+        var LASTMOD='2026-07-17 15:58 · 박지용';
+
+        /* ---------- 데이터: cx-roster.js(SSOT) ---------- */
+        var KINDS=[{k:'보통주',sh:M.sharesVoting,hd:M.holdersTotal-880,on:true},{k:'우선주1',sh:M.sharesIssued-M.sharesVoting,hd:880,on:false}];
+        function gbLabel(r){
+          if(r.gb==='개인') return '개인';
+          if(r.gb==='법인') return '일반법인';
+          var n=r.nm;
+          if(/은행/.test(n)) return '은행';
+          if(/증권/.test(n)) return '국내증권회사';
+          if(/생명|화재/.test(n)) return '보험회사';
+          if(/공단|공사|본부|부\(|기금/.test(n)) return '정부관리기업체';
+          if(/자산운용|투자자문|투자/.test(n)) return '투자신탁';
+          return '기타법인';
+        }
+        function hash(s){var h=7;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))%1e9;return h;}
+        function bizNo(s){return String(1000000000+hash(s)%8999999999).slice(0,10);}
+        var rows=(window.CX&&CX.roster?CX.roster:[]).slice().sort(function(a,b){return b.sh-a.sh;}).map(function(r,k){
+          var mgr='',fund='',m=/^(.+?)\((.+)\)$/.exec(r.nm);
+          if(r.gb==='기관'&&m){
+            if(/자산운용|운용|투자자문/.test(m[2])){mgr=m[2];fund=(k%2)?m[1]:'';}
+            else if(gbLabel(r)!=='정부관리기업체') mgr=m[1];
+          }
+          var locked=(r.pre||[]).indexOf('전자투표(국내)')>=0;
+          return {k:k,r:r,gb:gbLabel(r),mgr:mgr,fund:fund,voter:r.voterSet===false?null:(mgr||r.nm),locked:locked};
         });
-        body.innerHTML=html;
-        var S=CX.rosterSummary;
-        var h=document.getElementById('shHolders'); if(h) h.textContent=cm(S.total);
-        var uc=document.getElementById('unsetCount'); if(uc) uc.textContent=unset;
+        var byI={}; rows.forEach(function(x){byI[x.r.i]=x;});
+        function voterNo(name){
+          var hit=rows.filter(function(x){return x.r.nm===name;})[0];
+          return hit?hit.r.id:bizNo(name);
+        }
+        function voterOptions(){
+          var seen={},out=[{label:'(주)이머니',sub:'1234567890'}];seen['(주)이머니']=1;
+          rows.forEach(function(x){var v=x.voter||x.mgr; if(v&&!seen[v]){seen[v]=1;out.push({label:v,sub:voterNo(v)});}});
+          return out;
+        }
+        function mgrCount(){var s={};rows.forEach(function(x){if(x.mgr)s[x.mgr]=1;});return Object.keys(s).length;}
+        function fundCount(){var s={};rows.forEach(function(x){if(x.fund)s[x.fund]=1;});return Object.keys(s).length;}
+
+        /* 통합 그룹 — 자동(기관 20그룹, cx-roster) + 수동 예시 */
+        var groups={}, gseq=1;
+        function seedGroups(){
+          groups={}; gseq=1;
+          (window.CX&&CX.rosterGroups||[]).forEach(function(g){
+            var ms=g.members.map(function(r){return byI[r.i];}).filter(Boolean);
+            if(ms.length>1) groups['g'+(gseq++)]={voter:g.voter,method:'auto',inst:true,members:ms};
+          });
+          var psy=rows.filter(function(x){return x.r.nm==='박성용';});
+          if(psy.length>1) groups['g'+(gseq++)]={voter:'박성용',method:'manual',inst:false,members:psy};
+        }
+        function memberSet(){var s={};Object.keys(groups).forEach(function(g){groups[g].members.forEach(function(m){s[m.k]=g;});});return s;}
+
+        /* ---------- 상태 ---------- */
+        var ST={loaded:false,date:'',step:0,confirmed:false,change:false,open:false,tab:'set'};
+
+        /* ---------- 공용 UI ---------- */
+        function show(id){$(id).classList.remove('hidden');}
+        function hide(id){$(id).classList.add('hidden');}
+        document.querySelectorAll('.dlg-ov').forEach(function(ov){
+          ov.querySelectorAll('[data-dlg-close]').forEach(function(b){b.addEventListener('click',function(){ov.classList.add('hidden');});});
+        });
+        var snTimer;
+        function toast(t,d,sticky){
+          $('snT').textContent=t;$('snD').textContent=d||'';$('snD').style.display=d?'':'none';
+          $('sonner').classList.add('show');clearTimeout(snTimer);
+          snTimer=setTimeout(function(){$('sonner').classList.remove('show');},sticky?8000:3800);
+        }
+        $('snBtn').addEventListener('click',function(){$('sonner').classList.remove('show');});
+
+        /* 공용 알림 다이얼로그 */
+        var adCb={};
+        function alertDlg(o){
+          var ic=$('adIcon');
+          ic.className='ad-media'+(o.red?' red':'');
+          ic.querySelector('i').className='ph '+(o.icon||'ph-address-book');
+          $('adTitle').textContent=o.title; $('adText').innerHTML=o.desc||'';
+          $('adCancel').textContent=o.cancel||'취소'; $('adCancel').classList.toggle('hide',o.cancel===false);
+          $('adOk').textContent=o.ok||'확인'; $('adOk').className='btn '+(o.red?'soft-red':'primary');
+          adCb=o; show('alertDlg');
+        }
+        $('adCancel').addEventListener('click',function(){hide('alertDlg');if(adCb.onCancel)adCb.onCancel();});
+        $('adOk').addEventListener('click',function(){hide('alertDlg');if(adCb.onOk)adCb.onOk();});
+
+        /* 툴팁: [data-tip] (dark) */
+        var cxTip=$('cxTip');
+        document.addEventListener('mouseover',function(e){
+          var t=e.target.closest&&e.target.closest('[data-tip]');
+          if(!t){cxTip.classList.remove('show');return;}
+          cxTip.textContent=t.getAttribute('data-tip');
+          var rc=t.getBoundingClientRect(); cxTip.classList.add('show');
+          var w=cxTip.offsetWidth;
+          if(t.hasAttribute('data-tip-r')){cxTip.style.left=Math.max(8,rc.left-w-8)+'px';cxTip.style.top=(rc.top+rc.height/2-cxTip.offsetHeight/2)+'px';}
+          else {cxTip.style.left=Math.max(8,Math.min(innerWidth-w-8,rc.left+rc.width/2-w/2))+'px';cxTip.style.top=(rc.top-cxTip.offsetHeight-6)+'px';}
+        });
+        /* 주주명 툴팁 (주주번호 · 실질 계좌번호 · 주소) */
+        var shTip=$('shTip');
+        document.addEventListener('mouseover',function(e){
+          var t=e.target.closest&&e.target.closest('.tt-name[data-k]');
+          if(!t){shTip.classList.remove('show');return;}
+          var x=rows[+t.getAttribute('data-k')];
+          shTip.innerHTML='<div class="h">'+esc(x.r.nm)+'</div><div class="r"><span class="k">주주번호</span><span>'+esc(x.r.id)+'</span></div>'
+            +'<div class="r"><span class="k">실질 계좌번호</span><span>'+esc(x.r.ac)+'</span></div>'
+            +'<div class="r"><span class="k">주소</span><span>'+esc((window.CX&&CX.rosterAddr)||'-')+'</span></div>';
+          var rc=t.getBoundingClientRect(); shTip.style.left=rc.left+'px'; shTip.style.top=(rc.bottom+6)+'px'; shTip.classList.add('show');
+        });
+
+        /* 검색 콤보박스 */
+        function combo(wrap,getItems,onPick,ph){
+          var trig=wrap.querySelector('.cb-trig'),pnl=wrap.querySelector('.cb-pnl'),inp=pnl.querySelector('input'),list=pnl.querySelector('.cb-list'),its=[];
+          function draw(){
+            var q=inp.value.trim();
+            its=getItems().filter(function(it){return !q||(it.label+' '+(it.sub||'')).indexOf(q)>=0;}).slice(0,100);
+            list.innerHTML=its.length?its.map(function(it,i){
+              return '<button type="button" class="cb-it'+(it.disabled?' dis':'')+'" data-i="'+i+'"><span class="l">'+esc(it.label)+'</span>'+(it.sub?'<span class="s'+(it.blue?' blue':'')+'">'+esc(it.sub)+'</span>':'')+'</button>';
+            }).join(''):'<div class="combo-empty">검색 결과가 없습니다</div>';
+          }
+          trig.addEventListener('click',function(e){e.stopPropagation();var was=pnl.classList.contains('hidden');closeAllPanels();if(was){pnl.classList.remove('hidden');inp.value='';draw();inp.focus();}});
+          pnl.addEventListener('click',function(e){
+            e.stopPropagation();
+            var b=e.target.closest('.cb-it'); if(!b||b.classList.contains('dis')) return;
+            var it=its[+b.dataset.i]; api.set(it.label); pnl.classList.add('hidden'); onPick(it);
+          });
+          inp.addEventListener('input',draw);
+          var api={reset:function(){trig.querySelector('span').textContent=ph;trig.classList.remove('val');pnl.classList.add('hidden');},
+                   set:function(l){trig.querySelector('span').textContent=l;trig.classList.add('val');}};
+          return api;
+        }
+        function closeAllPanels(){document.querySelectorAll('.cb-pnl').forEach(function(p){p.classList.add('hidden');});}
+        document.addEventListener('click',closeAllPanels);
+
+        /* ---------- 헤더 ---------- */
+        function renderHeader(){
+          var L=ST.loaded;
+          $('msTitle').textContent='주주명부 설정'+(L?' ('+ST.date+')':'');
+          var b=$('msBadge'); b.classList.toggle('hide',!L);
+          b.className='ubadge '+(ST.confirmed?'success':'secondary')+(L?'':' hide'); b.textContent=ST.confirmed?'확정완료':'확정필요';
+          var d=$('msDesc'); d.classList.toggle('hide',!L);
+          d.textContent=mname()+' · 투표권자 설정, 투표권자 통합·해제 설정 후 주주명부 확정을 진행해 주세요.';
+          $('msRegister').classList.toggle('hidden',L); $('msLoad').classList.toggle('hidden',L);
+          var gated=(ST.tab==='merge'&&ST.step<1)||(ST.tab==='confirm'&&ST.step<2);
+          var normal=L&&!ST.confirmed&&!ST.change;
+          $('msNext').classList.toggle('hidden',!(normal&&ST.tab!=='confirm'&&!gated) && !(normal&&gated));
+          $('msNext').disabled=gated;
+          $('msConfirm').classList.toggle('hidden',!((normal&&ST.tab==='confirm'&&!gated)||(L&&ST.change)));
+          $('msChange').classList.toggle('hidden',!(L&&ST.confirmed));
+          var lm=$('msLastMod'); lm.classList.toggle('hidden',!(L&&(ST.confirmed||ST.change)));
+          lm.textContent=(ST.confirmed?'마지막 수정 ':'마지막 변경 ')+LASTMOD;
+          $('msBanner').classList.toggle('hide',!ST.change);
+        }
+
+        /* ---------- 요약 카드 ---------- */
+        function unsetCount(){var ms=memberSet();return rows.filter(function(x){return !x.voter&&!(ST.step>=1&&ms[x.k]);}).length;}
+        function confirmedHolders(){var red=0;Object.keys(groups).forEach(function(g){red+=groups[g].members.length-1;});return M.holdersTotal-red;}
+        function renderCards(){
+          var open=ST.open, chip='<button class="kchip" data-kchip>보통/우선주 '+(open?'접기':'보기')+'</button>';
+          var info=function(t){return '<i class="ph ph-info" data-tip="'+t+'"></i>';};
+          var uc=unsetCount();
+          var right='<div class="ic-col"><div class="icard unset"><div class="k">미설정 투표권자</div><div class="v red">'+fmt(uc)+'</div></div>'
+            +'<div class="icard org"><span class="k2"><span class="kl">운용기관 수 '+info('자금을 운용하며 실제로 주식을 매매하는 기관')+'</span><b>'+mgrCount()+'</b></span>'
+            +'<span class="k2"><span class="kl">자금제공기관 수 '+info('운용기관에 자금을 제공하는 기관')+'</span><b>'+fundCount()+'</b></span></div></div>';
+          /* 설정 탭 */
+          function box(key){return !open?'':'<div class="kbox">'+KINDS.map(function(k){return '<div class="kr"><span>'+k.k+'</span><b>'+fmt(k[key])+'</b></div>';}).join('')+'</div>';}
+          var set='<div class="icard big"><div class="hd"><span class="k">총 주식수 '+chip+'</span></div><div class="v">'+fmt(M.sharesIssued)+'</div>'+box('sh')+'</div>'
+            +'<div class="icard big"><div class="hd"><span class="k">총 주주수 '+chip+'</span></div><div class="v">'+fmt(M.holdersTotal)+'</div>'+box('hd')+'</div>'+right;
+          /* 확인 탭 — 원본/확정 */
+          var cSh=KINDS.reduce(function(a,k){return a+(k.on?k.sh:0);},0), cHd=confirmedHolders();
+          function cbox(key,cfn){return !open?'':'<div class="kbox cmp">'+KINDS.map(function(k){return '<div class="kr"><span>'+k.k+'</span><span>'+fmt(k[key])+'</span><b>'+(k.on?fmt(cfn(k)):'-')+'</b></div>';}).join('')+'</div>';}
+          function cmp(o,c){return '<div class="cmpv"><div class="cc"><span class="lb">원본</span><span class="n">'+fmt(o)+'</span></div><div class="cc c"><span class="lb">확정</span><span class="n">'+fmt(c)+'</span></div></div>';}
+          var cf='<div class="icard big"><div class="hd"><span class="k">총 주식수 '+chip+'</span></div>'+cmp(M.sharesIssued,cSh)+cbox('sh',function(k){return k.sh;})+'</div>'
+            +'<div class="icard big"><div class="hd"><span class="k">총 주주수 '+chip+'</span></div>'+cmp(M.holdersTotal,cHd)+cbox('hd',function(k){return k.hd-(M.holdersTotal-cHd);})+'</div>'+right;
+          document.querySelectorAll('[data-cards]').forEach(function(el){
+            el.innerHTML=el.getAttribute('data-cards')==='set'?set:cf; el.classList.toggle('open',open);
+          });
+        }
+        document.addEventListener('click',function(e){if(e.target.closest('[data-kchip]')){ST.open=!ST.open;renderCards();}});
+
+        function pagHTML(n,sh){
+          return '<div class="cnt">총 '+fmt(n)+'명 · '+fmt(sh)+'주</div><div class="mpag-r"><div class="psize">페이지당 <span class="psel">20 <i class="ph ph-caret-down"></i></span></div>'
+            +'<div class="pctrl"><i class="ph ph-caret-double-left"></i><i class="ph ph-caret-left"></i><span class="pnum"><b>1</b>/ '+Math.max(1,Math.ceil(n/20))+'</span><i class="ph ph-caret-right"></i><i class="ph ph-caret-double-right"></i></div></div>';
+        }
+        var totalSh=rows.reduce(function(a,x){return a+x.r.sh;},0);
+        function cx(id){if(window.cxTable)window.cxTable.apply($(id));}
+
+        /* ---------- 1. 투표권자 설정 ---------- */
+        function setRowHTML(x){
+          var lockBtn=ST.change&&x.locked;
+          return '<tr data-k="'+x.k+'"'+(x.voter?'':' class="row-none"')+'>'
+            +'<td class="c"><span class="cbadge">'+esc(x.r.st)+'</span></td>'
+            +'<td class="c"><span class="cbadge">'+esc(x.gb)+'</span></td>'
+            +'<td class="name"><span class="tt-name" data-k="'+x.k+'">'+esc(x.r.nm)+'</span></td>'
+            +'<td class="mut">'+esc(x.r.id)+'</td>'
+            +'<td class="r dk">'+fmt(x.r.sh)+'</td><td class="r sub">'+pct(x.r.rt)+'</td>'
+            +'<td class="mut">'+esc(x.mgr||'-')+'</td><td class="mut">'+esc(x.fund||'-')+'</td>'
+            +'<td class="voter">'+(x.voter?'<span class="voter-set">'+esc(x.voter)+'</span>':'<span class="cbadge">미설정</span>')+'</td>'
+            +'<td class="c"><button class="tbtn2 set-btn'+(lockBtn?' dis':'')+'">설정</button></td></tr>';
+        }
+        function renderSet(){
+          $('shBody').innerHTML=rows.map(setRowHTML).join('');
+          document.querySelector('[data-pag="set"]').innerHTML=pagHTML(rows.length,totalSh);
+          cx('setTbl');
+        }
+        function updateSetRow(x){
+          var tr=$('shBody').querySelector('tr[data-k="'+x.k+'"]'); if(!tr) return;
+          var tmp=document.createElement('tbody'); tmp.innerHTML=setRowHTML(x);
+          var n=tmp.firstChild; Array.prototype.forEach.call(tr.cells,function(c,i){n.cells[i].style.cssText=c.style.cssText;});
+          n.className=tr.className.replace('row-none','').trim(); if(!x.voter) n.classList.add('row-none');
+          tr.parentNode.replaceChild(n,tr);
+        }
+        $('swUnset').addEventListener('click',function(){$('swUnset').classList.toggle('on');$('shBody').classList.toggle('only-unset',$('swUnset').classList.contains('on'));});
+        $('swCfUnset').addEventListener('click',function(){$('swCfUnset').classList.toggle('on');$('cfBody').classList.toggle('only-unset',$('swCfUnset').classList.contains('on'));});
+
+        /* 투표권자 설정 sheet */
+        var vs={x:null,m:'pick',pick:null,dirty:false};
+        var vsCombo=combo($('vsCombo'),voterOptions,function(it){vs.pick=it;vs.dirty=true;vsValidate();},'투표권자 선택');
+        function vsMethod(m){
+          vs.m=m;
+          document.querySelectorAll('#vsMethod .rad').forEach(function(r){r.classList.toggle('on',r.dataset.m===m);});
+          document.querySelectorAll('#voterSheet [data-vm]').forEach(function(el){el.classList.toggle('hide',el.getAttribute('data-vm')!==m);});
+          vsValidate();
+        }
+        function vsValidate(){
+          var ok=vs.m==='pick'?!!vs.pick:vs.m==='new'?(/^\d{10,20}$/.test($('vsNo').value.trim())&&!!$('vsNm').value.trim()):true;
+          $('vsSave').disabled=!ok;
+        }
+        document.querySelectorAll('#vsMethod .rad').forEach(function(r){r.addEventListener('click',function(){if(vs.m!==r.dataset.m){vs.dirty=true;vsMethod(r.dataset.m);}});});
+        document.querySelectorAll('#vsType .rad').forEach(function(r){r.addEventListener('click',function(){vs.dirty=true;document.querySelectorAll('#vsType .rad').forEach(function(x){x.classList.toggle('on',x===r);});});});
+        ['vsNo','vsNm'].forEach(function(id){$(id).addEventListener('input',function(){vs.dirty=true;$('vsNo').classList.remove('err');$('vsNoErr').classList.add('hide');vsValidate();});});
+        function openVoterSheet(x){
+          vs={x:x,m:'pick',pick:null,dirty:false};
+          vsCombo.reset(); $('vsNameInp').value=x.r.nm; $('vsNo').value=''; $('vsNm').value='';
+          $('vsNo').classList.remove('err'); $('vsNoErr').classList.add('hide');
+          if(x.voter){vs.pick={label:x.voter};vsCombo.set(x.voter);}
+          vsMethod('pick'); show('voterSheet');
+        }
+        function guardClose(dirty,close){
+          if(!dirty){close();return;}
+          alertDlg({icon:'ph-warning-circle',title:'변경사항이 있습니다',desc:'저장하지 않으면 변경 내용이 사라집니다.',cancel:'저장 안 함',ok:'계속 편집',onCancel:close});
+        }
+        document.querySelectorAll('#voterSheet [data-vshclose]').forEach(function(b){b.addEventListener('click',function(){guardClose(vs.dirty,function(){hide('voterSheet');});});});
+        $('vsSave').addEventListener('click',function(){
+          var x=vs.x, v=null;
+          if(vs.m==='pick') v=vs.pick.label;
+          else if(vs.m==='name') v=x.r.nm;
+          else if(vs.m==='new'){
+            var no=$('vsNo').value.trim();
+            if(voterOptions().some(function(o){return String(o.sub).replace(/\D/g,'')===no;})){$('vsNo').classList.add('err');$('vsNoErr').classList.remove('hide');return;}
+            v=$('vsNm').value.trim();
+          }
+          x.voter=v; updateSetRow(x); renderCards(); hide('voterSheet');
+          toast('투표권자 설정 완료',"'"+x.r.nm+"' 주주의 투표권자가 "+(v?"'"+v+"'(으)로":'미설정으로')+' 설정되었습니다.');
+        });
+        $('shBody').addEventListener('click',function(e){
+          var b=e.target.closest('.set-btn'); if(!b) return;
+          var x=rows[+b.closest('tr').dataset.k];
+          if(ST.confirmed){toast('확정된 주주명부','주주명부 변경 후 수정할 수 있습니다.');return;}
+          if(b.classList.contains('dis')){alertDlg({icon:'ph-warning-circle',red:true,title:'이미 투표를 완료한 주주입니다.',desc:'해당 주주는 이미 투표를 행사하여 투표권자를 설정 및 변경할 수 없습니다.',cancel:false,ok:'확인'});return;}
+          openVoterSheet(x);
+        });
+
+        /* ---------- 2. 통합·해제 설정 ---------- */
+        function grpLocked(g){return ST.change&&g.members[0].locked;}
+        function renderMerge(){
+          var html='';
+          Object.keys(groups).sort(function(a,b){return sum(groups[b])-sum(groups[a]);}).forEach(function(gid){
+            var g=groups[gid], lead=g.members[0], n=g.members.length, lk=grpLocked(g);
+            html+='<tr class="mg-grp" data-g="'+gid+'"><td class="c"><button type="button" class="xp" aria-label="펼치기"><i class="ph ph-caret-down"></i></button></td>'
+              +'<td><span class="mbadge '+g.method+'" data-tip="'+(g.method==='auto'?'시스템에 의해 자동으로 통합된 주주입니다.':'담당자가 직접 선택하여 통합한 주주입니다.')+'">'+(g.method==='auto'?'자동':'수동')+' '+n+'건</span></td>'
+              +'<td class="voter"><span class="mg-tv">'+esc(g.voter)+'</span></td>'
+              +'<td class="name"><span class="tt-name" data-k="'+lead.k+'">'+esc(lead.r.nm)+'</span></td><td class="mut">'+esc(lead.r.id)+'</td>'
+              +'<td class="r dk">'+fmt(sum(g))+'</td><td class="r sub">'+pct(g.members.reduce(function(a,m){return a+m.r.rt;},0))+'</td>'
+              +'<td class="c"><button class="tbtn2 mg-edit'+(lk?' dis':'')+'"'+(lk?' data-tip-r data-tip="해당 주주가 투표를 완료하여 정보 변경 및 통합해제가 불가합니다."':'')+'>변경</button></td></tr>';
+            g.members.forEach(function(m){
+              html+='<tr class="mg-child" data-g="'+gid+'" hidden><td class="xline"></td><td></td><td>'+esc(g.voter)+'</td>'
+                +'<td class="name"><span class="tt-name" data-k="'+m.k+'">'+esc(m.r.nm)+'</span></td><td class="mut">'+esc(m.r.id)+'</td>'
+                +'<td class="r dk">'+fmt(m.r.sh)+'</td><td class="r sub">'+pct(m.r.rt)+'</td><td></td></tr>';
+            });
+          });
+          if(!html) html='<tr><td colspan="8" style="text-align:center;height:80px">통합된 주주가 없습니다.</td></tr>';
+          $('mgBody').innerHTML=html;
+          var n=Object.keys(groups).length,sh=Object.keys(groups).reduce(function(a,g){return a+sum(groups[g]);},0);
+          document.querySelector('[data-pag="merge"]').innerHTML=pagHTML(n,sh);
+          cx('mgTbl');
+        }
+        function sum(g){return g.members.reduce(function(a,m){return a+m.r.sh;},0);}
+        function toggleGroup(tb,tr,cls){
+          var open=tr.classList.toggle('open');
+          tb.querySelectorAll('tr.'+cls+'[data-g="'+tr.dataset.g+'"]').forEach(function(c){c.hidden=!open;});
+        }
+        $('mgBody').addEventListener('click',function(e){
+          var ed=e.target.closest('.mg-edit');
+          if(ed){ if(ed.classList.contains('dis')) return;
+            if(ST.confirmed){toast('확정된 주주명부','주주명부 변경 후 수정할 수 있습니다.');return;}
+            openMergeSheet('edit',ed.closest('tr').dataset.g); return; }
+          var tr=e.target.closest('tr.mg-grp'); if(tr) toggleGroup($('mgBody'),tr,'mg-child');
+        });
+
+        /* 의결권 있는 주식 종류 선택 → 자동 통합 */
+        function openKind(){
+          $('kindList').innerHTML=KINDS.map(function(k,i){return '<div class="dlg-cbx'+(k.on?' on':'')+'" data-i="'+i+'"><span class="cb"><i class="ph ph-check"></i></span><span class="fc"><span class="l">'+k.k+'</span><span class="d">'+fmt(k.sh)+'주</span></span></div>';}).join('');
+          show('kindDlg');
+        }
+        $('kindList').addEventListener('click',function(e){var c=e.target.closest('.dlg-cbx');if(c)c.classList.toggle('on');});
+        $('kindGo').addEventListener('click',function(){
+          var sel=$('kindList').querySelectorAll('.dlg-cbx.on'); if(!sel.length){toast('주식 종류 선택','의결권 있는 주식 종류를 하나 이상 선택해 주세요.');return;}
+          $('kindList').querySelectorAll('.dlg-cbx').forEach(function(c){KINDS[+c.dataset.i].on=c.classList.contains('on');});
+          hide('kindDlg'); show('mergingDlg');
+          setTimeout(function(){
+            hide('mergingDlg');
+            if(ST.step<1){seedGroups();ST.step=1;}
+            renderMerge(); renderCards(); activateTab('merge');
+            toast('시스템 자동 통합 완료','동일 주주 계좌 '+Object.keys(groups).filter(function(g){return groups[g].method==='auto';}).length+'건이 자동 통합되었습니다.');
+          },1400);
+        });
+        $('mgKind').addEventListener('click',openKind);
+
+        /* 통합주주 추가 */
+        var ad={t:'indiv',voter:null};
+        var adCombo=combo($('adCombo'),voterOptions,function(it){ad.voter=it;adSync();},'투표권자 선택');
+        function adSync(){
+          document.querySelectorAll('#adType .dlg-cbx').forEach(function(c){c.classList.toggle('on',c.dataset.t===ad.t);});
+          var inst=ad.t==='inst';
+          $('adInst').classList.toggle('hide',!inst);
+          $('adDesc').textContent=inst?'주주유형 선택 후 투표권자를 선택해 주세요.':'주주유형을 선택해 주세요.';
+          $('adGo').textContent=inst?'기관으로 통합':'개인으로 통합';
+          $('adGo').disabled=inst&&!ad.voter;
+        }
+        function openAdd(t,voter){ad={t:t||'indiv',voter:voter||null}; if(voter)adCombo.set(voter.label); else adCombo.reset(); adSync(); show('addDlg');}
+        document.querySelectorAll('#adType .dlg-cbx').forEach(function(c){c.addEventListener('click',function(){ad.t=c.dataset.t;adSync();});});
+        $('mgNew').addEventListener('click',function(){ if(ST.confirmed){toast('확정된 주주명부','주주명부 변경 후 수정할 수 있습니다.');return;} openAdd('indiv'); });
+        $('adGo').addEventListener('click',function(){hide('addDlg');openMergeSheet(ad.t,null,ad.voter);});
+
+        /* 통합내역 상세 sheet */
+        var ms={mode:'indiv',gid:null,voter:null,list:[],chk:{},field:'nm',orig:''};
+        var FIELD={nm:['주주명','주주명을 검색해 주세요'],id:['주주번호','주주번호를 검색해 주세요'],ac:['실질계좌번호','실질계좌번호를 검색해 주세요']};
+        function openMergeSheet(mode,gid,voter){
+          ms={mode:mode,gid:gid,voter:voter,list:gid?groups[gid].members.slice():[],chk:{},field:'nm'};
+          ms.orig=ms.list.map(function(m){return m.k;}).join();
+          var sh=document.querySelector('#mergeSheet .vsh'); sh.style.width=(mode==='inst'?700:580)+'px';
+          $('msRep').classList.toggle('hide',mode!=='inst');
+          if(mode==='inst'){$('msRepName').textContent=voter.label;$('msRepNo').textContent=voter.sub||'';}
+          $('msListLbl').textContent=mode==='edit'?'통합내역':mode==='inst'?voter.label+' 통합주주 목록':'통합주주 목록';
+          $('msSave').textContent=mode==='edit'?'저장':'통합주주 추가';
+          $('msSearch').value=''; setField('nm'); renderMs(); show('mergeSheet');
+        }
+        function setField(f){ms.field=f;$('msField').querySelector('.dlg-select span').textContent=FIELD[f][0];$('msSearch').placeholder=FIELD[f][1];}
+        function renderMs(){
+          var inst=ms.mode==='inst', all=ms.list.length&&ms.list.every(function(m){return ms.chk[m.k];});
+          $('msHead').innerHTML='<tr><th style="width:40px"><span class="mchk'+(all?' on':'')+'" data-all></span></th><th>주주명</th><th style="width:'+(inst?120:110)+'px">주주번호</th>'
+            +(inst?'<th style="width:120px">실질계좌번호</th>':'')+'<th class="r" style="width:120px">보유주식</th><th class="r" style="width:80px">지분율</th></tr>';
+          $('msBody').innerHTML=ms.list.length?ms.list.map(function(m){
+            return '<tr><td><span class="mchk'+(ms.chk[m.k]?' on':'')+'" data-k="'+m.k+'"></span></td><td class="name"><span class="tt-name" data-k="'+m.k+'">'+esc(m.r.nm)+'</span></td><td>'+esc(m.r.id)+'</td>'
+              +(inst?'<td>'+esc(m.r.ac)+'</td>':'')+'<td class="r dk">'+fmt(m.r.sh)+'</td><td class="r">'+pct(m.r.rt)+'</td></tr>';
+          }).join(''):'<tr><td class="empty" colspan="'+(inst?6:5)+'">검색 후 통합할 주주를 선택하세요.</td></tr>';
+          $('msUnlink').disabled=!Object.keys(ms.chk).some(function(k){return ms.chk[k];});
+          $('msNeed2').classList.toggle('hide',ms.list.length>=2);
+          $('msSave').disabled=ms.mode==='edit'?false:ms.list.length<2;
+        }
+        $('msField').querySelector('.dlg-select').addEventListener('click',function(e){e.stopPropagation();var p=$('msField').querySelector('.cb-pnl'),was=p.classList.contains('hidden');closeAllPanels();if(was)p.classList.remove('hidden');});
+        $('msField').querySelector('.cb-pnl').addEventListener('click',function(e){e.stopPropagation();var b=e.target.closest('[data-f]');if(!b)return;setField(b.dataset.f);this.classList.add('hidden');msSearch();});
+        function msSearch(){
+          var q=$('msSearch').value.trim(), p=$('msResults');
+          if(!q){p.classList.add('hidden');return;}
+          var inList={};ms.list.forEach(function(m){inList[m.k]=1;});
+          var hits=rows.filter(function(x){return !inList[x.k]&&String(x.r[ms.field]).indexOf(q)>=0;}).slice(0,8);
+          p.innerHTML=hits.length?hits.map(function(x){return '<button type="button" class="cb-it" data-k="'+x.k+'"><span class="l">'+esc(x.r.nm)+'</span><span class="s">'+esc(x.r.id)+'</span></button>';}).join(''):'<div class="combo-empty">검색 결과가 없습니다</div>';
+          p.classList.remove('hidden');
+        }
+        $('msSearch').addEventListener('input',msSearch);
+        $('msSearch').addEventListener('click',function(e){e.stopPropagation();msSearch();});
+        $('msResults').addEventListener('click',function(e){
+          e.stopPropagation(); var b=e.target.closest('[data-k]'); if(!b) return;
+          ms.list.push(rows[+b.dataset.k]); $('msSearch').value=''; this.classList.add('hidden'); renderMs();
+        });
+        $('mergeSheet').addEventListener('click',function(e){
+          var c=e.target.closest('.mchk'); if(!c) return;
+          if(c.hasAttribute('data-all')){var on=!c.classList.contains('on');ms.list.forEach(function(m){ms.chk[m.k]=on;});}
+          else ms.chk[c.dataset.k]=!ms.chk[c.dataset.k];
+          renderMs();
+        });
+        function removeChecked(){ms.list=ms.list.filter(function(m){return !ms.chk[m.k];});ms.chk={};}
+        $('msUnlink').addEventListener('click',function(){
+          var sel=ms.list.filter(function(m){return ms.chk[m.k];}); if(!sel.length) return;
+          if(ms.mode!=='edit'){removeChecked();renderMs();return;}
+          var g=groups[ms.gid], all=sel.length===ms.list.length, tot=fmt(sel.reduce(function(a,m){return a+m.r.sh;},0));
+          var o=all&&g.inst
+            ?{title:'기관 통합 해제하시겠습니까?',desc:esc(g.voter)+' 외 <b>'+(sel.length-1)+'</b>개<br>(총 '+tot+'주)',ok:'기관 통합 해제'}
+            :{title:'선택한 주주를 통합 해제하시겠습니까?',desc:esc(sel[0].r.nm)+' 외 <b>'+(sel.length-1)+'</b>개'+(all?' 그룹':'')+'을 개별 주주로 분리합니다. (총 '+tot+'주)',ok:all?'그룹 전체 해제':'통합 해제'};
+          o.icon='ph-link-break'; o.red=true;
+          o.onOk=function(){
+            removeChecked();
+            if(ms.list.length<2){delete groups[ms.gid];hide('mergeSheet');}
+            else {groups[ms.gid].members=ms.list.slice();ms.orig=ms.list.map(function(m){return m.k;}).join();renderMs();}
+            renderMerge(); renderCards(); toast('통합 해제','선택한 주주가 개별 주주로 분리되었습니다.');
+          };
+          alertDlg(o);
+        });
+        $('msRepChange').addEventListener('click',function(){
+          alertDlg({icon:'ph-warning-circle',red:true,title:'투표권자를 변경하시겠습니까?',desc:'설정 내역이 초기화됩니다.',ok:'투표권자 변경',onOk:function(){hide('mergeSheet');openAdd('inst',ms.voter);}});
+        });
+        $('msSave').addEventListener('click',function(){
+          if(ms.mode==='edit'){
+            if(ms.list.length<2) delete groups[ms.gid]; else groups[ms.gid].members=ms.list.slice();
+            hide('mergeSheet'); renderMerge(); renderCards(); toast('통합내역 변경','통합내역이 저장되었습니다.'); return;
+          }
+          var voter=ms.mode==='inst'?ms.voter.label:ms.list[0].r.nm, ms2=memberSet();
+          ms.list.forEach(function(m){var og=ms2[m.k];if(og){groups[og].members=groups[og].members.filter(function(x){return x!==m;});if(groups[og].members.length<2)delete groups[og];}});
+          groups['g'+(gseq++)]={voter:voter,method:'manual',inst:ms.mode==='inst',members:ms.list.slice()};
+          hide('mergeSheet'); renderMerge(); renderCards();
+          toast('통합 완료',voter+' 외 '+(ms.list.length-1)+'건이 통합되었습니다. (합산 '+fmt(sum({members:ms.list}))+'주)');
+        });
+        document.querySelectorAll('#mergeSheet [data-vshclose]').forEach(function(b){b.addEventListener('click',function(){
+          var dirty=ms.list.map(function(m){return m.k;}).join()!==(ms.orig||'');
+          guardClose(dirty,function(){hide('mergeSheet');});
+        });});
+
+        /* ---------- 3. 설정내역 확인 ---------- */
+        function renderConfirm(){
+          var mset=memberSet(), blocks=[];
+          Object.keys(groups).forEach(function(gid){blocks.push({g:gid,sh:sum(groups[gid])});});
+          rows.forEach(function(x){if(!mset[x.k])blocks.push({x:x,sh:x.r.sh});});
+          blocks.sort(function(a,b){return b.sh-a.sh;});
+          var html='';
+          blocks.forEach(function(b){
+            if(b.g){
+              var g=groups[b.g];
+              html+='<tr class="cf-grp" data-g="'+b.g+'"><td class="c"><button type="button" class="xp" aria-label="펼치기"><i class="ph ph-caret-down"></i></button></td>'
+                +'<td><span class="mbadge merged">통합 '+g.members.length+'건</span></td><td><span class="voter-set">'+esc(g.voter)+'</span></td>'
+                +'<td class="name">'+esc(g.members[0].r.nm)+'</td><td class="r dk">'+fmt(b.sh)+'</td><td class="r sub">'+pct(g.members.reduce(function(a,m){return a+m.r.rt;},0))+'</td></tr>';
+              g.members.forEach(function(m){
+                html+='<tr class="cf-child" data-g="'+b.g+'" hidden><td class="xline"></td><td></td><td>'+esc(g.voter)+'</td><td class="name">'+esc(m.r.nm)+'</td><td class="r dk">'+fmt(m.r.sh)+'</td><td class="r sub">'+pct(m.r.rt)+'</td></tr>';
+              });
+            } else {
+              var x=b.x;
+              html+='<tr'+(x.voter?'':' class="row-none"')+'><td></td><td></td><td>'+(x.voter?'<span class="voter-set">'+esc(x.voter)+'</span>':'<span class="cbadge">미설정</span>')+'</td>'
+                +'<td class="name">'+esc(x.r.nm)+'</td><td class="r dk">'+fmt(x.r.sh)+'</td><td class="r sub">'+pct(x.r.rt)+'</td></tr>';
+            }
+          });
+          $('cfBody').innerHTML=html;
+          document.querySelector('[data-pag="confirm"]').innerHTML=pagHTML(blocks.length,totalSh);
+          cx('cfTbl');
+        }
+        $('cfBody').addEventListener('click',function(e){var tr=e.target.closest('tr.cf-grp');if(tr)toggleGroup($('cfBody'),tr,'cf-child');});
+
+        /* ---------- 탭 · 단계 이동 ---------- */
+        function activateTab(key){
+          ST.tab=key;
+          document.querySelectorAll('#loadedState .utab').forEach(function(t){t.classList.toggle('active',t.dataset.utab===key);});
+          document.querySelectorAll('#loadedState [data-upanel]').forEach(function(p){p.classList.toggle('hide',p.dataset.upanel!==key);});
+          var gm=ST.step<1, gc=ST.step<2;
+          document.querySelector('[data-gate="merge"]').classList.toggle('hide',!gm);
+          document.querySelector('[data-body="merge"]').classList.toggle('hide',gm);
+          document.querySelector('[data-gate="confirm"]').classList.toggle('hide',!gc);
+          document.querySelector('[data-body="confirm"]').classList.toggle('hide',gc);
+          if(key==='merge'&&!gm) renderMerge();
+          if(key==='confirm'&&!gc) renderConfirm();
+          renderCards(); renderHeader();
+        }
+        document.querySelectorAll('#loadedState .utab').forEach(function(t){t.addEventListener('click',function(){activateTab(t.dataset.utab);});});
+        $('msNext').addEventListener('click',function(){
+          if(ST.tab==='set'){ if(ST.step<1) openKind(); else {toast('저장 완료','투표권자 설정이 저장되었습니다.');activateTab('merge');} return; }
+          if(ST.tab==='merge'){
+            alertDlg({title:'통합·해제 내역을 저장하시겠습니까?',desc:'저장 후 설정내역을 확인할 수 있습니다.<br>저장 후 다시 수정할 수 있습니다.',ok:'설정내역 확인',onOk:function(){ST.step=2;activateTab('confirm');}});
+          }
+        });
+        $('msConfirm').addEventListener('click',function(){
+          var n=unsetCount();
+          alertDlg(n?{title:'미설정 투표권자가 있어도 확정하시겠습니까?',desc:'<b>미설정 투표권자가 '+fmt(n)+'명</b> 있으며,<br>해당 주주는 투표에 참여할 수 없습니다.<br>확정 후 투표가 진행중인 경우 투표를 완료한 주주의 정보는 변경할 수 없습니다.',ok:'주주명부 확정',onOk:doConfirm}
+            :{title:'주주명부를 확정하시겠습니까?',desc:'확정 후 투표가 진행중인 경우 투표를 완료한 주주의 정보는 변경할 수 없습니다.',ok:'주주명부 확정',onOk:doConfirm});
+        });
+        function doConfirm(){
+          ST.confirmed=true; ST.change=false; ST.step=2; renderSet(); activateTab('confirm');
+          toast('주주명부 확정','주주명부가 확정되었습니다. 이후 전자투표·현장 집계의 기준 명부로 사용됩니다.');
+        }
+        $('msChange').addEventListener('click',function(){
+          alertDlg({icon:'ph-warning-circle',red:true,title:'주주명부를 변경하시겠습니까?',desc:'투표를 완료한 주주의 정보는 변경되지 않습니다.<br><b>변경 후 반드시 주주명부 재확정이 필요합니다.</b>',ok:'주주명부 변경',
+            onOk:function(){ST.confirmed=false;ST.change=true;renderSet();activateTab('set');}});
+        });
+
+        /* ---------- 불러오기 ---------- */
+        var ROSTERS=[{label:'2025-12-31(3)',d:'2025-12-31'},{label:'2025-12-31(2)',d:'2025-12-31'},{label:'2025-12-31(1)',d:'2025-12-31'},
+          {label:'2024-06-03',sub:'제 9기 정기주주총회',blue:1,disabled:1},{label:'2024-05-03',sub:'제 8기 정기주주총회',blue:1,disabled:1}];
+        var ldPick=null;
+        var ldCombo=combo($('ldCombo'),function(){return ROSTERS;},function(it){ldPick=it;$('ldConfirm').disabled=false;},'주주명부 기준일 선택');
+        $('msLoad').addEventListener('click',function(){
+          ldPick=null; ldCombo.reset(); $('ldConfirm').disabled=true;
+          document.querySelectorAll('[data-mname]').forEach(function(s){s.textContent=mname();});
+          show('loadDlg');
+        });
+        $('ldConfirm').addEventListener('click',function(){
+          hide('loadDlg'); ST.date=ldPick.d;
+          $('ldBox').innerHTML='<div class="r"><span>주주명부 기준일</span><b>'+ST.date+'</b></div>'
+            +KINDS.map(function(k){return '<div class="r"><span>총 주식수 ('+k.k.replace(/\d$/,'')+')</span><span><b>'+fmt(k.sh)+'</b> 주</span></div>';}).join('')
+            +'<div class="r"><span>총 주주수</span><span><b>'+fmt(M.holdersTotal)+'</b> 명</span></div>';
+          show('loadDoneDlg');
+        });
+        function afterLoad(){
+          hide('loadDoneDlg'); ST.loaded=true;
+          $('emptyState').classList.add('hide'); $('loadedState').classList.remove('hide');
+          renderSet(); activateTab('set');
+          toast('미설정 투표권자 '+unsetCount()+'건','투표권자가 지정되지 않아도 주주명부는 확정할 수 있습니다. 단, 투표권자가 없는 주주는 투표에 참여할 수 없습니다.',true);
+        }
+        $('ldDoneOk').addEventListener('click',afterLoad);
+        $('ldDoneX').addEventListener('click',afterLoad);
+        $('msRegister').addEventListener('click',function(){location.href='roster-manage.html';});
+
+        /* ---------- 다운로드 (사유 입력) ---------- */
+        document.addEventListener('click',function(e){if(e.target.closest('[data-dl]')){$('dlReason').value='';$('dlGo').disabled=true;show('dlDlg');}});
+        $('dlReason').addEventListener('input',function(){$('dlGo').disabled=!this.value.trim();});
+        $('dlGo').addEventListener('click',function(){hide('dlDlg');toast('다운로드 완료','주주명부 파일을 내려받았습니다.');});
+
+        /* conexus.js 공용 버튼 토스트(불러오기·저장)와 겹치지 않게 — 이 화면은 자체 토스트를 쓴다 */
+        ['ldConfirm','vsSave','msSave'].forEach(function(id){$(id).addEventListener('click',function(e){e.stopPropagation();});});
+        renderHeader();
       })();
       </script>
-      <script>
-        (function(){
-          function closeOv(ov){ov.classList.add('hidden');}
-          document.querySelectorAll('.dlg-ov').forEach(function(ov){
-            ov.querySelectorAll('[data-dlg-close]').forEach(function(b){b.addEventListener('click',function(){closeOv(ov);});});
-          });
-          var sonner=document.getElementById('sonner'),snT=document.getElementById('snT'),snD=document.getElementById('snD'),snTimer;
-          function toast(t,d){snT.textContent=t;snD.textContent=d;sonner.classList.add('show');clearTimeout(snTimer);snTimer=setTimeout(function(){sonner.classList.remove('show');},3800);}
-          document.getElementById('snUndo').addEventListener('click',function(){sonner.classList.remove('show');});
-
-          function showLoaded(date){
-            document.getElementById('emptyState').classList.add('hide');
-            document.getElementById('loadedState').classList.remove('hide');
-            document.getElementById('msLoad').classList.add('hidden');
-            document.getElementById('msRegister').classList.add('hidden');
-            document.getElementById('msNext').classList.remove('hidden');
-            var chip=document.getElementById('msChip'); chip.classList.remove('hide');
-            document.getElementById('msChipDate').textContent=date;
-          }
-
-          document.getElementById('msLoad').addEventListener('click',function(){document.getElementById('loadDlg').classList.remove('hidden');});
-          var ldSel=document.getElementById('ldSel'),ldMenu=document.getElementById('ldMenu'),chosen=null;
-          ldSel.addEventListener('click',function(e){e.stopPropagation();ldMenu.classList.toggle('hidden');});
-          ldMenu.querySelectorAll('.dlg-mi').forEach(function(mi){mi.addEventListener('click',function(){chosen=mi.dataset.date;ldSel.querySelector('span').textContent=mi.textContent;ldSel.classList.add('val');ldMenu.classList.add('hidden');});});
-          document.addEventListener('click',function(){ldMenu.classList.add('hidden');});
-          document.getElementById('ldConfirm').addEventListener('click',function(){
-            var d=chosen||'2025.12.31';
-            document.getElementById('loadDlg').classList.add('hidden');
-            showLoaded(d);
-            toast('불러오기 완료', d+' 기준 주주명부를 불러왔습니다. (650,000명 · 476,211,964주)');
-          });
-
-          // 주주명부 등록 → 명부관리 화면으로 이동
-          document.getElementById('msRegister').addEventListener('click',function(){location.href='roster.html';});
-
-          // 탭 전환 + 저장하고 다음
-          var utabsOrder=['set','merge','confirm'];
-          function activateTab(key){
-            document.querySelectorAll('#loadedState .utab').forEach(function(t){t.classList.toggle('active',t.dataset.utab===key);});
-            document.querySelectorAll('#loadedState .upanel').forEach(function(p){p.classList.toggle('hide',p.dataset.upanel!==key);});
-            var nx=document.getElementById('msNext');
-            nx.style.display = key==='confirm' ? 'none' : '';
-            var ct=document.getElementById('cfTopBtn'), lm=document.getElementById('cfLastMod');
-            if(ct){ ct.classList.toggle('hidden', key!=='confirm'); if(key==='confirm' && typeof updateCfBtn==='function') updateCfBtn(); }
-            if(lm) lm.classList.toggle('hidden', !(key==='confirm' && cfConfirmed));
-            var uc=document.getElementById('unsetCount'); var cu=document.getElementById('cfUnset');
-            if(cu) cu.textContent='0';
-            if(key==='confirm' && typeof renderConfirm==='function') renderConfirm();
-          }
-          document.querySelectorAll('#loadedState .utab').forEach(function(t){t.addEventListener('click',function(){activateTab(t.dataset.utab);});});
-          document.getElementById('msNext').addEventListener('click',function(){
-            var cur=document.querySelector('#loadedState .utab.active').dataset.utab;
-            var i=utabsOrder.indexOf(cur);
-            if(cur==='set'){ document.getElementById('mergeDlg').classList.remove('hidden'); return; }
-            if(i<utabsOrder.length-1){ toast('저장 완료', '통합·해제 설정이 저장되었습니다. 다음 단계로 이동합니다.'); activateTab(utabsOrder[i+1]); }
-          });
-          (function(){
-            var mp=document.getElementById('mgProceed');
-            if(mp){ mp.addEventListener('click',function(){ document.getElementById('mergeDlg').classList.add('hidden'); toast('투표권자 통합 완료','선택한 주식 종류 기준으로 동일 주주 계좌가 통합되었습니다.'); activateTab('merge'); }); }
-            document.querySelectorAll('#mergeDlg .dlg-cbx').forEach(function(c){ c.addEventListener('click',function(e){ e.preventDefault(); c.classList.toggle('on'); }); });
-          })();
-
-          // 통합·해제 설정 (그룹형 접기/펼치기 + 변경 시트)
-          var mgBody=document.getElementById('mgBody');
-          if(mgBody){
-            var mgRoster=[
-              {name:'KVIDIA',no:'2025119001',sh:19961925,rate:4.2},
-              {name:'K-홀딩스 주식회사',no:'2025119002',sh:19965917,rate:4.2},
-              {name:'나제한',no:'800401-1******',sh:19963921,rate:4.2},
-              {name:'젠슨박',no:'880411-1******',sh:10005912,rate:2.1},
-              {name:'이준호',no:'600101-1******',sh:6017919,rate:1.3},
-              {name:'이종승',no:'600101-1******',sh:6017919,rate:1.3},
-              {name:'천재민',no:'600101-1******',sh:6015923,rate:1.3},
-              {name:'박준호',no:'600101-1******',sh:6015923,rate:1.3},
-              {name:'유은지',no:'700201-2******',sh:2003977,rate:0.4},
-              {name:'정현우',no:'870302-1******',sh:5004918,rate:1.1},
-              {name:'정유진',no:'920715-2******',sh:3002915,rate:0.6},
-              {name:'강민서',no:'850109-1******',sh:4503920,rate:0.9},
-              {name:'강태호',no:'780621-1******',sh:2501912,rate:0.5},
-              {name:'강나연',no:'910330-2******',sh:1801909,rate:0.4},
-              {name:'서지훈',no:'900228-1******',sh:3504917,rate:0.7},
-              {name:'서은채',no:'950814-2******',sh:1502910,rate:0.3},
-              {name:'한소율',no:'881105-2******',sh:2803914,rate:0.6},
-              {name:'한지민',no:'930922-2******',sh:1602911,rate:0.3},
-              {name:'남주혁',no:'830417-1******',sh:2001908,rate:0.4}
-            ];
-            var groups={
-              g1:{voter:'이준호',method:'auto',kind:'보통주',members:[
-                {name:'이준호',no:'600101-1******',sh:6017919,rate:1.3},
-                {name:'이종승',no:'600101-1******',sh:6017919,rate:1.3}]},
-              g2:{voter:'천재민',method:'manual',kind:'보통주',members:[
-                {name:'천재민',no:'600101-1******',sh:6015923,rate:1.3},
-                {name:'박준호',no:'600101-1******',sh:6015923,rate:1.3}]},
-              g3:{voter:'정현우',method:'auto',kind:'보통주',members:[
-                {name:'정현우',no:'870302-1******',sh:5004918,rate:1.1},
-                {name:'정유진',no:'920715-2******',sh:3002915,rate:0.6}]},
-              g4:{voter:'강민서',method:'manual',kind:'보통주',members:[
-                {name:'강민서',no:'850109-1******',sh:4503920,rate:0.9},
-                {name:'강태호',no:'780621-1******',sh:2501912,rate:0.5},
-                {name:'강나연',no:'910330-2******',sh:1801909,rate:0.4}]},
-              g5:{voter:'서지훈',method:'auto',kind:'우선주1',members:[
-                {name:'서지훈',no:'900228-1******',sh:3504917,rate:0.7},
-                {name:'서은채',no:'950814-2******',sh:1502910,rate:0.3}]},
-              g6:{voter:'한소율',method:'auto',kind:'보통주',members:[
-                {name:'한소율',no:'881105-2******',sh:2803914,rate:0.6},
-                {name:'한지민',no:'930922-2******',sh:1602911,rate:0.3}]}
-            };
-            /* 주주명부(cx-roster) 기관 통합 20그룹 */
-            (CX.rosterGroups||[]).forEach(function(rg,k){
-              groups['g'+(7+k)]={voter:rg.voter,method:'auto',kind:'보통주',members:rg.members.map(function(r){return {name:r.nm,no:r.id,sh:r.sh,rate:r.rt};})};
-            });
-            var gseq=7+(CX.rosterGroups||[]).length;
-            function fmt(n){return n.toLocaleString('en-US');}
-            function groupHTML(gid,g){
-              var sumSh=g.members.reduce(function(a,m){return a+m.sh;},0);
-              var sumRate=g.members.reduce(function(a,m){return a+m.rate;},0);
-              var rep=g.members[0]||{no:'-'};
-              var repM=g.members.filter(function(m){return m.name===g.voter;})[0]||g.members[0]||{no:'-'};
-              var mb=g.method==='auto'?'<span class="mbadge auto">자동</span>':'<span class="mbadge manual">수동</span>';
-              var html='<tr class="mg-grp" data-gid="'+gid+'">'
-                +'<td>'+mb+'</td>'
-                +'<td class="c">'+g.kind+'</td>'
-                +'<td><div class="voter"><button type="button" class="tw-chevron" aria-label="통합 계좌 펼치기"><svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button><span class="mg-tv">'+g.voter+'</span></div></td>'
-                +'<td class="name"><span class="tag">통합 '+g.members.length+'건</span></td>'
-                +'<td class="mut">'+repM.no+'</td>'
-                +'<td class="r">'+fmt(sumSh)+'</td>'
-                +'<td class="r sub">'+sumRate.toFixed(1)+'%</td>'
-                +'<td class="c"><button class="tbtn2 mg-edit" data-gid="'+gid+'">변경</button></td></tr>';
-              g.members.forEach(function(m){
-                html+='<tr class="mg-child" data-gid="'+gid+'" hidden>'
-                  +'<td></td><td class="c">'+g.kind+'</td><td class="tcell"><span class="cv"></span></td>'
-                  +'<td class="cname">'+m.name+'</td><td class="mut">'+m.no+'</td>'
-                  +'<td class="r">'+fmt(m.sh)+'</td><td class="r sub">'+m.rate.toFixed(1)+'%</td><td></td></tr>';
-              });
-              return html;
-            }
-            function renderAll(){
-              var html=''; Object.keys(groups).forEach(function(gid){html+=groupHTML(gid,groups[gid]);});
-              if(!Object.keys(groups).length){ html='<tr><td colspan="8" style="text-align:center;color:#a3a3a3;height:80px">통합된 투표권자가 없습니다. ‘통합 주주 추가’로 계좌를 통합하세요.</td></tr>'; }
-              mgBody.innerHTML=html;
-              var gk=Object.keys(groups), acct=0; gk.forEach(function(g){acct+=(groups[g].members||[]).length;});
-              var gc=document.getElementById('mgGrpCnt'), ac=document.getElementById('mgAcctCnt');
-              if(gc) gc.textContent=gk.length; if(ac) ac.textContent=acct;
-              mgBody.querySelectorAll('tr.mg-grp').forEach(function(tr){
-                tr.addEventListener('click',function(e){
-                  if(e.target.closest('.mg-edit')) return;
-                  var gid=tr.dataset.gid, open=tr.classList.toggle('open');
-                  mgBody.querySelectorAll('tr.mg-child[data-gid="'+gid+'"]').forEach(function(c){c.hidden=!open;});
-                });
-              });
-              mgBody.querySelectorAll('.mg-edit').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();openMergeSheet(b.dataset.gid);});});
-              /* 칸을 채운 뒤 정렬 규칙을 다시 태운다 — 빈 표에 맞춰진 머리글이 남지 않게 */
-              if(window.cxTable) window.cxTable.apply(mgBody.closest('table'));
-            }
-
-            // ----- 변경/통합 시트 -----
-            var mSheet=document.getElementById('mergeSheet'), mgList=document.getElementById('mgList'), mgCount=document.getElementById('mgCount');
-            var mgRepSel=document.getElementById('mgRepSel'), mgRepMenu=document.getElementById('mgRepMenu');
-            var mgSearch=document.getElementById('mgSearch'), mgSearchList=document.getElementById('mgSearchList');
-            var mgDelete=document.getElementById('mgDelete'), mgSheetTitle=document.getElementById('mgSheetTitle');
-            var editGid=null, editMembers=[], editVoter=null;
-            function renderSheet(){
-              mgCount.textContent=editMembers.length;
-              mgList.innerHTML=editMembers.map(function(m,i){
-                return '<div class="mm"><div class="mm-info"><span>'+m.name+'</span><span class="no">'+m.no+' · '+fmt(m.sh)+'주</span></div>'
-                  +'<button class="x" data-i="'+i+'"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>';
-              }).join('');
-              mgList.querySelectorAll('.x').forEach(function(b){b.addEventListener('click',function(){editMembers.splice(+b.dataset.i,1);if(editVoter&&!editMembers.some(function(m){return m.name===editVoter;}))editVoter=null;renderSheet();});});
-              mgRepMenu.innerHTML='';
-              editMembers.forEach(function(m){var bt=document.createElement('button');bt.className='dlg-mi';bt.textContent=m.name;bt.addEventListener('click',function(){editVoter=m.name;mgRepSel.querySelector('span').textContent=m.name;mgRepSel.classList.add('val');mgRepMenu.classList.add('hidden');});mgRepMenu.appendChild(bt);});
-              if(editVoter){mgRepSel.querySelector('span').textContent=editVoter;mgRepSel.classList.add('val');}
-              else{mgRepSel.querySelector('span').textContent='대표 투표권자를 선택하세요';mgRepSel.classList.remove('val');}
-              renderMgSearch('');
-            }
-            function renderMgSearch(q){
-              q=(q||'').trim();
-              var items=mgRoster.filter(function(r){return (!q||r.name.indexOf(q)>=0||r.no.indexOf(q)>=0) && !editMembers.some(function(m){return m.name===r.name && m.no===r.no;});});
-              if(!items.length){mgSearchList.innerHTML='<div class="combo-empty">추가할 계좌가 없습니다</div>';return;}
-              mgSearchList.innerHTML=items.map(function(r){return '<div class="combo-item" data-name="'+r.name+'" data-no="'+r.no+'"><span>'+r.name+'</span><span class="no">'+r.no+'</span></div>';}).join('');
-              mgSearchList.querySelectorAll('.combo-item').forEach(function(it){it.addEventListener('click',function(){
-                var r=mgRoster.filter(function(x){return x.name===it.dataset.name&&x.no===it.dataset.no;})[0];
-                editMembers.push({name:r.name,no:r.no,sh:r.sh,rate:r.rate}); mgSearch.value=''; renderSheet();
-              });});
-            }
-            if(mgSearch) mgSearch.addEventListener('input',function(){renderMgSearch(mgSearch.value);});
-            mgRepSel.addEventListener('click',function(e){e.stopPropagation();mgRepMenu.classList.toggle('hidden');});
-            document.addEventListener('click',function(){mgRepMenu.classList.add('hidden');});
-            function openMergeSheet(gid){
-              editGid=gid||null;
-              if(gid){var g=groups[gid];editMembers=g.members.map(function(m){return {name:m.name,no:m.no,sh:m.sh,rate:m.rate};});editVoter=g.voter;mgSheetTitle.textContent='통합내역 변경';mgDelete.classList.remove('hide');}
-              else{editMembers=[];editVoter=null;mgSheetTitle.textContent='투표권자 통합';mgDelete.classList.add('hide');}
-              renderSheet();
-              mSheet.classList.remove('hidden');
-            }
-            mSheet.querySelectorAll('[data-vshclose]').forEach(function(b){b.addEventListener('click',function(){mSheet.classList.add('hidden');});});
-            document.getElementById('mgConfirm').addEventListener('click',function(){
-              if(editMembers.length<2){ toast('통합 불가','통합하려면 2건 이상의 계좌가 필요합니다.'); return; }
-              var voter=editVoter||editMembers[0].name;
-              if(editGid){ groups[editGid].members=editMembers.slice(); groups[editGid].voter=voter; }
-              else { var gid='g'+(gseq++); groups[gid]={voter:voter,method:'manual',kind:'보통주',members:editMembers.slice()}; }
-              renderAll(); mSheet.classList.add('hidden');
-              toast(editGid?'통합 변경 완료':'통합 완료', voter+' 외 '+(editMembers.length-1)+'건이 통합되었습니다. (합산 '+fmt(editMembers.reduce(function(a,m){return a+m.sh;},0))+'주)');
-            });
-            mgDelete.addEventListener('click',function(){
-              if(editGid){ delete groups[editGid]; renderAll(); mSheet.classList.add('hidden'); toast('통합 해제','통합이 해제되었습니다. 각 계좌가 개별 투표권자로 복원됩니다.'); }
-            });
-            document.getElementById('mgNew').addEventListener('click',function(){openMergeSheet(null);});
-            var mgKind=document.getElementById('mgKind');
-            if(mgKind){ mgKind.addEventListener('click',function(){ toast('의결권 있는 주식 종류','보통주 · 우선주 중 통합 대상 주식 종류를 선택할 수 있습니다.'); }); }
-            renderAll();
-          }
-
-          // 설정내역 확인 — 확정 명세 렌더 + 주주명부 설정
-          var cfConfirmed=false;
-          function renderConfirm(){
-            var body=document.getElementById('cfBody'); if(!body) return;
-            function pnum(x){return parseInt(String(x).replace(/[^0-9]/g,''),10)||0;}
-            var mgb=document.getElementById('mgBody'), memberNames={}, cgroups=[];
-            if(mgb){
-              mgb.querySelectorAll('tr.mg-grp').forEach(function(g){
-                var gid=g.dataset.gid;
-                var voter=g.querySelector('.mg-tv')?g.querySelector('.mg-tv').textContent.trim():'';
-                var members=[];
-                mgb.querySelectorAll('tr.mg-child[data-gid="'+gid+'"]').forEach(function(c){
-                  var td=c.children, nm=c.querySelector('.cname')?c.querySelector('.cname').textContent.trim():'';
-                  members.push({name:nm, sh:td[5].textContent.trim(), rate:td[6].textContent.trim()});
-                  memberNames[nm]=true;
-                });
-                if(members.length) cgroups.push({voter:voter, members:members});
-              });
-            }
-            var html='';
-            cgroups.forEach(function(g,gi){
-              var id='cg'+gi;
-              var sumSh=g.members.reduce(function(a,m){return a+pnum(m.sh);},0);
-              var sumRate=g.members.reduce(function(a,m){return a+(parseFloat(m.rate)||0);},0);
-              html+='<tr class="cf-grp" data-cg="'+id+'">'
-                +'<td><span class="mbadge auto">통합</span></td>'
-                +'<td><div class="voter"><button type="button" class="tw-chevron" aria-label="통합 계좌 펼치기"><svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button><span class="voter-set">'+g.voter+'</span></div></td>'
-                +'<td class="name"><span class="tag">통합 '+g.members.length+'건</span></td>'
-                +'<td class="r">'+sumSh.toLocaleString()+'</td>'
-                +'<td class="r sub">'+sumRate.toFixed(1)+'%</td></tr>';
-              g.members.forEach(function(m){
-                html+='<tr class="cf-child" data-cg="'+id+'" hidden><td></td><td class="tcell"><span class="cv"></span></td><td class="cname">'+m.name+'</td><td class="r">'+m.sh+'</td><td class="r sub">'+m.rate+'</td></tr>';
-              });
-            });
-            var src=document.querySelector('.upanel[data-upanel="set"] table.mtbl tbody');
-            if(src){ src.querySelectorAll('tr').forEach(function(tr){
-              var nmEl=tr.querySelector('.tt-name'), name=nmEl?nmEl.textContent.trim():tr.children[2].textContent.trim();
-              if(memberNames[name]) return;
-              var td=tr.children, sh=td[4].textContent.trim(), rate=td[5].textContent.trim();
-              var vcell=tr.querySelector('.voter'), none=vcell&&vcell.querySelector('.set-none');
-              var voter = none?'<span class="set-none">미설정</span>':'<span class="voter-set">'+(vcell?vcell.textContent.trim():'')+'</span>';
-              html+='<tr><td class="mut">-</td><td>'+voter+'</td><td class="name">'+name+'</td><td class="r">'+sh+'</td><td class="r sub">'+rate+'</td></tr>';
-            }); }
-            body.innerHTML=html;
-            if(window.cxTable) window.cxTable.apply(body.closest('table'));
-            body.querySelectorAll('tr.cf-grp').forEach(function(g){
-              g.addEventListener('click',function(){var id=g.dataset.cg,open=g.classList.toggle('open');body.querySelectorAll('tr.cf-child[data-cg="'+id+'"]').forEach(function(c){c.hidden=!open;});});
-            });
-            var red=0; if(mgb){ red=mgb.querySelectorAll('.mg-child').length - mgb.querySelectorAll('.mg-grp').length; if(red<0)red=0; }
-            var cv=document.getElementById('cfVoters'); if(cv) cv.textContent=(650000-red).toLocaleString();
-          }
-          var cfBtn=document.getElementById('cfTopBtn'), cfDlg=document.getElementById('cfDlg'), cfLastMod=document.getElementById('cfLastMod');
-          function updateCfBtn(){ if(!cfBtn) return;
-            cfBtn.classList.toggle('primary', !cfConfirmed);
-            cfBtn.innerHTML = cfConfirmed
-              ? '<i class="ph ph-pencil-simple" style="font-size:16px"></i>주주명부 변경'
-              : '<svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>주주명부 설정';
-          }
-          if(cfBtn&&cfDlg){ cfBtn.addEventListener('click',function(){
-            if(cfConfirmed){ cfConfirmed=false; updateCfBtn(); if(cfLastMod) cfLastMod.classList.add('hidden'); toast('주주명부 변경','주주명부를 다시 수정할 수 있습니다. 수정 후 다시 확정해 주세요.'); }
-            else { cfDlg.classList.remove('hidden'); }
-          }); }
-          var cfYes=document.getElementById('cfConfirmYes');
-          if(cfYes){ cfYes.addEventListener('click',function(){ cfDlg.classList.add('hidden'); cfConfirmed=true; updateCfBtn(); if(cfLastMod) cfLastMod.classList.remove('hidden'); toast('주주명부 설정','주주명부가 확정되었습니다. 이후 전자투표·현장 집계의 기준 명부로 사용됩니다.'); }); }
-
-          // shareholder tooltip (주주번호 · 실질 계좌번호 · 주소)
-          var tip=document.getElementById('shTip');
-          document.querySelectorAll('table.mtbl tbody tr').forEach(function(tr){
-            var trigger=tr.querySelector('.tt-name'); if(!trigger) return;
-            trigger.addEventListener('mouseenter',function(){
-              tip.innerHTML='<div class="r"><span class="k">주주번호</span><span class="v">'+(tr.dataset.no||'-')+'</span></div>'
-                +'<div class="r"><span class="k">실질 계좌번호</span><span class="v">'+(tr.dataset.acct||'-')+'</span></div>'
-                +'<div class="r"><span class="k">주소</span><span class="v">'+(tr.dataset.addr||'-')+'</span></div>';
-              var rc=trigger.getBoundingClientRect();
-              tip.style.left=rc.left+'px'; tip.style.top=(rc.bottom+8)+'px'; tip.classList.add('show');
-            });
-            trigger.addEventListener('mouseleave',function(){tip.classList.remove('show');});
-          });
-
-          // 미설정만 보기 토글
-          var swU=document.getElementById('swUnset');
-          function applyUnsetFilter(){
-            var on=swU&&swU.classList.contains('on');
-            document.querySelectorAll('table.mtbl tbody tr').forEach(function(tr){
-              tr.style.display=(on && !tr.classList.contains('row-none'))?'none':'';
-            });
-          }
-          if(swU){ swU.addEventListener('click',function(){swU.classList.toggle('on');applyUnsetFilter();}); }
-
-          // 헤더 클릭 정렬 (정렬 표시는 기본 히든)
-          var mtbl=document.querySelector('table.mtbl'), tbody=mtbl.querySelector('tbody');
-          var ths=mtbl.querySelectorAll('thead th.sortable');
-          var sortKey=null, sortDir=0;
-          function cellVal(tr,key,type){
-            var td=tr.children[key];
-            var t=(key===2 && td.querySelector('.tt-name'))?td.querySelector('.tt-name').textContent:td.textContent;
-            t=t.trim();
-            if(type==='num'){return parseFloat(t.replace(/[^0-9.\-]/g,''))||0;}
-            return t;
-          }
-          ths.forEach(function(th){
-            th.addEventListener('click',function(){
-              var key=+th.dataset.key, type=th.dataset.type;
-              if(sortKey===key){ sortDir = sortDir===1?-1:(sortDir===-1?0:1); }
-              else { sortKey=key; sortDir=1; }
-              ths.forEach(function(t){t.classList.remove('sorted','asc','desc');});
-              var rows=[].slice.call(tbody.querySelectorAll('tr'));
-              if(sortDir===0){ sortKey=null; rows.sort(function(a,b){return (+a.dataset.idx)-(+b.dataset.idx);}); }
-              else {
-                th.classList.add('sorted', sortDir===1?'asc':'desc');
-                rows.sort(function(a,b){
-                  var av=cellVal(a,key,type), bv=cellVal(b,key,type);
-                  if(av<bv) return -sortDir; if(av>bv) return sortDir; return (+a.dataset.idx)-(+b.dataset.idx);
-                });
-              }
-              rows.forEach(function(r){tbody.appendChild(r);});
-              applyUnsetFilter();
-            });
-          });
-
-          // 미설정 투표권자 설정 단계 (right sheet)
-          var vSheet=document.getElementById('voterSheet'), vsSub=document.getElementById('vsSub');
-          var vsAlertT=document.getElementById('vsAlertT');
-          var vsPickField=document.getElementById('vsPickField'), vsNewField=document.getElementById('vsNewField');
-          var vsSearch=document.getElementById('vsSearch'), vsList=document.getElementById('vsList');
-          var vsNewName=document.getElementById('vsNewName'), vsNewId=document.getElementById('vsNewId');
-          var curRow=null, curMethod='num', curPick=null;
-          var roster=[
-            {name:'KVIDIA',no:'2025119001'},{name:'K-홀딩스 주식회사',no:'2025119002'},
-            {name:'나제한',no:'800401-1******'},{name:'젠슨박',no:'880411-1******'},
-            {name:'이준호',no:'600101-1******'},{name:'이종승',no:'600101-1******'},
-            {name:'천재민',no:'600101-1******'},{name:'박준호',no:'600101-1******'},
-            {name:'유은지',no:'700201-2******'}
-          ];
-          var alertText={
-            num:"\u2018주주번호로 설정\u2019은 명부상 계좌(주주번호) 기준으로 투표권을 연동\u00b7합산합니다.",
-            name:"\u2018주주명으로 설정\u2019은 선택한 주주명과 동일하게 지정되며, 계좌 연동\u00b7합산은 지원되지 않습니다.",
-            "new":"\u2018신규 투표권자 등록\u2019은 주주명부에 없는 새로운 투표권자를 등록해 지정합니다.",
-            none:"\u2018지정안함\u2019 적용 시 해당 주주는 투표에 참여할 수 없습니다."
-          };
-          function renderList(q){
-            q=(q||'').trim();
-            var items=roster.filter(function(r){return !q || r.name.indexOf(q)>=0 || r.no.indexOf(q)>=0;});
-            if(!items.length){ vsList.innerHTML='<div class="combo-empty">검색 결과가 없습니다</div>'; return; }
-            vsList.innerHTML=items.map(function(r){
-              var sel=(curPick&&curPick.name===r.name&&curPick.no===r.no)?' sel':'';
-              return '<div class="combo-item'+sel+'" data-name="'+r.name+'" data-no="'+r.no+'"><span>'+r.name+'</span><span class="no">'+r.no+'</span></div>';
-            }).join('');
-            vsList.querySelectorAll('.combo-item').forEach(function(it){
-              it.addEventListener('click',function(){
-                curPick={name:it.dataset.name,no:it.dataset.no};
-                vsSearch.value=it.dataset.name;
-                vsList.querySelectorAll('.combo-item').forEach(function(x){x.classList.toggle('sel',x===it);});
-                vsList.hidden=true;
-              });
-            });
-          }
-          if(vsSearch){
-            vsSearch.addEventListener('input',function(){curPick=null;renderList(vsSearch.value);vsList.hidden=false;});
-            vsSearch.addEventListener('focus',function(){renderList(vsSearch.value);vsList.hidden=false;});
-          }
-          document.addEventListener('click',function(e){ if(vsList && !(e.target.closest&&e.target.closest('.combo'))) vsList.hidden=true; });
-          function setMethod(m){
-            curMethod=m; curPick=null;
-            document.querySelectorAll('#vsMethod .rad').forEach(function(r){r.classList.toggle('on', r.dataset.m===m);});
-            vsAlertT.textContent=alertText[m];
-            vsPickField.classList.toggle('hide', !(m==='num'||m==='name'));
-            vsNewField.classList.toggle('hide', m!=='new');
-            if(m==='num'){ vsSearch.value=''; curPick=null; renderList(''); vsList.hidden=true; }
-            if(m==='name'){
-              var _nm=curRow&&curRow.querySelector('.tt-name')?curRow.querySelector('.tt-name').textContent.trim():'';
-              vsSearch.value=_nm;
-              curPick=roster.filter(function(r){return r.name===_nm;})[0]||(_nm?{name:_nm,no:(curRow&&curRow.dataset.no)||'-'}:null);
-              renderList(_nm); vsList.hidden=true;
-            }
-            if(m==='new'){ vsNewName.value=''; vsNewId.value=''; }
-          }
-          document.querySelectorAll('#vsMethod .rad').forEach(function(r){ r.addEventListener('click',function(){ setMethod(r.dataset.m); }); });
-          function openVoterSheet(tr){
-            curRow=tr;
-            var nm=tr.querySelector('.tt-name')?tr.querySelector('.tt-name').textContent.trim():'';
-            vsSub.textContent="'"+nm+"' 주주의 투표권자를 지정합니다.";
-            setMethod('num');
-            vSheet.classList.remove('hidden');
-          }
-          vSheet.querySelectorAll('[data-vshclose]').forEach(function(b){b.addEventListener('click',function(){vSheet.classList.add('hidden');});});
-          tbody.querySelectorAll('.tbtn2').forEach(function(btn){ btn.addEventListener('click',function(){var tr=btn.closest('tr'); if(tr) openVoterSheet(tr);}); });
-          document.getElementById('vsSave').addEventListener('click',function(){
-            if(!curRow) return;
-            var nm=curRow.querySelector('.tt-name')?curRow.querySelector('.tt-name').textContent.trim():'';
-            var vcell=curRow.querySelector('td.voter');
-            var wasUnset=curRow.classList.contains('row-none');
-            var voter=null;
-            if(curMethod==='none'){ vcell.innerHTML='<span class="set-none">지정안함</span>'; }
-            else if(curMethod==='new'){
-              voter=(vsNewName.value||'').trim();
-              if(!voter){ toast('입력 필요','신규 투표권자명을 입력해 주세요.'); return; }
-              vcell.innerHTML='<span class="voter-set">'+voter+'</span>';
-            } else {
-              voter=curPick?curPick.name:nm;
-              vcell.innerHTML='<span class="voter-set">'+voter+'</span>';
-            }
-            curRow.querySelector('.tbtn2').textContent='수정';
-            if(wasUnset){
-              curRow.classList.remove('row-none');
-              var uc=document.getElementById('unsetCount'); var n=Math.max(0,(parseInt(uc.textContent,10)||0)-1); uc.textContent=n;
-            }
-            vSheet.classList.add('hidden');
-            applyUnsetFilter();
-            toast('투표권자 설정 완료', "'"+nm+"' 주주의 투표권자가 "+(curMethod==='none'?'지정안함으로':("'"+(voter||'')+"'(으)로"))+" 설정되었습니다.");
-          });
-        })();
-      </script>
-
     </div>
   </main>
 </div>
