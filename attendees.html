@@ -774,7 +774,8 @@
     if(!on){ chip='all'; box.querySelectorAll('.at-chip').forEach(function(b){ b.classList.toggle('on',b.dataset.chip==='all'); }); }
   }
   syncChips();
-  document.querySelectorAll('.at-tab').forEach(function(t){ t.addEventListener('click',function(){ cur=t.dataset.at; page=1; document.querySelectorAll('.at-tab').forEach(function(x){x.classList.toggle('on',x===t);}); document.querySelectorAll('.regonly').forEach(function(b){b.style.display=(cur==='reg')?'':'none';}); syncChips(); render(); }); });
+  document.querySelectorAll('.at-tab').forEach(function(t){ t.addEventListener('click',function(){ if(cur!==t.dataset.at) document.getElementById('atSearch').value='';   /* 탭을 옮기면 검색어 초기화 */
+    cur=t.dataset.at; page=1; document.querySelectorAll('.at-tab').forEach(function(x){x.classList.toggle('on',x===t);}); document.querySelectorAll('.regonly').forEach(function(b){b.style.display=(cur==='reg')?'':'none';}); syncChips(); render(); }); });
   document.getElementById('atSearch').addEventListener('input',function(){ page=1; render(); });
   document.getElementById('atChips').addEventListener('click',function(e){ var b=e.target.closest('.at-chip'); if(!b) return; chip=b.dataset.chip; this.querySelectorAll('.at-chip').forEach(function(x){ x.classList.toggle('on',x===b); }); page=1; render(); });
   /* 참석 철회 확인 — 더보기 메뉴 · 조회 패널이 함께 쓴다 */
