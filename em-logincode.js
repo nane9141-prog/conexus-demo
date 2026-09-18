@@ -18,7 +18,7 @@
   /* 표결 시작 여부 — 시작되면 매핑 변경을 막는다. 데모는 개회 전(CX.meeting.votingStarted 로 켤 수 있음) */
   var VOTING_STARTED = !!(CX.meeting && CX.meeting.votingStarted);
 
-  var TONE = { '로그인코드 발급': 'blue', '로그인코드 회수': 'rose', '주주확인 대기': 'orange', '주주확인 보완': 'purple', '주주확인 재보완': 'orange', '주주확인 반려': 'rose', '주주확인 완료': 'blue' };
+  var TONE = { '로그인코드 발급': 'blue', '로그인코드 회수': 'gray off', '주주확인 대기': 'purple', '주주확인 보완': 'orange', '주주확인 재보완': 'orange', '주주확인 반려': 'rose', '주주확인 완료': 'blue' };
   var OPEN = { '주주확인 대기': 1, '주주확인 보완': 1, '주주확인 재보완': 1 };   /* 담당자 검토 대상 */
   function badge(s) { return '<span class="lc-b ' + (TONE[s] || 'gray') + '"><i></i>' + s + '</span>'; }
 
@@ -117,13 +117,14 @@
   /* ---------- 표 ---------- */
   function shares(x) { return x.voters.length ? x.voters.reduce(function (a, r) { return a + r.sh; }, 0) : (x.cfAt ? x.decl : null); }
   var COLS = {
-    sh: [['구분', 98, 'c'], ['상태', 129, 'c'], ['유형', 60, 'c'], ['이름', 240], ['투표권자', 0], ['주주번호', 210], ['보유주식수', 110, 'n'], ['코드 신청일', 110, 'c'], ['로그인코드', 140], ['확인 신청일', 110, 'c'], ['주주확인', 78, 'c'], ['', 44, 'c']],
+    sh: [['등록경로', 104, 'c'], ['구분', 98, 'c'], ['상태', 129, 'c'], ['유형', 60, 'c'], ['이름', 240], ['투표권자', 0], ['주주번호', 210], ['보유주식수', 110, 'n'], ['코드 신청일', 110, 'c'], ['로그인코드', 140], ['확인 신청일', 110, 'c'], ['주주확인', 78, 'c'], ['', 44, 'c']],
     ns: [['유형', 110, 'c'], ['상태', 129, 'c'], ['이름', 160], ['소속', 0], ['직급', 140], ['이메일', 240], ['휴대폰번호', 150], ['발급일', 110, 'c'], ['로그인코드', 140], ['', 44, 'c']]
   };
-  var LEFT = { sh: 4, ns: 3 };   /* 왼쪽 고정 컬럼 수(이름까지) */
+  var LEFT = { sh: 5, ns: 3 };   /* 왼쪽 고정 컬럼 수(이름까지) */
   function val(x, c) {
     switch (c) {
       case '상태': return x.st;
+      case '등록경로': return x.route;
       case '구분': return x.corp ? '해외 법인' : '해외 개인';
       case '유형': return x.ns ? x.kind : (x.cfAt ? (x.multi ? '복수' : '단일') : '-');
       case '이름': return x.name;
@@ -142,7 +143,7 @@
     return '';
   }
   function txt(x, c) { var v = val(x, c); return c === '보유주식수' ? (v == null ? '-' : cm(v)) : String(v); }
-  var GRAY = { '구분': 1, '유형': 1, '코드 신청일': 1, '확인 신청일': 1, '발급일': 1 };
+  var GRAY = { '등록경로': 1, '구분': 1, '유형': 1, '코드 신청일': 1, '확인 신청일': 1, '발급일': 1 };
   function cell(x, c) {
     if (c === '상태') return badge(x.st);
     if (c === '로그인코드') return '<span class="lc-code' + (x.st === '로그인코드 회수' ? ' off' : '') + '">' + esc(x.code) + '</span>';
