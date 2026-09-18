@@ -436,6 +436,7 @@
     var cw = tbl.clientWidth; if (!cw) return;     /* 숨겨진 표는 보일 때 다시 잡는다 */
     var ths = t.ths || []; if (!ths.length) return;
     tbl.style.tableLayout = 'auto';                /* 자연 폭 측정 */
+    ths.forEach(function (th) { th.style.width = ''; });   /* loop 가 넣은 width:1%(min-content) 제거 → 컨테이너에 맞춘 '자연 분배' 폭으로 잰다 */
     t.colW = t.colW || [];
     var flex = [], meas = ths.map(function (th, i) {
       var rl = rule(label(th)); flex[i] = !!(rl && rl.flex);
