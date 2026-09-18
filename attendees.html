@@ -447,7 +447,7 @@
           </div>
           <div class="at-tb-r">
             <button class="abtn regonly"><i class="ph ph-user-plus" style="font-size:16px"></i>대리인 · 위임주주 등록</button>
-            <button class="abtn dark regonly"><i class="ph ph-calendar-blank" style="font-size:16px"></i>참관인 등록</button>
+            <button class="abtn dark regonly"><i class="ph ph-identification-badge" style="font-size:16px"></i>비주주 등록</button>
             <span data-cx-tools></span>
           </div>
         </div>
@@ -827,10 +827,10 @@
   to.addEventListener('click',function(e){ if(!e.target.closest('#tagSel,#tagList')) tagOpen(false); });
   chk.addEventListener('click',function(){ chk.classList.toggle('on'); ok.disabled=!(chk.classList.contains('on')&&!selT.classList.contains('ph')); });
   ok.addEventListener('click',function(){ if(!tagPick) return; var t=document.getElementById('tagId'); t.textContent=tagPick; t.className='tagid set'; to.classList.remove('on'); });
-  // 비주주 등록 다이얼로그(참관인 등록 버튼)
+  // 비주주 등록 다이얼로그(비주주 등록 버튼)
   (function(){
     var dlg=document.getElementById('nsDlg'); if(!dlg) return;
-    var btn=[].filter.call(document.querySelectorAll('.abtn'),function(b){ return /참관인/.test(b.textContent); })[0];
+    var btn=[].filter.call(document.querySelectorAll('.abtn'),function(b){ return /비주주 등록/.test(b.textContent); })[0];
     var KINDS=['참관인','임직원','감사인','법률자문','공증인','기타'], kind='';
     var sel=document.getElementById('nsKind'), dd=document.getElementById('nsKindDd'), ok=document.getElementById('nsOk');
     function $(id){ return document.getElementById(id); }
