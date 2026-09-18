@@ -599,10 +599,10 @@
       rows.push(lead);
     });
     rows=rows.filter(function(x){return !x.grouped;}).sort(function(a,b){return b.hold-a.hold;});
-    /* 현장 참석 등록 50명(비주주 3 포함) — 사전투표 미행사 주주 중 보유주식 상위 47명만 참석, 나머지는 미참석 */
+    /* 현장 참석 등록 50명(비주주 3 포함) — 사전투표 미행사 주주(사전행사 유지 '참관'은 사전투표 내역 그대로) 중 보유주식 상위 47명만 참석, 나머지는 미참석 */
     var siteN=0;
     rows.forEach(function(x){
-      if(x.site==='미참석' || (!x.pre.length && ++siteN<=47)) return;
+      if(x.site==='미참석' || ((!x.pre.length || x.site==='참관') && ++siteN<=47)) return;
       x.site='미참석'; x.app='미사용'; x.proxy='-'; x.attend=0;
       (x.members||[]).forEach(function(m){ m.attend=0; });
     });
