@@ -118,7 +118,7 @@ table.lctbl .lc-empty{padding:72px 16px;text-align:center;color:#737373;cursor:d
 .lc-rad{display:flex;gap:16px;height:32px;align-items:center}
 .lc-rad label{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;cursor:pointer}
 .lc-rad input{accent-color:#171717;width:16px;height:16px;margin:0}
-.lc-sheet .sheet-body{gap:24px}
+.lc-sheet .sheet-body{gap:24px;padding:0}
 .lc-stbox{display:flex;align-items:center;gap:12px;padding:12px;background:#FAFAFA;border-radius:10px}
 .lc-stbox>span{font-size:12px;font-weight:500;color:#737373}
 .lc-sec{display:flex;flex-direction:column}

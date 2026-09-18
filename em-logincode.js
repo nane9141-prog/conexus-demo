@@ -117,7 +117,7 @@
   /* ---------- 표 ---------- */
   function shares(x) { return x.voters.length ? x.voters.reduce(function (a, r) { return a + r.sh; }, 0) : (x.cfAt ? x.decl : null); }
   var COLS = {
-    sh: [['등록경로', 104, 'c'], ['구분', 98, 'c'], ['상태', 129, 'c'], ['유형', 60, 'c'], ['이름', 240], ['투표권자', 0], ['주주번호', 210], ['보유주식수', 110, 'n'], ['코드 신청일', 110, 'c'], ['로그인코드', 140], ['확인 신청일', 110, 'c'], ['주주확인', 78, 'c'], ['', 44, 'c']],
+    sh: [['등록경로', 104, 'c'], ['구분', 98, 'c'], ['상태', 129, 'c'], ['유형', 60, 'c'], ['이름', 240], ['연결된 투표권자', 0], ['주주번호', 210], ['보유주식수', 110, 'n'], ['코드 신청일', 110, 'c'], ['로그인코드', 140], ['확인 신청일', 110, 'c'], ['주주확인', 78, 'c'], ['', 44, 'c']],
     ns: [['유형', 110, 'c'], ['상태', 129, 'c'], ['이름', 160], ['소속', 0], ['직급', 140], ['이메일', 240], ['휴대폰번호', 150], ['발급일', 110, 'c'], ['로그인코드', 140], ['', 44, 'c']]
   };
   var LEFT = { sh: 5, ns: 3 };   /* 왼쪽 고정 컬럼 수(이름까지) */
@@ -128,7 +128,7 @@
       case '구분': return x.corp ? '해외 법인' : '해외 개인';
       case '유형': return x.ns ? x.kind : (x.cfAt ? (x.multi ? '복수' : '단일') : '-');
       case '이름': return x.name;
-      case '투표권자': return x.voters.length ? voterOf(x.voters[0]) + (x.voters.length > 1 ? ' 외 ' + (x.voters.length - 1) + '명' : '') : '-';
+      case '연결된 투표권자': return x.voters.length ? voterOf(x.voters[0]) + (x.voters.length > 1 ? ' 외 ' + (x.voters.length - 1) + '명' : '') : '-';
       case '주주번호': return x.cfAt ? x.idNo + ' (' + x.idType + ')' : '-';
       case '보유주식수': return shares(x);
       case '코드 신청일': return day(x.codeAt);
@@ -189,7 +189,7 @@
 
   var body = document.getElementById('lcBody'), tbl = document.getElementById('lcTbl');
   var cur = 'sh', chip = 'all', page = 1, pageSize = 20, lastTotal = 0, sortSt = null, filtPred = null, shX = null;
-  var QF = { sh: [['all', '전체'], ['이름', '이름'], ['투표권자', '투표권자'], ['주주번호', '주주번호'], ['로그인코드', '로그인코드']], ns: [['all', '전체'], ['이름', '이름'], ['소속', '소속'], ['이메일', '이메일'], ['로그인코드', '로그인코드']] };
+  var QF = { sh: [['all', '전체'], ['이름', '이름'], ['연결된 투표권자', '연결된 투표권자'], ['주주번호', '주주번호'], ['로그인코드', '로그인코드']], ns: [['all', '전체'], ['이름', '이름'], ['소속', '소속'], ['이메일', '이메일'], ['로그인코드', '로그인코드']] };
   var CHIPS = { sh: [['all', '전체'], ['로그인코드 발급', '코드 발급'], ['로그인코드 회수', '코드 회수'], ['주주확인 대기', '확인 대기'], ['주주확인 보완', '확인 보완'], ['주주확인 재보완', '확인 재보완'], ['주주확인 반려', '확인 반려'], ['주주확인 완료', '확인 완료']], ns: [['all', '전체'], ['로그인코드 발급', '코드 발급'], ['로그인코드 회수', '코드 회수']] };
   var qf = document.getElementById('lcQf'), q = document.getElementById('lcQ');
 
