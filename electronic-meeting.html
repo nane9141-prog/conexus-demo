@@ -239,6 +239,7 @@
 </style>
 <script src="cx-data.js"></script>
 <script src="cx-roster.js?v=r6"></script>
+<link rel="stylesheet" href="em-logincode.css?v=1">
 </head>
 <body>
 <div class="app" id="app">
@@ -439,22 +440,7 @@
 
 
           <!-- 로그인코드 관리 -->
-          <div class="st-tab" data-panel="logincode"><div class="st-full">
-            <div class="st-head"><div><h2>로그인코드 관리</h2><div class="sub-help">주주가 전자주총에 입장할 때 쓰는 로그인코드를 발급하고 관리합니다.</div></div><div class="actions"><button class="btn" id="lcIssueAll"><i class="ph ph-key" style="font-size:16px"></i>미발급 일괄 발급</button></div></div>
-            <div class="atbar">
-              <div class="chips" id="lcChips">
-                <button class="chip active" data-lc="all">전체 <span class="c"></span></button>
-                <button class="chip" data-lc="발급">발급 <span class="c"></span></button>
-                <button class="chip" data-lc="미발급">미발급 <span class="c"></span></button>
-              </div>
-            </div>
-            <div class="tbl-wrap"><table class="tbl">
-              <thead><tr><th style="width:96px;text-align:center">발급 상태</th><th>주주명</th><th style="width:150px">주주번호</th><th style="width:150px;text-align:right">보유주식수</th><th style="width:150px">로그인코드</th><th style="width:160px;text-align:center">발급일시</th></tr></thead>
-              <tbody id="lcBody"></tbody>
-            </table>
-              <div class="tfoot"><div class="tfoot-l" id="lcFoot"></div></div>
-            </div>
-          </div></div>
+          <div class="st-tab" data-panel="logincode"><div class="st-full" id="lcRoot"></div></div>
 
           <!-- 사전 질의 관리 -->
           <div class="st-tab" data-panel="preq"><div class="st-full">
@@ -526,32 +512,6 @@
       });
     });
   });
-  // 로그인코드 관리 — 주주명부 기준(참석자 관리의 입장코드와 같은 규칙)
-  (function(){
-    var body=document.getElementById('lcBody'); if(!body||!window.CX||!CX.roster) return;
-    function cm(n){ return Math.round(n).toLocaleString('en-US'); }
-    var L=CX.roster.slice().sort(function(a,b){return b.sh-a.sh;}).map(function(r,i){
-      var code=(i%3===0)?'':('EG-2026'+('000'+((i%900)+1)).slice(-4));
-      return {nm:r.nm, no:r.id, sh:r.sh, code:code, at:code?('2026-08-'+('0'+(10+i%15)).slice(-2)+' '+('0'+(9+i%9)).slice(-2)+':'+('0'+(i*7%60)).slice(-2)):''};
-    });
-    var cur='all', seq=900;
-    function paint(){
-      var list=L.filter(function(x){ return cur==='all'||(cur==='발급'?!!x.code:!x.code); });
-      body.innerHTML=list.slice(0,20).map(function(x){
-        return '<tr><td style="text-align:center"><span class="badge '+(x.code?'blue':'gray')+'">'+(x.code?'발급':'미발급')+'</span></td><td>'+x.nm+'</td><td style="color:#737373">'+x.no+'</td>'
-          +'<td style="text-align:right">'+cm(x.sh)+'</td><td>'+(x.code||'<span style="color:#a3a3a3">-</span>')+'</td><td style="text-align:center;color:#737373">'+(x.at||'-')+'</td></tr>';
-      }).join('');
-      var iss=L.filter(function(x){return !!x.code;}).length;
-      document.querySelectorAll('#lcChips .chip').forEach(function(c){ var k=c.dataset.lc; c.querySelector('.c').textContent=k==='all'?L.length:(k==='발급'?iss:L.length-iss); c.classList.toggle('active',k===cur); });
-      document.getElementById('lcFoot').textContent='총 '+list.length+'명'+(list.length>20?' · 상위 20명 표시':'');
-    }
-    document.getElementById('lcChips').addEventListener('click',function(e){ var c=e.target.closest('[data-lc]'); if(!c) return; cur=c.dataset.lc; paint(); });
-    document.getElementById('lcIssueAll').addEventListener('click',function(){
-      var n=0; L.forEach(function(x){ if(!x.code){ seq++; n++; x.code='EG-2026'+('000'+seq).slice(-4); x.at='2026-08-28 10:00'; } });
-      paint(); if(window.cxToast) cxToast(n?('로그인코드 '+n+'건을 발급했습니다.'):'미발급 로그인코드가 없습니다.');
-    });
-    paint();
-  })();
   // 저장 -> 현재 단계 완료 체크 + 다음 단계 이동
   var EM_TABS=['basic','progress','design','logincode','preq','attendee'];
   function switchEmTab(id){
@@ -778,6 +738,7 @@
   });
 })();
 </script>
-<script src="conexus.js?v=fwo"></script>
+<script src="em-logincode.js?v=1"></script>
+<script src="conexus.js?v=fwp"></script>
 </body>
 </html>
