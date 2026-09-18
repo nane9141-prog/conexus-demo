@@ -234,7 +234,7 @@
   .search2{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;min-width:300px}
   .search2 svg{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:2}
   .search2 input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
-  /* 필터 칩 — 현장참석 · 전자참석 · 비주주 (여러 개 선택 시 하나라도 해당하면 표시) */
+  /* 필터 칩 — 전체 · 주주 · 비주주 (단일 선택) */
   .at-chips{display:flex;align-items:center;gap:6px}
   .at-chip{box-sizing:border-box;height:32px;display:inline-flex;align-items:center;gap:6px;padding:0 12px;border:1px solid #E5E5E5;border-radius:9999px;background:#fff;font-family:inherit;font-size:13px;font-weight:500;letter-spacing:-.01em;color:#525252;cursor:pointer;white-space:nowrap}
   .at-chip:hover{background:#FAFAFA}
@@ -443,7 +443,7 @@
           <div class="at-tb-l">
             <div class="selbox"><span>투표권자</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
             <div class="search2"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="atSearch" placeholder="투표권자를 검색해 주세요"></div>
-            <div class="at-chips" id="atChips"><button type="button" class="at-chip" data-chip="sh">주주 <b></b></button><button type="button" class="at-chip" data-chip="non">비주주 <b></b></button></div>
+            <div class="at-chips" id="atChips"><button type="button" class="at-chip on" data-chip="all">전체 <b></b></button><button type="button" class="at-chip" data-chip="sh">주주 <b></b></button><button type="button" class="at-chip" data-chip="non">비주주 <b></b></button></div>
           </div>
           <div class="at-tb-r">
             <button class="abtn regonly"><i class="ph ph-user-plus" style="font-size:16px"></i>대리인 · 위임주주 등록</button>
@@ -715,15 +715,16 @@
   }
   var CW={'출석':90,'보유주식수':120,'대리인':96,'주주명':140,'주주번호':140,'사전투표':116,'현장 참석':110,'앱 사용':84,'보유주식':110,'지분율':72,'참석주식수':104,'의결권 제한':150,'의안별 제한':92};
   /* 검색은 항상 전체 데이터(D) 기준. reg 탭은 검색 전엔 목록을 감춘다(null 반환) */
-  var chips={};
-  function chipHit(x,k){ return k==='sh'?!x.nonsh:!!x.nonsh; }
+  /* 칩은 단일 선택 — 전체(기본) · 주주 · 비주주 */
+  var chip='all';
+  function chipHit(x,k){ return k==='all'||(k==='sh'?!x.nonsh:!!x.nonsh); }
   /* 현장 참석자 탭은 참석(등록)한 인원만 — 미참석은 현장 참석자 등록 탭에서 검색해 등록한다 */
   function base(){ return cur==='all'?D.filter(function(x){ return x.site!=='미참석'; }):D; }
   function filteredRows(){
-    var q=(document.getElementById('atSearch').value||'').trim(), on=Object.keys(chips).filter(function(k){ return chips[k]; });
-    if(cur==='reg' && !q && !on.length) return null;
+    var q=(document.getElementById('atSearch').value||'').trim();
+    if(cur==='reg' && !q) return null;
     var B=base(), r=q ? B.filter(function(x){return (x.key||(x.voter+x.name+x.no)).indexOf(q)>=0;}) : B.slice();
-    if(on.length) r=r.filter(function(x){ return on.some(function(k){ return chipHit(x,k); }); });
+    if(chip!=='all') r=r.filter(function(x){ return chipHit(x,chip); });
     return r;
   }
   function chipCounts(){ document.querySelectorAll('#atChips .at-chip').forEach(function(b){ var k=b.dataset.chip; b.querySelector('b').textContent=base().filter(function(x){ return chipHit(x,k); }).length; }); }
@@ -770,12 +771,12 @@
   function syncChips(){
     var box=document.getElementById('atChips'), on=(cur==='all');
     box.style.display=on?'':'none';
-    if(!on){ chips={}; box.querySelectorAll('.at-chip').forEach(function(b){ b.classList.remove('on','active'); }); }
+    if(!on){ chip='all'; box.querySelectorAll('.at-chip').forEach(function(b){ b.classList.toggle('on',b.dataset.chip==='all'); }); }
   }
   syncChips();
   document.querySelectorAll('.at-tab').forEach(function(t){ t.addEventListener('click',function(){ cur=t.dataset.at; page=1; document.querySelectorAll('.at-tab').forEach(function(x){x.classList.toggle('on',x===t);}); document.querySelectorAll('.regonly').forEach(function(b){b.style.display=(cur==='reg')?'':'none';}); syncChips(); render(); }); });
   document.getElementById('atSearch').addEventListener('input',function(){ page=1; render(); });
-  document.getElementById('atChips').addEventListener('click',function(e){ var b=e.target.closest('.at-chip'); if(!b) return; chips[b.dataset.chip]=!chips[b.dataset.chip]; b.classList.toggle('on',!!chips[b.dataset.chip]); page=1; render(); });
+  document.getElementById('atChips').addEventListener('click',function(e){ var b=e.target.closest('.at-chip'); if(!b) return; chip=b.dataset.chip; this.querySelectorAll('.at-chip').forEach(function(x){ x.classList.toggle('on',x===b); }); page=1; render(); });
   /* 참석 철회 확인 — 더보기 메뉴 · 조회 패널이 함께 쓴다 */
   var wdAsk=(function(){
     var dlg=document.getElementById('wdDlg'), tx=null, after=null;
