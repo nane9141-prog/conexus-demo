@@ -549,6 +549,18 @@
     }
     return '';
   }
+  /* 칸 글자 — 컬럼 필터가 전체 데이터에서 거르고 목록을 만들 때 쓴다(화면 표기와 같게) */
+  function cellText(x,c){
+    switch(c){
+      case '투표권자': return x.voter; case '주주명': return x.name; case '주주번호': return x.no;
+      case '사전투표': return !x.pre.length?'미행사':(x.pre.length>1?'중복행사':x.pre[0]);
+      case '현장 참석': return x.site; case '앱 사용': return x.app;
+      case '보유주식': return cm(x.hold); case '지분율': return x.ratio; case '참석주식수': return x.attend?cm(x.attend):'-';
+      case '의결권 제한': return x.limit; case '의안별 제한': return x.ag?'제한 '+x.ag.length+'건':'-';
+    }
+    return '';
+  }
+  var filtPred=null;
   function sortRows(rows){
     /* 기본 정렬 — 전자주총 참석자·전체 탭은 주주명 가나다 순(현장 참석자는 검색 결과 순서 그대로) */
     if(!sortSt||!sortSt.dir) return cur==='reg'?rows:rows.sort(function(a,b){ return String(a.name).localeCompare(String(b.name),'ko'); });
@@ -573,9 +585,12 @@
       var cg=document.getElementById('atCols');
       if(cg) cg.innerHTML=cols.map(function(c){return '<col style="width:'+(c==='투표권자'?220:(CW[c]||100))+'px">';}).join('');
       head.innerHTML='<tr>'+cols.map(function(c,i){var cl=nc.indexOf(i)>=0?' class="n"':(cc.indexOf(i)>=0?' class="c"':'');return '<th'+cl+'>'+c+'</th>';}).join('')+'</tr>';
-      headTab=cur; sortSt=null;
+      headTab=cur; sortSt=null; filtPred=null;
+      var tb=document.querySelector('table.attbl'); if(tb.__cx){ tb.__cx.filters={}; tb.__cx.draft={}; }   /* 탭이 바뀌면 컬럼 필터도 초기화 */
     }
-    var rows=filteredRows(); if(rows) rows=sortRows(rows);
+    var rows=filteredRows();
+    if(rows && filtPred){ var cs=COLS[cur]; rows=rows.filter(function(x){ return filtPred(function(i){ return cellText(x,cs[i]); }); }); }
+    if(rows) rows=sortRows(rows);
     if(rows===null){ body.innerHTML='<tr><td colspan="'+cols.length+'"><div class="atempty">주주명부에서 주주를 검색 후 참석자 등록을 진행해 주세요</div></td></tr>'; setCount(0,0); updatePager(0); return; }
     if(!rows.length){ body.innerHTML='<tr><td colspan="'+cols.length+'"><div class="atempty">검색 결과가 없습니다.</div></td></tr>'; setCount(0,0); updatePager(0); return; }
     var total=rows.length; lastTotal=total;
@@ -602,6 +617,11 @@
   }
   document.querySelectorAll('.at-tab').forEach(function(t){ t.addEventListener('click',function(){ cur=t.dataset.at; page=1; document.querySelectorAll('.at-tab').forEach(function(x){x.classList.toggle('on',x===t);}); document.querySelectorAll('.regonly').forEach(function(b){b.style.display=(cur==='reg')?'':'none';}); render(); }); });
   document.getElementById('atSearch').addEventListener('input',function(){ page=1; render(); });
+  /* 컬럼 필터 — 전체 데이터 기준(목록 항목도 전체에서) */
+  (function(){ var tb=document.querySelector('table.attbl');
+    tb.cxFilter=function(pred){ filtPred=pred; page=1; render(); };
+    tb.cxValues=function(i){ var r=(cur==='reg')?(filteredRows()||[]):D; return r.map(function(x){ return cellText(x,COLS[cur][i]); }); };
+  })();
   document.querySelector('table.attbl').addEventListener('cxsort',function(e){ e.preventDefault(); sortSt={idx:e.detail.idx,dir:e.detail.dir}; page=1; render(); });
   (function(){ var sel=document.getElementById('atPageSize'); if(sel) sel.addEventListener('change',function(){ pageSize=parseInt(this.value,10)||20; page=1; render(); }); })();
   (function(){ var pg=document.getElementById('atPager'); if(pg) pg.addEventListener('click',function(e){ var b=e.target.closest('.pp'); if(!b||b.classList.contains('dis')) return; var v=b.dataset.pg; var pages=Math.max(1,Math.ceil(lastTotal/pageSize)); if(v==='first')page=1; else if(v==='prev')page=Math.max(1,page-1); else if(v==='next')page=Math.min(pages,page+1); else if(v==='last')page=pages; else page=parseInt(v,10)||1; render(); }); })();
@@ -678,12 +698,27 @@
     }
     /* 등록 — 신규 등록이면서 현장투표 앱을 쓰면 NFC 태깅 다이얼로그를 먼저 띄운다 */
     var nfc=document.getElementById('nfcDlg');
+    /* 등록 결과를 표에 반영 — 사전행사 철회 경로면 '철회 후 참석', 아니면 참석/일부 참석 */
+    var sheetX=null, sheetWithdraw=false;
+    function num(v){ return parseInt(String(v||'').replace(/[^0-9]/g,''),10)||0; }
+    function applyReg(){
+      var x=sheetX; if(!x) return;
+      var part=ov.querySelector('[data-rg="shares"].on').dataset.v==='part';
+      var app=ov.querySelector('[data-rg="app1"].on').dataset.v==='use';
+      x.site=sheetWithdraw?'철회 후 참석':(part?'일부 참석':'참석');
+      x.app=app?'사용':'미사용';
+      if(x.members){
+        var qs=ov.querySelectorAll('.as-aq'); x.attend=0;
+        x.members.forEach(function(m,i){ m.attend=part?num(qs[i]&&qs[i].value):0; x.attend+=m.attend; });
+      } else x.attend=part?num(document.getElementById('asPartQty').value):0;
+      render();
+    }
     function done(msg){ nfc.classList.remove('show'); ov.classList.remove('show'); if(window.cxToast) cxToast(msg); }
     function submit(){
       var isNew=document.getElementById('asOk').textContent==='현장 참석 등록';
       var app=ov.querySelector('[data-rg="app1"].on'), useApp=app && app.dataset.v==='use';
       if(!isNew){ done('현장 참석 정보가 수정되었습니다.'); return; }
-      if(!useApp){ done('현장 참석이 등록되었습니다.'); return; }
+      if(!useApp){ applyReg(); done('현장 참석이 등록되었습니다.'); return; }
       var proxy=ov.querySelector('[data-rg="who"].on').dataset.v==='proxy', pn=document.getElementById('asProxyName').value.trim();
       var voter=(ov.querySelector('#asCard .v')||{}).textContent||'';
       document.getElementById('nfcName').textContent=((proxy&&pn)?pn:voter.trim())+'님';
@@ -691,6 +726,7 @@
     }
     nfc.addEventListener('click',function(e){
       var b=e.target.closest('[data-nfc]'); if(!b) return;
+      applyReg();
       done(b.dataset.nfc==='done'?'태깅이 완료되어 현장 참석이 등록되었습니다.':'현장 참석이 등록되었습니다. 앱 태깅은 나중에 진행해 주세요.');
     });
     /* 사전행사 내역 알림 — 철회 후 현장 참석(등록 시트로) / 사전행사 유지(참관 등록) */
@@ -733,6 +769,7 @@
       ov.querySelectorAll('.as-inp').forEach(function(i){ i.value=''; });
       who('self');
       var x=curRows[+tr.dataset.k], reg=x && x.site!=='미참석';
+      sheetX=x; sheetWithdraw=pvPass;
       if(reg) fill(x, hold);
       set('asOk', reg?'현장 참석 수정':'현장 참석 등록');
       var md=document.getElementById('asMod'); md.style.display=reg?'':'none';
@@ -766,6 +803,6 @@
 })();
 </script>
 
-<script src="conexus.js?v=fwn"></script>
+<script src="conexus.js?v=fwo"></script>
 </body>
 </html>

@@ -214,6 +214,15 @@
   }
 
   function applyFilters(t) {
+    /* 페이지로 나눠 그리는 표(tbl.cxFilter 제공)는 화면 줄이 아니라 전체 데이터에서 거른다.
+       표는 pred(textOf) 를 받아 두었다가 줄마다 textOf(칸 번호) → 칸 글자로 판정한다. null 이면 전체. */
+    if (t.tbl.cxFilter) {
+      var on = Object.keys(t.filters).filter(function (k) { return t.filters[k]; });
+      t.tbl.cxFilter(on.length ? function (textOf) {
+        return on.every(function (k) { return t.filters[k](String(textOf(+k) || '')); });
+      } : null);
+      return;
+    }
     blocks(t.tb).forEach(function (b) {
       var lead = b.lead;
       if (lead.cells.length < 2 || lead.querySelector('th')) return;
@@ -274,9 +283,9 @@
 
   function listFilter(t, idx, th, btn) {
     var seen = {}, vals = [];
-    bodyRows(t.tb).forEach(function (r) {
-      var v = txt(r.cells[idx]); if (!v || seen[v]) return; seen[v] = 1; vals.push(v);
-    });
+    /* 목록 항목 — 전체 데이터를 가진 표(tbl.cxValues)는 그 값, 아니면 화면의 줄 */
+    var src = t.tbl.cxValues ? t.tbl.cxValues(idx) : bodyRows(t.tb).map(function (r) { return txt(r.cells[idx]); });
+    src.forEach(function (v) { v = String(v == null ? '' : v).trim(); if (!v || seen[v]) return; seen[v] = 1; vals.push(v); });
     var picked = t.draft[idx] || null;                       /* null 이면 전체 */
     var html = '<label class="srch">' + SEARCH + '<input type="text" placeholder="검색"></label>'
       + '<div class="lb">' + esc(label(th)) + '</div>'
@@ -433,7 +442,7 @@
       fitFilter(th);
     });
 
-    applyFilters(t);
+    if (!t.tbl.cxFilter) applyFilters(t);
     if (t.hidden) paintCols(t);        /* 다시 그린 줄에도 컬럼 숨김 유지 */
     tools(tbl, t);
     watchFit(t, tbl);

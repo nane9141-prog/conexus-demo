@@ -79,8 +79,19 @@
       if (/미행사/.test(label)) return u.members.reduce(function (a, m) { return a + miss(m); }, 0);
       return u.sh;   /* 행사가능의결권 · 4-1 · 4-2 */
     }
+    /* 칸 글자 — 컬럼 필터(전체 데이터 기준)용 */
+    function cellText(x, label) {
+      var u = x.u;
+      if (/투표권자/.test(label)) return u.voter;
+      if (/주주명/.test(label)) return u.grp ? '통합 ' + u.members.length + '건' : u.name;
+      if (/행사방식/.test(label)) return x.method;
+      return '';
+    }
+    var filtPred = null, lastN = 0;
+    function heads() { return [].map.call(table.tHead.rows[0].cells, function (th) { return (th.textContent || '').trim(); }); }
     function render() {
       var list = forTab(activeLabel()), f = factor();
+      if (filtPred) { var hs = heads(); list = list.filter(function (x) { return filtPred(function (i) { return cellText(x, hs[i]); }); }); }
       if (sortSt && sortSt.dir) {
         list.forEach(function (x, i) { x.o = i; });
         list.sort(function (a, b) {
@@ -89,7 +100,7 @@
           return d ? sortSt.dir * d : a.o - b.o;
         });
       }
-      var pages = Math.max(1, Math.ceil(list.length / pageSize));
+      var pages = Math.max(1, Math.ceil(list.length / pageSize)); lastN = list.length;
       if (page > pages) page = pages;
       var start = (page - 1) * pageSize;
       tbody.innerHTML = list.slice(start, start + pageSize).map(function (x, i) { return rowHTML(x, 'h' + (start + i), f); }).join('');
@@ -110,12 +121,14 @@
 
     document.getElementById('hoPager').addEventListener('click', function (e) {
       var b = e.target.closest('.pp'); if (!b || b.classList.contains('dis')) return;
-      var pages = Math.max(1, Math.ceil(forTab(activeLabel()).length / pageSize)), v = b.getAttribute('data-pg');
+      var pages = Math.max(1, Math.ceil(lastN / pageSize)), v = b.getAttribute('data-pg');
       page = v === 'first' ? 1 : v === 'prev' ? page - 1 : v === 'next' ? page + 1 : v === 'last' ? pages : +v;
       render();
     });
     var ps = document.getElementById('hoPageSize');
     if (ps) ps.addEventListener('change', function () { pageSize = parseInt(this.value, 10) || 20; page = 1; render(); });
+    table.cxFilter = function (pred) { filtPred = pred; page = 1; render(); };
+    table.cxValues = function (i) { var h = heads()[i]; return forTab(activeLabel()).map(function (x) { return cellText(x, h); }); };
     table.addEventListener('cxsort', function (e) { e.preventDefault(); sortSt = { label: e.detail.label, dir: e.detail.dir }; page = 1; render(); });
     tbody.addEventListener('click', function (e) {
       var ch = e.target.closest('.tw-chevron'); if (!ch) return;
