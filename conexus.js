@@ -166,7 +166,7 @@
   }
 
   var CHECK = '<span class="ck"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>';
-  var BOX = '<span class="bx"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>';
+  var CHEV = '<svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>';
   var SEARCH = '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>';
   var FUNNEL = '<svg viewBox="0 0 24 24"><path d="M3 5h18"/><path d="M7 12h10"/><path d="M11 19h2"/></svg>';
 
@@ -228,16 +228,28 @@
     var f = t.draft[idx] || { op: 'has', q: '' };
     var OPS = [['has', '포함'], ['eq', '같음'], ['start', '시작'], ['end', '끝남']];
     var html = '<div class="lb">' + esc(label(th)) + ' 필터</div>'
-      + '<select>' + OPS.map(function (o) {
-          return '<option value="' + o[0] + '"' + (f.op === o[0] ? ' selected' : '') + '>' + o[1] + '</option>';
-        }).join('') + '</select>'
+      /* 조건 선택 — 시스템 select 대신 필터 목록과 같은 드롭다운(목록은 박스 아래로 펼침) */
+      + '<div class="cx-dd" data-v="' + f.op + '"><button type="button" class="cx-dd-t"><span>'
+      + OPS.filter(function (o) { return o[0] === f.op; })[0][1] + '</span>' + CHEV + '</button>'
+      + '<div class="cx-dd-l">' + OPS.map(function (o) {
+          return '<button type="button" class="it' + (f.op === o[0] ? ' on' : '') + '" data-v="' + o[0] + '">'
+            + '<span class="tx">' + o[1] + '</span>' + CHECK + '</button>';
+        }).join('') + '</div></div>'
       + '<label class="srch">' + SEARCH + '<input type="text" placeholder="검색" value="' + esc(f.q) + '"></label>'
       + '<div class="foot"><button type="button" data-rst>초기화</button><button type="button" class="dark" data-ok>적용</button></div>';
     show(btn, html, function (m) {
-      var sel = m.querySelector('select'), inp = m.querySelector('input');
+      var dd = m.querySelector('.cx-dd'), inp = m.querySelector('input');
+      dd.querySelector('.cx-dd-t').addEventListener('click', function () { dd.classList.toggle('open'); });
+      dd.querySelector('.cx-dd-l').addEventListener('click', function (e) {
+        var it = e.target.closest('[data-v]'); if (!it) return;
+        dd.setAttribute('data-v', it.getAttribute('data-v'));
+        dd.querySelector('.cx-dd-t span').textContent = it.textContent;
+        dd.querySelectorAll('.it').forEach(function (x) { x.classList.toggle('on', x === it); });
+        dd.classList.remove('open'); inp.focus();
+      });
       inp.focus();
       function commit() {
-        var op = sel.value, q = inp.value.trim();
+        var op = dd.getAttribute('data-v'), q = inp.value.trim();
         t.draft[idx] = { op: op, q: q };
         t.filters[idx] = q ? function (v) {
           if (op === 'eq') return v === q;
@@ -568,11 +580,19 @@
       var items = t.ths.map(function (th, i) {
         var lb = label(th); if (!lb) return '';
         return '<button class="it' + (t.hidden[i] ? '' : ' on') + '" type="button" data-c="' + i + '">'
-          + BOX + '<span class="tx">' + esc(lb) + '</span></button>';
+          + '<span class="tx">' + esc(lb) + '</span>' + CHECK + '</button>';
       }).join('');
-      show(b, '<div class="lb">컬럼 표시</div>' + items
+      /* 컬럼 필터(목록형)와 같은 모양 — 검색 · 제목 · 체크 표시 · 초기화/적용 */
+      show(b, '<label class="srch">' + SEARCH + '<input type="text" placeholder="검색"></label>'
+        + '<div class="lb">컬럼 표시</div><div data-list>' + items + '</div>'
         + '<div class="foot"><button type="button" data-rst>초기화</button><button type="button" class="dark" data-ok>적용</button></div>',
         function (m) {
+          m.querySelector('input').addEventListener('input', function (e) {
+            var q = e.target.value.trim();
+            m.querySelectorAll('[data-c]').forEach(function (x) {
+              x.style.display = (!q || x.textContent.indexOf(q) >= 0) ? '' : 'none';
+            });
+          });
           m.addEventListener('click', function (ev) {
             var it = ev.target.closest('[data-c]'); if (it) { it.classList.toggle('on'); return; }
             if (ev.target.closest('[data-rst]')) { t.hidden = {}; paintCols(t); hide(); return; }
