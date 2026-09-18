@@ -40,7 +40,7 @@
     return '';
   }
   function cell(x, c) {
-    if (c === '상태') return '<span class="lc-b ' + (x.ans ? 'blue' : 'gray') + '">' + st(x) + '</span>';
+    if (c === '상태') return '<span class="lc-b ' + (x.ans ? 'blue' : 'gray') + '"><i></i>' + st(x) + '</span>';   /* dot 뱃지(로그인코드 관리와 같은 모양) */
     if (c === '질의 내용') return '<div class="pq-q"><span class="tt">' + esc(x.title) + '</span><span class="bd">' + esc(x.body) + '</span></div>';
     var t = val(x, c);
     return (c === '접수일' || c === '답변일' || t === '-') ? '<span class="mu">' + esc(t) + '</span>' : esc(t);
