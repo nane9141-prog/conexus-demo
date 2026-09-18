@@ -50,7 +50,7 @@
   /* ---------- 컬럼 ---------- */
   var COLS = {
     sh: [['투표권자', 220], ['주주명', 0], ['주주번호', 140], ['참석 유형', 104, 'c'], ['사전투표', 96, 'c'], ['보유주식수', 120, 'n'], ['지분율', 90, 'n'], ['참석주식수', 120, 'n'], ['참석 신청', 96, 'c'], ['출석', 96, 'c'], ['로그인코드', 130], ['등록 경로', 104, 'c']],
-    ns: [['유형', 100, 'c'], ['이름', 140], ['이메일', 220], ['휴대폰번호', 140], ['소속', 0], ['직급', 120], ['질의권', 90, 'c'], ['메모', 200], ['로그인코드', 130], ['', 44, 'c']]
+    ns: [['유형', 100, 'c'], ['이름', 140], ['이메일', 220], ['휴대폰번호', 140], ['소속', 0], ['직급', 120], ['시청', 96, 'c'], ['질의권', 90, 'c'], ['메모', 200], ['로그인코드', 130], ['', 44, 'c']]
   };
   var LEFT = { sh: 1, ns: 2 };
   function val(x, c) {
@@ -68,6 +68,7 @@
   }
   var NUM = { '보유주식수': 1, '지분율': 1, '참석주식수': 1 };
   function txt(x, c) { var v = val(x, c); return c === '지분율' ? v.toFixed(4) + '%' : NUM[c] ? cm(v) : String(v); }
+  var MUTED = { '이메일': 'email', '휴대폰번호': 'phone', '소속': 'org', '직급': 'pos' };   /* 비주주 보조 정보 — muted */
   function cell(x, c, child) {
     if (c === '') {
       if (cur === 'ns') return '<button type="button" class="lc-more" aria-label="더보기"><i class="ph ph-dots-three"></i></button>';
@@ -77,11 +78,13 @@
     if (c === '투표권자' && x.grp) return '<div class="voter"><button type="button" class="tw-chevron' + (open[x.k] ? '' : ' collapsed') + '" aria-label="펼치기"><svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button><span>' + esc(x.voter) + '</span></div>';
     if (c === '투표권자' && child) return '<span class="cv"></span>';
     /* 참석 신청: 신청 blue · 미신청 info 50% / 출석: 참석 blue · 일부참석 info · 미참석 info 50% */
-    if (c === '참석 신청' || c === '출석') { var t0 = val(x, c); return '<span class="lc-b ' + ({ '신청': 'blue', '참석': 'blue', '일부참석': 'gray' }[t0] || 'gray off') + '"><i></i>' + t0 + '</span>'; }
+    /* 비주주 시청·질의권도 같은 규칙: 시청·부여 blue · 미시청·미부여 info 50% */
+    if (c === '참석 신청' || c === '출석' || c === '시청' || c === '질의권') { var t0 = val(x, c); return '<span class="lc-b ' + ({ '신청': 'blue', '참석': 'blue', '시청': 'blue', '부여': 'blue', '일부참석': 'gray' }[t0] || 'gray off') + '"><i></i>' + t0 + '</span>'; }
+    if (MUTED[c] && x[MUTED[c]]) return '<span class="mu">' + esc(x[MUTED[c]]) + '</span>';
     if (c === '등록 경로') return '<span class="mu">' + esc(x.route) + '</span>';
     if (c === '로그인코드') return x.code ? '<span class="lc-code' + (x.revoked ? ' off' : '') + '">' + x.code + '</span>' : '<span class="mu">-</span>';
     if (c === '주주명' && x.grp) return '<span class="tag">' + esc(x.name) + '</span>';
-    if (c === '메모') return '<span class="lc-memo" title="' + esc(x.memo || '') + '">' + esc(x.memo || '-') + '</span>';
+    if (c === '메모') return '<span class="lc-memo mu" title="' + esc(x.memo || '') + '">' + esc(x.memo || '-') + '</span>';
     var t = txt(x, c);
     return t === '-' ? '<span class="mu">-</span>' : esc(t);
   }
