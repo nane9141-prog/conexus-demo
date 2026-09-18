@@ -433,7 +433,7 @@
     var cc=CCOLS[cur]||[];
     var CW={'주주명':150,'주주번호':132,'주주구분':92,'사전투표':118,'보유주식수':112,'지분율':78,'현장 참석':90,'앱 사용':80,'의결권 제한':112,'의안별 제한':112,'입장코드':132,'전자주총 참석':110,'발급 상태':100};
     var cg=document.getElementById('atCols');
-    if(cg) cg.innerHTML=cols.map(function(c){return c==='투표권자'?'<col>':'<col style="width:'+(CW[c]||100)+'px">';}).join('');
+    if(cg) cg.innerHTML=cols.map(function(c){return '<col style="width:'+(c==='투표권자'?220:(CW[c]||100))+'px">';}).join('');
     head.innerHTML='<tr>'+cols.map(function(c,i){var cl=nc.indexOf(i)>=0?' class="n"':(cc.indexOf(i)>=0?' class="c"':'');return '<th'+cl+'>'+c+'</th>';}).join('')+'</tr>';
     var q=(document.getElementById('atSearch').value||'').trim();
     var rows=D;
@@ -490,6 +490,6 @@
 })();
 </script>
 
-<script src="conexus.js?v=fw8"></script>
+<script src="conexus.js?v=fw9"></script>
 </body>
 </html>
