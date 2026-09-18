@@ -201,7 +201,7 @@
   .as-cancel{background:#fff;border:1px solid #E5E5E5;color:#0A0A0A}
   .as-ok{background:#171717;border:none;color:#FAFAFA}
   .as-mod{text-align:center;font-size:12px;line-height:16px;color:#737373}
-  /* 조회 모드(전체 탭) — 입력 비활성, 하단 참석 철회 · 닫기 */
+  /* 조회 모드(현장 참석자 탭) — 입력 비활성, 하단 참석 철회 · 닫기 */
   .as-inp:disabled{opacity:.5;cursor:not-allowed;background:#fff}
   .assheet-ov.view .as-radio,.assheet-ov.view .as-rcard,.assheet-ov.view .as-acct{pointer-events:none;opacity:.5}
   .as-ft .vonly{display:none}
@@ -437,13 +437,13 @@
         <div class="at-tabs">
           <button class="at-tab on" data-at="reg">현장 참석자 등록</button>
           <button class="at-tab" data-at="evote">전자주총 참석자 <span class="cnt">99+</span></button>
-          <button class="at-tab" data-at="all">전체 <span class="cnt">99+</span></button>
+          <button class="at-tab" data-at="all">현장 참석자 <span class="cnt">99+</span></button>
         </div>
         <div class="at-tb">
           <div class="at-tb-l">
             <div class="selbox"><span>투표권자</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
             <div class="search2"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="atSearch" placeholder="투표권자를 검색해 주세요"></div>
-            <div class="at-chips" id="atChips"><button type="button" class="at-chip" data-chip="site">현장참석 <b></b></button><button type="button" class="at-chip" data-chip="e">전자참석 <b></b></button><button type="button" class="at-chip" data-chip="non">비주주 <b></b></button></div>
+            <div class="at-chips" id="atChips"><button type="button" class="at-chip" data-chip="sh">주주 <b></b></button><button type="button" class="at-chip" data-chip="non">비주주 <b></b></button></div>
           </div>
           <div class="at-tb-r">
             <button class="abtn regonly"><i class="ph ph-user-plus" style="font-size:16px"></i>대리인 · 위임주주 등록</button>
@@ -641,7 +641,7 @@
   }
   /* 세 탭 공통 항목 */
   var C=['투표권자','주주명','주주번호','사전투표','보유주식','지분율','참석주식수','현장 참석','앱 사용','의결권 제한','의안별 제한'];
-  /* 전체 탭 — 주주번호 오른쪽 '대리인', 맨 뒤 더보기(⋯). 헤더가 빈 칸은 표 도구가 정렬·필터를 달지 않는다 */
+  /* 현장 참석자 탭 — 주주번호 오른쪽 '대리인', 맨 뒤 더보기(⋯). 헤더가 빈 칸은 표 도구가 정렬·필터를 달지 않는다 */
   var CA=C.slice(0,3).concat(['대리인']).concat(C.slice(3)).concat(['']);
   /* 전자주총 참석자 탭 — 온라인 출석 기준 */
   var CE=['투표권자','주주명','주주번호','대리인','보유주식수','지분율','참석주식수','출석'];
@@ -698,7 +698,7 @@
   }
   var filtPred=null;
   function sortRows(rows){
-    /* 기본 정렬 — 전자주총 참석자·전체 탭은 주주명 가나다 순(현장 참석자는 검색 결과 순서 그대로) */
+    /* 기본 정렬 — 전자주총 참석자·현장 참석자 탭은 주주명 가나다 순(현장 참석자는 검색 결과 순서 그대로) */
     if(!sortSt||!sortSt.dir) return cur==='reg'?rows:rows.sort(function(a,b){ return String(a.name).localeCompare(String(b.name),'ko'); });
     var c=COLS[cur][sortSt.idx], d=sortSt.dir;
     rows.forEach(function(x,i){x._o=i;});
@@ -709,8 +709,8 @@
   var CW={'출석':90,'보유주식수':120,'대리인':96,'주주명':140,'주주번호':140,'사전투표':116,'현장 참석':110,'앱 사용':84,'보유주식':110,'지분율':72,'참석주식수':104,'의결권 제한':150,'의안별 제한':92};
   /* 검색은 항상 전체 데이터(D) 기준. reg 탭은 검색 전엔 목록을 감춘다(null 반환) */
   var chips={};
-  function chipHit(x,k){ return k==='site'?(x.site!=='미참석'):k==='e'?(x.evote==='참석'):!!x.nonsh; }
-  /* 전체 탭은 참석(등록)한 인원만 — 미참석은 현장 참석자 등록 탭에서 검색해 등록한다 */
+  function chipHit(x,k){ return k==='sh'?!x.nonsh:!!x.nonsh; }
+  /* 현장 참석자 탭은 참석(등록)한 인원만 — 미참석은 현장 참석자 등록 탭에서 검색해 등록한다 */
   function base(){ return cur==='all'?D.filter(function(x){ return x.site!=='미참석'; }):D; }
   function filteredRows(){
     var q=(document.getElementById('atSearch').value||'').trim(), on=Object.keys(chips).filter(function(k){ return chips[k]; });
@@ -759,7 +759,7 @@
     h+='<span class="atpg-tot">'+page+' / '+pages+'</span>';
     el.innerHTML=h;
   }
-  /* 검색 옆 칩은 전체 탭에서만 — 현장 참석자 등록 · 전자주총 참석자 탭은 숨기고 선택도 푼다 */
+  /* 검색 옆 칩은 현장 참석자 탭에서만 — 현장 참석자 등록 · 전자주총 참석자 탭은 숨기고 선택도 푼다 */
   function syncChips(){
     var box=document.getElementById('atChips'), on=(cur==='all');
     box.style.display=on?'':'none';
@@ -1091,7 +1091,7 @@
       set('asOk', reg?'현장 참석 수정':'현장 참석 등록');
       var md=document.getElementById('asMod'); md.style.display=reg?'':'none';
       if(reg) md.textContent='마지막 수정 2026-08-28 09:'+('0'+(x.ri%50+5)).slice(-2)+' · 담당자 박지용';
-      /* 모드 — 등록(현장 참석자 등록 탭) / 조회(전체 탭: 입력 비활성, 참석 철회·닫기) */
+      /* 모드 — 등록(현장 참석자 등록 탭) / 조회(현장 참석자 탭: 입력 비활성, 참석 철회·닫기) */
       ov.classList.toggle('view',view); viewX=view?x:null;
       set('asTitle',view?'현장참석자 정보':'현장 참석자 등록');
       set('asDesc',view?'현장참석자로 등록된 주주 및 대리인 정보입니다.':'현장 참석 정보를 입력해 등록합니다.');
