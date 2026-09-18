@@ -182,7 +182,7 @@
     '<div class="lc-ov" id="lcIssueDlg"><div class="lc-map lc-iss" role="dialog" aria-modal="true"><button class="lc-x" data-x aria-label="닫기"><i class="ph ph-x"></i></button>' +
       '<div class="mh"><div class="lc-dt">로그인코드 발급</div><div class="lc-dd">발급 대상을 선택해 주세요.</div></div>' +
       '<div class="mc"><div class="ml" id="lcIssL"></div><div class="mr" id="lcIssR"></div></div>' +
-      '<div class="mf"><button class="btn" data-reset style="width:72px">초기화</button><span class="lc-iss-d">참석자 등록 시, 입력하신 이메일로 접속 아이디와 비밀번호가 자동 발송됩니다.</span><button class="btn" data-x>취소</button><button class="btn dark" data-ok disabled style="width:108px">로그인코드 발급</button></div></div></div>' +
+      '<div class="mf"><button class="btn" data-back style="width:72px">이전 단계</button><span class="lc-iss-d">참석자 등록 시, 입력하신 이메일로 접속 아이디와 비밀번호가 자동 발송됩니다.</span><button class="btn" data-x>취소</button><button class="btn dark" data-ok disabled style="width:108px">로그인코드 발급</button></div></div></div>' +
     '<div class="lc-ov" id="lcMap"><div class="lc-map" role="dialog" aria-modal="true"><button class="lc-x" data-x aria-label="닫기"><i class="ph ph-x"></i></button>' +
       '<div class="mh"><div class="lc-dt">주주 매핑</div><div class="lc-dd">주주가 제출한 정보를 주주명부와 대조해 투표권자를 연결합니다. 연결하면 주주확인이 완료되고 주총 참여 권한이 부여됩니다.</div></div>' +
       '<div class="mc"><div class="ml" id="lcMapL"></div><div class="mr"><div class="lc-sh">주주명부 목록</div>' +
@@ -399,12 +399,14 @@
   function issPaint() {
     var v = iss.v, ns = iss.ns;
     function f(id, lb, ph, req, ex) { return fld(id, lb, ph, req, ex).replace('placeholder=', 'value="' + esc(v[id] || '') + '" placeholder='); }
-    var row2 = '<div class="lc-row2">' + f('lciOrg', ns ? '부서' : '소속', ns ? '부서' : '소속') + f('lciPos', '직급', '직급') + '</div>';
-    var mail = f('lciMail', '이메일', 'name@example.com', 1), phone = f('lciPhone', '휴대폰번호', ns ? '010-0000-0000' : '+1-212-000-0000', 1, ns ? ' inputmode="numeric" maxlength="13"' : '');
-    issL.innerHTML = '<div class="lc-sh">발급 정보 입력</div>' + f('lciName', '이름', ns ? '이름' : iss.corp ? '법인(기관)명' : '성명', 1) +
-      (ns ? row2 + mail + phone : mail + phone + row2) +
+    /* 법인: 법인(기관)명·담당자명·부서·직급 / 개인: 이름 / 비주주: 이름·소속·직급·질의권 — 공통으로 휴대폰번호·이메일·메모 */
+    var corp = !ns && iss.corp, dep = ns ? '소속' : '부서';
+    var row2 = '<div class="lc-row2">' + f('lciOrg', dep, dep) + f('lciPos', '직급', '직급') + '</div>';
+    issL.innerHTML = '<div class="lc-sh">발급 정보 입력</div>' +
+      (corp ? f('lciName', '법인(기관)명', '법인(기관)명', 1) + f('lciMgr', '담당자명', '담당자명', 1) + row2 : f('lciName', '이름', '이름', 1) + (ns ? row2 : '')) +
+      f('lciPhone', '휴대폰번호', ns ? '010-0000-0000' : '+1-212-000-0000', 1, ns ? ' inputmode="numeric" maxlength="13"' : '') + f('lciMail', '이메일', 'name@example.com', 1) +
       '<div class="lc-f"><label for="lciMemo">메모 (선택)</label><textarea class="lc-in" id="lciMemo" placeholder="참석 목적 등 메모를 입력해 주세요">' + esc(v.lciMemo || '') + '</textarea></div>' +
-      (ns ? '<div class="lc-f"><label>이용 기능</label><label class="lc-chk"><input type="checkbox" id="lciAsk"' + (v.lciAsk ? ' checked' : '') + '>질의권 부여</label></div>' : '');
+      (ns ? '<div class="lc-f"><label>질의권 부여</label><label class="lc-chk"><input type="checkbox" id="lciAsk"' + (v.lciAsk ? ' checked' : '') + '>질의 권한을 부여합니다.</label></div>' : '');
     issR.innerHTML = '<div class="lc-tgrow"><div class="lc-tgw"><div class="lc-sh">발급대상</div><div class="lc-tg">' + tg('tgt', 'sh', '주주', !ns) + tg('tgt', 'ns', '비주주', ns) + '</div></div>' +
       (ns ? '' : '<div class="lc-tgw"><div class="lc-sh">주주 유형</div><div class="lc-tg">' + tg('corp', '1', '해외(법인)', iss.corp) + tg('corp', '', '해외(개인)', !iss.corp) + '</div></div>') + '</div>' +
       (ns ? '<div class="lc-f"><label>유형 선택</label><div class="lc-tg lc-kgrid">' + NSK.map(function (k) { return tg('kind', k, k, iss.kind === k); }).join('') + '</div></div>'
@@ -434,7 +436,7 @@
   }
   function issCheck() {
     var v = iss.v;
-    issueOk.disabled = !(v.lciName && /.+@.+\..+/.test(v.lciMail || '') && v.lciPhone && (iss.ns ? iss.kind : iss.picked.length));
+    issueOk.disabled = !(v.lciName && (iss.ns || !iss.corp || v.lciMgr) && /.+@.+\..+/.test(v.lciMail || '') && v.lciPhone && (iss.ns ? iss.kind : iss.picked.length));
   }
   /* 첫 진입: 발급 대상(주주/비주주)과 유형을 고르는 작은 모달 */
   var pickEl = document.getElementById('lcPickDlg'), pickOk = pickEl.querySelector('[data-ok]'), pk = null;
@@ -446,7 +448,7 @@
         : '<div class="lc-f"><label>주주 유형</label><div class="lc-rad">' + rad('lcpCorp', '1', '해외(법인)', pk.corp) + rad('lcpCorp', '', '해외(개인)', !pk.corp) + '</div></div>');
     pickOk.disabled = pk.ns && !pk.kind;
   }
-  document.getElementById('lcIssue').addEventListener('click', function () { pk = { ns: cur === 'ns', corp: true, kind: '' }; pickPaint(); pickEl.classList.add('show'); });
+  document.getElementById('lcIssue').addEventListener('click', function () { iss = null; pk = { ns: cur === 'ns', corp: true, kind: '' }; pickPaint(); pickEl.classList.add('show'); });
   pickEl.addEventListener('change', function (e) {
     var t = e.target;
     if (t.name === 'lcpTgt') { pk.ns = t.value === 'ns'; pickPaint(); }
@@ -457,7 +459,7 @@
     if (e.target.closest('[data-x]')) { pickEl.classList.remove('show'); return; }
     if (!e.target.closest('[data-ok]') || pickOk.disabled) return;
     pickEl.classList.remove('show');
-    iss = issNew(pk.ns); iss.corp = pk.corp; iss.kind = pk.kind; issPaint(); issueEl.classList.add('show');
+    var keep = iss && iss.ns === pk.ns ? iss : null; iss = issNew(pk.ns); iss.corp = pk.corp; iss.kind = pk.kind; if (keep) { iss.v = keep.v; iss.picked = keep.picked; } issPaint(); issueEl.classList.add('show');
   });
   issueEl.addEventListener('input', function (e) {
     var t = e.target;
@@ -472,7 +474,7 @@
   issueEl.addEventListener('click', function (e) {
     var t = e.target, b;
     if (t.closest('[data-x]')) { issueEl.classList.remove('show'); return; }
-    if (t.closest('[data-reset]')) { var o = iss; iss = issNew(o.ns); iss.corp = o.corp; iss.kind = o.kind; issPaint(); return; }
+    if (t.closest('[data-back]')) { issueEl.classList.remove('show'); pk = { ns: iss.ns, corp: iss.corp, kind: iss.kind }; pickPaint(); pickEl.classList.add('show'); return; }
     if ((b = t.closest('[data-tgt]'))) { if ((b.dataset.tgt === 'ns') !== iss.ns) { iss.ns = !iss.ns; issPaint(); } return; }
     if ((b = t.closest('[data-corp]'))) { iss.corp = !!b.dataset.corp; issPaint(); return; }
     if ((b = t.closest('[data-kind]'))) { iss.kind = b.dataset.kind; [].forEach.call(b.parentNode.children, function (x) { x.classList.toggle('on', x === b); }); issCheck(); return; }
@@ -505,7 +507,7 @@
     if (ns) { x.kind = iss.kind; x.qna = !!v.lciAsk; }
     else {
       /* 주주명부에서 고른 투표권자로 바로 연결 — 셀프 신청의 주주확인 단계를 거치지 않는다 */
-      x.corp = iss.corp; x.trust = '-'; x.mgr = '-'; x.dept = '-';
+      x.corp = iss.corp; x.trust = '-'; x.mgr = iss.corp ? v.lciMgr : '-'; x.dept = iss.corp ? v.lciOrg || '-' : '-';
       x.voters = iss.picked.slice(); x.st = '주주확인 완료'; x.mapAt = t; x.mapBy = ME;
       x.hist.unshift({ at: t, t: '주주명부 선택 · 투표권자 ' + x.voters.map(voterOf).join(', ') + ' 연결', by: ME });
     }
