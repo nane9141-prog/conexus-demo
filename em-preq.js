@@ -93,8 +93,8 @@
   function kv(k, v) { return '<div class="lc-kv"><span class="k">' + k + '</span><span class="v">' + v + '</span></div>'; }
   function paint() {
     var x = cx, r = x.r, h = '';
-    h += '<div class="pq-info"><div class="nm">' + esc(r.nm) + '</div>' + kv('투표권자명', esc(voter(r))) + kv('구분', (r.fr === '외국인' ? '해외 ' : '') + (r.gb === '개인' ? '개인' : '법인') + ' 주주') + kv('보유 주식수', cm(r.sh) + '주') + kv('이메일', esc(x.email)) + kv('휴대폰번호', x.phone) + '</div>';
-    h += '<div class="lc-sec"><div class="lc-sh"><span>질의 내용</span><span class="lc-b gray">' + esc(x.lbl) + '</span></div><div class="pq-qbox"><div class="tt">' + esc(x.title) + '</div><div class="bd">' + esc(x.body) + '</div><div class="pq-ans" style="background:none;border:none;padding:0"><div class="meta"><span>' + x.at + ' 작성</span></div></div></div></div>';
+    h += '<div class="pq-info">' + kv('주주명', esc(r.nm)) + kv('투표권자명', esc(voter(r))) + kv('구분', (r.fr === '외국인' ? '해외 ' : '') + (r.gb === '개인' ? '개인' : '법인') + ' 주주') + kv('보유 주식수', cm(r.sh) + '주') + kv('이메일', esc(x.email)) + kv('휴대폰번호', x.phone) + '</div>';
+    h += '<div class="lc-sec"><div class="lc-sh"><span>질의 내용</span></div><div class="pq-qbox"><div class="tt">' + esc(x.title) + '</div><div class="bd">' + esc(x.body) + '</div><div class="pq-ans" style="background:none;border:none;padding:0"><div class="meta"><span>' + x.at + ' 작성</span></div></div></div></div>';
     if (x.ans && !editing) {
       h += '<div class="lc-sec"><div class="lc-sh"><span>답변</span></div><div class="pq-ans"><div class="bd">' + esc(x.ans) + '</div><div class="meta"><span>' + x.ansAt + ' · ' + esc(x.by) + '</span><span class="lk"><button type="button" data-a="edit">수정</button><span class="sep"></span><button type="button" data-a="del">삭제</button></span></div></div></div>';
     } else {
