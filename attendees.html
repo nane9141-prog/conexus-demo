@@ -134,6 +134,13 @@
   .px-ta::placeholder{color:#737373}
   .px-ta:focus{border-color:#a3a3a3}
   .px-box.g24{gap:24px}
+  /* 비주주 정보 패널(조회) — 가이드: 480 · 구분 #FAFAFA · 정보 박스 2×2(아랫줄 비활성) · 메모 · 참석 철회/닫기 */
+  .nv-sel{box-sizing:border-box;width:100%;height:32px;display:flex;align-items:center;gap:6px;padding:8px 8px 8px 10px;background:#FAFAFA;border:1px solid rgba(229,229,229,.5);border-radius:10px;font-size:14px;line-height:20px;color:#0A0A0A}
+  .nv-sel span{flex:1;min-width:0}.nv-sel i{width:24px;text-align:center;font-size:12px;color:#737373}
+  .nv-inp{box-sizing:border-box;width:100%;height:32px;padding:4px 10px;background:rgba(245,245,245,.5);border:1px solid rgba(229,229,229,.5);border-radius:10px;font-family:inherit;font-size:14px;line-height:20px;letter-spacing:-.01em;color:#0A0A0A;outline:none}
+  .nv-inp.off{background:rgba(229,229,229,.5);border-color:#E5E5E5;opacity:.5;color:#737373}
+  .nv-ta{background:rgba(245,245,245,.5);resize:none}
+  .nv-wd{background:rgba(220,38,38,.1);border:none;color:#E9081B}
   .px-f button{height:32px;padding:8px 10px;border-radius:10px;font-family:inherit;font-size:14px;line-height:16px;font-weight:500;letter-spacing:-.01em;cursor:pointer}
   .px-cancel{background:#fff;border:1px solid #E5E5E5;color:#171717}
   .px-ok{min-width:142px;background:#171717;border:none;color:#FAFAFA}
@@ -467,6 +474,7 @@
 <div class="pv-ov" id="pvDlg"><div class="pv-dlg" role="alertdialog" aria-modal="true" aria-labelledby="pvTitle"><div class="pv-h"><div class="pv-media"><i class="ph ph-warning-circle"></i></div><div class="pv-txt"><div class="pv-t" id="pvTitle">-</div><div class="pv-d" id="pvDesc">처리 방법을 선택해 주세요.</div></div><div class="pv-opts"><div class="as-rcard on" data-pv="withdraw"><span class="rd"></span><div class="as-rc"><b>사전행사 철회 후 현장 참석</b><span>사전 행사를 철회하고 현장에서 행사합니다</span></div></div><div class="as-rcard" data-pv="keep"><span class="rd"></span><div class="as-rc"><b>사전행사 유지 (참관 참석)</b><span>사전 행사 결과를 유지하고 참관합니다</span></div></div></div><label class="pv-chk" id="pvChk"><span class="cbx"><i class="ph ph-check"></i></span>주주에게 처리 방법을 안내했습니다.</label></div><div class="pv-f"><button class="pv-cancel" data-pv-close>취소</button><button class="pv-ok" id="pvOk" disabled>철회 후 등록</button></div></div></div>
 <div class="px-ov" id="pxDlg"><div class="px-dlg" role="dialog" aria-modal="true" aria-labelledby="pxTitle"><button class="px-x" data-px-close aria-label="닫기"><i class="ph ph-x"></i></button><div class="px-h"><div class="px-t" id="pxTitle">대리인 · 위임주주 등록</div><div class="px-d">대리인을 선택하고 의결권을 위임한 주주를 등록해 주세요.</div></div><div class="px-c"><div class="px-sec g12"><div class="px-lb">대리인 구분<em>*</em></div><div class="px-row"><div class="as-rcard on" data-pk="holder"><span class="rd"></span><div class="as-rc"><b>주주 대리인</b><span>주주명부에 있는 주주가 대리</span></div></div><div class="as-rcard" data-pk="ext"><span class="rd"></span><div class="as-rc"><b>비주주 대리인</b><span>주주가 아닌 대리인이 참석</span></div></div></div></div><div class="px-sec" id="pxHolderSec"><div class="px-lb">대리인</div><div class="px-find" data-find="proxy"><button type="button" class="px-sel" data-k="voter"><span>투표권자</span><i class="ph ph-caret-down"></i></button><div class="px-in"><i class="ph ph-magnifying-glass"></i><input type="text" placeholder="대리인을 검색해 주세요"></div><div class="px-dd" data-dd></div></div><div id="pxProxy"></div></div><div class="px-sec g12" id="pxExtSec" style="display:none"><div class="px-lb">대리인 등록 (1명)<em>*</em></div><div class="px-box"><div class="as-row2"><div class="as-field"><label>성명</label><input class="as-inp" id="pxExtName" placeholder="대리인 성명"></div><div class="as-field"><label>생년월일 + 성별</label><input class="as-inp" id="pxExtBirth" inputmode="numeric" maxlength="7" placeholder="'-' 제외 숫자만 입력 (9003041)"></div></div><div class="as-field"><label>연락처</label><input class="as-inp" id="pxExtPhone" inputmode="numeric" maxlength="13" placeholder="010-0000-0000"></div></div></div><div class="px-sec"><div class="px-lb" id="pxCnt">위임주주 등록 (0명)</div><div class="px-find" data-find="holders"><button type="button" class="px-sel" data-k="voter"><span>투표권자</span><i class="ph ph-caret-down"></i></button><div class="px-in"><i class="ph ph-magnifying-glass"></i><input type="text" placeholder="위임주주를 검색해 추가해 주세요"></div><div class="px-dd" data-dd></div></div><div id="pxList"></div></div></div><div class="px-f"><button class="px-cancel" data-px-close>취소</button><button class="px-ok" id="pxOk" disabled>위임주주 0명 등록</button></div></div></div>
 <div class="px-ov" id="nsDlg"><div class="px-dlg" role="dialog" aria-modal="true" aria-labelledby="nsTitle"><button class="px-x" data-ns-close aria-label="닫기"><i class="ph ph-x"></i></button><div class="px-h"><div class="px-t" id="nsTitle">비주주 등록</div><div class="px-d">주주가 아닌 참석자를 등록합니다. 등록된 비주주는 의결권이 없으며 참관만 가능합니다.</div></div><div class="px-c"><div class="px-sec"><div class="px-lb">구분</div><div class="px-find"><button type="button" class="px-sel full" id="nsKind"><span class="ph">비주주 구분을 선택해 주세요</span><i class="ph ph-caret-down"></i></button><div class="px-dd" id="nsKindDd"></div></div></div><div class="px-sec g12"><div class="px-lb">비주주 정보</div><div class="px-box g24"><div class="as-row2"><div class="as-field"><label>성명</label><input class="as-inp" id="nsName" placeholder="성명"></div><div class="as-field"><label>생년월일 + 성별</label><input class="as-inp" id="nsBirth" inputmode="numeric" maxlength="7" placeholder="'-' 제외 숫자만 입력 (9003041)"></div></div><div class="as-row2"><div class="as-field"><label>소속</label><input class="as-inp" id="nsOrg" placeholder="소속 (선택)"></div><div class="as-field"><label>연락처</label><input class="as-inp" id="nsPhone" inputmode="numeric" maxlength="13" placeholder="010-0000-0000"></div></div></div></div><div class="px-sec"><div class="px-lb">비고</div><textarea class="px-ta" id="nsMemo" placeholder="참석 목적 등 메모를 입력해 주세요"></textarea></div></div><div class="px-f"><button class="px-cancel" data-ns-close>취소</button><button class="px-ok" id="nsOk" style="min-width:84px" disabled>등록하기</button></div></div></div>
+<div class="px-ov" id="nvDlg"><div class="px-dlg" role="dialog" aria-modal="true" aria-labelledby="nvTitle"><button class="px-x" data-nv-close aria-label="닫기"><i class="ph ph-x"></i></button><div class="px-h"><div class="px-t" id="nvTitle">비주주 정보</div><div class="px-d">등록된 비주주 참석자 정보입니다.</div></div><div class="px-c"><div class="px-sec"><div class="px-lb">구분</div><div class="nv-sel"><span id="nvKind">-</span><i class="ph ph-caret-down"></i></div></div><div class="px-sec g12"><div class="px-lb">비주주 정보</div><div class="px-box g24"><div class="as-row2"><div class="as-field"><label>참석자명</label><input class="nv-inp" id="nvName" readonly></div><div class="as-field"><label>소속</label><input class="nv-inp" id="nvOrg" readonly></div></div><div class="as-row2"><div class="as-field"><label>전화번호</label><input class="nv-inp off" id="nvPhone" disabled></div><div class="as-field"><label>이메일</label><input class="nv-inp off" id="nvMail" disabled></div></div></div></div><div class="px-sec"><div class="px-lb">메모</div><textarea class="px-ta nv-ta" id="nvMemo" readonly></textarea></div></div><div class="px-f"><button class="nv-wd" id="nvWithdraw">참석 철회</button><button class="px-cancel" data-nv-close>닫기</button></div></div></div>
 <div class="pv-ov" id="wdDlg"><div class="pv-dlg" role="alertdialog" aria-modal="true" aria-labelledby="wdTitle"><div class="pv-h" style="gap:14px"><div class="pv-media"><i class="ph ph-warning-circle"></i></div><div class="pv-txt"><div class="pv-t" id="wdTitle">참석을 철회하시겠습니까?</div><div class="pv-d" id="wdDesc" style="color:#737373">-</div></div></div><div class="pv-f"><button class="pv-cancel" data-wd-close>취소</button><button class="pv-ok" id="wdOk">참석 철회</button></div></div></div>
 <div class="nfc-ov" id="nfcDlg"><div class="nfc-dlg" role="dialog" aria-modal="true" aria-labelledby="nfcTitle"><div class="nfc-h" id="nfcTitle">현장투표 앱 태깅</div><div class="nfc-c"><div class="nfc-who"><span>태깅 대상</span><b id="nfcName">-</b></div><div class="nfc-g"><div class="nfc-t">NFC 기기와 참석자의 휴대폰 뒷면을 태깅해주세요</div><div class="nfc-s">주주총회장 영역을 벗어나면 투표가 불가능하다는 점을 안내해 주세요.</div><div class="nfc-img"><img src="nfc-tag.png" alt="NFC 태그에 휴대폰을 대는 모습"></div></div></div><div class="nfc-f"><button class="nfc-b" data-nfc="skip">현장 참석자 등록</button><button class="nfc-b dark" data-nfc="done">태깅 완료</button></div></div></div>
 <script>
@@ -561,7 +569,7 @@
 <script>
 (function(){
   /* 참석자 목록 — cx-roster.js(SSOT) 에서 파생. 상태값은 데모용으로 결정적으로 배정 */
-  function nonSh(nm,kind){ return {nonsh:1, kind:kind, proxy:'-', voter:nm, name:nm, no:'-', pre:[], hold:0, attend:0, ratio:'0.00%', site:'참관', app:'미사용', evote:'미참석', limit:'-', ag:null, key:nm+kind}; }
+  function nonSh(nm,kind,org,phone,mail,memo){ return {nonsh:1, kind:kind, org:org||'-', phone:phone||'-', mail:mail||'-', memo:memo||'', proxy:'-', voter:nm, name:nm, no:'-', pre:[], hold:0, attend:0, ratio:'0.00%', site:'참관', app:'미사용', evote:'미참석', limit:'-', ag:null, key:nm+kind}; }
   var D=(function(){
     var R=(window.CX&&CX.roster)?CX.roster:[];
     /* 사전투표: 미행사(기본) · 단일 채널 7종 · 중복행사(채널 2개 이상) */
@@ -607,7 +615,9 @@
       (x.members||[]).forEach(function(m){ m.attend=0; });
     });
     /* 비주주(참관인 등) — 의결권 없음, 현장 참관 */
-    [['정다은','참관인'],['오민석','감사인'],['최하린','공증인']].forEach(function(n){ rows.push(nonSh(n[0],n[1])); });
+    [['정다은','임직원','KVIDIA 경영지원팀','010-2381-4410','daeun.jung@kvidia.co.kr','주주총회 운영 지원'],
+     ['오민석','기자','한국경제신문 증권부','010-5527-1093','minsuk.oh@hankyung.com','취재 목적 참관'],
+     ['최하린','변호사','법무법인 세종','010-9142-6678','harin.choi@shinkim.com','총회 진행 법률 자문']].forEach(function(n){ rows.push(nonSh.apply(null,n)); });
     return rows;
   })();
   function cm(n){return (n||0).toLocaleString('en-US');}
@@ -635,7 +645,7 @@
   }
   function childRows(gid,x){
     return (x.members||[]).map(function(m){
-      return '<tr class="atchild hidden" data-child="'+gid+'">'+COLS[cur].map(function(c){
+      return '<tr class="atchild hidden" data-child="'+gid+'">'+COLS[ck()].map(function(c){
         var v='';
         if(c==='투표권자') return '<td class="tcell"><span class="cv"></span></td>';
         if(c==='주주명') v=m.name; else if(c==='주주번호') v=m.no; else if(c==='대리인') v=mu('-'); else if(c==='출석') v=evB(x.evote);
@@ -652,8 +662,11 @@
   var CA=C.slice(0,3).concat(['대리인']).concat(C.slice(3)).concat(['']);
   /* 전자주총 참석자 탭 — 온라인 출석 기준 */
   var CE=['투표권자','주주명','주주번호','대리인','보유주식수','지분율','참석주식수','출석'];
-  var COLS={reg:C,evote:CE,all:CA};
-  var NUMC=['보유주식','보유주식수','지분율','참석주식수'], CENC=['사전투표','현장 참석','앱 사용','의결권 제한','의안별 제한','출석',''];
+  /* 현장 참석자 탭 + 비주주 칩 — 비주주 전용 컬럼 */
+  var CN=['비주주 구분','참석자명','소속','전화번호','이메일','메모'];
+  var COLS={reg:C,evote:CE,all:CA,non:CN};
+  function ck(){ return (cur==='all'&&chip==='non')?'non':cur; }
+  var NUMC=['보유주식','보유주식수','지분율','참석주식수'], CENC=['비주주 구분','사전투표','현장 참석','앱 사용','의결권 제한','의안별 제한','출석',''];
   function cls(c){ return NUMC.indexOf(c)>=0?' class="n"':(CENC.indexOf(c)>=0?' class="c"':''); }
   function cellHTML(x,c,gid,k){
     if(c==='보유주식수') c='보유주식';
@@ -671,6 +684,9 @@
       case '앱 사용': return appB(x.app);
       case '의결권 제한': return x.limit==='-'?mu('-'):'<span title="'+x.limit+'">'+x.limit+'</span>';
       case '의안별 제한': return agB(x.ag);
+      case '비주주 구분': return '<span class="atb gray">'+x.kind+'</span>';
+      case '참석자명': return x.name; case '소속': return x.org; case '전화번호': return x.phone; case '이메일': return x.mail;
+      case '메모': return x.memo?'<span title="'+x.memo+'">'+x.memo+'</span>':mu('-');
       case '': return '<button type="button" class="at-more" data-more="'+k+'" aria-label="더보기"><i class="ph ph-dots-three"></i></button>';
     }
     return '';
@@ -687,6 +703,7 @@
       case '현장 참석': return x.site; case '앱 사용': return x.app;
       case '보유주식': return x.hold; case '지분율': return parseFloat(x.ratio); case '참석주식수': return attOf(x);
       case '의결권 제한': return x.limit; case '의안별 제한': return x.ag?'제한':'-';
+      case '비주주 구분': return x.kind; case '참석자명': return x.name; case '소속': return x.org; case '전화번호': return x.phone; case '이메일': return x.mail; case '메모': return x.memo||'-';
     }
     return '';
   }
@@ -700,6 +717,7 @@
       case '현장 참석': return x.site; case '앱 사용': return x.app;
       case '보유주식': return cm(x.hold); case '지분율': return x.ratio; case '참석주식수': return attOf(x)?cm(attOf(x)):'-';
       case '의결권 제한': return x.limit; case '의안별 제한': return x.ag?'제한 '+x.ag.length+'건':'-';
+      case '비주주 구분': return x.kind; case '참석자명': return x.name; case '소속': return x.org; case '전화번호': return x.phone; case '이메일': return x.mail; case '메모': return x.memo||'-';
     }
     return '';
   }
@@ -707,13 +725,13 @@
   function sortRows(rows){
     /* 기본 정렬 — 전자주총 참석자·현장 참석자 탭은 주주명 가나다 순(현장 참석자는 검색 결과 순서 그대로) */
     if(!sortSt||!sortSt.dir) return cur==='reg'?rows:rows.sort(function(a,b){ return String(a.name).localeCompare(String(b.name),'ko'); });
-    var c=COLS[cur][sortSt.idx], d=sortSt.dir;
+    var c=COLS[ck()][sortSt.idx], d=sortSt.dir;
     rows.forEach(function(x,i){x._o=i;});
     return rows.sort(function(a,b){ var p=sortVal(a,c), q=sortVal(b,c);
       var r=(typeof p==='number'&&typeof q==='number')?p-q:String(p).localeCompare(String(q),'ko');
       return r?d*r:a._o-b._o; });
   }
-  var CW={'출석':90,'보유주식수':120,'대리인':96,'주주명':140,'주주번호':140,'사전투표':116,'현장 참석':110,'앱 사용':84,'보유주식':110,'지분율':72,'참석주식수':104,'의결권 제한':150,'의안별 제한':92};
+  var CW={'출석':90,'보유주식수':120,'대리인':96,'주주명':140,'주주번호':140,'사전투표':116,'현장 참석':110,'앱 사용':84,'보유주식':110,'지분율':72,'참석주식수':104,'의결권 제한':150,'의안별 제한':92,'비주주 구분':110,'참석자명':120,'소속':180,'전화번호':140,'이메일':220,'메모':240};
   /* 검색은 항상 전체 데이터(D) 기준. reg 탭은 검색 전엔 목록을 감춘다(null 반환) */
   /* 칩은 단일 선택 — 전체(기본) · 주주 · 비주주 */
   var chip='all';
@@ -730,18 +748,18 @@
   function chipCounts(){ document.querySelectorAll('#atChips .at-chip').forEach(function(b){ var k=b.dataset.chip; b.querySelector('b').textContent=base().filter(function(x){ return chipHit(x,k); }).length; }); }
   function render(){
     var head=document.getElementById('atHead'), body=document.getElementById('atBody');
-    var cols=COLS[cur];
-    /* 헤더·콜그룹은 탭이 바뀔 때만 다시 그린다 — 검색마다 다시 그리면 conexus 필터 아이콘이 사라졌다 붙어 흔들린다 */
-    if(headTab!==cur){
+    var cols=COLS[ck()];
+    /* 헤더·콜그룹은 탭(비주주 칩 포함)이 바뀔 때만 다시 그린다 — 검색마다 다시 그리면 conexus 필터 아이콘이 사라졌다 붙어 흔들린다 */
+    if(headTab!==ck()){
       var cg=document.getElementById('atCols');
       if(cg) cg.innerHTML=cols.map(function(c){return '<col style="width:'+(c==='투표권자'?220:(c===''?48:(CW[c]||100)))+'px">';}).join('');
       head.innerHTML='<tr>'+cols.map(function(c){return '<th'+cls(c)+'>'+c+'</th>';}).join('')+'</tr>';
-      headTab=cur; sortSt=null; filtPred=null;
+      headTab=ck(); sortSt=null; filtPred=null;
       var tb=document.querySelector('table.attbl'); if(tb.__cx){ tb.__cx.filters={}; tb.__cx.draft={}; }   /* 탭이 바뀌면 컬럼 필터도 초기화 */
     }
     chipCounts();
     var rows=filteredRows();
-    if(rows && filtPred){ var cs=COLS[cur]; rows=rows.filter(function(x){ return filtPred(function(i){ return cellText(x,cs[i]); }); }); }
+    if(rows && filtPred){ var cs=COLS[ck()]; rows=rows.filter(function(x){ return filtPred(function(i){ return cellText(x,cs[i]); }); }); }
     if(rows) rows=sortRows(rows);
     if(rows===null){ body.innerHTML='<tr><td colspan="'+cols.length+'"><div class="atempty">주주명부에서 주주를 검색 후 참석자 등록을 진행해 주세요</div></td></tr>'; setCount(0,0); updatePager(0); return; }
     if(!rows.length){ body.innerHTML='<tr><td colspan="'+cols.length+'"><div class="atempty">검색 결과가 없습니다.</div></td></tr>'; setCount(0,0); updatePager(0); return; }
@@ -750,7 +768,7 @@
     if(page>pages)page=pages; if(page<1)page=1;
     var start=(page-1)*pageSize;
     var pageRows=rows.slice(start, start+pageSize); curRows=pageRows;
-    body.innerHTML=pageRows.map(function(x,i){var gid='g'+(start+i);return '<tr data-k="'+i+'" data-ac="'+(x.ac||'')+'" data-hold="'+x.hold+'">'+rowFor(cur,x,gid,i)+'</tr>'+childRows(gid,x,cols.length);}).join('');
+    body.innerHTML=pageRows.map(function(x,i){var gid='g'+(start+i);return '<tr data-k="'+i+'" data-ac="'+(x.ac||'')+'" data-hold="'+x.hold+'">'+rowFor(ck(),x,gid,i)+'</tr>'+childRows(gid,x,cols.length);}).join('');
     var sum=rows.reduce(function(a,x){return a+(x.hold||0);},0);
     setCount(total,sum); updatePager(total);
   }
@@ -778,6 +796,17 @@
     cur=t.dataset.at; page=1; document.querySelectorAll('.at-tab').forEach(function(x){x.classList.toggle('on',x===t);}); document.querySelectorAll('.regonly').forEach(function(b){b.style.display=(cur==='reg')?'':'none';}); syncChips(); render(); }); });
   document.getElementById('atSearch').addEventListener('input',function(){ page=1; render(); });
   document.getElementById('atChips').addEventListener('click',function(e){ var b=e.target.closest('.at-chip'); if(!b) return; chip=b.dataset.chip; this.querySelectorAll('.at-chip').forEach(function(x){ x.classList.toggle('on',x===b); }); page=1; render(); });
+  /* 비주주 정보 패널(조회) — 현장 참석자 탭에서 비주주 행 클릭 */
+  var nvX=null, nv=document.getElementById('nvDlg');
+  function nvOpen(x){
+    nvX=x; document.getElementById('nvKind').textContent=x.kind;
+    [['nvName',x.name],['nvOrg',x.org],['nvPhone',x.phone],['nvMail',x.mail],['nvMemo',x.memo]].forEach(function(f){ document.getElementById(f[0]).value=(f[1]&&f[1]!=='-')?f[1]:''; });
+    nv.classList.add('show');
+  }
+  nv.addEventListener('click',function(e){
+    if(e.target.closest('[data-nv-close]')){ nv.classList.remove('show'); return; }
+    if(e.target.closest('#nvWithdraw')&&nvX) wdAsk(nvX,function(){ nv.classList.remove('show'); });
+  });
   /* 참석 철회 확인 — 더보기 메뉴 · 조회 패널이 함께 쓴다 */
   var wdAsk=(function(){
     var dlg=document.getElementById('wdDlg'), tx=null, after=null;
@@ -819,7 +848,7 @@
     /* 사전투표 필터 목록 순서 — 미행사 → 채널(명부 순) → 중복행사 */
     var PRE_ORDER=['미행사'].concat(CX.PRE_CH||[]).concat(['중복행사']);
     tb.cxValues=function(i){
-      var r=(cur==='reg')?(filteredRows()||[]):base(), c=COLS[cur][i];
+      var r=(cur==='reg')?(filteredRows()||[]):base(), c=COLS[ck()][i];
       var v=r.map(function(x){ return cellText(x,c); });
       if(c==='사전투표') v.sort(function(a,b){ return PRE_ORDER.indexOf(a)-PRE_ORDER.indexOf(b); });
       return v;
@@ -858,7 +887,7 @@
   (function(){
     var dlg=document.getElementById('nsDlg'); if(!dlg) return;
     var btn=[].filter.call(document.querySelectorAll('.abtn'),function(b){ return /비주주 등록/.test(b.textContent); })[0];
-    var KINDS=['참관인','임직원','감사인','법률자문','공증인','기타'], kind='';
+    var KINDS=['임직원','기자','변호사','기타'], kind='';
     var sel=document.getElementById('nsKind'), dd=document.getElementById('nsKindDd'), ok=document.getElementById('nsOk');
     function $(id){ return document.getElementById(id); }
     function check(){ ok.disabled=!(kind && $('nsName').value.trim()); }
@@ -881,7 +910,7 @@
       if(e.target.closest('#nsKind')){ var on=!dd.classList.contains('on'); dd.classList.toggle('on',on); sel.classList.toggle('open',on); return; }
       var k=e.target.closest('[data-kind]');
       if(k){ kind=k.dataset.kind; paintKind(); dd.classList.remove('on'); sel.classList.remove('open'); check(); $('nsName').focus(); return; }
-      if(e.target.closest('#nsOk') && !ok.disabled){ D.push(nonSh($('nsName').value.trim(), kind)); render(); dlg.classList.remove('show'); if(window.cxToast) cxToast('비주주 등록을 완료했습니다.'); return; }
+      if(e.target.closest('#nsOk') && !ok.disabled){ D.push(nonSh($('nsName').value.trim(), kind, $('nsOrg').value.trim(), $('nsPhone').value, '', $('nsMemo').value.trim())); render(); dlg.classList.remove('show'); if(window.cxToast) cxToast('비주주 등록을 완료했습니다.'); return; }
       if(!e.target.closest('.px-find')){ dd.classList.remove('on'); sel.classList.remove('open'); }
     });
   })();
@@ -1078,7 +1107,7 @@
       var view=(cur==='all');
       if(cur!=='reg' && !view) return; if(e.target.closest('.at-more')) return;
       var tr=e.target.closest('tr'); if(!tr||tr.classList.contains('atchild')) return;
-      var px=curRows[+tr.dataset.k]; if(px&&px.nonsh) return;
+      var px=curRows[+tr.dataset.k]; if(px&&px.nonsh){ if(view) nvOpen(px); return; }
       if(view && (!px || px.site==='미참석')) return;          /* 조회는 현장 참석 등록된 주주만 */
       if(!view && !pvPass && px && px.pre.length && px.site==='미참석' && !e.target.closest('.tw-chevron')){ pvOpen(tr, px); return; }
       if(e.target.closest('.tw-chevron')) return;
