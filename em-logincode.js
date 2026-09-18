@@ -111,7 +111,7 @@
   var NS = [['김하늘', '삼일회계법인', '회계사', '감사인', '외부감사인 참관'], ['이준호', '법무법인 세종', '변호사', '변호사', '법률 자문 · 의사진행 검토'], ['박민지', '한국예탁결제원', '과장', '기타', ''], ['정우성', '연합뉴스', '기자', '언론/기자', '취재'], ['최서윤', '카카오뱅크', 'IR팀 매니저', '임직원', '사내 참관'], ['한지훈', '대신경제연구소', '연구원', '기타', '의결권 자문사 참관'], ['Michael Grant', 'ISS', 'Analyst', '외국인', ''], ['윤가람', '카카오뱅크', '경영지원팀 대리', '임직원', '현장 지원']];
   var NSM = ['sky.kim@samil.com', 'jh.lee@shinkim.com', 'mj.park@ksd.or.kr', 'ws.jung@yna.co.kr', 'sy.choi@kakaobank.com', 'jh.han@daishin.com', 'm.grant@issgovernance.com', 'gr.yoon@kakaobank.com'];
   NS.forEach(function (n, i) {
-    mk({ ns: true, name: n[0], org: n[1], pos: n[2], kind: n[3], memo: n[4], route: '관리자 등록', st: i === 3 || i === 6 ? '로그인코드 회수' : '로그인코드 발급', codeAt: '', mailAt: dt(8, 20 + i % 6, 10 + i % 7, (i * 9) % 60), code: newCode(), phone: '010-' + (2000 + i * 731) + '-' + (4000 + i * 377), email: NSM[i] });
+    mk({ ns: true, name: n[0], org: n[1], pos: n[2], kind: n[3], memo: n[4], qna: i % 3 !== 2, route: '관리자 등록', st: i === 3 || i === 6 ? '로그인코드 회수' : '로그인코드 발급', codeAt: '', mailAt: dt(8, 20 + i % 6, 10 + i % 7, (i * 9) % 60), code: newCode(), phone: '010-' + (2000 + i * 731) + '-' + (4000 + i * 377), email: NSM[i] });
   });
 
   /* ---------- 표 ---------- */
@@ -407,7 +407,7 @@
     if (!e.target.closest('[data-ok]') || issueOk.disabled) return;
     var ns = cur === 'ns', t = now();
     var x = { k: uid++, ns: ns, voters: [], files: [], accts: [], supp: 0, reAt: '', cfAt: '', rej: '', mapAt: '', mapBy: '', route: '관리자 등록', st: '로그인코드 발급', codeAt: '', mailAt: t, code: newCode(), name: fv('lciName'), email: fv('lciMail'), phone: fv('lciPhone') || '-' };
-    if (ns) { x.kind = fv('lciKind'); x.org = fv('lciOrg') || '-'; x.pos = fv('lciPos') || '-'; x.memo = fv('lciMemo'); }
+    if (ns) { x.qna = true; x.kind = fv('lciKind'); x.org = fv('lciOrg') || '-'; x.pos = fv('lciPos') || '-'; x.memo = fv('lciMemo'); }
     else { x.corp = (issueEl.querySelector('input[name=lciKind]:checked') || {}).value === 'corp'; x.trust = '-'; x.mgr = '-'; x.dept = '-'; x.pos = '-'; }
     x.hist = [{ at: t, t: '로그인코드 발급 · 이메일 발송', by: ME }];
     L.unshift(x); issueEl.classList.remove('show'); chip = 'all'; page = 1; sortSt = null; render();
@@ -429,22 +429,21 @@
     var x = shX; if (!x) return;
     var rv = x.st === '로그인코드 회수', admin = x.route === '관리자 등록', cd = cool[x.k] || {}, h = '';
     h += '<div class="lc-stbox"><span>처리상태</span>' + badge(x.st) + '</div>';
-    var b = kv('구분', x.ns ? esc(x.kind) : (x.corp ? '해외 법인' : '해외 개인')) + kv('이름', esc(x.name)) + kv('등록경로', x.route);
-    if (x.voters.length) b += kv('투표권자', esc(x.voters.map(voterOf).join(', '))) + kv('확정 보유주식수', cm(shares(x)) + '주');
-    if (x.ns) b += kv('소속', esc(x.org || '-')) + kv('직급', esc(x.pos || '-')) + kv('메모', esc(x.memo || '-'));
-    h += sec('기본정보', b);
-    var c = '';
-    if (x.corp) c += kv('신탁기관명', esc(x.trust)) + kv('신청일시', x.codeAt || '-') + kv('법인(기관)명', esc(x.name)) + kv('담당자명', esc(x.mgr)) + kv('부서', esc(x.dept)) + kv('직책', esc(x.pos));
-    else if (!x.ns) c += kv('신청일시', x.codeAt || '-') + kv('이름', esc(x.name));
-    c += kv('휴대폰번호', esc(x.phone)) + kv('이메일', esc(x.email) + ' <span class="mu">(' + x.mailAt + ')</span>');
+    /* 로그인코드 신청내역 — 주주: 신청일시 · 법인(기관)명 · 담당자명 · 부서 · 직책 · 휴대폰번호 · 이메일 · 로그인코드
+       수동등록 비주주: 이름 · 부서 · 직책 · 이메일 · 휴대폰번호 · 메모 · 질의권 부여 · 로그인코드 */
+    var c = '', mail = esc(x.email) + ' <span class="mu">(' + x.mailAt + ')</span>';
+    if (x.ns) c += kv('이름', esc(x.name)) + kv('부서', esc(x.org || '-')) + kv('직책', esc(x.pos || '-')) + kv('이메일', mail) + kv('휴대폰번호', esc(x.phone || '-')) + kv('메모', esc(x.memo || '-')) + kv('질의권 부여', x.qna ? '부여' : '미부여');
+    else {
+      c += kv('신청일시', x.codeAt || '-');
+      c += x.corp ? kv('법인(기관)명', esc(x.name)) + kv('담당자명', esc(x.mgr)) + kv('부서', esc(x.dept)) + kv('직책', esc(x.pos)) : kv('이름', esc(x.name));
+      c += kv('휴대폰번호', esc(x.phone || '-')) + kv('이메일', mail);
+    }
     c += kv('로그인코드', '<span class="lc-code' + (rv ? ' off' : '') + '">' + x.code + '</span>');
     c += '<div class="lc-2btn"><button type="button" class="btn" data-a="re"' + (!admin || cd.re ? ' disabled' : '') + '><i class="ph ph-arrow-counter-clockwise"></i>코드 재발급</button><button type="button" class="btn soft" data-a="rv"' + (!admin || rv ? ' disabled' : '') + '><i class="ph ph-prohibit"></i>코드 회수</button></div>';
     if (!admin) c += '<div class="lc-note">주주가 직접 신청한 코드는 재발급·회수할 수 없습니다.</div>';
     h += sec(x.ns ? '로그인코드 발급내역' : '로그인코드 신청내역', c);
     if (x.cfAt) {
-      var shv = x.voters.length ? cm(shares(x)) + '주 <span class="mu">(명부 확정 · 신고 ' + cm(x.decl) + '주)</span>' : cm(x.decl) + '주 <span class="mu">(신고)</span>';
-      h += sec('주주확인 신청내역', kv('신청일시', x.cfAt + (x.reAt ? ' <span class="mu">(재제출 ' + x.reAt + ')</span>' : '')) + kv('보완요청', x.supp + '/2회') + kv('유형', x.multi ? '복수' : '단일') +
-        kv('주주번호', esc(x.idNo) + ' <span class="mu">(' + x.idType + ')</span>') + (x.corp ? kv('상임대리인코드', x.agent) : '') + kv('보유주식수량', shv) + acctCards(x));
+      h += sec('주주확인 신청내역', kv('신청일시', x.cfAt + (x.reAt ? ' <span class="mu">(재제출 ' + x.reAt + ')</span>' : '')) + kv('보완요청', x.supp + '/2회') + acctCards(x));
       h += sec('제출 서류', files(x), OPEN[x.st] ? '<button type="button" class="btn" data-a="supp"' + (x.supp >= 2 ? ' disabled' : '') + '><i class="ph ph-paper-plane-tilt"></i>서류 보완 요청</button>' : '');
     }
     if (x.st === '주주확인 반려') h += sec('반려사유', '<div class="lc-rej">' + esc(x.rej || '-') + '</div>');
