@@ -433,18 +433,26 @@
      colgroup 등으로 폭을 직접 짜 둔 표(fixed)는 그대로 존중한다. */
   function freezeWidths(t, tbl, fixed) {
     if (fixed) return;
-    if (!tbl.offsetWidth) return;                 /* 숨겨진 표는 보일 때 다시 잡는다 */
+    var cw = tbl.clientWidth; if (!cw) return;     /* 숨겨진 표는 보일 때 다시 잡는다 */
     var ths = t.ths || []; if (!ths.length) return;
-    tbl.style.tableLayout = 'auto';               /* 자연 폭 측정 */
+    tbl.style.tableLayout = 'auto';                /* 자연 폭 측정 */
     t.colW = t.colW || [];
     var flex = [], meas = ths.map(function (th, i) {
       var rl = rule(label(th)); flex[i] = !!(rl && rl.flex);
       return th.getBoundingClientRect().width;
     });
+    /* 칸별 내용맞춤 폭을 단조 최대로 확정(한번 넓어지면 검색·필터로 안 줄어든다) */
+    var fit = ths.map(function (th, i) {
+      var w = Math.max(t.colW[i] || 0, Math.ceil(meas[i])); t.colW[i] = w; return w;
+    });
+    /* flex(이름·의안명)는 '남는 자리'를 나눠 갖되, 최소한 자기 내용 폭은 지켜 0 붕괴를 막는다 */
+    var flexN = 0, fixedSum = 0;
+    ths.forEach(function (th, i) { if (flex[i]) flexN++; else fixedSum += fit[i]; });
+    var leftover = cw - fixedSum;
     ths.forEach(function (th, i) {
-      if (flex[i]) { th.style.width = 'auto'; return; }
-      var w = Math.max(t.colW[i] || 0, Math.ceil(meas[i]));
-      t.colW[i] = w; th.style.width = w + 'px';
+      var w = fit[i];
+      if (flex[i] && flexN) w = Math.max(fit[i], Math.floor(leftover / flexN));
+      th.style.width = w + 'px';
     });
     tbl.style.tableLayout = 'fixed';
   }
