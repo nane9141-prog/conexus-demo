@@ -948,3 +948,6 @@ th.cx-tight .cx-fbtn.cx-act{opacity:1;pointer-events:auto}
 .cxkpi .k .lb{font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#737373}
 .cxkpi .k .vv{font-size:20px;line-height:28px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A}
 .cxkpi .k .vv .sub{font-size:14px;font-weight:400;color:#737373;margin-left:2px}
+
+/* 필터로 숨긴 줄 — 접기 상태(hidden/display)와 따로 둔다 */
+.cx-off{display:none!important}

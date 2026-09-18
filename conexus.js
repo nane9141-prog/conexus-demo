@@ -198,7 +198,7 @@
 
   /* 통합기관처럼 접었다 펴는 줄은 상위 줄에 딸린 것이다.
      정렬도 필터도 상위 줄을 기준으로 하고, 딸린 줄은 함께 따라간다. */
-  var CHILD = '.pchild,.child,.atchild,.vchild,.subrow,[data-child]';
+  var CHILD = '.pchild,.child,.atchild,.vchild,.subrow,.mg-child,.cf-child,[data-child]';
   function isChild(r) { return !!(r.matches && r.matches(CHILD)); }
   function blocks(tb) {
     var out = [], cur = null;
@@ -219,8 +219,8 @@
         if (!t.filters[k]) continue;
         if (!t.filters[k](txt(lead.cells[+k]))) { keep = false; break; }
       }
-      /* 남길 때는 인라인 값을 비운다 — 접혀 있는 줄은 그대로 접힌 채로 둔다 */
-      b.rows.forEach(function (r) { r.style.display = keep ? '' : 'none'; });
+      /* 필터는 .cx-off 로만 숨긴다 — 접힘(hidden·inline display)과 섞이면 필터 해제 때 접힌 줄이 펼쳐진다 */
+      b.rows.forEach(function (r) { r.classList.toggle('cx-off', !keep); });
     });
   }
 

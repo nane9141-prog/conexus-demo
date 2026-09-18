@@ -914,6 +914,18 @@
   CX.roster = R;
   CX.rosterAddr = ADDR;
   CX.rosterSummary = S;
+  /* 통합기관 20그룹 — 같은 운용사(기관) 계좌를 대표 투표권자 명의로 합산. m: 레코드 i */
+  var G = [
+    ['DB투자자문',[13,58,61,164]],['메리츠증권',[8,29,75]],['KB증권',[10,17,66]],['피델리티생명',[11,39,60]],
+    ['교보악사자산운용',[12,21,64]],['키움자산운용',[19,25,48]],['이스트스프링생명',[26,38,78]],['피델리티화재',[35,54,73]],
+    ['BNK생명',[44,53,74]],['멀티에셋투자자문',[62,77,151]],['키움화재',[16,82]],['한화투자자문',[18,81]],
+    ['우리화재',[23,65]],['NH아문디생명',[24,108]],['현대생명',[28,71]],['하나투자자문',[34,46]],
+    ['신한생명',[36,86]],['피델리티자산운용',[72,171]],['현대화재',[84,186]],['미래에셋증권',[152,492]]
+  ];
+  var byI = {}; R.forEach(function (r) { byI[r.i] = r; });
+  CX.rosterGroups = G.map(function (g, k) {
+    return { id: 'rg' + (k + 1), voter: g[0], members: g[1].map(function (i) { return byI[i]; }).filter(Boolean) };
+  });
   CX.rosterTop = function (n) { return R.slice().sort(function (a, b) { return b.sh - a.sh; }).slice(0, n || 10); };
   CX.rosterBy = function (opt) {
     opt = opt || {};

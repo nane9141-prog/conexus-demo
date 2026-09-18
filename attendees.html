@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 참석자 관리</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=g3">
+<link rel="stylesheet" href="conexus.css?v=g4">
 <style>
   /* page-local content helpers (LNB styling comes from conexus.css) */
   .scroll{flex:1;overflow-y:auto}
@@ -153,7 +153,7 @@
   .decl-text{width:100%;box-sizing:border-box;background:#fafafa;border:1px solid var(--border);border-radius:14px;padding:20px;font-family:inherit;font-size:18px;line-height:28px;color:#0a0a0a;resize:none;outline:none}
 </style>
 <script src="cx-data.js"></script>
-<script src="cx-roster.js?v=r3"></script>
+<script src="cx-roster.js?v=r4"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -382,7 +382,7 @@
     var CH=['전자투표(국내)','전자투표(해외)','전자위임(국내)','전자위임(해외)','서면위임(자사)','서면위임(타사)','서면투표'];
     var LIMIT=['자사주','상호주','무효주','최대주주','공익법인(3% 모수 포함)','공익법인(3% 모수 제외)','금융보험사','최대주주 특수관계인','공익법인 특수관계인','금융보험사 특수관계인'];
     var AG=[['제2-1호','제2-2호'],['제3호'],['제2-1호','제3-1호','제3-2호'],['제4-1호']];
-    return R.slice().sort(function(a,b){return b.sh-a.sh;}).map(function(r,i){
+    var rows=R.slice().sort(function(a,b){return b.sh-a.sh;}).map(function(r,i){
       var code=(i%3===0)?'미발급':('EG-2026'+('000'+((i%900)+1)).slice(-4));
       /* 주주번호(대시 없음, 뒷자리 *): 개인 생년월일+성별+******, 외국인 개인 식별번호 12자리(뒤 6자리 *), 기관·법인 사업자번호(뒤 5자리 *) */
       var no=(r.gb==='개인'&&r.fr==='외국인')?('00000'+(r.i*982451653)%1e12).slice(-12,-6)+'******'
@@ -395,9 +395,22 @@
       var o={voter:(i%150===75)?'-':r.nm, name:r.nm, no:no, pre:pre, hold:r.sh,
         attend:site==='일부 참석'?Math.round(r.sh*0.6):0, ratio:r.rt.toFixed(2)+'%', site:site, app:app,
         code:code, evote:['참석','미참석','일부참석'][i%3], limit:lim, ag:(lim!=='-'&&i%2)?AG[i%AG.length]:null};
-      if(i>0 && i%80===0) o.sub='통합 3건';
+      o.ri=r.i; o.key=o.voter+o.name+o.no;
       return o;
     });
+    /* 통합기관(cx-roster rosterGroups): 대표 1줄 + 계좌 줄(접힘). 대표 줄 상태값은 최대 보유 계좌 기준 */
+    var byI={}; rows.forEach(function(x){byI[x.ri]=x;});
+    ((window.CX&&CX.rosterGroups)||[]).forEach(function(g){
+      var mem=g.members.map(function(r){return byI[r.i];}).filter(Boolean); if(mem.length<2) return;
+      var lead={}; for(var k in mem[0]) lead[k]=mem[0][k];
+      lead.voter=g.voter; lead.name=mem[0].name+' 외 '+(mem.length-1);
+      lead.hold=0; lead.attend=0; var rt=0;
+      mem.forEach(function(m){lead.hold+=m.hold; lead.attend+=m.attend; rt+=parseFloat(m.ratio); m.grouped=1;});
+      lead.ratio=rt.toFixed(2)+'%'; lead.sub='통합 '+mem.length+'건'; lead.members=mem;
+      lead.key=g.voter+mem.map(function(m){return m.name+m.no;}).join('');
+      rows.push(lead);
+    });
+    return rows.filter(function(x){return !x.grouped;}).sort(function(a,b){return b.hold-a.hold;});
   })();
   function cm(n){return (n||0).toLocaleString('en-US');}
   function mu(t){return '<span class="atmut">'+t+'</span>';}
@@ -412,15 +425,10 @@
     var sub=x.sub?'<span class="tag">'+x.sub+'</span>':'';
     return '<div class="voter"><span>'+x.voter+'</span>'+sub+'</div>';
   }
-  function childRows(gid,x,ncols){
-    var m=/통합\s*(\d+)건/.exec(x.sub||''); if(!m) return '';
-    var n=+m[1], out='';
-    for(var i=1;i<=n;i++){
-      out+='<tr class="atchild hidden" data-child="'+gid+'"><td><div class="voter" style="padding-left:34px"><span class="atsubname">'+x.voter+' 제 '+i+'호</span></div></td>';
-      for(var j=1;j<ncols;j++){ out+='<td></td>'; }
-      out+='</tr>';
-    }
-    return out;
+  function childRows(gid,x){
+    return (x.members||[]).map(function(m){
+      return '<tr class="atchild hidden" data-child="'+gid+'"><td></td><td>'+m.name+'</td><td>'+m.no+'</td><td></td><td></td><td></td><td class="n">'+cm(m.hold)+'</td><td class="n">'+m.ratio+'</td><td></td><td></td><td></td></tr>';
+    }).join('');
   }
   /* 세 탭 공통 항목 */
   var C=['투표권자','주주명','주주번호','사전투표','현장 참석','앱 사용','보유주식','지분율','참석주식수','의결권 제한','의안별 제한'];
@@ -443,12 +451,12 @@
     }
     var q=(document.getElementById('atSearch').value||'').trim();
     var rows=D;
-    if(cur==='reg'){ if(!q){ body.innerHTML='<tr><td colspan="'+cols.length+'"><div class="atempty">주주명부에서 주주를 검색 후 참석자 등록을 진행해 주세요</div></td></tr>'; setCount(0); return; } rows=D.filter(function(x){return (x.voter+x.name+x.no).indexOf(q)>=0;}); }
+    if(cur==='reg'){ if(!q){ body.innerHTML='<tr><td colspan="'+cols.length+'"><div class="atempty">주주명부에서 주주를 검색 후 참석자 등록을 진행해 주세요</div></td></tr>'; setCount(0); return; } rows=D.filter(function(x){return x.key.indexOf(q)>=0;}); }
     if(!rows.length){ body.innerHTML='<tr><td colspan="'+cols.length+'"><div class="atempty">검색 결과가 없습니다.</div></td></tr>'; setCount(0); return; }
     body.innerHTML=rows.map(function(x,i){var gid='g'+i;return '<tr>'+rowFor(cur,x,gid)+'</tr>'+childRows(gid,x,cols.length);}).join('');
     setCount(rows.length);
   }
-  function setCount(n){ var sum=0; (cur==='reg'? (function(){var q=(document.getElementById('atSearch').value||'').trim(); return q?D.filter(function(x){return (x.voter+x.name+x.no).indexOf(q)>=0;}):[];})() : D).forEach(function(x){sum+=x.hold;}); if(cur!=='reg') n=D.length; document.getElementById('atCount').textContent='총 '+n+'건 · '+cm(sum)+'주'; document.getElementById('atTot').textContent='/ '+Math.max(1,Math.ceil(n/20)); }
+  function setCount(n){ var sum=0; (cur==='reg'? (function(){var q=(document.getElementById('atSearch').value||'').trim(); return q?D.filter(function(x){return x.key.indexOf(q)>=0;}):[];})() : D).forEach(function(x){sum+=x.hold;}); if(cur!=='reg') n=D.length; document.getElementById('atCount').textContent='총 '+n+'건 · '+cm(sum)+'주'; document.getElementById('atTot').textContent='/ '+Math.max(1,Math.ceil(n/20)); }
   document.querySelectorAll('.at-tab').forEach(function(t){ t.addEventListener('click',function(){ cur=t.dataset.at; document.querySelectorAll('.at-tab').forEach(function(x){x.classList.toggle('on',x===t);}); document.querySelectorAll('.regonly').forEach(function(b){b.style.display=(cur==='reg')?'':'none';}); render(); }); });
   document.getElementById('atSearch').addEventListener('input',render);
   // 통합 계좌 접기/펼치기
@@ -500,6 +508,6 @@
 })();
 </script>
 
-<script src="conexus.js?v=fwc"></script>
+<script src="conexus.js?v=fwe"></script>
 </body>
 </html>

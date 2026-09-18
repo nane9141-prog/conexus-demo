@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 주주명부 설정</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=g3">
+<link rel="stylesheet" href="conexus.css?v=g4">
 <style>
   /* page-local content helpers (LNB styling comes from conexus.css) */
   .scroll{flex:1;overflow-y:auto}
@@ -37,7 +37,7 @@
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
 </style>
 <script src="cx-data.js"></script>
-<script src="cx-roster.js?v=r3"></script>
+<script src="cx-roster.js?v=r4"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -820,7 +820,11 @@
                 {name:'한소율',no:'881105-2******',sh:2803914,rate:0.6},
                 {name:'한지민',no:'930922-2******',sh:1602911,rate:0.3}]}
             };
-            var gseq=7;
+            /* 주주명부(cx-roster) 기관 통합 20그룹 */
+            (CX.rosterGroups||[]).forEach(function(rg,k){
+              groups['g'+(7+k)]={voter:rg.voter,method:'auto',kind:'보통주',members:rg.members.map(function(r){return {name:r.nm,no:r.id,sh:r.sh,rate:r.rt};})};
+            });
+            var gseq=7+(CX.rosterGroups||[]).length;
             function fmt(n){return n.toLocaleString('en-US');}
             function groupHTML(gid,g){
               var sumSh=g.members.reduce(function(a,m){return a+m.sh;},0);
@@ -1190,6 +1194,6 @@
     var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
   });
 </script>
-<script src="conexus.js?v=fwc"></script>
+<script src="conexus.js?v=fwe"></script>
 </body>
 </html>
