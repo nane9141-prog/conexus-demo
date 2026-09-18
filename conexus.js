@@ -566,6 +566,20 @@
     if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wire); else wire();
   })();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+
+  /* FOUC 방지 노출 — 표 보정(run)·페이지 렌더가 끝난 뒤, 아이콘 폰트까지 준비되면(최대 400ms) 한 번에 보여준다 */
+  (function () {
+    var shown = false;
+    function reveal() { if (shown) return; shown = true; document.documentElement.classList.add('cx-ready'); }
+    function schedule() {
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(reveal);
+        setTimeout(reveal, 400);          /* 폰트가 늦어도 화면은 막지 않는다 */
+      } else { reveal(); }
+      window.addEventListener('load', reveal);   /* 최후 보루 */
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', schedule); else schedule();
+  })();
   setTimeout(run, 400); setTimeout(run, 1200);
 })();
 

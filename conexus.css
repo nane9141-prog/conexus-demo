@@ -194,6 +194,8 @@ body{font-family:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-s
     --shadow-sm:0 1px 3px rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);
     --shadow-md:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);
   }
+  /* FOUC 방지 — 초기 렌더·표 보정·폰트 로드가 끝나면 cx-ready 로 한 번에 노출 */
+  html:not(.cx-ready) body{visibility:hidden}
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{
