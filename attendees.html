@@ -698,14 +698,16 @@
   /* 검색은 항상 전체 데이터(D) 기준. reg 탭은 검색 전엔 목록을 감춘다(null 반환) */
   var chips={};
   function chipHit(x,k){ return k==='site'?(x.site!=='미참석'):k==='e'?(x.evote==='참석'||x.evote==='일부참석'):!!x.nonsh; }
+  /* 전체 탭은 참석(등록)한 인원만 — 미참석은 현장 참석자 등록 탭에서 검색해 등록한다 */
+  function base(){ return cur==='all'?D.filter(function(x){ return x.site!=='미참석'; }):D; }
   function filteredRows(){
     var q=(document.getElementById('atSearch').value||'').trim(), on=Object.keys(chips).filter(function(k){ return chips[k]; });
     if(cur==='reg' && !q && !on.length) return null;
-    var r=q ? D.filter(function(x){return (x.key||(x.voter+x.name+x.no)).indexOf(q)>=0;}) : D.slice();
+    var B=base(), r=q ? B.filter(function(x){return (x.key||(x.voter+x.name+x.no)).indexOf(q)>=0;}) : B.slice();
     if(on.length) r=r.filter(function(x){ return on.some(function(k){ return chipHit(x,k); }); });
     return r;
   }
-  function chipCounts(){ document.querySelectorAll('#atChips .at-chip').forEach(function(b){ var k=b.dataset.chip; b.querySelector('b').textContent=D.filter(function(x){ return chipHit(x,k); }).length; }); }
+  function chipCounts(){ document.querySelectorAll('#atChips .at-chip').forEach(function(b){ var k=b.dataset.chip; b.querySelector('b').textContent=base().filter(function(x){ return chipHit(x,k); }).length; }); }
   function render(){
     var head=document.getElementById('atHead'), body=document.getElementById('atBody');
     var cols=COLS[cur];
@@ -789,7 +791,7 @@
     /* 사전투표 필터 목록 순서 — 미행사 → 채널(명부 순) → 중복행사 */
     var PRE_ORDER=['미행사'].concat(CX.PRE_CH||[]).concat(['중복행사']);
     tb.cxValues=function(i){
-      var r=(cur==='reg')?(filteredRows()||[]):D, c=COLS[cur][i];
+      var r=(cur==='reg')?(filteredRows()||[]):base(), c=COLS[cur][i];
       var v=r.map(function(x){ return cellText(x,c); });
       if(c==='사전투표') v.sort(function(a,b){ return PRE_ORDER.indexOf(a)-PRE_ORDER.indexOf(b); });
       return v;
@@ -1104,6 +1106,6 @@
 })();
 </script>
 
-<script src="conexus.js?v=fwq"></script>
+<script src="conexus.js?v=fwr"></script>
 </body>
 </html>

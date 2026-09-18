@@ -1,0 +1,100 @@
+/* 전자주주총회 관리 · 진행 설정 — 카드별 토글·일정·규칙, 한 번에 저장
+   - 진행 시간 예약을 켠 채로 일시가 비면 저장 불가
+   - 사전 참석 · 사전 질의 종료는 총회 전날 24:00 까지, 대리인 신청 시작은 사전 참석 시작 이후
+   - 당일 질의 · 당일 발언은 둘 다 끌 수 없음 */
+(function () {
+  var root = document.getElementById('pgRoot');
+  if (!root || !window.EM) return;
+  var M = (window.CX && CX.meeting) || { date: '2026-03-27' };
+  var D = M.date, PREV = (function () { var d = new Date(D + 'T00:00:00'); d.setDate(d.getDate() - 1); return d.getFullYear() + '-' + EM.p2(d.getMonth() + 1) + '-' + EM.p2(d.getDate()); })();
+
+  function sw(k, on) { return '<button type="button" class="pg-sw' + (on ? ' on' : '') + '" data-pgsw="' + k + '" role="switch" aria-checked="' + !!on + '"></button>'; }
+  function card(k, t, d, inner, on, w) {
+    return '<section class="pg-card' + (on === false ? ' off' : '') + '" data-card="' + k + '"><div class="pg-top"><div><div class="pg-t">' + t + '</div><div class="pg-d">' + d + '</div></div>' + (on == null ? '' : sw(k, on)) + '</div>' + (inner ? '<div class="pg-body">' + inner + '</div>' : '') + '</section>';
+  }
+  function dt(id, lb, d, t, hint) {
+    return '<div class="pg-f" data-dt="' + id + '"><label>' + lb + '</label><div class="pg-dt"><input type="date" class="pg-in" id="' + id + 'D" value="' + (d || '') + '"><input type="time" class="pg-in" id="' + id + 'T" value="' + (t || '') + '"></div>' + (hint ? '<div class="hint">' + hint + '</div>' : '') + '<div class="err" hidden></div></div>';
+  }
+  function inp(id, lb, v, ph, w) { return '<div class="pg-f"' + (w ? ' style="width:' + w + 'px"' : ' style="flex:1"') + '><label for="' + id + '">' + lb + '</label><input class="pg-in" id="' + id + '" value="' + (v || '') + '" placeholder="' + (ph || '') + '"></div>'; }
+  function unit(id, lb, v, u) { return '<div class="pg-f" style="flex:1"><label for="' + id + '">' + lb + '</label><div class="pg-unit"><input id="' + id + '" inputmode="numeric" value="' + v + '"><span>' + u + '</span></div></div>'; }
+  function chk(n, lb, on) { return '<label><input type="checkbox" name="' + n + '"' + (on ? ' checked' : '') + '>' + lb + '</label>'; }
+  function rad(n, v, lb, on) { return '<label><input type="radio" name="' + n + '" value="' + v + '"' + (on ? ' checked' : '') + '>' + lb + '</label>'; }
+  function sel(id, opts, w) { return '<select class="lc-sel pg-sel" id="' + id + '" style="width:' + w + 'px">' + opts.map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select>'; }
+
+  root.innerHTML = '<div class="pg lc">' +
+    '<div class="pg-hd lc-hd"><div><h2>진행 설정</h2><p>전자주주총회 당일 진행 순서와 화면 노출 설정을 관리합니다.</p></div><button type="button" class="btn dark" id="pgSave" style="height:32px;border-radius:10px">저장</button></div>' +
+    card('time', '전자주주총회 진행 시간 예약', '예약한 시간에 총회가 자동으로 시작·종료됩니다. 끄면 담당자가 당일 직접 시작·종료합니다.',
+      '<div class="pg-row">' + dt('pgStart', '시작 일시', D, '10:00') + dt('pgEnd', '종료 일시', D, '12:00') + '</div>', true) +
+    card('open', '주주총회 정보 공개 설정', '주주 사이트에 이번 총회 정보(일정·의안·소집공고)를 공개하는 시점을 정합니다.',
+      '<div class="pg-rad">' + rad('pgOpen', 'now', '즉시 공개') + rad('pgOpen', 'rsv', '예약 공개', 1) + '</div><div class="pg-row" id="pgOpenAt">' + dt('pgOpenT', '공개 일시', '2026-03-02', '10:30') + '</div>') +
+    card('late', '전자주주총회 중도입장 허용', '개회 후에도 주주가 온라인으로 입장할 수 있습니다. 끄면 개회 이후 시청 버튼이 비활성화됩니다.', '', true) +
+    card('apply', '사전 참석 신청', '주총 당일 온라인 참석을 위해 미리 신청받는 기간입니다. 끄면 신청 없이 누구나 입장할 수 있습니다.',
+      '<div class="pg-row">' + dt('pgApS', '신청 시작 일시', '2026-03-09', '09:00') + dt('pgApE', '신청 종료 일시', PREV, '23:59', '총회 전날 24:00까지 설정할 수 있습니다.') + '</div><div class="pg-row">' + unit('pgApN', '참석 인원 제한', '1,000', '명') + '</div>', true) +
+    card('proxy', '대리인 신청 기간', '주주가 대리인을 지정해 참석·의결권 행사를 맡길 수 있도록 신청받는 기간입니다.',
+      '<div class="pg-row">' + dt('pgPxS', '지정 시작 일시', '2026-03-09', '09:00', '사전 참석 신청 시작 이후로 설정해 주세요.') + dt('pgPxE', '지정 종료 일시', PREV, '18:00') + '</div>', true) +
+    card('preq', '사전 질의 운영 설정', '총회 전 지정한 기간 동안 주주가 질의를 등록·수정할 수 있습니다.',
+      '<div class="pg-row">' + dt('pgPqS', '질의 시작 일시', '2026-03-09', '09:00') + dt('pgPqE', '질의 종료 일시', PREV, '23:59', '총회 전날 24:00까지 설정할 수 있습니다.') + '</div>' +
+      '<div class="pg-row">' + unit('pgPqN', '1인당 질의 횟수', '3', '회').replace('flex:1', 'width:270px') + unit('pgPqL', '질의 글자 수 제한', '1,000', '자').replace('flex:1', 'width:270px') + '</div>' +
+      '<div class="pg-row">' + inp('pgPqNote', '사전질의 주의사항', '', '주주에게 안내할 주의사항을 입력해 주세요') + '</div><div class="pg-hr"></div>' +
+      '<div class="pg-f"><span class="pg-lb">주주 권한 설정</span><div class="pg-chk">' + chk('pqAuth', '질의 수정 허용', 1) + chk('pqAuth', '질의 삭제 허용', 1) + chk('pqAuth', '다른 주주 질의 열람') + '</div></div>' +
+      '<div class="pg-f"><span class="pg-lb">관리자 알림 설정</span><div class="pg-chk">' + chk('pqNoti', '신규 질의 등록 시 알림 받기', 1) + '</div><div class="pg-row">' + inp('pgPqMail', '수신 이메일', 'ir@kakaobank.com', 'name@example.com') + inp('pgPqTel', '수신 휴대폰번호', '010-2345-6789', '010-0000-0000') + '</div></div>', true) +
+    card('ask', '온라인 질의 설정', '총회 당일 라이브 중 주주가 텍스트로 질의하는 규칙입니다. 당일 발언과 둘 다 끌 수는 없습니다.',
+      '<div class="pg-f"><label for="pgAskBy">질의 기준</label>' + sel('pgAskBy', ['의안별', '주총 전체'], 200) + '</div>' +
+      '<div class="pg-chk">' + chk('askOnlyCur', '진행 중인 의안에만 질의 허용', 1) + '</div>' +
+      '<div class="pg-row">' + unit('pgAskN', '1인당 질의 횟수', '3', '회') + unit('pgAskL', '질의 글자 수 제한', '500', '자') + unit('pgAskGap', '질의 간격', '30', '초') + '</div>' +
+      '<div class="pg-f"><span class="pg-lb">주주 권한 설정</span><div class="pg-chk">' + chk('askAuth', '질의 수정 허용') + chk('askAuth', '질의 삭제 허용', 1) + '</div></div>' +
+      '<div class="pg-f"><span class="pg-lb">질의 공개 범위</span><div class="pg-rad">' + rad('askOpen', 'all', '전체 주주에게 공개', 1) + rad('askOpen', 'admin', '관리자에게만 공개') + '</div></div>', true) +
+    card('speak', '당일 발언 규칙', '총회 당일 주주가 음성으로 발언을 신청하는 규칙입니다.',
+      '<div class="pg-f"><label for="pgSpBy">발언 기준</label>' + sel('pgSpBy', ['의안별', '주총 전체'], 176) + '</div>' +
+      '<div class="pg-row">' + unit('pgSpN', '1인당 발언 횟수', '1', '회') + unit('pgSpT', '1회 발언 시간', '3', '분') + '</div>' +
+      '<div class="pg-chk">' + chk('spAuth', '발언 신청 시 의장 승인 후 연결', 1) + chk('spAuth', '대기 순번 주주에게 공개') + '</div>', true) +
+    card('cc', 'AI 자막 언어 설정', '라이브 화면에 노출할 AI 실시간 자막 언어를 선택합니다.',
+      '<div class="pg-chk">' + chk('cc', '한국어', 1) + chk('cc', '영어', 1) + chk('cc', '일본어') + chk('cc', '중국어') + '</div>') +
+    '</div>';
+
+  var save = document.getElementById('pgSave');
+  function $(id) { return document.getElementById(id); }
+  function at(id) { var d = $(id + 'D').value, t = $(id + 'T').value; return d && t ? d + 'T' + t : ''; }
+  function on(k) { var s = root.querySelector('[data-pgsw="' + k + '"]'); return !s || s.classList.contains('on'); }
+  function err(id, m) {
+    var f = root.querySelector('[data-dt="' + id + '"]'), e = f.querySelector('.err');
+    e.hidden = !m; e.textContent = m || '';
+    f.querySelectorAll('.pg-in').forEach(function (i) { i.classList.toggle('bad', !!m); });
+    return !m;
+  }
+  var LIMIT = PREV + 'T23:59';
+  function validate() {
+    var ok = true;
+    if (on('time')) {
+      ok = err('pgStart', at('pgStart') ? '' : '시작 일시를 입력해 주세요.') && ok;
+      ok = err('pgEnd', !at('pgEnd') ? '종료 일시를 입력해 주세요.' : at('pgEnd') <= at('pgStart') ? '종료 일시는 시작 일시 이후여야 합니다.' : '') && ok;
+    } else { err('pgStart'); err('pgEnd'); }
+    ok = err('pgApE', on('apply') && at('pgApE') > LIMIT ? '총회 전날 24:00 이후로 설정할 수 없습니다.' : '') && ok;
+    ok = err('pgPqE', on('preq') && at('pgPqE') > LIMIT ? '총회 전날 24:00 이후로 설정할 수 없습니다.' : '') && ok;
+    ok = err('pgPxS', on('proxy') && on('apply') && at('pgPxS') && at('pgPxS') < at('pgApS') ? '사전 참석 신청 시작 이전으로 설정할 수 없습니다.' : '') && ok;
+    save.disabled = !ok;
+    return ok;
+  }
+  function touch() { EM.setDirty('progress', true); validate(); }
+
+  root.addEventListener('click', function (e) {
+    var s = e.target.closest('[data-pgsw]'); if (!s) return;
+    var k = s.dataset.pgsw, next = !s.classList.contains('on');
+    if (!next && (k === 'ask' || k === 'speak') && !on(k === 'ask' ? 'speak' : 'ask')) {
+      return EM.alertDlg({ ic: 'info', t: '질의와 발언을 모두 끌 수 없습니다', d: '온라인 질의 또는 당일 발언 중 하나 이상은 켜 두어야 합니다.' });
+    }
+    s.classList.toggle('on', next); s.setAttribute('aria-checked', next);
+    s.closest('.pg-card').classList.toggle('off', !next);
+    touch();
+  });
+  root.addEventListener('input', touch);
+  root.addEventListener('change', function (e) {
+    if (e.target.name === 'pgOpen') $('pgOpenAt').style.display = e.target.value === 'now' ? 'none' : '';
+    touch();
+  });
+  save.addEventListener('click', function () {
+    if (!validate()) return;
+    EM.setDirty('progress', false); EM.markDone('progress'); EM.toast('저장되었습니다');
+  });
+  validate();
+})();
