@@ -8,7 +8,7 @@
  * ==========================================================================*/
 (function () {
   var OP = {
-    'for': '<span class="op for"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span>',
+    'for': '<span class="op for"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>찬성</span>',
     against: '<span class="op against"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span>',
     abs: '<span class="op abs"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</span>'
   };
@@ -58,7 +58,7 @@
     function factor() { var t = document.getElementById('dupTgl'); return (t && t.classList.contains('on')) ? 1 / (1 - DR) : 1; }
 
     function cells(r, method, f) {
-      var h = '<td class="c">' + method + '</td><td class="num">' + cm(r.sh * f) + '</td><td class="num"><span class="mbar"></span>' + cm(miss(r) * f) + '</td>';
+      var h = '<td class="c">' + method + '</td><td class="num">' + cm(r.sh * f) + '</td><td class="num mi">' + cm(miss(r) * f) + '</td>';
       for (var c = 0; c < 4; c++) h += '<td class="c">' + OP[vote(r, c)] + '</td>';
       return h + '<td class="num">' + cm(r.sh * 2 * f) + '</td><td class="num">' + cm(r.sh * 2 * f) + '</td>';
     }
