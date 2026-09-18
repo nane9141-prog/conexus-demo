@@ -195,9 +195,10 @@
   document.addEventListener('click', function (e) { if (!e.target.closest('.lc-menu')) hideMenu(); });
   window.addEventListener('scroll', hideMenu, true);
 
-  /* 행 호버 카드 — 주주번호 · 실질계좌번호 · 이메일 */
+  /* 투표권자 호버 카드 — 주주번호 · 실질계좌번호 · 이메일 */
   body.addEventListener('mousemove', function (e) {
-    var row = e.target.closest('tr[data-k]'), x = row && cur === 'sh' ? byK(row.dataset.k) : null;
+    /* 투표권자 칸에 올렸을 때만 */
+    var td = e.target.closest('td'), row = td && td.cellIndex === 0 && e.target.closest('tr[data-k]'), x = row && cur === 'sh' ? byK(row.dataset.k) : null;
     if (!x || x.grp) { pop.classList.remove('on'); return; }
     if (pop.dataset.k !== x.k) {
       pop.dataset.k = x.k;
