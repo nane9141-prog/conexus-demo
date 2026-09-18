@@ -493,11 +493,11 @@
 
               <!-- STEP 2: 파일 업로드 -->
               <div class="vstep" id="evStep2" style="display:none">
-                <div class="fld">
+                <div class="fld" id="dlgOrgFld" style="margin-bottom:16px">
                   <div class="lb">전자투표관리기관</div>
                   <div class="sel"><span class="ph">한국예탁결제원</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
                 </div>
-                <div class="fld" style="margin-top:16px">
+                <div class="fld">
                   <div class="upl-lb">엑셀 파일 업로드</div>
                   <div class="upl-row">
                     <div class="desc">첨부된 양식으로 전자투표/위임 내역 작성 후 업로드<br>엑셀 파일 암호 해제 필수 (미해제 시 업로드 불가)</div>
@@ -613,7 +613,13 @@
       if(step===3){ submit.disabled=!agree.classList.contains('on'); }
     }
     function reset(){ step=1; attached=false; agree.classList.remove('on'); drop.style.display='flex'; att.style.display='none'; render(); }
-    function openDlg(){ reset(); ov.classList.add('show'); }
+    function openDlg(){
+      reset();
+      /* 해외 주주 업로드에는 전자투표관리기관 선택이 없다 */
+      var act=document.querySelector((document.getElementById('evFilled').style.display==='none'?'#evEmpty':'#evFilled')+' .evtab.active');
+      document.getElementById('dlgOrgFld').style.display=act&&/해외/.test(act.textContent)?'none':'';
+      ov.classList.add('show');
+    }
     function closeDlg(){ ov.classList.remove('show'); reset(); }
     function attach(){ attached=true; drop.style.display='none'; att.style.display='flex'; render(); }
     document.querySelectorAll('.js-upload').forEach(function(b){b.addEventListener('click', openDlg);});
