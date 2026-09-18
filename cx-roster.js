@@ -910,6 +910,17 @@
 {i:897,gb:'개인',fr:'내국인',ct:'KR',st:'보통주',nm:'박성용',id:'881103-1******',ac:'8811031047047000000000897001',sh:800,rt:0.0002,pre:['전자위임(국내)'],site:'미참석'}
   ];
   var S = {total:897,shares:471661174,indiv:781,inst:114,corp:2,domestic:767,foreign:130,foreignIndiv:130};
+  /* 기관·법인 사업자번호 — 뒤 5자리가 마스킹돼 앞 5자리(세무서 3 + 구분 2)만 보인다.
+     합성 기관이 202-52 로 같아 보여서, 겹치는 번호는 기관마다 다른 앞자리로 바꾼다(결정적). */
+  (function () {
+    var seen = {}, TY = ['81', '82', '84', '85', '86', '87', '88'];
+    R.forEach(function (r) {
+      if (!/^\d{3}-\d{2}-\*{5}$/.test(r.id)) return;
+      var k = 0, pre = r.id.slice(0, 6);
+      while (seen[pre]) { k++; pre = (101 + (r.i * 137 + k * 53) % 800) + '-' + TY[(r.i + k) % TY.length]; }
+      seen[pre] = 1; r.id = pre + '-*****';
+    });
+  })();
   var CX = global.CX = global.CX || {};
   CX.roster = R;
   CX.rosterAddr = ADDR;
