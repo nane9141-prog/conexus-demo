@@ -107,6 +107,9 @@
   table.attbl tbody tr:hover td{background:#fafafa}
   table.attbl[data-clickable] tbody tr{cursor:pointer}
   .atmut{color:#a3a3a3}
+  table.attbl tbody td{overflow:hidden;text-overflow:ellipsis}
+  .attip{cursor:help}
+  .at-tip{position:fixed;display:none;z-index:4000;padding:6px 10px;border-radius:8px;background:#171717;color:#fff;font-size:12px;line-height:17px;white-space:nowrap;pointer-events:none}
   .voter{display:inline-flex;align-items:center;gap:8px}
   .vcaret{width:20px;height:20px;border-radius:50%;background:#171717;color:#fff;display:inline-flex;align-items:center;justify-content:center;flex:none}
   .vcaret svg{width:11px;height:11px;fill:none;stroke:#fff;stroke-width:2.4}
@@ -375,26 +378,32 @@
   /* 참석자 목록 — cx-roster.js(SSOT) 에서 파생. 상태값은 데모용으로 결정적으로 배정 */
   var D=(function(){
     var R=(window.CX&&CX.roster)?CX.roster:[];
-    var PRE=['전자투표(국내)','서면위임(타사)','미행사','중복행사','서면위임(자사)','전자투표(해외)'];
-    var SITE=['참석','미참석','일부참석','등록전'];
-    var APP=['사용','미사용','서면투표'];
-    var EV=['참석','미참석','일부참석'];
-    var LIMIT=['-','-','-','-','자사주','상호주','최대주주','공익법인'];
+    /* 사전투표: 미행사(기본) · 단일 채널 7종 · 중복행사(채널 2개 이상) */
+    var CH=['전자투표(국내)','전자투표(해외)','전자위임(국내)','전자위임(해외)','서면위임(자사)','서면위임(타사)','서면투표'];
+    var LIMIT=['자사주','상호주','무효주','최대주주','공익법인(3% 모수 포함)','공익법인(3% 모수 제외)','금융보험사','최대주주 특수관계인','공익법인 특수관계인','금융보험사 특수관계인'];
+    var AG=[['제2-1호','제2-2호'],['제3호'],['제2-1호','제3-1호','제3-2호'],['제4-1호']];
     return R.slice().sort(function(a,b){return b.sh-a.sh;}).map(function(r,i){
       var code=(i%3===0)?'미발급':('EG-2026'+('000'+((i%900)+1)).slice(-4));
-      var o={voter:r.nm, gubun:(i%9===0?'비주주':'주주'), name:r.nm, no:r.id,
-        pre:PRE[i%PRE.length], hold:r.sh, attend:Math.round(r.sh*(i%4===2?0.6:1)),
-        ratio:r.rt.toFixed(2)+'%', site:SITE[i%SITE.length], app:APP[i%APP.length],
-        code:code, evote:EV[i%EV.length], limit:LIMIT[i%LIMIT.length], ag:'-'};
+      /* 주주번호: 마스킹 없이 — 개인 생년월일+성별, 기관·법인 사업자번호 전체 */
+      var no=r.id.replace(/^(\d{6}-\d)\*+$/,'$1').replace(/\*{5}$/,('0000'+((r.i*7919)%100000)).slice(-5));
+      var k=i%11, pre=k<4?[]:(k===10?[CH[i%7],CH[(i+3)%7]]:[CH[i%7]]);
+      var site=['미참석','참석','일부 참석','참석','미참석'][i%5];
+      var ppl=(i%6===1)?2:1;                                 /* 주주+대리인 / 대리인 다수 */
+      var app=site==='미참석'?'미사용':(ppl>1?['사용','일부 사용','미사용'][i%3]:(i%4===3?'미사용':'사용'));
+      var lim=(i%7===3)?LIMIT[i%LIMIT.length]:'-';
+      var o={voter:(i%150===75)?'-':r.nm, name:r.nm, no:no, pre:pre, hold:r.sh,
+        attend:site==='일부 참석'?Math.round(r.sh*0.6):0, ratio:r.rt.toFixed(2)+'%', site:site, app:app,
+        code:code, evote:['참석','미참석','일부참석'][i%3], limit:lim, ag:(lim!=='-'&&i%2)?AG[i%AG.length]:null};
       if(i>0 && i%80===0) o.sub='통합 3건';
       return o;
     });
   })();
   function cm(n){return (n||0).toLocaleString('en-US');}
-  function preB(p){ if(p==='미행사') return '<span class="atb gray" style="opacity:.5">미행사</span>'; if(p==='중복행사') return '<span class="atb purple">중복행사</span>'; return '<span class="atb gray">'+p+'</span>'; }
-  function siteB(s){ return s==='참석'?'<span class="atb blue">참석</span>':'<span class="atb gray">'+s+'</span>'; }
-  function evoteB(s){ return s==='참석'?'<span class="atb blue">참석</span>':'<span class="atb gray">'+s+'</span>'; }
-  function appB(a){ return a==='사용'?'사용':(a==='미사용'?'<span class="atmut">미사용</span>':a); }
+  function mu(t){return '<span class="atmut">'+t+'</span>';}
+  function preB(p){ if(!p.length) return '<span class="atb gray" style="opacity:.5">미행사</span>'; if(p.length>1) return '<span class="atb purple attip" data-tip="'+p.join(' · ')+'">중복행사</span>'; return '<span class="atb gray">'+p[0]+'</span>'; }
+  function siteB(s){ return s==='미참석'?'<span class="atb gray">미참석</span>':'<span class="atb blue">'+s+'</span>'; }
+  function appB(a){ return a==='미사용'?mu(a):a; }
+  function agB(ag){ return ag?'<span class="atb red attip" data-tip="제한 의안: '+ag.join(', ')+'">제한</span>':mu('-'); }
   function voterCell(x,gid){
     if(x.sub && /통합/.test(x.sub)){
       return '<div class="voter"><button class="tw-chevron collapsed" data-toggle="'+gid+'"><svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button><span>'+x.voter+'</span><span class="tag">'+x.sub+'</span></div>';
@@ -412,26 +421,18 @@
     }
     return out;
   }
-  var COLS={
-    reg:['투표권자','주주명','주주번호','사전투표','보유주식수','지분율','현장 참석','앱 사용','의결권 제한','의안별 제한'],
-    all:['투표권자','주주명','주주번호','사전투표','보유주식수','지분율','현장 참석','앱 사용','의결권 제한'],
-    evote:['투표권자','주주구분','주주명','보유주식수','지분율','입장코드','전자주총 참석'],
-    code:['투표권자','주주명','입장코드','발급 상태','전자주총 참석']
-  };
-  var NCOLS={reg:[4,5],all:[4,5],evote:[3,4],code:[]};
-  var CCOLS={reg:[3,6,7],all:[3,6,7],evote:[],code:[]};
+  /* 세 탭 공통 항목 */
+  var C=['투표권자','주주명','주주번호','사전투표','현장 참석','앱 사용','보유주식','지분율','참석주식수','의결권 제한','의안별 제한'];
+  var COLS={reg:C,evote:C,all:C};
+  var NC=[6,7,8], CC=[3,4,5,10];
   function rowFor(tab,x,gid){
-    if(tab==='evote') return '<td>'+voterCell(x,gid)+'</td><td><span class="atb gray">'+x.gubun+'</span></td><td>'+x.name+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+x.ratio+'</td><td>'+(x.code==='미발급'?'<span class="atmut">미발급</span>':x.code)+'</td><td>'+evoteB(x.evote)+'</td>';
-    if(tab==='code') return '<td>'+voterCell(x,gid)+'</td><td>'+x.name+'</td><td>'+(x.code==='미발급'?'<span class="atmut">미발급</span>':x.code)+'</td><td>'+(x.code==='미발급'?'<span class="atb gray">미발급</span>':'<span class="atb blue">발급완료</span>')+'</td><td>'+evoteB(x.evote)+'</td>';
-    var last = tab==='all' ? ('<td>'+(x.limit==='-'?'<span class="atmut">-</span>':x.limit)+'</td>') : ('<td>'+(x.limit==='-'?'<span class="atmut">-</span>':x.limit)+'</td><td>'+(x.ag==='-'?'<span class="atmut">-</span>':x.ag)+'</td>');
-    return '<td>'+voterCell(x,gid)+'</td><td>'+x.name+'</td><td>'+x.no+'</td><td class="c">'+preB(x.pre)+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+x.ratio+'</td><td class="c">'+siteB(x.site)+'</td><td class="c">'+appB(x.app)+'</td>'+last;
+    return '<td>'+voterCell(x,gid)+'</td><td>'+x.name+'</td><td>'+x.no+'</td><td class="c">'+preB(x.pre)+'</td><td class="c">'+siteB(x.site)+'</td><td class="c">'+appB(x.app)+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+x.ratio+'</td><td class="n">'+(x.attend?cm(x.attend):mu('-'))+'</td><td>'+(x.limit==='-'?mu('-'):'<span title="'+x.limit+'">'+x.limit+'</span>')+'</td><td class="c">'+agB(x.ag)+'</td>';
   }
   var cur='reg', headTab=null;
-  var CW={'주주명':140,'주주번호':120,'주주구분':92,'사전투표':110,'보유주식수':104,'지분율':74,'현장 참석':86,'앱 사용':76,'의결권 제한':100,'의안별 제한':100,'입장코드':120,'전자주총 참석':104,'발급 상태':96};
+  var CW={'주주명':140,'주주번호':124,'사전투표':116,'현장 참석':90,'앱 사용':84,'보유주식':110,'지분율':72,'참석주식수':104,'의결권 제한':150,'의안별 제한':92};
   function render(){
     var head=document.getElementById('atHead'), body=document.getElementById('atBody');
-    var cols=COLS[cur], nc=NCOLS[cur];
-    var cc=CCOLS[cur]||[];
+    var cols=COLS[cur], nc=NC, cc=CC;
     /* 헤더·콜그룹은 탭이 바뀔 때만 다시 그린다 — 검색마다 다시 그리면 conexus 필터 아이콘이 사라졌다 붙어 흔들린다 */
     if(headTab!==cur){
       var cg=document.getElementById('atCols');
@@ -490,10 +491,14 @@
       if(rd){ var g=rd.dataset.rg; ov.querySelectorAll('.as-radio[data-rg="'+g+'"]').forEach(function(r){r.classList.toggle('on',r===rd);}); if(g==='shares1'||g==='shares2'){ var pq=document.getElementById(g==='shares1'?'asPartQty1':'asPartQty2'); if(pq) pq.style.display=(rd.dataset.v==='part')?'':'none'; } }
     });
   })();
+  /* 호버 툴팁 — 중복행사 채널 · 의안별 제한 의안번호 (스크롤 영역 밖으로 잘리지 않게 fixed) */
+  var tip=document.createElement('div'); tip.className='at-tip'; document.body.appendChild(tip);
+  document.getElementById('atBody').addEventListener('mouseover',function(e){ var t=e.target.closest('.attip'); if(!t){tip.style.display='none';return;} var r=t.getBoundingClientRect(); tip.textContent=t.dataset.tip; tip.style.display='block'; tip.style.left=Math.max(8,r.left+r.width/2-tip.offsetWidth/2)+'px'; tip.style.top=(r.top-tip.offsetHeight-6)+'px'; });
+  document.getElementById('atBody').addEventListener('mouseleave',function(){tip.style.display='none';});
   render();
 })();
 </script>
 
-<script src="conexus.js?v=fwb"></script>
+<script src="conexus.js?v=fwc"></script>
 </body>
 </html>
