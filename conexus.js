@@ -391,11 +391,14 @@
       if (lb) { th.style.textAlign = (rl.vote || rl.auto) ? (allNum ? R : C) : al; }
       /* 왼쪽 맞춤 칸은 필터 버튼을 글자 옆에 둔다 — 칸이 넓으면 오른쪽 끝은 너무 멀다 */
       th.classList.toggle('cx-al-l', !!lb && !rl.vote && !rl.auto && al === L);
+      /* 보조 수치 칸 — 본문 글자를 muted-foreground로 */
+      var mute = /^(주주번호|보유\s*주식수?|지분율|참석\s*주식수)$/.test(lb);
       cells.forEach(function (c) {
         c.style.textAlign = (rl.vote || rl.auto)
           ? ((c.querySelector('input') || isNum(c) || txt(c) === '') ? (allNum ? R : C) : C)
           : al;
         if (rl.bold) c.style.fontWeight = '600';
+        if (mute) c.style.color = '#737373';
       });
 
       /* 칸 너비 — 글자 길이에 맞춰 좁히고, 투표권자·의안명이 남는 자리를 가져간다 */
