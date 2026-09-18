@@ -392,7 +392,7 @@
       var w = th.getBoundingClientRect().width;
       /* 채널 칸이 표기라면 목록으로 고를 수 있게 해 준다 — 수치면 거를 것이 없다 */
       var ft = rl.ft || (rl.auto && !allNum ? 'list' : 0);
-      var canFilter = ft && lb && rows.length > 0 && (w === 0 || w >= 100);
+      var canFilter = ft && lb;   /* 데이터 유무·폭과 무관하게 필터 가능한 컬럼엔 아이콘 항상 노출(헤더 흔들림 방지) */
       if (canFilter && !th.querySelector('.cx-fbtn')) {
         th.classList.add('cx-filterable');
         /* sticky 헤더를 덮어쓰지 않도록, 자리 기준이 없을 때만 relative 를 준다 */
