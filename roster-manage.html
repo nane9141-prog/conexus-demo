@@ -47,6 +47,7 @@
   @media(max-width:1200px){.rmcards{flex-direction:column}.rmlink{width:auto}}
 </style>
 <script src="cx-data.js"></script>
+<script src="cx-roster.js"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -317,7 +318,7 @@
   var LIST = [
     { id: 'R-2026-01', st: '연결됨', nm: '제10기 정기주주총회 기준 주주명부', stage: 'set',
       meeting: '제10기 정기주주총회',
-      sh: M.sharesIssued || 476211964, ho: 234000, base: '2026-01-31', reg: '2026-02-02', by: '강하나' },
+      sh: (window.CX&&CX.rosterSummary?CX.rosterSummary.shares:471661174), ho: (window.CX&&CX.rosterSummary?CX.rosterSummary.total:893), base: '2026-01-31', reg: '2026-02-02', by: '강하나' },
     { id: 'R-2025-08', st: '연결됨', nm: '2025년 8월 임시주주총회 기준 주주명부', stage: 'end',
       meeting: '2025년 8월 임시주주총회',
       sh: 468902110, ho: 221400, base: '2025-07-31', reg: '2025-08-04', by: '박지용' },
@@ -397,20 +398,34 @@
       : '연결하면 이 명부를 기준으로 의결권이 계산됩니다.';
     cur = r;
 
-    var tot = r.sh || 1, rows = [], sum = 0;
-    NAMES.forEach(function (n, i) {
-      var sh = Math.round(tot * (0.09 - i * 0.0055));
-      if (sh < 1000) sh = 1000 + i * 137;
-      sum += sh;
-      rows.push('<tr><td class="c"><span class="sbadge">' + GUBUN[i % 5 === 4 ? 1 : 0] + '</span></td>'
-        + '<td class="c"><span class="sbadge">' + KIND[i % 4] + '</span></td>'
-        + '<td class="md">' + esc(n) + '</td>'
-        + '<td class="c mut">' + ('00' + (1001 + i * 7)).slice(-6) + '</td>'
-        + '<td class="r">' + cm(sh) + '</td>'
-        + '<td class="r mut">' + (sh / tot * 100).toFixed(2) + '%</td>'
-        + '<td class="mut">' + ADDR[i % ADDR.length] + '</td>'
-        + '<td class="mut">' + AGENT[i % AGENT.length] + '</td></tr>');
-    });
+    var rows = [];
+    if (window.CX && CX.roster && CX.roster.length) {
+      var raddr = CX.rosterAddr || '-';
+      CX.roster.slice().sort(function (a2, b2) { return b2.sh - a2.sh; }).forEach(function (x, i) {
+        rows.push('<tr><td class="c"><span class="sbadge">' + x.st + '</span></td>'
+          + '<td class="c"><span class="sbadge">' + (x.gb === '법인' ? '일반법인' : x.gb) + (x.fr === '외국인' ? '·외국인' : '') + '</span></td>'
+          + '<td class="md">' + esc(x.nm) + '</td>'
+          + '<td class="c mut">' + x.id + '</td>'
+          + '<td class="r">' + cm(x.sh) + '</td>'
+          + '<td class="r mut">' + x.rt.toFixed(2) + '%</td>'
+          + '<td class="mut">' + raddr + '</td>'
+          + '<td class="mut">' + AGENT[i % AGENT.length] + '</td></tr>');
+      });
+    } else {
+      var tot = r.sh || 1;
+      NAMES.forEach(function (n, i) {
+        var sh = Math.round(tot * (0.09 - i * 0.0055));
+        if (sh < 1000) sh = 1000 + i * 137;
+        rows.push('<tr><td class="c"><span class="sbadge">' + GUBUN[i % 5 === 4 ? 1 : 0] + '</span></td>'
+          + '<td class="c"><span class="sbadge">' + KIND[i % 4] + '</span></td>'
+          + '<td class="md">' + esc(n) + '</td>'
+          + '<td class="c mut">' + ('00' + (1001 + i * 7)).slice(-6) + '</td>'
+          + '<td class="r">' + cm(sh) + '</td>'
+          + '<td class="r mut">' + (sh / tot * 100).toFixed(2) + '%</td>'
+          + '<td class="mut">' + ADDR[i % ADDR.length] + '</td>'
+          + '<td class="mut">' + AGENT[i % AGENT.length] + '</td></tr>');
+      });
+    }
     document.getElementById('rmRows').innerHTML = rows.join('');
     document.getElementById('rmFoot').textContent = '총 ' + cm(r.ho) + '명 · ' + cm(r.sh) + '주';
   }
