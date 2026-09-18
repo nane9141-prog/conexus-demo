@@ -974,8 +974,7 @@
           + '<td class="n">' + yesPct(a.yes, a.w) + '</td>'
           + '<td class="c">' + badge + '</td></tr>';
       }).join('');
-      var noteHtml = '가결 <b style="color:#0071F3">' + pass + '</b>';
-      if (fail) noteHtml += ' · 부결 <b style="color:#E9081B">' + fail + '</b>';
+      var noteHtml = '가결 <b style="color:#0071F3">' + pass + '</b> · 부결 <b style="color:#E9081B">' + fail + '</b>';
       if (drop) noteHtml += ' · 폐기 <b style="color:#8a8a8f">' + drop + '</b>';
       document.getElementById('dbDayWait').textContent = waitN;
       document.getElementById('dbDayCount').textContent = countN;
