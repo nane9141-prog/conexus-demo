@@ -477,7 +477,13 @@
      처음 그릴 때는 표가 숨어 있어 너비가 0 이라, 이 자리에서 다시 재지 않으면 잘못 판단한다. */
   function watchFit(t, tbl) {
     if (t.ro || !window.ResizeObserver) return;
-    t.ro = new ResizeObserver(function () { (t.ths || []).forEach(fitFilter); });
+    t.ro = new ResizeObserver(function () {
+      (t.ths || []).forEach(fitFilter);
+      /* 숨겨졌던 표(탭 뒤 등)가 처음 보이면 그제야 폭을 확정한다 — 로드 때는 폭이 0이라 못 잡는다 */
+      if (!t.roFroze && tbl.clientWidth && getComputedStyle(tbl).tableLayout !== 'fixed') {
+        t.roFroze = 1; freezeWidths(t, tbl, false);
+      }
+    });
     t.ro.observe(tbl);
   }
   /* 탭을 갈아 끼우면 그제야 칸 너비가 잡힌다. 누른 뒤 한 박자 쉬고 모두 다시 잰다. */
