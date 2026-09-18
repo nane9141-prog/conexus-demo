@@ -159,6 +159,24 @@
   .db-m3 .v{display:flex;align-items:center;gap:4px;font-size:18px;line-height:28px;font-weight:700;color:#0A0A0A;
     font-variant-numeric:tabular-nums}
   .db-m3 .v small{font-size:12px;font-weight:500;color:#737373}
+  /* 사전 의안별 행사 현황 — 사전 의결권 현황(voting-rights)과 같은 표 스타일 */
+  .tbl-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
+  table.tbl{width:100%;border-collapse:collapse;font-size:14px}
+  table.tbl th{background:#fafafa;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap}
+  table.tbl td{padding:12px 14px;border-bottom:1px solid #f0f0f0;color:#0a0a0a}
+  table.tbl tr:last-child td{border-bottom:none}
+  table.tbl tr:hover td{background:#fafafa}
+  table.tbl td.num,table.tbl th.num{text-align:right}
+  table.tbl.agex td:first-child{white-space:nowrap}
+  table.tbl td.c,table.tbl th.c{text-align:center}
+  .tblcard{overflow:hidden}
+  .tblcard .tbl td{font-weight:400}
+  .tblcard .tbl tr:last-child td{border-bottom:none}
+  .ubadge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:500;line-height:16px}
+  .ubadge.secondary{background:#f4f4f5;color:#18181b}
+  .badge-exp{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:500;color:#171717}
+  .badge-exp.pass{background:#ebf4ff}
+  .badge-exp.rej{background:#f5f5f5;color:#737373}
   /* 의안별 행사 현황 표 */
   .db-tblc{box-sizing:border-box;padding:16px;background:#fff;border:1px solid #E5E5E5;border-radius:14px;
     box-shadow:0 1px 3px rgba(0,0,0,.1);overflow:auto}
@@ -565,16 +583,16 @@
             <div class="db-sec-h"><div class="db-sec-t with">의안별 행사 현황
                 <button class="db-sbtn" id="dbRefreshPre" type="button"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 1 2.3 5.6"/><path d="M4 20v-5h5"/></svg>새로고침</button></div>
               <div class="db-sec-d">현장 참석 주주수에 따라 결과가 달라질 수 있습니다.</div></div>
-            <div class="db-tblc">
-              <table class="db-ft">
-                <colgroup><col style="width:6%"><col style="width:18%"><col style="width:14%"><col style="width:9%"><col style="width:12%"><col style="width:16%"><col style="width:16%"><col style="width:9%"></colgroup>
+            <div class="tbl-wrap tblcard">
+              <table class="tbl agex" id="dbAgTbl">
                 <thead><tr>
-                  <th>번호</th><th>의안명</th>
-                  <th class="n">총 행사가능의결권 ①</th>
-                  <th class="n">행사주주</th>
-                  <th class="n">총 행사의결권 ②</th>
-                  <th class="n">① 찬성(률)</th>
-                  <th class="n">② 찬성(률)</th>
+                  <th>번호</th>
+                  <th>의안명</th>
+                  <th class="num">총 행사가능의결권</th>
+                  <th class="num">행사주주</th>
+                  <th class="num">행사의결권</th>
+                  <th class="num">찬성률 (총행사가능)</th>
+                  <th class="num">찬성률 (총행사)</th>
                   <th class="c">예상</th>
                 </tr></thead>
                 <tbody id="dbAgBody"></tbody>
@@ -989,27 +1007,48 @@
     window.addEventListener('storage', function (e) { if (e.key === 'cxDayState') renderDay(); });
   })();
 
-  /* 사전 의안 표 — 가결·부결 예상은 여기서 세어 카드에 그대로 넘긴다 */
+  /* 사전 의안 표 — 사전 의결권 현황(voting-rights)의 의안별 행사 현황과 같은 데이터·같은 계산.
+     가결·부결 예상은 여기서 세어 카드에 그대로 넘긴다 */
   (function () {
-    var body = document.getElementById('dbAgBody'); if (!body) return;
+    var body = document.getElementById('dbAgBody'); if (!body || !window.CX) return;
+    var AV = CX.meeting.sharesVoting, HOLDERS = CX.meeting.attendHolders;
+    function cm(n) { return Math.round(n).toLocaleString('en-US'); }
+    function pct(v) { return v == null ? '' : v.toFixed(1) + '%'; }
+    function rows() {
+      return CX.agenda.map(function (a) {
+        var d = CX.center[a.no];
+        var r = { no: a.no, nm: a.nm, cat: (a.types || []).join(' · '), grp: !!a.header || !d };
+        if (r.grp) return r;
+        r.sp = (d.thrLabel || '').indexOf('2/3') >= 0;
+        if (d.cands) {
+          r.w = d.cands.reduce(function (t, c) { return t + c.votes; }, 0);
+          r.cum = d.cands.filter(function (c) { return c.elected; }).length;
+        } else {
+          var v = d.options ? (d.options.filter(function (o) { return o.result === '가결'; })[0] || d.options[0]) : d;
+          r.yes = v['for']; r.w = v['for'] + v.against + (v.abs || 0);
+        }
+        return r;
+      });
+    }
+    function head(a) {
+      var cat = a.cat ? '<span class="ubadge secondary" style="margin-left:6px">' + a.cat + '</span>' : '';
+      return '<td>' + a.no + '</td><td>' + a.nm + cat + '</td>';
+    }
+    var EMPTY = '<td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="c"></td>';
     var pass = 0, fail = 0;
-    body.innerHTML = agendaRows().map(function (a) {
-      if (a.grp) return '<tr class="grp">' + rowHead(a) + EMPTY + '</tr>';
-      if (a.cumParent) return cumParentRow(a);
-      if (a.exclParent) { pass++; return cumParentRow(a); }
-      if (a.cand) return candRow(a, 'wait');
-      if (a.opt) return optRow(a, 'wait');
-      var r1 = a.yes / AV * 100;
-      var ok = r1 >= (a.sp ? 33.33 : 25);
+    body.innerHTML = rows().map(function (a) {
+      if (a.grp) return '<tr class="grp">' + head(a) + EMPTY + '</tr>';
+      var r1 = a.cum ? null : a.yes / AV * 100;
+      var ok = a.cum ? true : r1 >= (a.sp ? 33.33 : 25);
       if (ok) pass++; else fail++;
-      return '<tr>' + rowHead(a)
-        + '<td class="n">' + cm(AV) + '</td><td class="n">' + cm(HOLDERS) + '</td>'
-        + '<td class="n">' + cm(a.w) + '</td>'
-        + '<td class="n">' + yesPct(a.yes, AV) + '</td>'
-        + '<td class="n">' + yesPct(a.yes, a.w) + '</td>'
-        + '<td class="c"><span class="db-rb ' + (ok ? 'pass' : 'fail') + '">'
-        + (ok ? '가결 예상' : '부결 예상') + '</span></td></tr>';
+      return '<tr>' + head(a)
+        + '<td class="num">' + cm(AV) + '</td><td class="num">' + cm(HOLDERS) + '</td>'
+        + '<td class="num">' + cm(a.w) + '</td>'
+        + '<td class="num">' + pct(r1) + '</td>'
+        + '<td class="num">' + pct(a.yes == null ? null : a.yes / a.w * 100) + '</td>'
+        + '<td class="c"><span class="badge-exp ' + (ok ? 'pass' : 'rej') + '">' + (ok ? '가결 예상' : '부결 예상') + '</span></td></tr>';
     }).join('');
+    if (window.cxTable) window.cxTable.apply(document.getElementById('dbAgTbl'));
     document.getElementById('dbPass').textContent = pass;
     document.getElementById('dbFail').textContent = fail;
     var rfp = document.getElementById('dbRefreshPre');
