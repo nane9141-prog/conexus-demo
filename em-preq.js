@@ -31,17 +31,17 @@
   function voter(r) { var g = (CX.rosterGroups || []).filter(function (g) { return g.members.indexOf(r) >= 0; })[0]; return g ? g.voter : r.nm; }
 
   /* ---------- 표 ---------- */
-  var COLS = [['상태', 90, 'c'], ['접수일', 120, 'c'], ['작성자', 120, 'c'], ['질의 내용', 0], ['담당자', 100, 'c'], ['답변일', 120, 'c']];
+  var COLS = [['상태', 90, 'c'], ['접수일', 120, 'c'], ['작성자', 120, 'c'], ['의안번호', 80], ['질의 내용', 0], ['담당자', 100, 'c'], ['답변일', 120, 'c']];
   function val(x, c) {
     switch (c) {
-      case '상태': return st(x); case '접수일': return x.at.slice(0, 10); case '작성자': return x.r.nm;
+      case '상태': return st(x); case '접수일': return x.at.slice(0, 10); case '작성자': return x.r.nm; case '의안번호': return x.lbl;
       case '질의 내용': return x.title + ' ' + x.body; case '담당자': return x.by || '-'; case '답변일': return x.ansAt ? x.ansAt.slice(0, 10) : '-';
     }
     return '';
   }
   function cell(x, c) {
     if (c === '상태') return '<span class="lc-b ' + (x.ans ? 'blue' : 'gray') + '">' + st(x) + '</span>';
-    if (c === '질의 내용') return '<div class="pq-q"><span class="lbl">' + esc(x.lbl) + '</span><span class="tt">' + esc(x.title) + '</span><span class="bd">' + esc(x.body) + '</span></div>';
+    if (c === '질의 내용') return '<div class="pq-q"><span class="tt">' + esc(x.title) + '</span><span class="bd">' + esc(x.body) + '</span></div>';
     var t = val(x, c);
     return (c === '접수일' || c === '답변일' || t === '-') ? '<span class="mu">' + esc(t) + '</span>' : esc(t);
   }
@@ -77,7 +77,7 @@
     var pages = Math.max(1, Math.ceil(r.length / pageSize)); if (page > pages) page = pages;
     body.innerHTML = r.slice((page - 1) * pageSize, page * pageSize).map(function (x) {
       return '<tr data-k="' + x.k + '">' + COLS.map(function (c) { return '<td' + (c[2] ? ' class="' + c[2] + '"' : '') + '>' + cell(x, c[0]) + '</td>'; }).join('') + '</tr>';
-    }).join('') || '<tr><td colspan="6" class="lc-empty">등록된 질의가 없습니다.</td></tr>';
+    }).join('') || '<tr><td colspan="' + COLS.length + '" class="lc-empty">등록된 질의가 없습니다.</td></tr>';
     document.getElementById('pqCount').textContent = '총 ' + r.length + '건';
     document.getElementById('pqPager').innerHTML = EM.pagerHtml(page, pages);
   }
@@ -94,7 +94,7 @@
   function paint() {
     var x = cx, r = x.r, h = '';
     h += '<div class="pq-info">' + kv('주주명', esc(r.nm)) + kv('투표권자명', esc(voter(r))) + kv('구분', (r.fr === '외국인' ? '해외 ' : '') + (r.gb === '개인' ? '개인' : '법인') + ' 주주') + kv('보유 주식수', cm(r.sh) + '주') + kv('이메일', esc(x.email)) + kv('휴대폰번호', x.phone) + '</div>';
-    h += '<div class="lc-sec"><div class="lc-sh"><span>질의 내용</span></div><div class="pq-qbox"><div class="tt">' + esc(x.title) + '</div><div class="bd">' + esc(x.body) + '</div><div class="pq-ans" style="background:none;border:none;padding:0"><div class="meta"><span>' + x.at + ' 작성</span></div></div></div></div>';
+    h += '<div class="lc-sec"><div class="lc-sh"><span>질의 내용</span><span class="lc-b gray">' + esc(x.lbl) + '</span></div><div class="pq-qbox"><div class="tt">' + esc(x.title) + '</div><div class="bd">' + esc(x.body) + '</div><div class="pq-ans" style="background:none;border:none;padding:0"><div class="meta"><span>' + x.at + ' 작성</span></div></div></div></div>';
     if (x.ans && !editing) {
       h += '<div class="lc-sec"><div class="lc-sh"><span>답변</span></div><div class="pq-ans"><div class="bd">' + esc(x.ans) + '</div><div class="meta"><span>' + x.ansAt + ' · ' + esc(x.by) + '</span><span class="lk"><button type="button" data-a="edit">수정</button><span class="sep"></span><button type="button" data-a="del">삭제</button></span></div></div></div>';
     } else {
