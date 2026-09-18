@@ -161,7 +161,7 @@
   /* ---------- 화면 ---------- */
   root.innerHTML =
     '<div class="lc">' +
-    '<div class="lc-hd"><h2>로그인코드 관리</h2><p>본인인증이 불가한 해외 법인/개인 주주가 입장코드로 제출한 신청건입니다. 주주명부 대조 후 승인 시 해당 주총 참여 권한이 부여됩니다.</p></div>' +
+    '<div class="lc-hd"><h2>로그인코드 관리</h2><p>참석자의 주주 확인 및 입장 코드 발급 상태를 관리합니다.</p></div>' +
     '<div class="lc-bar">' +
       '<div class="lc-seg" id="lcTabs"><button type="button" class="on" data-t="sh">주주</button><button type="button" data-t="ns">비주주</button></div>' +
       '<select class="lc-sel" id="lcQf" aria-label="검색 기준"></select>' +
@@ -193,7 +193,7 @@
 
   var body = document.getElementById('lcBody'), tbl = document.getElementById('lcTbl');
   var cur = 'sh', chip = 'all', page = 1, pageSize = 20, lastTotal = 0, sortSt = null, filtPred = null, shX = null;
-  var QF = { sh: [['all', '전체'], ['이름', '이름'], ['연결된 투표권자', '연결된 투표권자'], ['주주번호', '주주번호'], ['로그인코드', '로그인코드']], ns: [['all', '전체'], ['이름', '이름'], ['소속', '소속'], ['이메일', '이메일'], ['로그인코드', '로그인코드']] };
+  var QF = { sh: [['vt', '투표권자'], ['nm', '주주명'], ['id', '주주번호'], ['ac', '실질계좌번호']], ns: [['all', '전체'], ['이름', '이름'], ['소속', '소속'], ['이메일', '이메일'], ['로그인코드', '로그인코드']] };
   var CHIPS = { sh: [['all', '전체'], ['로그인코드 발급', '코드 발급'], ['로그인코드 회수', '코드 회수'], ['주주확인 대기', '확인 대기'], ['주주확인 보완', '확인 보완'], ['주주확인 재보완', '확인 재보완'], ['주주확인 반려', '확인 반려'], ['주주확인 완료', '확인 완료']]};
   CHIPS.ns = CHIPS.sh;   /* 비주주 탭도 주주 탭과 같은 상태 칩 */
   var qf = document.getElementById('lcQf'), q = document.getElementById('lcQ');
@@ -204,8 +204,11 @@
     if (chip !== 'all') r = r.filter(function (x) { return x.st === chip; });
     var s = q.value.trim().toLowerCase();
     if (s) {
-      var F = qf.value === 'all' ? cs.map(function (c) { return c[0]; }).filter(Boolean) : [qf.value];
-      r = r.filter(function (x) { return F.some(function (c) { return txt(x, c).toLowerCase().indexOf(s) >= 0; }); });
+      /* 주주 탭은 명부 기준(신청 정보 + 연결된 투표권자 계좌), 비주주 탭은 컬럼 기준 */
+      var SK = { vt: function (x) { return x.voters.map(voterOf); }, nm: function (x) { return [x.name].concat(x.voters.map(function (v) { return v.nm; })); },
+        id: function (x) { return [x.idNo || ''].concat(x.voters.map(function (v) { return v.id; })); }, ac: function (x) { return x.accts.map(function (a) { return a.ac; }).concat(x.voters.map(function (v) { return v.ac; })); } };
+      var F = SK[qf.value] ? null : qf.value === 'all' ? cs.map(function (c) { return c[0]; }).filter(Boolean) : [qf.value];
+      r = r.filter(function (x) { return F ? F.some(function (c) { return txt(x, c).toLowerCase().indexOf(s) >= 0; }) : SK[qf.value](x).some(function (v) { return String(v).toLowerCase().indexOf(s) >= 0; }); });
     }
     if (filtPred) r = r.filter(function (x) { return filtPred(function (i) { return txt(x, cs[i][0]); }); });
     if (sortSt && sortSt.dir) {

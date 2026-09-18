@@ -93,6 +93,13 @@
     s.closest('.pg-card').classList.toggle('off', !next);
     touch();
   });
+  /* 시간 칸: 포커스하면 전체 선택, 이미 다 찬 상태에서 숫자를 치면 비우고 새로 입력 — 기존 값을 덮어쓴다 */
+  function isTime(t) { return /T$/.test(t.id) && t.closest && t.closest('.pk-tr'); }
+  root.addEventListener('focusin', function (e) { var t = e.target; if (isTime(t)) setTimeout(function () { t.select(); }); });
+  root.addEventListener('keydown', function (e) {
+    var t = e.target;
+    if (isTime(t) && /^\d$/.test(e.key) && t.value.length >= 5 && t.selectionStart === t.selectionEnd) t.value = '';
+  });
   root.addEventListener('input', function (e) {
     /* 시간 직접 입력 — 숫자만 받아 HH:MM 으로 맞춘다 */
     var t = e.target;

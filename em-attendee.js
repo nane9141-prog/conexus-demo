@@ -91,7 +91,7 @@
 
   /* ---------- 화면 ---------- */
   root.innerHTML = '<div class="lc">' +
-    '<div class="lc-hd"><h2>참가자 현황</h2><p>전자주주총회에 사전 등록된 참가자의 사전투표 · 참석 신청 · 출석 현황을 확인합니다.</p></div>' +
+    '<div class="lc-hd"><h2>참가자 현황</h2><p>사전 신청자를 포함한 전체 참가자 현황을 조회합니다.</p></div>' +
     '<div class="lc-bar">' +
       '<div class="lc-seg" id="atTabs"><button type="button" class="on" data-t="sh">주주</button><button type="button" data-t="ns">비주주</button></div>' +
       '<div class="lc-chips" id="atChips"></div>' +

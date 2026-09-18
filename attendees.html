@@ -238,6 +238,7 @@
   .at-tb-l{display:flex;align-items:center;gap:8px}
   .selbox{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;font-size:14px;color:#0a0a0a;cursor:pointer}
   .selbox svg{width:15px;height:15px;fill:none;stroke:#737373;stroke-width:2}
+  .at-tb .cx-sel{width:128px;border-radius:9px;padding:0 10px 0 12px;font-size:14px}   /* 검색 기준 드롭다운 */
   .search2{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;min-width:300px}
   .search2 svg{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:2}
   .search2 input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
@@ -448,8 +449,8 @@
         </div>
         <div class="at-tb">
           <div class="at-tb-l">
-            <div class="selbox"><span>투표권자</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
-            <div class="search2"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="atSearch" placeholder="투표권자를 검색해 주세요"></div>
+            <select class="selbox" id="atQf" aria-label="검색 기준"><option value="voter">투표권자</option><option value="name">주주명</option><option value="no">주주번호</option><option value="ac">실질계좌번호</option></select>
+            <div class="search2"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="atSearch" placeholder="검색어를 입력하세요"></div>
             <div class="at-chips" id="atChips"><button type="button" class="at-chip on" data-chip="all">전체 <b></b></button><button type="button" class="at-chip" data-chip="sh">주주 <b></b></button><button type="button" class="at-chip" data-chip="non">비주주 <b></b></button></div>
           </div>
           <div class="at-tb-r">
@@ -741,7 +742,7 @@
   function filteredRows(){
     var q=(document.getElementById('atSearch').value||'').trim();
     if(cur==='reg' && !q) return null;
-    var B=base(), r=q ? B.filter(function(x){return (x.key||(x.voter+x.name+x.no)).indexOf(q)>=0;}) : B.slice();
+    var f=document.getElementById('atQf').value, B=base(), num=f==='no'||f==='ac', nq=num?q.replace(/\D/g,''):q, r=q ? B.filter(function(x){ var v=String(x[f]||''); return (num?v.replace(/\D/g,''):v).indexOf(nq)>=0; }) : B.slice();   /* 검색 기준: 투표권자·주주명·주주번호·실질계좌번호 — 번호는 '-' 없이 숫자로 비교 */
     if(chip!=='all') r=r.filter(function(x){ return chipHit(x,chip); });
     return r;
   }
@@ -795,6 +796,8 @@
   document.querySelectorAll('.at-tab').forEach(function(t){ t.addEventListener('click',function(){ if(cur!==t.dataset.at) document.getElementById('atSearch').value='';   /* 탭을 옮기면 검색어 초기화 */
     cur=t.dataset.at; page=1; document.querySelectorAll('.at-tab').forEach(function(x){x.classList.toggle('on',x===t);}); document.querySelectorAll('.regonly').forEach(function(b){b.style.display=(cur==='reg')?'':'none';}); syncChips(); render(); }); });
   document.getElementById('atSearch').addEventListener('input',function(){ page=1; render(); });
+  document.getElementById('atQf').addEventListener('change',function(){ page=1; render(); });
+  document.addEventListener('DOMContentLoaded',function(){ if(window.cxSelect) cxSelect(document.getElementById('atQf')); });
   document.getElementById('atChips').addEventListener('click',function(e){ var b=e.target.closest('.at-chip'); if(!b) return; chip=b.dataset.chip; this.querySelectorAll('.at-chip').forEach(function(x){ x.classList.toggle('on',x===b); }); page=1; render(); });
   /* 비주주 정보 패널(조회) — 현장 참석자 탭에서 비주주 행 클릭 */
   var nvX=null, nv=document.getElementById('nvDlg');
@@ -1162,6 +1165,6 @@
 })();
 </script>
 
-<script src="conexus.js?v=fwu"></script>
+<script src="conexus.js?v=fwv"></script>
 </body>
 </html>

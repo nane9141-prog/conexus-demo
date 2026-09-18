@@ -47,7 +47,7 @@
   }
 
   root.innerHTML = '<div class="lc">' +
-    '<div class="lc-hd"><h2>사전 질의 관리</h2><p>주주가 총회 전 등록한 질의를 확인하고 답변을 관리합니다. 등록한 답변은 주주 사이트의 질의 내역에 노출됩니다.</p></div>' +
+    '<div class="lc-hd"><h2>사전 질의 관리</h2><p>주주총회 참석 주주의 사전 질의 현황 및 답변 관리 화면입니다.</p></div>' +
     '<div class="lc-bar"><div class="lc-chips" id="pqChips"></div><span data-cx-tools></span></div>' +
     '<div class="lc-wrap"><div class="lc-scroll"><table class="lctbl" id="pqTbl"><colgroup>' + COLS.map(function (c) { return c[1] ? '<col style="width:' + c[1] + 'px">' : '<col>'; }).join('') + '</colgroup>' +
       '<thead><tr>' + COLS.map(function (c) { return '<th' + (c[2] ? ' class="' + c[2] + '"' : '') + (c[3] ? ' data-al="' + c[3] + '"' : '') + '>' + c[0] + '</th>'; }).join('') + '</tr></thead><tbody id="pqBody"></tbody></table></div>' +
