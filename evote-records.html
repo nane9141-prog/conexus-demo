@@ -629,7 +629,7 @@
     document.querySelectorAll('.evtabs').forEach(function(g){
       g.querySelectorAll('.evtab').forEach(function(t){
         t.addEventListener('click', function(){ g.querySelectorAll('.evtab').forEach(function(x){x.classList.toggle('active',x===t);});
-          document.getElementById('evOrg').style.display=/해외/.test(t.textContent)?'none':'';   /* 전자투표관리기관은 국내 주주에서만 표기 */ });
+          document.getElementById('evOrg').style.visibility=/해외/.test(t.textContent)?'hidden':'';   /* 전자투표관리기관은 국내 주주에서만 표기 — 자리는 남겨 타이틀이 움직이지 않게 */ });
       });
     });
   })();
