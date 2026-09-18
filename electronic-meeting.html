@@ -342,9 +342,7 @@
       <div class="left">
         <button class="iconbtn sm" id="toggleLnb" title="사이드바"><i class="ph ph-sidebar-simple" style="font-size:16px"></i></button>
         <span class="vsep"></span>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="crumb">전자주주총회 설정</span>
-        </div>
+        <div style="display:flex;align-items:center;gap:8px" id="emCrumb"></div>
       </div>
       <button class="iconbtn md" title="변경이력"><i class="ph ph-clock-counter-clockwise" style="font-size:16px"></i></button>
     </div>
@@ -420,6 +418,16 @@
     document.addEventListener('click',function(){mp.classList.add('hidden');});
     mp.addEventListener('click',function(e){e.stopPropagation();});
   })();
+  /* 상단 breadcrumb — 전자주주총회 설정 › 현재 탭 [› 하위 화면]. 하위 화면이 있으면 탭 이름을 눌러 목록으로(#crumbBack) */
+  var crumbSub={};
+  function emCrumb(){
+    var it=document.querySelector('.st-nav .st-item.active'), tab=it?it.dataset.tab:'', lbl=it?it.querySelector('.st-lbl').textContent:'', sub=crumbSub[tab];
+    var sep='<svg class="ic" style="width:14px;height:14px;color:var(--muted-fg);opacity:.55" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>';
+    document.getElementById('emCrumb').innerHTML='<span class="crumb" style="color:var(--muted-fg)">전자주주총회 설정</span>'+sep+
+      (sub?'<a class="crumb" id="crumbBack" href="#" style="color:var(--muted-fg);text-decoration:none">'+lbl+'</a>'+sep+'<span class="crumb">'+sub+'</span>':'<span class="crumb">'+lbl+'</span>');
+  }
+  window.emCrumbSub=function(tab,sub){ crumbSub[tab]=sub||''; emCrumb(); };
+  emCrumb();
   // settings tab switching (in-page st-nav)
   document.querySelectorAll('.st-nav').forEach(function(nav){
     nav.querySelectorAll('.st-item').forEach(function(item){
@@ -428,6 +436,7 @@
         nav.querySelectorAll('.st-item').forEach(function(i){i.classList.toggle('active',i===item);});
         var body=nav.parentElement.querySelector('.st-body')||document;
         body.querySelectorAll('.st-tab').forEach(function(p){p.classList.toggle('active',p.dataset.panel===tab);});
+        emCrumb();
       });
     });
   });
@@ -439,6 +448,7 @@
     var body=nav.parentElement.querySelector('.st-body')||document;
     body.querySelectorAll('.st-tab').forEach(function(p){p.classList.toggle('active',p.dataset.panel===id);});
     var sc=document.querySelector('.scroll'); if(sc) sc.scrollTop=0;
+    emCrumb();
   }
   document.querySelectorAll('.st-save').forEach(function(b){
     if(b.textContent.trim()!=='저장') return;
@@ -478,8 +488,8 @@
 
 
 <script src="em-util.js?v=1"></script>
-<script src="em-logincode.js?v=1"></script>
-<script src="em-site.js?v=1"></script>
+<script src="em-logincode.js?v=2"></script>
+<script src="em-site.js?v=2"></script>
 <script src="em-progress.js?v=1"></script>
 <script src="em-design.js?v=1"></script>
 <script src="em-attendee.js?v=1"></script>

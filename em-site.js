@@ -74,7 +74,7 @@
     var ttl = en ? '<div class="row2">' + fld('fTk', '제목(국문)', x.tk) + fld('fTe', '제목(영문)', x.te) + '</div>' : '<div class="row2">' + fld('fTk', '제목', x.tk) + '</div>';
     var bdy = en ? '<div class="row2">' + editor('fBk', '본문(국문)', x.bk) + editor('fBe', '본문(영문)', x.be) + '</div>' : '<div class="row2">' + editor('fBk', '본문(국문)', x.bk) + '</div>';
     root.innerHTML = '<div class="lc ns-form">' +
-      '<div class="pg-hd" style="padding-bottom:0;align-items:center"><div style="display:flex;align-items:center;gap:8px"><button type="button" class="lc-more" id="fBack" aria-label="목록으로"><i class="ph ph-arrow-left"></i></button><span style="font-size:16px;line-height:24px;font-weight:600;color:#0A0A0A">' + NAME[k] + ' ' + (f.x ? '수정' : '등록') + '</span></div><button type="button" class="btn dark" id="fSave" disabled>저장</button></div>' +
+      '<div class="pg-hd" style="padding-bottom:0;align-items:center"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px;line-height:24px;font-weight:600;color:#0A0A0A">' + NAME[k] + ' ' + (f.x ? '수정' : '등록') + '</span></div><button type="button" class="btn dark" id="fSave" disabled>저장</button></div>' +
       (k === 'notice' ? '<div class="pg-chk"><label><input type="checkbox" id="fPin"' + (x.pin ? ' checked' : '') + '>상단 고정</label></div>' : '') +
       '<div class="pg-row"><div class="pg-f" style="width:200px"><label for="fS">노출 시작일</label><input type="date" class="pg-in" id="fS" style="width:200px" value="' + (x.s || TODAY) + '"><div class="hint">시작일 0시부터 노출됩니다.</div></div>' +
         '<div class="pg-f" style="width:200px"><label for="fE">노출 종료일</label><input type="date" class="pg-in" id="fE" style="width:200px" value="' + (x.e || '') + '"><div class="err" id="fErr" hidden></div></div></div>' +
@@ -90,8 +90,15 @@
     var need = ['fS', 'fE', 'fTk', 'fBk'].concat(langEn ? ['fTe', 'fBe'] : []);
     $('fSave').disabled = bad || need.some(function (id) { return !v(id); });
   }
-  function openForm(k, x) { form = { k: k, x: x || null }; view = 'form'; renderForm(); EM.setDirty('basic', false); }
-  function backToList() { view = 'list'; form = null; EM.setDirty('basic', false); renderList(); }
+  function openForm(k, x) { form = { k: k, x: x || null }; view = 'form'; renderForm(); EM.setDirty('basic', false); if (window.emCrumbSub) emCrumbSub('basic', NAME[k] + ' ' + (form.x ? '수정' : '등록')); }
+  function backToList() { view = 'list'; form = null; EM.setDirty('basic', false); renderList(); if (window.emCrumbSub) emCrumbSub('basic', ''); }
+  /* 상단 breadcrumb의 '사이트 설정'으로 목록 복귀 — 작성 중이면 확인 */
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('#crumbBack') || view !== 'form') return;
+    e.preventDefault();
+    if (form.dirty) return EM.alertDlg({ ic: 'info', t: '변경사항이 저장되지 않았습니다', d: '목록으로 돌아가면 작성한 내용이 사라집니다.', cancel: '계속 작성', ok: '나가기' }, backToList);
+    backToList();
+  });
   function find(k, id) { return LIST[k].filter(function (x) { return x.id === +id; })[0]; }
 
   /* ---------- 미리보기 모달 ---------- */
@@ -143,10 +150,6 @@
   root.addEventListener('click', function (e) {
     var t = e.target;
     if (view === 'form') {
-      if (t.closest('#fBack')) {
-        if (form.dirty) return EM.alertDlg({ ic: 'info', t: '변경사항이 저장되지 않았습니다', d: '목록으로 돌아가면 작성한 내용이 사라집니다.', cancel: '계속 작성', ok: '나가기' }, backToList);
-        return backToList();
-      }
       if (t.closest('#fSave') && !$('fSave').disabled) {
         var x = form.x || item({}), isNew = !form.x;
         x.pin = !!($('fPin') && $('fPin').checked); x.s = v('fS'); x.e = v('fE'); x.tk = v('fTk'); x.bk = v('fBk');
