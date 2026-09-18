@@ -384,9 +384,9 @@
           </div>
           <div class="evk">
             <div class="kc"><div class="lbl">행사 의결권</div><div class="val" id="kpiEx">150,000,000주</div><div class="sub" id="kpiExSub">14,000명 · 발행주식총수 대비 31.5%</div></div>
-            <div class="kc"><div class="lbl">중복 의결권</div><div class="val" id="kpiDup">3,150,000주</div><div class="sub">자동 병합 대상</div></div>
+            <div class="kc"><div class="lbl">중복 의결권</div><div class="val" id="kpiDup">3,150,000주</div><div class="sub" id="kpiDupSub">0명</div></div>
             <div class="kc"><div class="lbl">중복 미처리</div><div class="val red" id="kpiDupUn">105,000주</div><div class="sub" id="kpiDupUnSub">0명</div></div>
-            <div class="kc"><div class="lbl">확정 의결권</div><div class="val blue" id="kpiConf">149,895,000주</div><div class="sub">중복 처리 완료 기준</div></div>
+            <div class="kc"><div class="lbl">확정 의결권</div><div class="val blue" id="kpiConf">149,895,000주</div><div class="sub" id="kpiConfSub">0명</div></div>
           </div>
           <div class="toolbar" style="margin-bottom:12px">
             <div class="seg" id="viewSeg">
@@ -714,9 +714,10 @@
       var cnt=el.dataset.cnt||'0', shr=num(el.dataset.shr);
       set('pgTotal',cnt); set('pgShares',fmt(shr));
       var dup=Math.round(shr*DR), dupUn=Math.round(shr*0.0007), conf=shr-dupUn;
-      var pct=shr?(shr/TOTAL*100).toFixed(1):'0.0';
-      set('kpiEx',fmt(shr)+'주'); set('kpiExSub',cnt+'명 · 발행주식총수 대비 '+pct+'%');
-      set('kpiDup',fmt(dup)+'주'); set('kpiDupUn',fmt(dupUn)+'주'); set('kpiDupUnSub',fmt(dupUn?Math.max(1,Math.round(num(cnt)*0.02)):0)+'명');   /* 미처리 주주수 — 데모: 행사 주주의 2% */ set('kpiConf',fmt(conf)+'주');
+      /* 카드 서브는 모두 주주수 — 중복·미처리 주주는 데모 비율(중복 = 행사 주주의 10%, 미처리 = 중복의 20%) */
+      var nEx=num(cnt), nDup=dup?Math.max(1,Math.round(nEx*0.1)):0, nUn=dupUn?Math.max(1,Math.round(nDup*0.2)):0;
+      set('kpiEx',fmt(shr)+'주'); set('kpiExSub',cnt+'명');
+      set('kpiDup',fmt(dup)+'주'); set('kpiDupUn',fmt(dupUn)+'주'); set('kpiDupUnSub',fmt(nUn)+'명'); set('kpiConf',fmt(conf)+'주'); set('kpiDupSub',fmt(nDup)+'명'); set('kpiConfSub',fmt(nEx-nUn)+'명');
       var empty=(shr===0);
       ['viewAgenda','viewHolder'].forEach(function(id){var w=document.getElementById(id);if(w)w.classList.toggle('novot',empty);});
       if(empty){ set('pgInd','0 / 0'); var p=document.getElementById('pgPrev'),n=document.getElementById('pgNext'); if(p)p.disabled=true; if(n)n.disabled=true; }
