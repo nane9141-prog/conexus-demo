@@ -719,8 +719,8 @@
     if(!q) return;
     var bt=document.querySelector('.db-tab[data-dt="'+q+'"]');
     if(bt) bt.click();
-    var lt=document.querySelector('.t[data-tab="'+q+'"]');
-    if(lt){ document.querySelectorAll('.t[data-tab]').forEach(function(x){x.classList.toggle('active',x===lt);}); }
+    var lt=document.querySelector('.lnb-tabs .t[data-tab="'+q+'"]');
+    if(lt) lt.click();   /* LNB 탭 클릭 → 탭 active + 하단 메뉴 패널(.lnb-content)까지 함께 전환 */
   })();
   // 변경법안 안내 — '자세히' 클릭 시 모달 (모달 DOM은 하단에 있으므로 클릭 시점에 조회)
   (function(){
