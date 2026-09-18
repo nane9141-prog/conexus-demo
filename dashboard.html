@@ -141,7 +141,7 @@
   .db-chc2 .sw{width:6px;height:6px;flex:none}
   .db-chc2 .v{font-size:18px;line-height:1;font-weight:600;color:#0A0A0A;font-variant-numeric:tabular-nums}
   .db-chc2 .s{font-size:14px;line-height:1;font-weight:500;letter-spacing:-.01em;color:#737373;font-variant-numeric:tabular-nums}
-  .db-stack{display:flex;height:24px;gap:2px;background:#FAFAFA;border-radius:9999px;overflow:hidden}
+  .db-stack{display:flex;height:16px;gap:2px;background:#FAFAFA;border-radius:9999px;overflow:hidden}
   .db-stack i{display:block;height:100%;border-radius:9999px}
   /* 현장 — 표 위 작은 통계 세 칸 */
   .db-sec-h.row{flex-direction:row;align-items:flex-start;gap:10px}
@@ -174,6 +174,9 @@
   table.db-ft td.db-no{color:var(--muted-fg)}   /* 의안번호 — muted */
   table.db-ft .c{text-align:center}
   table.db-ft tr.grp td{font-weight:400}    /* 상위 의안 의안명도 일반 굵기 */
+  table.db-ft th.db-sortable{cursor:pointer;user-select:none;white-space:nowrap}
+  table.db-ft th.db-sortable:hover{color:#0a0a0a}
+  table.db-ft th .db-sort-ind{margin-left:4px;font-size:11px;color:#0071F3}
   .db-cat{display:inline-flex;align-items:center;justify-content:center;padding:2px 6px;margin-left:8px;border-radius:6px;
     background:#F5F5F5;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#525252}
   .db-rb{display:inline-flex;align-items:center;justify-content:center;padding:2px 6px;border-radius:6px;
@@ -1046,5 +1049,41 @@
     <div class="lawdlg-f"><button class="lawdlg-ok" id="lawDlgOk" type="button">확인</button></div>
   </div>
 </div>
+<script>
+/* 의안별 행사 현황 표 — 번호 컬럼 계층형 정렬(오름/내림 토글). 부모·자식 순서 유지. */
+(function(){
+  function key(r){
+    var t=(r.cells[0]?r.cells[0].textContent:'').trim();
+    if(!t) return [Infinity];
+    return t.split('-').map(function(n){ var v=parseInt(n,10); return isNaN(v)?0:v; });
+  }
+  function bindSort(){
+    document.querySelectorAll('table.db-ft').forEach(function(tbl){
+      var th=tbl.tHead&&tbl.tHead.rows[0]?tbl.tHead.rows[0].cells[0]:null;
+      if(!th||th.__sortBound) return;
+      th.__sortBound=1; th.__dir=0; th.classList.add('db-sortable');
+      var ind=document.createElement('span'); ind.className='db-sort-ind'; th.appendChild(ind);
+      th.addEventListener('click',function(){
+        var tb=tbl.tBodies[0]; if(!tb) return;
+        th.__dir = th.__dir===1 ? -1 : 1;
+        var rows=Array.prototype.slice.call(tb.rows);
+        rows.sort(function(a,b){
+          var ka=key(a), kb=key(b), n=Math.max(ka.length,kb.length);
+          for(var i=0;i<n;i++){
+            var x=ka[i], y=kb[i];
+            if(x==null) return -1*th.__dir;   /* 짧은 쪽(상위 의안) 먼저(오름) */
+            if(y==null) return 1*th.__dir;
+            if(x!==y) return (x-y)*th.__dir;
+          }
+          return 0;
+        });
+        rows.forEach(function(r){ tb.appendChild(r); });
+        ind.textContent = th.__dir===1?'▲':(th.__dir===-1?'▼':'');
+      });
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bindSort); else bindSort();
+})();
+</script>
 </body>
 </html>

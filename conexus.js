@@ -551,6 +551,20 @@
 
   function run() { Array.prototype.forEach.call(document.querySelectorAll('table'), apply); }
   window.cxTable = { apply: apply, run: run };
+
+  /* 좌상단 로고·'대시보드' 메뉴 → 설정 대시보드(dashboard.html?tab=set) */
+  (function(){
+    function wire(){
+      var DEST='dashboard.html?tab=set';
+      var logo=document.querySelector('.lnb-brand img');
+      if(logo && !logo.__cxHome){ logo.__cxHome=1; logo.style.cursor='pointer';
+        logo.addEventListener('click',function(){ location.href=DEST; }); }
+      document.querySelectorAll('.lnb-menu .nav-item[href^="dashboard.html"],.lnb-rail .railbtn[href^="dashboard.html"]').forEach(function(a){
+        a.setAttribute('href',DEST);
+      });
+    }
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wire); else wire();
+  })();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   setTimeout(run, 400); setTimeout(run, 1200);
 })();
