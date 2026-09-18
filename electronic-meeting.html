@@ -238,6 +238,7 @@
   .miss{display:inline-flex;align-items:center;height:18px;padding:0 6px;background:#fff1f2;color:#e11d48;border-radius:6px;font-size:11px;font-weight:600}
 </style>
 <script src="cx-data.js"></script>
+<script src="cx-roster.js?v=r6"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -345,18 +346,18 @@
     <div class="scroll">
       <div class="settings">
         <nav class="st-nav" id="stNav">
-          <button class="st-item active" data-tab="basic"><span class="st-lbl">기본 설정</span><svg class="ic st-chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
+          <button class="st-item active" data-tab="basic"><span class="st-lbl">사이트 설정</span><svg class="ic st-chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
           <button class="st-item" data-tab="progress"><span class="st-lbl">진행 설정</span><svg class="ic st-chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
-          <button class="st-item" data-tab="terms"><span class="st-lbl">약관 관리</span><svg class="ic st-chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
           <button class="st-item" data-tab="design"><span class="st-lbl">디자인 설정</span><svg class="ic st-chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
-          <button class="st-item" data-tab="attendee"><span class="st-lbl">참석자 관리</span><svg class="ic st-chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
+          <button class="st-item" data-tab="logincode"><span class="st-lbl">로그인코드 관리</span><svg class="ic st-chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
           <button class="st-item" data-tab="preq"><span class="st-lbl">사전 질의 관리</span><svg class="ic st-chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
+          <button class="st-item" data-tab="attendee"><span class="st-lbl">참가자 현황</span><svg class="ic st-chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></button>
         </nav>
         <div class="st-body">
 
           <!-- 기본 설정 -->
           <div class="st-tab active" data-panel="basic"><div class="st-form">
-            <div class="st-head"><h2>기본 설정</h2><div class="actions"><button class="btn"><i class="ph ph-upload-simple" style="font-size:16px"></i>사이트 미리보기</button><button class="st-save">저장</button></div></div>
+            <div class="st-head"><h2>사이트 설정</h2><div class="actions"><button class="btn"><i class="ph ph-upload-simple" style="font-size:16px"></i>사이트 미리보기</button><button class="st-save">저장</button></div></div>
             <div class="st-section">
               <div class="sub-h">시청 사이트 설정</div>
               <div class="field"><label>시청 사이트 URL</label><div class="urlbox"><i class="ph ph-arrow-square-out" style="font-size:16px;color:#0071F3"></i><span class="urltxt">https://evote.conexus.co.kr/kakaobank-12</span><button class="urlcopy">복사</button></div></div>
@@ -389,11 +390,6 @@
           </div></div>
 
           <!-- 약관 관리 -->
-          <div class="st-tab" data-panel="terms"><div class="st-full">
-            <div class="st-head"><h2>약관 관리</h2><div class="actions"><button class="st-save">저장</button></div></div>
-            <div class="emain2"><div class="esec"><div class="esec-h"><div><div class="esec-t">개인정보 수집 및 이용</div><div class="esec-d">온라인 주주총회 진행을 위해 주주들의 필수 개인정보를 수집 및 이용하는 법적 동의 항목입니다.</div></div><button class="btn">등록</button></div><div class="etbl"><div class="etr eth"><span>구분</span><span>제목</span><span class="ert">등록일</span><span></span></div><div class="etr"><span class="ec">국문</span><span class="etitle">개인정보 수집 및 이용 동의 <span class="nowbadge">현재시행</span></span><span class="ert">2027-03-05</span><span class="eact"><i class="ph ph-pencil-simple" style="font-size:16px"></i><i class="ph ph-trash" style="font-size:16px"></i></span></div><div class="etr"><span class="ec">영문</span><span class="etitle">개인정보 수집 및 이용 동의 <span class="nowbadge">현재시행</span></span><span class="ert">2027-03-05</span><span class="eact"><i class="ph ph-pencil-simple" style="font-size:16px"></i><i class="ph ph-trash" style="font-size:16px"></i></span></div></div><button class="ever"><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg> 버전 이력 2개</button></div><div class="esec"><div class="esec-h"><div><div class="esec-t">이용 약관</div><div class="esec-d">전자주주총회 사이트 이용 시 주주와 회사 간의 권리, 의무 및 책임 사항을 규정하는 약관입니다.</div></div><button class="btn">등록</button></div><div class="etbl"><div class="etr eth"><span>구분</span><span>제목</span><span class="ert">등록일</span><span></span></div><div class="etr"><span class="ec">국문</span><span class="etitle">개인정보 수집 및 이용 동의 <span class="nowbadge">현재시행</span></span><span class="ert">2027-03-05</span><span class="eact"><i class="ph ph-pencil-simple" style="font-size:16px"></i><i class="ph ph-trash" style="font-size:16px"></i></span></div></div><button class="ever"><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg> 버전 이력 3개</button></div><div class="esec"><div class="esec-h"><div><div class="esec-t">개인정보 처리 방침</div><div class="esec-d">수집한 주주 개인정보의 처리 목적, 보유 기간 및 제3자 제공 현황 등을 투명하게 공개하는 방침입니다.</div></div><button class="btn">등록</button></div><div class="etbl"><div class="etr eth"><span>구분</span><span>제목</span><span class="ert">등록일</span><span></span></div><div class="etr"><span class="ec">국문</span><span class="etitle">개인정보 수집 및 이용 동의 <span class="nowbadge">현재시행</span></span><span class="ert">2027-03-05</span><span class="eact"><i class="ph ph-pencil-simple" style="font-size:16px"></i><i class="ph ph-trash" style="font-size:16px"></i></span></div></div><button class="ever"><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg> 버전 이력 2개</button></div><div class="esec"><div class="esec-h"><div><div class="esec-t">만 14세 미만 보호자 동의 <span class="miss">미등록</span></div><div class="esec-d">만 14세 미만 미성년자 주주가 사전 참석을 신청할 경우, 법정대리인의 동의를 받기 위한 양식입니다.</div></div><button class="btn">등록</button></div><div class="etbl"><div class="etr eth"><span>구분</span><span>제목</span><span class="ert">등록일</span><span></span></div><div class="etr"><span class="ec">국문</span><span class="etitle">개인정보 수집 및 이용 동의 <span class="nowbadge">현재시행</span></span><span class="ert">2027-03-05</span><span class="eact"><i class="ph ph-pencil-simple" style="font-size:16px"></i><i class="ph ph-trash" style="font-size:16px"></i></span></div></div><button class="ever"><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg> 버전 이력 2개</button></div></div>
-          </div></div>
-
           <!-- 디자인 설정 -->
           <div class="st-tab" data-panel="design"><div class="st-form dz-wide">
             <div class="st-head"><div><h2>디자인 설정</h2><div class="sub-help">브랜드 컬러, 로고 등 전자주주총회 사이트의 시각 요소를 설정합니다.</div></div><div class="actions"><button class="btn">사이트 미리보기</button><button class="st-save">저장</button></div></div>
@@ -407,7 +403,7 @@
 
           <!-- 참석자 관리 -->
           <div class="st-tab" data-panel="attendee"><div class="st-full">
-            <div class="st-head"><div><h2>참석자 관리</h2><div class="sub-help">전자주총 참석·대리 신청 현황을 확인하고 승인 처리합니다.</div></div><div class="actions"><button class="st-save">참석자 추가</button></div></div>
+            <div class="st-head"><div><h2>참가자 현황</h2><div class="sub-help">전자주총 참석·대리 신청 현황을 확인하고 승인 처리합니다.</div></div><div class="actions"><button class="st-save">참석자 추가</button></div></div>
             <div class="atbar">
               <div class="chips" id="atChips">
                 <button class="chip active" data-fs="all">전체 <span class="c">82</span></button>
@@ -441,6 +437,24 @@
             <div class="sheet-ov" id="atSheet"><div class="sheet"><button class="sheet-x" data-sheet-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button><button class="sheet-more" id="shMore" style="display:none"><i class="ph ph-dots-three" style="font-size:16px"></i></button><div class="sheet-hd"><div class="sheet-t">참석자 상세정보</div><div class="sheet-d" id="shSub">전자주주총회 참석 신청 정보 및 처리 이력입니다.</div></div><div class="sheet-body"><div class="sh-namerow"><span class="sh-name" id="shName">-</span><span class="badge" id="shBadge">-</span></div><div class="sh-card"><div class="sh-grid"><div class="sh-field"><div class="k">유형</div><div class="v" id="shType">-</div></div><div class="sh-field"><div class="k">보유주식</div><div class="v" id="shHold">-</div></div><div class="sh-field"><div class="k">연락처</div><div class="v">010-2344-0900</div></div><div class="sh-field"><div class="k">이메일</div><div class="v">doji@irkudos.co.kr</div></div><div class="sh-field"><div class="k">신청일</div><div class="v">2026-07-12</div></div><div class="sh-field"><div class="k">입장코드</div><div class="v" style="color:#0071F3">EEGH-23498</div></div></div></div><div class="sh-sec"><div class="sh-tlh">처리 이력</div><div class="sh-tl" id="shTL"></div></div></div><div class="sheet-ft" id="shFoot"></div></div></div>
           </div></div>
 
+
+          <!-- 로그인코드 관리 -->
+          <div class="st-tab" data-panel="logincode"><div class="st-full">
+            <div class="st-head"><div><h2>로그인코드 관리</h2><div class="sub-help">주주가 전자주총에 입장할 때 쓰는 로그인코드를 발급하고 관리합니다.</div></div><div class="actions"><button class="btn" id="lcIssueAll"><i class="ph ph-key" style="font-size:16px"></i>미발급 일괄 발급</button></div></div>
+            <div class="atbar">
+              <div class="chips" id="lcChips">
+                <button class="chip active" data-lc="all">전체 <span class="c"></span></button>
+                <button class="chip" data-lc="발급">발급 <span class="c"></span></button>
+                <button class="chip" data-lc="미발급">미발급 <span class="c"></span></button>
+              </div>
+            </div>
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr><th style="width:96px;text-align:center">발급 상태</th><th>주주명</th><th style="width:150px">주주번호</th><th style="width:150px;text-align:right">보유주식수</th><th style="width:150px">로그인코드</th><th style="width:160px;text-align:center">발급일시</th></tr></thead>
+              <tbody id="lcBody"></tbody>
+            </table>
+              <div class="tfoot"><div class="tfoot-l" id="lcFoot"></div></div>
+            </div>
+          </div></div>
 
           <!-- 사전 질의 관리 -->
           <div class="st-tab" data-panel="preq"><div class="st-full">
@@ -512,8 +526,34 @@
       });
     });
   });
+  // 로그인코드 관리 — 주주명부 기준(참석자 관리의 입장코드와 같은 규칙)
+  (function(){
+    var body=document.getElementById('lcBody'); if(!body||!window.CX||!CX.roster) return;
+    function cm(n){ return Math.round(n).toLocaleString('en-US'); }
+    var L=CX.roster.slice().sort(function(a,b){return b.sh-a.sh;}).map(function(r,i){
+      var code=(i%3===0)?'':('EG-2026'+('000'+((i%900)+1)).slice(-4));
+      return {nm:r.nm, no:r.id, sh:r.sh, code:code, at:code?('2026-08-'+('0'+(10+i%15)).slice(-2)+' '+('0'+(9+i%9)).slice(-2)+':'+('0'+(i*7%60)).slice(-2)):''};
+    });
+    var cur='all', seq=900;
+    function paint(){
+      var list=L.filter(function(x){ return cur==='all'||(cur==='발급'?!!x.code:!x.code); });
+      body.innerHTML=list.slice(0,20).map(function(x){
+        return '<tr><td style="text-align:center"><span class="badge '+(x.code?'blue':'gray')+'">'+(x.code?'발급':'미발급')+'</span></td><td>'+x.nm+'</td><td style="color:#737373">'+x.no+'</td>'
+          +'<td style="text-align:right">'+cm(x.sh)+'</td><td>'+(x.code||'<span style="color:#a3a3a3">-</span>')+'</td><td style="text-align:center;color:#737373">'+(x.at||'-')+'</td></tr>';
+      }).join('');
+      var iss=L.filter(function(x){return !!x.code;}).length;
+      document.querySelectorAll('#lcChips .chip').forEach(function(c){ var k=c.dataset.lc; c.querySelector('.c').textContent=k==='all'?L.length:(k==='발급'?iss:L.length-iss); c.classList.toggle('active',k===cur); });
+      document.getElementById('lcFoot').textContent='총 '+list.length+'명'+(list.length>20?' · 상위 20명 표시':'');
+    }
+    document.getElementById('lcChips').addEventListener('click',function(e){ var c=e.target.closest('[data-lc]'); if(!c) return; cur=c.dataset.lc; paint(); });
+    document.getElementById('lcIssueAll').addEventListener('click',function(){
+      var n=0; L.forEach(function(x){ if(!x.code){ seq++; n++; x.code='EG-2026'+('000'+seq).slice(-4); x.at='2026-08-28 10:00'; } });
+      paint(); if(window.cxToast) cxToast(n?('로그인코드 '+n+'건을 발급했습니다.'):'미발급 로그인코드가 없습니다.');
+    });
+    paint();
+  })();
   // 저장 -> 현재 단계 완료 체크 + 다음 단계 이동
-  var EM_TABS=['basic','progress','terms','design','attendee','preq'];
+  var EM_TABS=['basic','progress','design','logincode','preq','attendee'];
   function switchEmTab(id){
     var nav=document.querySelector('.st-nav'); if(!nav) return;
     nav.querySelectorAll('.st-item').forEach(function(i){i.classList.toggle('active',i.dataset.tab===id);});
