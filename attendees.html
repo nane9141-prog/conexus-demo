@@ -407,7 +407,7 @@
       var lead={}; for(var k in mem[0]) lead[k]=mem[0][k];
       lead.voter=g.voter; lead.name=mem[0].name+' 외 '+(mem.length-1);
       lead.hold=0; lead.attend=0; var rt=0;
-      mem.forEach(function(m){lead.hold+=m.hold; lead.attend+=m.attend; rt+=parseFloat(m.ratio); m.grouped=1;});
+      mem.forEach(function(m){m.attend=lead.site==='일부 참석'?Math.round(m.hold*0.6):0; lead.hold+=m.hold; lead.attend+=m.attend; rt+=parseFloat(m.ratio); m.grouped=1;});
       lead.ratio=rt.toFixed(2)+'%'; lead.sub='통합 '+mem.length+'건'; lead.members=mem;
       lead.key=g.voter+mem.map(function(m){return m.name+m.no;}).join('');
       rows.push(lead);
@@ -430,11 +430,11 @@
   /* 주주명 칸 — 통합기관은 '통합 N건' 뱃지를 주주명 옆에 */
   function nameCell(x){
     if(!(x.sub && /통합/.test(x.sub))) return x.name;
-    return '<div class="voter" style="max-width:100%"><span class="atnm" style="overflow:hidden;text-overflow:ellipsis">'+x.name+'</span><span class="tag">'+x.sub+'</span></div>';
+    return '<span class="tag" data-nm="'+x.name+'">'+x.sub+'</span>';
   }
   function childRows(gid,x){
     return (x.members||[]).map(function(m){
-      return '<tr class="atchild hidden" data-child="'+gid+'"><td></td><td>'+m.name+'</td><td>'+m.no+'</td><td class="c">'+preB(x.pre)+'</td><td class="c">'+siteB(x.site)+'</td><td class="c">'+appB(x.app)+'</td><td class="n">'+cm(m.hold)+'</td><td class="n">'+m.ratio+'</td><td></td><td></td><td></td></tr>';
+      return '<tr class="atchild hidden" data-child="'+gid+'"><td></td><td>'+m.name+'</td><td>'+m.no+'</td><td class="c">'+preB(x.pre)+'</td><td class="c">'+siteB(x.site)+'</td><td class="c">'+appB(x.app)+'</td><td class="n">'+cm(m.hold)+'</td><td class="n">'+m.ratio+'</td><td class="n">'+(m.attend?cm(m.attend):mu('-'))+'</td><td></td><td></td></tr>';
     }).join('');
   }
   /* 세 탭 공통 항목 */
@@ -515,7 +515,7 @@
       if(cur!=='reg') return; var tr=e.target.closest('tr'); if(!tr) return;
       var tds=tr.querySelectorAll('td'); if(tds.length<3) return;
       document.getElementById('asVoter').textContent=(tds[0].textContent||'').trim();
-      document.getElementById('asName').textContent=((tds[1].querySelector('.atnm')||tds[1]).textContent||'').trim();
+      var nmT=tds[1].querySelector('[data-nm]'); document.getElementById('asName').textContent=nmT?nmT.dataset.nm:(tds[1].textContent||'').trim();
       document.getElementById('asNo').textContent=(tds[2].textContent||'').trim();
       var s=document.getElementById('asSec'); if(s) s.classList.remove('collapsed');
       ['asPartQty1','asPartQty2'].forEach(function(id){var pq=document.getElementById(id); if(pq){pq.style.display='none'; pq.value='';}});
