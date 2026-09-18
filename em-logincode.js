@@ -289,12 +289,14 @@
   var menu = document.createElement('div'); menu.className = 'lc-menu'; document.body.appendChild(menu);
   var menuX = null, menuBtn = null, cool = {};
   function hideMenu() { menu.classList.remove('on'); if (menuBtn) menuBtn.classList.remove('on'); menuBtn = null; }
-  function it(a, ic, t, dis, c2) { return '<button type="button" data-a="' + a + '"' + (dis ? ' disabled' : '') + (c2 ? ' class="' + c2 + '"' : '') + '><i class="ph ' + ic + '"></i>' + t + '</button>'; }
+  /* 비활성 항목은 메뉴에 그리지 않는다 */
+  function it(a, ic, t, dis, c2) { if (dis) return ''; return '<button type="button" data-a="' + a + '"' + (c2 ? ' class="' + c2 + '"' : '') + '><i class="ph ' + ic + '"></i>' + t + '</button>'; }
   function openMenu(x, btn) {
     var admin = x.route === '관리자 등록', rv = x.st === '로그인코드 회수', cd = cool[x.k] || {}, g = [];
     if (OPEN[x.st]) g.push(it('supp', 'ph-paper-plane-tilt', '보완 요청', x.supp >= 2) + it('rej', 'ph-prohibit', '주주확인 반려'));
     g.push(it('pw', 'ph-paper-plane-tilt', '임시비밀번호 발송', rv || cd.pw) + it('re', 'ph-arrow-clockwise', '코드 재발급', !admin || cd.re) + it('rv', 'ph-backspace', '코드 회수', !admin || rv));
-    if (admin) g.push(it('del', 'ph-trash', '삭제', false, 'danger'));
+    if (admin) g.push(it('del', 'ph-trash', '참석자 삭제', false, 'danger'));
+    g = g.filter(Boolean); if (!g.length) return;   /* 쓸 수 있는 항목이 없으면 열지 않는다 */
     menu.innerHTML = g.map(function (s) { return '<div class="g">' + s + '</div>'; }).join('<div class="sep"></div>');
     menuX = x; menuBtn = btn; btn.classList.add('on'); menu.classList.add('on');
     var r = btn.getBoundingClientRect();
