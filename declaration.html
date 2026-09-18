@@ -148,6 +148,29 @@
   .dec-script p{margin:0 0 20px}
   .dec-script p:last-child{margin-bottom:0}
   .dec-hl{color:#0071F3;font-weight:700}
+  /* 현장대본 반영 확인 */
+  .dap-ov{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.4)}
+  .dap-ov.show{display:flex}
+  .dap{width:320px;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px}
+  .dap-h{display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 8px}
+  .dap-m{width:40px;height:40px;border-radius:8px;background:#F5F5F5;display:flex;align-items:center;justify-content:center}
+  .dap-m i{font-size:24px;color:#0A0A0A}
+  .dap-t{font-size:16px;line-height:24px;font-weight:600;color:#0A0A0A;text-align:center;word-break:keep-all}
+  .dap-d{font-size:14px;line-height:20px;color:#737373;text-align:center;margin-top:6px;word-break:keep-all}
+  .dap-note{margin-top:6px;padding:8px;background:#F5F5F5;border-radius:8px;font-size:14px;line-height:20px;color:#737373;text-align:center;word-break:keep-all}
+  .dap-f{display:flex;gap:8px;padding:12px 16px 16px}
+  .dap-f button{flex:1;height:32px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer}
+  .dap-f .c{background:#fff;border:1px solid #E5E5E5;color:#0A0A0A}
+  .dap-f .o{background:#171717;border:none;color:#FAFAFA}
+  /* 대본 미리보기 — 의장 화면 기준 */
+  .dpv{position:fixed;inset:0;z-index:190;display:none;padding:16px;background:rgba(0,0,0,.4)}
+  .dpv.show{display:flex}
+  .dpv-w{flex:1;display:flex;flex-direction:column;gap:40px;padding:20px;background:#FAFAFA;border:1px solid #E5E5E5;border-radius:14px;overflow:auto;box-sizing:border-box}
+  .dpv-top{display:flex;justify-content:center;gap:16px}
+  .dpv-top button{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border:1px solid #E5E5E5;border-radius:10px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;color:#0A0A0A;cursor:pointer}
+  .dpv-top button i{font-size:16px}
+  .dpv-top button:disabled{opacity:.5;cursor:default}
+  .dpv-txt{font-size:18px;line-height:28px;color:#0A0A0A;white-space:pre-line}
   .dec-script.editing{background:#fafafa;border-radius:10px;padding:16px;box-shadow:inset 0 0 0 1px #dbe8ff}
 </style>
 <script src="cx-data.js"></script>
@@ -261,14 +284,14 @@
       <div class="content" style="width:100%">
         <div class="dec-head">
           <div><h1 class="page-title">주총선언문</h1><div class="page-sub">템플릿 관리에서 등록한 주총선언문을 확인하고 현장에서 문구를 직접 수정할 수 있습니다. 수정내역 확정 시 변경된 내용이 사회자 및 의장 화면에 즉시 반영됩니다.</div></div>
-          <div class="dec-head-r"><button class="abtn" id="decPrint"><i class="ph ph-download-simple" style="font-size:15px"></i>인쇄</button><button class="abtn dark" id="decApply">주주총회 시작</button></div>
+          <div class="dec-head-r"><button class="abtn" id="decPrint"><i class="ph ph-download-simple" style="font-size:15px"></i>인쇄</button><button class="abtn dark" id="decApply">현장대본 반영</button></div>
         </div>
         <div class="dec-tb">
           <div class="dec-tpl"><label>템플릿</label><div class="dec-tpl-row"><button class="dec-sel" type="button"><span>2026년 주총선언문</span><i class="ph ph-caret-down"></i></button><button class="abtn">템플릿 관리</button></div></div>
           <button class="abtn" id="decEdit" type="button">수정</button>
         </div>
         <div class="dec-card">
-          <div class="dec-card-top"><button class="abtn" id="decPreview" type="button"><i class="ph ph-arrow-square-out" style="font-size:15px"></i>대본 미리보기</button></div>
+          <div class="dec-card-top"><button class="abtn" id="decPreview" type="button"><i class="ph ph-arrows-out-simple" style="font-size:15px"></i>대본 미리보기</button></div>
           <div class="dec-script" id="decScript"><p>2026년 3월 30일 기준일 현재<br>당사의 총 발행 주식수는 <b class="dec-hl">칠천 팔백 구십 구만 삼천 팔십 오 (78,993,085)</b> 주 이며,<br>총 주주수는 <b class="dec-hl">팔만 이천 육십 구 (82,069)</b> 명입니다.<br>이중 의결권 있는 주식수는 <b class="dec-hl">칠천 육십 육만 팔천 사백 삼십 (70,668,430)</b> 주 이며,<br>그 주주수는 <b class="dec-hl">팔만 이천 육십 일 (82,061)</b> 명입니다.</p><p>2026년 6월 30일 9시<br>현재 참석 주식수는 <b class="dec-hl">이천 일백 이십만 오백 이십 구 (21,200,529)</b> 주입니다.</p><p>당사의 의결권 있는 주식의 총수인<br><b class="dec-hl">칠천 육십 육만 팔천 사백 삼십 (70,688,430)</b> 주의<br><b class="dec-hl">30 %</b> 가 출석하였음을 보고 드립니다.</p></div>
         </div>
       </div>
@@ -281,9 +304,43 @@
   if(edit&&sc){ edit.addEventListener("click",function(){ var on=sc.getAttribute("contenteditable")==="true";
     if(on){ sc.setAttribute("contenteditable","false"); sc.classList.remove("editing"); edit.textContent="수정"; edit.classList.remove("dark"); }
     else { sc.setAttribute("contenteditable","true"); sc.classList.add("editing"); edit.textContent="완료"; edit.classList.add("dark"); sc.focus(); } }); }
-  var ap=document.getElementById("decApply"); if(ap) ap.addEventListener("click",function(){ window.location.href="onsite-control.html"; });
+  /* 현장대본 반영 — 현장 제어로 넘어가지 않고 확인 후 의장 대본(chair-view)에 반영 */
+  var ORIG=sc?sc.innerHTML:'', KEY='cx.decl';
+  function stopEdit(){ if(sc.getAttribute("contenteditable")==="true") edit.click(); }
+  /* 강조(dec-hl)는 대본의 값 표시(\u0001 … \u0002)로, 문단은 빈 줄로 */
+  function toScript(html){
+    var d=document.createElement('div'); d.innerHTML=html;
+    d.querySelectorAll('.dec-hl').forEach(function(b){ b.replaceWith('\u0001'+b.textContent+'\u0002'); });
+    d.querySelectorAll('br').forEach(function(b){ b.replaceWith(' '); });
+    var ps=d.querySelectorAll('p'); var parts=ps.length?[].map.call(ps,function(p){ return p.textContent.replace(/\s+/g,' ').trim(); }):[d.textContent.replace(/\s+/g,' ').trim()];
+    return parts.filter(Boolean).join('\n\n');
+  }
+  try{ var h0=localStorage.getItem(KEY+'.html'); if(h0) sc.innerHTML=h0; }catch(e){}
+  var dlg=document.createElement('div'); dlg.className='dap-ov';
+  dlg.innerHTML='<div class="dap" role="alertdialog" aria-modal="true"><div class="dap-h"><div class="dap-m"><i class="ph ph-warning-circle"></i></div><div><div class="dap-t">수정내역을 의장 대본에 반영하시겠어요?</div><div class="dap-d">의장 화면에 실시간으로 반영됩니다. (이번 주주총회에만 적용되며, 원본 템플릿은 변경되지 않습니다)</div><div class="dap-note">반영한 뒤에도 다시 수정해 반영할 수 있습니다.</div></div></div><div class="dap-f"><button class="c" data-x>취소</button><button class="o" data-ok>대본에 반영하기</button></div></div>';
+  document.body.appendChild(dlg);
+  dlg.addEventListener('click',function(e){
+    if(e.target===dlg||e.target.closest('[data-x]')){ dlg.classList.remove('show'); return; }
+    if(!e.target.closest('[data-ok]')) return;
+    try{ localStorage.setItem(KEY,toScript(sc.innerHTML)); localStorage.setItem(KEY+'.html',sc.innerHTML); }catch(err){}
+    dlg.classList.remove('show'); syncRevert();
+    if(window.cxToast) cxToast('의장 대본에 반영했습니다.');
+  });
+  var ap=document.getElementById("decApply"); if(ap) ap.addEventListener("click",function(){ stopEdit(); dlg.classList.add('show'); });
+
+  /* 대본 미리보기 — 의장 화면 기준 텍스트, 원문 되돌리기 */
+  var pvw=document.createElement('div'); pvw.className='dpv';
+  pvw.innerHTML='<div class="dpv-w"><div class="dpv-top"><button type="button" data-close><i class="ph ph-arrows-in-simple"></i>미리보기 닫기</button><button type="button" data-revert><i class="ph ph-arrow-counter-clockwise"></i>원문으로 되돌리기</button></div><div class="dpv-txt" id="dpvTxt"></div></div>';
+  document.body.appendChild(pvw);
+  function syncRevert(){ pvw.querySelector('[data-revert]').disabled=(sc.innerHTML===ORIG); }
+  function paintPv(){ document.getElementById('dpvTxt').textContent=toScript(sc.innerHTML).replace(/[\u0001\u0002]/g,''); syncRevert(); }
+  pvw.addEventListener('click',function(e){
+    if(e.target===pvw||e.target.closest('[data-close]')){ pvw.classList.remove('show'); return; }
+    if(e.target.closest('[data-revert]')){ sc.innerHTML=ORIG; try{ localStorage.removeItem(KEY); localStorage.removeItem(KEY+'.html'); }catch(err){} paintPv(); if(window.cxToast) cxToast('템플릿 원문으로 되돌렸습니다.'); }
+  });
   var pv=document.getElementById("decPreview");
-  if(pv) pv.addEventListener("click",function(){ window.open("chair-view.html","_blank","noopener"); });
+  if(pv) pv.addEventListener("click",function(){ stopEdit(); paintPv(); pvw.classList.add('show'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ pvw.classList.remove('show'); dlg.classList.remove('show'); } });
 })();
 </script>
 <script src="conexus.js?v=fwr"></script>

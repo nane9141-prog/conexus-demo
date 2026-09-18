@@ -253,11 +253,16 @@
     ];
   }
 
+  /* 주총선언문 화면에서 '현장대본 반영' 한 문구 — 이번 총회에만 적용(원본 템플릿은 그대로) */
+  function savedDecl() { try { return localStorage.getItem('cx.decl'); } catch (e) { return null; } }
+  var role0 = null;
+  window.addEventListener('storage', function (e) { if (e.key === 'cx.decl' && role0 && role0 !== 'mc') location.reload(); });
   function buildOrder(role) {
+    role0 = role;
     var chair = (role !== 'mc');
     var list = [];
     list.push({ key: 'open', lb: '개회', tabs: chair
-      ? [{ t: '주총 선언문', s:
+      ? [{ t: '주총 선언문', s: savedDecl() ||
           V('2026년 3월 27일') + ' 기준일 현재 당사의 총 발행 주식수는 ' + V(cm(M.sharesIssued) + ' 주') + ' 이며, 총 주주수는 ' + V(cm(M.holdersTotal) + ' 명') + ' 입니다.\n\n'
           + '이중 의결권 있는 주식수는 ' + V(cm(M.sharesVoting) + ' 주') + ' 입니다.\n\n'
           + V(M.dateText + ' ' + M.time) + ' 현재 참석 주식수는 ' + V(cm(M.attendShares) + ' 주') + ' 이며, 참석 주주수는 ' + V(cm(M.attendHolders) + ' 명') + ' 입니다.\n\n'
