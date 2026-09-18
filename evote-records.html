@@ -370,7 +370,7 @@
           <div class="evbar">
             <div class="evtabs"><span class="evtab active" data-cnt="14,000" data-shr="150,000,000">국내 주주</span><span class="evtab" data-cnt="3,500" data-shr="90,000,000">해외 주주</span></div>
             <div class="hbtns">
-              <button class="tbtn"><i class="ph ph-check-square" style="font-size:16px"></i>검증 정보</button>
+              <button class="tbtn js-verify"><i class="ph ph-check-square" style="font-size:16px"></i>검증 정보</button>
               <button class="tbtn js-upload"><i class="ph ph-upload-simple" style="font-size:16px"></i>파일 등록</button>
               <button class="tbtn"><i class="ph ph-trash" style="font-size:16px"></i>내역 삭제</button>
             </div>
@@ -600,9 +600,14 @@
     var step=1, attached=false;
     var descs={1:'업로드 전 적용되는 필수 검증 로직을 확인하세요.',2:'양식에 맞춰 작성한 엑셀 파일을 업로드하세요.',3:'아래 수치를 확인한 뒤 등록을 완료하세요.'};
     function show(id,on){ document.getElementById(id).style.display=on?'block':'none'; }
+    var mode='reg', ttl=ov.querySelector('.dlg-h .t'), TTL=ttl.textContent, stepper=ov.querySelector('.stepper'), ckSnap=[];
     function render(){
       show('evStep1',step===1); show('evStep2',step===2); show('evStep3',step===3);
       desc.textContent=descs[step];
+      /* 검증 정보 수정 — 등록 마법사의 1단계(파일 업로드 전 검증 로직)만 띄운다 */
+      var vf=mode==='verify';
+      ttl.textContent=vf?'검증 정보 수정':TTL; stepper.style.display=vf?'none':''; submit.textContent=vf?'저장':'등록하기';
+      if(vf){ desc.textContent='업로드 전 적용되는 필수 검증 로직을 수정하세요.'; cancel.style.display='inline-flex'; prev.style.display=next.style.display=agree.style.display='none'; submit.style.display='inline-flex'; submit.disabled=false; return; }
       document.querySelectorAll('.stepper .sd').forEach(function(d){ d.classList.toggle('on', +d.dataset.s<=step); });
       cancel.style.display=(step===1||step===3)?'inline-flex':'none';
       prev.style.display=(step===2)?'inline-flex':'none';
@@ -620,11 +625,15 @@
       document.getElementById('dlgOrgFld').style.display=act&&/해외/.test(act.textContent)?'none':'';
       ov.classList.add('show');
     }
-    function closeDlg(){ ov.classList.remove('show'); reset(); }
+    function closeDlg(){ ov.classList.remove('show'); mode='reg'; reset(); }
+    var cks=function(){ return document.querySelectorAll('#evStep1 .ckitem[data-ck]'); };
+    function openVerify(){ mode='verify'; reset(); ckSnap=[].map.call(cks(),function(c){ return c.classList.contains('on'); }); ov.classList.add('show'); }
+    function cancelDlg(){ if(mode==='verify') [].forEach.call(cks(),function(c,i){ c.classList.toggle('on',ckSnap[i]); }); closeDlg(); }
     function attach(){ attached=true; drop.style.display='none'; att.style.display='flex'; render(); }
     document.querySelectorAll('.js-upload').forEach(function(b){b.addEventListener('click', openDlg);});
-    document.getElementById('dlgX').addEventListener('click', closeDlg);
-    cancel.addEventListener('click', closeDlg);
+    document.querySelectorAll('.js-verify').forEach(function(b){b.addEventListener('click', openVerify);});
+    document.getElementById('dlgX').addEventListener('click', cancelDlg);
+    cancel.addEventListener('click', cancelDlg);
     pick.addEventListener('click', function(e){ e.stopPropagation(); attach(); });
     drop.addEventListener('click', attach);
     rm.addEventListener('click', function(){ attached=false; drop.style.display='flex'; att.style.display='none'; render(); });
@@ -633,6 +642,7 @@
     agree.addEventListener('click', function(){ agree.classList.toggle('on'); render(); });
     document.querySelectorAll('#evStep1 .ckitem[data-ck]').forEach(function(c){ c.addEventListener('click', function(){ c.classList.toggle('on'); }); });
     submit.addEventListener('click', function(){
+      if(mode==='verify'){ closeDlg(); if(window.cxToast) cxToast('검증 정보를 저장했습니다.'); return; }
       closeDlg();
       document.getElementById('evEmpty').style.display='none';
       document.getElementById('evFilled').style.display='block';
