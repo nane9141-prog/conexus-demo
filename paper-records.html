@@ -236,6 +236,22 @@
   .cmp .delta{font-weight:600;color:#0a0a0a}
   .cmp .delta.mut{color:#a3a3a3;font-weight:400}
   .fchk{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:#171717;cursor:pointer}
+  /* 내역 삭제 — 범위 선택 다이얼로그 + 확인 알림 */
+  .del-scope{display:flex;gap:12px}
+  .del-scope .ckitem{flex:1;min-height:56px;box-sizing:border-box}
+  .del-scope .ckitem.on{border-color:transparent}
+  .del-warn{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#FFF1F2;border:1px solid #FECDD3;border-radius:10px;font-size:14px;font-weight:500;line-height:20px;color:#E9081B}
+  .del-warn i{font-size:16px;flex:none}
+  #delDlg .dlg-f .fchk{margin-right:auto}
+  .adlg{width:320px;max-width:calc(100vw - 32px);background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;display:flex;flex-direction:column}
+  .adlg .ah{display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 16px 8px;text-align:center}
+  .adlg .am{width:40px;height:40px;border-radius:8px;background:#FDE6E8;display:flex;align-items:center;justify-content:center;color:#E9081B}
+  .adlg .am i{font-size:24px}
+  .adlg .at{font-size:16px;line-height:24px;font-weight:600;color:#0A0A0A}
+  .adlg .ad{font-size:14px;line-height:20px;color:#737373;margin-top:6px}
+  .adlg .af{display:flex;gap:8px;padding:12px 16px 16px}
+  .adlg .af button{flex:1}
+  .btn-dng{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 10px;background:rgba(220,38,38,.1);border:none;border-radius:10px;font-size:14px;font-weight:500;color:#E9081B;cursor:pointer;font-family:inherit}
   .coldd{position:relative}
   .colsel{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 8px 0 12px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:14px;color:#0a0a0a;cursor:pointer;font-family:inherit}
   .colsel svg{width:16px;height:16px;stroke:#a7aab1;fill:none;stroke-width:2}
@@ -385,7 +401,7 @@
               <button class="tbtn js-verify"><i class="ph ph-check-square" style="font-size:16px"></i>검증 정보</button>
               <button class="tbtn js-indiv"><i class="ph ph-pencil-simple" style="font-size:16px"></i>개별 등록</button>
               <button class="tbtn js-upload"><i class="ph ph-upload-simple" style="font-size:16px"></i>파일 등록</button>
-              <button class="tbtn"><i class="ph ph-trash" style="font-size:16px"></i>내역 삭제</button>
+              <button class="tbtn js-del"><i class="ph ph-trash" style="font-size:16px"></i>내역 삭제</button>
             </div>
           </div>
           <div class="evk">
@@ -752,6 +768,30 @@
     document.querySelectorAll('.js-indiv').forEach(function(b){ b.addEventListener('click',function(){ location.href='paper-individual.html?ch='+encodeURIComponent(chOf())+'&v='+Date.now(); }); });
   })();
 </script>
+<div class="dlg-ov" id="delDlg">
+  <div class="dlg" role="dialog" aria-modal="true">
+    <button class="dlg-x" data-del-x aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="dlg-h"><div class="t">내역 삭제</div><div class="d" id="delDesc">삭제할 등록 내역을 선택해 주세요.</div></div>
+    <div class="dlg-c" style="gap:12px">
+      <div class="del-scope">
+        <div class="ckitem on" data-scope="file"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="cl">파일 등록 내역</div><div class="cd">엑셀 파일로 등록한 주주</div></div></div>
+        <div class="ckitem" data-scope="indiv"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="cl">개별 등록 내역</div><div class="cd">개별 등록으로 추가한 주주</div></div></div>
+      </div>
+      <div class="del-warn"><i class="ph ph-warning-circle"></i><span id="delWarn"></span></div>
+    </div>
+    <div class="dlg-f" style="align-items:center">
+      <label class="fchk" id="delAgree"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 내용을 확인했으며, 삭제에 동의합니다.</label>
+      <button class="btn-out" data-del-x>취소</button>
+      <button class="btn-dark" id="delOk" disabled>삭제하기</button>
+    </div>
+  </div>
+</div>
+<div class="dlg-ov" id="delAlert">
+  <div class="adlg" role="alertdialog" aria-modal="true">
+    <div class="ah"><div class="am"><i class="ph ph-trash"></i></div><div><div class="at">내역을 삭제하시겠습니까?</div><div class="ad">삭제된 데이터는 복구할 수 없습니다.</div></div></div>
+    <div class="af"><button class="btn-out" data-del-alert-x>취소</button><button class="btn-dng" id="delDo">삭제하기</button></div>
+  </div>
+</div>
 <div class="dlg-ov" id="cfmOv">
   <div class="dlg cfm">
     <div class="dlg-h"><div class="t">서면투표 · 서면위임장 내역을 확정 하시겠습니까?</div><div class="d">아래 수치를 확인한 뒤 확정을 완료하세요.</div><button class="dlg-x" data-cfm-close><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
@@ -782,5 +822,35 @@
 })();
 </script>
 <script src="conexus.js?v=fwv"></script>
+<script>
+/* 내역 삭제 — 범위(파일 등록 · 개별 등록) 선택 → 동의 → 확인 알림 → 삭제 */
+(function(){
+  var dlg=document.getElementById('delDlg'), al=document.getElementById('delAlert'), ok=document.getElementById('delOk'), agree=document.getElementById('delAgree');
+  var items=dlg.querySelectorAll('[data-scope]');
+  function picked(){ return [].filter.call(items,function(i){ return i.classList.contains('on'); }).map(function(i){ return i.dataset.scope; }); }
+  function paint(){
+    var p=picked(), f=p.indexOf('file')>=0, i=p.indexOf('indiv')>=0;
+    document.getElementById('delWarn').textContent=(f&&i?'파일 · 개별 등록된':f?'파일로 등록 된':i?'개별 등록된':'선택한')+' 주주 모두가 삭제되며, 삭제된 데이터는 되돌릴 수 없습니다';
+    ok.disabled=!p.length||!agree.classList.contains('on');
+  }
+  document.querySelectorAll('.js-del').forEach(function(b){ b.addEventListener('click',function(){
+    var tab=document.querySelector('#evFilled .evtab.active');
+    document.getElementById('delDesc').textContent=(tab?tab.textContent+' ':'')+'내역 중 삭제할 등록 내역을 선택해 주세요.';
+    items.forEach(function(i,k){ i.classList.toggle('on',k===0); }); agree.classList.remove('on'); paint(); dlg.classList.add('show');
+  }); });
+  items.forEach(function(i){ i.addEventListener('click',function(){ i.classList.toggle('on'); paint(); }); });
+  agree.addEventListener('click',function(){ agree.classList.toggle('on'); paint(); });
+  dlg.addEventListener('click',function(e){ if(e.target.closest('[data-del-x]')) dlg.classList.remove('show'); });
+  ok.addEventListener('click',function(){ if(!ok.disabled) al.classList.add('show'); });
+  al.addEventListener('click',function(e){ if(e.target.closest('[data-del-alert-x]')) al.classList.remove('show'); });
+  document.getElementById('delDo').addEventListener('click',function(){
+    var file=picked().indexOf('file')>=0;
+    al.classList.remove('show'); dlg.classList.remove('show');
+    /* 파일 등록 내역을 지우면 등록 전(빈) 상태로 */
+    if(file){ document.getElementById('evFilled').style.display='none'; document.getElementById('evEmpty').style.display='block'; document.getElementById('btnConfirm').style.display='none'; }
+    if(window.cxToast) cxToast('내역을 삭제했습니다.');
+  });
+})();
+</script>
 </body>
 </html>
