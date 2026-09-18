@@ -72,6 +72,66 @@
   .as-inl{display:flex;align-items:center;gap:12px}
   .as-il{width:130px;font-size:14px;line-height:20px;font-weight:500;color:#737373}
   .as-foot{display:flex;flex-direction:column;gap:12px}
+  /* 대리인 · 위임주주 등록 다이얼로그 — 가이드: 480 · r14 */
+  .px-ov{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center}
+  .px-ov.show{display:flex}
+  .px-dlg{box-sizing:border-box;position:relative;width:480px;min-width:360px;max-width:calc(100vw - 32px);max-height:calc(100vh - 32px);background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;display:flex;flex-direction:column;letter-spacing:-.01em;box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1)}
+  .px-x{position:absolute;top:16px;right:16px;width:16px;height:16px;padding:0;border:none;background:none;color:#171717;opacity:.7;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .px-x:hover{opacity:1}.px-x i{font-size:16px}
+  .px-h{display:flex;flex-direction:column;gap:8px;padding:16px;padding-right:40px}
+  .px-t{font-size:16px;line-height:16px;font-weight:600;color:#171717}
+  .px-d{font-size:14px;line-height:20px;color:#737373}
+  .px-c{display:flex;flex-direction:column;gap:24px;padding:0 16px 8px;overflow:auto;min-height:0}
+  .px-sec{display:flex;flex-direction:column;gap:8px}
+  .px-sec.g12{gap:12px}
+  .px-lb{font-size:14px;line-height:20px;font-weight:500;color:#0A0A0A}
+  .px-lb em{font-style:normal;color:#E9081B;margin-left:2px}
+  .px-row{display:flex;gap:8px}
+  .px-row .as-rcard{flex:1}
+  .px-find{position:relative;display:flex;gap:8px}
+  .px-sel{box-sizing:border-box;position:relative;width:102px;flex:none;height:32px;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:0 8px 0 10px;border:1px solid #E5E5E5;border-radius:10px;background:#fff;font-family:inherit;font-size:14px;line-height:20px;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer}
+  .px-sel i{font-size:12px;color:#737373}
+  .px-sel.open{border-color:#a3a3a3}
+  .px-in{box-sizing:border-box;flex:1;min-width:0;height:32px;display:flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid #E5E5E5;border-radius:10px;background:#fff}
+  .px-in i{font-size:16px;color:#737373}
+  .px-in input{flex:1;min-width:0;border:none;outline:none;background:none;font-family:inherit;font-size:14px;line-height:20px;letter-spacing:-.01em;color:#0A0A0A}
+  .px-in input::placeholder{color:#737373}
+  .px-in:focus-within{border-color:#a3a3a3}
+  .px-dd{display:none;position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:5;max-height:240px;overflow:auto;padding:4px;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:10px;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1)}
+  .px-dd.on{display:block}
+  .px-dd .it{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;box-sizing:border-box;padding:6px 8px;border:none;border-radius:8px;background:none;font-family:inherit;font-size:14px;line-height:20px;color:#0A0A0A;cursor:pointer;text-align:left}
+  .px-dd .it:hover{background:#F5F5F5}
+  .px-dd .it small{font-size:12px;color:#737373;white-space:nowrap}
+  .px-dd .it i{visibility:hidden;font-size:16px}
+  .px-dd .it.on i{visibility:visible}
+  .px-dd .none{padding:8px;font-size:13px;color:#737373}
+  .px-card{box-sizing:border-box;display:flex;align-items:flex-start;justify-content:space-between;gap:4px;padding:12px;background:#FAFAFA;border:1px solid #E5E5E5;border-radius:10px}
+  .px-card b{display:block;font-size:14px;line-height:20px;font-weight:600;color:#0A0A0A}
+  .px-card span{display:block;margin-top:4px;font-size:12px;line-height:16px;color:#737373}
+  .px-del{width:28px;height:28px;flex:none;padding:0;border:none;border-radius:8px;background:none;color:#737373;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .px-del:hover{background:#F5F5F5;color:#0A0A0A}
+  .px-del i{font-size:16px}
+  .px-tbl{box-sizing:border-box;border:1px solid #E5E5E5;border-radius:14px;overflow:hidden}
+  .px-tr{display:flex;align-items:center;gap:8px;height:46px;padding:0 12px 0 16px;border-top:1px solid #E5E5E5;font-size:14px;line-height:20px}
+  .px-tr:first-child{border-top:none}
+  .px-tr.hd{height:48px;background:#F5F5F5;font-weight:500;color:#737373}
+  .px-tr>span{flex:1;min-width:0;padding:0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#737373}
+  .px-tr>span.nm{color:#0A0A0A;font-weight:500}
+  .px-tr.hd>span{color:#737373}
+  .px-tr>span.sh{flex:none;width:94px;text-align:right}
+  .px-tr>.px-del,.px-tr>.sp{flex:none;width:28px}
+  .px-body{max-height:230px;overflow:auto}
+  .px-empty{box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:160px;background:#FAFAFA;border:1px dashed #E5E5E5;border-radius:10px;text-align:center}
+  .px-empty i{font-size:24px;color:#737373}
+  .px-empty b{display:block;font-size:12px;line-height:16px;font-weight:600;color:#737373}
+  .px-empty span{display:block;margin-top:2px;font-size:12px;line-height:16px;font-weight:300;color:#737373}
+  .px-box{display:flex;flex-direction:column;gap:12px;padding:16px;background:#FAFAFA;border-radius:14px}
+  .px-box .as-field>label{color:#0A0A0A}
+  .px-f{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px 16px}
+  .px-f button{height:32px;padding:8px 10px;border-radius:10px;font-family:inherit;font-size:14px;line-height:16px;font-weight:500;letter-spacing:-.01em;cursor:pointer}
+  .px-cancel{background:#fff;border:1px solid #E5E5E5;color:#171717}
+  .px-ok{min-width:142px;background:#171717;border:none;color:#FAFAFA}
+  .px-ok:disabled{opacity:.5;cursor:not-allowed}
   /* 사전행사 내역 알림 — 가이드: Alert Dialog 320 · r14 */
   .pv-ov{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center}
   .pv-ov.show{display:flex}
@@ -375,6 +435,7 @@
 </div>
 <div class="assheet-ov" id="asSheet"><div class="assheet"><span class="as-grip"></span><button class="as-x" data-as-close aria-label="닫기"><i class="ph ph-x"></i></button><div class="as-hd"><div class="as-t">현장 참석자 등록</div><div class="as-d">현장 참석 정보를 입력해 등록합니다.</div></div><div class="as-body"><div class="as-card" id="asCard"><div class="as-f"><div class="k">투표권자</div><div class="v" id="asVoter">-</div></div><div class="as-f"><div class="k">주주명</div><div class="v" id="asName">-</div></div><div class="as-f"><div class="k">주주번호</div><div class="v" id="asNo">-</div></div><div class="as-f"><div class="k">보유주식</div><div class="v" id="asHold">-</div></div><div class="as-f full"><div class="k">실질계좌번호</div><div class="v" id="asAcct">-</div></div></div><div class="as-grp"><div class="as-gt">참석자 구분</div><div class="as-radios"><label class="as-radio on" data-rg="who" data-v="self"><span class="rd"></span>본인</label><label class="as-radio" data-rg="who" data-v="proxy"><span class="rd"></span>대리인</label></div></div><div class="as-sec"><div class="as-sec-h" id="asSecLbl">참석자 정보</div><div class="as-box"><div class="as-row2" id="asProxyRow" style="display:none"><div class="as-field"><label>대리인 성명</label><input class="as-inp" id="asProxyName" placeholder="대리인 성명"></div><div class="as-field"><label>생년월일 + 성별</label><input class="as-inp" id="asBirth" inputmode="numeric" maxlength="7" placeholder="'-' 제외 숫자만 입력 (9003041)"></div></div><div class="as-row2"><div class="as-field"><label>전화번호</label><input class="as-inp" id="asPhone" inputmode="numeric" maxlength="13" placeholder="010-0000-0000"></div><div class="as-field"><label>좌석번호</label><input class="as-inp" id="asSeat" placeholder="예: A-12"></div></div><div class="as-field" id="asShares"><label>참석 주식수</label><div class="as-rcards"><div class="as-rcard on" data-rg="shares" data-v="all"><span class="rd"></span><div class="as-rc"><b>보유주식으로 참석</b><span id="asAllDesc">보유주식 전체로 참석</span></div></div><div class="as-rcard" data-rg="shares" data-v="part"><span class="rd"></span><div class="as-rc"><b>일부 주식으로 참석</b><span>참석 주식수를 직접 입력</span></div></div></div><input class="as-inp" id="asPartQty" inputmode="numeric" placeholder="참석 주식수를 입력해 주세요" style="display:none"></div><div class="as-inl"><span class="as-il">현장투표 앱 사용</span><div class="as-radios g12"><label class="as-radio on" data-rg="app1" data-v="use"><span class="rd"></span>사용</label><label class="as-radio" data-rg="app1" data-v="no"><span class="rd"></span>미사용</label></div></div></div></div><div class="as-accts" id="asAccts" style="display:none"><div class="as-sec-h">참석계좌 선택</div><div id="asAcctList" class="as-accts"></div></div></div><div class="as-foot"><div class="as-ft"><button class="as-cancel" data-as-close>취소</button><button class="as-ok" id="asOk">현장 참석 등록</button></div><div class="as-mod" id="asMod" style="display:none"></div></div></div></div>
 <div class="pv-ov" id="pvDlg"><div class="pv-dlg" role="alertdialog" aria-modal="true" aria-labelledby="pvTitle"><div class="pv-h"><div class="pv-media"><i class="ph ph-warning-circle"></i></div><div class="pv-txt"><div class="pv-t" id="pvTitle">-</div><div class="pv-d" id="pvDesc">처리 방법을 선택해 주세요.</div></div><div class="pv-opts"><div class="as-rcard on" data-pv="withdraw"><span class="rd"></span><div class="as-rc"><b>사전행사 철회 후 현장 참석</b><span>사전 행사를 철회하고 현장에서 행사합니다</span></div></div><div class="as-rcard" data-pv="keep"><span class="rd"></span><div class="as-rc"><b>사전행사 유지 (참관 참석)</b><span>사전 행사 결과를 유지하고 참관합니다</span></div></div></div><label class="pv-chk" id="pvChk"><span class="cbx"><i class="ph ph-check"></i></span>주주에게 처리 방법을 안내했습니다.</label></div><div class="pv-f"><button class="pv-cancel" data-pv-close>취소</button><button class="pv-ok" id="pvOk" disabled>철회 후 등록</button></div></div></div>
+<div class="px-ov" id="pxDlg"><div class="px-dlg" role="dialog" aria-modal="true" aria-labelledby="pxTitle"><button class="px-x" data-px-close aria-label="닫기"><i class="ph ph-x"></i></button><div class="px-h"><div class="px-t" id="pxTitle">대리인 · 위임주주 등록</div><div class="px-d">대리인을 선택하고 의결권을 위임한 주주를 등록해 주세요.</div></div><div class="px-c"><div class="px-sec g12"><div class="px-lb">대리인 구분<em>*</em></div><div class="px-row"><div class="as-rcard on" data-pk="holder"><span class="rd"></span><div class="as-rc"><b>주주 대리인</b><span>주주명부에 있는 주주가 대리</span></div></div><div class="as-rcard" data-pk="ext"><span class="rd"></span><div class="as-rc"><b>비주주 대리인</b><span>주주가 아닌 대리인이 참석</span></div></div></div></div><div class="px-sec" id="pxHolderSec"><div class="px-lb">대리인</div><div class="px-find" data-find="proxy"><button type="button" class="px-sel" data-k="voter"><span>투표권자</span><i class="ph ph-caret-down"></i></button><div class="px-in"><i class="ph ph-magnifying-glass"></i><input type="text" placeholder="대리인을 검색해 주세요"></div><div class="px-dd" data-dd></div></div><div id="pxProxy"></div></div><div class="px-sec g12" id="pxExtSec" style="display:none"><div class="px-lb">대리인 등록 (1명)<em>*</em></div><div class="px-box"><div class="as-row2"><div class="as-field"><label>성명</label><input class="as-inp" id="pxExtName" placeholder="대리인 성명"></div><div class="as-field"><label>생년월일 + 성별</label><input class="as-inp" id="pxExtBirth" inputmode="numeric" maxlength="7" placeholder="'-' 제외 숫자만 입력 (9003041)"></div></div><div class="as-field"><label>연락처</label><input class="as-inp" id="pxExtPhone" inputmode="numeric" maxlength="13" placeholder="010-0000-0000"></div></div></div><div class="px-sec"><div class="px-lb" id="pxCnt">위임주주 등록 (0명)</div><div class="px-find" data-find="holders"><button type="button" class="px-sel" data-k="voter"><span>투표권자</span><i class="ph ph-caret-down"></i></button><div class="px-in"><i class="ph ph-magnifying-glass"></i><input type="text" placeholder="위임주주를 검색해 추가해 주세요"></div><div class="px-dd" data-dd></div></div><div id="pxList"></div></div></div><div class="px-f"><button class="px-cancel" data-px-close>취소</button><button class="px-ok" id="pxOk" disabled>위임주주 0명 등록</button></div></div></div>
 <div class="nfc-ov" id="nfcDlg"><div class="nfc-dlg" role="dialog" aria-modal="true" aria-labelledby="nfcTitle"><div class="nfc-h" id="nfcTitle">현장투표 앱 태깅</div><div class="nfc-c"><div class="nfc-who"><span>태깅 대상</span><b id="nfcName">-</b></div><div class="nfc-g"><div class="nfc-t">NFC 기기와 참석자의 휴대폰 뒷면을 태깅해주세요</div><div class="nfc-s">주주총회장 영역을 벗어나면 투표가 불가능하다는 점을 안내해 주세요.</div><div class="nfc-img"><img src="nfc-tag.png" alt="NFC 태그에 휴대폰을 대는 모습"></div></div></div><div class="nfc-f"><button class="nfc-b" data-nfc="skip">현장 참석자 등록</button><button class="nfc-b dark" data-nfc="done">태깅 완료</button></div></div></div>
 <script>
   // LNB tab switching (설정/사전/당일)
@@ -659,6 +720,90 @@
   to.addEventListener('click',function(e){ if(!e.target.closest('#tagSel,#tagList')) tagOpen(false); });
   chk.addEventListener('click',function(){ chk.classList.toggle('on'); ok.disabled=!(chk.classList.contains('on')&&!selT.classList.contains('ph')); });
   ok.addEventListener('click',function(){ if(!tagPick) return; var t=document.getElementById('tagId'); t.textContent=tagPick; t.className='tagid set'; to.classList.remove('on'); });
+  // 대리인 · 위임주주 등록 다이얼로그
+  (function(){
+    var dlg=document.getElementById('pxDlg'); if(!dlg) return;
+    var btn=[].filter.call(document.querySelectorAll('.abtn'),function(b){ return /대리인/.test(b.textContent); })[0];
+    var KEYS={voter:'투표권자',name:'주주명',no:'주주번호'};
+    var proxy=null, holders=[];
+    function esc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+    function kind(){ return dlg.querySelector('[data-pk].on').dataset.pk; }
+    function sub(x){ return x.no+'・'+cm(x.hold)+'주'; }
+    function paint(){
+      document.getElementById('pxProxy').innerHTML=proxy?'<div class="px-card"><div><b>'+esc(proxy.name)+'</b>'+(proxy.no?'<span>'+sub(proxy)+'</span>':'<span>비주주 대리인</span>')+'</div><button type="button" class="px-del" data-del-proxy aria-label="대리인 삭제"><i class="ph ph-trash"></i></button></div>':'';
+      document.getElementById('pxCnt').textContent='위임주주 등록 ('+holders.length+'명)';
+      document.getElementById('pxList').innerHTML=holders.length
+        ? '<div class="px-tbl"><div class="px-tr hd"><span>주주명</span><span>주주번호</span><span class="sh">보유주식</span><span class="sp"></span></div><div class="px-body">'
+          + holders.map(function(x,i){ return '<div class="px-tr"><span class="nm">'+esc(x.name)+'</span><span>'+x.no+'</span><span class="sh">'+cm(x.hold)+'</span><button type="button" class="px-del" data-del="'+i+'" aria-label="위임주주 삭제"><i class="ph ph-trash"></i></button></div>'; }).join('')
+          + '</div></div>'
+        : '<div class="px-empty"><i class="ph ph-address-book"></i><div><b>등록된 위임주주가 없습니다</b><span>주주명부에서 위임주주를 검색해 추가해 주세요</span></div></div>';
+      var ext=kind()==='ext';
+      document.getElementById('pxHolderSec').style.display=ext?'none':'';
+      document.getElementById('pxExtSec').style.display=ext?'':'none';
+      var who=ext?(document.getElementById('pxExtName').value.trim()?{name:document.getElementById('pxExtName').value.trim()}:null):proxy;
+      var ok=document.getElementById('pxOk'); ok.disabled=!(who&&holders.length); ok.textContent='위임주주 '+holders.length+'명 등록';
+    }
+    function closeDd(except){ dlg.querySelectorAll('[data-dd].on').forEach(function(d){ if(d!==except){ d.classList.remove('on'); d.parentNode.querySelector('.px-sel').classList.remove('open'); } }); }
+    function suggest(f){
+      var q=f.querySelector('input').value.trim(), dd=f.querySelector('[data-dd]'), k=f.querySelector('.px-sel').dataset.k;
+      if(!q){ dd.classList.remove('on'); return; }
+      var hit=D.filter(function(x){ return String(x[k]||'').indexOf(q)>=0; }).slice(0,8);
+      var ext=(f.dataset.find==='proxy' && kind()==='ext');
+      dd.innerHTML=(ext?'<button type="button" class="it" data-ext="'+esc(q)+'">\''+esc(q)+'\' 비주주 대리인으로 지정<small>Enter</small></button>':'')
+        + (hit.length?hit.map(function(x){ return '<button type="button" class="it" data-pick="'+D.indexOf(x)+'"><span>'+esc(x.voter==='-'?x.name:x.voter)+(x.name!==x.voter&&x.voter!=='-'?' <small>'+esc(x.name)+'</small>':'')+'</span><small>'+sub(x)+'</small></button>'; }).join('')
+          : (ext?'':'<div class="none">검색 결과가 없습니다.</div>'));
+      closeDd(dd); dd.classList.add('on');
+    }
+    function pick(f,x){
+      if(f.dataset.find==='proxy') proxy=x;
+      else if(holders.indexOf(x)<0) holders.push(x);
+      f.querySelector('input').value=''; f.querySelector('[data-dd]').classList.remove('on'); paint();
+    }
+    function open(){
+      proxy=null; holders=[];
+      ['pxExtName','pxExtBirth','pxExtPhone'].forEach(function(id){ document.getElementById(id).value=''; });
+      dlg.querySelectorAll('[data-pk]').forEach(function(c,i){ c.classList.toggle('on',i===0); });
+      dlg.querySelectorAll('.px-find').forEach(function(f){ f.querySelector('input').value=''; var s=f.querySelector('.px-sel'); s.dataset.k='voter'; s.querySelector('span').textContent=KEYS.voter; });
+      closeDd(); paint(); dlg.classList.add('show');
+    }
+    if(btn) btn.addEventListener('click',open);
+    dlg.addEventListener('input',function(e){
+      var f=e.target.closest('.px-find'); if(f){ suggest(f); return; }
+      if(e.target.id==='pxExtBirth') e.target.value=e.target.value.replace(/\D/g,'').slice(0,7);
+      if(e.target.id==='pxExtPhone'){ var d=e.target.value.replace(/\D/g,'').slice(0,11); e.target.value=d.length<4?d:d.length<8?d.slice(0,3)+'-'+d.slice(3):d.slice(0,3)+'-'+d.slice(3,7)+'-'+d.slice(7); }
+      paint();
+    });
+    dlg.addEventListener('keydown',function(e){
+      if(e.key!=='Enter') return; var f=e.target.closest('.px-find'); if(!f) return; e.preventDefault();
+      var first=f.querySelector('[data-dd].on .it'); if(first) first.click();
+    });
+    dlg.addEventListener('click',function(e){
+      if(e.target===dlg || e.target.closest('[data-px-close]')){ dlg.classList.remove('show'); return; }
+      var t;
+      if((t=e.target.closest('[data-pk]'))){ dlg.querySelectorAll('[data-pk]').forEach(function(c){ c.classList.toggle('on',c===t); }); proxy=null; paint(); return; }
+      if((t=e.target.closest('.px-sel'))){
+        var f=t.closest('.px-find'), dd=f.querySelector('[data-dd]');
+        if(dd.classList.contains('on') && dd.hasAttribute('data-keys')){ closeDd(); return; }
+        dd.setAttribute('data-keys',''); dd.innerHTML=Object.keys(KEYS).map(function(k){ return '<button type="button" class="it'+(t.dataset.k===k?' on':'')+'" data-key="'+k+'">'+KEYS[k]+'<i class="ph ph-check"></i></button>'; }).join('');
+        closeDd(dd); dd.classList.add('on'); t.classList.add('open'); return;
+      }
+      if((t=e.target.closest('[data-key]'))){
+        var f2=t.closest('.px-find'), s=f2.querySelector('.px-sel'); s.dataset.k=t.dataset.key; s.querySelector('span').textContent=KEYS[t.dataset.key];
+        var d2=f2.querySelector('[data-dd]'); d2.removeAttribute('data-keys'); d2.classList.remove('on'); s.classList.remove('open'); f2.querySelector('input').focus(); return;
+      }
+      if((t=e.target.closest('[data-pick]'))){ var f3=t.closest('.px-find'); f3.querySelector('[data-dd]').removeAttribute('data-keys'); pick(f3, D[+t.dataset.pick]); return; }
+      if((t=e.target.closest('[data-ext]'))){ pick(t.closest('.px-find'), {name:t.dataset.ext}); return; }
+      if(e.target.closest('[data-del-proxy]')){ proxy=null; paint(); return; }
+      if((t=e.target.closest('[data-del]'))){ holders.splice(+t.dataset.del,1); paint(); return; }
+      if(e.target.closest('#pxOk') && !document.getElementById('pxOk').disabled){
+        holders.forEach(function(x){ if(x.site==='미참석') x.site='참석'; });
+        dlg.classList.remove('show'); render();
+        if(window.cxToast) cxToast('대리인 · 위임주주 등록을 완료했습니다.');
+        return;
+      }
+      if(!e.target.closest('.px-find')) closeDd();
+    });
+  })();
   // 현장 참석자 등록 시트
   (function(){
     var ov=document.getElementById('asSheet'); if(!ov) return;
