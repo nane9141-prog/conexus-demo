@@ -480,7 +480,8 @@
   var SITE_C={'참석':'blue','일부 참석':'gray','미참석':'off','철회 후 참석':'purple','참관':'purple'};
   function siteB(s){ return '<span class="atb '+(SITE_C[s]||'gray')+'">'+s+'</span>'; }
   function appB(a){ return '<span class="atb '+(a==='사용'?'blue':a==='미사용'?'off':'gray')+'">'+a+'</span>'; }
-  function agB(ag){ return ag?'<span class="atb red attip" data-tip="제한 의안: '+ag.join(', ')+'">제한</span>':mu('-'); }
+  /* 의안별 제한 — '통합 N건'과 같은 뱃지로 건수 표시, 호버 시 제한 의안번호 */
+  function agB(ag){ return ag?'<span class="tag attip" data-tip="제한 의안: '+ag.join(', ')+'">제한 '+ag.length+'건</span>':mu('-'); }
   function voterCell(x,gid){
     if(x.sub && /통합/.test(x.sub)){
       return '<div class="voter"><button class="tw-chevron collapsed" data-toggle="'+gid+'"><svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button><span>'+x.voter+'</span></div>';

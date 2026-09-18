@@ -201,6 +201,8 @@
   .ty-tbl tr.subg td{background:#fcfcfd;color:#0a0a0a}
   .ty-tbl td.ind{padding-left:26px}
   .ty-tbl td.ind2{padding-left:42px}
+  /* 의안별 제한 'N건' — 통합 N건과 같은 뱃지 */
+  .ty-tbl .tag{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:#f4f4f5;color:#737373;font-size:12px;font-weight:500}
   .ty-tbl .atag{font-size:11px;font-weight:600;padding:2px 7px;border-radius:6px;background:#f1f5f9;color:#475569;margin-left:6px}
   .ty-tbl .atag.neutral{background:#F4F4F5;color:#525252}
   .badge.pass{background:#EBF4FF;color:#0071F3}
@@ -701,7 +703,7 @@
       var ex=(h.ex==null?h.av:h.ex), un=h.av-ex;
       body.insertAdjacentHTML('beforeend','<tr><td class="l nm">'+h.vt+'</td><td class="l sub">'+h.nm+'</td><td class="l sub">'+chLabel(h.ch)+'</td>'+
         '<td>'+fmt(h.av)+'</td><td'+(un?'':' class="muted"')+'>'+fmt(un)+'</td><td>'+fmt(ex)+'</td>'+
-        '<td class="'+shc+'">'+h.sh+'</td><td class="'+arc+'">'+h.ar+'</td>'+
+        '<td class="'+shc+'">'+h.sh+'</td><td class="'+arc+'">'+(h.ar==='-'?h.ar:'<span class="tag">'+h.ar+'</span>')+'</td>'+
         '<td class="c">'+opv(h.v[0])+'</td><td class="c">'+opv(h.v[1])+'</td><td class="c">'+opv(h.v[2])+'</td></tr>');
     });
   }
