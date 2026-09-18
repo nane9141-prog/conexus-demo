@@ -99,7 +99,7 @@
   .atwrap{margin-top:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
   .atscroll{overflow:auto;max-height:calc(100vh - 340px)}
   table.attbl{width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed}
-  table.attbl thead th{position:sticky;top:0;background:#fafafa;z-index:1;padding:10px 14px;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;white-space:nowrap;border-bottom:1px solid var(--border)}
+  table.attbl thead th{position:sticky;top:0;background:#fafafa;z-index:1;height:44px;padding:0 14px;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;white-space:nowrap;border-bottom:1px solid var(--border);vertical-align:middle}
   table.attbl thead th.n{text-align:right}
   table.attbl tbody td{padding:12px 14px;border-bottom:1px solid #f0f0f0;color:#0a0a0a;white-space:nowrap}
   table.attbl tbody td.n{text-align:right}
@@ -426,15 +426,19 @@
     var last = tab==='all' ? ('<td>'+(x.limit==='-'?'<span class="atmut">-</span>':x.limit)+'</td>') : ('<td>'+(x.limit==='-'?'<span class="atmut">-</span>':x.limit)+'</td><td>'+(x.ag==='-'?'<span class="atmut">-</span>':x.ag)+'</td>');
     return '<td>'+voterCell(x,gid)+'</td><td>'+x.name+'</td><td>'+x.no+'</td><td class="c">'+preB(x.pre)+'</td><td class="n">'+cm(x.hold)+'</td><td class="n">'+x.ratio+'</td><td class="c">'+siteB(x.site)+'</td><td class="c">'+appB(x.app)+'</td>'+last;
   }
-  var cur='reg';
+  var cur='reg', headTab=null;
+  var CW={'주주명':140,'주주번호':120,'주주구분':92,'사전투표':110,'보유주식수':104,'지분율':74,'현장 참석':86,'앱 사용':76,'의결권 제한':100,'의안별 제한':100,'입장코드':120,'전자주총 참석':104,'발급 상태':96};
   function render(){
     var head=document.getElementById('atHead'), body=document.getElementById('atBody');
     var cols=COLS[cur], nc=NCOLS[cur];
     var cc=CCOLS[cur]||[];
-    var CW={'주주명':140,'주주번호':120,'주주구분':92,'사전투표':110,'보유주식수':104,'지분율':74,'현장 참석':86,'앱 사용':76,'의결권 제한':100,'의안별 제한':100,'입장코드':120,'전자주총 참석':104,'발급 상태':96};
-    var cg=document.getElementById('atCols');
-    if(cg) cg.innerHTML=cols.map(function(c){return '<col style="width:'+(c==='투표권자'?220:(CW[c]||100))+'px">';}).join('');
-    head.innerHTML='<tr>'+cols.map(function(c,i){var cl=nc.indexOf(i)>=0?' class="n"':(cc.indexOf(i)>=0?' class="c"':'');return '<th'+cl+'>'+c+'</th>';}).join('')+'</tr>';
+    /* 헤더·콜그룹은 탭이 바뀔 때만 다시 그린다 — 검색마다 다시 그리면 conexus 필터 아이콘이 사라졌다 붙어 흔들린다 */
+    if(headTab!==cur){
+      var cg=document.getElementById('atCols');
+      if(cg) cg.innerHTML=cols.map(function(c){return '<col style="width:'+(c==='투표권자'?220:(CW[c]||100))+'px">';}).join('');
+      head.innerHTML='<tr>'+cols.map(function(c,i){var cl=nc.indexOf(i)>=0?' class="n"':(cc.indexOf(i)>=0?' class="c"':'');return '<th'+cl+'>'+c+'</th>';}).join('')+'</tr>';
+      headTab=cur;
+    }
     var q=(document.getElementById('atSearch').value||'').trim();
     var rows=D;
     if(cur==='reg'){ if(!q){ body.innerHTML='<tr><td colspan="'+cols.length+'"><div class="atempty">주주명부에서 주주를 검색 후 참석자 등록을 진행해 주세요</div></td></tr>'; setCount(0); return; } rows=D.filter(function(x){return (x.voter+x.name+x.no).indexOf(q)>=0;}); }
@@ -490,6 +494,6 @@
 })();
 </script>
 
-<script src="conexus.js?v=fwa"></script>
+<script src="conexus.js?v=fwb"></script>
 </body>
 </html>
