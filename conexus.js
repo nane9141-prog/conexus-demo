@@ -673,6 +673,7 @@
     });
   }
   window.cxTable = { apply: apply, run: run };
+  window.cxSelect = pageSelect;   /* 다른 화면의 select 도 같은 드롭다운으로 */
 
   /* 좌상단 로고·'대시보드' 메뉴 → 설정 대시보드(dashboard.html?tab=set) */
   (function(){

@@ -45,7 +45,7 @@ table.lctbl tr.child td.b{font-weight:400;padding-left:28px}
 .pg-hd{display:flex;align-items:flex-start;gap:24px;padding-bottom:12px}
 .pg-hd>div{flex:1}
 .pg-card{border:1px solid #E5E5E5;border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:16px;background:#fff}
-.pg-card.off .pg-body{opacity:.5;pointer-events:none}
+.pg-card.off .pg-body{display:none}   /* 토글 off — 하위 선택 항목 숨김 */
 .pg-top{display:flex;align-items:flex-start;gap:16px}
 .pg-top>div{flex:1}
 .pg-t{font-size:16px;line-height:24px;font-weight:600;color:#0A0A0A}
@@ -177,3 +177,6 @@ input.pg-in[type=time]{width:110px}
 .pk-pop .col::-webkit-scrollbar{display:none}
 .pk-pop .col button{flex:none;height:28px;border-radius:8px;font-size:14px;font-variant-numeric:tabular-nums}
 .pk-pop .col button:hover:not(.on){background:#F5F5F5}
+/* 진행 설정 드롭다운 — 입력 필드와 같은 32px · radius 10 */
+.pg .cx-sel{height:32px;border-radius:10px;padding:0 10px;font-size:14px}
+.pg .cx-sel svg{width:16px;height:16px}

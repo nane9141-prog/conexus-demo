@@ -13,10 +13,13 @@
     return '<section class="pg-card' + (on === false ? ' off' : '') + '" data-card="' + k + '"><div class="pg-top"><div><div class="pg-t">' + t + '</div><div class="pg-d">' + d + '</div></div>' + (on == null ? '' : sw(k, on)) + '</div>' + (inner ? '<div class="pg-body">' + inner + '</div>' : '') + '</section>';
   }
   function dt(id, lb, d, t, hint) {
-    return '<div class="pg-f" data-dt="' + id + '"><label>' + lb + '</label><div class="pg-dt">' +
+    return '<div class="pg-f" data-dt="' + id + '"><label>' + lb + '</label>' + dtIn(id, d, t) + (hint ? '<div class="hint">' + hint + '</div>' : '') + '<div class="err" hidden></div></div>';
+  }
+  /* 날짜·시간 트리거 한 쌍 — 값은 hidden input(id+D / id+T) */
+  function dtIn(id, d, t, attr) {
+    return '<div class="pg-dt"' + (attr || '') + '>' +
       '<button type="button" class="pg-in pk-tr" data-pk="date" data-for="' + id + 'D"><i class="ph ph-calendar-blank"></i><span></span></button><input type="hidden" id="' + id + 'D" value="' + (d || '') + '">' +
-      '<button type="button" class="pg-in pk-tr t" data-pk="time" data-for="' + id + 'T"><i class="ph ph-clock"></i><span></span></button><input type="hidden" id="' + id + 'T" value="' + (t || '') + '">' +
-      '</div>' + (hint ? '<div class="hint">' + hint + '</div>' : '') + '<div class="err" hidden></div></div>';
+      '<button type="button" class="pg-in pk-tr t" data-pk="time" data-for="' + id + 'T"><i class="ph ph-clock"></i><span></span></button><input type="hidden" id="' + id + 'T" value="' + (t || '') + '"></div>';
   }
   function inp(id, lb, v, ph, w) { return '<div class="pg-f"' + (w ? ' style="width:' + w + 'px"' : ' style="flex:1"') + '><label for="' + id + '">' + lb + '</label><input class="pg-in" id="' + id + '" value="' + (v || '') + '" placeholder="' + (ph || '') + '"></div>'; }
   function unit(id, lb, v, u) { return '<div class="pg-f" style="flex:1"><label for="' + id + '">' + lb + '</label><div class="pg-unit"><input id="' + id + '" inputmode="numeric" value="' + v + '"><span>' + u + '</span></div></div>'; }
@@ -25,17 +28,17 @@
   function sel(id, opts, w) { return '<select class="lc-sel pg-sel" id="' + id + '" style="width:' + w + 'px">' + opts.map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select>'; }
 
   root.innerHTML = '<div class="pg lc">' +
-    '<div class="pg-hd lc-hd"><div><h2>진행 설정</h2><p>전자주주총회 당일 진행 순서와 화면 노출 설정을 관리합니다.</p></div><button type="button" class="btn dark" id="pgSave" style="height:32px;border-radius:10px">저장</button></div>' +
-    card('time', '전자주주총회 진행 시간 예약', '예약한 시간에 총회가 자동으로 시작·종료됩니다. 끄면 담당자가 당일 직접 시작·종료합니다.',
+    '<div class="pg-hd lc-hd"><div><h2>진행 설정</h2><p>전자주주총회 운영에 필요한 진행·질의·발언 설정을 관리합니다.</p></div><button type="button" class="btn dark" id="pgSave" style="height:32px;border-radius:10px">저장</button></div>' +
+    card('time', '전자주주총회 진행 시간 예약', '예약 미설정 시, 주주총회 당일에 수동으로 진행합니다.',
       '<div class="pg-row">' + dt('pgStart', '시작 일시', D, '10:00') + dt('pgEnd', '종료 일시', D, '12:00') + '</div>', true) +
-    card('open', '주주총회 정보 공개 설정', '주주 사이트에 이번 총회 정보(일정·의안·소집공고)를 공개하는 시점을 정합니다.',
-      '<div class="pg-rad">' + rad('pgOpen', 'now', '즉시 공개') + rad('pgOpen', 'rsv', '예약 공개', 1) + '</div><div class="pg-row" id="pgOpenAt">' + dt('pgOpenT', '공개 일시', '2026-03-02', '10:30') + '</div>') +
-    card('late', '전자주주총회 중도입장 허용', '개회 후에도 주주가 온라인으로 입장할 수 있습니다. 끄면 개회 이후 시청 버튼이 비활성화됩니다.', '', true) +
-    card('apply', '사전 참석 신청', '주총 당일 온라인 참석을 위해 미리 신청받는 기간입니다. 끄면 신청 없이 누구나 입장할 수 있습니다.',
+    card('open', '주주총회 정보 공개 설정', '공개 설정에 따라 주주PASS - 전자주주총회 사이트에 주주총회 설정 정보가 제공됩니다.',
+      '<div class="pg-rad" style="align-items:center">' + rad('pgOpen', 'now', '즉시 공개') + rad('pgOpen', 'rsv', '예약 공개', 1) + dtIn('pgOpenT', '2026-03-02', '10:30', ' id="pgOpenAt"') + '</div>') +
+    card('late', '전자주주총회 중도입장 허용', '주주총회 개회 후에도 주주의 실시간 온라인 입장을 허용합니다.', '', true) +
+    card('apply', '사전 참석 신청', '주주들이 주주총회 당일 전자주주총회 시청 및 참여를 위해 미리 신청하는 기간을 설정합니다.',
       '<div class="pg-row">' + dt('pgApS', '신청 시작 일시', '2026-03-09', '09:00') + dt('pgApE', '신청 종료 일시', PREV, '23:59', '총회 전날 24:00까지 설정할 수 있습니다.') + '</div><div class="pg-row">' + unit('pgApN', '참석 인원 제한 (선택)', '1,000', '명').replace('flex:1', 'width:268px') + '</div>', true) +
-    card('proxy', '대리인 신청 기간', '주주가 대리인을 지정해 참석·의결권 행사를 맡길 수 있도록 신청받는 기간입니다.',
+    card('proxy', '대리인 신청 기간', '주주가 본인 대신 대리인을 지정하여 전자주주총회에 참석 및 의결권을 행사할 수 있도록 신청받는 기간입니다.',
       '<div class="pg-row">' + dt('pgPxS', '지정 시작 일시', '2026-03-09', '09:00', '사전 참석 신청 시작 이후로 설정해 주세요.') + dt('pgPxE', '지정 종료 일시', PREV, '18:00') + '</div>', true) +
-    card('preq', '사전 질의 운영 설정', '총회 전 지정한 기간 동안 주주가 질의를 등록·수정할 수 있습니다.',
+    card('preq', '사전 질의 운영 설정', '주총 개최 전, 지정된 사전 기간 동안 주주들이 미리 질문을 등록하고 수정할 수 있도록 허용합니다.',
       '<div class="pg-row">' + dt('pgPqS', '질의 시작 일시', '2026-03-09', '09:00') + dt('pgPqE', '질의 종료 일시', PREV, '23:59', '총회 전날 24:00까지 설정할 수 있습니다.') + '</div>' +
       '<div class="pg-row">' + unit('pgPqN', '질의 횟수', '3', '회') + unit('pgPqL', '작성 분량', '1,000', '자') + '</div>' +
       '<div class="pg-row">' + inp('pgPqNote', '사전질의 주의사항 (선택)', '', '주주에게 안내할 주의사항을 입력해 주세요') + '</div><div class="pg-hr"></div>' +
@@ -155,6 +158,12 @@
   });
   document.addEventListener('click', function (e) { if (pkBtn && !e.target.closest('.pk-pop')) closePk(); });
   window.addEventListener('scroll', function (e) { if (pkBtn && !pop.contains(e.target)) closePk(); }, true);
+
+  function selects() {
+    if (!window.cxSelect) return;
+    root.querySelectorAll('select').forEach(function (s) { cxSelect(s); s.nextSibling.style.width = s.style.width; });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', selects); else selects();
 
   validate();
 })();
