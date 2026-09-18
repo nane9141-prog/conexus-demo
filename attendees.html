@@ -98,7 +98,7 @@
   .abtn.ic{padding:0;width:38px;justify-content:center}
   .atwrap{margin-top:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
   .atscroll{overflow:auto;max-height:calc(100vh - 340px)}
-  table.attbl{width:100%;border-collapse:collapse;font-size:14px}
+  table.attbl{width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed}
   table.attbl thead th{position:sticky;top:0;background:#fafafa;z-index:1;padding:10px 14px;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;white-space:nowrap;border-bottom:1px solid var(--border)}
   table.attbl thead th.n{text-align:right}
   table.attbl tbody td{padding:12px 14px;border-bottom:1px solid #f0f0f0;color:#0a0a0a;white-space:nowrap}
@@ -278,7 +278,7 @@
           </div>
         </div>
         <div class="atwrap">
-          <div class="atscroll"><table class="attbl" data-clickable><thead id="atHead"></thead><tbody id="atBody"></tbody></table></div>
+          <div class="atscroll"><table class="attbl" data-clickable><colgroup id="atCols"></colgroup><thead id="atHead"></thead><tbody id="atBody"></tbody></table></div>
           <div class="at-foot"><span id="atCount">총 0건 · 0주</span>
             <div class="at-pg">페이지당 <select><option>20</option><option>50</option></select>
               <span class="pp">|&lt;</span><span class="pp">&lt;</span><span class="pp cur">1</span><span id="atTot">/ 0</span><span class="pp">&gt;</span><span class="pp">&gt;|</span>
@@ -431,6 +431,9 @@
     var head=document.getElementById('atHead'), body=document.getElementById('atBody');
     var cols=COLS[cur], nc=NCOLS[cur];
     var cc=CCOLS[cur]||[];
+    var CW={'주주명':150,'주주번호':132,'주주구분':92,'사전투표':118,'보유주식수':112,'지분율':78,'현장 참석':90,'앱 사용':80,'의결권 제한':112,'의안별 제한':112,'입장코드':132,'전자주총 참석':110,'발급 상태':100};
+    var cg=document.getElementById('atCols');
+    if(cg) cg.innerHTML=cols.map(function(c){return c==='투표권자'?'<col>':'<col style="width:'+(CW[c]||100)+'px">';}).join('');
     head.innerHTML='<tr>'+cols.map(function(c,i){var cl=nc.indexOf(i)>=0?' class="n"':(cc.indexOf(i)>=0?' class="c"':'');return '<th'+cl+'>'+c+'</th>';}).join('')+'</tr>';
     var q=(document.getElementById('atSearch').value||'').trim();
     var rows=D;
@@ -487,6 +490,6 @@
 })();
 </script>
 
-<script src="conexus.js?v=fw7"></script>
+<script src="conexus.js?v=fw8"></script>
 </body>
 </html>
