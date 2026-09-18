@@ -1,0 +1,26 @@
+/* 의안별 행사 현황 표 — 대시보드(현장·사전) · 사전 의결권 현황 공통 */
+.db-tblc{box-sizing:border-box;padding:16px;background:#fff;border:1px solid #E5E5E5;border-radius:14px;
+  box-shadow:0 1px 3px rgba(0,0,0,.1);overflow:auto}
+table.db-ft{width:100%;border-collapse:collapse;font-size:14px;line-height:20px;letter-spacing:-.01em;table-layout:fixed}
+table.db-ft th{height:40px;padding:6px 20px;text-align:left;font-weight:500;color:#737373;vertical-align:middle;
+  border-bottom:1px solid #E5E5E5}
+table.db-ft td{height:40px;padding:8px 20px;color:#171717;border-bottom:1px solid #E5E5E5}
+table.db-ft tbody tr:last-child td{border-bottom:none}
+table.db-ft .n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.db-ft th.n,table.db-ft td.n{text-align:right !important}
+table.db-ft th.c,table.db-ft td.c{text-align:center !important}
+table.db-ft td.n{color:#0A0A0A}          /* 숫자 칸만 진하게 — 헤더는 th 규칙 하나로 */
+table.db-ft td.db-no{color:var(--muted-fg)}   /* 의안번호 — muted */
+table.db-ft .c{text-align:center}
+table.db-ft tr.grp td{font-weight:400}    /* 상위 의안 의안명도 일반 굵기 */
+table.db-ft th.db-sortable{cursor:pointer;user-select:none;white-space:nowrap}
+table.db-ft th.db-sortable:hover{color:#0a0a0a}
+table.db-ft th .db-sort-ind{margin-left:4px;font-size:11px;color:#0071F3}
+.db-cat{display:inline-flex;align-items:center;justify-content:center;padding:2px 6px;margin-left:8px;border-radius:6px;
+  background:#F5F5F5;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#525252}
+.db-rb{display:inline-flex;align-items:center;justify-content:center;padding:2px 6px;border-radius:6px;
+  font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em}
+.db-rb.pass{background:#EEF5FF;color:#0071F3}
+.db-rb.fail{background:#FFF5F7;color:#E9081B}
+.db-rb.wait{background:#F5F5F5;color:#525252}
+.db-rb.count{background:#FEF5E7;color:#EA580C}

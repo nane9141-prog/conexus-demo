@@ -6,6 +6,7 @@
 <title>CONEXUS · 사전 의결권 현황</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 <link rel="stylesheet" href="conexus.css?v=h1">
+<link rel="stylesheet" href="ag-exercise.css?v=1">
 <style>
   /* page-local content helpers (LNB styling comes from conexus.css) */
   .scroll{flex:1;overflow-y:auto}
@@ -336,6 +337,7 @@
   });
 </script>
 <script src="cx-data.js"></script>
+<script src="ag-exercise.js?v=1"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -507,23 +509,9 @@
             </div>
           </div>
 
-          <div class="card tblcard" style="padding:0">
-            <div class="sec-head"><div class="h">의안별 행사 현황</div><div class="d">현장 참석 주주수에 따라 결과가 달라질 수 있습니다.</div></div>
-            <div class="tbl-wrap" style="border:none;border-top:1px solid var(--border);border-radius:0">
-              <table class="tbl agex" id="vrAgTbl">
-                <thead><tr>
-                  <th>번호</th>
-                  <th>의안명</th>
-                  <th class="num">총 행사가능의결권</th>
-                  <th class="num">행사주주</th>
-                  <th class="num">행사의결권</th>
-                  <th class="num">찬성률 (총행사가능)</th>
-                  <th class="num">찬성률 (총행사)</th>
-                  <th class="c">예상</th>
-                </tr></thead>
-                <tbody id="vrAgBody"></tbody>
-              </table>
-            </div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="sec-head" style="padding:0"><div class="h">의안별 행사 현황</div><div class="d">현장 참석 주주수에 따라 결과가 달라질 수 있습니다.</div></div>
+            <div id="vrAgTblHost"></div>
           </div>
         </div>
 
@@ -659,46 +647,10 @@
     var cr=e.target.closest('.chk-row'); if(cr){cr.classList.toggle('on');}
     var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
   });
-  /* 의안별 행사 현황 — 대시보드 사전 탭과 같은 출처·같은 계산을 쓴다 */
+  /* 의안별 행사 현황 — 대시보드 현장 탭과 같은 표(ag-exercise.js). 사전 화면이라 현장 제어 상태 없이 지금 데이터 기준 '예상' */
   (function(){
-    var body=document.getElementById('vrAgBody'); if(!body||!window.CX) return;
-    var AV=CX.meeting.sharesVoting, HOLDERS=CX.meeting.attendHolders;
-    function cm(n){ return Math.round(n).toLocaleString('en-US'); }
-    function pct(v){ return v==null?'':v.toFixed(1)+'%'; }
-    function rows(){
-      return CX.agenda.map(function(a){
-        var d=CX.center[a.no];
-        var r={no:a.no, nm:a.nm, cat:(a.types||[]).join(' · '), grp:!!a.header||!d};
-        if(r.grp) return r;
-        r.sp=(d.thrLabel||'').indexOf('2/3')>=0;
-        r.dis=CX.util.discarded(a.no);
-        if(d.cands){
-          r.w=d.cands.reduce(function(t,c){return t+c.votes;},0);
-          r.cum=d.cands.filter(function(c){return c.elected;}).length;
-        } else {
-          var v=d.options ? (d.options.filter(function(o){return o.result==='가결';})[0]||d.options[0]) : d;
-          r.yes=v['for']; r.w=v['for']+v.against+(v.abs||0);
-        }
-        return r;
-      });
-    }
-    function head(a){
-      var cat=a.cat?'<span class="ubadge secondary" style="margin-left:6px">'+a.cat+'</span>':'';
-      return '<td>'+a.no+'</td><td>'+a.nm+cat+'</td>';
-    }
-    var EMPTY='<td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="c"></td>';
-    body.innerHTML=rows().map(function(a){
-      if(a.grp) return '<tr class="grp">'+head(a)+EMPTY+'</tr>';
-      var r1=a.cum?null:a.yes/AV*100;
-      var ok=a.cum?true:r1>=(a.sp?33.33:25);
-      return '<tr>'+head(a)
-        +'<td class="num">'+cm(AV)+'</td><td class="num">'+cm(HOLDERS)+'</td>'
-        +'<td class="num">'+cm(a.w)+'</td>'
-        +'<td class="num">'+pct(r1)+'</td>'
-        +'<td class="num">'+pct(a.yes==null?null:a.yes/a.w*100)+'</td>'
-        +'<td class="c"><span class="badge-exp '+(ok?'pass':'rej')+'">'+(ok?'가결 예상':'부결 예상')+'</span></td></tr>';
-    }).join('');
-    if(window.cxTable) window.cxTable.apply(document.getElementById('vrAgTbl'));
+    var host=document.getElementById('vrAgTblHost'); if(!host||!window.AGX) return;
+    host.innerHTML=AGX.table('vrAgBody'); AGX.render(document.getElementById('vrAgBody'), {});
   })();
 
   // 사전 의결권 현황 tabs
@@ -710,6 +662,6 @@
     });
   });
 </script>
-<script src="conexus.js?v=fwu"></script>
+<script src="conexus.js?v=fwv"></script>
 </body>
 </html>
