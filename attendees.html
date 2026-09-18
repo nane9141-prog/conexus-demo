@@ -60,11 +60,9 @@
   .as-radios{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
   .as-radios.g12{gap:12px}
   .as-radio{display:inline-flex;align-items:center;gap:8px;font-size:14px;line-height:14px;font-weight:500;color:#0A0A0A;cursor:pointer;user-select:none}
-  .as-radio.dis{opacity:.5;cursor:not-allowed}
   .rd{box-sizing:border-box;position:relative;width:16px;height:16px;flex:none;border:1px solid #E5E5E5;border-radius:9999px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05)}
   .on>.rd{background:#171717;border-color:#171717;box-shadow:none}
   .on>.rd::after{content:"";position:absolute;left:calc(50% - 4px);top:calc(50% - 4px);width:8px;height:8px;border-radius:9999px;background:#FAFAFA}
-  .as-info{display:inline-flex;margin-left:-12px;color:#A3A3A3;font-size:16px;cursor:help}
   .as-rcards{display:flex;gap:8px}
   .as-rcard{box-sizing:border-box;flex:1;min-width:0;display:flex;align-items:flex-start;gap:8px;padding:10px 10px 8px;border:1px solid #E5E5E5;border-radius:10px;cursor:pointer;user-select:none}
   .as-rcard.on{background:rgba(23,23,23,.05);border-color:transparent}
@@ -315,7 +313,7 @@
     </div>
   </main>
 </div>
-<div class="assheet-ov" id="asSheet"><div class="assheet"><span class="as-grip"></span><button class="as-x" data-as-close aria-label="닫기"><i class="ph ph-x"></i></button><div class="as-hd"><div class="as-t">현장 참석자 등록</div><div class="as-d">현장 참석 정보를 입력해 등록합니다.</div></div><div class="as-body"><div class="as-card"><div class="as-f"><div class="k">투표권자</div><div class="v" id="asVoter">-</div></div><div class="as-f"><div class="k">주주명</div><div class="v" id="asName">-</div></div><div class="as-f"><div class="k">주주번호</div><div class="v" id="asNo">-</div></div><div class="as-f"><div class="k">보유주식</div><div class="v" id="asHold">-</div></div><div class="as-f full"><div class="k">실질계좌번호</div><div class="v" id="asAcct">-</div></div></div><div class="as-grp"><div class="as-gt">현장투표 앱 사용</div><div class="as-radios"><label class="as-radio on" data-rg="app0" data-v="use"><span class="rd"></span>사용</label><label class="as-radio" data-rg="app0" data-v="no"><span class="rd"></span>미사용</label><label class="as-radio dis" data-v="part"><span class="rd"></span>일부 사용</label><i class="ph ph-info as-info" title="주주+대리인 또는 대리인 다수 참석 시 선택할 수 있습니다."></i></div></div><div class="as-sec"><div class="as-sec-h">참석자 정보</div><div class="as-box"><div class="as-row2"><div class="as-field"><label>전화번호</label><input class="as-inp" placeholder="010-0000-0000"></div><div class="as-field"><label>좌석번호</label><input class="as-inp" placeholder="예: A-12"></div></div><div class="as-field"><label>참석 주식수</label><div class="as-rcards"><div class="as-rcard on" data-rg="shares" data-v="all"><span class="rd"></span><div class="as-rc"><b>보유주식으로 참석</b><span id="asAllDesc">보유주식 전체로 참석</span></div></div><div class="as-rcard" data-rg="shares" data-v="part"><span class="rd"></span><div class="as-rc"><b>일부 주식으로 참석</b><span>참석 주식수를 직접 입력</span></div></div></div><input class="as-inp" id="asPartQty" inputmode="numeric" placeholder="참석 주식수를 입력해 주세요" style="display:none"></div><div class="as-inl"><span class="as-il">현장투표 앱 사용</span><div class="as-radios g12"><label class="as-radio on" data-rg="app1" data-v="use"><span class="rd"></span>사용</label><label class="as-radio" data-rg="app1" data-v="no"><span class="rd"></span>미사용</label></div></div></div></div></div><div class="as-foot"><div class="as-ft"><button class="as-cancel" data-as-close>취소</button><button class="as-ok" data-as-close>현장 참석 등록</button></div><div class="as-mod">마지막 수정 2026-07-17 15:58 · 박지용</div></div></div></div>
+<div class="assheet-ov" id="asSheet"><div class="assheet"><span class="as-grip"></span><button class="as-x" data-as-close aria-label="닫기"><i class="ph ph-x"></i></button><div class="as-hd"><div class="as-t">현장 참석자 등록</div><div class="as-d">현장 참석 정보를 입력해 등록합니다.</div></div><div class="as-body"><div class="as-card"><div class="as-f"><div class="k">투표권자</div><div class="v" id="asVoter">-</div></div><div class="as-f"><div class="k">주주명</div><div class="v" id="asName">-</div></div><div class="as-f"><div class="k">주주번호</div><div class="v" id="asNo">-</div></div><div class="as-f"><div class="k">보유주식</div><div class="v" id="asHold">-</div></div><div class="as-f full"><div class="k">실질계좌번호</div><div class="v" id="asAcct">-</div></div></div><div class="as-grp"><div class="as-gt">참석자 구분</div><div class="as-radios"><label class="as-radio on" data-rg="who" data-v="self"><span class="rd"></span>본인</label><label class="as-radio" data-rg="who" data-v="proxy"><span class="rd"></span>대리인</label></div></div><div class="as-sec"><div class="as-sec-h" id="asSecLbl">참석자 정보</div><div class="as-box"><div class="as-row2" id="asProxyRow" style="display:none"><div class="as-field"><label>대리인 성명</label><input class="as-inp" placeholder="대리인 성명"></div><div class="as-field"><label>생년월일</label><input class="as-inp" placeholder="YYYY-MM-DD"></div></div><div class="as-row2"><div class="as-field"><label>전화번호</label><input class="as-inp" placeholder="010-0000-0000"></div><div class="as-field"><label>좌석번호</label><input class="as-inp" placeholder="예: A-12"></div></div><div class="as-field"><label>참석 주식수</label><div class="as-rcards"><div class="as-rcard on" data-rg="shares" data-v="all"><span class="rd"></span><div class="as-rc"><b>보유주식으로 참석</b><span id="asAllDesc">보유주식 전체로 참석</span></div></div><div class="as-rcard" data-rg="shares" data-v="part"><span class="rd"></span><div class="as-rc"><b>일부 주식으로 참석</b><span>참석 주식수를 직접 입력</span></div></div></div><input class="as-inp" id="asPartQty" inputmode="numeric" placeholder="참석 주식수를 입력해 주세요" style="display:none"></div><div class="as-inl"><span class="as-il">현장투표 앱 사용</span><div class="as-radios g12"><label class="as-radio on" data-rg="app1" data-v="use"><span class="rd"></span>사용</label><label class="as-radio" data-rg="app1" data-v="no"><span class="rd"></span>미사용</label></div></div></div></div></div><div class="as-foot"><div class="as-ft"><button class="as-cancel" data-as-close>취소</button><button class="as-ok" data-as-close>현장 참석 등록</button></div><div class="as-mod">마지막 수정 2026-07-17 15:58 · 박지용</div></div></div></div>
 <script>
   // LNB tab switching (설정/사전/당일)
   document.querySelectorAll('.lnb-tabs .t').forEach(function(t){
@@ -554,6 +552,7 @@
   (function(){
     var ov=document.getElementById('asSheet'); if(!ov) return;
     function set(id,v){ document.getElementById(id).textContent=v; }
+    function who(v){ document.getElementById('asProxyRow').style.display=(v==='proxy')?'':'none'; set('asSecLbl',v==='proxy'?'대리인 정보':'참석자 정보'); }
     function pick(el){ var g=el.dataset.rg; ov.querySelectorAll('[data-rg="'+g+'"]').forEach(function(r){r.classList.toggle('on',r===el);}); }
     document.getElementById('atBody').addEventListener('click',function(e){
       if(cur!=='reg') return; var tr=e.target.closest('tr'); if(!tr||tr.classList.contains('atchild')) return;
@@ -566,12 +565,14 @@
       ov.querySelectorAll('[data-rg]').forEach(function(r){ r.classList.toggle('on', r===ov.querySelector('[data-rg="'+r.dataset.rg+'"]')); });
       var pq=document.getElementById('asPartQty'); pq.style.display='none';
       ov.querySelectorAll('.as-inp').forEach(function(i){ i.value=''; });
+      who('self');
       ov.classList.add('show');
     });
     ov.addEventListener('click',function(e){
       if(e.target===ov || e.target.closest('[data-as-close]')){ ov.classList.remove('show'); return; }
       var el=e.target.closest('[data-rg]'); if(!el) return;
       pick(el);
+      if(el.dataset.rg==='who') who(el.dataset.v);
       if(el.dataset.rg==='shares'){ var pq=document.getElementById('asPartQty'); pq.style.display=(el.dataset.v==='part')?'':'none'; if(el.dataset.v==='part') pq.focus(); }
     });
   })();
