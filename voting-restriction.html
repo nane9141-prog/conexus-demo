@@ -437,6 +437,199 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 <script src="cx-data.js"></script>
+<style>
+/* ===== Figma [SC] 의결권제한 설정 (262:52471) 반영 ===== */
+.title-row .sub{font-size:12px;margin-top:4px}
+.btn{height:32px;padding:0 10px;border-radius:10px;text-decoration:none}
+/* 요약 카드 hover 툴팁 */
+.stat{position:relative;border-radius:10px}
+.stat[data-tip]:hover::after{content:attr(data-tip);position:absolute;left:12px;right:12px;top:calc(100% + 6px);z-index:30;
+  background:#171717;color:#fafafa;font-size:12px;line-height:16px;padding:6px 10px;border-radius:8px;box-shadow:var(--shadow-md);pointer-events:none}
+/* 명부 상태 태그 + 확정 버튼 */
+.tsec-head h2{font-size:16px;line-height:24px}
+.tsec-head .desc{font-size:14px;margin-top:2px}
+.st-tag{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:6px;background:#f5f5f5;color:#0a0a0a;font-size:12px;font-weight:500}
+.tsec{gap:12px}
+/* 필터 바: 셀렉트 + 검색 + 칩 */
+.filterbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fsel{position:relative;display:inline-flex;flex:none}
+.fsel select{appearance:none;-webkit-appearance:none;height:32px;min-width:102px;padding:0 30px 0 10px;border:1px solid var(--border);border-radius:10px;
+  background:#fff;font:inherit;font-size:14px;letter-spacing:inherit;color:#0a0a0a;cursor:pointer;outline:none}
+.fsel select:focus{border-color:#a3a3a3}
+.fsel select:invalid{color:#737373}
+.fsel>i{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:14px;color:#737373;pointer-events:none}
+.fsel.full{display:flex;width:100%}.fsel.full select{width:100%}
+.fsearch{display:flex;align-items:center;gap:6px;height:32px;width:242px;padding:0 10px;border:1px solid var(--border);border-radius:10px;background:#fff;flex:none}
+.fsearch i{font-size:16px;color:#737373}
+.fsearch input{flex:1;min-width:0;border:none;outline:none;background:none;font:inherit;font-size:14px;letter-spacing:inherit;color:#0a0a0a}
+.fsearch input::placeholder{color:#737373}
+.filterbar .chips{margin-left:0}
+table.tbl tr.q-out{display:none}
+/* 표: 내부 스크롤 + sticky 헤더/하단 (SC-1-2) */
+.tbl-wrap{border-radius:10px}
+.tbl-scroll{max-height:calc(100vh - 250px);min-height:240px;overflow-y:auto;overflow-x:hidden}
+table.tbl thead th,table.agtbl thead th{position:sticky;top:0;z-index:2}
+table.tbl th{background:#f5f5f5;font-size:14px;font-weight:500;height:46px;padding:0 16px}
+table.tbl td{padding:0 16px;height:46px;border-bottom:1px solid var(--border)}
+/* 통합(그룹) 행 토글 — 열림: 외곽선 ▲ / 닫힘: 검정 ▼ */
+.tw-chevron{width:16px;height:16px;border:1.5px solid #0a0a0a;border-radius:5px;background:#fff;color:#0a0a0a}
+.tw-chevron i{font-size:10px;font-weight:700;transition:transform .15s}
+.tw-chevron.collapsed{background:#0a0a0a;color:#fff}
+.tw-chevron.collapsed i{transform:rotate(180deg)}
+.tw-chevron svg{display:none}
+.voter{gap:10px}
+.voter .tag{background:#f5f5f5;color:#0a0a0a}
+tr.child td{background:#fafafa}
+td.tcell .cv{left:23px}
+/* 3% 해제 / 제한 버튼 */
+.tbtn{height:28px;border-radius:8px;font-size:12px;padding:0 10px}
+.tbtn.on{background:#f5f5f5;border-color:#a3a3a3}
+.tbtn i{font-size:13px}
+/* 빈 상태 (SC-1-4, SC-2-4) */
+.empty{display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:320px;border:1px dashed var(--border);border-radius:10px;background:#fafafa;text-align:center}
+.empty>i{font-size:24px;color:#0a0a0a;margin-bottom:8px}
+.empty .et{font-size:12px;font-weight:600;color:#0a0a0a}
+.empty .ed{font-size:12px;color:#737373}
+.empty .btn{height:24px;font-size:12px;padding:0 8px;border-radius:8px;margin-top:8px;text-decoration:none}
+.content.is-empty .stats,.content.is-empty .tsec,.content.is-empty .agkpis{display:none!important}
+.content.is-empty:not(.agmode) .empty.sh{display:flex}
+.content.is-empty.agmode .empty.ag{display:flex}
+/* 의안 기준 — 상단 요약 카드 3개 */
+.agk{background:#fff;min-height:124px;padding:16px;border-radius:10px}
+.agk .kt{font-size:14px;line-height:20px}
+.agk .kd{font-size:12px;line-height:16px;margin-top:2px}
+.agk .kv{font-size:18px}
+.agk .kb{border-radius:6px}
+/* 의안 목록 표 */
+table.agtbl thead th{background:#f5f5f5}
+table.agtbl tbody tr.sub td{background:#fafafa}
+table.agtbl td .agno{display:inline-block;position:relative}
+table.agtbl tr.lv1 td:first-child{padding-left:52px;color:#737373}
+table.agtbl tr.lv2 td:first-child{padding-left:72px;color:#737373}
+table.agtbl tr.lv1 td:first-child,table.agtbl tr.lv2 td:first-child{background-image:linear-gradient(#e5e5e5,#e5e5e5);background-size:1px 100%;background-repeat:no-repeat;background-position:36px 0}
+table.agtbl tr.lv2 td:first-child{background-image:linear-gradient(#e5e5e5,#e5e5e5),linear-gradient(#e5e5e5,#e5e5e5);background-size:1px 100%,1px 100%;background-position:36px 0,56px 0}
+table.agtbl td.b{font-weight:600}
+.gtag{display:inline-flex;align-items:center;height:20px;padding:0 6px;border-radius:6px;background:#f5f5f5;color:#0a0a0a;font-size:12px;font-weight:500;margin-left:8px;vertical-align:middle}
+.setbtn{height:28px;border-radius:8px;gap:4px}
+.setbtn i{font-size:13px}
+.setbtn.on{background:#f5f5f5;border-color:#a3a3a3}
+/* 사이드 시트 공통 (Figma: 32px 컨트롤, 10px 라운드) */
+.sheet-head{padding:16px 16px 0}
+.sheet-head .sdesc{font-size:12px;margin-top:2px;line-height:16px}
+.sheet-body{padding:16px}
+.sheet-foot{padding:12px 16px 16px;border-top:none;gap:12px}
+.sheet-foot .primary,.sheet-cancel{height:32px;font-weight:500}
+.sheet-foot .primary:disabled{opacity:.5;cursor:default}
+.field-select{height:32px;padding:0 8px 0 10px}
+.field-label{font-size:14px;margin-bottom:8px}
+.rv-card{border-radius:10px;padding:12px}
+.rv-tabs{margin-top:24px}
+.rv-tab{height:32px}
+.rinfo{display:flex;gap:8px;align-items:flex-start;margin-top:8px;padding:8px 10px;border:1px solid #d4e8ff;background:#f5f9ff;border-radius:10px;color:#0071f3;font-size:12px;line-height:16px}
+.rinfo i{font-size:16px;flex:none}
+.rinfo b{font-weight:600}
+.rinfo[hidden]{display:none}
+.rsn-input{min-height:64px;padding:8px 10px;font-size:14px}
+.rsn-add{height:32px;padding:0 10px;border-radius:10px;font-weight:500;margin-top:8px}
+.rsn-add:disabled{opacity:.5;cursor:default}
+.rsn-item{border-radius:10px;padding:10px 12px}
+.rsn-meta{font-size:12px}
+.rsn-acts button{font-size:12px}
+/* 특수관계인 탭 */
+.relrow{display:flex;gap:8px;position:relative}
+.relrow .fsearch{flex:1;width:auto}
+.srch-res{position:absolute;top:36px;right:0;z-index:20;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-md);padding:4px;max-height:260px;overflow:auto}
+.srch-res[hidden]{display:none}
+.srch-res .it{display:flex;flex-direction:column;align-items:flex-start;width:100%;padding:6px 8px;border-radius:8px;text-align:left}
+.srch-res .it:hover{background:var(--muted)}
+.srch-res .it b{font-size:14px;font-weight:600;color:#0a0a0a}
+.srch-res .it span{font-size:12px;color:#737373}
+.srch-res .it.dis{cursor:default}.srch-res .it.dis:hover{background:none}
+.srch-res .it.dis b{color:#737373;font-weight:500}.srch-res .it.dis span{color:#0071f3}
+.srch-res .none{padding:10px;font-size:12px;color:#737373}
+.rel-list{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.rel-card{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:#fafafa}
+.rel-card .rc-t{flex:1;min-width:0}
+.rel-card b{display:block;font-size:14px;font-weight:600}
+.rel-card span{font-size:12px;color:#737373}
+.icbtn{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#737373;flex:none}
+.icbtn:hover{background:var(--muted);color:#0a0a0a}
+.icbtn i{font-size:16px}
+/* 이전 설정 불러오기 */
+.lcard{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--border);border-radius:10px;cursor:pointer;margin-top:8px}
+.lcard:has(input:checked){background:#f5f5f5;border-color:#a3a3a3}
+.lcard input{width:16px;height:16px;margin-top:2px;accent-color:#171717;flex:none;cursor:pointer}
+.lcard b{display:block;font-size:14px;font-weight:600;line-height:20px}
+.lcard small{display:block;font-size:12px;color:#737373;line-height:16px;margin-top:2px}
+.lnote{font-size:12px;color:#737373;margin-top:12px}
+/* 다이얼로그 (Alert / 3% 해제) — 시트 위로 */
+.adlg-ov{z-index:500}
+.adlg-media i{font-size:22px}
+.adlg-media.danger{background:#fdf4f5;color:#e9081b}
+.adlg-desc b{display:block;color:#0a0a0a;font-weight:400}
+.adlg-meta{font-size:12px;color:#0a0a0a;text-align:center;margin-top:10px}
+.adlg-meta:empty{display:none}
+.adlg-foot .confirm.danger{background:#fdf4f5;color:#e9081b}
+.adlg-foot .confirm.danger:hover{background:#fbe5e7}
+.xdlg{width:360px;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.xdlg-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.xdlg-hd span{font-size:16px;font-weight:600}
+.xdlg .req{color:#e9081b;margin-left:2px}
+.xdlg .field-label{margin-bottom:0}
+.xdlg-ft{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.btn-o,.btn-d{height:32px;padding:0 10px;border-radius:10px;font-size:14px;font-weight:500}
+.btn-o{border:1px solid var(--border);background:#fff}.btn-o:hover{background:var(--muted)}
+.btn-d{background:#171717;color:#fafafa}.btn-d:hover{background:#000}
+.btn-d:disabled{opacity:.5;cursor:default}
+/* 의안 기준 패널 */
+.agset{width:950px}
+.agset-banner .ab-no{font-weight:500}
+.ab-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid #e5e5e5}
+.ab-stats span{display:block;font-size:12px;color:#737373;line-height:16px}
+.ab-stats b{display:block;font-size:14px;font-weight:600;margin-top:6px;font-variant-numeric:tabular-nums}
+.agset-search-row{position:relative;max-width:494px}
+.agset-search-row .fsel select{min-width:148px}
+.agcard{max-width:494px;border:1px solid #0a0a0a;border-radius:10px;overflow:hidden}
+.agcard[hidden]{display:none}
+.agcard-hd{display:flex;align-items:center;gap:8px;padding:10px 8px 10px 16px;background:#fafafa;border-bottom:1px solid var(--border)}
+.agcard-hd b{font-size:14px;font-weight:600}
+.agcard-hd span{flex:1;font-size:14px;color:#737373}
+.agcard-bd{padding:12px 16px 16px;display:flex;flex-direction:column;gap:8px}
+.agcard-bd .field-label{margin:4px 0 0}
+.condbox{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:10px;background:#f5f5f5}
+.condbox label{display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+.condbox input{width:16px;height:16px;margin-top:2px;accent-color:#171717}
+.condbox b{display:block;font-size:14px;font-weight:500}
+.condbox small{display:block;font-size:12px;color:#737373}
+.inrow{display:flex;align-items:center;gap:8px}
+.inrow .unit{font-size:14px;color:#737373}
+.numin{height:32px;width:100px;padding:0 10px;border:1px solid var(--border);border-radius:10px;font:inherit;font-size:14px;outline:none;text-align:left}
+.numin:focus,.agcard textarea:focus{border-color:#a3a3a3}
+.agcard textarea{min-height:64px;padding:8px 10px;border:1px solid var(--border);border-radius:10px;font:inherit;font-size:14px;resize:vertical;outline:none}
+.agcard .btn-d{align-self:flex-start;margin-top:4px}
+.lim-hd{display:flex;align-items:center;justify-content:space-between}
+.sw-lbl{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#0a0a0a;cursor:pointer}
+.sw{width:24px;height:14px;border-radius:9999px;background:#e5e5e5;position:relative;flex:none;transition:background .15s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:#fff;transition:left .15s}
+.sw.on{background:#171717}.sw.on::after{left:12px}
+.agset-tbl thead th{background:#f5f5f5;font-size:14px}
+.agset-tbl td{height:46px;white-space:nowrap}
+.agset-tbl td.n{color:#737373}
+.agset-tbl td.n.b{color:#0a0a0a;font-weight:600}
+.agset-tbl td.rsn{max-width:220px;overflow:hidden;text-overflow:ellipsis}
+.agset-tbl td.rsn .m{color:#737373}
+.agset-tbl tr.kid td{background:#fafafa}
+.agset-tbl tr.kid td:first-child{background-image:linear-gradient(#e5e5e5,#e5e5e5);background-size:1px 100%;background-repeat:no-repeat;background-position:24px 0}
+.agset-tbl th.ck,.agset-tbl td.ck{width:44px;padding:0 0 0 16px}
+.agset-tbl .tw-chevron{display:inline-flex;align-items:center;justify-content:center}
+.srcb{display:inline-flex;align-items:center;height:20px;padding:0 6px;border-radius:6px;background:#f5f5f5;color:#0a0a0a;font-size:12px;font-weight:500}
+.srcb.add{background:#ebf4ff;color:#0071f3}
+.agset-acts .icbtn{width:28px;height:28px}
+.agset-tbl tfoot td{background:#f5f5f5}
+.agset-save:disabled{opacity:.5}
+#acEtc{display:flex;flex-direction:column;gap:8px}
+.agset [hidden],.sheet [hidden],.btn[hidden]{display:none!important}
+</style>
 </head>
 <body>
 <div class="app" id="app">
@@ -554,7 +747,8 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     </div>
 
     <div class="scroll">
-      <div class="content">
+      <!-- 데모 상태: ?roster=pending → 명부 확정필요, ?empty=1 → 빈 상태 -->
+      <div class="content" id="vrContent">
 
         <!-- title -->
         <div class="title-row">
@@ -567,42 +761,56 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 
         <!-- 기준 toggle -->
         <div class="seg">
-          <div class="s active">주주 기준</div>
-          <div class="s">의안 기준</div>
+          <div class="s active" data-mode="sh">주주 기준</div>
+          <div class="s" data-mode="ag">의안 기준</div>
         </div>
 
-        <!-- stat cards -->
+        <!-- 주주 기준: 빈 상태 -->
+        <div class="empty sh">
+          <i class="ph ph-address-book"></i>
+          <div class="et">주주 데이터가 없습니다</div>
+          <div class="ed">주주명부를 먼저 확정해 주세요</div>
+          <a class="btn" href="shareholders.html">주주명부 확정하기</a>
+        </div>
+
+        <!-- stat cards (hover 툴팁) -->
         <div class="stats sh-only">
-          <div class="stat"><div class="lab">자사주</div><div class="val"><span class="sh tnum">1,823주</span><span class="cnt tnum">1명</span></div></div>
-          <div class="stat"><div class="lab">상호주</div><div class="val"><span class="sh tnum">640,900주</span><span class="cnt tnum">2명</span></div></div>
-          <div class="stat"><div class="lab">무효주</div><div class="val"><span class="sh tnum">42,180주</span><span class="cnt tnum">1명</span></div></div>
-          <div class="stat"><div class="lab">최대주주</div><div class="val"><span class="sh tnum">502,340주</span><span class="cnt tnum">2명</span></div></div>
-          <div class="stat"><div class="lab">공익법인(포함)</div><div class="val"><span class="sh tnum">433,580주</span><span class="cnt tnum">1명</span></div></div>
-          <div class="stat"><div class="lab">공익법인(제외)</div><div class="val"><span class="sh tnum">273,513주</span><span class="cnt tnum">1명</span></div></div>
-          <div class="stat"><div class="lab">금융보험사</div><div class="val"><span class="sh tnum">167,473주</span><span class="cnt tnum">3명</span></div></div>
+          <div class="stat" data-tip="회사가 보유한 자기 주식으로 의결권이 없는 주주"><div class="lab">자사주</div><div class="val"><span class="sh tnum">1,823주</span><span class="cnt tnum">1명</span></div></div>
+          <div class="stat" data-tip="두 회사가 서로의 주식을 보유하는 관계로 의결권이 없는 주주"><div class="lab">상호주</div><div class="val"><span class="sh tnum">640,900주</span><span class="cnt tnum">2명</span></div></div>
+          <div class="stat" data-tip="법적 사유 또는 기타 사유로 의결권 행사가 제한되는 주주"><div class="lab">무효주</div><div class="val"><span class="sh tnum">42,180주</span><span class="cnt tnum">1명</span></div></div>
+          <div class="stat" data-tip="가장 많은 주식을 보유한 주주"><div class="lab">최대주주</div><div class="val"><span class="sh tnum">502,340주</span><span class="cnt tnum">2명</span></div></div>
+          <div class="stat" data-tip="공익을 목적으로 설립된 법인"><div class="lab">공익법인(포함)</div><div class="val"><span class="sh tnum">433,580주</span><span class="cnt tnum">1명</span></div></div>
+          <div class="stat" data-tip="공익을 목적으로 설립된 법인"><div class="lab">공익법인(제외)</div><div class="val"><span class="sh tnum">273,513주</span><span class="cnt tnum">1명</span></div></div>
+          <div class="stat" data-tip="금융 및 보험 관련 사업을 하는 회사"><div class="lab">금융보험사</div><div class="val"><span class="sh tnum">167,473주</span><span class="cnt tnum">3명</span></div></div>
         </div>
 
         <!-- table section -->
         <div class="tsec sh-only">
           <div class="tsec-head">
             <div>
-              <div class="htitle"><h2>주주명부 (2026-01-31)</h2><span class="pill-blue"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>명부확정</span></div>
+              <div class="htitle"><h2>주주명부 (2026-01-31)</h2><span class="st-tag" id="rosterTag">확정완료</span></div>
               <div class="desc">제한 유형을 지정하면 해당 주주의 전체 주식이 모든 의안에서 의결권 제외됩니다.</div>
+            </div>
+            <a class="btn" id="confirmRosterBtn" href="shareholders.html" hidden>주주명부 확정하기</a>
+          </div>
+
+          <div class="filterbar">
+            <div class="fsel"><select id="shField"><option value="0">투표권자</option><option value="1">주주명</option><option value="2">주주번호</option></select><i class="ph ph-caret-down"></i></div>
+            <div class="fsearch"><i class="ph ph-magnifying-glass"></i><input type="text" id="shSearch" placeholder="투표권자를 검색해 주세요" autocomplete="off"></div>
+            <div class="chips">
+              <button class="chip active">전체 <span class="c">14</span></button>
+              <button class="chip">자사주 <span class="c">1</span></button>
+              <button class="chip">상호주 <span class="c">2</span></button>
+              <button class="chip">무효주 <span class="c">1</span></button>
+              <button class="chip">최대주주 <span class="c">2</span></button>
+              <button class="chip">공익법인(포함) <span class="c">1</span></button>
+              <button class="chip">공익법인(제외) <span class="c">1</span></button>
+              <button class="chip">금융보험사 <span class="c">3</span></button>
             </div>
           </div>
 
-          <div class="chips">
-            <button class="chip active">전체 <span class="c">14</span></button>
-            <button class="chip">자사주 <span class="c">1</span></button>
-            <button class="chip">상호주 <span class="c">2</span></button>
-            <button class="chip">무효주 <span class="c">1</span></button>
-            <button class="chip">최대주주 <span class="c">2</span></button>
-            <button class="chip">공익법인(포함) <span class="c">1</span></button>
-            <button class="chip">공익법인(제외) <span class="c">1</span></button>
-            <button class="chip">금융보험사 <span class="c">3</span></button>
-          </div>
-
           <div class="tbl-wrap">
+            <div class="tbl-scroll">
             <table class="tbl">
               <colgroup>
                 <col style="width:20%"><col style="width:15%"><col style="width:15%">
@@ -613,165 +821,182 @@ a.nav-item{text-decoration:none;color:var(--fg)}
                 <tr>
                   <th>투표권자</th><th>주주명</th><th>주주번호</th>
                   <th class="r">보유주식</th><th class="r">지분율</th>
-                  <th>의결권제한</th><th>특수관계인</th><th>3%제한 해제</th>
+                  <th>의결권제한</th><th>특수관계인</th><th>3% 제한 해제</th>
                 </tr>
               </thead>
               <tbody>
-                <!-- 정찰리 (단일) -->
                 <tr>
-                  <td><div class="voter" style="padding-left:38px">정찰리</div></td>
+                  <td><div class="voter">정찰리</div></td>
                   <td>정찰리</td><td class="sub">6820451</td>
                   <td class="r tnum">350,040</td><td class="r tnum sub">5.14%</td>
-                  <td><button class="tbtn" data-restrict data-type="최대주주"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>최대주주</button></td>
+                  <td><button class="tbtn on" data-restrict data-type="최대주주"><i class="ph ph-check"></i>최대주주</button></td>
                   <td><button class="tbtn" data-rel data-count="0">관계인 설정</button></td>
-                  <td><button class="tbtn" data-exempt data-on="0">해제하기</button></td>
+                  <td><button class="tbtn" data-exempt data-ex="">해제하기</button></td>
                 </tr>
-                <!-- 우리사주 -->
                 <tr>
-                  <td><div class="voter" style="padding-left:38px">우리사주</div></td>
+                  <td><div class="voter">우리사주</div></td>
                   <td>우리사주</td><td class="sub">7603251</td>
                   <td class="r tnum">1,823</td><td class="r tnum sub">5.14%</td>
-                  <td><button class="tbtn" data-restrict data-type="자사주"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>자사주</button></td>
+                  <td><button class="tbtn on" data-restrict data-type="자사주"><i class="ph ph-check"></i>자사주</button></td>
                   <td><button class="tbtn off" disabled>관계인 설정</button></td>
-                  <td><button class="tbtn" data-exempt data-on="1"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>해제됨</button></td>
+                  <td><button class="tbtn on" data-exempt data-ex="우리사주조합"><i class="ph ph-check"></i>우리사주조합</button></td>
                 </tr>
-                <!-- 아이알큐더스 -->
                 <tr>
-                  <td><div class="voter" style="padding-left:38px">김민주</div></td>
+                  <td><div class="voter">김민주</div></td>
                   <td>김민주</td><td class="sub">00036827878747898</td>
                   <td class="r tnum">10,503</td><td class="r tnum sub">5.14%</td>
                   <td><button class="tbtn" data-restrict data-type="">제한 설정</button></td>
                   <td><button class="tbtn" data-rel data-count="0">관계인 설정</button></td>
-                  <td><button class="tbtn" data-exempt data-on="0">해제하기</button></td>
+                  <td><button class="tbtn" data-exempt data-ex="">해제하기</button></td>
                 </tr>
-                <!-- 한국투자신탁운용 (통합 3건) -->
                 <tr class="grp" data-grp="hti">
-                  <td><div class="voter"><button class="tw-chevron collapsed" data-toggle="hti"><svg class="ic" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button><span class="vname">한국투자신탁운용</span></div></td>
-                  <td><span class="tag">통합 3건</span></td><td></td>
+                  <td><div class="voter"><button class="tw-chevron collapsed" data-toggle="hti" title="펼치기/접기"><i class="ph ph-caret-up"></i></button><span class="vname">한국투자신탁운용</span><span class="tag">통합 3건</span></div></td>
+                  <td></td><td></td>
                   <td class="r tnum">273,513</td><td class="r tnum sub">5.14%</td>
-                  <td><button class="tbtn" data-restrict data-type="공익법인(제외)"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>공익법인(제외)</button></td>
-                  <td><button class="tbtn" data-rel data-count="12"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>12명</button></td>
-                  <td><button class="tbtn" data-exempt data-on="0">해제하기</button></td>
+                  <td><button class="tbtn on" data-restrict data-type="공익법인(제외)"><i class="ph ph-check"></i>공익법인(제외)</button></td>
+                  <td><button class="tbtn on" data-rel data-count="12"><i class="ph ph-check"></i>12명</button></td>
+                  <td><button class="tbtn" data-exempt data-ex="">해제하기</button></td>
                 </tr>
-                <tr class="child hidden" data-child="hti"><td class="tcell"><span class="cv"></span><span class="ch"></span></td><td>한국투자신탁운용 제 1호</td><td class="sub">378742234</td><td class="r tnum">56,723</td><td class="r tnum sub">5.14%</td><td></td><td></td><td></td></tr>
-                <tr class="child hidden" data-child="hti"><td class="tcell"><span class="cv"></span><span class="ch"></span></td><td>한국투자신탁운용 제 2호</td><td class="sub">378742235</td><td class="r tnum">160,067</td><td class="r tnum sub">5.14%</td><td></td><td></td><td></td></tr>
-                <tr class="child hidden" data-child="hti"><td class="tcell"><span class="cv"></span><span class="ch"></span></td><td>한국투자신탁운용 제 3호</td><td class="sub">378742236</td><td class="r tnum">56,723</td><td class="r tnum sub">5.14%</td><td></td><td></td><td></td></tr>
-                <!-- 교직원공제회 (통합 4건) -->
+                <tr class="child hidden" data-child="hti"><td class="tcell"><span class="cv"></span></td><td>한국투자신탁운용 제 1호</td><td class="sub">378742234</td><td class="r tnum">56,723</td><td class="r tnum sub">5.14%</td><td></td><td></td><td></td></tr>
+                <tr class="child hidden" data-child="hti"><td class="tcell"><span class="cv"></span></td><td>한국투자신탁운용 제 2호</td><td class="sub">378742235</td><td class="r tnum">160,067</td><td class="r tnum sub">5.14%</td><td></td><td></td><td></td></tr>
+                <tr class="child hidden" data-child="hti"><td class="tcell"><span class="cv"></span></td><td>한국투자신탁운용 제 3호</td><td class="sub">378742236</td><td class="r tnum">56,723</td><td class="r tnum sub">5.14%</td><td></td><td></td><td></td></tr>
                 <tr class="grp" data-grp="ktu">
-                  <td><div class="voter"><button class="tw-chevron collapsed" data-toggle="ktu"><svg class="ic" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button><span class="vname">교직원공제회</span></div></td>
-                  <td><span class="tag">통합 4건</span></td><td></td>
+                  <td><div class="voter"><button class="tw-chevron collapsed" data-toggle="ktu" title="펼치기/접기"><i class="ph ph-caret-up"></i></button><span class="vname">교직원공제회</span><span class="tag">통합 4건</span></div></td>
+                  <td></td><td></td>
                   <td class="r tnum">433,580</td><td class="r tnum sub">5.14%</td>
-                  <td><button class="tbtn" data-restrict data-type="공익법인(포함)"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>공익법인(포함)</button></td>
-                  <td><button class="tbtn" data-rel data-count="4"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>4명</button></td>
-                  <td><button class="tbtn" data-exempt data-on="0">해제하기</button></td>
+                  <td><button class="tbtn on" data-restrict data-type="공익법인(포함)"><i class="ph ph-check"></i>공익법인(포함)</button></td>
+                  <td><button class="tbtn on" data-rel data-count="4"><i class="ph ph-check"></i>4명</button></td>
+                  <td><button class="tbtn" data-exempt data-ex="">해제하기</button></td>
                 </tr>
-                <tr class="child hidden" data-child="ktu"><td class="tcell"><span class="cv"></span><span class="ch"></span></td><td>교직원공제회 제 1호</td><td class="sub">441002201</td><td class="r tnum">56,723</td><td class="r tnum sub">5.14%</td><td></td><td></td><td></td></tr>
-                <tr class="child hidden" data-child="ktu"><td class="tcell"><span class="cv"></span><span class="ch"></span></td><td>교직원공제회 제 2호</td><td class="sub">441002202</td><td class="r tnum">160,067</td><td class="r tnum sub">5.14%</td><td></td><td></td><td></td></tr>
-                <tr class="child hidden" data-child="ktu"><td class="tcell"><span class="cv"></span><span class="ch"></span></td><td>교직원공제회 제 3호</td><td class="sub">441002203</td><td class="r tnum">56,723</td><td class="r tnum sub">5.14%</td><td></td><td></td><td></td></tr>
-                <tr class="child hidden" data-child="ktu"><td class="tcell"><span class="cv"></span><span class="ch"></span></td><td>교직원공제회 제 4호</td><td class="sub">441002204</td><td class="r tnum">160,067</td><td class="r tnum sub">5.14%</td><td></td><td></td><td></td></tr>
-                <!-- ADR -->
+                <tr class="child hidden" data-child="ktu"><td class="tcell"><span class="cv"></span></td><td>교직원공제회 제 1호</td><td class="sub">441002201</td><td class="r tnum">56,723</td><td class="r tnum sub">5.14%</td><td></td><td></td><td></td></tr>
+                <tr class="child hidden" data-child="ktu"><td class="tcell"><span class="cv"></span></td><td>교직원공제회 제 2호</td><td class="sub">441002202</td><td class="r tnum">160,067</td><td class="r tnum sub">5.14%</td><td></td><td></td><td></td></tr>
+                <tr class="child hidden" data-child="ktu"><td class="tcell"><span class="cv"></span></td><td>교직원공제회 제 3호</td><td class="sub">441002203</td><td class="r tnum">56,723</td><td class="r tnum sub">5.14%</td><td></td><td></td><td></td></tr>
+                <tr class="child hidden" data-child="ktu"><td class="tcell"><span class="cv"></span></td><td>교직원공제회 제 4호</td><td class="sub">441002204</td><td class="r tnum">160,067</td><td class="r tnum sub">5.14%</td><td></td><td></td><td></td></tr>
                 <tr>
-                  <td><div class="voter" style="padding-left:38px">ADR</div></td>
+                  <td><div class="voter">ADR</div></td>
                   <td>ADR</td><td class="sub">7603251</td>
                   <td class="r tnum">1,823</td><td class="r tnum sub">5.14%</td>
-                  <td><button class="tbtn" data-restrict data-type="금융보험사"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>금융보험사</button></td>
+                  <td><button class="tbtn on" data-restrict data-type="금융보험사"><i class="ph ph-check"></i>금융보험사</button></td>
                   <td><button class="tbtn off" disabled>관계인 설정</button></td>
-                  <td><button class="tbtn" data-exempt data-on="1"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>해제됨</button></td>
+                  <td><button class="tbtn on" data-exempt data-ex="ADR"><i class="ph ph-check"></i>ADR</button></td>
                 </tr>
-                <!-- 케이비증권 (무효주) -->
                 <tr>
-                  <td><div class="voter" style="padding-left:38px">김도윤</div></td>
+                  <td><div class="voter">김도윤</div></td>
                   <td>김도윤</td><td class="sub">8123441</td>
                   <td class="r tnum">42,180</td><td class="r tnum sub">0.62%</td>
-                  <td><button class="tbtn" data-restrict data-type="무효주"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>무효주</button></td>
+                  <td><button class="tbtn on" data-restrict data-type="무효주"><i class="ph ph-check"></i>무효주</button></td>
                   <td><button class="tbtn off" disabled>관계인 설정</button></td>
-                  <td><button class="tbtn" data-exempt data-on="0">해제하기</button></td>
+                  <td><button class="tbtn" data-exempt data-ex="">해제하기</button></td>
                 </tr>
-                <!-- 신한지주 (상호주) -->
                 <tr>
-                  <td><div class="voter" style="padding-left:38px">이서준</div></td>
+                  <td><div class="voter">이서준</div></td>
                   <td>이서준</td><td class="sub">7742093</td>
                   <td class="r tnum">128,900</td><td class="r tnum sub">1.89%</td>
-                  <td><button class="tbtn" data-restrict data-type="상호주"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>상호주</button></td>
+                  <td><button class="tbtn on" data-restrict data-type="상호주"><i class="ph ph-check"></i>상호주</button></td>
                   <td><button class="tbtn off" disabled>관계인 설정</button></td>
-                  <td><button class="tbtn" data-exempt data-on="0">해제하기</button></td>
+                  <td><button class="tbtn" data-exempt data-ex="">해제하기</button></td>
                 </tr>
                 <tr>
-                  <td><div class="voter" style="padding-left:38px">존슨리</div></td>
+                  <td><div class="voter">존슨리</div></td>
                   <td>존슨리</td><td class="sub">00047382910</td>
                   <td class="r tnum">152,300</td><td class="r tnum sub">2.24%</td>
-                  <td><button class="tbtn" data-restrict data-type="최대주주"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>최대주주</button></td>
+                  <td><button class="tbtn on" data-restrict data-type="최대주주"><i class="ph ph-check"></i>최대주주</button></td>
                   <td><button class="tbtn" data-rel data-count="0">관계인 설정</button></td>
-                  <td><button class="tbtn" data-exempt data-on="0">해제하기</button></td>
+                  <td><button class="tbtn" data-exempt data-ex="">해제하기</button></td>
                 </tr>
                 <tr>
-                  <td><div class="voter" style="padding-left:38px">국민연금공단</div></td>
+                  <td><div class="voter">국민연금공단</div></td>
                   <td>국민연금공단</td><td class="sub">11002938</td>
                   <td class="r tnum">421,900</td><td class="r tnum sub">6.19%</td>
                   <td><button class="tbtn" data-restrict data-type="">제한 설정</button></td>
                   <td><button class="tbtn" data-rel data-count="0">관계인 설정</button></td>
-                  <td><button class="tbtn" data-exempt data-on="0">해제하기</button></td>
+                  <td><button class="tbtn" data-exempt data-ex="">해제하기</button></td>
                 </tr>
                 <tr>
-                  <td><div class="voter" style="padding-left:38px">김도현</div></td>
+                  <td><div class="voter">김도현</div></td>
                   <td>김도현</td><td class="sub">66218847</td>
                   <td class="r tnum">98,450</td><td class="r tnum sub">1.44%</td>
-                  <td><button class="tbtn" data-restrict data-type="금융보험사"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>금융보험사</button></td>
+                  <td><button class="tbtn on" data-restrict data-type="금융보험사"><i class="ph ph-check"></i>금융보험사</button></td>
                   <td><button class="tbtn" data-rel data-count="0">관계인 설정</button></td>
-                  <td><button class="tbtn" data-exempt data-on="0">해제하기</button></td>
+                  <td><button class="tbtn" data-exempt data-ex="">해제하기</button></td>
                 </tr>
                 <tr>
-                  <td><div class="voter" style="padding-left:38px">이수민</div></td>
+                  <td><div class="voter">이수민</div></td>
                   <td>이수민</td><td class="sub">77120934</td>
                   <td class="r tnum">67,200</td><td class="r tnum sub">0.99%</td>
-                  <td><button class="tbtn" data-restrict data-type="금융보험사"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>금융보험사</button></td>
+                  <td><button class="tbtn on" data-restrict data-type="금융보험사"><i class="ph ph-check"></i>금융보험사</button></td>
                   <td><button class="tbtn off" disabled>관계인 설정</button></td>
-                  <td><button class="tbtn" data-exempt data-on="1"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>해제됨</button></td>
+                  <td><button class="tbtn on" data-exempt data-ex="우리사주조합"><i class="ph ph-check"></i>우리사주조합</button></td>
                 </tr>
                 <tr>
-                  <td><div class="voter" style="padding-left:38px">카카오</div></td>
+                  <td><div class="voter">카카오</div></td>
                   <td>카카오</td><td class="sub">20250110</td>
                   <td class="r tnum">512,000</td><td class="r tnum sub">7.51%</td>
-                  <td><button class="tbtn" data-restrict data-type="상호주"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>상호주</button></td>
+                  <td><button class="tbtn on" data-restrict data-type="상호주"><i class="ph ph-check"></i>상호주</button></td>
                   <td><button class="tbtn off" disabled>관계인 설정</button></td>
-                  <td><button class="tbtn" data-exempt data-on="0">해제하기</button></td>
+                  <td><button class="tbtn" data-exempt data-ex="">해제하기</button></td>
                 </tr>
                 <tr>
-                  <td><div class="voter" style="padding-left:38px">정해인</div></td>
+                  <td><div class="voter">정해인</div></td>
                   <td>정해인</td><td class="sub">88293011</td>
                   <td class="r tnum">33,180</td><td class="r tnum sub">0.49%</td>
                   <td><button class="tbtn" data-restrict data-type="">제한 설정</button></td>
-                  <td><button class="tbtn" data-rel data-count="3"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>3명</button></td>
-                  <td><button class="tbtn" data-exempt data-on="0">해제하기</button></td>
+                  <td><button class="tbtn on" data-rel data-count="3"><i class="ph ph-check"></i>3명</button></td>
+                  <td><button class="tbtn" data-exempt data-ex="">해제하기</button></td>
                 </tr>
               </tbody>
             </table>
+            </div>
             <div class="tfoot">
               <span class="cnt tnum">총 82명 · 510,356,025주</span>
               <div class="pager">
-                <button class="pb"><svg class="ic" viewBox="0 0 24 24"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg></button>
-                <button class="pb"><svg class="ic" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+                <button class="pb"><i class="ph ph-caret-double-left"></i></button>
+                <button class="pb"><i class="ph ph-caret-left"></i></button>
                 <span class="cur">1</span>
-                <button class="pb"><svg class="ic" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
-                <button class="pb"><svg class="ic" viewBox="0 0 24 24"><path d="m6 17 5-5-5-5"/><path d="m13 17 5-5-5-5"/></svg></button>
+                <button class="pb"><i class="ph ph-caret-right"></i></button>
+                <button class="pb"><i class="ph ph-caret-double-right"></i></button>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- ===== 의안 기준 ===== -->
+        <div class="empty ag">
+          <i class="ph ph-file-dashed"></i>
+          <div class="et">등록된 의안이 없습니다</div>
+          <div class="ed">의안 설정을 완료하면 의결권 제한을 설정할 수 있습니다</div>
+        </div>
         <div class="ag-only" id="panelAG">
           <div class="agkpis">
-            <div class="agk"><div><div class="kt">발행주식총수</div><div class="kd">전체 발행 주식 (자사주·상호주 포함)</div></div><div class="krow"><span class="kb">기준</span><span class="kv">300,000,000</span></div></div>
-            <div class="agk"><div><div class="kt">의결권 있는 주식수</div><div class="kd">발행주식총수 - 법적 의결권 없는 주식(자사주·상호주 등)</div></div><div class="krow"><span class="kb">기준</span><span class="kv">297,000,000</span></div></div>
-            <div class="agk"><div><div class="kt">3%룰 (의결권 상한)</div><div class="kd">(발행주식총수 - 의결권 없는 주식) × 3%</div></div><div class="krow"><span class="kb">기준</span><span class="kv">8,910,000</span></div></div>
-            <div class="agk"><div><div class="kt">총 제한 주식수</div><div class="kd">안건별 사유(3%룰, 특별이해관계 등)로 제한된 주식 총합</div></div><div class="krow"><span class="kb">기준</span><span class="kv">18,900,000</span></div></div>
-            <div class="agk hl"><div><div class="kt"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0071F3" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>총 행사 가능 주식수</div><div class="kd">의결권 있는 주식수 - 총 제한 주식수 (실제 투표 가능 수)</div></div><div class="krow"><span class="kb">93.6%</span><span class="kv">278,100,000</span></div></div>
+            <div class="agk"><div><div class="kt">발행주식총수</div><div class="kd">전체 발행 주식 (자사주·상호주 포함)</div></div><div class="krow"><span class="kv">241,834</span></div></div>
+            <div class="agk"><div><div class="kt">의결권 있는 주식수</div><div class="kd">발행주식총수 - 법적 의결권 없는 주식(자사주·상호주 등)</div></div><div class="krow"><span class="kb">-10,003</span><span class="kv">231,831</span></div></div>
+            <div class="agk"><div><div class="kt">3%룰 (의결권 상한)</div><div class="kd">(발행주식총수 - 의결권 없는 주식) × 3%</div></div><div class="krow"><span class="kb">× 3% 상한</span><span class="kv">6,954</span></div></div>
           </div>
-          <div class="agtbl-wrap">
-            <table class="agtbl">
-              <thead><tr><th>구분</th><th>의안명</th><th class="n">발행주식총수</th><th class="n">의결권주식수</th><th class="n">행사가능주식수</th><th class="c">설정</th></tr></thead>
-              <tbody><tr><td class="mut">제1호</td><td>재무제표 승인의 건<span class="rbadge2 neutral">보통결의</span></td><td class="n">300,000,000</td><td class="n">297,000,000</td><td class="n">288,090,000</td><td class="c"><button class="setbtn" type="button">설정</button></td></tr><tr><td class="mut">제2-1호</td><td>집중투표 배제 조항 삭제의 건<span class="rbadge2 neutral">특별결의</span></td><td class="n">300,000,000</td><td class="n">297,000,000</td><td class="n">278,100,000</td><td class="c"><button class="setbtn" type="button">설정</button></td></tr><tr><td class="mut">제2-2호</td><td>전자주주총회 도입의 건<span class="rbadge2 neutral">특별결의</span></td><td class="n">300,000,000</td><td class="n">297,000,000</td><td class="n">278,100,000</td><td class="c"><button class="setbtn" type="button">설정</button></td></tr><tr><td class="mut">제2-3호</td><td>대리행사 수단 확대의 건<span class="rbadge2 neutral">특별결의</span></td><td class="n">300,000,000</td><td class="n">297,000,000</td><td class="n">278,100,000</td><td class="c"><button class="setbtn" type="button">설정</button></td></tr><tr><td class="mut">제3-1호</td><td>사외이사 선임의 건<span class="rbadge2 neutral">보통결의</span></td><td class="n">300,000,000</td><td class="n">297,000,000</td><td class="n">288,090,000</td><td class="c"><button class="setbtn" type="button">설정</button></td></tr><tr><td class="mut">제3-2호</td><td>감사위원이 되는 사외이사 선임의 건<span class="rbadge2 neutral">특별결의</span></td><td class="n">300,000,000</td><td class="n">297,000,000</td><td class="n">268,110,000</td><td class="c"><button class="setbtn" type="button">설정</button></td></tr></tbody>
-            </table>
+          <div class="tsec">
+            <div class="tsec-head">
+              <div>
+                <div class="htitle"><h2>의안 목록</h2></div>
+                <div class="desc">제한 설정 버튼 클릭 후 의안별 의결권 제한을 설정해 주세요.</div>
+              </div>
+            </div>
+            <div class="tbl-wrap">
+              <div class="tbl-scroll">
+                <table class="agtbl">
+                  <thead><tr><th>의안번호</th><th>의안명</th><th class="n">의결권 있는 주식수</th><th class="n">제한의결권</th><th class="n">행사가능의결권</th><th class="c">제한 설정</th></tr></thead>
+                  <tbody id="agBody"></tbody>
+                </table>
+              </div>
+              <div class="tfoot">
+                <span class="cnt tnum">총 82명 · 510,356,025주</span>
+                <div class="pager">
+                  <button class="pb"><i class="ph ph-caret-double-left"></i></button>
+                  <button class="pb"><i class="ph ph-caret-left"></i></button>
+                  <span class="cur">1</span>
+                  <button class="pb"><i class="ph ph-caret-right"></i></button>
+                  <button class="pb"><i class="ph ph-caret-double-right"></i></button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -802,36 +1027,46 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 
 </div>
 
-<!-- 의결권제한 설정 패널 -->
+<!-- 의결권제한 설정 패널 (주주 기준) -->
 <div class="overlay hidden" id="restrictOverlay">
   <aside class="sheet">
     <div class="sheet-head">
       <div><h3>의결권제한 설정</h3><div class="sdesc">해당 주주에게 적용될 의결권 제한 요건을 설정해 주세요.</div></div>
-      <button class="iconbtn md" data-close><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+      <button class="iconbtn sm" id="restrictX" title="닫기"><i class="ph ph-x" style="font-size:16px"></i></button>
     </div>
     <div class="sheet-body">
       <div class="rv-card"><div class="rv-name" id="rvName">{주주명}</div><div class="rv-meta" id="rvMeta"></div></div>
-      <div class="rv-tabs"><button class="rv-tab active" data-rvtab="set">의결권제한 설정</button><button class="rv-tab" data-rvtab="reason">제한 사유</button></div>
+      <div class="rv-tabs"><button class="rv-tab active" data-rvtab="set">의결권제한 설정</button><button class="rv-tab" data-rvtab="rel" hidden>특수관계인 설정</button><button class="rv-tab" data-rvtab="reason">제한 사유</button></div>
       <div class="rv-pane" data-rvpane="set">
-        <div style="margin-top:18px">
+        <div style="margin-top:24px">
           <label class="field-label">의결권제한</label>
-          <button class="field-select" id="rtypeSel"><span id="rtypeLbl" style="color:var(--muted-fg)">의결권제한 유형 선택</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+          <button class="field-select" id="rtypeSel"><span id="rtypeLbl" style="color:var(--muted-fg)">의결권제한 유형 선택</span><i class="ph ph-caret-down" style="font-size:14px;color:#737373"></i></button>
           <div class="rtype-list hidden" id="rtypeList"></div>
+          <div class="rinfo" id="rInfo" hidden><i class="ph ph-warning-circle"></i><div id="rInfoTx"></div></div>
         </div>
       </div>
+      <div class="rv-pane hidden" data-rvpane="rel">
+        <label class="field-label" style="margin-top:24px">특수관계인 설정</label>
+        <div class="relrow">
+          <div class="fsel"><select id="relField"><option>투표권자</option><option>주주명</option><option>주주번호</option><option>실질계좌번호</option></select><i class="ph ph-caret-down"></i></div>
+          <div class="fsearch"><i class="ph ph-magnifying-glass"></i><input type="text" id="relQ" placeholder="주주명을 검색해 주세요" autocomplete="off"></div>
+          <div class="srch-res" id="relRes" hidden style="left:110px"></div>
+        </div>
+        <div class="rel-list" id="relList"></div>
+      </div>
       <div class="rv-pane hidden" data-rvpane="reason">
-        <label class="field-label" style="display:block;margin:18px 0 8px">제한 사유</label>
+        <label class="field-label" style="display:block;margin:24px 0 8px">제한 사유</label>
         <textarea class="rsn-input" id="rsnInput" placeholder="사유를 입력하세요."></textarea>
         <button class="rsn-add" id="rsnAdd" type="button">등록</button>
-        <div class="rsn-list" id="rsnList"><div class="rsn-item"><div class="rsn-tx">경영권 분쟁 관련, 서울중앙지법 의결권 행사 금지 가처분 인용 결정(2026.07.10)에 따라 해당 주식 의결권 행사 불가 처리.</div><div class="rsn-ft"><span class="rsn-meta">2026-07-17 15:58 · 김지만</span><span class="rsn-acts"><button type="button" data-rsn-edit>변경</button><span class="divd"></span><button type="button" data-rsn-del>삭제</button></span></div></div><div class="rsn-item"><div class="rsn-tx">2026.05 자사주 매입분. 상법상 의결권 없음 (모수 제외)</div><div class="rsn-ft"><span class="rsn-meta">2026-07-17 15:58 · 정윤호</span><span class="rsn-acts"><button type="button" data-rsn-edit>변경</button><span class="divd"></span><button type="button" data-rsn-del>삭제</button></span></div></div><div class="rsn-item"><div class="rsn-tx">경영권 분쟁 관련, 서울중앙지법 의결권 행사 금지 가처분 인용 결정(2026.07.10)에 따라 해당 주식 의결권 행사 불가 처리.</div><div class="rsn-ft"><span class="rsn-meta">2026-07-17 15:58 · 김지만</span><span class="rsn-acts"><button type="button" data-rsn-edit>변경</button><span class="divd"></span><button type="button" data-rsn-del>삭제</button></span></div></div></div>
+        <div class="rsn-list" id="rsnList"><div class="rsn-item"><div class="rsn-tx">경영권 분쟁 관련, 서울중앙지법 의결권 행사 금지 가처분 인용 결정(2026.07.10)에 따라 해당 주식 의결권 행사 불가 처리.</div><div class="rsn-ft"><span class="rsn-meta">2026-07-17 15:58 · 김지만</span><span class="rsn-acts"><button type="button" data-rsn-edit>변경</button><span class="divd"></span><button type="button" data-rsn-del>삭제</button></span></div></div><div class="rsn-item"><div class="rsn-tx">2026.05 자사주 매입분. 상법상 의결권 없음 (모수 제외)</div><div class="rsn-ft"><span class="rsn-meta">2026-07-17 15:58 · 정윤호</span><span class="rsn-acts"><button type="button" data-rsn-edit>변경</button><span class="divd"></span><button type="button" data-rsn-del>삭제</button></span></div></div></div>
       </div>
     </div>
     <div class="sheet-foot">
       <div style="display:flex;gap:8px">
-        <button class="sheet-cancel" data-close style="flex:1">취소</button>
+        <button class="sheet-cancel" id="restrictCancel" style="flex:1">취소</button>
         <button class="primary" id="restrictApply" style="flex:1">저장</button>
       </div>
-      <div class="meta">마지막 수정 2026-07-17 15:58 · 박지용</div>
+      <div class="meta">마지막 변경 2026-07-17 15:58 · 박지용</div>
     </div>
   </aside>
 </div>
@@ -839,70 +1074,89 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 <!-- 의안 기준 - 의결권제한 설정 (우측 시트) -->
 <div class="agset-ov" id="agsetOv">
   <div class="agset">
-    <button class="agset-x" data-agset-close><svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    <button class="agset-x" id="agsetX" title="닫기"><i class="ph ph-x" style="font-size:16px"></i></button>
     <div class="agset-hd">
       <h2>의결권제한 설정</h2>
-      <div class="agset-desc">해당 의안에서 의결권이 제한될 주주를 추가하고 사유를 입력하세요.</div>
+      <div class="agset-desc">해당 의안에서 의결권이 제한될 주주를 추가하고 사유를 설정하세요.</div>
     </div>
     <div class="agset-body">
       <div class="agset-banner">
-        <div class="ab-no"><span id="agsetNo">제3-1-1호</span><span class="ab-tags" id="agsetTags">특별결의 · 3%룰 · 양립불가</span></div>
+        <div class="ab-no"><span id="agsetNo">제 3-1-1호</span><span class="ab-tags" id="agsetTags">특별결의 · 양립불가</span></div>
         <div class="ab-name" id="agsetName">감사위원회 위원 선임의 건</div>
-      </div>
-      <div class="agset-field">
-        <div class="agset-sec-t">제한 대상 주주</div>
-        <div class="agset-search-row">
-          <button class="agset-sel">투표권자 <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
-          <div class="agset-searchbox"><i class="ph ph-magnifying-glass" style="font-size:16px;color:#737373"></i><input type="text" placeholder="투표권자를 검색해 주세요"></div>
+        <div class="ab-stats">
+          <div><span>총 발행 주식 수</span><b>241,834</b></div>
+          <div><span>의결권 있는 주식 수</span><b>231,831</b></div>
+          <div><span>3% 의결권 상한</span><b>6,954</b></div>
+          <div><span>총 제한 의결권</span><b id="abLim">0</b></div>
+          <div><span>총 행사 가능 의결권</span><b id="abEx">231,831</b></div>
         </div>
       </div>
       <div class="agset-field">
-        <div class="agset-sec-t">제한된 주주</div>
+        <div class="agset-sec-t">제한 주주 추가</div>
+        <div class="agset-search-row">
+          <div class="fsel"><select id="agField"><option>투표권자</option><option>주주명</option><option>주주번호</option></select><i class="ph ph-caret-down"></i></div>
+          <div class="agset-searchbox"><i class="ph ph-magnifying-glass" style="font-size:16px;color:#737373"></i><input type="text" id="agQ" placeholder="투표권자를 검색해 주세요" autocomplete="off"></div>
+          <div class="srch-res" id="agRes" hidden style="left:156px"></div>
+        </div>
+        <div class="agcard" id="agCard" hidden>
+          <div class="agcard-hd"><b id="acName"></b><span id="acMeta"></span><button class="icbtn" id="acDel" title="삭제"><i class="ph ph-trash"></i></button></div>
+          <div class="agcard-bd">
+            <label class="field-label">제한 사유</label>
+            <div class="fsel full"><select id="acReason" required><option value="" disabled selected hidden>제한 사유를 선택해 주세요</option><option>특별이해관계자</option><option>기타</option></select><i class="ph ph-caret-down"></i></div>
+            <div class="condbox" id="acCondBox" hidden>
+              <label><input type="checkbox" id="acCond"><span><b>조건부 적용</b><small>특정 의안 결과에 따른 조건부 제한을 적용합니다.</small></span></label>
+              <div class="fsel full" id="acCondSelW" hidden><select id="acCondSel"></select><i class="ph ph-caret-down"></i></div>
+            </div>
+            <div id="acEtc" hidden>
+              <label class="field-label">제한 방법</label>
+              <div class="fsel full"><select id="acMethod"><option value="all">전체 제한</option><option value="pct">허용 비율 지정</option><option value="cnt">허용 주식수 지정</option></select><i class="ph ph-caret-down"></i></div>
+              <div class="inrow" id="acPctRow" hidden><div class="fsel" style="flex:1"><select id="acBase" style="width:100%"><option value="ex">총 행사가능주식수</option><option value="hold">보유주식</option></select><i class="ph ph-caret-down"></i></div><span class="unit">의</span><input class="numin" id="acPct" type="number" min="0" max="100" placeholder="0"><span class="unit">%</span></div>
+              <div class="inrow" id="acCntRow" hidden><input class="numin" id="acCnt" type="number" min="0" placeholder="0"><span class="unit">주</span></div>
+              <textarea id="acText" placeholder="이 주주에게 해당 제한이 적용되는 사유를 입력하세요."></textarea>
+            </div>
+            <button class="btn-d" id="acAdd" disabled>추가하기</button>
+          </div>
+        </div>
+      </div>
+      <div class="agset-field" id="agLimSec">
+        <div class="lim-hd"><div class="agset-sec-t">제한된 주주</div><label class="sw-lbl" id="agCondT">조건부 제한 포함<span class="sw on"></span></label></div>
         <div class="agset-tbl-wrap">
-          <table class="agset-tbl">
-            <thead><tr><th>투표권자</th><th>주주명</th><th class="n">보유주식</th><th class="n">제한의결권</th><th class="n">행사가능의결권</th><th class="n" style="width:64px"></th></tr></thead>
-            <tbody>
-              <tr>
-                <td>김범수<span class="agset-selfbadge">자사주</span></td><td class="sub">김범수</td>
-                <td class="n">241,076</td><td class="n">10,503</td><td class="n strong">230,573</td>
-                <td class="n"><div class="agset-acts"><button title="수정"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button><button title="삭제"><svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></button></div></td>
-              </tr>
-              <tr>
-                <td>정찰리<span class="agset-selfbadge">최대주주</span></td><td class="sub">정찰리</td>
-                <td class="n">350,040</td><td class="n">8,910</td><td class="n strong">341,130</td>
-                <td class="n"><div class="agset-acts"><button title="수정"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button><button title="삭제"><svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></button></div></td>
-              </tr>
-              <tr>
-                <td>존슨리<span class="agset-selfbadge">3%룰</span></td><td class="sub">존슨리</td>
-                <td class="n">152,300</td><td class="n">4,569</td><td class="n strong">147,731</td>
-                <td class="n"><div class="agset-acts"><button title="수정"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button><button title="삭제"><svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></button></div></td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr><td>총 3명</td><td></td><td class="n">743,416</td><td class="n">23,982</td><td class="n strong">719,434</td><td></td></tr>
-            </tfoot>
+          <table class="agset-tbl" data-nocx>
+            <thead><tr><th class="ck"><button class="tw-chevron collapsed" id="agAllT" title="전체 펼치기/접기"><i class="ph ph-caret-up"></i></button></th><th>구분</th><th>제한 주주</th><th>제한 사유</th><th class="n">보유주식</th><th class="n">제한의결권</th><th class="n">행사가능의결권</th><th style="width:76px"></th></tr></thead>
+            <tbody id="agRows"></tbody>
+            <tfoot><tr><td colspan="4">총 <span id="agCnt">0</span>명</td><td class="n" id="agSumH">0</td><td class="n b" id="agSumL">0</td><td class="n b" id="agSumE">0</td><td></td></tr></tfoot>
           </table>
         </div>
       </div>
     </div>
     <div class="agset-foot">
       <div class="btns">
-        <button class="agset-cancel" data-agset-close>취소</button>
+        <button class="agset-cancel" id="agsetCancel">취소</button>
         <button class="agset-save" id="agsetSave">저장</button>
       </div>
-      <div class="agset-meta">마지막 변경 2026-07-17 15:58 · 박지용</div>
+      <div class="agset-meta">마지막 수정 2026-07-17 15:58 · 박지용</div>
     </div>
   </div>
 </div>
 
-<!-- 3% 제한 해제 Alert Dialog -->
+<!-- Alert Dialog (공통: 해제·원복·삭제·변경사항·불러오기) -->
 <div class="adlg-ov hidden" id="adlgOv">
   <div class="adlg">
     <div class="adlg-head">
-      <div class="adlg-media"><i class="ph ph-dots-three" style="font-size:16px"></i></div>
-      <div class="adlg-txt"><div class="adlg-title" id="adlgTitle"></div><div class="adlg-desc" id="adlgDesc"></div></div>
+      <div class="adlg-media" id="adlgMedia"></div>
+      <div class="adlg-txt"><div class="adlg-title" id="adlgTitle"></div><div class="adlg-desc" id="adlgDesc"></div><div class="adlg-meta" id="adlgMeta"></div></div>
     </div>
-    <div class="adlg-foot"><button class="cancel" id="adlgCancel">취소</button><button class="confirm" id="adlgConfirm">해제</button></div>
+    <div class="adlg-foot"><button class="cancel" id="adlgCancel">취소</button><button class="confirm" id="adlgConfirm">확인</button></div>
+  </div>
+</div>
+
+<!-- 3% 제한 해제 (ADR, 우리사주조합) -->
+<div class="adlg-ov hidden" id="xdlgOv">
+  <div class="xdlg">
+    <div class="xdlg-hd"><span>3% 제한 해제</span><button class="iconbtn sm" id="xdlgX" title="닫기"><i class="ph ph-x" style="font-size:16px"></i></button></div>
+    <label class="field-label">해제 사유 선택<span class="req">*</span></label>
+    <div class="fsel full"><select id="xdlgSel" required><option value="" disabled selected hidden>해제 사유를 선택해 주세요</option><option>우리사주조합</option><option>ADR</option></select><i class="ph ph-caret-down"></i></div>
+    <div class="xdlg-ft"><button class="btn-o" id="xdlgCancel">취소</button><button class="btn-d" id="xdlgOk" disabled>3% 제한 해제하기</button></div>
   </div>
 </div>
 
@@ -910,29 +1164,20 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 <div class="overlay hidden" id="loadOverlay">
   <aside class="sheet">
     <div class="sheet-head">
-      <div><h3>이전 설정 불러오기</h3><div class="sdesc">현재 입력 중인 내용이 선택한 항목 기준으로 덮어씌워집니다.</div></div>
-      <button class="iconbtn md" data-close><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+      <div><h3>이전 설정 불러오기</h3><div class="sdesc">현재 입력 중인 내용이 선택한 정보로 변경됩니다.</div></div>
+      <button class="iconbtn sm" data-close title="닫기"><i class="ph ph-x" style="font-size:16px"></i></button>
     </div>
     <div class="sheet-body">
       <label class="field-label">주주총회 기수 선택</label>
-      <button class="field-select"><span>제 11기 정기주주총회</span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="fsel full"><select id="loadMeeting"><option>제 11기 정기주주총회</option><option>제 10기 정기주주총회</option><option>제 9기 정기주주총회</option></select><i class="ph ph-caret-down"></i></div>
+      <label class="field-label" style="margin-top:24px">불러올 항목 선택</label>
+      <label class="lcard"><input type="checkbox" class="loadItem" checked><span><b>기본 제한 규칙</b><small>자사주 · 상호주 · 무효주 · 최대주주 · 공익법인 · 금융보험사 · 특수관계인 정보</small></span></label>
+      <label class="lcard"><input type="checkbox" class="loadItem"><span><b>특수 계좌 예외 설정</b><small>우리사주조합 · ADR 등 3% 룰 예외 적용 정보</small></span></label>
+      <p class="lnote">*주주 구성이 다른 경우 일부 항목이 맞지 않을 수 있습니다.</p>
     </div>
     <div class="sheet-foot">
-      <button class="primary" data-close>불러오기</button>
-      <div class="meta">마지막 수정 2026-07-17 15:58 · 박지용</div>
+      <button class="primary" id="loadGo">불러오기</button>
     </div>
-  </aside>
-</div>
-
-<!-- 특수관계인 패널 -->
-<div class="overlay hidden" id="relOverlay">
-  <aside class="sheet">
-    <div class="sheet-head">
-      <div><h3 id="relTitle">특수관계인</h3><div class="sdesc">해당 기관과 특수관계에 있는 주주 목록입니다.</div></div>
-      <button class="iconbtn md" data-close><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
-    </div>
-    <div class="sheet-body" id="relBody"></div>
-    <div class="sheet-foot"><button class="primary" data-close>확인</button></div>
   </aside>
 </div>
 
@@ -940,30 +1185,26 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 
 <script>
   const app=document.getElementById('app');
+  const content=document.getElementById('vrContent');
   document.getElementById('toggleLnb').addEventListener('click',()=>{app.classList.toggle('collapsed');closeMpop();});
   const hist=document.getElementById('history');
   document.getElementById('toggleHistory').addEventListener('click',()=>hist.classList.toggle('hidden'));
   document.getElementById('closeHistory').addEventListener('click',()=>hist.classList.add('hidden'));
-  // segmented toggles (visual)
-  document.querySelectorAll('.seg').forEach(seg=>seg.querySelectorAll('.s').forEach(s=>s.addEventListener('click',()=>{
-    seg.querySelectorAll('.s').forEach(x=>x.classList.remove('active'));s.classList.add('active');
-    var content=document.querySelector('.content'); if(content) content.classList.toggle('agmode', s.textContent.trim()==='의안 기준');})));
-  function filterRestrict(label){
-    var tbody=document.querySelector('table.tbl tbody'); if(!tbody) return;
-    tbody.querySelectorAll('tr').forEach(function(tr){
-      if(tr.classList.contains('child')) return;
-      var show = (label==='전체');
-      if(!show){ var b=tr.querySelector('[data-restrict]'); var t=b?(b.dataset.type||''):''; show=(t===label); }
-      tr.classList.toggle('filtered-out', !show);
-      if(tr.classList.contains('grp')){ var gid=tr.dataset.grp; tbody.querySelectorAll('tr.child[data-child="'+gid+'"]').forEach(function(cr){ cr.classList.toggle('filtered-out', !show); }); }
-    });
-  }
-  document.querySelectorAll('.chips').forEach(c=>c.querySelectorAll('.chip').forEach(ch=>ch.addEventListener('click',()=>{
-    c.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));ch.classList.add('active');
-    var label=ch.textContent.replace(/\s*[0-9,]+\s*$/,'').trim();
-    filterRestrict(label);})));
+  function esc(x){return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function fmt(n){return Math.round(n).toLocaleString('en-US');}
 
-  // toast helper
+  // 데모 상태 (쿼리): ?roster=pending → 확정필요, ?empty=1 → 빈 상태
+  const QS=new URLSearchParams(location.search);
+  if(QS.get('empty')==='1') content.classList.add('is-empty');
+  if(QS.get('roster')==='pending'){document.getElementById('rosterTag').textContent='확정필요';document.getElementById('confirmRosterBtn').hidden=false;}
+
+  // 주주 기준 / 의안 기준 탭
+  document.querySelectorAll('.seg .s').forEach(s=>s.addEventListener('click',()=>{
+    document.querySelectorAll('.seg .s').forEach(x=>x.classList.toggle('active',x===s));
+    content.classList.toggle('agmode', s.dataset.mode==='ag');
+  }));
+
+  // toast helper (페이지 토스트 — 공통 cxToast 중복 방지)
   let toastT;
   function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
     clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2000);}
@@ -975,13 +1216,8 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     {id:'m10',title:'제 10기 정기주주총회',current:false},
     {id:'m9', title:'제 9기 정기주주총회', current:false},
   ];
-  const mtrigger=document.getElementById('mtrigger');
-  const mpop=document.getElementById('mpop');
-  const mlist=document.getElementById('mlist');
-  const mcurrent=document.getElementById('mcurrent');
-  const msearch=document.getElementById('msearch');
+  const mpop=document.getElementById('mpop'),mlist=document.getElementById('mlist'),mcurrent=document.getElementById('mcurrent'),msearch=document.getElementById('msearch');
   const iconCheck='<svg class="ic mchk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';
-
   function renderMeetings(filter){
     const f=(filter||'').trim();
     mlist.innerHTML='';
@@ -989,200 +1225,414 @@ a.nav-item{text-decoration:none;color:var(--fg)}
       const b=document.createElement('button');
       b.className='mitem'+(m.current?' cur':'');
       b.innerHTML='<span class="dot'+(m.current?'':' gray')+'"></span><span class="mlbl">'+m.title+'</span>'+iconCheck;
-      b.addEventListener('click',()=>{
-        MEETINGS.forEach(x=>x.current=(x.id===m.id));
-        mcurrent.textContent=m.title;
-        closeMpop();
-      });
+      b.addEventListener('click',()=>{MEETINGS.forEach(x=>x.current=(x.id===m.id));mcurrent.textContent=m.title;closeMpop();});
       mlist.appendChild(b);
     });
   }
   function openMpop(){renderMeetings('');msearch.value='';mpop.classList.remove('hidden');}
   function closeMpop(){mpop.classList.add('hidden');}
-  mtrigger.addEventListener('click',e=>{e.stopPropagation();mpop.classList.contains('hidden')?openMpop():closeMpop();});
+  document.getElementById('mtrigger').addEventListener('click',e=>{e.stopPropagation();mpop.classList.contains('hidden')?openMpop():closeMpop();});
   mpop.addEventListener('click',e=>e.stopPropagation());
   msearch.addEventListener('input',()=>renderMeetings(msearch.value));
   document.getElementById('maddbtn').addEventListener('click',()=>{closeMpop();showToast('준비 중인 기능이에요');});
   document.addEventListener('click',()=>closeMpop());
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMpop();});
   renderMeetings('');
 
-  const CHK='<svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';
+  const CHK='<i class="ph ph-check"></i>';
+  function setBtn(btn,label,on){btn.innerHTML=on?CHK+esc(label):esc(label);btn.classList.toggle('on',!!on);}
+  function rowName(el){const tr=el.closest('tr');const v=tr.querySelector('.vname')||tr.querySelector('.voter');return v?v.textContent.trim():'';}
 
-  // ===== 통합기관 접기/펴기 (accordion) =====
+  // ===== 공통 Alert Dialog =====
+  const adlgOv=document.getElementById('adlgOv');
+  let dlgOk=null,dlgNo=null;
+  function confirmDlg(o){
+    const m=document.getElementById('adlgMedia');
+    m.className='adlg-media'+(o.danger?' danger':'');
+    m.innerHTML='<i class="ph ph-'+(o.danger?'trash':'warning-circle')+'"></i>';
+    document.getElementById('adlgTitle').textContent=o.title;
+    document.getElementById('adlgDesc').innerHTML=(o.name?'<b>'+esc(o.name)+'</b>':'')+esc(o.desc||'');
+    document.getElementById('adlgMeta').textContent=o.meta||'';
+    document.getElementById('adlgCancel').textContent=o.cancel||'취소';
+    const ok=document.getElementById('adlgConfirm');ok.textContent=o.ok;ok.classList.toggle('danger',!!o.danger);
+    dlgOk=o.onOk||null;dlgNo=o.onCancel||null;
+    adlgOv.classList.remove('hidden');
+  }
+  document.getElementById('adlgConfirm').addEventListener('click',e=>{e.stopPropagation();adlgOv.classList.add('hidden');const f=dlgOk;dlgOk=dlgNo=null;if(f)f();});
+  document.getElementById('adlgCancel').addEventListener('click',e=>{e.stopPropagation();adlgOv.classList.add('hidden');const f=dlgNo;dlgOk=dlgNo=null;if(f)f();});
+  // 변경사항 확인 — '저장 안 함'은 닫기, '계속 편집'은 다이얼로그만 닫기
+  function confirmDiscard(close){
+    confirmDlg({title:'변경사항이 있습니다',desc:'저장하지 않으면 변경 내용이 사라집니다.',cancel:'저장 안 함',ok:'계속 편집',onCancel:close});
+  }
+
+  // ===== 검색 · 칩 필터 (주주 기준) =====
+  const shTbody=document.querySelector('table.tbl tbody');
+  let chipLabel='전체';
+  function applyShFilter(){
+    const q=document.getElementById('shSearch').value.trim().toLowerCase();
+    const col=+document.getElementById('shField').value;
+    shTbody.querySelectorAll('tr:not(.child)').forEach(tr=>{
+      let show=true;
+      if(chipLabel!=='전체'){const b=tr.querySelector('[data-restrict]');show=!!b&&b.dataset.type===chipLabel;}
+      if(show&&q){
+        const texts=[tr.cells[col].textContent];
+        if(tr.classList.contains('grp')) shTbody.querySelectorAll('tr.child[data-child="'+tr.dataset.grp+'"]').forEach(c=>texts.push(c.cells[col].textContent));
+        show=texts.some(t=>t.toLowerCase().includes(q));
+      }
+      tr.classList.toggle('filtered-out',!show);
+      if(tr.classList.contains('grp')) shTbody.querySelectorAll('tr.child[data-child="'+tr.dataset.grp+'"]').forEach(c=>c.classList.toggle('filtered-out',!show));
+    });
+  }
+  document.querySelectorAll('.chips .chip').forEach(ch=>ch.addEventListener('click',()=>{
+    document.querySelectorAll('.chips .chip').forEach(x=>x.classList.toggle('active',x===ch));
+    chipLabel=ch.textContent.replace(/\s*[0-9,]+\s*$/,'').trim();applyShFilter();}));
+  document.getElementById('shSearch').addEventListener('input',applyShFilter);
+  document.getElementById('shField').addEventListener('change',e=>{
+    document.getElementById('shSearch').placeholder=e.target.selectedOptions[0].text+(e.target.value==='0'?'를':'을')+' 검색해 주세요';applyShFilter();});
+
+  // ===== 통합기관 접기/펴기 =====
   document.querySelectorAll('.tw-chevron[data-toggle]').forEach(btn=>{
     btn.addEventListener('click',e=>{
       e.stopPropagation();
-      const id=btn.dataset.toggle;
       btn.classList.toggle('collapsed');
       const collapsed=btn.classList.contains('collapsed');
-      document.querySelectorAll('tr.child[data-child="'+id+'"]').forEach(r=>r.classList.toggle('hidden',collapsed));
+      document.querySelectorAll('tr.child[data-child="'+btn.dataset.toggle+'"]').forEach(r=>r.classList.toggle('hidden',collapsed));
     });
   });
 
-  // ===== 의결권제한 설정 패널 (Figma 사이드 시트) =====
-  const RTYPES=['미설정','자사주','상호주','무효주','최대주주','공익법인(포함)','공익법인(제외)','금융보험사'];
-  const restrictOverlay=document.getElementById('restrictOverlay');
-  const rvName=document.getElementById('rvName'),rvMeta=document.getElementById('rvMeta');
-  const rtypeSel=document.getElementById('rtypeSel'),rtypeList=document.getElementById('rtypeList'),rtypeLbl=document.getElementById('rtypeLbl');
-  let restrictTarget=null, restrictSel='';
-  function setRtypeLabel(){
-    if(restrictSel){rtypeLbl.textContent=restrictSel;rtypeLbl.style.color='#0a0a0a';}
-    else{rtypeLbl.textContent='의결권제한 유형 선택';rtypeLbl.style.color='var(--muted-fg)';}
+  // ===== 의결권제한 설정 패널 (주주 기준) =====
+  const RTYPES=[
+    {v:'',l:'미설정'},
+    {v:'자사주',l:'자사주',info:'회사가 보유한 자기주식은 상법에 따라 의결권이 제한됩니다.<br>* 총 행사가능의결권수에도 제외됩니다.'},
+    {v:'상호주',l:'상호주',info:'당사가 지분을 10% 초과 보유한 타회사가 소유한 당사의 주식은 의결권이 제한됩니다.'},
+    {v:'무효주',l:'무효주',info:'법령, 정관, 법원 결정 등에 의해 의결권 행사가 정지된 주식입니다.'},
+    {v:'최대주주',l:'최대주주',rel:1,info:'<b>최대주주 그룹 합산 적용중</b><br>{최대주주명}의 특수관계인으로, 최대주주 그룹 합산 3% 제한이 적용됩니다.'},
+    {v:'공익법인(포함)',l:'공익법인(3% 모수 포함)',rel:1,info:'공익을 목적으로 설립된 법인으로, 보유 주식이 3% 제한 계산의 기준에 포함됩니다.'},
+    {v:'공익법인(제외)',l:'공익법인(3% 모수 제외)',rel:1,info:'공익을 목적으로 설립된 법인으로, 보유 주식이 3% 제한 계산의 기준에서 제외됩니다.'},
+    {v:'금융보험사',l:'금융보험사',info:'금융회사가 계열사 주식에 대해 보유한 의결권은 원칙적으로 행사할 수 없습니다.<br>* 단, 임원 선임·해임 반대 등 일부 예외적 행사는 허용됩니다.'}
+  ];
+  const rtOf=v=>RTYPES.find(t=>t.v===v)||RTYPES[0];
+  // 특수관계인 검색 대상 (데모 데이터)
+  const PEOPLE=[['김범수','8904121',3085,'1.05%'],['김재호','8904121',3085,'1.05%'],['임아람','9404121',1482,'0.3%'],['김민서','37010000',2210,'0.72%'],['이준호','37010137',1804,'0.59%'],['박서연','37010274',960,'0.31%'],['정우진','37010411',4410,'1.44%'],['최지아','37010548',730,'0.24%'],['한도윤','37010685',1290,'0.42%'],['오세훈','37010822',3320,'1.08%'],['임하늘','37010959',610,'0.2%'],['서지후','37011096',2045,'0.67%'],['문가온','37011233',1180,'0.38%'],['배시우','37011370',870,'0.28%'],['노아린','37011507',1530,'0.5%'],['김도윤','8123441',42180,'0.62%',1],['이서준','7742093',128900,'1.89%',1],['카카오','20250110',512000,'7.51%',1]];
+  const relStore=new WeakMap();   // 행 → 특수관계인 목록
+  function relsOf(tr){
+    if(!relStore.has(tr)){const n=+(tr.querySelector('[data-rel]')||{dataset:{count:0}}).dataset.count||0;relStore.set(tr,PEOPLE.slice(3,3+n).map(p=>p.slice()));}
+    return relStore.get(tr);
   }
+  const restrictOverlay=document.getElementById('restrictOverlay');
+  const rtypeList=document.getElementById('rtypeList'),rtypeLbl=document.getElementById('rtypeLbl');
+  let rTr=null,rSel='',rRels=[],rSnap='',rViaRel=false;
+  function relTabOn(){return !!rtOf(rSel).rel||rViaRel||rRels.length>0;}
+  function renderSet(){
+    const t=rtOf(rSel);
+    if(rSel){rtypeLbl.textContent=t.l;rtypeLbl.style.color='#0a0a0a';}else{rtypeLbl.textContent='의결권제한 유형 선택';rtypeLbl.style.color='var(--muted-fg)';}
+    const info=document.getElementById('rInfo');
+    info.hidden=!t.info;
+    if(t.info) document.getElementById('rInfoTx').innerHTML=t.info.replace('{최대주주명}',esc(document.getElementById('rvName').textContent));
+    const relTab=document.querySelector('.rv-tab[data-rvtab="rel"]');
+    relTab.hidden=!relTabOn();
+    if(relTab.hidden&&relTab.classList.contains('active')) showTab('set');
+  }
+  function showTab(key){
+    document.querySelectorAll('.rv-tabs .rv-tab').forEach(x=>x.classList.toggle('active',x.dataset.rvtab===key));
+    document.querySelectorAll('.rv-pane').forEach(p=>p.classList.toggle('hidden',p.dataset.rvpane!==key));
+  }
+  document.querySelectorAll('.rv-tabs .rv-tab').forEach(t=>t.addEventListener('click',()=>showTab(t.dataset.rvtab)));
   function renderRtypeList(){
     rtypeList.innerHTML='';
     RTYPES.forEach(t=>{
-      const val=(t==='미설정')?'':t;
       const o=document.createElement('button');
-      o.className='ropt-row'+(val===restrictSel?' sel':'');
-      o.innerHTML='<span class="rlbl2">'+t+'</span><svg class="ic rchk2" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';
-      o.addEventListener('click',ev=>{ev.stopPropagation();restrictSel=val;setRtypeLabel();rtypeList.classList.add('hidden');});
+      o.className='ropt-row'+(t.v===rSel?' sel':'');
+      o.innerHTML='<span class="rlbl2">'+t.l+'</span><i class="ph ph-check rchk2"></i>';
+      o.addEventListener('click',ev=>{ev.stopPropagation();rSel=t.v;renderSet();rtypeList.classList.add('hidden');});
       rtypeList.appendChild(o);
     });
   }
-  rtypeSel.addEventListener('click',e=>{e.stopPropagation();if(rtypeList.classList.contains('hidden')){renderRtypeList();rtypeList.classList.remove('hidden');}else{rtypeList.classList.add('hidden');}});
-  function openRestrict(btn){
-    restrictTarget=btn;
-    const c=btn.closest('tr').children;
-    const juju=c[1]?c[1].textContent.trim():'';
-    const vname=btn.closest('tr').querySelector('.vname');
-    rvName.textContent=juju||(vname?vname.textContent:'{주주명}');
-    const parts=[];
-    if(c[2]&&c[2].textContent.trim())parts.push(c[2].textContent.trim());
-    if(c[3]&&c[3].textContent.trim())parts.push(c[3].textContent.trim()+'주');
-    if(c[4]&&c[4].textContent.trim())parts.push(c[4].textContent.trim());
-    rvMeta.textContent=parts.join(' · ');
-    restrictSel=btn.dataset.type||'';
-    setRtypeLabel();
-    rtypeList.classList.add('hidden');
+  document.getElementById('rtypeSel').addEventListener('click',e=>{e.stopPropagation();if(rtypeList.classList.contains('hidden')){renderRtypeList();rtypeList.classList.remove('hidden');}else rtypeList.classList.add('hidden');});
+  restrictOverlay.addEventListener('click',()=>{rtypeList.classList.add('hidden');document.getElementById('relRes').hidden=true;});
+  function renderRels(){
+    const box=document.getElementById('relList');
+    box.innerHTML=rRels.map((p,i)=>'<div class="rel-card"><div class="rc-t"><b>'+esc(p[0])+'</b><span>'+esc(p[1])+' · '+fmt(p[2])+'주 · '+esc(p[3])+'</span></div><button class="icbtn" data-reldel="'+i+'" title="삭제"><i class="ph ph-trash"></i></button></div>').join('');
+  }
+  document.getElementById('relList').addEventListener('click',e=>{
+    const b=e.target.closest('[data-reldel]');if(!b)return;
+    confirmDlg({danger:1,title:'특수관계인을 삭제하시겠습니까?',desc:'삭제 후에는 복구할 수 없습니다.',ok:'삭제',onOk:()=>{rRels.splice(+b.dataset.reldel,1);renderRels();renderSet();showToast('특수관계인이 삭제되었습니다');}});
+  });
+  const relQ=document.getElementById('relQ'),relRes=document.getElementById('relRes');
+  function renderRelRes(){
+    const q=relQ.value.trim();
+    if(!q){relRes.hidden=true;return;}
+    const col={'투표권자':0,'주주명':0,'주주번호':1,'실질계좌번호':1}[document.getElementById('relField').value];
+    const hits=PEOPLE.filter(p=>String(p[col]).includes(q)&&!rRels.some(r=>r[0]===p[0]&&r[1]===p[1]));
+    relRes.innerHTML=hits.length?hits.map(p=>p[4]
+      ?'<div class="it dis"><b>'+esc(p[0])+'</b><span>의결권제한 설정됨</span></div>'
+      :'<button class="it" data-pi="'+PEOPLE.indexOf(p)+'"><b>'+esc(p[0])+'</b><span>'+esc(p[1])+' · '+fmt(p[2])+'주 · '+esc(p[3])+'</span></button>').join(''):'<div class="none">검색 결과가 없습니다</div>';
+    relRes.hidden=false;
+  }
+  relQ.addEventListener('input',renderRelRes);
+  relQ.addEventListener('click',e=>{e.stopPropagation();renderRelRes();});
+  relRes.addEventListener('click',e=>{e.stopPropagation();const b=e.target.closest('[data-pi]');if(!b)return;rRels.push(PEOPLE[+b.dataset.pi].slice());relQ.value='';relRes.hidden=true;renderRels();});
+  function snap(){return JSON.stringify([rSel,rRels.map(r=>r[0]+r[1])]);}
+  function openRestrict(btn,viaRel){
+    rTr=btn.closest('tr');
+    const c=rTr.cells;
+    const nm=c[1].textContent.trim()||rowName(btn);
+    document.getElementById('rvName').textContent=nm;
+    const parts=[c[2].textContent.trim(),c[3].textContent.trim()&&c[3].textContent.trim()+'주',c[4].textContent.trim()].filter(Boolean);
+    document.getElementById('rvMeta').textContent=parts.join(' · ');
+    rSel=rTr.querySelector('[data-restrict]').dataset.type||'';
+    rRels=relsOf(rTr).map(r=>r.slice());
+    rViaRel=!!viaRel;
+    rtypeList.classList.add('hidden');relQ.value='';relRes.hidden=true;
+    renderRels();renderSet();showTab(viaRel?'rel':'set');
+    rSnap=snap();
     restrictOverlay.classList.remove('hidden');
   }
-  function applyRestrict(btn,t){
-    if(!t){btn.dataset.type='';btn.innerHTML='제한 설정';}
-    else{btn.dataset.type=t;btn.innerHTML=CHK+t;}
+  function closeRestrict(){restrictOverlay.classList.add('hidden');}
+  function tryCloseRestrict(){ if(snap()!==rSnap) confirmDiscard(closeRestrict); else closeRestrict(); }
+  document.getElementById('restrictX').addEventListener('click',tryCloseRestrict);
+  document.getElementById('restrictCancel').addEventListener('click',tryCloseRestrict);
+  function commitRestrict(){
+    const rb=rTr.querySelector('[data-restrict]');
+    const was=rb.dataset.type;
+    rb.dataset.type=rSel;
+    setBtn(rb,rSel||'제한 설정',!!rSel);
+    relStore.set(rTr,rRels);
+    const relB=rTr.querySelector('[data-rel]');
+    if(relB){relB.dataset.count=rRels.length;setBtn(relB,rRels.length?rRels.length+'명':'관계인 설정',rRels.length>0);}
+    closeRestrict();applyShFilter();
+    if(rSel) showToast('의결권 제한이 설정되었습니다');
+    return was;
   }
-  document.getElementById('restrictApply').addEventListener('click',()=>{
-    if(restrictTarget)applyRestrict(restrictTarget,restrictSel);
-    rtypeList.classList.add('hidden');
-    restrictOverlay.classList.add('hidden');
+  document.getElementById('restrictApply').addEventListener('click',e=>{
+    e.stopPropagation();
+    const was=rTr.querySelector('[data-restrict]').dataset.type;
+    if(was&&!rSel){
+      confirmDlg({title:'의결권 제한을 해제하시겠어요?',name:document.getElementById('rvName').textContent,desc:'의결권제한이 적용되지 않습니다.',ok:'제한 해제',onOk:commitRestrict});
+    }else commitRestrict();
   });
-  restrictOverlay.addEventListener('click',()=>rtypeList.classList.add('hidden'));
-  // 제한 사유 탭 전환 + 등록/삭제/변경
+  rtypeList.addEventListener('click',e=>e.stopPropagation());
+  document.querySelectorAll('.tbtn[data-restrict]').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();openRestrict(btn,false);}));
+  document.querySelectorAll('.tbtn[data-rel]').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();openRestrict(btn,true);}));
+
+  // 제한 사유: 등록 / 변경 / 삭제
   (function(){
-    var tabs=document.querySelectorAll('.rv-tabs .rv-tab');
-    var panes=document.querySelectorAll('.rv-pane');
-    tabs.forEach(function(t){ t.addEventListener('click',function(){
-      tabs.forEach(function(x){x.classList.toggle('active',x===t);});
-      var key=t.dataset.rvtab;
-      panes.forEach(function(p){p.classList.toggle('hidden',p.dataset.rvpane!==key);});
-    });});
-    var input=document.getElementById('rsnInput'), addBtn=document.getElementById('rsnAdd'), list=document.getElementById('rsnList');
+    const input=document.getElementById('rsnInput'),addBtn=document.getElementById('rsnAdd'),list=document.getElementById('rsnList');
     function pad(n){return (n<10?'0':'')+n;}
-    function nowStr(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes());}
-    function esc(x){return (x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-    if(addBtn) addBtn.addEventListener('click',function(){
-      var v=(input.value||'').trim(); if(!v) return;
-      var item=document.createElement('div'); item.className='rsn-item';
+    function nowStr(){const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes());}
+    addBtn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const v=input.value.trim(); if(!v) return;
+      const item=document.createElement('div'); item.className='rsn-item';
       item.innerHTML='<div class="rsn-tx">'+esc(v)+'</div><div class="rsn-ft"><span class="rsn-meta">'+nowStr()+' · 박지용</span><span class="rsn-acts"><button type="button" data-rsn-edit>변경</button><span class="divd"></span><button type="button" data-rsn-del>삭제</button></span></div>';
-      list.insertBefore(item, list.firstChild); input.value=''; input.focus();
+      list.insertBefore(item,list.firstChild); input.value='';
+      showToast('제한 사유가 등록되었습니다');
     });
-    if(list) list.addEventListener('click',function(e){
-      var del=e.target.closest('[data-rsn-del]'); if(del){ var it=del.closest('.rsn-item'); if(it) it.remove(); return; }
-      var ed=e.target.closest('[data-rsn-edit]'); if(ed){ var it2=ed.closest('.rsn-item'); var tx=it2.querySelector('.rsn-tx'); if(tx){ input.value=tx.textContent; input.focus(); it2.remove(); } return; }
+    list.addEventListener('click',e=>{
+      const del=e.target.closest('[data-rsn-del]');
+      if(del){const it=del.closest('.rsn-item');confirmDlg({danger:1,title:'제한 사유를 삭제하시겠습니까?',desc:'삭제 후에는 복구할 수 없습니다.',ok:'삭제',onOk:()=>{it.remove();showToast('제한 사유가 삭제되었습니다');}});return;}
+      const ed=e.target.closest('[data-rsn-edit]');
+      if(ed){const it=ed.closest('.rsn-item');input.value=it.querySelector('.rsn-tx').textContent;input.focus();it.remove();}
     });
   })();
-  rtypeList.addEventListener('click',e=>e.stopPropagation());
-  document.querySelectorAll('.tbtn[data-restrict]').forEach(btn=>{
-    btn.addEventListener('click',e=>{e.stopPropagation();openRestrict(btn);});
-  });
 
-  // ===== 3%제한 해제 Alert Dialog =====
-  const adlgOv=document.getElementById('adlgOv');
-  const adlgTitle=document.getElementById('adlgTitle');
-  const adlgDesc=document.getElementById('adlgDesc');
-  const adlgConfirm=document.getElementById('adlgConfirm');
-  let exemptTarget=null;
-  function openExemptDlg(btn){
-    exemptTarget=btn;
-    const nm=rowName(btn)||'주주명';
-    const on=btn.dataset.on==='1';
-    if(!on){
-      adlgTitle.textContent=nm+'의 3% 제한을 해제하시겠어요?';
-      adlgDesc.textContent='해당 주주의 의결권이 3% 제한 없이 전체 산정됩니다.';
-      adlgConfirm.textContent='해제';
-    }else{
-      adlgTitle.textContent=nm+'의 3% 제한 해제를 취소하시겠어요?';
-      adlgDesc.textContent='해당 주주에게 다시 3% 의결권 제한이 적용됩니다.';
-      adlgConfirm.textContent='해제 취소';
-    }
-    adlgOv.classList.remove('hidden');
-  }
-  adlgConfirm.addEventListener('click',()=>{
-    if(exemptTarget){const on=exemptTarget.dataset.on==='1';exemptTarget.dataset.on=on?'0':'1';exemptTarget.innerHTML=on?'해제하기':CHK+'해제됨';}
-    adlgOv.classList.add('hidden');
-  });
-  document.getElementById('adlgCancel').addEventListener('click',()=>adlgOv.classList.add('hidden'));
-  document.querySelectorAll('.tbtn[data-exempt]').forEach(btn=>{
-    btn.addEventListener('click',e=>{e.stopPropagation();openExemptDlg(btn);});
-  });
+  // ===== 3% 제한 해제 (해제 사유: 우리사주조합 / ADR) · 원복 =====
+  const xdlgOv=document.getElementById('xdlgOv'),xSel=document.getElementById('xdlgSel'),xOk=document.getElementById('xdlgOk');
+  let xTarget=null;
+  function closeX(){xdlgOv.classList.add('hidden');}
+  xSel.addEventListener('change',()=>{xOk.disabled=!xSel.value;});
+  document.getElementById('xdlgX').addEventListener('click',closeX);
+  document.getElementById('xdlgCancel').addEventListener('click',closeX);
+  xOk.addEventListener('click',()=>{xTarget.dataset.ex=xSel.value;setBtn(xTarget,xSel.value,true);closeX();});
+  document.querySelectorAll('.tbtn[data-exempt]').forEach(btn=>btn.addEventListener('click',e=>{
+    e.stopPropagation();xTarget=btn;
+    if(btn.dataset.ex){
+      confirmDlg({title:'3% 제한 해제를 취소하시겠어요?',name:rowName(btn),desc:'3%룰이 다시 적용됩니다.',meta:'2026-02-10 · 김담당님이 제한 해제함',ok:'다시 제한',
+        onOk:()=>{btn.dataset.ex='';setBtn(btn,'해제하기',false);}});
+    }else{xSel.value='';xOk.disabled=true;xdlgOv.classList.remove('hidden');}
+  }));
 
-  // ===== 특수관계인 패널 =====
-  const relOverlay=document.getElementById('relOverlay');
-  const relBody=document.getElementById('relBody');
-  const relTitle=document.getElementById('relTitle');
-  const REL_NAMES=['김민서','이준호','박서연','정우진','최지아','한도윤','오세훈','임하늘','서지후','문가온','배시우','노아린'];
-  function openRel(btn){
-    const row=btn.closest('tr');
-    const name=row.querySelector('.vname')?row.querySelector('.vname').textContent:(row.querySelector('.voter')?row.querySelector('.voter').textContent.trim():'특수관계인');
-    const count=parseInt(btn.dataset.count||'0',10)||3;
-    relTitle.textContent='특수관계인 · '+name;
-    relBody.innerHTML='';
-    for(let i=0;i<count;i++){
-      const nm=REL_NAMES[i%REL_NAMES.length];
-      const num=(37010000+i*137).toString();
-      const d=document.createElement('div');
-      d.className='rel-row';
-      d.innerHTML='<span class="rel-av">'+nm.charAt(0)+'</span><span class="rel-name">'+nm+'</span><span class="rel-num">'+num+'</span>';
-      relBody.appendChild(d);
-    }
-    relOverlay.classList.remove('hidden');
-  }
-  document.querySelectorAll('.tbtn[data-rel]').forEach(btn=>{
-    btn.addEventListener('click',e=>{e.stopPropagation();openRel(btn);});
-  });
-
-  // ===== 이전 설정 불러오기 패널 =====
-  const loadOverlay=document.getElementById('loadOverlay');
+  // ===== 이전 설정 불러오기 =====
+  const loadOverlay=document.getElementById('loadOverlay'),loadGo=document.getElementById('loadGo');
   document.getElementById('loadBtn').addEventListener('click',()=>loadOverlay.classList.remove('hidden'));
-
-  // overlay close (backdrop + data-close)
-  document.querySelectorAll('.overlay').forEach(ov=>{
-    ov.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>ov.classList.add('hidden')));
+  loadOverlay.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>loadOverlay.classList.add('hidden')));
+  document.querySelectorAll('.loadItem').forEach(c=>c.addEventListener('change',()=>{loadGo.disabled=!document.querySelector('.loadItem:checked');}));
+  loadGo.addEventListener('click',e=>{
+    e.stopPropagation();
+    confirmDlg({title:'이전 설정을 불러오시겠습니까?',desc:'선택한 항목의 기존 입력 내용이 이전 설정 데이터로 덮어씌워집니다.',ok:'불러오기',
+      onOk:()=>{loadOverlay.classList.add('hidden');showToast('설정을 불러왔습니다.');}});
   });
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.overlay').forEach(o=>o.classList.add('hidden'));adlgOv.classList.add('hidden');}});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){rtypeList.classList.add('hidden');closeMpop();}});
 </script>
 <script>
 document.querySelectorAll('.lnb-tabs .t').forEach(function(t){t.addEventListener('click',function(){var tab=t.dataset.tab;if(!tab)return;document.querySelectorAll('.lnb-tabs .t').forEach(function(x){x.classList.toggle('active',x===t);});document.querySelectorAll('.lnb-content[data-tabpanel]').forEach(function(p){p.classList.toggle('show',p.dataset.tabpanel===tab);});});});
 </script>
 <script>
-  // ===== 의안 기준 - 의결권제한 설정 패널 =====
+  // ===== 의안 기준 =====
   (function(){
-    var ov=document.getElementById('agsetOv'); if(!ov) return;
-    document.querySelectorAll('.setbtn').forEach(function(b){
-      b.addEventListener('click',function(){
-        var tr=b.closest('tr');
-        var no=tr.children[0].textContent.trim();
-        var nc=tr.children[1].cloneNode(true); var bd=nc.querySelector('.rbadge2'); var typ=bd?bd.textContent.trim():'';
-        if(bd)bd.remove();
-        document.getElementById('agsetNo').textContent=no;
-        document.getElementById('agsetName').textContent=nc.textContent.trim();
-        document.getElementById('agsetTags').textContent=(typ?typ+' · ':'')+'3%룰 · 양립불가';
-        ov.classList.add('show');
+    // 의안 목록 (lv: 들여쓰기 단계, lim: 제한의결권, n: 설정된 제한 주주 수, btn: 제한 설정 필요 여부)
+    const AG=[
+      {no:'1',name:'제13기 재무제표 및 연결재무제표 승인의 건',res:'보통결의',lv:0,lim:10503,btn:1,preset:1},
+      {no:'2',name:'정관 일부 변경의 건',res:'특별결의',lv:0,lim:350040,btn:0},
+      {no:'3',name:'감사위원회 위원 선임의 건',res:'보통결의',lv:0,lim:350040,btn:1,preset:1},
+      {no:'3-2',name:'사외이사인 감사위원회 위원 선임의 건',res:'보통결의',tag:'집중투표',lv:1,lim:350040,btn:0},
+      {no:'3-2-1',name:'사외이사인 감사위원회 위원 김수지 선임의 건',res:'보통결의',tag:'집중투표',lv:2,lim:273090,btn:1,preset:2},
+      {no:'3-3',name:'사외이사가 아닌 감사위원회 위원 이영호 선임의 건',res:'보통결의',tag:'양립불가',lv:1,lim:273090,btn:1},
+      {no:'4',name:'감사 선임의 건',res:'보통결의',lv:0,lim:350040,btn:0},
+      {no:'5',name:'이사 선임의 건',res:'보통결의',lv:0,lim:450040,btn:1},
+      {no:'5-3',name:'사외이사 후보 박민수 선임의 건',res:'보통결의',tag:'양립불가',lv:1,lim:273090,btn:1},
+      {no:'6',name:'이사 보수한도 승인의 건',res:'보통결의',lv:0,lim:10503,btn:1}
+    ];
+    const VS=231831, CAP=6954;
+    // 연동(시스템 자동 산출) 제한 주주 — [이름, 사유, 보유, 제한]
+    const LINKED=[
+      {name:'K-홀딩스(K-Holdings) 외 2',rsn:'의결권 없는 주식',kids:[['K-홀딩스(K-Holdings)','자사주',10003,10003],['(주)대한산업','상호주',4200,4200],['(주)세종','무효주',800,800]]},
+      {name:'정재훈 외 1',rsn:'최대주주',kids:[['정재훈','최대주주',12400,8185],['정하나','특수관계인',8056,5317]]},
+      {name:'한빛장학재단 외 1',rsn:'공익법인',kids:[['한빛장학재단','공익법인',9800,4558],['한빛문화재단','특수관계인',3200,1488]]},
+      {name:'삼성생명보험 외 1',rsn:'금융보험사',kids:[['삼성생명보험','금융보험사',7500,3210],['이민주','특수관계인',1200,514]]},
+      {name:'미래복지재단',rsn:'공익법인',kids:[['미래복지재단','공익법인',5120,0]]}
+    ];
+    const POOL=[['김한울','8904121',3085,'1.05%'],['김우선','8904122',20456,'0.3%'],['정찰리','6820451',350040,'5.14%'],['김민주','00036827878747898',10503,'5.14%'],['국민연금공단','11002938',421900,'6.19%'],['존슨리','00047382910',152300,'2.24%'],['정해인','88293011',33180,'0.49%'],['김도현','66218847',98450,'1.44%']];
+    const state=AG.map(a=>({linked:a.preset?LINKED.slice(0,a.preset===2?2:5):[],added:a.preset===1?[{p:POOL[1],reason:'특별이해관계자',cond:'2호 가결시',lim:20456}]:[]}));
+    const countOf=s=>s.linked.reduce((n,g)=>n+g.kids.length,0)+s.added.length;
+    const body=document.getElementById('agBody');
+    function renderAG(){
+      body.innerHTML=AG.map((a,i)=>{
+        const n=countOf(state[i]);
+        const b=a.btn?'<button class="setbtn'+(n?' on':'')+'" data-ag="'+i+'">'+(n?'<i class="ph ph-check"></i>'+n+'명':'제한설정')+'</button>':'';
+        return '<tr class="'+(a.lv?'sub lv'+a.lv:'')+'"><td>'+a.no+'</td><td>'+esc(a.name)+(a.tag?'<span class="gtag">'+a.tag+'</span>':'')+'</td><td class="n mut">10,503</td><td class="n mut">'+fmt(a.lim)+'</td><td class="n b">241,834</td><td class="c">'+b+'</td></tr>';
+      }).join('');
+    }
+    renderAG();
+
+    // --- 패널 ---
+    const ov=document.getElementById('agsetOv');
+    let cur=-1, work=null, snapA='', condOn=true, editing=null;
+    const rowsEl=document.getElementById('agRows');
+    const open=new Set();
+    function totals(){
+      let h=0,l=0,cnt=0;
+      work.linked.forEach(g=>g.kids.forEach(k=>{h+=k[2];l+=k[3];cnt++;}));
+      work.added.forEach(a=>{if(!condOn&&a.cond)return;h+=a.p[2];l+=a.lim;cnt++;});
+      return {h,l,cnt};
+    }
+    function renderRows(){
+      const sec=document.getElementById('agLimSec');
+      sec.hidden=!work.linked.length&&!work.added.length;
+      let html='';
+      work.linked.forEach((g,gi)=>{
+        const multi=g.kids.length>1, h=g.kids.reduce((s,k)=>s+k[2],0), l=g.kids.reduce((s,k)=>s+k[3],0), isOpen=open.has(gi);
+        html+='<tr><td class="ck">'+(multi?'<button class="tw-chevron'+(isOpen?'':' collapsed')+'" data-g="'+gi+'"><i class="ph ph-caret-up"></i></button>':'')+'</td><td><span class="srcb">연동</span></td><td>'+esc(g.name)+'</td><td class="rsn">'+esc(g.rsn)+'</td><td class="n">'+fmt(h)+'</td><td class="n b">'+fmt(l)+'</td><td class="n b">'+fmt(h-l)+'</td><td></td></tr>';
+        if(multi&&isOpen) g.kids.forEach(k=>{html+='<tr class="kid"><td class="ck"></td><td><span class="srcb">연동</span></td><td>'+esc(k[0])+'</td><td class="rsn">'+esc(k[1])+'</td><td class="n">'+fmt(k[2])+'</td><td class="n b">'+fmt(k[3])+'</td><td class="n b">'+fmt(k[2]-k[3])+'</td><td></td></tr>';});
       });
+      work.added.forEach((a,ai)=>{
+        if(!condOn&&a.cond) return;
+        const tail=a.cond||a.method||'';
+        const full=a.reason+(tail?' · '+tail:'')+(a.text?' · '+a.text:'');
+        html+='<tr><td class="ck"></td><td><span class="srcb add">추가</span></td><td>'+esc(a.p[0])+'</td><td class="rsn" title="'+esc(full)+'">'+esc(a.reason)+'<span class="m">'+esc(full.slice(a.reason.length))+'</span></td><td class="n">'+fmt(a.p[2])+'</td><td class="n b">'+fmt(a.lim)+'</td><td class="n b">'+fmt(a.p[2]-a.lim)+'</td><td><div class="agset-acts"><button class="icbtn" data-edit="'+ai+'" title="수정"><i class="ph ph-pencil-simple"></i></button><button class="icbtn" data-del="'+ai+'" title="삭제"><i class="ph ph-trash"></i></button></div></td></tr>';
+      });
+      rowsEl.innerHTML=html;
+      const t=totals();
+      document.getElementById('agCnt').textContent=t.cnt;
+      document.getElementById('agSumH').textContent=fmt(t.h);
+      document.getElementById('agSumL').textContent=fmt(t.l);
+      document.getElementById('agSumE').textContent=fmt(t.h-t.l);
+      document.getElementById('abLim').textContent=fmt(t.l);
+      document.getElementById('abEx').textContent=fmt(VS-t.l);
+      document.getElementById('agAllT').classList.toggle('collapsed',open.size===0);
+    }
+    rowsEl.addEventListener('click',e=>{
+      const g=e.target.closest('[data-g]');
+      if(g){const i=+g.dataset.g;open.has(i)?open.delete(i):open.add(i);renderRows();return;}
+      const d=e.target.closest('[data-del]');
+      if(d){confirmDlg({danger:1,title:'제한 주주를 삭제하시겠습니까?',desc:'삭제 후에는 복구할 수 없습니다.',ok:'삭제',onOk:()=>{work.added.splice(+d.dataset.del,1);renderRows();}});return;}
+      const ed=e.target.closest('[data-edit]');
+      if(ed){const a=work.added.splice(+ed.dataset.edit,1)[0];renderRows();openCard(a.p,a);}
     });
-    ov.addEventListener('click',function(e){ if(e.target.closest('[data-agset-close]')) ov.classList.remove('show'); });
-    var sv=document.getElementById('agsetSave'); if(sv)sv.addEventListener('click',function(){ ov.classList.remove('show'); if(window.cxToast)cxToast('저장되었습니다.'); });
+    document.getElementById('agAllT').addEventListener('click',()=>{
+      if(open.size) open.clear(); else work.linked.forEach((g,i)=>{if(g.kids.length>1)open.add(i);});
+      renderRows();
+    });
+    document.getElementById('agCondT').addEventListener('click',e=>{
+      e.preventDefault();condOn=!condOn;e.currentTarget.querySelector('.sw').classList.toggle('on',condOn);renderRows();
+    });
+
+    // 제한 주주 추가: 검색 → 카드
+    const q=document.getElementById('agQ'),res=document.getElementById('agRes'),card=document.getElementById('agCard');
+    const $=id=>document.getElementById(id);
+    let cardP=null;
+    function renderRes(){
+      const s=q.value.trim(); if(!s){res.hidden=true;return;}
+      const col=$('agField').value==='주주번호'?1:0;
+      const hits=POOL.filter(p=>String(p[col]).includes(s));
+      res.innerHTML=hits.length?hits.map(p=>'<button class="it" data-pp="'+POOL.indexOf(p)+'"><b>'+esc(p[0])+'</b><span>'+esc(p[1])+' · '+fmt(p[2])+'주 · '+p[3]+'</span></button>').join(''):'<div class="none">검색 결과가 없습니다</div>';
+      res.hidden=false;
+    }
+    q.addEventListener('input',renderRes);
+    res.addEventListener('click',e=>{const b=e.target.closest('[data-pp]');if(!b)return;const p=POOL[+b.dataset.pp];q.value=p[0];res.hidden=true;openCard(p,null);});
+    ov.addEventListener('click',e=>{if(!e.target.closest('#agRes,#agQ'))res.hidden=true;});
+    ov.addEventListener('keydown',e=>{if(e.key==='Enter')e.stopPropagation();});   // 공통 Enter=저장 차단
+    function openCard(p,prev){
+      cardP=p;editing=prev;
+      $('acName').textContent=p[0];$('acMeta').textContent=p[1]+' · '+fmt(p[2])+'주 · '+p[3];
+      $('acReason').value=prev?prev.reason:'';
+      $('acCond').checked=!!(prev&&prev.cond);
+      $('acMethod').value=prev&&prev.m||'all';$('acPct').value=prev&&prev.pct||'';$('acCnt').value=prev&&prev.cnt||'';$('acText').value=prev&&prev.text||'';
+      card.hidden=false;syncCard();
+    }
+    function closeCard(){card.hidden=true;cardP=null;q.value='';
+      if(editing){work.added.push(editing);editing=null;renderRows();}}   // 수정 취소 시 원래 행 복구
+    $('acDel').addEventListener('click',closeCard);
+    // 조건부 적용 대상 의안 (현재 의안 제외)
+    function fillCond(){ $('acCondSel').innerHTML=AG.filter((a,i)=>i!==cur&&a.lv===0).map(a=>'<option>'+a.no+'호 '+esc(a.name)+' 가결 시</option>').join(''); }
+    function syncCard(){
+      const r=$('acReason').value, m=$('acMethod').value;
+      $('acCondBox').hidden=r!=='특별이해관계자';
+      $('acCondSelW').hidden=!$('acCond').checked;
+      $('acEtc').hidden=r!=='기타';
+      $('acPctRow').hidden=m!=='pct';$('acCntRow').hidden=m!=='cnt';
+      let ok=!!r;
+      if(r==='기타') ok=!!$('acText').value.trim()&&(m==='all'||(m==='pct'&&$('acPct').value!=='')||(m==='cnt'&&$('acCnt').value!==''));
+      $('acAdd').disabled=!ok;
+    }
+    ['acReason','acCond','acMethod','acPct','acCnt','acText','acBase'].forEach(id=>{$(id).addEventListener('input',syncCard);$(id).addEventListener('change',syncCard);});
+    // 입력값이 보유주식 초과 시 보유주식 수로 자동 제한
+    $('acCnt').addEventListener('change',()=>{if(cardP&&+$('acCnt').value>cardP[2])$('acCnt').value=cardP[2];});
+    $('acPct').addEventListener('change',()=>{if(+$('acPct').value>100)$('acPct').value=100;});
+    $('acAdd').addEventListener('click',()=>{
+      const hold=cardP[2], r=$('acReason').value;
+      const a={p:cardP,reason:r,lim:hold};
+      if(r==='특별이해관계자'){ a.method='전체제한'; if($('acCond').checked){const c=$('acCondSel').value;a.cond=c.split('호')[0]+'호 가결시';a.method='';} }
+      else{
+        a.m=$('acMethod').value;a.text=$('acText').value.trim();
+        if(a.m==='pct'){a.pct=+$('acPct').value;const base=$('acBase').value==='hold'?hold:VS;const allow=Math.min(hold,Math.floor(base*a.pct/100));a.lim=hold-allow;a.method=$('acBase').selectedOptions[0].text+'의 '+a.pct+'% 허용';}
+        else if(a.m==='cnt'){a.cnt=Math.min(hold,+$('acCnt').value);a.lim=hold-a.cnt;a.method=fmt(a.cnt)+'주 허용';}
+        else a.method='전체제한';
+      }
+      work.added.push(a);editing=null;card.hidden=true;cardP=null;q.value='';renderRows();
+    });
+
+    function openPanel(i){
+      cur=i;const a=AG[i];
+      work={linked:state[i].linked,added:state[i].added.slice()};
+      open.clear();condOn=true;document.querySelector('#agCondT .sw').classList.add('on');
+      $('agsetNo').textContent='제 '+a.no+'호';
+      $('agsetTags').textContent=[a.res,a.tag].filter(Boolean).join(' · ');
+      $('agsetName').textContent=a.name;
+      card.hidden=true;editing=null;q.value='';res.hidden=true;fillCond();
+      renderRows();snapA=JSON.stringify(work.added);
+      ov.classList.add('show');
+    }
+    function closePanel(){ov.classList.remove('show');}
+    function tryClose(){ if(JSON.stringify(work.added)!==snapA||!card.hidden) confirmDiscard(closePanel); else closePanel(); }
+    body.addEventListener('click',e=>{const b=e.target.closest('[data-ag]');if(b)openPanel(+b.dataset.ag);});
+    $('agsetX').addEventListener('click',tryClose);
+    $('agsetCancel').addEventListener('click',tryClose);
+    $('agsetSave').addEventListener('click',e=>{
+      e.stopPropagation();
+      if(editing){work.added.push(editing);editing=null;}
+      state[cur].added=work.added;closePanel();renderAG();
+      showToast('의결권 제한이 설정되었습니다');
+    });
   })();
 </script>
 <script src="conexus.js?v=fwu"></script>
