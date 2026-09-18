@@ -180,6 +180,7 @@
   .op.abs svg{color:#171717}
   #viewAgenda tbody td:nth-child(5),#viewHolder td.mi{color:var(--muted-fg)}   /* 미행사의결권 — muted, 막대 없이 수치만 */
   #viewAgenda tbody td:nth-child(2),#viewHolder tbody td:nth-child(2){font-weight:400}   /* 의안명 · 주주명 — 보통 굵기 */
+  #viewAgenda th:first-child{width:80px !important}   /* 의안번호 — 번호만 표기라 좁게(conexus.js 자동 폭 덮어쓰기) */
   .mbar{display:inline-block;width:28px;height:6px;border-radius:3px;background:linear-gradient(90deg,#737373 45%,#e5e5e5 45%);vertical-align:middle;margin-right:6px}
 
   .dlg-c{max-height:58vh;overflow-y:auto}
@@ -339,7 +340,7 @@
       <div class="content" style="width:100%">
         <!-- 상단 타이틀 + 확정하기 -->
         <div class="ev-head">
-          <div class="ev-title"><div class="page-title">전자투표/위임 내역</div><div class="ev-org"><span>전자투표관리기관</span><b>한국예탁결제원</b></div></div>
+          <div class="ev-title"><div class="page-title">전자투표/위임 내역</div><div class="ev-org" id="evOrg"><span>전자투표관리기관</span><b>IR큐더스</b></div></div>
           <span class="spacer"></span>
           <button class="btn-primary" id="btnConfirm" style="display:inline-flex"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>확정하기</button>
         </div>
@@ -388,27 +389,27 @@
           <!-- 의안 기준 -->
           <div class="tbl-wrap" id="viewAgenda">
             <table class="tbl" data-nosort>
-              <thead><tr><th>의안번호</th><th>의안명</th><th class="num">총행사가능의결권</th><th class="num">행사의결권</th><th class="num">미행사의결권</th><th class="num"><span class="hh"><svg class="hicon for" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></th><th class="num"><span class="hh"><svg class="hicon against" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></th><th class="num"><span class="hh"><svg class="hicon abs" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</span></th></tr></thead>
+              <thead><tr><th>의안번호</th><th>의안명</th><th class="num">총행사가능의결권</th><th class="num">행사의결권</th><th class="num">미행사의결권</th><th class="num"><span class="hh"><svg class="hicon for" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></th><th class="num"><span class="hh"><svg class="hicon against" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></th><th class="num"><span class="hh"><svg class="hicon abs" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</span></th><th class="num"><span class="hh"><svg class="hicon neu" viewBox="0 0 24 24"><path d="M12 5 4 19h16z"/></svg>중립</span></th></tr></thead>
               <tbody>
-                  <tr><td>1</td><td>재무제표 승인의 건</td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">0</td><td class="num">241,800,000</td><td class="num">58,200,000</td><td class="num">0</td></tr>
-                  <tr class="grp-h"><td>2</td><td>정관 일부 변경의 건</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
-                  <tr><td>2-1</td><td>집중투표제 배제 조항 삭제의 건(정관 제37조 제3항)</td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">0</td><td class="num">214,000,000</td><td class="num">84,000,000</td><td class="num">2,000,000</td></tr>
-                  <tr><td>2-2</td><td>전자주주총회 도입 관련 변경(정관 제26조 제2항)</td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">0</td><td class="num">206,000,000</td><td class="num">92,000,000</td><td class="num">2,000,000</td></tr>
-                  <tr><td>3</td><td>선임 이사 수 결정의 건</td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">0</td><td class="num">241,800,000</td><td class="num">58,200,000</td><td class="num">0</td></tr>
-                  <tr class="sub"><td>3-1</td><td>집중투표 4인 중 2인 선임의 건(회사제안)</td><td class="num"></td><td class="num">300,000,000</td><td class="num"></td><td class="num">241,800,000</td><td class="num">58,200,000</td><td class="num">0</td></tr>
-                  <tr class="sub"><td>3-2</td><td>집중투표 5인 중 2인 선임의 건(주주제안)</td><td class="num"></td><td class="num">300,000,000</td><td class="num"></td><td class="num">118,000,000</td><td class="num">182,000,000</td><td class="num">0</td></tr>
-                  <tr class="grp-h"><td>4</td><td>집중투표에 의한 이사 선임의 건</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
-                  <tr><td>4-1</td><td>집중투표 4인 중 2인 선임의 건(회사제안) <span class="cvb">집중투표</span></td><td class="num">471,661,174</td><td class="num">23,000,000</td><td class="num">277,000,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-1-1</td><td>사외이사 후보 김도현</td><td class="num"></td><td class="num">10,240,000</td><td class="num"></td><td class="num">10,240,000</td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-1-2</td><td>사외이사 후보 이수진</td><td class="num"></td><td class="num">4,320,000</td><td class="num"></td><td class="num">4,320,000</td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-1-3</td><td>사외이사 후보 박준영</td><td class="num"></td><td class="num">7,180,000</td><td class="num"></td><td class="num">7,180,000</td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-1-4</td><td>사외이사 후보 최민서</td><td class="num"></td><td class="num">1,260,000</td><td class="num"></td><td class="num">1,260,000</td><td class="num"></td><td class="num"></td></tr>
-                  <tr><td>4-2</td><td>집중투표 5인 중 2인 선임의 건(주주제안) <span class="cvb">집중투표</span></td><td class="num">471,661,174</td><td class="num">23,340,000</td><td class="num">276,660,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-2-1</td><td>사외이사 후보 정우성</td><td class="num"></td><td class="num">9,850,000</td><td class="num"></td><td class="num">9,850,000</td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-2-2</td><td>사외이사 후보 한지민</td><td class="num"></td><td class="num">6,420,000</td><td class="num"></td><td class="num">6,420,000</td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-2-3</td><td>사외이사 후보 오세훈</td><td class="num"></td><td class="num">3,980,000</td><td class="num"></td><td class="num">3,980,000</td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-2-4</td><td>사외이사 후보 강가람</td><td class="num"></td><td class="num">2,110,000</td><td class="num"></td><td class="num">2,110,000</td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-2-5</td><td>사외이사 후보 윤서연</td><td class="num"></td><td class="num">980,000</td><td class="num"></td><td class="num">980,000</td><td class="num"></td><td class="num"></td></tr>
+                  <tr><td>1</td><td>재무제표 승인의 건</td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">0</td><td class="num">241,800,000</td><td class="num">58,200,000</td><td class="num">0</td><td class="num">0</td></tr>
+                  <tr class="grp-h"><td>2</td><td>정관 일부 변경의 건</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr><td>2-1</td><td>집중투표제 배제 조항 삭제의 건(정관 제37조 제3항)</td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">0</td><td class="num">214,000,000</td><td class="num">84,000,000</td><td class="num">2,000,000</td><td class="num">0</td></tr>
+                  <tr><td>2-2</td><td>전자주주총회 도입 관련 변경(정관 제26조 제2항)</td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">0</td><td class="num">206,000,000</td><td class="num">92,000,000</td><td class="num">2,000,000</td><td class="num">0</td></tr>
+                  <tr><td>3</td><td>선임 이사 수 결정의 건 <span class="cvb">양립불가</span></td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">0</td><td class="num">241,800,000</td><td class="num">58,200,000</td><td class="num">0</td><td class="num">0</td></tr>
+                  <tr class="sub"><td>3-1</td><td>집중투표 4인 중 2인 선임의 건(회사제안)</td><td class="num"></td><td class="num">300,000,000</td><td class="num"></td><td class="num">241,800,000</td><td class="num">58,200,000</td><td class="num">0</td><td class="num">0</td></tr>
+                  <tr class="sub"><td>3-2</td><td>집중투표 5인 중 2인 선임의 건(주주제안)</td><td class="num"></td><td class="num">300,000,000</td><td class="num"></td><td class="num">118,000,000</td><td class="num">182,000,000</td><td class="num">0</td><td class="num">0</td></tr>
+                  <tr class="grp-h"><td>4</td><td>집중투표에 의한 이사 선임의 건</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr><td>4-1</td><td>집중투표 4인 중 2인 선임의 건(회사제안) <span class="cvb">집중투표</span></td><td class="num">471,661,174</td><td class="num">23,000,000</td><td class="num">277,000,000</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-1-1</td><td>사외이사 후보 김도현</td><td class="num"></td><td class="num">10,240,000</td><td class="num"></td><td class="num">10,240,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-1-2</td><td>사외이사 후보 이수진</td><td class="num"></td><td class="num">4,320,000</td><td class="num"></td><td class="num">4,320,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-1-3</td><td>사외이사 후보 박준영</td><td class="num"></td><td class="num">7,180,000</td><td class="num"></td><td class="num">7,180,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-1-4</td><td>사외이사 후보 최민서</td><td class="num"></td><td class="num">1,260,000</td><td class="num"></td><td class="num">1,260,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr><td>4-2</td><td>집중투표 5인 중 2인 선임의 건(주주제안) <span class="cvb">집중투표</span></td><td class="num">471,661,174</td><td class="num">23,340,000</td><td class="num">276,660,000</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-2-1</td><td>사외이사 후보 정우성</td><td class="num"></td><td class="num">9,850,000</td><td class="num"></td><td class="num">9,850,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-2-2</td><td>사외이사 후보 한지민</td><td class="num"></td><td class="num">6,420,000</td><td class="num"></td><td class="num">6,420,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-2-3</td><td>사외이사 후보 오세훈</td><td class="num"></td><td class="num">3,980,000</td><td class="num"></td><td class="num">3,980,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-2-4</td><td>사외이사 후보 강가람</td><td class="num"></td><td class="num">2,110,000</td><td class="num"></td><td class="num">2,110,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-2-5</td><td>사외이사 후보 윤서연</td><td class="num"></td><td class="num">980,000</td><td class="num"></td><td class="num">980,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
               </tbody>
             </table>
             <div class="pg-empty">표시할 데이터가 없습니다</div>
@@ -627,7 +628,8 @@
     // 내역 탭 전환
     document.querySelectorAll('.evtabs').forEach(function(g){
       g.querySelectorAll('.evtab').forEach(function(t){
-        t.addEventListener('click', function(){ g.querySelectorAll('.evtab').forEach(function(x){x.classList.toggle('active',x===t);}); });
+        t.addEventListener('click', function(){ g.querySelectorAll('.evtab').forEach(function(x){x.classList.toggle('active',x===t);});
+          document.getElementById('evOrg').style.display=/해외/.test(t.textContent)?'none':'';   /* 전자투표관리기관은 국내 주주에서만 표기 */ });
       });
     });
   })();
@@ -662,7 +664,7 @@
     function num(x){return parseInt((x||'').replace(/[^0-9]/g,''),10)||0;}
     function fmt(n){return n.toLocaleString('en-US');}
     function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
-    var SCOLS=[3,5,6,7];
+    var SCOLS=[3,5,6,7,8];
     var agBody=document.querySelector('#viewAgenda tbody');
     if(agBody){ agBody.querySelectorAll('tr').forEach(function(tr){
       var tds=tr.children;
