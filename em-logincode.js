@@ -118,9 +118,9 @@
   function shares(x) { return x.voters.length ? x.voters.reduce(function (a, r) { return a + r.sh; }, 0) : (x.cfAt ? x.decl : null); }
   var COLS = {
     sh: [['등록경로', 120, 'c'], ['상태', 129, 'c'], ['구분', 90, 'c'], ['이름', 240], ['연결된 투표권자', 0], ['주주번호', 210], ['보유주식수', 110, 'n'], ['코드 신청일', 110, 'c'], ['로그인코드', 140], ['확인 신청일', 110, 'c'], ['주주확인', 78, 'c'], ['', 44, 'c']],
-    ns: [['유형', 110, 'c'], ['상태', 129, 'c'], ['이름', 160], ['소속', 140], ['직급', 140], ['이메일', 240], ['휴대폰번호', 150], ['발급일', 110, 'c'], ['로그인코드', 140], ['', 44, 'c']]
+    ns: [['등록경로', 120, 'c'], ['상태', 129, 'c'], ['구분', 90, 'c'], ['이름', 160], ['소속', 140], ['전화번호', 150], ['이메일', 0], ['코드 발급일', 110, 'c'], ['로그인코드', 140], ['확인 신청일', 110, 'c'], ['주주확인', 78, 'c'], ['', 44, 'c']]
   };
-  var LEFT = { sh: 4, ns: 3 };   /* 왼쪽 고정 컬럼 수(이름까지) */
+  var LEFT = { sh: 4, ns: 4 };   /* 왼쪽 고정 컬럼 수(이름까지) */
   function val(x, c) {
     switch (c) {
       case '상태': return x.st;
@@ -137,13 +137,13 @@
       case '소속': return x.org || '-';
       case '직급': return x.pos || '-';
       case '이메일': return x.email;
-      case '휴대폰번호': return x.phone;
-      case '발급일': return day(x.mailAt);
+      case '휴대폰번호': case '전화번호': return x.phone;
+      case '발급일': case '코드 발급일': return day(x.mailAt);
     }
     return '';
   }
   function txt(x, c) { var v = val(x, c); return c === '보유주식수' ? (v == null ? '-' : cm(v)) : String(v); }
-  var GRAY = { '등록경로': 1, '구분': 1, '유형': 1, '코드 신청일': 1, '확인 신청일': 1, '발급일': 1 };
+  var GRAY = { '등록경로': 1, '구분': 1, '유형': 1, '코드 신청일': 1, '확인 신청일': 1, '발급일': 1, '코드 발급일': 1 };
   function cell(x, c) {
     if (c === '상태') return badge(x.st);
     if (c === '로그인코드') return '<span class="lc-code' + (x.st === '로그인코드 회수' ? ' off' : '') + '">' + esc(x.code) + '</span>';
@@ -190,7 +190,8 @@
   var body = document.getElementById('lcBody'), tbl = document.getElementById('lcTbl');
   var cur = 'sh', chip = 'all', page = 1, pageSize = 20, lastTotal = 0, sortSt = null, filtPred = null, shX = null;
   var QF = { sh: [['all', '전체'], ['이름', '이름'], ['연결된 투표권자', '연결된 투표권자'], ['주주번호', '주주번호'], ['로그인코드', '로그인코드']], ns: [['all', '전체'], ['이름', '이름'], ['소속', '소속'], ['이메일', '이메일'], ['로그인코드', '로그인코드']] };
-  var CHIPS = { sh: [['all', '전체'], ['로그인코드 발급', '코드 발급'], ['로그인코드 회수', '코드 회수'], ['주주확인 대기', '확인 대기'], ['주주확인 보완', '확인 보완'], ['주주확인 재보완', '확인 재보완'], ['주주확인 반려', '확인 반려'], ['주주확인 완료', '확인 완료']], ns: [['all', '전체'], ['로그인코드 발급', '코드 발급'], ['로그인코드 회수', '코드 회수']] };
+  var CHIPS = { sh: [['all', '전체'], ['로그인코드 발급', '코드 발급'], ['로그인코드 회수', '코드 회수'], ['주주확인 대기', '확인 대기'], ['주주확인 보완', '확인 보완'], ['주주확인 재보완', '확인 재보완'], ['주주확인 반려', '확인 반려'], ['주주확인 완료', '확인 완료']]};
+  CHIPS.ns = CHIPS.sh;   /* 비주주 탭도 주주 탭과 같은 상태 칩 */
   var qf = document.getElementById('lcQf'), q = document.getElementById('lcQ');
 
   function list() { return L.filter(function (x) { return cur === 'ns' ? x.ns : !x.ns; }); }
