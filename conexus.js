@@ -419,6 +419,7 @@
     });
 
     applyFilters(t);
+    if (t.hidden) paintCols(t);        /* 다시 그린 줄에도 컬럼 숨김 유지 */
     tools(tbl, t);
     watchFit(t, tbl);
     freezeWidths(t, tbl, fixed);
@@ -533,11 +534,12 @@
     host.__cx = 1;
     host.classList.add('cx-tools');
     host.innerHTML =
+      /* 줄 간격: Tabler line-height · 컬럼 표시: Phosphor SlidersHorizontal(regular) */
       '<button class="cx-tbtn" type="button" data-rowh title="줄 간격">'
-      + '<svg viewBox="0 0 24 24"><path d="M3 5h18M3 12h18M3 19h18"/></svg></button>'
+      + '<svg viewBox="0 0 24 24"><path d="M3 8l3 -3l3 3"/><path d="M3 16l3 3l3 -3"/><path d="M6 5l0 14"/>'
+      + '<path d="M13 6l7 0"/><path d="M13 12l7 0"/><path d="M13 18l7 0"/></svg></button>'
       + '<button class="cx-tbtn" type="button" data-cols title="컬럼 표시">'
-      + '<svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 12h4M12 12h8M4 17h12M20 17h0"/>'
-      + '<circle cx="16" cy="7" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="17" r="2"/></svg></button>';
+      + '<svg class="cx-ph" viewBox="0 0 256 256"><path d="M40,88H73a32,32,0,0,0,62,0h81a8,8,0,0,0,0-16H135a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16Zm64-24A16,16,0,1,1,88,80,16,16,0,0,1,104,64ZM216,168H199a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16h97a32,32,0,0,0,62,0h17a8,8,0,0,0,0-16Zm-48,24a16,16,0,1,1,16-16A16,16,0,0,1,168,192Z"/></svg></button>';
 
     host.querySelector('[data-rowh]').addEventListener('click', function (e) {
       e.stopPropagation();
@@ -550,9 +552,10 @@
           var it = ev.target.closest('[data-h]'); if (!it) return;
           var h = +it.getAttribute('data-h');
           t.rowh = h;
-          bodyRows(t.tb).forEach(function (r) {
-            Array.prototype.forEach.call(r.cells, function (c) { c.style.height = h ? h + 'px' : ''; });
-          });
+          /* 칸 height 는 '최소값'이라 패딩·뱃지가 큰 표에선 좁아지지 않는다 — 표 클래스로 패딩까지 바꾼다.
+             클래스라서 페이지 이동·검색으로 줄을 다시 그려도 유지된다. */
+          t.tbl.classList.remove('cx-rh-s', 'cx-rh-l');
+          if (h) t.tbl.classList.add(h < 40 ? 'cx-rh-s' : 'cx-rh-l');
           hide();
         });
       });
