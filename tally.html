@@ -358,7 +358,7 @@
               <button class="mchip" data-ch="evk">전자투표/위임(국내)</button>
               <button class="mchip" data-ch="eww">전자투표/위임(해외)</button>
               <button class="mchip" data-ch="pwo">서면위임(자사)</button>
-              <button class="mchip" data-ch="pwt">서면위임(타사)</button>
+              <button class="mchip" data-ch="pwt">서면위임(자사 외)</button>
             </div>
             <div class="hbtns">
               <label class="tgl-wrap"><span class="tgl on" id="neuTgl"></span>중립투표 적용</label>
@@ -388,7 +388,7 @@
               <button class="mchip" data-ch="evk">전자투표/위임(국내)</button>
               <button class="mchip" data-ch="eww">전자투표/위임(해외)</button>
               <button class="mchip" data-ch="pwo">서면위임(자사)</button>
-              <button class="mchip" data-ch="pwt">서면위임(타사)</button>
+              <button class="mchip" data-ch="pwt">서면위임(자사 외)</button>
             </div>
             <div class="hbtns">
               <button class="dlbtn" data-dl><i class="ph ph-download-simple" style="font-size:16px"></i>다운로드</button>
@@ -707,7 +707,7 @@
         '<td class="c">'+opv(h.v[0])+'</td><td class="c">'+opv(h.v[1])+'</td><td class="c">'+opv(h.v[2])+'</td></tr>');
     });
   }
-  function chLabel(c){return {evk:'전자투표/위임(국내)',eww:'전자투표/위임(해외)',pwo:'서면위임(자사)',pwt:'서면위임(타사)'}[c]||c;}
+  function chLabel(c){return {evk:'전자투표/위임(국내)',eww:'전자투표/위임(해외)',pwo:'서면위임(자사)',pwt:'서면위임(자사 외)'}[c]||c;}
 
   /* 요약 — 총 행사 의결권 · 총 출석 주주수 · 전체 의안 · 총 진행 시간 */
   function kpiRender(){

@@ -265,7 +265,7 @@
   .colitem.sel .colchk{visibility:visible}
 </style>
 <script src="cx-data.js"></script>
-<script src="cx-roster.js?v=r6"></script>
+<script src="cx-roster.js?v=r7"></script>
 <script src="cx-holders.js?v=5"></script>
 <link rel="stylesheet" href="cx-accordion.css?v=1">
 <style>
@@ -766,8 +766,8 @@
   })();
   // 주주 기준 표 — 주주명부 SSOT · 페이지네이션(cx-holders.js)
   cxHolders({
-    tabChannels: function(t){ return [t.replace('자사 외','타사')]; },   /* 명부 채널명은 '서면위임(타사)' 그대로 */
-    method: function(c){ return String(c).replace(/\((자사|타사)\)/,''); }
+    tabChannels: function(t){ return [t]; },
+    method: function(c){ return String(c).replace(/\((자사 외|자사|타사)\)/,''); }
   });
   // 탭별 데이터 수(SSOT) → KPI · 페이지네이션 · 빈 상태
   (function(){

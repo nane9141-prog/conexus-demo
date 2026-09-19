@@ -492,7 +492,7 @@
   // ── 개별 등록: 검색 선택 + 키보드 숏컷 ──
   (function(){
     var CH={ '자사':{title:'서면위임(자사)', way:'서면위임(자사)'},
-             '타사':{title:'서면위임(타사)', way:'서면위임(타사)'},
+             '타사':{title:'서면위임(자사 외)', way:'서면위임(자사 외)'},
              '투표':{title:'서면투표',       way:'서면투표'} };
     var p=new URLSearchParams(location.search); var chk=p.get('ch'); var ch=CH[chk]||CH['자사'];
     document.getElementById('chTitle').textContent=ch.title;
