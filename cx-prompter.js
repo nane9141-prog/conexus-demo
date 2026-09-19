@@ -161,7 +161,7 @@
     var r1 = present ? ((d['for'] / present) * 100).toFixed(2) : '0.00';
     var r2 = ((d['for'] || 0) / M.sharesIssued * 100).toFixed(2);
     return {
-      '기준일': '2026년 3월 27일',
+      '기준일': '2026년 9월 29일',
       '발행주식총수': cm(M.sharesIssued) + ' 주',
       '총 주주수': cm(M.holdersTotal) + ' 명',
       '의결권 있는 주식수': cm(M.sharesVoting) + ' 주',
@@ -293,7 +293,7 @@
     var list = [];
     list.push({ key: 'open', lb: '개회', tabs: chair
       ? [{ t: '주총 선언문', s: savedDecl() ||
-          V('2026년 3월 27일') + ' 기준일 현재 당사의 총 발행 주식수는 ' + V(cm(M.sharesIssued) + ' 주') + ' 이며, 총 주주수는 ' + V(cm(M.holdersTotal) + ' 명') + ' 입니다.\n\n'
+          V('2026년 9월 29일') + ' 기준일 현재 당사의 총 발행 주식수는 ' + V(cm(M.sharesIssued) + ' 주') + ' 이며, 총 주주수는 ' + V(cm(M.holdersTotal) + ' 명') + ' 입니다.\n\n'
           + '이중 의결권 있는 주식수는 ' + V(cm(M.sharesVoting) + ' 주') + ' 입니다.\n\n'
           + V(M.dateText + ' ' + M.time) + ' 현재 참석 주식수는 ' + V(cm(M.attendShares) + ' 주') + ' 이며, 참석 주주수는 ' + V(cm(M.attendHolders) + ' 명') + ' 입니다.\n\n'
           + '당사의 의결권 있는 주식의 총수인 ' + V(cm(M.sharesVoting) + ' 주') + ' 의 '

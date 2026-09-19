@@ -161,6 +161,13 @@
   .ivid-act button:hover{background:rgba(255,255,255,.12);color:#fff}
   .ivid-act button i{font-size:15px}
   .ivid video{display:block;width:100%;aspect-ratio:16/9;background:#000;object-fit:cover;cursor:pointer}
+  /* 총회 시작 전 — 시청 페이지의 '중계 준비 중' 화면과 같게 */
+  .ivid-pre{position:absolute;left:0;right:0;top:30px;bottom:0;background:linear-gradient(135deg,#12203a,#0c1730 60%,#1a2c52);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#eef}
+  .ivid-pre .lg{width:40px;height:40px;border-radius:11px;object-fit:contain;background:#fff;margin-bottom:10px}
+  .ivid-pre .t{font-size:18px;font-weight:800;opacity:.92}
+  .ivid-pre .t2{font-size:12px;opacity:.6;margin-top:3px}
+  .ivid-pre .wait{position:absolute;left:10px;top:10px;display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:rgba(255,255,255,.18);color:#fff;font-size:11px;font-weight:700}
+  .ivid.pre .ivid-t .liv{animation:none;background:#737373}
   .apanel-h{padding:11px 12px;font-size:14px;font-weight:600;color:#0a0a0a}
   .apanel-ph{padding:24px 12px;font-size:13px;color:#a3a3a3;text-align:center;line-height:1.6}
   .arow{padding:12px;background:#fff;border:1px solid #E5E5E5;border-radius:8px;display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
@@ -1291,9 +1298,10 @@
           <div class="nowgrid3">
             <div class="ngleft">
             <div class="apanel">
-              <div class="ivid">
+              <div class="ivid pre">
                 <div class="ivid-h"><span class="ivid-t"><span class="liv"></span>생중계 · 카카오뱅크 주주총회</span><div class="ivid-act"><button id="pipMute" title="음소거"><i class="ph ph-speaker-simple-high"></i></button><button id="vidPip" title="PIP"><i class="ph ph-picture-in-picture"></i></button><button id="vidFull" title="전체화면"><i class="ph ph-arrows-out"></i></button></div></div>
                 <video id="pipVid" src="kakaobank.mp4" loop playsinline></video>
+                <div class="ivid-pre" id="ividPre"><span class="wait">중계 준비 중</span><img class="lg" id="ividLogo" src="logo-kakaobank.png" alt="" width="40" height="40"><div class="t" data-cx="meeting.name">제10기 정기주주총회</div><div class="t2"><span class="ivid-co">카카오뱅크</span> · 곧 시작합니다</div></div>
               </div>
               <div class="apanel-h">의안 진행</div>
               <div id="agTree"></div>
@@ -1686,6 +1694,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     this.style.display='none'; document.getElementById('ocTimerW').style.display='';
     t=0; running=true; paint();
     window.__ocStarted=true;
+    var ivb=document.querySelector('.ivid'); if(ivb) ivb.classList.remove('pre');
+    var ivp=document.getElementById('ividPre'); if(ivp) ivp.remove();
     if(vid){ vid.currentTime=0; vid.muted=false; var pr=vid.play(); if(pr&&pr.catch) pr.catch(function(){}); }
     castClock();
     if(window.cxToast) cxToast('주주총회를 시작했습니다.');
@@ -4043,7 +4053,7 @@ document.addEventListener('click',function(e){
     setTimeout(function(){ cxSync.set({mcq:Date.now()}); },0);
 },true);
 </script>
-<script src="cx-prompter.js?v=d4"></script>
+<script src="cx-prompter.js?v=d5"></script>
 <script>
 /* 상정문 · 표결문 모달 — 의안 콘트롤에서 연다. 본문은 의장용 화면과 같은 대본(cx-prompter)을 쓴다. */
 (function(){
@@ -4073,7 +4083,7 @@ document.addEventListener('click',function(e){
   };
 })();
 </script>
-<script src="conexus.js?v=s8"></script>
+<script src="conexus.js?v=s9"></script>
 <script>/* 칸이 열린 뒤에야 내보낼 수 있으므로, 화면을 연 순간의 상태를 여기서 한 번 알린다 */
 if(window.OC&&OC.fire) OC.fire();
 /* 주주PASS 시청 화면에서 올라온 질의를 받아 목록 맨 앞에 얹는다 */

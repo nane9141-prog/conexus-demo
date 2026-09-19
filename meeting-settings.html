@@ -1137,7 +1137,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     </div>
     <div class="fgrid c2">
       <div class="field"><label>주주총회 일시 선택</label><div class="frow"><button class="inp dt" data-date data-value=""><span>날짜 선택</span><i class="ph ph-calendar-blank"></i></button><input class="inp time" value="10:30"></div></div>
-      <div class="field"><label>명부 기준일</label><input class="inp" value="2026-03-12" disabled><div class="fhelp">기준일을 변경하려면 [주주명부 관리]에서 연결 해제 후 다시 연결해 주세요.</div></div>
+      <div class="field"><label>명부 기준일</label><input class="inp" value="2026-09-14" disabled><div class="fhelp">기준일을 변경하려면 [주주명부 관리]에서 연결 해제 후 다시 연결해 주세요.</div></div>
     </div>
     <div class="field" style="gap:8px"><label>주주총회 장소</label>
       <div class="frow"><input class="inp" id="zipInp" placeholder="우편번호" readonly><button class="btn-line" id="addrBtn">주소 검색</button></div>
@@ -1799,6 +1799,6 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 <script>
 document.querySelectorAll('.lnb-tabs .t').forEach(function(t){t.addEventListener('click',function(){var tab=t.dataset.tab;if(!tab)return;document.querySelectorAll('.lnb-tabs .t').forEach(function(x){x.classList.toggle('active',x===t);});document.querySelectorAll('.lnb-content[data-tabpanel]').forEach(function(p){p.classList.toggle('show',p.dataset.tabpanel===tab);});});});
 </script>
-<script src="conexus.js?v=s8"></script>
+<script src="conexus.js?v=s9"></script>
 </body>
 </html>

@@ -1011,6 +1011,7 @@ window.cxClock = cxChannel('cx.clock');
     (root.querySelectorAll ? root.querySelectorAll('video[src*="kakaobank.mp4"]') : []).forEach(function (v) {
       v.setAttribute('src', v.getAttribute('src').replace('kakaobank.mp4', 'kudoselectric-live.mp4'));
     });
+    (root.querySelectorAll ? root.querySelectorAll('img[src="logo-kakaobank.png"]') : []).forEach(function (im) { im.setAttribute('src', 'kudos-favicon.png'); });
   }
   function picker() {
     document.querySelectorAll('.lnb-org').forEach(function (el) {
@@ -1033,9 +1034,22 @@ window.cxClock = cxChannel('cx.clock');
       });
     });
   }
+  /* 디자인 설정 이미지 — 화면 기본은 큐더스전자, 카카오뱅크일 때만 원래 카카오뱅크 이미지로 */
+  var KAKAO_IMG = { 'kudos-logo-ko.svg': 'KakaoBank_logo.svg', 'kudos-logo-en.svg': 'KakaoBank_logo.svg',
+    'kudos-favicon.png': 'favicon-bl.png', 'kudos-banner.jpg': 'introduction-img.png' };
+  function swapKakao(root) {
+    (root.querySelectorAll ? root.querySelectorAll('img.pimg') : []).forEach(function (im) {
+      var to = KAKAO_IMG[im.getAttribute('src')]; if (to) im.setAttribute('src', to);
+    });
+  }
+  /* 브라우저 탭 아이콘 — 고른 회사의 파비콘(디자인 설정의 파비콘과 같은 이미지) */
+  function favicon() {
+    var l = document.querySelector('link[rel="icon"]') || document.head.appendChild(document.createElement('link'));
+    l.rel = 'icon'; l.href = KUDOS ? 'kudos-favicon.png' : 'favicon-bl.png';
+  }
   function start() {
-    picker();
-    if (!KUDOS) return;
+    picker(); favicon();
+    if (!KUDOS) { swapKakao(document); return; }
     document.title = document.title.replace(/카카오뱅크/g, '큐더스전자');
     swapText(document.body); swapMedia(document);
     new MutationObserver(function (ms) {

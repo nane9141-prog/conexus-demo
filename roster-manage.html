@@ -296,7 +296,7 @@
       <!-- 재업로드 필요 -->
       <section id="rmErr" style="display:none;flex-direction:column;gap:16px">
         <div class="phead">
-          <div class="l"><div style="display:flex;align-items:center;gap:8px"><h1 id="rmErrBase">2026-03-15</h1><span class="sbadge r">재업로드 필요</span></div></div>
+          <div class="l"><div style="display:flex;align-items:center;gap:8px"><h1 id="rmErrBase">2026-09-17</h1><span class="sbadge r">재업로드 필요</span></div></div>
           <div class="acts"><button class="fbtn red" type="button" id="rmErrDel">주주명부 삭제</button></div>
         </div>
         <div class="falert red"><i class="ph ph-warning-circle"></i><div><b style="font-weight:500">데이터가 올바르지 않습니다</b>상세내역에서 시트와 행별 오류 원인을 확인 후, 올바르게 수정하여 다시 업로드해 주세요</div></div>
@@ -483,7 +483,7 @@
   /* 명부 상태: 대기중 · 업로드중 · 재업로드 필요 · 분류중 · 업로드완료. 최신 등록이 위 */
   var LIST = [
     { id: 'R-2026-04', st: '대기중', base: '2026-04-16', reg: '2026-04-16 17:41', by: '전수현' },
-    { id: 'R-2026-03', st: '재업로드 필요', base: '2026-03-15', reg: '2026-03-16 09:12', by: '이수민' },
+    { id: 'R-2026-03', st: '재업로드 필요', base: '2026-09-17', reg: '2026-09-18 09:12', by: '이수민' },
     { id: 'R-2026-02', st: '분류중', base: '2026-01-31', seq: 2, sh: RS.shares || 471661174, ho: RS.total || 897, reg: '2026-02-10 11:20', by: '이수민' },
     { id: 'R-2026-01', st: '업로드완료', base: '2026-01-31', seq: 1, stage: 'set',
       meeting: M.name || '제10기 정기주주총회',
@@ -824,6 +824,6 @@
   show(new URLSearchParams(location.search).get('id'));
 })();
 </script>
-<script src="conexus.js?v=s8"></script>
+<script src="conexus.js?v=s9"></script>
 </body>
 </html>

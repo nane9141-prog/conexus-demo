@@ -342,7 +342,7 @@
       var f=vote==='찬성'?ex:0, ag=vote==='반대'?ex:0, ab=vote==='기권'?ex:0, nt=vote==='중립'?ex:0;
       if(vote==='미행사'){ f=ag=ab=nt=0; }
       sum.can+=can; sum.un+=un; sum.ex+=ex; sum.f+=f; sum.a+=ag; sum.b+=ab; sum.n+=nt;
-      var tip=PRE?'행사일시 2026-03-'+(10+i%10)+' 09:'+(30+i):'행사 '+M.date+' 10:'+(12+i%40)+':'+(10+i)+'\n처리 '+M.operator.name+'\n채널 '+way;
+      var tip=PRE?'행사일시 2026-09-'+(12+i%10)+' 09:'+(30+i):'행사 '+M.date+' 10:'+(12+i%40)+':'+(10+i)+'\n처리 '+M.operator.name+'\n채널 '+way;
       return '<tr>'
         + td(voter,'l') + td(nm,'l') + td(PRE?way:'<span class="exchip'+(r[2]<2?' b':'')+'">'+way+'</span>','l')
         + '<td>'+cm(can)+'</td>' + num(un) + '<td>'+cm(ex)+'</td>'
@@ -373,6 +373,6 @@
   }
 })();
 </script>
-<script src="conexus.js?v=s8"></script>
+<script src="conexus.js?v=s9"></script>
 </body>
 </html>
