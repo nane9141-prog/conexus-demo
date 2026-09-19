@@ -86,9 +86,9 @@
   /* 권유 — 목표와 현황을 한 장에서 */
   .gcard{position:relative;display:flex;align-items:flex-start;gap:24px;padding:16px;background:#fff;
     border:1px solid var(--border);box-shadow:0 1px 2px rgba(0,0,0,.05);border-radius:10px;margin-bottom:16px}
-  .gcard .gl{display:flex;flex-direction:column;gap:24px;flex:1;min-width:280px}   /* 목표 및 현황 : 확보 현황 = 1 : 2 */
+  .gcard .gl{display:flex;flex-direction:column;gap:24px;width:460px;flex:none}   /* Figma: 목표 및 현황 460px 고정, 확보 현황이 나머지 */
   .gcard .gt{font-size:18px;line-height:28px;font-weight:600;color:#0a0a0a}
-  .gcard .gnote{font-size:12px;line-height:16px;color:#737373}
+  .gcard .gnote{max-width:414px;font-size:12px;line-height:16px;letter-spacing:-.01em;color:#737373}
   .gsep{width:1px;align-self:stretch;background:var(--border);flex:none}
   .gblk{display:flex;flex-direction:column;gap:12px}
   .gblk>.k{font-size:14px;line-height:1;font-weight:600;color:#737373}
@@ -102,7 +102,7 @@
   .gbar .t{height:24px;border-radius:4px;background:#f5f5f5;overflow:hidden}
   .gbar .t i{display:block;height:100%;background:linear-gradient(90deg,#82bbff,#0071f3)}
   .gbar .t.ink i{background:linear-gradient(90deg,#737373,#171717)}
-  .gright{flex:2;min-width:0;display:flex;align-items:flex-start;gap:24px;padding:6px 0}
+  .gright{flex:1;min-width:0;display:flex;align-items:flex-start;gap:24px;padding:6px 0}
   .gnum{display:flex;flex-direction:column;gap:16px;width:320px;flex:none}
   .gnum>.k{font-size:14px;line-height:1;font-weight:600;color:#737373}
   .gsum{display:flex;flex-direction:column;gap:8px;padding:14px;background:#fff;border-radius:8px}
@@ -284,7 +284,7 @@
         set('gPieV',p1.toFixed(1)+'%');
         var a=IRK/GOAL*100, b=Math.min(co/GOAL*100,100-a);
         document.getElementById('gPie').style.background=
-          'conic-gradient(#171717 0 '+a+'%,#0071f3 '+a+'% '+(a+b)+'%,#e5e5e5 '+(a+b)+'% 100%)';
+          'conic-gradient(#737373 0,#171717 '+a+'%,#82bbff '+a+'%,#0071f3 '+(a+b)+'%,#e5e5e5 '+(a+b)+'% 100%)';
       }
       var btn=document.getElementById('gEdit'), inp=document.getElementById('gCoIn'), out=document.getElementById('gLegCo');
       if(btn&&inp&&out){
@@ -522,7 +522,7 @@
             <div class="gl">
               <div style="display:flex;flex-direction:column;gap:8px">
                 <div class="gt">목표 및 현황</div>
-                <div class="gnote">※ 의결권 제한 설정에 따라 확보한 보유주식과 행사가능 의결권의 차이가 있을 수 있습니다.<br>※ 정확한 데이터 확인을 위해 회사 직접 확보 의결권을 입력·수정해 주세요.</div>
+                <div class="gnote">※ 의결권 제한 설정에 따라 확보한 보유주식과 행사가능 의결권의 차이가 있을 수 있습니다.<br>※ 정확한 데이터 확인을 위해 예상 기업 확보 의결권을 입력/수정해주세요.</div>
               </div>
               <div class="gblk">
                 <div class="k">보유주식 확보 현황</div>
