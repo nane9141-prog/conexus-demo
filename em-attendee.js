@@ -1,4 +1,4 @@
-/* 전자주주총회 관리 · 사전신청 관리 — 사전 등록된 참가자 조회 전용
+/* 전자주주총회 관리 · 사전 신청 관리 — 사전 등록된 참가자 조회 전용
    주주 탭: 명부 기준(통합 그룹은 펼침), 사전투표·참석 신청·출석·시청을 각각 독립 표시
    비주주 탭: 유형·연락처·소속·질의권·메모 (칩 없음) */
 (function () {
@@ -92,7 +92,7 @@
 
   /* ---------- 화면 ---------- */
   root.innerHTML = '<div class="lc">' +
-    '<div class="lc-hd"><h2>사전신청 관리</h2><p>사전 신청자를 포함한 전체 참가자를 조회합니다.</p></div>' +
+    '<div class="lc-hd"><h2>사전 신청 관리</h2><p>사전 신청자를 포함한 전체 참가자를 조회합니다.</p></div>' +
     '<div class="lc-bar">' +
       '<div class="lc-seg" id="atTabs"><button type="button" class="on" data-t="sh">주주</button><button type="button" data-t="ns">비주주</button></div>' +
       '<div class="lc-chips" id="atChips"></div>' +
@@ -170,7 +170,7 @@
     var b = e.target.closest('.pp'); if (!b || b.classList.contains('dis')) return;
     page = EM.pagerGo(b.dataset.pg, page, Math.max(1, Math.ceil(lastTotal / pageSize))); render();
   });
-  document.getElementById('atDown').addEventListener('click', function () { EM.toast((cur === 'sh' ? '주주' : '비주주') + ' 사전신청 관리 ' + rows().length + '건을 엑셀로 다운로드합니다.'); });
+  document.getElementById('atDown').addEventListener('click', function () { EM.toast((cur === 'sh' ? '주주' : '비주주') + ' 사전 신청 관리 ' + rows().length + '건을 엑셀로 다운로드합니다.'); });
   tbl.addEventListener('cxsort', function (e) { e.preventDefault(); sortSt = { idx: e.detail.idx, dir: e.detail.dir }; page = 1; render(); });
   tbl.cxFilter = function (pred) { filtPred = pred; page = 1; render(); };
   tbl.cxValues = function (i) { var c = COLS[cur][i][0]; return list().map(function (x) { return txt(x, c); }); };
