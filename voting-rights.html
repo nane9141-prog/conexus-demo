@@ -42,6 +42,9 @@
   .vr-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);width:100%}
   .vr-tab{appearance:none;background:none;border:none;font-family:inherit;font-size:14px;font-weight:500;color:var(--muted-fg);padding:8px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
   .vr-tab.active{color:#0a0a0a;border-bottom-color:#171717}
+  .vr-refresh{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#171717;cursor:pointer}
+  .vr-refresh i{font-size:14px}
+  .vr-refresh:hover{background:#F5F5F5}
   .vr-meta{display:flex;align-items:center;gap:10px;flex:none;padding-bottom:8px;white-space:nowrap}
   .vr-hint{font-size:12px;color:var(--muted-fg)}
   .vr-sep{width:1px;height:10px;background:var(--border)}
@@ -105,23 +108,29 @@
   .gright{flex:1;min-width:0;display:flex;align-items:flex-start;gap:24px;padding:6px 0}
   .gnum{display:flex;flex-direction:column;gap:16px;width:320px;flex:none}
   .gnum>.k{font-size:14px;line-height:1;font-weight:600;color:#737373}
-  .gsum{display:flex;flex-direction:column;gap:8px;padding:14px;background:#fff;border-radius:8px}
+  .gsum{display:flex;flex-direction:column;gap:8px;padding:15px;background:#fff;border:2px solid #82BBFF;border-radius:8px}   /* Figma: 확보 요약 박스 */
   .gsum .a{font-size:16px;line-height:1;font-weight:600;color:#0a0a0a}
   .gsum .b{font-size:12px;line-height:1;font-weight:500;color:#737373}
   .glegend{display:flex;flex-direction:column;gap:12px}
-  .glegend .row{display:flex;align-items:center;gap:6px;padding:0 2px;font-size:14px;line-height:20px;color:#0a0a0a}
+  .glegend .row{display:flex;align-items:center;gap:12px;min-height:24px;padding:0 2px;font-size:14px;line-height:20px;letter-spacing:-.01em;color:#0a0a0a}
+  .glegend .row#gCoRow{gap:6px}
+  .glegend .lb{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .glegend .row.editing{gap:12px}
   .glegend .sq{width:12px;height:12px;border-radius:2px;flex:none}
   .glegend .v{margin-left:auto;font-weight:600;color:#171717}
   .glegend .v.mut{color:#737373}
   .glegend .hr{height:1px;background:var(--border)}
   .gedit{width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;
     border:1px solid var(--border);border-radius:8px;background:#fff;color:#171717;cursor:pointer;padding:0}
-  .gedit svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
-  .gin{width:120px;height:24px;margin-left:auto;padding:0 8px;border:1px solid #a3a3a3;border-radius:8px;
-    font-family:inherit;font-size:14px;font-weight:600;text-align:right;color:#171717;outline:none}
+  .gedit i{font-size:12px}
+  .gedit[hidden]{display:none}
+  .gedit:hover{background:#F5F5F5}
+  /* 수정 상태 — Figma Input(focus): 32px · radius 10 · #A3A3A3 테두리 + 3px 링 */
+  .gin{flex:1;min-width:0;height:32px;box-sizing:border-box;padding:4px 10px;border:1px solid #A3A3A3;border-radius:10px;
+    box-shadow:0 0 0 3px rgba(163,163,163,.5);font-family:inherit;font-size:14px;letter-spacing:-.01em;text-align:right;color:#0A0A0A;outline:none}
   .gpie{position:relative;flex:1;min-width:232px;display:flex;align-items:center;justify-content:center}
   .gpie .d{width:232px;height:232px;border-radius:50%}
-  .gpie .d:after{content:"";position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;
+  .gpie .d:after{content:"";position:absolute;left:50%;top:50%;width:116px;height:116px;margin:-58px 0 0 -58px;
     background:#fff;border-radius:50%}
   .gpie .c{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1;
     font-size:18px;line-height:1;font-weight:600;color:#0a0a0a}
@@ -231,7 +240,7 @@
       if(!tt||tt.opacity===0){ el.style.opacity=0; return; }
       var title=(tt.title||[])[0]||''; var rows='';
       (tt.dataPoints||[]).forEach(function(dp){
-        var c=dp.dataset.backgroundColor;
+        var c=dp.dataset.backgroundColor; if(typeof c==='function') c='#82BBFF';
         rows+='<div class="ti"><span class="sq" style="background:'+c+'"></span><span class="lb">'+dp.dataset.label+'</span><span class="nw"><span class="nm">'+dp.parsed.y.toLocaleString()+'</span><span class="un">주</span></span></div>';
       });
       el.innerHTML='<div class="tt">'+title+'</div><div class="iw">'+rows+'</div>';
@@ -250,8 +259,9 @@
       var cum=[]; var run=0; daily.forEach(function(d){run+=d;cum.push(run);});
       chart=new Chart(cv.getContext('2d'),{
         data:{labels:labels,datasets:[
-          {type:'bar',label:'일일 수집',data:daily,backgroundColor:'#d4d4d4',borderRadius:6,yAxisID:'y',order:2,maxBarThickness:44,categoryPercentage:0.8,barPercentage:0.9},
-          {type:'line',label:'누적 수집',data:cum,borderColor:'#171717',backgroundColor:'#171717',borderWidth:2,tension:.3,pointRadius:3,yAxisID:'y1',order:1}
+          {type:'bar',label:'일일 수집',data:daily,backgroundColor:function(c){var a=c.chart.chartArea;if(!a)return '#82BBFF';var g=c.chart.ctx.createLinearGradient(0,a.top,0,a.bottom);g.addColorStop(0,'#82BBFF');g.addColorStop(1,'#D4E8FF');return g;},borderRadius:4,yAxisID:'y',order:2,maxBarThickness:84,categoryPercentage:0.8,barPercentage:0.9},
+          {type:'line',label:'누적 수집',data:cum,borderColor:'#0071F3',backgroundColor:'#0071F3',borderWidth:3,tension:0,pointRadius:0,pointHoverRadius:4,yAxisID:'y1',order:1,
+            fill:{target:'origin',above:'rgba(0,113,243,.08)'}}
         ]},
         options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
           plugins:{legend:{display:false},
@@ -267,7 +277,16 @@
       if(t.dataset.vt==='solicit') t.addEventListener('click',function(){ setTimeout(initChart,60); });
     });
     if(document.querySelector('.vr-panel[data-vp="solicit"].active')) setTimeout(initChart,120);
-    // 목표 및 현황 — 회사가 직접 확보한 몫만 고쳐 가며 본다
+    // 새로고침 — 기준 시각 갱신
+    (function(){
+      var b=document.getElementById('vrRefresh'); if(!b) return;
+      b.addEventListener('click',function(){
+        var d=new Date(), p=function(n){return ('0'+n).slice(-2);};
+        document.getElementById('vrAsOf').textContent=d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())+' 기준';
+        if(window.cxToast) cxToast('최신 현황을 불러왔습니다.');
+      });
+    })();
+    // 목표 및 현황 — 기업 예상 확보 의결권만 고쳐 가며 본다
     (function(){
       var IRK=118000000, GOAL=160000000, co=24800000;
       function cm(n){ return Math.round(n).toLocaleString('en-US'); }
@@ -276,26 +295,29 @@
         var got=IRK+co, left=Math.max(0,GOAL-got);
         var p1=Math.min(100,got/GOAL*100), p2=Math.min(100,IRK/GOAL*100);
         set('gHold',cm(got)); set('gGoal1',cm(GOAL)); set('gHoldP',p1.toFixed(1)+'%');
-        set('gVote',cm(IRK)); set('gGoal2',cm(GOAL)); set('gVoteP',p2.toFixed(1)+'%');
+        set('gVote',cm(IRK)); set('gGoal2',cm(GOAL)); set('gVoteP',p2.toFixed(1)+'%');   /* 의결정족수 = 목표와 같은 값(데모) */
         document.getElementById('gHoldB').style.width=p1+'%';
         document.getElementById('gVoteB').style.width=p2+'%';
         set('gSumA',cm(got)); set('gSumB',cm(GOAL));
-        set('gLegIrk',cm(IRK)); set('gLegCo',cm(co)); set('gLegLeft',cm(left));
+        set('gLegIrk',cm(IRK)+'주'); set('gLegCo',cm(co)+'주'); set('gLegLeft',cm(left)+'주');
         set('gPieV',p1.toFixed(1)+'%');
-        var a=IRK/GOAL*100, b=Math.min(co/GOAL*100,100-a);
+        /* 12시부터 기업 예상 확보(회색→검정) → IRK 확보(연파랑→파랑) → 잔여 */
+        var a=Math.min(co/GOAL*100,100), b=Math.min(IRK/GOAL*100,100-a);
         document.getElementById('gPie').style.background=
           'conic-gradient(#737373 0,#171717 '+a+'%,#82bbff '+a+'%,#0071f3 '+(a+b)+'%,#e5e5e5 '+(a+b)+'% 100%)';
       }
       var btn=document.getElementById('gEdit'), inp=document.getElementById('gCoIn'), out=document.getElementById('gLegCo');
       if(btn&&inp&&out){
+        var row=document.getElementById('gCoRow');
         btn.addEventListener('click',function(){
-          inp.value=cm(co); out.hidden=true; inp.hidden=false; inp.focus(); inp.select();
+          inp.value=cm(co)+'주'; out.hidden=true; btn.hidden=true; inp.hidden=false; row.classList.add('editing'); inp.focus(); inp.select();
         });
         var done=function(){
           var v=parseInt((inp.value||'').replace(/[^0-9]/g,''),10);
           if(!isNaN(v)) co=Math.max(0,v);
-          inp.hidden=true; out.hidden=false; draw();
+          inp.hidden=true; out.hidden=false; btn.hidden=false; row.classList.remove('editing'); draw();
         };
+        inp.addEventListener('input',function(){ var d=inp.value.replace(/[^0-9]/g,''); inp.value=d?Number(d).toLocaleString('en-US'):''; });
         inp.addEventListener('blur',done);
         inp.addEventListener('keydown',function(e){ if(e.key==='Enter') inp.blur(); });
         draw();
@@ -449,7 +471,7 @@
             <button class="vr-tab active" data-vt="status">종합 현황</button>
             <button class="vr-tab" data-vt="solicit">의결권 권유 현황</button>
           </div>
-          <div class="vr-meta"><span class="vr-hint">2026-01-02 12:30 기준</span><span class="vr-sep"></span><span class="vr-hint">권유기간 2026-01-01 ~ 2026-01-07</span><span class="vr-sep"></span><span class="vr-dday">D-5 · 2일차</span></div>
+          <div class="vr-meta"><button type="button" class="vr-refresh" id="vrRefresh"><i class="ph ph-arrow-counter-clockwise"></i>새로고침</button><span class="vr-hint" id="vrAsOf">2026-01-02 12:30 기준</span><span class="vr-sep"></span><span class="vr-hint">권유기간 2026-01-01 ~ 2026-01-07</span><span class="vr-sep"></span><span class="vr-dday">D-5 · 2일차</span></div>
         </div>
 
         <!-- ===== 현황 ===== -->
@@ -535,7 +557,7 @@
               <div class="gblk">
                 <div class="k">행사가능 의결권 확보 현황</div>
                 <div class="gbar">
-                  <div class="r"><div class="l"><span>확보 <b id="gVote">0</b>주</span><span class="vs"></span><span class="mut">목표 <b id="gGoal2">0</b>주</span></div>
+                  <div class="r"><div class="l"><span>확보 <b id="gVote">0</b>주</span><span class="vs"></span><span class="mut">의결정족수 <b id="gGoal2">0</b>주</span></div>
                     <div class="p dark" id="gVoteP">0%</div></div>
                   <div class="t ink"><i id="gVoteB" style="width:0%"></i></div>
                 </div>
@@ -544,17 +566,17 @@
             <div class="gsep"></div>
             <div class="gright">
               <div class="gnum">
-                <div class="k">확보 현황 수치</div>
-                <div class="gsum"><div class="a">확보 <span id="gSumA">0</span>주</div><div class="b">의결정족수 <span id="gSumB">0</span>주</div></div>
+                <div class="k">확보 현황 수치 확인</div>
+                <div class="gsum"><div class="a"><span id="gSumA">0</span>주 확보</div><div class="b">의결정족수 <span id="gSumB">0</span>주 대비</div></div>
                 <div class="glegend">
-                  <div class="row"><span class="sq" style="background:#171717"></span>IR큐더스<span class="v" id="gLegIrk">0</span></div>
-                  <div class="hr"></div>
-                  <div class="row"><span class="sq" style="background:#0071f3"></span>회사 직접 확보
-                    <button class="gedit" id="gEdit" type="button" title="회사 직접 확보 수정"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg></button>
+                  <div class="row" id="gCoRow"><span class="lb"><span class="sq" style="background:#171717"></span>기업 예상 확보 의결권</span>
+                    <button class="gedit" id="gEdit" type="button" title="기업 예상 확보 의결권 수정"><i class="ph ph-pencil-simple"></i></button>
                     <span class="v" id="gLegCo">0</span>
-                    <input class="gin" id="gCoIn" type="text" hidden></div>
+                    <input class="gin" id="gCoIn" type="text" inputmode="numeric" hidden></div>
                   <div class="hr"></div>
-                  <div class="row"><span class="sq" style="background:#e5e5e5"></span>잔여<span class="v mut" id="gLegLeft">0</span></div>
+                  <div class="row"><span class="lb"><span class="sq" style="background:#0071f3"></span>IRK 확보 의결권</span><span class="v" id="gLegIrk">0</span></div>
+                  <div class="hr"></div>
+                  <div class="row"><span class="lb"><span class="sq" style="background:#e5e5e5"></span>잔여</span><span class="v mut" id="gLegLeft">0</span></div>
                 </div>
               </div>
               <div class="gpie"><div class="d" id="gPie"></div><div class="c" id="gPieV">0%</div></div>
