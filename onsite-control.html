@@ -2341,7 +2341,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   var HEAD={
     q:'<tr><th class="c" style="width:90px">의안</th><th style="width:160px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th>질의 내용</th><th class="c" style="width:110px">접수시간</th><th style="width:96px">공개</th><th style="width:110px">상태</th><th class="c" style="width:56px">상세</th></tr>',
     s:'<tr><th class="c" style="width:90px">의안</th><th style="width:160px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th>신청 내용</th><th class="c" style="width:110px">상태</th><th class="c" style="width:110px">대기열</th></tr>',
-    a:'<tr><th class="c" style="width:90px">의안</th><th style="width:160px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th>수정 내용</th><th class="c" style="width:96px">접수 경로</th><th class="c" style="width:110px">검증유형</th><th class="c" style="width:110px">접수시간</th><th class="c" style="width:110px">상태</th></tr>',
+    a:'<tr><th class="c" style="width:90px">의안</th><th style="width:160px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th>수정 내용</th><th class="c" style="width:96px">방식</th><th class="c" style="width:110px">검증유형</th><th class="c" style="width:110px">접수시간</th><th class="c" style="width:110px">상태</th></tr>',
     v:'<tr><th>투표권자</th><th>주주번호</th><th class="r">보유주식수</th><th class="c">의결권 행사</th>'
       +'<th class="c">질의</th><th class="c">발언</th>'
       +'<th class="c">접속시각</th><th class="c">퇴장시각</th><th class="c">발언 조치</th><th class="c">퇴장 명령</th></tr>'
@@ -2385,10 +2385,12 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
       .sort(function(p,q2){ return String(p.tm).localeCompare(String(q2.tm)); });
     return VIEWERS;
   }
+  /* 동의 상태 — 질의 · 발언 탭과 같은 표시: 접수(회색) · 완료(질의 파랑 / 발언 회청) · 반려(회색, 흐리지 않음) */
   function amDot(x){
-    if(x.st==='반려') return '<span class="qmdot" style="opacity:.5"><i></i>반려</span>';
-    if(x.st==='완료') return '<span class="qmdot blue"><i></i>'+(x.via==='질의'||QUESTIONS.indexOf(x)>=0?'답변완료':'완료')+'</span>';
-    return '<span class="qmdot amber"><i></i>접수</span>';
+    var viaQ=(x.via==='질의'||QUESTIONS.indexOf(x)>=0);
+    if(x.st==='반려') return '<span class="qmdot"><i></i>반려</span>';
+    if(x.st==='완료') return viaQ?'<span class="qmdot blue"><i></i>답변완료</span>':'<span class="qmdot done"><i></i>완료</span>';
+    return '<span class="qmdot"><i></i>접수</span>';
   }
   function pubCell(x){
     if(x.st==='미답변') return '<span class="qmdot">−</span>';   /* 답변 전이라 공개 범위가 아직 없다 */
@@ -2458,7 +2460,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
         var viaQ=(QUESTIONS.indexOf(x)>=0);
         return '<tr data-id="'+id+'"'+(x.st==='반려'?' class="off"':'')+'>'+base
           +'<td class="txt">'+esc(x.q||x.r||'')+'</td>'
-          +'<td class="c"><span class="tg '+(viaQ?'tg-ind':'tg-speak')+'">'+(viaQ?'질의':'발언')+'</span></td>'
+          +'<td class="c"><span class="cbadge '+(viaQ?'vq':'vs')+'">'+(viaQ?'질의':'발언')+'</span></td>'   /* 실시간 운영 동의 카드와 같은 뱃지 — 질의 파랑 · 발언 보라 */
           +'<td class="c">'+esc(x.amtype||'금액 조정')+'</td><td class="c">'+(x.tm||'−')+'</td><td class="c">'+amDot(x)+'</td></tr>';
       }
       if(mode==='s'){
