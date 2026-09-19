@@ -4140,7 +4140,7 @@ document.addEventListener('click',function(e){
 <script src="conexus.js?v=s14"></script>
 <script>/* 칸이 열린 뒤에야 내보낼 수 있으므로, 화면을 연 순간의 상태를 여기서 한 번 알린다 */
 if(window.OC&&OC.fire) OC.fire();
-/* 주주PASS 시청 화면에서 올라온 질의를 받아 목록 맨 앞에 얹는다 */
+/* 주주PASS 시청 화면에서 올라온 질의 · 발언 · 수정 동의를 받아 각 목록에 얹는다 */
 (function(){
   var CH='cx.qna';
   /* 시청 화면은 표결 단위로 보내고, 이 화면의 목록은 옛 번호 체계를 쓴다 */
@@ -4161,6 +4161,11 @@ if(window.OC&&OC.fire) OC.fire();
         var SP=window.SPEECHES;
         SP.push({id:x.id, ag:m[0], sub:m[1], name:x.name, t:x.t||'개인', sh:x.sh||0, tm:x.tm, kind:'수정동의',
           amend:true, via:'발언', amtype:x.amtype||'금액 조정', r:x.q, st:'대기', inq:false, seq:SP.length, qord:0});
+        got++; return;
+      }
+      if(x.kind==='발언'){                         /* 발언 신청 — 발언 대기 목록 */
+        window.SPEECHES.push({id:x.id, ag:m[0], sub:m[1], name:x.name, t:x.t||'개인', sh:x.sh||0, tm:x.tm,
+          kind:'발언', st:'대기', r:x.q});
         got++; return;
       }
       if(x.kind==='수정동의'){                     /* 질의로 접수 — 답변 흐름 + 수정안 표결 */
