@@ -852,6 +852,42 @@
             +'<div class="pctrl">'+nav('caret-double-left',1,p===1)+nav('caret-left',p-1,p===1)+nums+nav('caret-right',p+1,p===pages)+nav('caret-double-right',pages,p===pages)
             +'<span class="pnum">'+p+' / '+pages+'</span></div></div>';
         }
+        /* 정렬·컬럼 필터는 보이는 페이지가 아니라 전체 데이터에 건다 — cxTable 이 cxsort 를 보내면 여기서 정렬해 다시 그린다 */
+        var SORT={set:null,merge:null,confirm:null}, FILT={set:null,merge:null,confirm:null};
+        function colText(key,it,i){
+          if(key==='set'){var x=it; return [x.r.st,x.gb,x.r.nm,x.r.id,fmt(x.r.sh),pct(x.r.rt),x.mgr||'-',x.fund||'-',x.voter||'미설정',''][i];}
+          if(key==='merge'){var g=groups[it],l=g.members[0]; return ['',(g.method==='auto'?'자동':'수동')+' '+g.members.length+'건',g.voter,l.r.nm,l.r.id,fmt(sum(g)),pct(rtSum(g)),''][i];}
+          if(it.g){var gg=groups[it.g]; return ['','통합 '+gg.members.length+'건',gg.voter,gg.members[0].r.nm,fmt(it.sh),pct(rtSum(gg))][i];}
+          return ['','',it.x.voter||'미설정',it.x.r.nm,fmt(it.sh),pct(it.x.r.rt)][i];
+        }
+        function colNum(key,it,i){
+          if(key==='set') return i===4?it.r.sh:i===5?it.r.rt:null;
+          if(key==='merge') return i===5?sum(groups[it]):i===6?rtSum(groups[it]):null;
+          return i===4?it.sh:i===5?(it.g?rtSum(groups[it.g]):it.x.r.rt):null;
+        }
+        function rtSum(g){return g.members.reduce(function(a,m){return a+m.r.rt;},0);}
+        function sortFilter(key,list){
+          var f=FILT[key], st=SORT[key];
+          if(f) list=list.filter(function(it){return f(function(i){return String(colText(key,it,i));});});
+          if(st&&st.dir){
+            var d=(st.dir==='desc'||st.dir<0)?-1:1;
+            list=list.slice().sort(function(a,b){
+              var na=colNum(key,a,st.idx), nb=colNum(key,b,st.idx);
+              if(na!=null&&nb!=null) return (na-nb)*d;
+              return String(colText(key,a,st.idx)).localeCompare(String(colText(key,b,st.idx)),'ko')*d;
+            });
+          }
+          return list;
+        }
+        function hookTbl(key,id,all){
+          var t=$(id);
+          t.addEventListener('cxsort',function(e){e.preventDefault();SORT[key]={idx:e.detail.idx,dir:e.detail.dir};PG[key].p=1;RENDER[key]();});
+          t.cxFilter=function(pred){FILT[key]=pred;PG[key].p=1;RENDER[key]();};
+          t.cxValues=function(i){return all().map(function(it){return String(colText(key,it,i));});};
+        }
+        hookTbl('set','setTbl',function(){return rows;});
+        hookTbl('merge','mgTbl',function(){return Object.keys(groups);});
+        hookTbl('confirm','cfTbl',function(){return confirmBlocks();});
         document.querySelectorAll('[data-pag]').forEach(function(el){
           var key=el.getAttribute('data-pag');
           el.addEventListener('click',function(e){var b=e.target.closest('[data-go]'); if(!b||b.disabled) return; PG[key].p=+b.dataset.go; RENDER[key]();});
@@ -874,7 +910,7 @@
             +'<td class="c"><button class="tbtn2 set-btn'+(lockBtn?' dis':'')+'">설정</button></td></tr>';
         }
         function renderSet(){
-          var list=$('swUnset').classList.contains('on')?rows.filter(function(x){return !x.voter;}):rows;
+          var list=sortFilter('set',$('swUnset').classList.contains('on')?rows.filter(function(x){return !x.voter;}):rows);
           $('shBody').innerHTML=pageOf('set',list).map(setRowHTML).join('')||'<tr><td colspan="10" style="text-align:center;height:80px">미설정 투표권자가 없습니다.</td></tr>';
           document.querySelector('[data-pag="set"]').innerHTML=pagHTML('set',list.length,list.reduce(function(a,x){return a+x.r.sh;},0));
           cx('setTbl');
@@ -940,7 +976,7 @@
         /* ---------- 2. 통합·해제 설정 ---------- */
         function grpLocked(g){return ST.change&&g.members[0].locked;}
         function renderMerge(){
-          var html='', gids=Object.keys(groups).sort(function(a,b){return sum(groups[b])-sum(groups[a]);});
+          var html='', gids=sortFilter('merge',Object.keys(groups).sort(function(a,b){return sum(groups[b])-sum(groups[a]);}));
           pageOf('merge',gids).forEach(function(gid){
             var g=groups[gid], lead=g.members[0], n=g.members.length, lk=grpLocked(g);
             html+='<tr class="mg-grp" data-g="'+gid+'"><td class="c"><button type="button" class="xp" aria-label="펼치기"><i class="ph ph-caret-down"></i></button></td>'
@@ -957,7 +993,7 @@
           });
           if(!html) html='<tr><td colspan="8" style="text-align:center;height:80px">통합된 주주가 없습니다.</td></tr>';
           $('mgBody').innerHTML=html;
-          var n=Object.keys(groups).length,sh=Object.keys(groups).reduce(function(a,g){return a+sum(groups[g]);},0);
+          var n=gids.length,sh=gids.reduce(function(a,g){return a+sum(groups[g]);},0);
           document.querySelector('[data-pag="merge"]').innerHTML=pagHTML('merge',n,sh,'건');
           cx('mgTbl');
         }
@@ -1094,12 +1130,16 @@
         });});
 
         /* ---------- 3. 설정내역 확인 ---------- */
-        function renderConfirm(){
+        function confirmBlocks(){
           var mset=memberSet(), blocks=[];
           Object.keys(groups).forEach(function(gid){blocks.push({g:gid,sh:sum(groups[gid])});});
           rows.forEach(function(x){if(!mset[x.k])blocks.push({x:x,sh:x.r.sh});});
-          blocks.sort(function(a,b){return b.sh-a.sh;});
+          return blocks.sort(function(a,b){return b.sh-a.sh;});
+        }
+        function renderConfirm(){
+          var blocks=confirmBlocks();
           if($('swCfUnset').classList.contains('on')) blocks=blocks.filter(function(b){return b.x&&!b.x.voter;});
+          blocks=sortFilter('confirm',blocks);
           var html='';
           pageOf('confirm',blocks).forEach(function(b){
             if(b.g){
