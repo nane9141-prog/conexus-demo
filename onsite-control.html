@@ -3491,7 +3491,8 @@ function toggleMute(id){
      표결 단위가 아닌 제2호(헤더)와 삭제된 제2-3호는 제2-1/제2-2 로 나눈다. */
   var UNIT={'1':'제1호','2':'제2-1호','2-1':'제2-1호','2-2':'제2-2호','2-3':'제2-2호',
             '3':'제3호','3-1':'제4-1호','3-2':'제4-2호'};
-  function unitOf(x){ return UNIT[x.sub]||UNIT[x.ag]||''; }
+  /* 의사진행 동의는 의안이 아니라 총회 진행에 대한 것 — 동의 탭의 '의사진행 동의'로 묶는다 */
+  function unitOf(x){ if(x.amend && /^의사진행/.test(x.amtype||'')) return 'proc'; return UNIT[x.sub]||UNIT[x.ag]||''; }
   function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   /* 주주 분류 · 보유주식수 — 카드의 유일한 info 배지 */
   function shBadge(x){ return '<span class="cbadge gr">'+x.t+' · '+CX.util.comma(x.sh)+'주</span>'; }
@@ -3665,13 +3666,14 @@ function toggleMute(id){
     qReorder(id, qPos(it).at-1 + dir);
   }
   /* idx(0-based) 자리로 옮긴다. qord 에 소수를 끼워넣지 않고 배열을 직접 다시 번호 매긴다.
-     0번은 발언 중(또는 다음 차례)이라 건드리지 않는다. */
+     0번은 발언 중일 때만 건드리지 않는다(아무도 발언 중이 아니면 맨 앞으로도 옮길 수 있다). */
+  function qFirst(q){ return (speakingId && q[0] && q[0].id===speakingId) ? 1 : 0; }
   function qReorder(id, idx){
     var it=null; S.forEach(function(x){ if(x.id===id) it=x; }); if(!it) return;
     var q=qList(unitOf(it)), ids=q.map(function(x){ return x.id; });
     var from=ids.indexOf(id); if(from<0) return;
     ids.splice(from,1);
-    idx=Math.max(1,Math.min(ids.length,idx));
+    idx=Math.max(qFirst(q),Math.min(ids.length,idx));
     ids.splice(idx,0,id);
     ids.forEach(function(qid,n){ q.forEach(function(x){ if(x.id===qid) x.qord=n+1; }); });
   }
@@ -3825,6 +3827,7 @@ function toggleMute(id){
   function agOpts(){
     var o=CX.votingUnits.map(function(no){ return [no, CX.util.chip(no)+' 의안']; });
     if(qt==='q') o.unshift(['pre','사전 질의']);
+    if(qt==='a') o.unshift(['proc','의사진행 동의']);   /* 동의 탭 — 맨 위 */
     return o;
   }
   function fillAgSel(){
@@ -3873,8 +3876,10 @@ function toggleMute(id){
       if(kind==='time'){
         open(b, ['1분','3분','5분'].map(function(t){ return [t,t]; }), function(v){ it.limit=v; render(); });
       } else if(kind==='order'){
-        var q=qPos(it).list;
-        open(b, q.slice(1).map(function(_,i){ return [i+2, (i+2)+'번째']; }), function(v){ qSetPos(id, v); render(); });
+        /* 옮길 수 있는 자리 — 발언 중인 자리(맨 앞)만 뺀다. 대기열이 한 건이어도 '1번째'가 보이게 */
+        var q=qPos(it).list, f=qFirst(q), opts=[];
+        for(var n=f; n<Math.max(q.length,f+1); n++) opts.push([n+1,(n+1)+'번째']);
+        open(b, opts, function(v){ qSetPos(id, v); render(); });
       }
     });
   })();
