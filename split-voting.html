@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 불통일행사 관리</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=h3">
+<link rel="stylesheet" href="conexus.css?v=h4">
 <link rel="stylesheet" href="cx-accordion.css">
 <style>
   /* page-local content helpers (LNB styling comes from conexus.css) */
@@ -144,7 +144,7 @@
   #splTbl td.tcell .cv{left:24px}   /* 펼침 버튼(20px) 중심 = 칸 여백 14 + 10 */
   .spl-tag{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:#f4f4f5;color:#737373;font-size:12px;font-weight:500}
   .spl-nm{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
-  td.spl-b{font-weight:600}
+  #splTbl td.spl-mu{color:#737373}   /* 신청 사유 · 신청 일시 · 처리 일시 — muted-foreground */
   .rsn{display:inline-block;vertical-align:middle;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:default}
   .mst{gap:4px;font-size:12px;font-weight:500}
   .mst .d{width:6px;height:6px}
@@ -465,10 +465,10 @@
         :'<td>'+(grp?'<div class="voter"><button class="tw-chevron'+(open[x.k]?'':' collapsed')+'" type="button" data-tog="'+x.k+'" aria-label="통합 계좌 펼치기"></button><span class="vname">'+esc(x.voter)+'</span></div>':esc(x.voter))+'</td>')
       +'<td>'+(grp?'<span class="spl-tag">통합 '+x.kids.length+'건</span>':'<span class="spl-nm">'+esc(x.name)+'</span>')+'</td>'
       +'<td>'+x.gb+'</td><td>'+cm(x.sh)+'</td>'
-      +'<td'+(x.ch==='담당자 등록'?' class="spl-b"':'')+'>'+x.ch+'</td>'
-      +'<td><span class="rsn" data-tip="'+esc(x.rsn)+'">'+esc(x.rsn)+'</span></td>'
+      +'<td>'+x.ch+'</td>'
+      +'<td class="spl-mu"><span class="rsn" data-tip="'+esc(x.rsn)+'">'+esc(x.rsn)+'</span></td>'
       +'<td><span class="mst '+ST[x.st]+'"><span class="d"></span>'+x.st+'</span></td>'
-      +'<td>'+x.at+'</td><td>'+x.dt+'</td>'
+      +'<td class="spl-mu">'+x.at+'</td><td class="spl-mu">'+x.dt+'</td>'
       +'<td>'+(x.doc?'<button class="spl-doc" type="button" title="증빙 서류"><i class="ph ph-file-text"></i></button>':'')+'</td>'
       +'<td class="spl-mo"><button class="spl-more" type="button" data-more aria-label="더보기"><i class="ph ph-dots-three-vertical"></i></button></td></tr>';
   }
@@ -609,6 +609,6 @@
   render();
 })();
 </script>
-<script src="conexus.js?v=s2"></script>
+<script src="conexus.js?v=s3"></script>
 </body>
 </html>

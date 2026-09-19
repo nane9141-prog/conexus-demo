@@ -844,11 +844,7 @@ th.cx-sort{cursor:pointer;user-select:none}
 .cx-fbtn:hover,.cx-fbtn.on{opacity:1;background:rgba(10,10,10,.06)}
 /* 필터 아이콘은 항상 텍스트 바로 옆(인라인). 자리를 늘 차지해 있고 없고가 텍스트를 밀지 않는다. */
 th.cx-al-l .cx-fbtn{margin-left:4px}
-/* 칸이 좁아 아이콘이 헤더 글자를 덮는 자리 — 평소엔 감추고 마우스를 올릴 때만 보여 준다.
-   이미 걸어 둔 필터는 감추지 않는다. 걸려 있는지 모르면 표를 잘못 읽는다. */
-th.cx-tight .cx-fbtn{opacity:0;pointer-events:none}   /* 자리는 유지(인라인) — 텍스트는 그대로 */
-th.cx-tight:hover .cx-fbtn{opacity:1;pointer-events:auto}
-th.cx-tight .cx-fbtn.cx-act{opacity:1;pointer-events:auto}
+/* 칸이 좁은 자리(cx-tight)도 필터 아이콘을 감추지 않는다 — 다른 칸과 같이 항상 보인다. */
 .cx-fbtn.on{opacity:1}
 .cx-fbtn.cx-act{opacity:1}
 .cx-fbtn.cx-act svg{stroke:#0071F3}
@@ -980,3 +976,13 @@ table.cx-stk1>*>tr>:first-child{position:sticky;left:0;z-index:1}
 table.cx-stk1>thead>tr>:first-child{z-index:3}
 :where(table.cx-stk1>tbody>tr>td:first-child,table.cx-stk1>tfoot>tr>td:first-child){background:#fff}
 :where(table.cx-stk1>thead>tr>th:first-child){background:#fff}
+
+/* 공통 달력(conexus.js cxDate) — 모달·시트 위로 */
+.cal.cx-cal{z-index:5000}
+/* 브라우저 기본 달력 아이콘 숨김 — 클릭하면 공통 달력이 뜬다 */
+input[type="date"]{cursor:pointer}
+input[type="date"]::-webkit-calendar-picker-indicator{display:none}
+/* 표의 '의안명' 칸 굵게 (conexus.js 가 칸 번호를 data-agcol 로 적는다) */
+table[data-agcol="1"]>tbody>tr>td:nth-child(1),table[data-agcol="2"]>tbody>tr>td:nth-child(2),
+table[data-agcol="3"]>tbody>tr>td:nth-child(3),table[data-agcol="4"]>tbody>tr>td:nth-child(4),
+table[data-agcol="5"]>tbody>tr>td:nth-child(5),table[data-agcol="6"]>tbody>tr>td:nth-child(6){font-weight:600!important}

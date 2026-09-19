@@ -819,7 +819,9 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 .att-files.v .fslot{display:flex;align-items:center;gap:12px}
 .att-files.v .fl{margin:0;width:28px;flex:none}
 .att-files.v .fcard{flex:1;min-width:0}
-.upl{height:28px;padding:0 8px;border-radius:8px;font-size:12px;gap:4px}
+.upl{height:28px;padding:0 8px;border-radius:8px;font-size:12px;gap:4px;white-space:nowrap;flex:none}   /* 버튼 글자가 두 줄로 깨지지 않게 */
+.attach-btns{flex:none}
+.att-top>div:first-child{min-width:0}
 .upl i{font-size:14px}
 /* 이용 서비스 */
 .svc-box{background:#fafafa;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:16px}
@@ -890,6 +892,10 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 .selopt .bdg{display:inline-flex;align-items:center;height:20px;padding:0 6px;margin-left:6px;border-radius:4px;background:var(--muted);color:#404040;font-size:11px;font-weight:500}
 .selopt .bdg.red{background:var(--red50);color:var(--red600)}
 .selpop{max-height:360px;overflow:auto}
+/* 의안 종류 드롭다운 — 항목이 줄바꿈되지 않게 가장 긴 이름에 맞춰 넓힌다(최소 254px) */
+.selpop.grouped{width:auto;min-width:254px;max-width:calc(100vw - 16px)}
+.selpop.grouped .selopt .sc{white-space:nowrap}
+.selpop.grouped .selopt{height:auto;min-height:36px}
 .selsrch{background:var(--muted);border-color:var(--border)}
 .selsrch input{background:none}
 /* 의안상세 패널 */
@@ -941,12 +947,12 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 /* 의안 연계 설정 */
 .lk-list{display:flex;flex-direction:column;gap:8px}
 .lk-group{border:1px solid var(--border);border-radius:10px;background:#fff;overflow:hidden}
-.lk-head{display:flex;align-items:center;gap:8px;min-height:46px;padding:7px 12px 7px 28px;background:var(--muted)}
+.lk-head{display:flex;align-items:center;gap:8px;min-height:46px;padding:7px 12px 7px 20px;background:var(--muted)}
 .lk-head .t{font-size:14px;font-weight:600;white-space:nowrap}
 .lk-head .ty{font-size:12px;color:var(--muted-fg)}
 .lk-head .sp{flex:1}
 .lk-head .inp.sel{flex:1;height:32px;margin-left:-4px}
-.lk-rule{display:grid;grid-template-columns:144px 16px minmax(0,1fr) 144px 20px 20px;gap:0 12px;align-items:center;padding:8px 12px 8px 24px;border-top:1px solid var(--border)}
+.lk-rule{display:grid;grid-template-columns:144px 16px minmax(0,1fr) 144px 20px 20px;gap:0 12px;align-items:center;padding:8px 12px 8px 16px;border-top:1px solid var(--border)}
 .lk-rule .inp.sel{height:32px}
 .lk-rule .arr{font-size:16px;color:#0a0a0a}
 .ibtn{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#737373;font-size:16px}
@@ -1295,7 +1301,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
         <div class="field"><label class="field-label" style="margin:0">의안설명 (국문)</label><textarea class="ta" id="dtlDescKo" placeholder="의안설명을 작성해 주세요. (최대 1,000자)" maxlength="1000"></textarea></div>
         <div class="field"><label class="field-label" style="margin:0">의안설명 (영문)</label><textarea class="ta" id="dtlDescEn" placeholder="의안설명을 영문으로 작성해 주세요. (최대 1,000자)" maxlength="1000"></textarea></div>
         <div><div class="field-label" style="margin-bottom:8px">첨부파일</div>
-          <div class="attach" style="padding:0 16px"><div class="att" id="dtlAtt" data-att="의안 참고 자료" data-hint="파일 업로드: PDF (최대 50MB)" data-ext="pdf" data-v="1"></div></div>
+          <div class="attach" style="padding:0 16px"><div class="att" id="dtlAtt" data-short="1" data-att="의안 참고 자료" data-hint="파일 업로드: PDF (최대 50MB)" data-ext="pdf" data-v="1"></div></div>
         </div>
       </div>
     </div>
@@ -1421,7 +1427,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     const slot=(lang,col)=>f[lang]?'<div class="fslot" style="grid-column:'+col+'"><div class="fl">'+lang+'</div><div class="fcard"><span class="fic"><i class="ph ph-file"></i></span><span class="fn">'+esc(f[lang].name)+'</span><span class="fs">'+f[lang].size+'</span><button class="fx" data-frm="'+lang+'" title="삭제"><i class="ph ph-x"></i></button><button class="fdl" title="다운로드"><i class="ph ph-download-simple"></i></button></div></div>':'';
     el.classList.toggle('has',!!(f['국문']||f['영문']));
     el.innerHTML='<div class="att-top"><div><div class="an">'+esc(el.dataset.att)+'</div><div class="ad"><span class="ed">'+esc(hint)+'</span><span class="rv">등록된 파일이 없습니다</span></div></div>'
-      +'<div class="attach-btns"><button class="upl" data-upl="국문"><i class="ph ph-upload-simple"></i>국문 파일</button><button class="upl" data-upl="영문"><i class="ph ph-upload-simple"></i>영문 파일</button></div></div>'
+      +'<div class="attach-btns"><button class="upl" data-upl="국문"><i class="ph ph-upload-simple"></i>'+(el.dataset.short?'국문':'국문 파일')+'</button><button class="upl" data-upl="영문"><i class="ph ph-upload-simple"></i>'+(el.dataset.short?'영문':'영문 파일')+'</button></div></div>'
       +'<div class="att-files'+(el.dataset.v?' v':'')+'">'+slot('국문',1)+slot('영문',el.dataset.v?1:2)+'</div>';
   }
   function fmtSize(b){return b>=1048576?(b/1048576).toFixed(1)+'MB':Math.max(1,Math.round(b/1024))+'KB';}
@@ -1491,6 +1497,10 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     ['임원 보수',['이사 보수한도 승인','감사 보수한도 승인']],['지배구조 및 사업구조 변경',['합병계약서의 승인','분할계획서의 승인','분할합병계약서의 승인','영업의 양도/양수 및 포괄적 계약 체결 승인']],['기타',['기타']]];
   const SPECIAL=['정관 변경','정관변경(집중투표 배제 및 해지)','이사해임','감사해임','감사위원회 감사위원 해임(독립이사)','감사위원회 감사위원 해임(일반)','합병계약서의 승인','분할계획서의 승인','분할합병계약서의 승인','영업의 양도/양수 및 포괄적 계약 체결 승인'];
   const methodOf=t=>SPECIAL.indexOf(t)>=0?'특별결의':'보통결의';
+  /* 3% 룰이 자동으로 붙는 의안 종류 — 감사선임은 보통결의 + 3% 룰 */
+  const R3_TYPES=['감사선임'];
+  function applyType(n,t){n.type=t;n.method=methodOf(t);const on=R3_TYPES.indexOf(t)>=0,has=n.tags.indexOf('3% 제한')>=0;
+    if(on&&!has){n.tags.push('3% 제한');n.r3auto=true;} else if(!on&&has&&n.r3auto){n.tags=n.tags.filter(x=>x!=='3% 제한');n.r3auto=false;}}
   const N=(id,type,method,ko,en,sub,tags)=>({id,type,method,ko,en,sub:sub||[],tags:tags||[]});
   let AGS=[
     N('a1','재무제표 승인','보통결의','제13기 재무제표 및 연결재무제표 승인의 건','Approval of Financial Statements and Consolidated Financial Statements for the 13th Fiscal Year'),
@@ -1560,7 +1570,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     const box=$('#agTypeList'),q=$('#agTypeQ');
     function list(k){k=(k||'').trim();let h='';AG_GROUPS.forEach(g=>{const items=g[1].filter(t=>!k||t.indexOf(k)>=0);if(!items.length)return;if(!k)h+='<div class="selgh">'+g[0]+'</div>';h+=items.map(t=>optHtml({v:t,label:t},n.type)).join('');});
       box.innerHTML=h||'<div class="selnone">검색 결과가 없습니다.</div>';
-      box.querySelectorAll('[data-v]').forEach(o=>o.addEventListener('click',ev=>{ev.stopPropagation();const t=o.dataset.v;n.type=t;n.method=methodOf(t);if(n.err)n.err.type=false;closePop();markDirty();renderAgenda();}));}
+      box.querySelectorAll('[data-v]').forEach(o=>o.addEventListener('click',ev=>{ev.stopPropagation();const t=o.dataset.v;applyType(n,t);if(n.err)n.err.type=false;closePop();markDirty();renderAgenda();}));}
     list('');q.addEventListener('input',()=>list(q.value));
     gpop.__btn=btn;placePop(btn,gpop,254);q.focus();
   }
@@ -1786,6 +1796,6 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 <script>
 document.querySelectorAll('.lnb-tabs .t').forEach(function(t){t.addEventListener('click',function(){var tab=t.dataset.tab;if(!tab)return;document.querySelectorAll('.lnb-tabs .t').forEach(function(x){x.classList.toggle('active',x===t);});document.querySelectorAll('.lnb-content[data-tabpanel]').forEach(function(p){p.classList.toggle('show',p.dataset.tabpanel===tab);});});});
 </script>
-<script src="conexus.js?v=s2"></script>
+<script src="conexus.js?v=s3"></script>
 </body>
 </html>

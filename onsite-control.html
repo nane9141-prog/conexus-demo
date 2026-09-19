@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 주주총회 현장 제어</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=h3">
+<link rel="stylesheet" href="conexus.css?v=h4">
 <link rel="stylesheet" href="cx-accordion.css?v=1">
 <style>
   *{box-sizing:border-box}
@@ -1193,7 +1193,7 @@
             <div class="apanel">
               <div class="chat-top">
                 <div class="chat-tabs-row">
-                  <div class="qtabs"><button data-qt="q" class="on">질의<span class="bn" id="qCnt"></span></button><button data-qt="s">발언<span class="bn" id="sCnt"></span></button></div>
+                  <div class="qtabs"><button data-qt="q" class="on">질의<span class="bn" id="qCnt"></span></button><button data-qt="s">발언<span class="bn" id="sCnt"></span></button><button data-qt="a">수정동의<span class="bn" id="aCnt"></span></button></div>
                   <div class="seg2"><button data-qf="all" class="on">전체</button><button data-qf="open">미답변</button><button data-qf="done">답변완료</button></div>
                 </div>
                 <button class="qsel" type="button" id="qAgSel" data-pop="agenda"><span class="lbl"></span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
@@ -2473,8 +2473,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     l.addEventListener('click',function(){ l.classList.toggle('on'); });
   });
 
+  var onDone=null;
   window.openAmend=function(pre){
     pre=pre||{};
+    onDone=pre.done||null;   /* 실시간 운영 수정동의 카드 — 확정되면 카드 상태를 상정으로 */
     /* 상위 의안(제2호처럼 표결 단위가 아닌 것)은 첫 하위 표결 단위로 대체한다 */
     if(pre.no){
       var vals=Array.prototype.map.call(sel.options,function(o){return o.value;});
@@ -2505,7 +2507,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     document.getElementById('amcDesc').textContent=draft.no+'가 원안과 수정안으로 나뉘며, 사전투표 내역은 기권 처리됩니다.';
     open(o3);
   });
-  document.getElementById('amcOk').addEventListener('click',function(){ close(o3); applyAmend(draft); });
+  document.getElementById('amcOk').addEventListener('click',function(){ close(o3); applyAmend(draft); if(onDone){ var f=onDone; onDone=null; f(draft.no); } });
 
   /* 좌측 의안 리스트 반영 — 원안(제N-1호) · 수정안(제N-2호)으로 가른다 */
   function applyAmend(a){
@@ -3067,7 +3069,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 </div>
 <script>
 (function(){
-  var Q=window.QUESTIONS||[], S=window.SPEECHES||[];
+  var Q=window.QUESTIONS||[], SALL=window.SPEECHES||[];
+  /* 수정동의는 질의·발언 목록에서 빼고 '수정동의' 탭에서 따로 처리한다.
+     시청 화면의 질의·발언 어느 쪽으로 접수돼도 여기로 모인다(via). st: 접수 · 상정 · 반려 */
+  var S=SALL.filter(function(x){ return x.kind!=='수정동의'; });
+  var A=window.AMENDS=(window.AMENDS||[]).concat(SALL.filter(function(x){ return x.kind==='수정동의'; }).map(function(x){
+    return { id:'A-'+x.id, ag:x.ag, sub:x.sub, name:x.name, t:x.t, sh:x.sh, tm:x.tm, via:'발언', q:x.r, st:'접수' };
+  }));
   S.forEach(function(x,i){ x.inq=(x.st==='대기'&&i%2===0); x.seq=i; x.qord=i; });
   /* inq: 대기열 등재 여부 · seq: 접수 순서. 대기열은 S 배열 순서를 바꾸므로
      카드 목록은 seq 로 다시 세운다 — 순서 조정이 목록을 흔들지 않는다. */
@@ -3099,6 +3107,11 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   /* 주주 분류 · 보유주식수 — 카드의 유일한 info 배지 */
   function shBadge(x){ return '<span class="cbadge gr">'+x.t+' · '+CX.util.comma(x.sh)+'주</span>'; }
   function stBadge(x){
+    if(qt==='a'){
+      if(x.st==='상정') return '<span class="mbadge done"><span class="d"></span>상정</span>';
+      if(x.st==='반려') return '<span class="mbadge dim"><span class="d"></span>반려</span>';
+      return '<span class="mbadge wait"><span class="d"></span>접수</span>';
+    }
     if(qt==='q') return x.st==='미답변'?'<span class="mbadge wait"><span class="d"></span>미답변</span>':'<span class="mbadge done"><span class="d"></span>답변완료</span>';
     /* 발언 — 접수(회색) · 대기열(블루) · 반려(흐림) · 완료(블루) */
     if(x.st==='반려') return '<span class="mbadge dim"><span class="d"></span>반려</span>';
@@ -3122,7 +3135,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   /* 카드 하단 메타 — 접수 시각과 현재 목록 기준 순번 */
   function metaRow(x){
     var a=list(), i=a.indexOf(x)+1;
-    return '<div class="mc-meta"><span>'+x.tm+'</span><span>'+(qt==='q'?'질의':'발언')+' '+i+'/'+a.length+'</span></div>';
+    return '<div class="mc-meta"><span>'+x.tm+'</span><span>'+(qt==='q'?'질의':qt==='a'?'수정동의':'발언')+' '+i+'/'+a.length+'</span></div>';
   }
   function cardHTML(x){
     var on=(qt==='q'&&(x.id===selId||x.id===editId));
@@ -3147,10 +3160,11 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     else if(x.pre || unitOf(x)!==spAgenda) return false;        /* 의안 필터엔 현장 건만 */
     if(qf==='all'||qf==='queue') return true;
     if(qt==='q') return qf==='open'?(x.st==='미답변'):(x.st!=='미답변');
+    if(qt==='a') return qf==='open'?(x.st==='접수'):(x.st!=='접수');
     return qf==='rej'?(x.st==='반려'):true;
   }
   function list(){
-    var a=(qt==='q'?Q:S).filter(pass);
+    var a=(qt==='q'?Q:qt==='a'?A:S).filter(pass);
     if(qt==='s') a=a.slice().sort(function(p,q2){ return p.seq-q2.seq; });   /* 전체 목록은 접수 순 */
     return a;
   }
@@ -3307,7 +3321,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   }
   function spCardHTML(x){
     var sel=(x.id===selId);
-    var badges=(x.kind==='수정동의'?'<span class="cbadge amend">수정동의</span>':'')+shBadge(x);
+    var badges=shBadge(x);
     var st=(x.id===speakingId)
       ? '<span class="mbadge done"><span class="d"></span>발언중</span>'
       : stBadge(x);
@@ -3317,8 +3331,26 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       +'<div class="mc-q">'+esc(x.r)+'</div>'
       +metaRow(x)+(sel?spActs(x):'')+'</div>';
   }
+  /* 수정동의 카드 — 발언 카드와 같은 틀. 접수 → 상정(수정동의 등록 흐름) / 반려(사유) */
+  function amActs(x){
+    if(x.st==='반려') return spActs(x);          /* 반려 사유 보기·수정은 발언과 같다 */
+    if(x.id===noteId) return reasonEdit(x);
+    if(x.st==='상정') return '<div class="sp-acts end"><span class="mc-q" style="color:#737373">'+(x.upNo?CX.util.chip(x.upNo)+' 의안으로 상정했습니다.':'상정했습니다.')+'</span></div>';
+    return '<div class="sp-acts"><span class="sp-l"></span><span class="sp-l">'
+      + '<button class="mc-btn reject" type="button" data-rjopen>반려</button>'
+      + '<button class="mc-btn dark" type="button" data-amup>수정동의 상정</button></span></div>';
+  }
+  function amCardHTML(x){
+    var sel=(x.id===selId);
+    return '<div class="mcard sp-click'+(sel?' sel':'')+'" data-id="'+x.id+'">'
+      +'<div class="mc-h"><span class="mc-nm">'+x.name+'</span><span class="mc-st">'+stBadge(x)+'</span></div>'
+      +'<div class="mc-cat"><span class="cbadge amend">'+x.via+' 접수'+(x.amtype?' · '+x.amtype:'')+'</span>'+shBadge(x)+'</div>'
+      +'<div class="mc-q">'+esc(x.q)+'</div>'
+      +metaRow(x)+(sel?amActs(x):'')+'</div>';
+  }
   var QF={q:[['all','전체'],['open','미답변'],['done','답변완료']],
-          s:[['all','전체'],['rej','반려'],['queue','대기열']]};
+          s:[['all','전체'],['rej','반려'],['queue','대기열']],
+          a:[['all','전체'],['open','미처리'],['done','처리완료']]};
   function fillQf(){
     var L=QF[qt]||QF.q;
     if(!L.some(function(o){ return o[0]===qf; })) qf='all';
@@ -3330,12 +3362,14 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     fillAgSel(); fillQf();
     var host=document.getElementById('chatList');
     if(qt==='q'){ host.innerHTML=list().map(cardHTML).join('')||'<div class="mc-q" style="padding:12px;color:#737373">항목이 없습니다.</div>'; }
+    else if(qt==='a'){ host.innerHTML=list().map(amCardHTML).join('')||'<div class="mc-q" style="padding:12px;color:#737373">항목이 없습니다.</div>'; }
     else if(qf==='queue'){ host.innerHTML=queueHTML(); }
     else { host.innerHTML=spList().map(spCardHTML).join('')||'<div class="mc-q" style="padding:12px;color:#737373">항목이 없습니다.</div>'; }
     /* 대기열 뷰에서만 목록 영역을 꽉 채워 완료 섹션을 하단에 붙인다 */
     host.parentElement.classList.toggle('fill', qt==='s'&&qf==='queue');
     document.getElementById('qCnt').textContent=Q.filter(function(x){return x.st==='미답변';}).length;
     document.getElementById('sCnt').textContent=S.filter(function(x){return x.inq&&x.st==='대기';}).length;
+    document.getElementById('aCnt').textContent=A.filter(function(x){return x.st==='접수';}).length;
   }
   var ovl=document.getElementById('ansOvl'), taD=document.getElementById('ansTa'), pend=null, vis='pub';
   function setVis(v){ vis=v; document.querySelectorAll('#ansVis button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-v')===v);}); }
@@ -3576,12 +3610,17 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       var ta2=cs.closest('.vqbody').querySelector('[data-chair]');
       S.forEach(function(x){ if(x.id===cid) x.chair=ta2.value.trim(); });
       openRow=null; render(); return; }
+    var au=e.target.closest('[data-amup]'); if(au){ var aid=au.closest('.mcard').getAttribute('data-id');
+      var ax=A.filter(function(x){return x.id===aid;})[0];
+      if(ax&&window.openAmend) openAmend({no:unitOf(ax), who:ax.name, body:ax.q,
+        done:function(no){ ax.st='상정'; ax.upNo=no; render(); if(window.cxToast) cxToast('수정동의를 상정했습니다.'); }});
+      return; }
     var ne=e.target.closest('[data-noedit]'); if(ne){ noteId=ne.closest('.mcard').getAttribute('data-id'); render(); return; }
     var ro=e.target.closest('[data-rjopen]'); if(ro){ noteId=ro.closest('.mcard').getAttribute('data-id'); render(); return; }
     var nc=e.target.closest('[data-nocancel]'); if(nc){ noteId=null; render(); return; }
     var rs=e.target.closest('[data-rjsave]'); if(rs){ var card=rs.closest('.mcard'), rid=card.getAttribute('data-id');
       var ta=card.querySelector('.mc-ta');
-      S.forEach(function(x){ if(x.id===rid){ x.reason=ta.value; x.st='반려'; x.inq=false; } });
+      (qt==='a'?A:S).forEach(function(x){ if(x.id===rid){ x.reason=ta.value; x.st='반려'; x.inq=false; } });
       if(speakingId===rid) speakingId=null; noteId=null; render(); return; }
     var qi=e.target.closest('[data-qin]'); if(qi){ var iid=qi.closest('.mcard').getAttribute('data-id');
       qAppend(iid); render(); return; }
@@ -3644,7 +3683,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   b.addEventListener("click",function(){ v.muted=!v.muted; if(!v.muted){ try{v.play();}catch(_){} } upd(); });
 })();
 </script>
-<script src="conexus.js?v=s2"></script>
+<script src="conexus.js?v=s3"></script>
 <script>/* 칸이 열린 뒤에야 내보낼 수 있으므로, 화면을 연 순간의 상태를 여기서 한 번 알린다 */
 if(window.OC&&OC.fire) OC.fire();
 /* 주주PASS 시청 화면에서 올라온 질의를 받아 목록 맨 앞에 얹는다 */
@@ -3663,7 +3702,13 @@ if(window.OC&&OC.fire) OC.fire();
       if(!x || !x.id || seen[x.id]) return;
       seen[x.id]=1;
       var m=MAP[x.ag]||['1',''];
-      var q=x.kind ? '['+x.kind+(x.amtype?' · '+x.amtype:'')+'] '+x.q : x.q;
+      /* 수정동의는 질의 목록이 아니라 수정동의 탭으로 */
+      if(x.kind==='수정동의'){
+        (window.AMENDS=window.AMENDS||[]).unshift({id:x.id, ag:m[0], sub:m[1], name:x.name, t:x.t||'개인',
+          sh:x.sh||0, tm:x.tm, via:x.via||'질의', amtype:x.amtype||'', q:x.q, st:'접수'});
+        got++; return;
+      }
+      var q=x.q;
       window.QUESTIONS.unshift({id:x.id, ag:m[0], sub:m[1], name:x.name, t:x.t||'개인',
         sh:x.sh||0, tm:x.tm, pub:true, st:'미답변', q:q, a:null});
       got++;

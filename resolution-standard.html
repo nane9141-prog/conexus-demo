@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 결의기준 설정</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=h3">
+<link rel="stylesheet" href="conexus.css?v=h4">
 <style>
   .rsnum{display:flex;align-items:center;gap:8px}
   .rsnum .sep{width:72px;height:0;border-top:1px solid #0A0A0A}
@@ -465,7 +465,7 @@
   }
   $('rsDateB').addEventListener('click', function (e) {
     e.preventDefault();
-    try { $('rsDate').showPicker(); } catch (x) { $('rsDate').focus(); }
+    if (window.cxDate) cxDate($('rsDate'));   /* 공통 달력(conexus.js) */
   });
   $('rsDate').addEventListener('change', function () { paintDate(); validate(); });
 
@@ -550,6 +550,6 @@
   draw();
 })();
 </script>
-<script src="conexus.js?v=s2"></script>
+<script src="conexus.js?v=s3"></script>
 </body>
 </html>

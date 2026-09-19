@@ -861,3 +861,137 @@ function cxChannel(K) {
 }
 window.cxSync = cxChannel('cx.live');
 window.cxClock = cxChannel('cx.clock');
+
+/* 날짜 입력 — 브라우저 기본 달력 대신 공통 달력(.cal · conexus.css)을 띄운다.
+   input[type=date] 값·input/change 이벤트는 그대로라 페이지 코드는 바꿀 게 없다.
+   숨겨 둔 date 입력을 대신 여는 곳은 cxDate(input) 를 부른다. */
+(function () {
+  var cal = null, inp = null, y = 0, m = 0, fresh = false;
+  var PREV = '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>';
+  var NEXT = '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function build() {
+    cal = document.createElement('div'); cal.className = 'cal cx-cal hidden';
+    document.body.appendChild(cal);
+    cal.addEventListener('mousedown', function (e) { e.preventDefault(); });
+    cal.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var n = e.target.closest('[data-nav]');
+      if (n) { m += +n.getAttribute('data-nav'); if (m < 0) { m = 11; y--; } if (m > 11) { m = 0; y++; } paint(); return; }
+      var d = e.target.closest('[data-d]'); if (d) set(y + '-' + pad(m + 1) + '-' + pad(+d.getAttribute('data-d')));
+    });
+    /* 바깥 클릭이면 닫는다 — 여는 클릭(라벨 등에서 cxDate 호출)이 곧바로 닫지 않게 fresh 로 한 번 거른다 */
+    document.addEventListener('click', function (e) { if (inp && !fresh && e.target !== inp) hide(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && inp) { e.stopPropagation(); hide(); } }, true);
+    window.addEventListener('resize', hide);
+  }
+  function paint() {
+    var first = new Date(y, m, 1).getDay(), days = new Date(y, m + 1, 0).getDate(), v = inp.value, h = '';
+    for (var i = 0; i < first; i++) h += '<span class="cal-day empty"></span>';
+    for (var d = 1; d <= days; d++) {
+      var s = y + '-' + pad(m + 1) + '-' + pad(d);
+      h += '<button type="button" class="cal-day' + (s === v ? ' sel' : '') + '" data-d="' + d + '">' + d + '</button>';
+    }
+    cal.innerHTML = '<div class="cal-head"><button type="button" class="cal-nav" data-nav="-1">' + PREV + '</button>'
+      + '<div class="cm">' + y + '년 ' + (m + 1) + '월</div><button type="button" class="cal-nav" data-nav="1">' + NEXT + '</button></div>'
+      + '<div class="cal-grid">' + ['일', '월', '화', '수', '목', '금', '토'].map(function (w) { return '<span class="cal-dow">' + w + '</span>'; }).join('') + h + '</div>';
+  }
+  function show(el) {
+    if (!cal) build();
+    if (inp === el && !cal.classList.contains('hidden')) { hide(); return; }
+    inp = el; fresh = true; setTimeout(function () { fresh = false; }, 0);
+    var d = el.value ? new Date(el.value + 'T00:00') : new Date();
+    if (isNaN(d)) d = new Date();
+    y = d.getFullYear(); m = d.getMonth(); paint();
+    cal.classList.remove('hidden');
+    var r = el.getBoundingClientRect(), top = r.bottom + 4;
+    if (top + cal.offsetHeight > window.innerHeight - 8) top = Math.max(8, r.top - 4 - cal.offsetHeight);
+    cal.style.left = Math.max(8, Math.min(r.left, window.innerWidth - cal.offsetWidth - 8)) + 'px';
+    cal.style.top = top + 'px';
+  }
+  function hide() { if (cal) cal.classList.add('hidden'); inp = null; }
+  function set(v) {
+    var el = inp; hide(); if (!el) return;
+    el.value = v;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  window.cxDate = show;
+  document.addEventListener('click', function (e) {
+    var el = e.target && e.target.closest ? e.target.closest('input[type="date"]') : null;
+    if (!el || el.disabled || el.readOnly) return;
+    e.preventDefault(); show(el);
+  }, true);
+  document.addEventListener('keydown', function (e) {
+    var el = e.target;
+    if (el && el.type === 'date' && (e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); show(el); }
+  }, true);
+})();
+
+/* 파일 선택 — 시연에서는 실제 파일을 고르지 않는다.
+   파일 입력을 열면(직접 클릭이든 코드의 input.click() 이든) 형식(accept)에 맞는 예시 파일이
+   바로 첨부되고 change 가 나간다. 페이지의 형식·용량 검사 코드는 그대로 탄다. */
+(function () {
+  var NAME = { xlsx: '주주명부_20260315.xlsx', xls: '내역_20260315.xls', pdf: '첨부서류.pdf', docx: '첨부서류.docx',
+    png: 'image.png', jpg: 'image.jpg', jpeg: 'image.jpg', gif: 'image.gif', webp: 'image.webp', svg: 'logo.svg', ico: 'favicon.ico' };
+  function extOf(inp) {
+    var a = (inp.accept || '').toLowerCase().split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+    for (var i = 0; i < a.length; i++) {
+      if (a[i].charAt(0) === '.') return a[i].slice(1);
+      if (/^image\//.test(a[i])) return 'png';
+      if (/sheet|excel/.test(a[i])) return 'xlsx';
+      if (/pdf/.test(a[i])) return 'pdf';
+    }
+    return 'pdf';
+  }
+  function body(ext) {
+    if (ext === 'svg') return ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#0071F3"/></svg>', 'image/svg+xml'];
+    if (/^(png|jpe?g|gif|webp|ico)$/.test(ext)) {
+      /* 미리보기가 비지 않게 실제 그림으로 만든다 */
+      var c = document.createElement('canvas'); c.width = c.height = 64;
+      var g = c.getContext('2d'); g.fillStyle = '#0071F3'; g.fillRect(0, 0, 64, 64);
+      g.fillStyle = '#fff'; g.font = 'bold 30px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('C', 32, 34);
+      var s = atob(c.toDataURL('image/png').split(',')[1]), u = new Uint8Array(s.length);
+      for (var i = 0; i < s.length; i++) u[i] = s.charCodeAt(i);
+      return [u, 'image/png'];
+    }
+    return [new Uint8Array(245760), ''];   /* 문서·엑셀 — 240KB 자리만 */
+  }
+  function fake(inp) {
+    var ext = extOf(inp), b = body(ext);
+    try {
+      var dt = new DataTransfer();
+      dt.items.add(new File([b[0]], NAME[ext] || ('첨부파일.' + ext), { type: b[1] }));
+      inp.files = dt.files;
+    } catch (e) { return; }
+    inp.dispatchEvent(new Event('input', { bubbles: true }));
+    inp.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  var click = HTMLInputElement.prototype.click;
+  HTMLInputElement.prototype.click = function () {
+    if (this.type !== 'file') return click.apply(this, arguments);
+    var el = this; setTimeout(function () { fake(el); }, 0);
+  };
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (t && t.tagName === 'INPUT' && t.type === 'file') { e.preventDefault(); fake(t); }
+  }, true);
+})();
+
+/* 표의 '의안명' 칸은 어느 표든 굵게(600) — 공통 표 도구를 쓰지 않는 표(data-nocx)까지.
+   칸 번호를 표에 적어 두고(data-agcol) 규칙은 conexus.css 에 둔다. 다시 그려진 표도 따라간다. */
+(function () {
+  function mark() {
+    Array.prototype.forEach.call(document.querySelectorAll('table'), function (t) {
+      var hr = t.tHead && t.tHead.rows[0]; if (!hr) return;
+      var idx = -1;
+      Array.prototype.forEach.call(hr.cells, function (c, i) { if (/^\s*의안명\s*$/.test(c.textContent)) idx = i + 1; });
+      if (idx > 0) { if (t.getAttribute('data-agcol') !== String(idx)) t.setAttribute('data-agcol', idx); }
+      else if (t.hasAttribute('data-agcol')) t.removeAttribute('data-agcol');
+    });
+  }
+  var q = 0;
+  function later() { if (q) return; q = requestAnimationFrame(function () { q = 0; mark(); }); }
+  function start() { mark(); new MutationObserver(later).observe(document.body, { childList: true, subtree: true }); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();

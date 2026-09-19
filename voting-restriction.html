@@ -482,6 +482,7 @@ td .tag{background:#f4f4f5;color:#737373;padding:0 8px}   /* 통합 N건 — 참
 /* 투표권자가 맨 앞 칸인 표 — 좌우 스크롤 시 투표권자 칸 고정 (conexus.css 와 같은 규칙, 이 페이지는 conexus.css 미사용) */
 table.cx-stk1>*>tr>:first-child{position:sticky;left:0;z-index:1}
 table.cx-stk1>thead>tr>:first-child{z-index:3}
+table[data-agcol="2"]>tbody>tr>td:nth-child(2){font-weight:600!important}   /* 의안명 굵게 (conexus.css 와 동일) */
 table.cx-t thead th{height:32px!important;padding-top:0!important;padding-bottom:0!important;box-sizing:border-box}   /* 헤더 32px (conexus.css 와 동일) */
 :where(table.cx-stk1>tbody>tr>td:first-child,table.cx-stk1>tfoot>tr>td:first-child){background:#fff}
 :where(table.cx-stk1>thead>tr>th:first-child){background:#fff}
@@ -1640,6 +1641,6 @@ document.querySelectorAll('.lnb-tabs .t').forEach(function(t){t.addEventListener
     });
   })();
 </script>
-<script src="conexus.js?v=s2"></script>
+<script src="conexus.js?v=s3"></script>
 </body>
 </html>
