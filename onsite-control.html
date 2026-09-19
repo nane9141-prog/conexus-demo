@@ -570,7 +570,13 @@
   .ntbl td{font-weight:500;color:#0A0A0A}
   .ntbl tr:last-child th,.ntbl tr:last-child td{border-bottom:none}
   .ntbl .tm{width:60px;text-align:center;color:#737373}
-  .ntbl .pin{width:40px;text-align:center;padding:0}
+  .ntbl .ic{width:32px;text-align:center;padding:0}
+  .ntbl tr.ed td{background:#EEF5FF}
+  .ntbl .ask{text-align:right;padding:0 8px}
+  .nact{width:28px;height:24px;border:none;border-radius:8px;background:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;color:#737373;font-size:12px}
+  .nact:hover{background:#F5F5F5;color:#0A0A0A}
+  .nask{height:24px;padding:0 8px;border:1px solid #E5E5E5;border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#171717;cursor:pointer;margin-left:6px}
+  .nask.del{border-color:transparent;background:rgba(220,38,38,.1);color:#E9081B}
   .ntbl .nm{overflow:hidden;text-overflow:ellipsis;max-width:0}
   .npin{width:28px;height:24px;border:none;border-radius:8px;background:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
   .npin svg{width:12px;height:12px;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
@@ -1236,7 +1242,7 @@
         <div class="l">
           <button class="oc-ib" id="lnbToggle" title="사이드바"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg></button>
           <span class="vsep"></span>
-          <span class="crumb">주총 현장 제어</span>
+          <span class="crumb">주주총회 현장 제어</span>
         </div>
         <button class="oc-ib" title="변경이력"><i class="ph ph-clock-counter-clockwise" style="font-size:16px"></i></button>
       </div>
@@ -1290,7 +1296,7 @@
             <div class="apanel">
               <div class="ivid">
                 <div class="ivid-h"><span class="ivid-t"><span class="liv"></span>생중계 · 카카오뱅크 주주총회</span><div class="ivid-act"><button id="pipMute" title="음소거"><i class="ph ph-speaker-simple-high"></i></button><button id="vidPip" title="PIP"><i class="ph ph-picture-in-picture"></i></button><button id="vidFull" title="전체화면"><i class="ph ph-arrows-out"></i></button></div></div>
-                <video id="pipVid" src="kakaobank.mp4" autoplay loop playsinline></video>
+                <video id="pipVid" src="kakaobank.mp4" loop playsinline></video>
               </div>
               <div class="apanel-h">의안 진행</div>
               <div id="agTree"></div>
@@ -1506,24 +1512,16 @@
 <div class="ovl" id="ntcOvl">
   <div class="dlg">
     <button class="dlg-x" id="ntcClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-    <div class="dlg-h"><div class="tt">공지</div><div class="ds">현장 화면과 온라인 참석 주주에게 공지를 전송합니다.</div></div>
+    <div class="dlg-h"><div class="tt">공지 관리</div><div class="ds">공지를 등록하고 주주 화면에 노출합니다.</div></div>
     <div class="dlg-c" style="padding-bottom:16px">
       <div class="dlg-field"><div class="lb">제목</div>
-        <input class="dlg-inp" id="ntcTitle" type="text" placeholder="공지 제목을 입력하세요"></div>
-      <div class="dlg-field">
-        <textarea class="dlg-ta" id="ntcBody" style="min-height:165px" placeholder="공지 내용을 입력하세요"></textarea></div>
-      <div style="display:flex;align-items:center;gap:16px">
-        <label class="ckrow" data-ck style="margin-right:0"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>상단 고정</label>
-        <span style="margin-left:auto"></span>
-        <button class="dlg-btn" type="button" data-close="ntcOvl">취소</button>
+        <input class="dlg-inp" id="ntcTitle" type="text" placeholder="제목을 입력하세요."></div>
+      <textarea class="dlg-ta" id="ntcBody" style="min-height:165px;resize:none" placeholder="공지 내용을 입력하세요."></textarea>
+      <div style="display:flex;justify-content:flex-end;gap:8px">
+        <button class="dlg-btn" type="button" id="ntcCancel">취소</button>
         <button class="dlg-btn dark" type="button" id="ntcSend">공지 등록</button>
       </div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <table class="ntbl" data-nocx id="ntcTbl"><tbody>
-          <tr><th>내용</th><th class="tm">시간</th><th class="pin">고정</th></tr>
-        </tbody></table>
-        <div class="dlg-cap">고정한 공지는 현장 화면 상단에 계속 노출됩니다. 최대 1건까지 고정할 수 있습니다.</div>
-      </div>
+      <table class="ntbl" data-nocx id="ntcTbl"><tbody></tbody></table>
     </div>
   </div>
 </div>
@@ -1689,7 +1687,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   /* 총회 시작 전에는 시계 자리에 '총회 시작' 버튼 — 누르면 00:00:00 부터 흐른다 */
   document.getElementById('ocStart').addEventListener('click',function(){
     this.style.display='none'; document.getElementById('ocTimerW').style.display='';
-    t=0; running=true; paint(); castClock();
+    t=0; running=true; paint();
+    window.__ocStarted=true;
+    if(vid){ vid.currentTime=0; vid.muted=false; var pr=vid.play(); if(pr&&pr.catch) pr.catch(function(){}); }
+    castClock();
     if(window.cxToast) cxToast('주주총회를 시작했습니다.');
   });
   function paint(){ var h=Math.floor(t/3600),m=Math.floor(t%3600/60),s=t%60; var v=[h,m,s].map(function(n){return (n<10?'0':'')+n;}).join(':'); hh.textContent=v; if(hh2)hh2.textContent=v; }
@@ -2498,6 +2499,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
               +'<span class="sp"></span><span class="qmqag">발언 완료</span></div>';
           }).join('');
     }
+    /* 대기·완료 모두 없으면 섹션 없이 질의 목록과 같은 빈 상태 */
+    if(!items.length && !fin.length) html='<div class="chat-empty">접수된 내역이 없습니다.</div>';
     document.getElementById('qmAccB').innerHTML=html;
   }
   document.getElementById('qmAccTgl').addEventListener('click',function(){ acc.classList.toggle('on'); });
@@ -2956,6 +2959,9 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
       if(q){ var hay=qf==='voter'?r[0]:qf==='agent'?(r[2]||''):[r[1]].concat((r[9]||[]).map(function(k){return k[0];})).join(' ');
         if(hay.indexOf(q)<0) return; }
       var voter=r[0],nm=r[1],agent=r[2],app=r[3],done=r[4],can=r[5],lim=r[6],aglim=r[7],seat=r[8],kids=r[9];
+      /* 의안별 제한이 없으면 '−'. 통합 계좌 하위 줄도 같은 글자·색을 쓴다 */
+      var limC='<td class="c'+(lim==='해당없음'?' mut':'')+'">'+lim+'</td>';
+      var agC=(aglim==='없음')?'<td class="c mut">−</td>':'<td class="c">'+aglim+'</td>';
       var agentCell = agent
         ? '<td class="l"><span class="extip" data-tip="대리인 '+agent+'\n생년월일 1978-0'+(i%9+1)+'-1'+(i%9)+'\n연락처 010-'+(3000+i*37)+'-'+(1000+i*53)+'">'+agent+'</span></td>'
         : '<td class="l mut">−</td>';
@@ -2969,8 +2975,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
         +'<td class="c"><span class="pchip'+(app?' b':'')+'">'+(app?'사용':'미사용')+'</span></td>'
         +'<td class="c"><span class="pchip'+(done?' b':'')+'">'+(done?'행사':'미행사')+'</span></td>'
         +'<td>'+cm(can)+'</td><td>'+pct(can)+'</td>'
-        +'<td class="c'+(lim==='해당없음'?' mut':'')+'">'+lim+'</td>'
-        +'<td class="c'+(aglim==='없음'?' mut':'')+'">'+aglim+'</td>'
+        +limC+agC
         +'<td class="c">'+seat+'</td>'
         +'<td class="c"><span class="extip" data-tip="참석처리 '+M.operator.name+'\n'+M.date+' 09:'+(20+i)+'\n참석번호 '+seat+'">'+INFO+'</span></td></tr>');
       (kids||[]).forEach(function(k){
@@ -2980,8 +2985,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
           +'<td class="c"><span class="pchip'+(app?' b':'')+'">'+(app?'사용':'미사용')+'</span></td>'
           +'<td class="c"><span class="pchip'+(done?' b':'')+'">'+(done?'행사':'미행사')+'</span></td>'
           +'<td>'+cm(k[1])+'</td><td>'+pct(k[1])+'</td>'
-          +'<td class="c mut">'+lim+'</td><td class="c mut">'+aglim+'</td>'
-          +'<td class="c mut">'+seat+'</td><td class="c"></td></tr>');
+          +limC+agC
+          +'<td class="c"></td><td class="c"></td></tr>');   /* 참석번호는 통합 계좌 줄에만 */
       });
     });
     document.getElementById('pBody').innerHTML=out.join('')||'<tr><td colspan="11" class="c mut" style="height:120px">검색 결과가 없습니다.</td></tr>';
@@ -3553,6 +3558,8 @@ function toggleMute(id){
       return '<div class="vqitem"><div class="vqrow"><span class="vqno">'+(i+1)+'</span>'
            + '<span class="vqnm">'+x.name+'</span><span class="vqtm">'+x.tm+'</span></div></div>';
     }).join('')||'<div class="mc-q" style="padding:4px 2px;color:#737373">완료된 발언이 없습니다.</div>';
+    /* 대기·완료 모두 없으면 섹션 없이 질의 목록과 같은 빈 상태 */
+    if(!wait.length && !done.length) return '<div class="vqwrap"><div class="vqmain">'+host+EMPTY+'</div></div>';
     return '<div class="vqwrap">'
       + '<div class="vqmain">'+host
       +   '<div class="vqsec">대기<span class="vqcnt">'+wait.length+'</span></div>'
@@ -4000,7 +4007,8 @@ function toggleMute(id){
 <script>
 (function(){ var v=document.getElementById("pipVid"), b=document.getElementById("pipMute"); if(!v||!b) return;
   function upd(){ b.innerHTML="<i class=\"ph "+(v.muted?"ph-speaker-simple-x":"ph-speaker-simple-high")+"\"></i>"; b.title=v.muted?"음소거 해제":"음소거"; }
-  function tryPlay(){ v.muted=false; var p=v.play(); if(p&&p.catch){ p.catch(function(){}); } upd(); }
+  function tryPlay(){ if(!window.__ocStarted) return;   /* 영상은 총회 시작 후에만 */
+    v.muted=false; var p=v.play(); if(p&&p.catch){ p.catch(function(){}); } upd(); }
   v.muted=false; tryPlay();
   function once(){ tryPlay(); document.removeEventListener("pointerdown",once); document.removeEventListener("keydown",once); }
   document.addEventListener("pointerdown",once); document.addEventListener("keydown",once);
@@ -4187,40 +4195,56 @@ if(window.OC&&OC.fire) OC.fire();
     if (window.cxToast) cxToast(DLY[dlyV].toast);
   });
 
-  /* 공지 — 등록하면 목록 맨 위에 쌓인다 */
+  /* 공지 관리 — 등록하면 목록 맨 위에 쌓인다. 연필은 위 입력칸으로 불러와 '수정', 휴지통은 그 줄에서 취소/삭제를 한 번 더 묻는다. */
   var NTC = [
-    { t: '총회장 내 금연 및 정숙을 부탁드립니다.', tm: '09:42', pin: 0 },
-    { t: '의결권 행사는 배부된 단말기로 진행해 주세요.', tm: '09:31', pin: 1 },
-    { t: '2층 주주 대기실이 개방되었습니다.', tm: '09:18', pin: 0 },
-    { t: '참석 등록은 1층 안내데스크에서 가능합니다.', tm: '09:05', pin: 0 }
+    { t: '의사정족수 충족 안내', b: '의사정족수가 충족되어 주주총회 개회를 선언합니다.\n질의, 발언하실 내용이 있으신 주주분들은 의안 표결이 진행되기 전에 질의, 발언 신청을 해주시면 내용을 확인하여 전달 드리도록 하겠습니다.', tm: '09:30' },
+    { t: '제 1호 의안 가결 안내', b: '제 1호 의안이 가결되었습니다.', tm: '09:30' },
+    { t: '표결 집계중 안내', b: '표결 결과를 집계 중입니다. 잠시만 기다려 주세요.', tm: '09:30' },
+    { t: '클린 질의 환경 부탁', b: '비방, 욕설 등 부적절한 표현이 포함된 질의는 접수가 제한될 수 있습니다.', tm: '09:30' },
+    { t: '투표 독려 안내', b: '아직 투표하지 않으신 주주께서는 표결 마감 전까지 투표를 완료해 주세요.', tm: '09:30' }
   ];
-  var PIN = '<svg viewBox="0 0 24 24"><path d="M9 4h6l-1 6 4 3v2H6v-2l4-3-1-6z"/><path d="M12 15v5"/></svg>';
-  var PINOFF = '<svg viewBox="0 0 24 24"><path d="M9 4h6l-1 6 4 3v2h-7"/><path d="M12 15v5"/><path d="m4 3 16 18"/></svg>';
+  var ntEd = -1, ntDel = -1;
+  var PEN = '<i class="ph ph-pencil-simple" style="font-size:12px"></i>', BIN = '<i class="ph ph-trash" style="font-size:12px"></i>';
   function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function now() { var d = new Date(), h = d.getHours(), m = d.getMinutes(); return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m; }
   function drawNtc() {
-    var b = $('ntcTbl').querySelector('tbody'); if (!b) return;
-    b.innerHTML = '<tr><th>내용</th><th class="tm">시간</th><th class="pin">고정</th></tr>'
+    $('ntcSend').textContent = ntEd >= 0 ? '수정' : '공지 등록';
+    $('ntcTbl').querySelector('tbody').innerHTML = '<tr><th>제목</th><th class="tm">등록</th><th class="ic">수정</th><th class="ic">삭제</th></tr>'
       + NTC.map(function (n, i) {
+          var cls = (i === ntEd || i === ntDel) ? ' class="ed"' : '';
+          if (i === ntDel) return '<tr' + cls + '><td class="nm">' + esc(n.t) + '</td><td class="ask" colspan="3">'
+            + '<button class="nask" type="button" data-nno>취소</button><button class="nask del" type="button" data-nyes="' + i + '">삭제</button></td></tr>';
+          if (i === ntEd) return '<tr' + cls + '><td class="nm">' + esc(n.t) + '</td><td class="tm"></td><td class="ic"></td><td class="ic"></td></tr>';
           return '<tr><td class="nm">' + esc(n.t) + '</td><td class="tm">' + n.tm + '</td>'
-            + '<td class="pin"><button class="npin' + (n.pin ? ' on' : '') + '" type="button" data-pin="' + i + '">'
-            + (n.pin ? PIN : PINOFF) + '</button></td></tr>';
+            + '<td class="ic"><button class="nact" type="button" data-ned="' + i + '" title="수정">' + PEN + '</button></td>'
+            + '<td class="ic"><button class="nact" type="button" data-ndel="' + i + '" title="삭제">' + BIN + '</button></td></tr>';
         }).join('');
   }
+  function clearForm() { ntEd = -1; $('ntcTitle').value = ''; $('ntcBody').value = ''; }
   $('ntcTbl').addEventListener('click', function (e) {
-    var b = e.target.closest('[data-pin]'); if (!b) return;
-    var i = +b.getAttribute('data-pin'), was = NTC[i].pin;
-    NTC.forEach(function (n) { n.pin = 0; });      /* 고정은 한 건만 */
-    NTC[i].pin = was ? 0 : 1;
-    drawNtc();
+    var ed = e.target.closest('[data-ned]'), dl = e.target.closest('[data-ndel]'), yes = e.target.closest('[data-nyes]');
+    if (ed) { ntDel = -1; ntEd = +ed.getAttribute('data-ned'); $('ntcTitle').value = NTC[ntEd].t; $('ntcBody').value = NTC[ntEd].b || ''; drawNtc(); return; }
+    if (dl) { clearForm(); ntDel = +dl.getAttribute('data-ndel'); drawNtc(); return; }
+    if (yes) { NTC.splice(+yes.getAttribute('data-nyes'), 1); ntDel = -1; drawNtc(); if (window.cxToast) cxToast('공지를 삭제했습니다.'); return; }
+    if (e.target.closest('[data-nno]')) { ntDel = -1; drawNtc(); }
+  });
+  $('ntcCancel').addEventListener('click', function () {
+    if (ntEd < 0 && ntDel < 0 && !$('ntcTitle').value && !$('ntcBody').value) { close('ntcOvl'); return; }
+    clearForm(); ntDel = -1; drawNtc();
   });
   $('ntcSend').addEventListener('click', function () {
-    var t = $('ntcTitle').value.trim() || $('ntcBody').value.trim();
-    if (!t) { close('ntcOvl'); return; }
-    var d = new Date(), hh = d.getHours(), mm = d.getMinutes();
-    NTC.unshift({ t: t, tm: (hh < 10 ? '0' : '') + hh + ':' + (mm < 10 ? '0' : '') + mm, pin: 0 });
-    $('ntcTitle').value = ''; $('ntcBody').value = '';
-    drawNtc();
+    var t = $('ntcTitle').value.trim(), b = $('ntcBody').value.trim();
+    if (!t && !b) { if (window.cxToast) cxToast('공지 내용을 입력해 주세요.'); return; }
+    if (!t) t = b.split('\n')[0].slice(0, 30);
+    var was = ntEd >= 0;
+    if (was) { NTC[ntEd].t = t; NTC[ntEd].b = b; }
+    else NTC.unshift({ t: t, b: b, tm: now() });
+    clearForm(); drawNtc();
+    if (window.cxToast) cxToast(was ? '공지를 수정했습니다.' : '공지를 등록했습니다.');
   });
+  /* 다시 열 때는 입력칸을 비워 둔다 */
+  new MutationObserver(function () { if ($('ntcOvl').classList.contains('on')) { clearForm(); ntDel = -1; drawNtc(); } })
+    .observe($('ntcOvl'), { attributes: true, attributeFilter: ['class'] });
   drawNtc();
 })();
 </script>
@@ -4274,11 +4298,6 @@ if(window.OC&&OC.fire) OC.fire();
     say('미행사 의결권 표결 방식을 ' + (t ? t.textContent : '기권 처리') + '로 설정했습니다.');
   });
 
-  /* 공지 등록 핸들러가 입력을 비우고 가므로 캡처 단계에서 먼저 읽는다 */
-  $('ntcSend').addEventListener('click', function () {
-    var t = ($('ntcTitle').value || $('ntcBody').value || '').trim();
-    say(t ? '공지를 전송했습니다.' : '공지 내용을 입력해 주세요.');
-  }, true);
 
 
   on('bulkOk', function () {
