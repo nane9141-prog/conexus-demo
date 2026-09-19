@@ -27,10 +27,10 @@
     holdersTotal: 650000,         // 전체 주주 수
     // 출석/참석 현황
     attendShares: 300000000,      // 출석의결권 (= 채널 합계)
-    attendHolders: 300000,        // 출석 주주 수
-    onsiteHolders: 93000,         // 현장 참석 주주
+    attendHolders: 100060,        // 출석 주주 수 (= 현장 + 온라인)
+    onsiteHolders: 60,            // 현장 참석 주주
     onsiteShares: 3120000,        // 현장 참석 행사 가능 주식
-    onlineHolders: 207000,        // 온라인 참석 주주
+    onlineHolders: 100000,        // 온라인 참석 주주
     onlineShares: 296880000,      // 온라인 참석 의결권
     preExercised: 312504900,      // 사전 의결권 행사 (전자+서면+위임)
     // 파생 비율 (참고): attendShares / sharesVoting ≈ 63.6%

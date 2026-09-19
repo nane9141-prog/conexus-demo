@@ -1163,7 +1163,9 @@
   .chtab{height:24px;padding:0 10px;border:none;background:none;border-radius:6px;font-family:inherit;font-size:12px;font-weight:600;color:#737373;cursor:pointer}
   .chtab.on{background:#F5F5F5;color:#0a0a0a}
 </style>
-<script src="cx-data.js?v=4"></script>
+<script src="cx-data.js?v=5"></script>
+<script src="cx-roster.js?v=r7"></script>
+<script src="cx-attendees.js?v=1"></script>
 </head>
 <body>
 <div class="oc app collapsed" id="app">
@@ -1308,9 +1310,9 @@
         <div class="oc-mc"><div class="k">의안 진행 <span class="stbadge blue" id="mAgSt"><span class="d"></span>진행 중</span></div><div class="v"><span><b id="mAgNo">0</b> / <span id="mAgTot">8</span></span></div><div class="s" id="mAgSub"></div></div>
         <div class="oc-mc"><div class="k">출석률</div><div class="v" id="mAttendRate">00%</div><div class="s"><span data-cx="meeting.sharesIssued">476,211,964</span>주 기준</div></div>
         <div class="oc-mc"><div class="k">전체 출석 주주수</div><div class="v"><span data-cx="meeting.attendHolders">300,000</span><span class="sub">명</span></div><div class="s">출석의결권 <span data-cx="meeting.attendShares">300,000,000</span>주</div></div>
-        <div class="oc-mc"><div class="k">현장 참석</div><div class="v"><span data-cx="meeting.onsiteHolders">93,000</span><span class="sub">명</span></div><div class="s"><span data-cx="meeting.onsiteShares">3,120,000</span>주 행사 가능</div></div>
+        <div class="oc-mc"><div class="k">현장 참석</div><div class="v"><span data-cx="meeting.onsiteHolders">60</span><span class="sub">명</span></div><div class="s"><span data-cx="meeting.onsiteShares">3,120,000</span>주 행사 가능</div></div>
         <div class="oc-mc"><div class="k">현장 표결</div><div class="v"><span><b id="mSiteN">0</b> / <span id="mSiteTot">8</span></span></div><div class="s"><span id="mSiteW">0</span>주 행사</div></div>
-        <div class="oc-mc"><div class="k">온라인 참석</div><div class="v"><span id="mOnline" data-cx="meeting.onlineHolders">207,000</span><span class="sub">명</span><svg class="spark" viewBox="0 0 80 22" preserveAspectRatio="none"><polyline fill="none" stroke="#0071f3" stroke-width="2" points="0,18 12,15 24,16 36,10 48,12 60,6 72,7 80,3"/></svg></div><div class="s"><span data-cx="meeting.onlineShares">296,880,000</span>주</div></div>
+        <div class="oc-mc"><div class="k">온라인 참석</div><div class="v"><span id="mOnline" data-cx="meeting.onlineHolders">100,000</span><span class="sub">명</span><svg class="spark" viewBox="0 0 80 22" preserveAspectRatio="none"><polyline fill="none" stroke="#0071f3" stroke-width="2" points="0,18 12,15 24,16 36,10 48,12 60,6 72,7 80,3"/></svg></div><div class="s"><span data-cx="meeting.onlineShares">296,880,000</span>주</div></div>
       </div>
 
       <div class="oc-grid">
@@ -2193,7 +2195,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     var ast=node.querySelector('.astatus'); if(!ast) return;
     ast.innerHTML=listBadge(node,node.dataset.no);
   }
-  var SITE_TOT=30;  /* 현장 표결 대상 수 — 데모 고정값 */
+  var SITE_TOT=(CX.meeting&&CX.meeting.onsiteHolders)||60;  /* 현장 표결 대상 수 = 현장 참석 주주(참석자 관리와 같은 60명) */
   function updateMetric(){
     var set=function(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; };
     /* 출석률 — 캡션이 발행주식총수 기준이므로 분모도 발행주식총수 */
@@ -2216,8 +2218,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   function bumpSite(){
     if(OC.stage!==2) return;
     var moved=false;
-    /* 30명이 5분 남짓에 걸쳐 들어오는 속도 — 시연에서 눈으로 따라갈 수 있을 만큼 */
-    if(OC.siteN<SITE_TOT && Math.random()<0.09){
+    /* 60명이 5분 남짓에 걸쳐 들어오는 속도 — 시연에서 눈으로 따라갈 수 있을 만큼 */
+    if(OC.siteN<SITE_TOT && Math.random()<0.18){
       OC.siteN++; OC.siteW+=800+Math.round(Math.random()*900); moved=true;
     }
     /* 온라인 투표도 표결이 열린 동안 천천히 쌓인다 — 5분쯤에 다 들어온다 */
@@ -2266,8 +2268,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   window.OC=OC;
   var sw=document.querySelector('.cag [data-sw]');
   if(sw) sw.addEventListener('click',function(){ OC.preEx=sw.classList.contains('on'); renderAll(); });
-  var onl=document.getElementById('mOnline'), obase=207000;
-  if(onl){ setInterval(function(){ obase+=Math.round((Math.random()-0.4)*12); if(obase<206800)obase=206800; if(obase>207200)obase=207200; onl.textContent=obase.toLocaleString('en-US'); },3000); }
+  var onl=document.getElementById('mOnline'), obase=CX.meeting.onlineHolders;   /* 온라인 참석 10만 명 근처에서 조금씩 움직인다 */
+  if(onl){ setInterval(function(){ obase+=Math.round((Math.random()-0.4)*12); if(obase<CX.meeting.onlineHolders-200)obase=CX.meeting.onlineHolders-200; if(obase>CX.meeting.onlineHolders+200)obase=CX.meeting.onlineHolders+200; onl.textContent=obase.toLocaleString('en-US'); },3000); }
   // 초기 선택: 제1호
   (function(){ var f=document.querySelector('#agTree .selnode[data-no="제1호"]'); if(f) f.classList.add('sel'); })();
   renderStage(); renderAll();
@@ -2951,14 +2953,15 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
 
   function cur(){ return (window.OC&&OC.agenda)||'제1호'; }
   /* 참석자 목록 — 수정 동의 제안자 검색이 쓴다(투표권자 · 주주명 · 대리인, 통합 계좌 포함) */
+  /* 제안 주주 검색 대상 — 참석자 관리와 같은 명단(cx-attendees.js)의 현장 참석자 · 전자주총 참석자 */
   if(window.OC) OC.attendees=function(){
-    var out=[];
-    ROWS.forEach(function(r){
-      out.push({name:r[0], sub:(r[1]&&r[1]!==r[0]?r[1]+' · ':'')+r[8]+' · '+cm(r[5])+'주', no:'S-'+(100000+out.length*137), sh:r[5]});
-      if(r[2]) out.push({name:r[2], sub:'대리인 ('+r[0]+') · '+r[8], no:'S-'+(100000+out.length*137), sh:r[5]});
-      (r[9]||[]).forEach(function(k){ out.push({name:k[0], sub:r[0]+' 통합 · '+r[8]+' · '+cm(k[1])+'주', no:'S-'+(100000+out.length*137), sh:k[1]}); });
+    if(OC.__att) return OC.__att;
+    var L=(CX.buildAttendees?CX.buildAttendees():[]).filter(function(x){ return !x.nonsh && (x.site!=='미참석' || x.evote==='참석'); });
+    return OC.__att=L.map(function(x){
+      var where=x.site!=='미참석'?'현장':'전자';
+      return {name:x.voter&&x.voter!=='-'?x.voter:x.name, no:x.no, sh:x.hold,
+        sub:where+' 참석 · '+(x.voter&&x.voter!==x.name&&x.voter!=='-'?x.name+' · ':'')+cm(x.hold)+'주'};
     });
-    return out;
   };
   /* 양립불가·집중투표는 하위 표결 단위를 탭으로 고른다 */
   var optIdx=0;
