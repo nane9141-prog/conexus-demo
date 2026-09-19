@@ -42,6 +42,7 @@
   .ocg{display:flex;align-items:center;gap:8px}
   .tsep{width:1px;height:20px;background:var(--border)}
   .ocb{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 8px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap;text-decoration:none}
+  .ocb.pri{background:#171717;border-color:#171717;color:#FAFAFA}
   .ocb svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.6}
   .ocb:hover{background:#fafafa}
   .ocb.gray{background:#f5f5f5;border-color:transparent}
@@ -292,8 +293,16 @@
   .chat-top{display:flex;flex-direction:column;gap:10px;padding:12px;flex:none}
   /* 상단 탭 — 밑줄형(질의/발언) */
   .qtabs{display:flex;align-items:center;padding:3px;flex:1;min-width:0}
-  .qtabs .bn:empty{display:none}   /* 건수 0 이면 뱃지 없음 */
-  .chat-empty{padding:40px 12px;text-align:center;font-size:14px;color:#737373}   /* 질의·발언·수정동의 목록이 비었을 때 */
+  .qtabs .bn:empty{display:none}
+  /* 수정 동의 카드 뱃지 · 검증유형 (Figma) */
+  .cbadge.am{background:#FEF5E7;color:#EA580C}
+  .cbadge.vq{background:#EEF5FF;color:#0071F3}
+  .cbadge.vs{background:#F5F3FF;color:#7C3AED}
+  .mc-vt{font-size:12px;line-height:16px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A}
+  .mbadge.amber{color:#EA580C}.mbadge.amber .d{background:#EA580C}
+  .mc-ans.am{display:flex;flex-direction:column;gap:12px}
+  .mc-ans.am .mc-ta{min-height:108px}   /* 건수 0 이면 뱃지 없음 */
+  .chat-empty{padding:40px 12px;text-align:center;font-size:14px;color:#737373}   /* 질의·발언·수정 동의 목록이 비었을 때 */
   .qtabs button{display:inline-flex;align-items:center;justify-content:center;gap:6px;flex:none;
     height:34px;padding:4px 12px;border:none;border-bottom:1px solid var(--border);background:none;
     font-family:inherit;font-size:14px;font-weight:500;letter-spacing:inherit;color:#737373;cursor:pointer}
@@ -490,6 +499,26 @@
     font-weight:500;letter-spacing:inherit;color:#0A0A0A;cursor:pointer;white-space:nowrap}
   .mc-btn svg{width:14px;height:14px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
   .mc-btn.dark{background:#171717;border-color:#171717;color:#FAFAFA}
+  /* 상정문 · 표결문 모달 — Figma 9823:164099 */
+  .dlg.sdlg{width:1200px;height:min(800px,calc(100vh - 32px))}
+  .dlg.sdlg .dlg-c{flex:1;min-height:0;padding:0 16px 16px}
+  .sd-top .r .dlg-btn{white-space:nowrap}
+  .sd-top{display:flex;align-items:flex-end;gap:16px}
+  .sd-top .l{display:flex;flex-direction:column;gap:8px}
+  .sd-top .dlg-sel{width:442px}
+  .sd-info{display:flex;align-items:center;gap:6px;font-size:13px;color:#737373}
+  .sd-info i{font-size:16px}
+  .sd-info a{color:#2563EB;text-decoration:underline}
+  .sd-top .r{margin-left:auto;display:flex;gap:8px}
+  .sd-top .dlg-btn{display:inline-flex;align-items:center;gap:6px}
+  .sd-top .dlg-btn i{font-size:16px}
+  .sd-body{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px}
+  .sd-box{flex:1;min-height:0;display:flex;flex-direction:column;border:1px solid #E5E5E5;border-radius:10px;overflow:hidden}
+  .sd-bar{display:flex;align-items:center;justify-content:flex-end;gap:4px;padding:6px 8px;border-bottom:1px solid #E5E5E5;background:#FAFAFA}
+  .sd-bar button{width:28px;height:28px;border:1px solid #E5E5E5;border-radius:8px;background:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;color:#171717}
+  .sd-bar span{min-width:32px;text-align:center;font-size:14px;font-weight:500;color:#171717}
+  .sd-txt{flex:1;overflow:auto;padding:20px 24px;font-size:18px;line-height:1.7;color:#171717;white-space:pre-wrap;outline:none}
+  .sd-txt .v{color:#2563EB}
   .ovl{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:1000}
   .ovl.on{display:flex}
   .dlg{box-sizing:border-box;width:480px;max-width:calc(100vw - 32px);background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;display:flex;flex-direction:column;position:relative;box-shadow:0 8px 24px rgba(0,0,0,.08)}
@@ -503,6 +532,9 @@
   .dlg-ta.filled{background:#FAFAFA;color:#171717;resize:none;cursor:default}
   .dlg-tabs{display:flex;padding:3px;background:#F5F5F5;border-radius:10px}
   .dlg-tabs button{flex:1;height:26px;border:none;background:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:500;color:#737373;cursor:pointer}
+  .dly-tabs{align-self:flex-start}
+  .dly-tabs button{flex:none;padding:0 6px}
+  .dlg-f.dly-f .ckrow{flex:1 0 0;margin-right:0}
   .dlg-tabs button.on{background:#fff;color:#0A0A0A;box-shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1)}
   .dlg-f{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:8px;padding:12px 16px 16px}
   .dlg-f .ckrow{flex:1 0 100%;margin-right:0}
@@ -589,7 +621,7 @@
   .vscroll{flex:1;min-height:0;overflow:auto;margin:0 12px 12px;border:1px solid #E5E5E5;border-radius:8px;background:#fff}
   .dlg-inp,.dlg-sel{width:100%;box-sizing:border-box;height:32px;padding:0 10px;border:1px solid #E5E5E5;border-radius:10px;font-family:inherit;font-size:14px;letter-spacing:-.01em;color:#171717;background:#fff}
   .dlg-sel{padding-right:28px}
-  /* 수정동의 */
+  /* 수정 동의 */
   .achip{display:inline-flex;align-items:center;padding:2px 6px;border-radius:6px;font-size:12px;line-height:16px;font-weight:500;background:#F5F5F5;color:#525252;flex:none}
   .achip.b{background:#EEF5FF;color:#0071F3}
   .achip.v{background:#F5F3FF;color:#7C3AED}
@@ -651,8 +683,12 @@
   .vwvia.off{background:#EDE9FE;color:#5B21B6}
   .vwbtn{height:24px;padding:0 8px;border:none;border-radius:8px;background:rgba(220,38,38,.1);font-family:inherit;font-size:12px;font-weight:500;color:#E9081B;cursor:pointer}
   .vwbtn.undo{background:#fff;border:1px solid #E5E5E5;color:#0A0A0A}
+  .vwact{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border:1px solid #E5E5E5;border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0A0A0A;cursor:pointer;white-space:nowrap}
+  .vwact i{font-size:14px}
+  .vwact.out{border-color:transparent;background:rgba(220,38,38,.1);color:#E9081B}
+  .vwact[disabled]{opacity:.5;cursor:default}
   .vwproxy{display:inline-flex;align-items:center;margin-left:6px;padding:2px 6px;border-radius:6px;background:#F5F5F5;font-size:12px;line-height:16px;font-weight:500;color:#525252}
-  /* 수정동의 패널 — 이름표와 값을 나란히 */
+  /* 수정 동의 패널 — 이름표와 값을 나란히 */
   .qmkv{display:flex;align-items:center;gap:8px;font-size:14px;line-height:20px;letter-spacing:-.01em;color:#171717}
   .qmkv .k{font-size:12px;font-weight:500;color:#737373;flex:none}
   .dlg-btn.warn{background:rgba(220,38,38,.1);border-color:transparent;color:#E9081B}
@@ -733,8 +769,24 @@
   .qmqnm{font-size:14px;font-weight:500;letter-spacing:-.01em;color:#171717}
   .qmqag{font-size:12px;font-weight:500;color:#737373}
   .qmqrow .sp{margin-left:auto}
+  .vqmute{width:24px;height:24px;flex:none;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:8px;background:none;color:#171717;cursor:pointer}
+  .vqmute:hover{background:#F5F5F5}
+  .vqmute i{font-size:14px}
+  .vqmute.on{background:rgba(220,38,38,.1);color:#E9081B}   /* 음소거 중 — 누르면 해제 */
   /* 표결 관리 */
   .psheet{padding:0;height:100%;display:flex;flex-direction:column;overflow:hidden}
+  /* 수정 동의 등록 — 제안자는 참석자 안에서 검색해 고른다 */
+  .am-find{position:relative}
+  .am-in{box-sizing:border-box;display:flex;align-items:center;gap:6px;height:36px;padding:0 10px;border:1px solid #E5E5E5;border-radius:10px;background:#fff}
+  .am-in:focus-within{border-color:#a3a3a3}
+  .am-in i{font-size:16px;color:#737373}
+  .am-in input{flex:1;min-width:0;border:none;outline:none;background:none;font-family:inherit;font-size:14px;letter-spacing:-.01em;color:#0A0A0A}
+  .am-dd{display:none;position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:5;max-height:220px;overflow:auto;padding:4px;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:10px;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1)}
+  .am-dd.on{display:block}
+  .am-dd .it{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;box-sizing:border-box;padding:6px 8px;border:none;border-radius:8px;background:none;font-family:inherit;font-size:14px;line-height:20px;color:#0A0A0A;cursor:pointer;text-align:left}
+  .am-dd .it:hover,.am-dd .it.act{background:#F5F5F5}
+  .am-dd .it small{font-size:12px;color:#737373;white-space:nowrap}
+  .am-dd .none{padding:8px;font-size:13px;color:#737373}
   /* 표결 관리 상단 제어 — Figma: 단계별 배경 · 상태 · 버튼 (실시간 운영과 같은 단계 기계) */
   .pnav{background:#F9FAFB;border-radius:8px 8px 0 0}
   .pnav.s1{background:#fff}
@@ -851,6 +903,8 @@
   .pfoot .pg select,.pfoot .pg input{height:24px;border:1px solid var(--border);border-radius:6px;background:#fff;font-family:inherit;font-size:12px;color:#0a0a0a;padding:0 6px}
   .pfoot .pg input{width:36px;text-align:center}
   /* 일괄 투표 · 경고 */
+  .disc-info{display:flex;align-items:flex-start;gap:8px;font-size:14px;font-weight:500;line-height:20px;color:#171717}
+  .disc-info i{font-size:16px;margin-top:2px;flex:none}
   .palert{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#FFF1F2;border:1px solid #FECDD3;border-radius:10px;font-size:14px;font-weight:500;color:#E9081B}
   .palert svg{width:16px;height:16px;flex:none;fill:none;stroke:#E9081B;stroke-width:1.4;stroke-linecap:round}
   .prad{display:flex;flex-direction:column;gap:8px}
@@ -1074,7 +1128,7 @@
   .chtab{height:24px;padding:0 10px;border:none;background:none;border-radius:6px;font-family:inherit;font-size:12px;font-weight:600;color:#737373;cursor:pointer}
   .chtab.on{background:#F5F5F5;color:#0a0a0a}
 </style>
-<script src="cx-data.js"></script>
+<script src="cx-data.js?v=2"></script>
 </head>
 <body>
 <div class="oc app collapsed" id="app">
@@ -1136,11 +1190,18 @@
       <div class="grp"><div class="grp-label">의결권 권유 설정</div><div class="nav">
         <a class="nav-item" href="proxy-basic.html">의결권 권유 설정</a>
       </div></div>
+      <div class="grp"><div class="grp-label">전자주주총회 설정</div><div class="nav">
+        <a class="nav-item" href="electronic-meeting.html?tab=basic">사이트 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=progress">진행 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=design">디자인 설정</a>
+      </div></div>
     </div>
 
     <div class="lnb-content  exp-only" data-tabpanel="pre">
       <div class="grp"><div class="grp-label">전자주주총회 관리</div><div class="nav">
-        <a class="nav-item" href="electronic-meeting.html">전자주주총회 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=logincode">로그인코드 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=attendee">사전 신청 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=preq">사전 질의 관리</a>
       </div></div>
       <div class="grp"><div class="grp-label">사전 의결권 관리</div><div class="nav">
         <a class="nav-item" href="voting-rights.html">사전 의결권 현황</a>
@@ -1199,13 +1260,14 @@
           <span class="tsep"></span>
           <!-- 옵션 -->
           <div class="ocg">
-            <button class="ocb" id="btnNoVote"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m17 8 5 5M22 8l-5 5"/></svg>출석 미투표 처리</button>
+            <button class="ocb" id="btnNoVote"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m17 8 5 5M22 8l-5 5"/></svg>미행사 의결권 처리</button>
             <button class="ocb" id="btnBeacon"><svg viewBox="0 0 24 24"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg>비콘 제어</button>
           </div>
           <span class="tsep"></span>
           <!-- 제어 -->
           <div class="ocg">
-            <span class="otimer"><span class="dot"></span><span id="ocTimer">00:10:12</span></span>
+            <button class="ocb pri" id="ocStart" type="button"><i class="ph ph-play" style="font-size:14px"></i>총회 시작</button>
+            <span class="otimer" id="ocTimerW" style="display:none"><span class="dot"></span><span id="ocTimer">00:00:00</span></span>
             <button class="ocb gray" id="btnMeetingCtl">총회 제어<svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
@@ -1250,7 +1312,7 @@
             <div class="apanel">
               <div class="chat-top">
                 <div class="chat-tabs-row">
-                  <div class="qtabs"><button data-qt="q" class="on">질의<span class="bn" id="qCnt"></span></button><button data-qt="s">발언<span class="bn" id="sCnt"></span></button><button data-qt="a">수정동의<span class="bn" id="aCnt"></span></button></div>
+                  <div class="qtabs"><button data-qt="q" class="on">질의<span class="bn" id="qCnt"></span></button><button data-qt="s">발언<span class="bn" id="sCnt"></span></button><button data-qt="a">수정 동의<span class="bn" id="aCnt"></span></button></div>
                   <div class="seg2"><button data-qf="all" class="on">전체</button><button data-qf="open">미답변</button><button data-qf="done">답변완료</button></div>
                 </div>
                 <button class="qsel" type="button" id="qAgSel" data-pop="agenda"><span class="lbl"></span><svg class="ic" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
@@ -1279,7 +1341,7 @@
               <th style="width:108px"><span class="exh for"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>찬성</span></th>
               <th style="width:108px"><span class="exh ag"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></th>
               <th style="width:108px"><span class="exh ab"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</span></th>
-              <th style="width:108px"><span class="exh nt"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>중립</span></th>
+              <th style="width:108px"><span class="exh nt"><svg viewBox="0 0 24 24"><path d="M12 5 20 19H4z"/></svg>중립</span></th>
               <th style="width:68px">찬성률</th>
               <th class="c" style="width:58px">결과</th>
               <th class="c" style="width:50px">상세</th>
@@ -1334,6 +1396,7 @@
             <div class="qmhead" id="qmTabs">
               <button class="on" data-qm="q" type="button">질의</button>
               <button data-qm="s" type="button">발언</button>
+              <button data-qm="a" type="button">수정 동의</button>
               <button data-qm="v" type="button">시청자 관리</button>
               <span class="sp"></span>
               <button class="vbtn" type="button" style="height:28px;font-size:12px"><i class="ph ph-download-simple" style="font-size:14px"></i>다운로드</button>
@@ -1414,26 +1477,27 @@
   </div>
 </div>
 
-<!-- 출석 미투표 처리 -->
+<!-- 미행사 의결권 표결 방식 설정 (Figma 9823:86964) -->
 <div class="ovl" id="nvOvl">
   <div class="dlg">
     <button class="dlg-x" id="nvClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-    <div class="dlg-h"><div class="tt">출석 미투표 처리</div><div class="ds">표결이 마감된 의안에 대해 아직 행사하지 않은 출석 주주를 일괄 처리합니다.</div></div>
+    <div class="dlg-h"><div class="tt">미행사 의결권 표결 방식 설정</div><div class="ds">출석 하였으나 표결하지 않은 의결권 표결 방식을 설정합니다.</div></div>
     <div class="dlg-c">
       <div class="dlg-field">
-        <div class="lb">처리 방식</div>
+        <div class="lb">표결 방식</div>
         <div class="dlg-tabs" id="nvTabs">
           <button type="button" class="on" data-v="abs">기권 처리</button>
-          <button type="button" data-v="no">불참 처리</button>
+          <button type="button" data-v="ag">반대 처리</button>
+          <button type="button" data-v="no">출석 제외</button>
         </div>
-        <div class="dlg-ds" id="nvDs">행사하지 않은 의결권을 기권으로 집계합니다.</div>
+        <div class="dlg-ds">전체 의안에 대해 설정한 방식으로 적용 됩니다.</div>
       </div>
-      <div class="palert"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>기존 투표 여부와 관계없이 모든 참석 주주를 처리합니다.</div>
+      <div class="palert" id="nvWarn" style="display:none"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>출석 제외 시 출석 의결권 총수가 줄어 가결 기준이 달라집니다.</div>
     </div>
-    <div class="dlg-f">
-      <label class="ckrow" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>처리 결과를 확인했으며 되돌릴 수 없음에 동의합니다.</label>
+    <div class="dlg-f dly-f">
+      <label class="ckrow" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 내용을 확인했으며, 표결 방식을 설정합니다.</label>
       <button class="dlg-btn" type="button" data-close="nvOvl">취소</button>
-      <button class="dlg-btn dark" type="button" id="nvOk" data-close="nvOvl">저장</button>
+      <button class="dlg-btn dark" type="button" id="nvOk" data-close="nvOvl">설정</button>
     </div>
   </div>
 </div>
@@ -1464,38 +1528,48 @@
   </div>
 </div>
 
-<!-- 총회 지연 · 속개 · 종료 안내 -->
+<!-- 총회 지연 — 정회 · 휴회 · 연기 (Figma 4214:225447) -->
 <div class="ovl" id="dlyOvl">
   <div class="dlg">
     <button class="dlg-x" id="dlyClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-    <div class="dlg-h"><div class="tt" id="dlyTt">총회 정회</div><div class="ds" id="dlyDs">현장 화면과 온라인 참석 주주에게 진행 상황을 안내합니다.</div></div>
+    <div class="dlg-h"><div class="tt">총회 지연</div><div class="ds">총회 진행을 정회 · 휴회 · 연기할 수 있습니다. 처리 방식을 선택하세요.</div></div>
     <div class="dlg-c">
-      <div class="dlg-tabs" id="dlyTabs" style="width:180px;flex:none">
+      <div class="dlg-tabs dly-tabs" id="dlyTabs">
         <button type="button" class="on" data-v="recess">정회</button>
         <button type="button" data-v="adjourn">휴회</button>
         <button type="button" data-v="postpone">연기</button>
       </div>
       <div class="dlg-field" id="dlyTimeF">
-        <div class="lb" id="dlyTimeLb">재개 예정 시각</div>
-        <div class="dlg-when">
-          <div class="dlg-time" id="dlyDateW"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></svg><input id="dlyDate" type="date" value="2026-03-27"></div>
-          <div class="dlg-tp">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>
-            <select class="ap" id="dlyAp"><option value="0">오전</option><option value="12">오후</option></select>
-            <select id="dlyHh"></select><span class="cl">:</span><select id="dlyMm"></select>
-          </div>
-        </div>
+        <div class="lb">재개 예정 시간</div>
+        <div class="dlg-time"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg><input id="dlyTime" type="text" value="10:30:00" autocomplete="off"></div>
       </div>
       <div class="dlg-field">
-        <div class="lb">안내 문구</div>
-        <textarea class="dlg-ta" id="dlyBody" style="min-height:137px"></textarea>
+        <div class="lb">사유 입력</div>
+        <textarea class="dlg-ta" id="dlyBody" style="min-height:137px;resize:none" placeholder="사유를 입력 하세요."></textarea>
       </div>
-      <div class="palert" id="dlyWarn" style="display:none"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg><span id="dlyWarnT"></span></div>
+      <div class="palert" id="dlyWarn" style="display:none"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>총회를 연기하면 되돌릴 수 없습니다. 진행 중인 안건 표결이 종료 됩니다.</div>
     </div>
-    <div class="dlg-f">
-      <label class="ckrow" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 내용을 확인했으며 현장 화면과 온라인에 전송합니다.</label>
+    <div class="dlg-f dly-f">
+      <label class="ckrow" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span id="dlyCkT">위 내용으로, 총회를 정회 합니다.</span></label>
       <button class="dlg-btn" type="button" data-close="dlyOvl">취소</button>
-      <button class="dlg-btn dark" type="button" id="dlyOk">화면 전송</button>
+      <button class="dlg-btn dark" type="button" id="dlyOk">정회 시작</button>
+    </div>
+  </div>
+</div>
+
+<!-- 시청자 퇴장 명령 · 재입장 허용 확인 -->
+<div class="ovl" id="vwOvl">
+  <div class="adlg">
+    <div class="adlg-h">
+      <div class="adlg-ic"><i class="ph ph-prohibit" id="vwIc" style="font-size:24px;color:#E9081B"></i></div>
+      <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+        <div class="adlg-t" id="vwT"></div>
+        <div class="adlg-d" id="vwD"></div>
+      </div>
+    </div>
+    <div class="adlg-f">
+      <button type="button" data-close="vwOvl">취소</button>
+      <button type="button" class="danger" id="vwGo"></button>
     </div>
   </div>
 </div>
@@ -1506,16 +1580,16 @@
     <div class="adlg-h">
       <div class="adlg-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg></div>
       <div style="display:flex;flex-direction:column;gap:6px;width:100%">
-        <div class="adlg-t">총회를 종료하시겠습니까?</div>
-        <div class="adlg-d">종료하면 모든 채널의 의결권 행사가 마감되고 집계가 확정됩니다. 종료 후에는 되돌릴 수 없습니다.</div>
+        <div class="adlg-t">주주총회를 종료하시겠습니까?</div>
+        <div class="adlg-d" id="endD"></div>
       </div>
     </div>
-    <div class="adlg-ck">
-      <label class="ckrow" data-ck id="endAgree"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>모든 의안의 표결이 마감된 것을 확인했습니다.</label>
+    <div class="adlg-ck" id="endCk">
+      <label class="ckrow" data-ck id="endAgree"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 내용을 확인했으며, 총회를 종료합니다.</label>
     </div>
     <div class="adlg-f">
       <button type="button" data-close="endOvl">취소</button>
-      <button type="button" class="danger" id="endGo">총회 종료</button>
+      <button type="button" class="danger" id="endGo">종료</button>
     </div>
   </div>
 </div>
@@ -1526,8 +1600,8 @@
 </div>
 
 <script>
-var QUESTIONS=[{"id": "Q1-01", "ag": "1", "sub": "", "name": "김명준", "t": "개인", "sh": 350040, "tm": "09:07", "pub": true, "st": "미답변", "q": "최근 주가가 지속적으로 하락하고 있는데, 회사는 주가 부진의 원인을 무엇으로 보고 계신지, 그리고 이를 개선하기 위한 구체적인 대책과 중장기 주주가치 제고 방안을 어떻게 마련하고 계신지 상세히 설명해 주시기 바랍니다.", "a": null}, {"id": "Q1-02", "ag": "1", "sub": "", "name": "국민연금공단", "t": "기관", "sh": 42300000, "tm": "09:08", "pub": true, "st": "완료", "q": "당기순이익 대비 배당성향을 어떤 기준으로 산정하고 계신지, 그리고 그 산정 방식이 앞으로도 일관되게 유지될 것인지 구체적으로 알고 싶습니다.", "a": "당사는 별도재무제표 당기순이익을 기준으로 배당성향을 약 27% 수준으로 책정하고 있으며, 이는 안정적인 주주환원과 미래 성장 투자 사이의 균형을 고려한 결정입니다. 앞으로도 실적과 자본 상황을 종합적으로 반영하되, 주주 여러분께서 예측하실 수 있도록 일관된 배당 정책을 유지하겠습니다."}, {"id": "Q1-03", "ag": "1", "sub": "", "name": "이나리", "t": "개인", "sh": 128500, "tm": "09:09", "pub": true, "st": "미답변", "q": "향후 배당을 확대할 계획이 있으신지, 있다면 어느 시점부터 어떤 방식으로 단계적으로 확대해 나가실 것인지에 대한 회사의 중장기 배당 로드맵을 듣고 싶습니다.", "a": null}, {"id": "Q1-04", "ag": "1", "sub": "", "name": "미래에셋증권(쿼드자산운용-신한은행)", "t": "기관", "sh": 18750000, "tm": "09:10", "pub": true, "st": "완료", "q": "대손충당금 적립 기준에 변경이 있었는지, 그리고 최근의 경기 상황을 반영하여 충당금 적립 정책을 어떻게 운영하고 계신지 설명해 주시기 바랍니다.", "a": "대손충당금은 보수적인 적립 기조를 일관되게 유지하고 있으며, 회계기준상의 변경은 없었습니다. 다만 거시경제 지표와 차주별 신용위험을 상시 모니터링하여 필요 시 선제적으로 충당금을 보강하는 방식으로 건전성을 관리하고 있습니다."}, {"id": "Q1-05", "ag": "1", "sub": "", "name": "전승현", "t": "개인", "sh": 96700, "tm": "09:11", "pub": false, "st": "완료", "q": "이익잉여금을 사내에 유보하시는 주된 목적이 무엇인지, 그리고 유보한 재원을 향후 어떤 부문에 우선적으로 활용하실 계획인지 구체적으로 알고 싶습니다.", "a": "이익잉여금 사내유보는 자본적정성(BIS 비율) 관리와 신사업 투자재원 확보를 주된 목적으로 하고 있습니다. 확보한 재원은 디지털 금융 경쟁력 강화와 리스크 완충 능력 제고에 우선 활용하여, 장기적으로 주주가치가 훼손되지 않도록 운영하겠습니다."}, {"id": "Q1-06", "ag": "1", "sub": "", "name": "최길준", "t": "개인", "sh": 74300, "tm": "09:12", "pub": false, "st": "완료", "q": "자기주식 취득이나 소각 계획이 있으신지, 있다면 그 규모와 시기를 어떤 기준으로 판단하실 것인지에 대한 회사의 입장을 듣고 싶습니다.", "a": "자기주식 취득·소각은 주당가치 제고를 위한 중요한 주주환원 수단으로 이사회에서 지속적으로 검토하고 있습니다. 주가 수준과 재무 건전성, 잉여현금흐름 상황 등을 종합적으로 고려하여 실행 여부와 규모를 결정하며, 확정되는 대로 신속히 공시하겠습니다."}, {"id": "Q1-07", "ag": "1", "sub": "", "name": "삼성자산운용", "t": "기관", "sh": 9870000, "tm": "09:13", "pub": true, "st": "완료", "q": "순이자마진(NIM)의 최근 추이와 향후 전망은 어떠한지, 그리고 금리 환경 변화에 대응하기 위한 수익성 방어 전략을 어떻게 준비하고 계신지 설명해 주시기 바랍니다.", "a": "순이자마진은 금리 하락기에 소폭 축소가 예상되나, 조달 구조 개선과 우량 자산 중심의 성장으로 하방을 방어하고 있습니다. 아울러 플랫폼 기반 수수료·비이자수익을 확대하여 전체 수익성이 안정적으로 유지되도록 대응하고 있습니다."}, {"id": "Q1-08", "ag": "1", "sub": "", "name": "한국투자증권", "t": "기관", "sh": 15200000, "tm": "09:14", "pub": true, "st": "완료", "q": "최근 연체율 상승에 대한 우려가 제기되고 있는데, 회사의 자산 건전성 지표는 어떤 수준이며 부실 확대를 막기 위해 어떤 관리 방안을 시행하고 계신지 궁금합니다.", "a": "연체율은 업권 평균 대비 안정적인 수준에서 관리되고 있으며, 건전성 지표 역시 견조하게 유지되고 있습니다. 조기경보 시스템을 통한 선제적 리스크관리와 보수적 충당금 적립을 병행하여 잠재 부실에 충분히 대비하고 있습니다."}, {"id": "Q1-09", "ag": "1", "sub": "", "name": "정하윤", "t": "개인", "sh": 22400, "tm": "09:15", "pub": true, "st": "완료", "q": "이번 재무제표에 대한 외부감사인의 감사의견은 어떠했는지, 그리고 감사 과정에서 특별히 지적되거나 강조된 사항이 있었는지 알고 싶습니다.", "a": "외부감사인으로부터 재무제표가 회계기준에 따라 적정하게 작성되었다는 적정의견을 받았습니다. 감사 과정에서 중대한 지적 사항은 없었으며, 핵심감사사항에 대해서도 충분한 소통과 검토가 이루어졌습니다."}, {"id": "Q1-10", "ag": "1", "sub": "", "name": "오세훈", "t": "개인", "sh": 19900, "tm": "09:16", "pub": true, "st": "미답변", "q": "전체 매출에서 플랫폼 사업이 차지하는 수익 비중은 어느 정도이며, 향후 플랫폼 수익을 어떤 방향으로 성장시켜 나가실 계획인지 구체적으로 듣고 싶습니다.", "a": null}, {"id": "Q2-01", "ag": "2", "sub": "2-1", "name": "블랙록펀드", "t": "기관", "sh": 12940000, "tm": "09:20", "pub": true, "st": "완료", "q": "이번에 집중투표제 배제 조항을 삭제하시는 취지가 무엇인지, 그리고 이 변경이 소수주주 권익과 이사회 구성에 어떤 긍정적 효과를 가져올 것으로 기대하시는지 설명해 주시기 바랍니다.", "a": "집중투표제 배제 조항 삭제는 소수주주권을 실질적으로 강화하고 이사회의 다양성과 독립성을 제고하기 위한 것입니다. 이를 통해 다양한 주주의 의사가 이사 선임에 반영될 수 있도록 지배구조를 개선하고자 합니다."}, {"id": "Q2-02", "ag": "2", "sub": "2-1", "name": "민경선", "t": "개인", "sh": 54900, "tm": "09:21", "pub": true, "st": "미답변", "q": "집중투표제를 도입할 경우 경영 안정성이 저해될 우려는 없는지, 있다면 이러한 우려를 완화하기 위해 회사가 마련한 보완 장치는 무엇인지 궁금합니다.", "a": null}, {"id": "Q2-03", "ag": "2", "sub": "2-2", "name": "KB자산운용", "t": "기관", "sh": 8110000, "tm": "09:22", "pub": true, "st": "완료", "q": "전자주주총회 도입 일정이 어떻게 되는지, 그리고 현장 총회와 병행하여 운영하실 때의 구체적인 준비 계획과 절차를 상세히 알고 싶습니다.", "a": "전자주주총회는 다음 정기주주총회부터 현장 총회와 병행하여 개최하는 것을 목표로 준비하고 있습니다. 안정적인 시스템 검증과 사전 테스트를 충분히 거쳐, 주주 여러분께서 온라인으로도 원활히 참석·의결하실 수 있도록 하겠습니다."}, {"id": "Q2-04", "ag": "2", "sub": "2-2", "name": "이준기", "t": "개인", "sh": 43600, "tm": "09:23", "pub": true, "st": "완료", "q": "전자주주총회에 참석할 때 본인확인은 어떤 수단으로 이루어지는지, 그리고 보안과 편의성을 함께 확보하기 위한 방안은 어떻게 마련하고 계신지 설명해 주시기 바랍니다.", "a": "전자주주총회 참석 시 본인확인은 공동인증서와 간편인증 등 다양한 수단을 통해 이루어집니다. 접근 편의성을 높이는 동시에 위·변조 방지와 권한 검증을 강화하여 안전한 의결권 행사 환경을 제공하겠습니다."}, {"id": "Q2-05", "ag": "2", "sub": "2-2", "name": "신한자산운용", "t": "기관", "sh": 6540000, "tm": "09:24", "pub": true, "st": "완료", "q": "전자투표와 전자주주총회는 구체적으로 어떤 점에서 차이가 있는지, 그리고 주주 입장에서 두 제도를 어떻게 활용하는 것이 좋은지 알기 쉽게 설명해 주시기 바랍니다.", "a": "전자투표는 주주총회 이전에 미리 의결권을 행사하는 사전 행사 방식이고, 전자주주총회는 총회 당일 온라인으로 실시간 참석하여 발언과 의결을 함께 하는 방식입니다. 두 제도를 상황에 맞게 활용하시면 참석이 어려우신 경우에도 충실히 권리를 행사하실 수 있습니다."}, {"id": "Q2-06", "ag": "2", "sub": "2-3", "name": "한민준", "t": "개인", "sh": 38100, "tm": "09:25", "pub": false, "st": "완료", "q": "의결권 대리행사 수단을 확대하실 때 그 범위가 어디까지 포함되는지, 그리고 대리행사 과정에서의 적법성과 투명성은 어떻게 확보하실 것인지 궁금합니다.", "a": "의결권 대리행사 수단 확대에는 전자위임장과 플랫폼을 통한 위임이 포함됩니다. 위임 절차 전반에 본인확인과 이력 관리를 강화하여, 대리행사가 적법하고 투명하게 이루어지도록 관리하겠습니다."}, {"id": "Q2-07", "ag": "2", "sub": "2-3", "name": "교보생명", "t": "기관", "sh": 2980000, "tm": "09:26", "pub": true, "st": "완료", "q": "정관 제31조 개정으로 위임 절차가 실제로 간소화되는지, 그리고 간소화에 따른 부작용을 방지하기 위한 안전장치는 어떻게 마련되어 있는지 설명해 주시기 바랍니다.", "a": "정관 제31조 개정으로 서면과 전자 방식을 병행할 수 있게 되어 위임 절차의 편의성이 높아집니다. 다만 본인확인 절차를 함께 강화하여, 절차 간소화가 권리 행사의 신뢰성을 훼손하지 않도록 보완하였습니다."}, {"id": "Q2-08", "ag": "2", "sub": "", "name": "김성준", "t": "개인", "sh": 31500, "tm": "09:27", "pub": true, "st": "완료", "q": "이번 정관 변경 안건이 상법상 특별결의 요건을 충족하는지, 그리고 요건 충족 여부를 어떤 기준으로 판단하시는지 명확히 확인하고 싶습니다.", "a": "정관 변경은 상법상 특별결의 사항으로, 출석한 주주 의결권의 3분의 2 이상과 발행주식총수의 3분의 1 이상의 찬성이 필요합니다. 오늘 표결 결과가 이 요건을 충족하는지 정확히 집계하여 의장님께서 결과를 선포하실 예정입니다."}, {"id": "Q2-09", "ag": "2", "sub": "", "name": "우정사업본부", "t": "기관", "sh": 5300000, "tm": "09:28", "pub": true, "st": "완료", "q": "개정되는 정관 조항의 시행 시점이 언제부터인지, 그리고 시행에 따라 주주가 유의해야 할 사항이 있다면 무엇인지 안내해 주시기 바랍니다.", "a": "개정 조항은 주주총회 승인 즉시 효력이 발생합니다. 시행에 따른 세부 절차와 주주 여러분께서 유의하실 사항은 총회 이후 공시와 안내를 통해 상세히 알려 드리겠습니다."}, {"id": "Q2-10", "ag": "2", "sub": "", "name": "이남희", "t": "개인", "sh": 27800, "tm": "09:29", "pub": true, "st": "미답변", "q": "이번 정관 변경과 함께 소수주주가 이사 후보를 추천할 수 있는 제도의 도입도 함께 검토되고 있는지, 향후 지배구조 개선 방향을 어떻게 설정하고 계신지 궁금합니다.", "a": null}, {"id": "Q3-01", "ag": "3", "sub": "3-1", "name": "국민연금공단", "t": "기관", "sh": 42300000, "tm": "09:33", "pub": true, "st": "완료", "q": "이번 사외이사 후보들의 독립성을 어떤 절차와 기준으로 검증하셨는지, 그리고 이해관계 충돌 여부에 대한 확인은 어떻게 이루어졌는지 구체적으로 설명해 주시기 바랍니다.", "a": "사외이사 후보는 사외이사후보추천위원회의 엄정한 심사를 거쳐 독립성과 전문성을 검증하였으며, 결격사유가 없음을 확인하였습니다. 후보별 이해관계와 겸직 현황도 함께 검토하여 이사회의 독립적 운영에 지장이 없도록 하였습니다."}, {"id": "Q3-02", "ag": "3", "sub": "3-1", "name": "이영석", "t": "개인", "sh": 61200, "tm": "09:34", "pub": true, "st": "완료", "q": "집중투표 방식에서 표는 어떻게 계산되는지, 그리고 주주가 보유한 의결권을 특정 후보에게 집중하거나 분산할 때 어떤 방식으로 반영되는지 알기 쉽게 설명해 주시기 바랍니다.", "a": "집중투표는 1주당 선임 예정 이사 수(이번 안건 기준 2표)만큼 의결권이 부여되며, 주주께서는 이를 한 후보에게 집중하거나 여러 후보에게 나누어 행사하실 수 있습니다. 최종적으로 후보별 득표수를 집계하여 다득표 순으로 선임 인원만큼 선임됩니다."}, {"id": "Q3-03", "ag": "3", "sub": "3-1", "name": "한화투자증권", "t": "기관", "sh": 3420000, "tm": "09:35", "pub": true, "st": "완료", "q": "이사 후보들의 상세 이력과 경력은 어디에서 확인할 수 있는지, 그리고 후보 선정 과정에서 어떤 역량과 전문성을 중점적으로 고려하셨는지 궁금합니다.", "a": "후보별 이력과 경력은 소집공고 및 사업보고서에 상세히 게재되어 있으니 참고해 주시기 바랍니다. 후보 선정 시에는 금융·회계·리스크 등 이사회에 필요한 전문성과 독립성을 종합적으로 고려하였습니다."}, {"id": "Q3-04", "ag": "3", "sub": "3-2", "name": "강도현", "t": "개인", "sh": 16700, "tm": "09:36", "pub": true, "st": "미답변", "q": "감사위원이 되는 사외이사에게 요구되는 자격 요건은 무엇인지, 그리고 해당 후보가 이러한 요건을 충족하는지 어떻게 확인하셨는지 설명해 주시기 바랍니다.", "a": null}, {"id": "Q3-05", "ag": "3", "sub": "", "name": "미래에셋증권(쿼드자산운용-신한은행)", "t": "기관", "sh": 18750000, "tm": "09:37", "pub": true, "st": "완료", "q": "이사 보수한도를 어떤 근거와 기준으로 산정하셨는지, 그리고 성과와 보수를 연동하는 체계가 실제로 어떻게 운영되고 있는지 구체적으로 알고 싶습니다.", "a": "이사 보수한도는 임원보수 규정과 회사의 경영성과 및 시장 수준을 종합적으로 반영하여 산정하였습니다. 성과와 보수를 연동하는 평가 체계를 통해 보수의 적정성과 책임경영이 함께 담보되도록 운영하고 있습니다."}, {"id": "Q3-06", "ag": "3", "sub": "3-1", "name": "손예진", "t": "개인", "sh": 14300, "tm": "09:38", "pub": false, "st": "완료", "q": "집중투표 후보 중 일부가 부결될 경우 회사가 어떻게 대응하실 것인지, 그리고 이사 결원이 발생하면 이를 어떤 절차로 보완하실 계획인지 궁금합니다.", "a": "집중투표 결과는 주주 여러분의 의사에 따라 다득표 순으로 결정되며, 회사는 그 결과를 그대로 존중합니다. 만약 결원이 발생하는 경우에는 관련 법령과 정관이 정한 절차에 따라 후속 선임 등을 투명하게 진행하겠습니다."}, {"id": "Q3-07", "ag": "3", "sub": "", "name": "삼성자산운용", "t": "기관", "sh": 9870000, "tm": "09:39", "pub": true, "st": "완료", "q": "ESG 경영을 강화하기 위한 위원회 구성 계획이 있으신지, 있다면 그 역할과 운영 방향을 어떻게 설정하고 계신지 구체적으로 듣고 싶습니다.", "a": "ESG 위원회는 이사회 산하 위원회로 설치하여 환경·사회·지배구조 전반의 정책을 심의하고 점검하는 역할을 맡을 계획입니다. 이를 통해 지속가능경영 과제를 체계적으로 관리하고 그 성과를 주주 여러분께 투명하게 보고하겠습니다."}, {"id": "Q3-08", "ag": "3", "sub": "3-1", "name": "윤가은", "t": "개인", "sh": 11800, "tm": "09:40", "pub": true, "st": "미답변", "q": "집중투표 후보 수를 현재 4인에서 3인으로 축소하는 것이 가능한지, 후보 수 결정이 어떤 절차와 기준에 따라 이루어지는지 설명해 주시기 바랍니다.", "a": null}, {"id": "Q3-09", "ag": "3", "sub": "", "name": "블랙록펀드", "t": "기관", "sh": 12940000, "tm": "09:41", "pub": true, "st": "완료", "q": "이사회 내 여성 이사 비율을 개선하기 위한 구체적인 계획이 있으신지, 있다면 어떤 목표와 일정으로 다양성을 확대해 나가실 것인지 알고 싶습니다.", "a": "당사는 이사회 다양성 정책에 따라 여성 및 다양한 배경을 가진 이사의 비율을 단계적으로 확대해 나갈 계획입니다. 후보군을 폭넓게 발굴하고 추천 절차를 개선하여, 이사회 구성의 다양성과 균형을 지속적으로 제고하겠습니다."}, {"id": "Q3-10", "ag": "3", "sub": "", "name": "임재민", "t": "개인", "sh": 9600, "tm": "09:42", "pub": true, "st": "미답변", "q": "이번에 선임되는 사외이사 후보들의 다른 회사 겸직 현황은 어떠한지, 그리고 겸직으로 인한 이사 업무 수행의 충실성에는 문제가 없는지 확인하고 싶습니다.", "a": null}, {"id": "QP-01", "ag": "1", "sub": "", "name": "박서준", "t": "개인", "sh": 128500, "tm": "03-24 10:12", "pub": true, "st": "완료", "q": "감사보고서상 계속기업 관련 불확실성 언급이 있는지, 있다면 그 사유를 사전에 알고 싶습니다.", "a": "당기 감사보고서에는 계속기업 관련 불확실성 기재 사항이 없습니다. 적정의견으로 수령했습니다.", "pre": true}, {"id": "QP-02", "ag": "1", "sub": "", "name": "대한자산운용", "t": "기관", "sh": 8400000, "tm": "03-24 11:40", "pub": true, "st": "완료", "q": "재무제표 승인 안건과 관련해 배당성향 목표치를 중기적으로 어떻게 가져가실 계획인지 문의드립니다.", "a": "중기적으로 배당성향 25~30% 구간을 유지하는 것을 목표로 하고 있습니다.", "pre": true}, {"id": "QP-03", "ag": "2", "sub": "2-1", "name": "이하늘", "t": "개인", "sh": 64200, "tm": "03-24 15:05", "pub": true, "st": "완료", "q": "집중투표제 배제 조항을 삭제하면 소수주주 이사 선임 가능성이 실제로 얼마나 높아지는지 궁금합니다.", "a": "집중투표가 가능해지면 지분율 대비 특정 후보에 표를 집중할 수 있어 소수주주의 선임 가능성이 높아집니다.", "pre": true}, {"id": "QP-04", "ag": "2", "sub": "2-1", "name": "한국가치투자", "t": "기관", "sh": 3150000, "tm": "03-25 09:22", "pub": false, "st": "미답변", "q": "정관 제37조 제3항 삭제에 대해 이사회가 반대 의견을 낸 적이 있는지 경과를 알고 싶습니다.", "a": null, "pre": true}, {"id": "QP-05", "ag": "2", "sub": "2-2", "name": "정유진", "t": "개인", "sh": 91300, "tm": "03-25 10:48", "pub": true, "st": "완료", "q": "전자주주총회를 도입하면 현장 참석이 제한되는 것인지, 병행 운영인지 확인 부탁드립니다.", "a": "현장과 전자주주총회를 병행 운영합니다. 현장 참석 권리는 그대로 유지됩니다.", "pre": true}, {"id": "QP-06", "ag": "2", "sub": "2-2", "name": "최윤호", "t": "개인", "sh": 45800, "tm": "03-25 13:31", "pub": true, "st": "미답변", "q": "전자주주총회 도입 후 의결권 행사 기록은 몇 년간 보관되는지 궁금합니다.", "a": null, "pre": true}, {"id": "QP-07", "ag": "3", "sub": "", "name": "미래에셋자산운용", "t": "기관", "sh": 12940000, "tm": "03-25 16:07", "pub": true, "st": "완료", "q": "선임 이사 수를 4인과 5인 중 어느 쪽으로 제안하시는지, 회사 의견의 근거가 궁금합니다.", "a": "회사는 이사회 규모의 적정성과 심의 효율을 고려해 4인 중 2인 선임을 제안드립니다.", "pre": true}, {"id": "QP-08", "ag": "3", "sub": "3-1", "name": "강민서", "t": "개인", "sh": 210400, "tm": "03-26 09:15", "pub": true, "st": "미답변", "q": "회사제안 사외이사 후보 4인의 금융업 경력과 겸직 현황을 사전에 공개해 주실 수 있는지요.", "a": null, "pre": true}, {"id": "QP-09", "ag": "3", "sub": "3-1", "name": "신한자산운용", "t": "기관", "sh": 5620000, "tm": "03-26 11:02", "pub": true, "st": "완료", "q": "집중투표 시 단주 처리 기준을 어떻게 적용하실 예정인지 사전에 확인하고 싶습니다.", "a": "단주는 주주가 지정한 후보에게 합산 배분하며, 미지정 시 최다득표 후보 순으로 배분합니다.", "pre": true}, {"id": "QP-10", "ag": "3", "sub": "3-2", "name": "오지훈", "t": "개인", "sh": 33700, "tm": "03-26 14:36", "pub": false, "st": "미답변", "q": "주주제안 후보 5인에 대한 회사 측 검토 의견을 총회 전에 알 수 있을까요.", "a": null, "pre": true}];
-var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "개인", "sh": 61200, "tm": "09:05", "kind": "발언", "st": "대기", "r": "배당성향 상향 필요성에 대해 발언 신청합니다."}, {"id": "S1-02", "ag": "1", "sub": "", "name": "미래에셋증권(쿼드자산운용-신한은행)", "t": "기관", "sh": 18750000, "tm": "09:05", "kind": "발언", "st": "대기", "r": "중장기 배당정책의 명문화를 요청하는 발언입니다."}, {"id": "S1-03", "ag": "1", "sub": "", "name": "김명준", "t": "개인", "sh": 350040, "tm": "09:06", "kind": "발언", "st": "대기", "r": "주가 부양 및 주주환원 대책에 대해 발언하고자 합니다."}, {"id": "S1-04", "ag": "1", "sub": "", "name": "국민연금공단", "t": "기관", "sh": 42300000, "tm": "09:06", "kind": "발언", "st": "완료", "r": "자본적정성과 배당의 균형에 대한 의견을 발언했습니다."}, {"id": "S1-05", "ag": "1", "sub": "", "name": "전승현", "t": "개인", "sh": 96700, "tm": "09:07", "kind": "발언", "st": "대기", "r": "사내유보금 활용 계획의 구체화를 요청합니다."}, {"id": "S1-06", "ag": "1", "sub": "", "name": "삼성자산운용", "t": "기관", "sh": 9870000, "tm": "09:07", "kind": "발언", "st": "대기", "r": "비이자수익 확대 전략에 대해 발언 신청합니다."}, {"id": "S1-07", "ag": "1", "sub": "", "name": "정하윤", "t": "개인", "sh": 22400, "tm": "09:08", "kind": "발언", "st": "반려", "r": "개별 종목 주가 전망 관련 발언으로 안건과 무관하여 반려.", "reason": "의안과 직접 관련이 없는 내용으로 확인되어 반려합니다."}, {"id": "S1-08", "ag": "1", "sub": "", "name": "한국투자증권", "t": "기관", "sh": 15200000, "tm": "09:08", "kind": "발언", "st": "대기", "r": "건전성 지표 공시 주기 확대를 제안하는 발언입니다."}, {"id": "S1-09", "ag": "1", "sub": "", "name": "최길준", "t": "개인", "sh": 74300, "tm": "09:09", "kind": "발언", "st": "완료", "r": "자기주식 소각 계획에 대한 질의성 발언을 마쳤습니다."}, {"id": "S1-10", "ag": "1", "sub": "", "name": "오세훈", "t": "개인", "sh": 19900, "tm": "09:09", "kind": "발언", "st": "대기", "r": "플랫폼 부문 실적 세부 공개를 요청합니다."}, {"id": "S2-01", "ag": "2", "sub": "", "name": "이영석", "t": "개인", "sh": 61200, "tm": "09:05", "kind": "발언", "st": "대기", "r": "이사 보수한도 산정 근거에 대해 발언 신청합니다."}, {"id": "S2-02", "ag": "2", "sub": "", "name": "미래에셋증권(쿼드자산운용-신한은행)", "t": "기관", "sh": 18750000, "tm": "09:05", "kind": "발언", "st": "대기", "r": "이사 보수한도 산정 근거에 대해 발언 신청합니다."}, {"id": "S2-03", "ag": "2", "sub": "2-1", "name": "민경선", "t": "개인", "sh": 54900, "tm": "09:06", "kind": "수정동의", "st": "대기", "r": "집중투표 후보 수 결정의 건을 후보 6인 중 3인 선임으로 의안을 수정하는 것을 요청합니다."}, {"id": "S2-04", "ag": "2", "sub": "2-1", "name": "블랙록펀드", "t": "기관", "sh": 12940000, "tm": "09:06", "kind": "발언", "st": "대기", "r": "집중투표제 배제 조항 삭제의 취지 설명을 요청하는 발언입니다."}, {"id": "S2-05", "ag": "2", "sub": "2-2", "name": "이준기", "t": "개인", "sh": 43600, "tm": "09:07", "kind": "발언", "st": "대기", "r": "전자주주총회 도입 일정에 대한 발언을 신청합니다."}, {"id": "S2-06", "ag": "2", "sub": "2-3", "name": "KB자산운용", "t": "기관", "sh": 8110000, "tm": "09:07", "kind": "발언", "st": "완료", "r": "전자위임 본인확인 절차 강화 의견을 발언했습니다."}, {"id": "S2-07", "ag": "2", "sub": "2-3", "name": "한민준", "t": "개인", "sh": 38100, "tm": "09:08", "kind": "수정동의", "st": "대기", "r": "정관 제31조 개정안에 위임 철회 조항 추가를 제안합니다."}, {"id": "S2-08", "ag": "2", "sub": "2-2", "name": "신한자산운용", "t": "기관", "sh": 6540000, "tm": "09:08", "kind": "발언", "st": "대기", "r": "전자주총과 현장 병행 시 의사정족수 산정 방식을 질의합니다."}, {"id": "S2-09", "ag": "2", "sub": "", "name": "김성준", "t": "개인", "sh": 31500, "tm": "09:09", "kind": "발언", "st": "반려", "r": "특정 주주 비방성 표현이 포함되어 반려.", "reason": "동일 주주의 중복 신청으로 앞선 건만 접수 처리합니다."}, {"id": "S2-10", "ag": "2", "sub": "2-3", "name": "교보생명", "t": "기관", "sh": 2980000, "tm": "09:09", "kind": "발언", "st": "대기", "r": "대리행사 수단 확대의 실무 적용 범위를 확인하는 발언입니다."}, {"id": "S3-01", "ag": "3", "sub": "3-1", "name": "이나리", "t": "개인", "sh": 128500, "tm": "09:05", "kind": "발언", "st": "대기", "r": "집중투표 후보자별 자질 검증에 대해 발언 신청합니다."}, {"id": "S3-02", "ag": "3", "sub": "3-1", "name": "국민연금공단", "t": "기관", "sh": 42300000, "tm": "09:05", "kind": "발언", "st": "대기", "r": "사외이사 독립성 강화 방안에 대한 발언입니다."}, {"id": "S3-03", "ag": "3", "sub": "3-2", "name": "이남희", "t": "개인", "sh": 27800, "tm": "09:06", "kind": "수정동의", "st": "대기", "r": "감사위원 사외이사 선임의 건에 후보 추가를 요청합니다."}, {"id": "S3-04", "ag": "3", "sub": "", "name": "한화투자증권", "t": "기관", "sh": 3420000, "tm": "09:06", "kind": "발언", "st": "대기", "r": "이사 보수한도 인상 근거의 소명을 요청하는 발언입니다."}, {"id": "S3-05", "ag": "3", "sub": "3-2", "name": "강도현", "t": "개인", "sh": 16700, "tm": "09:07", "kind": "발언", "st": "대기", "r": "감사위원회 운영 계획에 대해 발언 신청합니다."}, {"id": "S3-06", "ag": "3", "sub": "3-1", "name": "손예진", "t": "개인", "sh": 14300, "tm": "09:07", "kind": "발언", "st": "완료", "r": "집중투표 표 계산 방식에 대한 질의성 발언을 마쳤습니다."}, {"id": "S3-07", "ag": "3", "sub": "", "name": "삼성자산운용", "t": "기관", "sh": 9870000, "tm": "09:08", "kind": "발언", "st": "대기", "r": "ESG·이사회 다양성 정책에 대한 발언입니다."}, {"id": "S3-08", "ag": "3", "sub": "3-1", "name": "윤가은", "t": "개인", "sh": 11800, "tm": "09:08", "kind": "수정동의", "st": "대기", "r": "집중투표 후보 수를 3인 선임으로 축소하는 수정동의를 신청합니다."}, {"id": "S3-09", "ag": "3", "sub": "", "name": "블랙록펀드", "t": "기관", "sh": 12940000, "tm": "09:09", "kind": "발언", "st": "대기", "r": "이사회 여성 비율 목표치 설정을 제안하는 발언입니다."}, {"id": "S3-10", "ag": "3", "sub": "", "name": "임재민", "t": "개인", "sh": 9600, "tm": "09:09", "kind": "발언", "st": "반려", "r": "후보 개인 신상 관련 발언으로 안건과 무관하여 반려.", "reason": "발언 신청 마감 시각 이후 접수되어 반려합니다."}];
+var QUESTIONS=[{"id": "Q1-01", "ag": "1", "sub": "", "name": "오준우", "t": "개인", "sh": 143293, "tm": "09:07", "pub": true, "st": "미답변", "q": "최근 주가가 지속적으로 하락하고 있는데, 회사는 주가 부진의 원인을 무엇으로 보고 계신지, 그리고 이를 개선하기 위한 구체적인 대책과 중장기 주주가치 제고 방안을 어떻게 마련하고 계신지 상세히 설명해 주시기 바랍니다.", "a": null}, {"id": "Q1-02", "ag": "1", "sub": "", "name": "국민연금공단", "t": "기관", "sh": 16700771, "tm": "09:08", "pub": true, "st": "완료", "q": "당기순이익 대비 배당성향을 어떤 기준으로 산정하고 계신지, 그리고 그 산정 방식이 앞으로도 일관되게 유지될 것인지 구체적으로 알고 싶습니다.", "a": "당사는 별도재무제표 당기순이익을 기준으로 배당성향을 약 27% 수준으로 책정하고 있으며, 이는 안정적인 주주환원과 미래 성장 투자 사이의 균형을 고려한 결정입니다. 앞으로도 실적과 자본 상황을 종합적으로 반영하되, 주주 여러분께서 예측하실 수 있도록 일관된 배당 정책을 유지하겠습니다."}, {"id": "Q1-03", "ag": "1", "sub": "", "name": "최연우", "t": "개인", "sh": 129916, "tm": "09:09", "pub": true, "st": "미답변", "q": "향후 배당을 확대할 계획이 있으신지, 있다면 어느 시점부터 어떤 방식으로 단계적으로 확대해 나가실 것인지에 대한 회사의 중장기 배당 로드맵을 듣고 싶습니다.", "a": null}, {"id": "Q1-04", "ag": "1", "sub": "", "name": "미래에셋증권(쿼드자산운용-신한은행)", "t": "기관", "sh": 30547, "tm": "09:10", "pub": true, "st": "완료", "q": "대손충당금 적립 기준에 변경이 있었는지, 그리고 최근의 경기 상황을 반영하여 충당금 적립 정책을 어떻게 운영하고 계신지 설명해 주시기 바랍니다.", "a": "대손충당금은 보수적인 적립 기조를 일관되게 유지하고 있으며, 회계기준상의 변경은 없었습니다. 다만 거시경제 지표와 차주별 신용위험을 상시 모니터링하여 필요 시 선제적으로 충당금을 보강하는 방식으로 건전성을 관리하고 있습니다."}, {"id": "Q1-05", "ag": "1", "sub": "", "name": "백예준", "t": "개인", "sh": 115598, "tm": "09:11", "pub": false, "st": "완료", "q": "이익잉여금을 사내에 유보하시는 주된 목적이 무엇인지, 그리고 유보한 재원을 향후 어떤 부문에 우선적으로 활용하실 계획인지 구체적으로 알고 싶습니다.", "a": "이익잉여금 사내유보는 자본적정성(BIS 비율) 관리와 신사업 투자재원 확보를 주된 목적으로 하고 있습니다. 확보한 재원은 디지털 금융 경쟁력 강화와 리스크 완충 능력 제고에 우선 활용하여, 장기적으로 주주가치가 훼손되지 않도록 운영하겠습니다."}, {"id": "Q1-06", "ag": "1", "sub": "", "name": "박지우", "t": "개인", "sh": 104908, "tm": "09:12", "pub": false, "st": "완료", "q": "자기주식 취득이나 소각 계획이 있으신지, 있다면 그 규모와 시기를 어떤 기준으로 판단하실 것인지에 대한 회사의 입장을 듣고 싶습니다.", "a": "자기주식 취득·소각은 주당가치 제고를 위한 중요한 주주환원 수단으로 이사회에서 지속적으로 검토하고 있습니다. 주가 수준과 재무 건전성, 잉여현금흐름 상황 등을 종합적으로 고려하여 실행 여부와 규모를 결정하며, 확정되는 대로 신속히 공시하겠습니다."}, {"id": "Q1-07", "ag": "1", "sub": "", "name": "공무원연금공단", "t": "기관", "sh": 9219518, "tm": "09:13", "pub": true, "st": "완료", "q": "순이자마진(NIM)의 최근 추이와 향후 전망은 어떠한지, 그리고 금리 환경 변화에 대응하기 위한 수익성 방어 전략을 어떻게 준비하고 계신지 설명해 주시기 바랍니다.", "a": "순이자마진은 금리 하락기에 소폭 축소가 예상되나, 조달 구조 개선과 우량 자산 중심의 성장으로 하방을 방어하고 있습니다. 아울러 플랫폼 기반 수수료·비이자수익을 확대하여 전체 수익성이 안정적으로 유지되도록 대응하고 있습니다."}, {"id": "Q1-08", "ag": "1", "sub": "", "name": "한국투자공사", "t": "기관", "sh": 17978969, "tm": "09:14", "pub": true, "st": "완료", "q": "최근 연체율 상승에 대한 우려가 제기되고 있는데, 회사의 자산 건전성 지표는 어떤 수준이며 부실 확대를 막기 위해 어떤 관리 방안을 시행하고 계신지 궁금합니다.", "a": "연체율은 업권 평균 대비 안정적인 수준에서 관리되고 있으며, 건전성 지표 역시 견조하게 유지되고 있습니다. 조기경보 시스템을 통한 선제적 리스크관리와 보수적 충당금 적립을 병행하여 잠재 부실에 충분히 대비하고 있습니다."}, {"id": "Q1-09", "ag": "1", "sub": "", "name": "유연우", "t": "개인", "sh": 30243, "tm": "09:15", "pub": true, "st": "완료", "q": "이번 재무제표에 대한 외부감사인의 감사의견은 어떠했는지, 그리고 감사 과정에서 특별히 지적되거나 강조된 사항이 있었는지 알고 싶습니다.", "a": "외부감사인으로부터 재무제표가 회계기준에 따라 적정하게 작성되었다는 적정의견을 받았습니다. 감사 과정에서 중대한 지적 사항은 없었으며, 핵심감사사항에 대해서도 충분한 소통과 검토가 이루어졌습니다."}, {"id": "Q1-10", "ag": "1", "sub": "", "name": "임유준", "t": "개인", "sh": 21990, "tm": "09:16", "pub": true, "st": "미답변", "q": "전체 매출에서 플랫폼 사업이 차지하는 수익 비중은 어느 정도이며, 향후 플랫폼 수익을 어떤 방향으로 성장시켜 나가실 계획인지 구체적으로 듣고 싶습니다.", "a": null}, {"id": "Q2-01", "ag": "2", "sub": "2-1", "name": "고용노동부(고용보험기금)", "t": "기관", "sh": 17201631, "tm": "09:20", "pub": true, "st": "완료", "q": "이번에 집중투표제 배제 조항을 삭제하시는 취지가 무엇인지, 그리고 이 변경이 소수주주 권익과 이사회 구성에 어떤 긍정적 효과를 가져올 것으로 기대하시는지 설명해 주시기 바랍니다.", "a": "집중투표제 배제 조항 삭제는 소수주주권을 실질적으로 강화하고 이사회의 다양성과 독립성을 제고하기 위한 것입니다. 이를 통해 다양한 주주의 의사가 이사 선임에 반영될 수 있도록 지배구조를 개선하고자 합니다."}, {"id": "Q2-02", "ag": "2", "sub": "2-1", "name": "신정우", "t": "개인", "sh": 81229, "tm": "09:21", "pub": true, "st": "미답변", "q": "집중투표제를 도입할 경우 경영 안정성이 저해될 우려는 없는지, 있다면 이러한 우려를 완화하기 위해 회사가 마련한 보완 장치는 무엇인지 궁금합니다.", "a": null}, {"id": "Q2-03", "ag": "2", "sub": "2-2", "name": "브이아이생명(스마트베타 제2호)", "t": "기관", "sh": 5932504, "tm": "09:22", "pub": true, "st": "완료", "q": "전자주주총회 도입 일정이 어떻게 되는지, 그리고 현장 총회와 병행하여 운영하실 때의 구체적인 준비 계획과 절차를 상세히 알고 싶습니다.", "a": "전자주주총회는 다음 정기주주총회부터 현장 총회와 병행하여 개최하는 것을 목표로 준비하고 있습니다. 안정적인 시스템 검증과 사전 테스트를 충분히 거쳐, 주주 여러분께서 온라인으로도 원활히 참석·의결하실 수 있도록 하겠습니다."}, {"id": "Q2-04", "ag": "2", "sub": "2-2", "name": "신현준", "t": "개인", "sh": 63006, "tm": "09:23", "pub": true, "st": "완료", "q": "전자주주총회에 참석할 때 본인확인은 어떤 수단으로 이루어지는지, 그리고 보안과 편의성을 함께 확보하기 위한 방안은 어떻게 마련하고 계신지 설명해 주시기 바랍니다.", "a": "전자주주총회 참석 시 본인확인은 공동인증서와 간편인증 등 다양한 수단을 통해 이루어집니다. 접근 편의성을 높이는 동시에 위·변조 방지와 권한 검증을 강화하여 안전한 의결권 행사 환경을 제공하겠습니다."}, {"id": "Q2-05", "ag": "2", "sub": "2-2", "name": "KB증권(디비던드 3호)", "t": "기관", "sh": 5927353, "tm": "09:24", "pub": true, "st": "완료", "q": "전자투표와 전자주주총회는 구체적으로 어떤 점에서 차이가 있는지, 그리고 주주 입장에서 두 제도를 어떻게 활용하는 것이 좋은지 알기 쉽게 설명해 주시기 바랍니다.", "a": "전자투표는 주주총회 이전에 미리 의결권을 행사하는 사전 행사 방식이고, 전자주주총회는 총회 당일 온라인으로 실시간 참석하여 발언과 의결을 함께 하는 방식입니다. 두 제도를 상황에 맞게 활용하시면 참석이 어려우신 경우에도 충실히 권리를 행사하실 수 있습니다."}, {"id": "Q2-06", "ag": "2", "sub": "2-3", "name": "송하준", "t": "개인", "sh": 53091, "tm": "09:25", "pub": false, "st": "완료", "q": "의결권 대리행사 수단을 확대하실 때 그 범위가 어디까지 포함되는지, 그리고 대리행사 과정에서의 적법성과 투명성은 어떻게 확보하실 것인지 궁금합니다.", "a": "의결권 대리행사 수단 확대에는 전자위임장과 플랫폼을 통한 위임이 포함됩니다. 위임 절차 전반에 본인확인과 이력 관리를 강화하여, 대리행사가 적법하고 투명하게 이루어지도록 관리하겠습니다."}, {"id": "Q2-07", "ag": "2", "sub": "2-3", "name": "DB투자자문(액티브밸류 제1호)", "t": "기관", "sh": 5760547, "tm": "09:26", "pub": true, "st": "완료", "q": "정관 제31조 개정으로 위임 절차가 실제로 간소화되는지, 그리고 간소화에 따른 부작용을 방지하기 위한 안전장치는 어떻게 마련되어 있는지 설명해 주시기 바랍니다.", "a": "정관 제31조 개정으로 서면과 전자 방식을 병행할 수 있게 되어 위임 절차의 편의성이 높아집니다. 다만 본인확인 절차를 함께 강화하여, 절차 간소화가 권리 행사의 신뢰성을 훼손하지 않도록 보완하였습니다."}, {"id": "Q2-08", "ag": "2", "sub": "", "name": "배준서", "t": "개인", "sh": 42401, "tm": "09:27", "pub": true, "st": "완료", "q": "이번 정관 변경 안건이 상법상 특별결의 요건을 충족하는지, 그리고 요건 충족 여부를 어떤 기준으로 판단하시는지 명확히 확인하고 싶습니다.", "a": "정관 변경은 상법상 특별결의 사항으로, 출석한 주주 의결권의 3분의 2 이상과 발행주식총수의 3분의 1 이상의 찬성이 필요합니다. 오늘 표결 결과가 이 요건을 충족하는지 정확히 집계하여 의장님께서 결과를 선포하실 예정입니다."}, {"id": "Q2-09", "ag": "2", "sub": "", "name": "우정사업본부", "t": "기관", "sh": 20256800, "tm": "09:28", "pub": true, "st": "완료", "q": "개정되는 정관 조항의 시행 시점이 언제부터인지, 그리고 시행에 따라 주주가 유의해야 할 사항이 있다면 무엇인지 안내해 주시기 바랍니다.", "a": "개정 조항은 주주총회 승인 즉시 효력이 발생합니다. 시행에 따른 세부 절차와 주주 여러분께서 유의하실 사항은 총회 이후 공시와 안내를 통해 상세히 알려 드리겠습니다."}, {"id": "Q2-10", "ag": "2", "sub": "", "name": "박현우", "t": "개인", "sh": 37665, "tm": "09:29", "pub": true, "st": "미답변", "q": "이번 정관 변경과 함께 소수주주가 이사 후보를 추천할 수 있는 제도의 도입도 함께 검토되고 있는지, 향후 지배구조 개선 방향을 어떻게 설정하고 계신지 궁금합니다.", "a": null}, {"id": "Q3-01", "ag": "3", "sub": "3-1", "name": "국민연금공단", "t": "기관", "sh": 16700771, "tm": "09:33", "pub": true, "st": "완료", "q": "이번 사외이사 후보들의 독립성을 어떤 절차와 기준으로 검증하셨는지, 그리고 이해관계 충돌 여부에 대한 확인은 어떻게 이루어졌는지 구체적으로 설명해 주시기 바랍니다.", "a": "사외이사 후보는 사외이사후보추천위원회의 엄정한 심사를 거쳐 독립성과 전문성을 검증하였으며, 결격사유가 없음을 확인하였습니다. 후보별 이해관계와 겸직 현황도 함께 검토하여 이사회의 독립적 운영에 지장이 없도록 하였습니다."}, {"id": "Q3-02", "ag": "3", "sub": "3-1", "name": "서준서", "t": "개인", "sh": 87433, "tm": "09:34", "pub": true, "st": "완료", "q": "집중투표 방식에서 표는 어떻게 계산되는지, 그리고 주주가 보유한 의결권을 특정 후보에게 집중하거나 분산할 때 어떤 방식으로 반영되는지 알기 쉽게 설명해 주시기 바랍니다.", "a": "집중투표는 1주당 선임 예정 이사 수(이번 안건 기준 2표)만큼 의결권이 부여되며, 주주께서는 이를 한 후보에게 집중하거나 여러 후보에게 나누어 행사하실 수 있습니다. 최종적으로 후보별 득표수를 집계하여 다득표 순으로 선임 인원만큼 선임됩니다."}, {"id": "Q3-03", "ag": "3", "sub": "3-1", "name": "피델리티생명(액티브밸류 3호)", "t": "기관", "sh": 5822611, "tm": "09:35", "pub": true, "st": "완료", "q": "이사 후보들의 상세 이력과 경력은 어디에서 확인할 수 있는지, 그리고 후보 선정 과정에서 어떤 역량과 전문성을 중점적으로 고려하셨는지 궁금합니다.", "a": "후보별 이력과 경력은 소집공고 및 사업보고서에 상세히 게재되어 있으니 참고해 주시기 바랍니다. 후보 선정 시에는 금융·회계·리스크 등 이사회에 필요한 전문성과 독립성을 종합적으로 고려하였습니다."}, {"id": "Q3-04", "ag": "3", "sub": "3-2", "name": "이준영", "t": "개인", "sh": 19636, "tm": "09:36", "pub": true, "st": "미답변", "q": "감사위원이 되는 사외이사에게 요구되는 자격 요건은 무엇인지, 그리고 해당 후보가 이러한 요건을 충족하는지 어떻게 확인하셨는지 설명해 주시기 바랍니다.", "a": null}, {"id": "Q3-05", "ag": "3", "sub": "", "name": "미래에셋증권(쿼드자산운용-신한은행)", "t": "기관", "sh": 30547, "tm": "09:37", "pub": true, "st": "완료", "q": "이사 보수한도를 어떤 근거와 기준으로 산정하셨는지, 그리고 성과와 보수를 연동하는 체계가 실제로 어떻게 운영되고 있는지 구체적으로 알고 싶습니다.", "a": "이사 보수한도는 임원보수 규정과 회사의 경영성과 및 시장 수준을 종합적으로 반영하여 산정하였습니다. 성과와 보수를 연동하는 평가 체계를 통해 보수의 적정성과 책임경영이 함께 담보되도록 운영하고 있습니다."}, {"id": "Q3-06", "ag": "3", "sub": "3-1", "name": "황현우", "t": "개인", "sh": 18195, "tm": "09:38", "pub": false, "st": "완료", "q": "집중투표 후보 중 일부가 부결될 경우 회사가 어떻게 대응하실 것인지, 그리고 이사 결원이 발생하면 이를 어떤 절차로 보완하실 계획인지 궁금합니다.", "a": "집중투표 결과는 주주 여러분의 의사에 따라 다득표 순으로 결정되며, 회사는 그 결과를 그대로 존중합니다. 만약 결원이 발생하는 경우에는 관련 법령과 정관이 정한 절차에 따라 후속 선임 등을 투명하게 진행하겠습니다."}, {"id": "Q3-07", "ag": "3", "sub": "", "name": "공무원연금공단", "t": "기관", "sh": 9219518, "tm": "09:39", "pub": true, "st": "완료", "q": "ESG 경영을 강화하기 위한 위원회 구성 계획이 있으신지, 있다면 그 역할과 운영 방향을 어떻게 설정하고 계신지 구체적으로 듣고 싶습니다.", "a": "ESG 위원회는 이사회 산하 위원회로 설치하여 환경·사회·지배구조 전반의 정책을 심의하고 점검하는 역할을 맡을 계획입니다. 이를 통해 지속가능경영 과제를 체계적으로 관리하고 그 성과를 주주 여러분께 투명하게 보고하겠습니다."}, {"id": "Q3-08", "ag": "3", "sub": "3-1", "name": "임민준", "t": "개인", "sh": 16783, "tm": "09:40", "pub": true, "st": "미답변", "q": "집중투표 후보 수를 현재 4인에서 3인으로 축소하는 것이 가능한지, 후보 수 결정이 어떤 절차와 기준에 따라 이루어지는지 설명해 주시기 바랍니다.", "a": null}, {"id": "Q3-09", "ag": "3", "sub": "", "name": "고용노동부(고용보험기금)", "t": "기관", "sh": 17201631, "tm": "09:41", "pub": true, "st": "완료", "q": "이사회 내 여성 이사 비율을 개선하기 위한 구체적인 계획이 있으신지, 있다면 어떤 목표와 일정으로 다양성을 확대해 나가실 것인지 알고 싶습니다.", "a": "당사는 이사회 다양성 정책에 따라 여성 및 다양한 배경을 가진 이사의 비율을 단계적으로 확대해 나갈 계획입니다. 후보군을 폭넓게 발굴하고 추천 절차를 개선하여, 이사회 구성의 다양성과 균형을 지속적으로 제고하겠습니다."}, {"id": "Q3-10", "ag": "3", "sub": "", "name": "차시우", "t": "개인", "sh": 10801, "tm": "09:42", "pub": true, "st": "미답변", "q": "이번에 선임되는 사외이사 후보들의 다른 회사 겸직 현황은 어떠한지, 그리고 겸직으로 인한 이사 업무 수행의 충실성에는 문제가 없는지 확인하고 싶습니다.", "a": null}, {"id": "QP-01", "ag": "1", "sub": "", "name": "황서연", "t": "개인", "sh": 122328, "tm": "03-24 10:12", "pub": true, "st": "완료", "q": "감사보고서상 계속기업 관련 불확실성 언급이 있는지, 있다면 그 사유를 사전에 알고 싶습니다.", "a": "당기 감사보고서에는 계속기업 관련 불확실성 기재 사항이 없습니다. 적정의견으로 수령했습니다.", "pre": true}, {"id": "QP-02", "ag": "1", "sub": "", "name": "흥국화재(성장주 2호)", "t": "기관", "sh": 6026805, "tm": "03-24 11:40", "pub": true, "st": "완료", "q": "재무제표 승인 안건과 관련해 배당성향 목표치를 중기적으로 어떻게 가져가실 계획인지 문의드립니다.", "a": "중기적으로 배당성향 25~30% 구간을 유지하는 것을 목표로 하고 있습니다.", "pre": true}, {"id": "QP-03", "ag": "2", "sub": "2-1", "name": "주예린", "t": "개인", "sh": 98621, "tm": "03-24 15:05", "pub": true, "st": "완료", "q": "집중투표제 배제 조항을 삭제하면 소수주주 이사 선임 가능성이 실제로 얼마나 높아지는지 궁금합니다.", "a": "집중투표가 가능해지면 지분율 대비 특정 후보에 표를 집중할 수 있어 소수주주의 선임 가능성이 높아집니다.", "pre": true}, {"id": "QP-04", "ag": "2", "sub": "2-1", "name": "교보악사자산운용(인덱스 1호)", "t": "기관", "sh": 5781152, "tm": "03-25 09:22", "pub": false, "st": "미답변", "q": "정관 제37조 제3항 삭제에 대해 이사회가 반대 의견을 낸 적이 있는지 경과를 알고 싶습니다.", "a": null, "pre": true}, {"id": "QP-05", "ag": "2", "sub": "2-2", "name": "이서진", "t": "개인", "sh": 109367, "tm": "03-25 10:48", "pub": true, "st": "완료", "q": "전자주주총회를 도입하면 현장 참석이 제한되는 것인지, 병행 운영인지 확인 부탁드립니다.", "a": "현장과 전자주주총회를 병행 운영합니다. 현장 참석 권리는 그대로 유지됩니다.", "pre": true}, {"id": "QP-06", "ag": "2", "sub": "2-2", "name": "신시아", "t": "개인", "sh": 71203, "tm": "03-25 13:31", "pub": true, "st": "미답변", "q": "전자주주총회 도입 후 의결권 행사 기록은 몇 년간 보관되는지 궁금합니다.", "a": null, "pre": true}, {"id": "QP-07", "ag": "3", "sub": "", "name": "사학연금공단", "t": "기관", "sh": 12229168, "tm": "03-25 16:07", "pub": true, "st": "완료", "q": "선임 이사 수를 4인과 5인 중 어느 쪽으로 제안하시는지, 회사 의견의 근거가 궁금합니다.", "a": "회사는 이사회 규모의 적정성과 심의 효율을 고려해 4인 중 2인 선임을 제안드립니다.", "pre": true}, {"id": "QP-08", "ag": "3", "sub": "3-1", "name": "강민서", "t": "개인", "sh": 86463, "tm": "03-26 09:15", "pub": true, "st": "미답변", "q": "회사제안 사외이사 후보 4인의 금융업 경력과 겸직 현황을 사전에 공개해 주실 수 있는지요.", "a": null, "pre": true}, {"id": "QP-09", "ag": "3", "sub": "3-1", "name": "KB증권(디비던드 3호)", "t": "기관", "sh": 5927353, "tm": "03-26 11:02", "pub": true, "st": "완료", "q": "집중투표 시 단주 처리 기준을 어떻게 적용하실 예정인지 사전에 확인하고 싶습니다.", "a": "단주는 주주가 지정한 후보에게 합산 배분하며, 미지정 시 최다득표 후보 순으로 배분합니다.", "pre": true}, {"id": "QP-10", "ag": "3", "sub": "3-2", "name": "원기연", "t": "개인", "sh": 47247, "tm": "03-26 14:36", "pub": false, "st": "미답변", "q": "주주제안 후보 5인에 대한 회사 측 검토 의견을 총회 전에 알 수 있을까요.", "a": null, "pre": true}];
+var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "개인", "sh": 87433, "tm": "09:05", "kind": "발언", "st": "대기", "r": "배당성향 상향 필요성에 대해 발언 신청합니다."}, {"id": "S1-02", "ag": "1", "sub": "", "name": "미래에셋증권(쿼드자산운용-신한은행)", "t": "기관", "sh": 30547, "tm": "09:05", "kind": "발언", "st": "대기", "r": "중장기 배당정책의 명문화를 요청하는 발언입니다."}, {"id": "S1-03", "ag": "1", "sub": "", "name": "오준우", "t": "개인", "sh": 143293, "tm": "09:06", "kind": "발언", "st": "대기", "r": "주가 부양 및 주주환원 대책에 대해 발언하고자 합니다."}, {"id": "S1-04", "ag": "1", "sub": "", "name": "국민연금공단", "t": "기관", "sh": 16700771, "tm": "09:06", "kind": "발언", "st": "완료", "r": "자본적정성과 배당의 균형에 대한 의견을 발언했습니다."}, {"id": "S1-05", "ag": "1", "sub": "", "name": "백예준", "t": "개인", "sh": 115598, "tm": "09:07", "kind": "발언", "st": "대기", "r": "사내유보금 활용 계획의 구체화를 요청합니다."}, {"id": "S1-06", "ag": "1", "sub": "", "name": "공무원연금공단", "t": "기관", "sh": 9219518, "tm": "09:07", "kind": "발언", "st": "대기", "r": "비이자수익 확대 전략에 대해 발언 신청합니다."}, {"id": "S1-07", "ag": "1", "sub": "", "name": "유연우", "t": "개인", "sh": 30243, "tm": "09:08", "kind": "발언", "st": "반려", "r": "개별 종목 주가 전망 관련 발언으로 안건과 무관하여 반려.", "reason": "의안과 직접 관련이 없는 내용으로 확인되어 반려합니다."}, {"id": "S1-08", "ag": "1", "sub": "", "name": "한국투자공사", "t": "기관", "sh": 17978969, "tm": "09:08", "kind": "발언", "st": "대기", "r": "건전성 지표 공시 주기 확대를 제안하는 발언입니다."}, {"id": "S1-09", "ag": "1", "sub": "", "name": "박지우", "t": "개인", "sh": 104908, "tm": "09:09", "kind": "발언", "st": "완료", "r": "자기주식 소각 계획에 대한 질의성 발언을 마쳤습니다."}, {"id": "S1-10", "ag": "1", "sub": "", "name": "임유준", "t": "개인", "sh": 21990, "tm": "09:09", "kind": "발언", "st": "대기", "r": "플랫폼 부문 실적 세부 공개를 요청합니다."}, {"id": "S2-01", "ag": "2", "sub": "", "name": "서준서", "t": "개인", "sh": 87433, "tm": "09:05", "kind": "발언", "st": "대기", "r": "이사 보수한도 산정 근거에 대해 발언 신청합니다."}, {"id": "S2-02", "ag": "2", "sub": "", "name": "미래에셋증권(쿼드자산운용-신한은행)", "t": "기관", "sh": 30547, "tm": "09:05", "kind": "발언", "st": "대기", "r": "이사 보수한도 산정 근거에 대해 발언 신청합니다."}, {"id": "S2-03", "ag": "2", "sub": "2-1", "name": "신정우", "t": "개인", "sh": 81229, "tm": "09:06", "kind": "수정동의", "st": "대기", "r": "집중투표 후보 수 결정의 건을 후보 6인 중 3인 선임으로 의안을 수정하는 것을 요청합니다."}, {"id": "S2-04", "ag": "2", "sub": "2-1", "name": "고용노동부(고용보험기금)", "t": "기관", "sh": 17201631, "tm": "09:06", "kind": "발언", "st": "대기", "r": "집중투표제 배제 조항 삭제의 취지 설명을 요청하는 발언입니다."}, {"id": "S2-05", "ag": "2", "sub": "2-2", "name": "신현준", "t": "개인", "sh": 63006, "tm": "09:07", "kind": "발언", "st": "대기", "r": "전자주주총회 도입 일정에 대한 발언을 신청합니다."}, {"id": "S2-06", "ag": "2", "sub": "2-3", "name": "브이아이생명(스마트베타 제2호)", "t": "기관", "sh": 5932504, "tm": "09:07", "kind": "발언", "st": "완료", "r": "전자위임 본인확인 절차 강화 의견을 발언했습니다."}, {"id": "S2-07", "ag": "2", "sub": "2-3", "name": "송하준", "t": "개인", "sh": 53091, "tm": "09:08", "kind": "수정동의", "st": "대기", "r": "정관 제31조 개정안에 위임 철회 조항 추가를 제안합니다."}, {"id": "S2-08", "ag": "2", "sub": "2-2", "name": "KB증권(디비던드 3호)", "t": "기관", "sh": 5927353, "tm": "09:08", "kind": "발언", "st": "대기", "r": "전자주총과 현장 병행 시 의사정족수 산정 방식을 질의합니다."}, {"id": "S2-09", "ag": "2", "sub": "", "name": "배준서", "t": "개인", "sh": 42401, "tm": "09:09", "kind": "발언", "st": "반려", "r": "특정 주주 비방성 표현이 포함되어 반려.", "reason": "동일 주주의 중복 신청으로 앞선 건만 접수 처리합니다."}, {"id": "S2-10", "ag": "2", "sub": "2-3", "name": "DB투자자문(액티브밸류 제1호)", "t": "기관", "sh": 5760547, "tm": "09:09", "kind": "발언", "st": "대기", "r": "대리행사 수단 확대의 실무 적용 범위를 확인하는 발언입니다."}, {"id": "S3-01", "ag": "3", "sub": "3-1", "name": "최연우", "t": "개인", "sh": 129916, "tm": "09:05", "kind": "발언", "st": "대기", "r": "집중투표 후보자별 자질 검증에 대해 발언 신청합니다."}, {"id": "S3-02", "ag": "3", "sub": "3-1", "name": "국민연금공단", "t": "기관", "sh": 16700771, "tm": "09:05", "kind": "발언", "st": "대기", "r": "사외이사 독립성 강화 방안에 대한 발언입니다."}, {"id": "S3-03", "ag": "3", "sub": "3-2", "name": "박현우", "t": "개인", "sh": 37665, "tm": "09:06", "kind": "수정동의", "st": "대기", "r": "감사위원 사외이사 선임의 건에 후보 추가를 요청합니다."}, {"id": "S3-04", "ag": "3", "sub": "", "name": "피델리티생명(액티브밸류 3호)", "t": "기관", "sh": 5822611, "tm": "09:06", "kind": "발언", "st": "대기", "r": "이사 보수한도 인상 근거의 소명을 요청하는 발언입니다."}, {"id": "S3-05", "ag": "3", "sub": "3-2", "name": "이준영", "t": "개인", "sh": 19636, "tm": "09:07", "kind": "발언", "st": "대기", "r": "감사위원회 운영 계획에 대해 발언 신청합니다."}, {"id": "S3-06", "ag": "3", "sub": "3-1", "name": "황현우", "t": "개인", "sh": 18195, "tm": "09:07", "kind": "발언", "st": "완료", "r": "집중투표 표 계산 방식에 대한 질의성 발언을 마쳤습니다."}, {"id": "S3-07", "ag": "3", "sub": "", "name": "공무원연금공단", "t": "기관", "sh": 9219518, "tm": "09:08", "kind": "발언", "st": "대기", "r": "ESG·이사회 다양성 정책에 대한 발언입니다."}, {"id": "S3-08", "ag": "3", "sub": "3-1", "name": "임민준", "t": "개인", "sh": 16783, "tm": "09:08", "kind": "수정동의", "st": "대기", "r": "집중투표 후보 수를 3인 선임으로 축소하는 수정 동의를 신청합니다."}, {"id": "S3-09", "ag": "3", "sub": "", "name": "고용노동부(고용보험기금)", "t": "기관", "sh": 17201631, "tm": "09:09", "kind": "발언", "st": "대기", "r": "이사회 여성 비율 목표치 설정을 제안하는 발언입니다."}, {"id": "S3-10", "ag": "3", "sub": "", "name": "차시우", "t": "개인", "sh": 10801, "tm": "09:09", "kind": "발언", "st": "반려", "r": "후보 개인 신상 관련 발언으로 안건과 무관하여 반려.", "reason": "발언 신청 마감 시각 이후 접수되어 반려합니다."}];
 (function(){
   function esc(s){ return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function fmt(n){ return Number(n).toLocaleString('en-US'); }
@@ -1543,6 +1617,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       document.querySelectorAll('.oc-panel').forEach(function(p){p.classList.toggle('on',p.dataset.panel===k);});
     });
   });
+  /* 상세 화면의 breadcrumb(#vote 등)으로 돌아오면 그 탭을 연다 */
+  (function(){ var h=location.hash.slice(1), t=h&&document.querySelector('.oc-tab[data-tab="'+h+'"]'); if(t) t.click(); })();
   // 질의 필터
   var AG=[['all','전체'],['1','제1호'],['2','제2호'],['3','제3호']];
   function chips(host,cur,cb){
@@ -1574,7 +1650,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var seq=0;
     document.getElementById('spList').innerHTML=list.map(function(x){
       seq++;
-      var kind = '<span class="tg '+(x.kind==='수정동의'?'tg-amend':'tg-speak')+'">'+x.kind+'</span>';
+      var kind = '<span class="tg '+(x.kind==='수정동의'?'tg-amend':'tg-speak')+'">'+String(x.kind).replace('수정동의','수정 동의')+'</span>';
       var acts = x.st==='대기'
         ? '<button class="qbtn dark">발언 시작</button><button class="qbtn">완료</button><button class="qbtn">반려</button>'
         : (x.st==='완료' ? '<button class="qbtn">기록 보기</button>' : '<button class="qbtn">반려 사유</button><button class="qbtn">재검토</button>');
@@ -1609,9 +1685,13 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   document.querySelectorAll('[data-sw]').forEach(function(sw){ sw.addEventListener('click',function(){ sw.classList.toggle('on'); }); });
 
   // 타이머 (경과)
-  var t=0, hh=document.getElementById('ocTimer'), hh2=document.getElementById('ocTimer2'), running=true;
-  function parse(s){var p=s.split(':');return (+p[0])*3600+(+p[1])*60+(+p[2]);}
-  t=parse('00:10:12');
+  var t=0, hh=document.getElementById('ocTimer'), hh2=document.getElementById('ocTimer2'), running=false;
+  /* 총회 시작 전에는 시계 자리에 '총회 시작' 버튼 — 누르면 00:00:00 부터 흐른다 */
+  document.getElementById('ocStart').addEventListener('click',function(){
+    this.style.display='none'; document.getElementById('ocTimerW').style.display='';
+    t=0; running=true; paint(); castClock();
+    if(window.cxToast) cxToast('주주총회를 시작했습니다.');
+  });
   function paint(){ var h=Math.floor(t/3600),m=Math.floor(t%3600/60),s=t%60; var v=[h,m,s].map(function(n){return (n<10?'0':'')+n;}).join(':'); hh.textContent=v; if(hh2)hh2.textContent=v; }
   setInterval(function(){ if(running){ t++; paint(); } },1000); paint();
 
@@ -1628,6 +1708,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   if(vid) ['play','pause','seeked','loadedmetadata'].forEach(function(ev){ vid.addEventListener(ev, castClock); });
 
   document.getElementById('btnPause').addEventListener('click',function(){
+    if(!t) return;   /* 시작 전 */
     running=!running; this.classList.toggle('gray',true);
     if(vid){ if(running) vid.play(); else vid.pause(); }
     castClock();
@@ -2026,6 +2107,23 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     return '';
   }
   /* 마감 시점의 판정 — 그때의 진행률(lf=1)로 한 번만 셈하고 그 값을 보관한다 */
+  /* 표결 관리 KPI 카드용 — 채널별 표결 현황 표와 같은 실제 값(행사 의결권)을 채널 묶음으로 넘긴다.
+     pre=전자+서면(사전), site=현장 앱+현장 서면, onl=온라인. 단계에 따라 차오르는 것도 표와 같다.
+     집중투표는 후보마다 같은 비율로 채널을 나누고, 판정(pred)은 실시간 운영 그래프와 같은 규칙이다. */
+  OC.kpi=function(d){
+    var ch=chanRows(), rd=function(c){ return c.ready?c.w:0; };
+    var r={pre:rd(ch[0])+rd(ch[1]), site:rd(ch[2])+rd(ch[3]), onl:rd(ch[4])};
+    r.tot=r.pre+r.site+r.onl; r.done=OC.stage>=4;
+    if(d && d.cands){
+      var f=0.8+0.2*liveFrac(), cs=r.tot||1, seats=seatsOf(d);
+      r.cands=d.cands.slice().sort(function(x,y){return x.rank-y.rank;}).map(function(c){
+        var v=c.votes*f, o={no:c.no, pre:Math.round(v*r.pre/cs), site:Math.round(v*r.site/cs), onl:Math.round(v*r.onl/cs),
+          pred:(c.rank<=seats)?'가결':'부결'};
+        o.tot=o.pre+o.site+o.onl; return o;
+      });
+    } else if(d){ r.pred=d.result||predOf(d); }
+    return r;
+  };
   function resOf(no){
     var d=CENTER[no];
     if(!d) return '가결';
@@ -2102,6 +2200,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(!moved) return;
     updateMetric();
     renderChan(CENTER[OC.agenda]);   /* 현장투표 앱 행이 KPI 와 같은 수치를 본다 */
+    if(OC.onLive) OC.onLive();       /* 표결 관리 KPI 카드도 같은 값으로 */
   }
   function renderAll(){
     var d=CENTER[OC.agenda]; if(!d) return;
@@ -2166,9 +2265,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   var HEAD={
     q:'<tr><th style="width:110px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th class="c" style="width:90px">의안</th><th>질의 내용</th><th class="c" style="width:110px">접수시간</th><th style="width:96px">공개</th><th style="width:110px">상태</th><th class="c" style="width:56px">상세</th></tr>',
     s:'<tr><th style="width:110px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th style="width:90px">의안</th><th>신청 내용</th><th class="c" style="width:110px">상태</th><th class="c" style="width:110px">대기열</th></tr>',
+    a:'<tr><th style="width:110px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th class="c" style="width:90px">의안</th><th>수정 내용</th><th class="c" style="width:96px">접수 경로</th><th class="c" style="width:110px">검증유형</th><th class="c" style="width:110px">접수시간</th><th class="c" style="width:110px">상태</th></tr>',
     v:'<tr><th>투표권자</th><th>주주번호</th><th class="r">보유주식수</th><th class="c">의결권 행사</th>'
-      +'<th class="c">질의</th><th class="c">발언</th><th class="c">참여방법</th>'
-      +'<th class="c">접속시각</th><th class="c">퇴장시각</th><th class="c">처리</th></tr>'
+      +'<th class="c">질의</th><th class="c">발언</th>'
+      +'<th class="c">접속시각</th><th class="c">퇴장시각</th><th class="c">발언 조치</th><th class="c">퇴장 명령</th></tr>'
   };
   var INFO='<svg class="exi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="7.6" r=".9" fill="#737373" stroke="none"/></svg>';
   /* 시청자 — 총회에 접속한 참여자 표본.
@@ -2193,17 +2293,26 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   });
 
   /* 밖에서 질의가 들어오면 이 화면도 다시 그린다 */
-  (window.QAREPAINT=window.QAREPAINT||[]).push(function(){ render(); });
+  (window.QAREPAINT=window.QAREPAINT||[]).push(function(){ render(); renderAcc(); });
   /* 의안이 폐기되면 그 의안으로 잡아 둔 발언 순서는 사라진다 */
   window.QADROP=function(){
     var gone=SPEECHES.filter(function(x){ return CX.util.discarded(x.ag||''); }).map(function(x){ return x.id; });
     queue=queue.filter(function(id){ return gone.indexOf(id)<0; });
     render(); renderAcc();
   };
+  /* 수정 동의는 질의 · 발언에서 빼고 '수정동의' 탭에 모은다 — 실시간 운영 탭과 같은 기준 */
+  function amd(x){ return x.amend || x.kind==='수정동의'; }
   function rows(){
-    if(mode==='q') return QUESTIONS;      /* 사전 질의도 같이 본다 — 표시로만 구분 */
-    if(mode==='s') return SPEECHES;
+    if(mode==='q') return QUESTIONS.filter(function(x){ return !amd(x); });   /* 사전 질의도 같이 본다 — 표시로만 구분 */
+    if(mode==='s') return SPEECHES.filter(function(x){ return !amd(x); });
+    if(mode==='a') return QUESTIONS.filter(amd).concat(SPEECHES.filter(amd))
+      .sort(function(p,q2){ return String(p.tm).localeCompare(String(q2.tm)); });
     return VIEWERS;
+  }
+  function amDot(x){
+    if(x.st==='반려') return '<span class="qmdot" style="opacity:.5"><i></i>반려</span>';
+    if(x.st==='완료') return '<span class="qmdot blue"><i></i>'+(x.via==='질의'||QUESTIONS.indexOf(x)>=0?'답변완료':'완료')+'</span>';
+    return '<span class="qmdot amber"><i></i>접수</span>';
   }
   function pubCell(x){
     if(x.st==='미답변') return '<span class="qmdot">−</span>';   /* 답변 전이라 공개 범위가 아직 없다 */
@@ -2218,8 +2327,35 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     if(i>0) return '<span class="qmdot amber"><i></i>대기열</span>';
     return '<span class="qmdot"><i></i>접수</span>';
   }
+  /* 시청자 — 발언 조치(발언 제한 ↔ 발언 허용) · 퇴장 명령. 현장 참석자는 온라인 제어 대상이 아니라 비운다,
+     발언 권한이 없는 줄은 발언 조치를 비우고, 이미 퇴장한 줄은 흐리게(비활성) 둔다. */
+  var MIC='<i class="ph ph-microphone"></i>', MICX='<i class="ph ph-microphone-slash"></i>', BAN='<i class="ph ph-prohibit"></i>';
+  function spAct(x,id){
+    if(x.via==='현장' || !x.sp) return '';
+    var out=!!x.outTm||!!x.ban;
+    return '<button class="vwact" type="button" data-lim="'+id+'"'+(out?' disabled':'')+'>'+(x.lim&&!out?MIC+'발언 허용':MICX+'발언 제한')+'</button>';
+  }
+  /* 퇴장 명령 → 퇴장시각 기록 + 재입장 제한(ban). 그 자리에 '제한 해제'(재입장 허용)를 둔다.
+     스스로 나간 사람(퇴장시각만 있음)은 흐린 '퇴장'. */
+  function outAct(x,id){
+    if(x.via==='현장') return '';
+    if(x.ban) return '<button class="vwact" type="button" data-unban="'+id+'"><i class="ph ph-circle"></i>제한 해제</button>';
+    return '<button class="vwact out" type="button" data-out="'+id+'"'+(x.outTm?' disabled':'')+'>'+BAN+'퇴장</button>';
+  }
   function render(){
     head.innerHTML=HEAD[mode];
+    /* 탭마다 칸 구성이 달라 칸 너비를 colgroup 으로 직접 적는다 — conexus 는 칸 번호별 최대 폭을 기억해
+       탭을 오갈 때 표가 넘친다. 너비 없는 칸(투표권자 · 내용)이 남는 자리를 나눈다. 시청자 관리는 내용맞춤. */
+    (function(){
+      var tbl=head.closest('table'), cg=tbl.querySelector('colgroup');
+      if(cg) cg.remove();
+      if(mode==='v'){ tbl.style.tableLayout=''; return; }
+      cg=document.createElement('colgroup');
+      cg.innerHTML=[].map.call(head.querySelectorAll('th'),function(th){
+        return th.style.width ? '<col style="width:'+th.style.width+'">' : '<col>';
+      }).join('');
+      tbl.insertBefore(cg,tbl.firstChild); tbl.style.tableLayout='fixed';
+    })();
     var list=rows();
     tbody.innerHTML=list.map(function(x,i){
       var id=x.id||('V'+i);
@@ -2237,10 +2373,15 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
           +'<td>'+x.no+'</td><td class="r">'+cm(x.sh)+'</td>'
           +'<td class="c">'+cnt(x.vote)+'</td><td class="c">'+cnt(x.q)+'</td>'
           +'<td class="c">'+cnt(x.sp,x.lim)+'</td>'
-          +'<td class="c"><span class="vwvia '+(x.via==='온라인'?'on':'off')+'">'+x.via+'</span></td>'
           +'<td class="c">'+x.inTm+'</td><td class="c">'+(x.outTm||'−')+'</td>'
-          +'<td class="c"><button class="vwbtn'+(x.lim?' undo':'')+'" data-lim="'+id+'" type="button">'
-          +(x.lim?'제한 해제':'발언 제한')+'</button></td></tr>';
+          +'<td class="c">'+spAct(x,id)+'</td><td class="c">'+outAct(x,id)+'</td></tr>';
+      }
+      if(mode==='a'){
+        var viaQ=(QUESTIONS.indexOf(x)>=0);
+        return '<tr data-id="'+id+'"'+(x.st==='반려'?' class="off"':'')+'>'+base+'<td class="c">'+agOf(x)+'</td>'
+          +'<td class="txt">'+esc(x.q||x.r||'')+'</td>'
+          +'<td class="c"><span class="tg '+(viaQ?'tg-ind':'tg-speak')+'">'+(viaQ?'질의':'발언')+'</span></td>'
+          +'<td class="c">'+esc(x.amtype||'금액 조정')+'</td><td class="c">'+(x.tm||'−')+'</td><td class="c">'+amDot(x)+'</td></tr>';
       }
       if(mode==='s'){
         var inQ=queue.indexOf(id)>=0;
@@ -2279,29 +2420,29 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var isQ=(mode==='q');
     var st = isQ
       ? (x.st==='완료'?'<span class="qmdot blue"><i></i>답변완료</span>':'<span class="qmdot"><i></i>미답변</span>')
-      : (x.kind==='수정동의'?'<span class="qmdot amber"><i></i>수정동의</span>':spDot(x.id,x));
+      : (mode==='a'?amDot(x):spDot(x.id,x));
     var same=list.filter(function(y){return (y.sub||y.ag)===(x.sub||x.ag);});
     var seq=same.indexOf(x)+1;
-    var amend=(x.kind==='수정동의');
+    var amend=(mode==='a');
     var done=(x.st==='완료');
     var acts = isQ
       ? (done
           ? '<button class="dlg-btn" type="button" data-act="ans">답변 수정</button><button class="dlg-btn dark" type="button" data-act="send">의장 송출</button>'
           : '<button class="dlg-btn" type="button" data-act="clear">취소</button><button class="dlg-btn dark" type="button" data-act="ans">답변 등록</button>')
       : '<button class="dlg-btn'+(amend?' warn':'')+'" type="button" data-act="rej">반려</button>'
-        + (amend ? '<button class="dlg-btn dark" type="button" data-act="amend">수정동의 상정</button>'
+        + (amend ? '<button class="dlg-btn dark" type="button" data-act="amend">수정 동의 상정</button>'
                  : '<button class="dlg-btn dark" type="button" data-act="add">대기열 등록</button>');
     pane.innerHTML=
       '<div style="display:flex;flex-direction:column;gap:8px">'
       +'<div class="qmname">'+esc(x.name)+'<span class="sp"></span>'+st+'</div>'
       +'<div class="qmmeta">'
-      +(amend?'<span class="pchip amd">수정동의</span>'
+      +(amend?'<span class="pchip amd">수정 동의</span>'
              :'<span class="pchip">'+(isQ?(x.pre?'사전 질의':'질의'):(x.kind||'발언'))+'</span>')
       +'<span class="pchip">'+agOf(x)+'</span>'
       +'<span class="pchip">'+x.t+'</span><span class="pchip">'+cm(x.sh)+'주</span></div></div>'
       +'<div style="display:flex;flex-direction:column;gap:6px">'
       +'<div class="qmkv"><span class="k">투표권자</span>'+esc(x.name)+'</div>'
-      +'<div class="qmq">'+esc(isQ?x.q:x.r)+'</div>'
+      +'<div class="qmq">'+esc(isQ?x.q:(x.r||x.q||''))+'</div>'
       +'<div class="qmsub"><span>'+(x.tm||'')+'</span><span>'+(isQ?'질의':'발언')+' '+seq+'/'+same.length+'</span></div></div>'
       +'<div style="display:flex;flex-direction:column;gap:6px">'
       +'<div class="qmlb">'+(isQ?'답변 작성':'처리 사유')+'</div>'
@@ -2321,6 +2462,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       +'<span class="qmqno">'+(i+1)+'</span><span class="qmqnm">'+esc(x.name)+'</span>'
       +'<span class="qmqag">'+agOf(x)+'</span><span class="sp"></span>'
       +(live?'<span class="qmqlive"><i></i>발언 중</span>':'')
+      +(live?'<button class="vqmute'+(x.muted?' on':'')+'" type="button" data-mute="'+x.id+'" title="'+(x.muted?'음소거 해제':'음소거')+'"><i class="ph ph-'+(x.muted?'microphone':'microphone-slash')+'"></i></button>':'')
       +(live?'<button class="qmqbtn" data-fin="'+x.id+'" type="button">발언 종료</button>':'')
       +'<button class="qmqbtn rm" data-q="'+x.id+'" type="button">제거</button></div>';
   }
@@ -2366,9 +2508,32 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var i=list.indexOf(accAg); if(i<0) i=0;
     accAg=list[Math.min(list.length-1,Math.max(0,i+d))]; renderAcc();
   }
+  /* 퇴장 명령 · 재입장 허용 — 확인 창을 거친다 */
+  var vwO=document.getElementById('vwOvl'), vwPend=null;
+  function vwAsk(v, ban){
+    vwPend={v:v,ban:ban};
+    document.getElementById('vwIc').className='ph '+(ban?'ph-prohibit':'ph-arrow-counter-clockwise');
+    document.getElementById('vwT').textContent=ban?v.name+' 님을 퇴장시키겠습니까?':v.name+' 님의 재입장을 허용하시겠습니까?';
+    document.getElementById('vwD').textContent=ban?'퇴장 즉시 전자주총 시청이 종료되며, 제한을 해제하기 전까지 다시 입장할 수 없습니다.'
+      :'제한이 해제되면 해당 주주가 전자주총에 다시 입장할 수 있습니다.';
+    var go=document.getElementById('vwGo'); go.textContent=ban?'퇴장':'제한 해제'; go.className=ban?'danger':'';
+    vwO.classList.add('on');
+  }
+  vwO.querySelector('[data-close]').addEventListener('click',function(){ vwO.classList.remove('on'); vwPend=null; });
+  document.getElementById('vwGo').addEventListener('click',function(){
+    if(!vwPend) return; var v=vwPend.v, ban=vwPend.ban; vwPend=null; vwO.classList.remove('on');
+    if(ban){ var d=new Date(); v.outTm=(d.getHours()<10?'0':'')+d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes(); v.ban=true; }
+    else v.ban=false;
+    render(); if(window.cxToast) cxToast(ban?v.name+' 님을 퇴장 처리했습니다.':v.name+' 님의 재입장을 허용했습니다.');
+  });
   /* 발언 제한 · 해제 */
   tbody.addEventListener('click',function(e){
-    var b=e.target.closest('[data-lim]'); if(!b) return;
+    var o=e.target.closest('[data-out],[data-unban]');
+    if(o&&!o.disabled){ e.stopPropagation();
+      var ban=o.hasAttribute('data-out'), vid=o.getAttribute(ban?'data-out':'data-unban'), v=null;
+      VIEWERS.forEach(function(x){ if(x.id===vid) v=x; }); if(!v) return;
+      vwAsk(v, ban); return; }
+    var b=e.target.closest('[data-lim]'); if(!b||b.disabled) return;
     e.stopPropagation();
     var v=null; VIEWERS.forEach(function(x){ if(x.id===b.dataset.lim) v=x; });
     if(!v) return;
@@ -2377,6 +2542,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   });
 
   document.getElementById('qmAccB').addEventListener('click',function(e){
+    var mu=e.target.closest('[data-mute]'); if(mu){ e.stopPropagation(); toggleMute(mu.dataset.mute); renderAcc(); return; }
     var rm=e.target.closest('[data-q]'); if(rm){ toggleQ(rm.dataset.q); return; }
     var fin=e.target.closest('[data-fin]');
     if(fin){ var id=fin.dataset.fin; queue=queue.filter(function(x){return x!==id;}); done.push(id);
@@ -2434,38 +2600,63 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     }
     /* 반려 — 사유를 적어 두고 목록에서 흐리게 둔다. 대기열에 있었다면 뺀다. */
     if(a.dataset.act==='rej' && selId){
-      var f=null; SPEECHES.forEach(function(y){ if(y.id===selId) f=y; });
+      var f=null; SPEECHES.concat(QUESTIONS).forEach(function(y){ if(y.id===selId) f=y; });
       if(!f) return;
       f.st='반려'; f.inq=false; f.reason=(ta&&ta.value.trim())||'';
       queue=queue.filter(function(x){ return x!==selId; });
-      render(); renderAcc();
-      if(window.cxToast) cxToast(f.name+' 님의 발언 신청을 반려했습니다.');
+      (window.QAREPAINT||[]).forEach(function(fn){ fn(); });
+      if(window.cxToast) cxToast(f.name+' 님의 '+(mode==='a'?'수정 동의를':'발언 신청을')+' 반려했습니다.');
       return;
     }
     if(a.dataset.act==='add' && selId){ toggleQ(selId); return; }
     if(a.dataset.act==='amend' && selId && window.openAmend){
-      var f=null; SPEECHES.forEach(function(y){ if(y.id===selId) f=y; });
-      if(f) openAmend({no:'제'+(f.sub||f.ag)+'호',who:f.name,title:'',body:f.r});
+      var f=null; SPEECHES.concat(QUESTIONS).forEach(function(y){ if(y.id===selId) f=y; });
+      if(f) openAmend({no:'제'+(f.sub||f.ag)+'호',who:f.name,title:'',body:f.r||f.q});
     }
   });
   render();
 })();
 </script>
+<div class="ovl" id="sdOvl">
+  <div class="dlg sdlg">
+    <button class="dlg-x" id="sdClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="dlg-h"><div class="tt" id="sdTitle">표결문</div></div>
+    <div class="dlg-c">
+      <div class="sd-top">
+        <div class="l"><div class="lb" style="margin:0">템플릿 유형</div>
+          <select class="dlg-sel" id="sdType" data-nocx><option value="0">의안상정문</option><option value="1">의안표결문</option></select>
+          <div class="sd-info"><i class="ph ph-info"></i>본문 내용으로 의장용 화면에 노출됩니다. 변수값 수정은 '<a href="template-manage.html" target="_blank" rel="noopener">템플릿 관리</a>' 에서 변경 가능합니다.</div></div>
+        <div class="r">
+          <button class="dlg-btn" id="sdChair" type="button"><i class="ph ph-arrow-square-out"></i>의장용 화면</button>
+          <button class="dlg-btn" id="sdPrint" type="button"><i class="ph ph-printer"></i>인쇄</button>
+          <button class="dlg-btn dark" id="sdSave" type="button">저장</button>
+        </div>
+      </div>
+      <div class="sd-body"><div class="lb" style="margin:0">본문</div>
+        <div class="sd-box">
+          <div class="sd-bar"><button type="button" id="sdDn"><i class="ph ph-minus"></i></button><span id="sdFs">18</span><button type="button" id="sdUp"><i class="ph ph-plus"></i></button></div>
+          <div class="sd-txt" id="sdTxt" contenteditable="true"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="ovl" id="amOvl">
   <div class="dlg" style="width:480px">
     <button class="dlg-x" id="amClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-    <div class="dlg-h"><div class="tt">수정동의 등록</div><div class="ds">현장에서 제안된 수정동의를 의안으로 올립니다.</div></div>
+    <div class="dlg-h"><div class="tt">수정 동의 등록</div><div class="ds">현장에서 제안된 수정 동의를 의안으로 올립니다.</div></div>
     <div class="dlg-c">
       <div><div class="lb">대상 의안</div>
         <select class="dlg-sel" id="amAg"></select></div>
       <div><div class="lb">제안자</div>
-        <input class="dlg-inp" id="amWho" type="text" value=""></div>
+        <div class="am-find"><label class="am-in"><i class="ph ph-magnifying-glass"></i><input id="amWho" type="text" value="" placeholder="참석자 이름 · 참석번호로 검색" autocomplete="off"></label>
+          <div class="am-dd" id="amDd"></div></div></div>
       <div><div class="lb">수정안 제목</div>
         <input class="dlg-inp" id="amTitle" type="text" placeholder="예) 배당금 상향 추가 반영 건"></div>
       <div><div class="lb">수정 내용</div>
         <textarea class="dlg-ta" id="amBody" style="min-height:64px" placeholder="원안에서 바뀌는 내용을 적습니다."></textarea></div>
       <div><div class="lb">제안 사유</div>
-        <textarea class="dlg-ta" id="amWhy" style="min-height:64px" placeholder="수정동의를 제안한 사유를 적습니다."></textarea></div>
+        <textarea class="dlg-ta" id="amWhy" style="min-height:64px" placeholder="수정 동의를 제안한 사유를 적습니다."></textarea></div>
     </div>
     <div class="dlg-f"><button class="dlg-btn" id="amCancel" type="button">취소</button><button class="dlg-btn dark" id="amNext" type="button">다음</button></div>
   </div>
@@ -2473,7 +2664,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 <div class="ovl" id="amvOvl">
   <div class="dlg" style="width:480px">
     <button class="dlg-x" id="amvClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-    <div class="dlg-h"><div class="tt">수정동의 표결 처리</div><div class="ds">원안과 수정안을 나눠 다시 표결합니다. 처리 전 영향 범위를 확인하세요.</div></div>
+    <div class="dlg-h"><div class="tt">수정 동의 표결 처리</div><div class="ds">원안과 수정안을 나눠 다시 표결합니다. 처리 전 영향 범위를 확인하세요.</div></div>
     <div class="dlg-c">
       <div style="display:flex;flex-direction:column;gap:8px">
         <div class="amrow" id="amvWho"></div>
@@ -2493,7 +2684,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       </div>
     </div>
     <div class="dlg-f">
-      <label class="ckrow" id="amvAgree"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 안내를 확인했으며 수정동의 표결을 진행합니다.</label>
+      <label class="ckrow" id="amvAgree"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 안내를 확인했으며 수정 동의 표결을 진행합니다.</label>
       <button class="dlg-btn" id="amvCancel" type="button">취소</button>
       <button class="dlg-btn dark" id="amvOk" type="button">표결 진행</button>
     </div>
@@ -2513,7 +2704,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   </div>
 </div>
 <script>
-/* 수정동의 — 등록 → 표결 처리 안내 → 확인. 확정되면 좌측 의안 리스트가 원안/수정안으로 갈라진다. */
+/* 수정 동의 — 등록 → 표결 처리 안내 → 확인. 확정되면 좌측 의안 리스트가 원안/수정안으로 갈라진다. */
 (function(){
   var o1=document.getElementById('amOvl'), o2=document.getElementById('amvOvl'), o3=document.getElementById('amcOvl');
   if(!o1||!window.CX) return;
@@ -2537,7 +2728,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   var onDone=null;
   window.openAmend=function(pre){
     pre=pre||{};
-    onDone=pre.done||null;   /* 실시간 운영 수정동의 카드 — 확정되면 카드 상태를 상정으로 */
+    onDone=pre.done||null;   /* 실시간 운영 수정 동의 카드 — 확정되면 카드 상태를 상정으로 */
     /* 상위 의안(제2호처럼 표결 단위가 아닌 것)은 첫 하위 표결 단위로 대체한다 */
     if(pre.no){
       var vals=Array.prototype.map.call(sel.options,function(o){return o.value;});
@@ -2549,6 +2740,26 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     document.getElementById('amBody').value=pre.body||'';
     open(o1);
   };
+  /* 제안자 — 참석자 안에서 이름·참석번호로 검색해 고른다 */
+  var who=document.getElementById('amWho'), dd=document.getElementById('amDd');
+  function esc2(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  function suggest(){
+    var q=who.value.trim(), L=(window.OC&&OC.attendees)?OC.attendees():[];
+    if(!q){ dd.classList.remove('on'); return; }
+    var hit=L.filter(function(x){ return x.name.indexOf(q)>=0 || x.sub.indexOf(q)>=0; }).slice(0,8);
+    dd.innerHTML=hit.length?hit.map(function(x,i){ return '<button type="button" class="it'+(i?'':' act')+'" data-who="'+esc2(x.name)+'"><span>'+esc2(x.name)+'</span><small>'+esc2(x.sub)+'</small></button>'; }).join('')
+      :'<div class="none">참석자 중에 검색 결과가 없습니다.</div>';
+    dd.classList.add('on');
+  }
+  who.addEventListener('input',suggest);
+  who.addEventListener('focus',suggest);
+  who.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){ var f=dd.querySelector('.it'); if(dd.classList.contains('on')&&f){ e.preventDefault(); f.click(); } }
+    else if(e.key==='Escape' && dd.classList.contains('on')){ e.stopPropagation(); dd.classList.remove('on'); }
+  });
+  dd.addEventListener('mousedown',function(e){ e.preventDefault(); });
+  dd.addEventListener('click',function(e){ var b=e.target.closest('[data-who]'); if(!b) return; who.value=b.getAttribute('data-who'); dd.classList.remove('on'); });
+  who.addEventListener('blur',function(){ dd.classList.remove('on'); });
   document.getElementById('amNext').addEventListener('click',function(){
     draft.no=sel.value;
     draft.title=document.getElementById('amTitle').value.trim()||'수정안';
@@ -2577,14 +2788,14 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     card.classList.add('amended');
     var base=a.no.replace(/호$/,'');
     var types=card.querySelector('.atypes');
-    if(types) types.insertAdjacentHTML('beforeend','<span class="atsep">·</span><span class="tp amd">수정동의</span>');
-    else card.querySelector('.acat').insertAdjacentHTML('afterend','<div class="atypes"><span class="tp amd">수정동의</span></div>');
+    if(types) types.insertAdjacentHTML('beforeend','<span class="atsep">·</span><span class="tp amd">수정 동의</span>');
+    else card.querySelector('.acat').insertAdjacentHTML('afterend','<div class="atypes"><span class="tp amd">수정 동의</span></div>');
     var nm=card.querySelector('.acat .anm');
     var sub=card.querySelector('.asub');
     var kids='<div class="achild selnode" data-no="'+base+'-1호"><div class="acat"><span class="ano">'+CX.util.chip(base+'-1호')
       +'</span><span class="anm">'+(nm?nm.textContent:'')+' (원안)</span><span class="achip b">원안</span></div></div>'
       +'<div class="achild selnode" data-no="'+base+'-2호"><div class="acat"><span class="ano">'+CX.util.chip(base+'-2호')
-      +'</span><span class="anm">[수정동의] '+a.title+'</span><span class="achip v">수정</span></div></div>';
+      +'</span><span class="anm">[수정 동의] '+a.title+'</span><span class="achip v">수정</span></div></div>';
     if(sub) sub.insertAdjacentHTML('afterbegin',kids);
     else card.insertAdjacentHTML('beforeend','<div class="asub">'+kids+'</div>');
   }
@@ -2675,6 +2886,16 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   ];
 
   function cur(){ return (window.OC&&OC.agenda)||'제1호'; }
+  /* 참석자 목록 — 수정 동의 제안자 검색이 쓴다(투표권자 · 주주명 · 대리인, 통합 계좌 포함) */
+  if(window.OC) OC.attendees=function(){
+    var out=[];
+    ROWS.forEach(function(r){
+      out.push({name:r[0], sub:(r[1]&&r[1]!==r[0]?r[1]+' · ':'')+r[8]+' · '+cm(r[5])+'주'});
+      if(r[2]) out.push({name:r[2], sub:'대리인 ('+r[0]+') · '+r[8]});
+      (r[9]||[]).forEach(function(k){ out.push({name:k[0], sub:r[0]+' 통합 · '+r[8]+' · '+cm(k[1])+'주'}); });
+    });
+    return out;
+  };
   /* 양립불가·집중투표는 하위 표결 단위를 탭으로 고른다 */
   var optIdx=0;
   function unitOf(){
@@ -2698,36 +2919,32 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     } else { tabs.style.display='none'; tabs.innerHTML=''; }
   }
 
-  /* 표결 현황 요약 — Figma 한 줄 카드.
-     일반·양립불가: 사전 의결권 · 현장 투표 · 온라인 투표 · 전체 행사 · 가결기준+예상
-     집중투표: 채널 카드 4장, 카드마다 후보별 득표(번호 뱃지 · 수 · 비율), 전체 카드에 선임/탈락 예상 */
+  /* 표결 현황 요약 — Figma 한 줄 카드. 값은 실시간 운영의 채널별 표결 현황과 같은 실제 데이터(OC.kpi).
+     일반·양립불가: 사전 의결권 · 현장 투표 · 온라인 투표 · 전체 행사 · 가결기준+가결/부결 예상
+     집중투표: 채널 카드 4장, 후보별 득표(번호 뱃지 · 수 · 비율), 전체 카드에 가결/부결 예상 */
   function renderCards(){
-    var u=unitOf(); if(!u) return;
-    var box=document.getElementById('pCards'), d=u.d, P=u.parent||d;
-    var W=[CH[0].w+CH[1].w, CH[2].w, CH[3].w, 1], K=['사전 의결권','현장 투표','온라인 투표','전체 행사'];
+    var u=unitOf(); if(!u||!window.OC||!OC.kpi) return;
+    var box=document.getElementById('pCards'), d=u.d, P=u.parent||d, k=OC.kpi(d);
+    var KEY=['pre','site','onl','tot'], K=['사전 의결권','현장 투표','온라인 투표','전체 행사'];
     box.classList.toggle('cum', !!d.cands);
     box.classList.toggle('after-tabs', document.getElementById('pOpts').style.display!=='none');
-    if(d.cands){
-      var all=d.cands.slice().sort(function(x,y){return x.rank-y.rank;});
-      box.innerHTML=W.map(function(w,i){
-        var rows=all.map(function(c){ return {c:c,v:Math.round(c.votes*w)}; }), tot=rows.reduce(function(a,r){return a+r.v;},0);
+    function xp(r){ return '<span class="pxp'+(r==='가결'?'':' no')+'">'+r+(k.done?'':' 예상')+'</span>'; }
+    if(k.cands){
+      box.innerHTML=KEY.map(function(key,i){
+        var tot=k.cands.reduce(function(a,c){return a+c[key];},0);
         return '<div class="it"><div class="hd"><span class="k">'+K[i]+'</span><span class="v">'+cm(tot)+'주</span></div><div class="cands">'
-          +rows.map(function(r){
-            var tail=cm(r.v)+'('+(tot?(r.v/tot*100).toFixed(1):'0.0')+'%)';
-            var badge=i===3?'<span class="pxp'+(r.c.elected?'':' no')+'">'+(r.c.elected?'선임 예상':'탈락 예상')+'</span>':'';
-            return '<div class="cr"><span class="cno">'+no2(r.c.no)+'</span><span class="cv">'+tail+badge+'</span></div>';
+          +k.cands.map(function(c){
+            var tail=cm(c[key])+'('+(tot?(c[key]/tot*100).toFixed(1):'0.0')+'%)';
+            return '<div class="cr"><span class="cno">'+no2(c.no)+'</span><span class="cv">'+tail+(i===3?xp(c.pred):'')+'</span></div>';
           }).join('')+'</div></div>';
       }).join('');
       return;
     }
-    var T=(d['for']||0)+(d.against||0)+(d.abs||0);
-    function it(k,v){ return '<div class="it"><span class="k">'+k+'</span><span class="v">'+cm(v)+'주</span></div>'; }
+    function it(lb,v){ return '<div class="it"><span class="k">'+lb+'</span><span class="v">'+cm(v)+'주</span></div>'; }
     var sp=(P.type==='특별결의')||/2\/3/.test(P.thrLabel||'');
     var thr='<span>가결기준 : 발행주식총수 '+(sp?'1/3':'1/4')+'</span><span>가결기준 : 출석주식수 '+(sp?'2/3':'1/2')+'</span>';
-    /* 양립불가 선택지는 결과만(가결/부결), 일반 의안은 '○○ 예상' */
-    var ex=d.result?d.result:String(P.expect||'가결 예상');
-    box.innerHTML=W.map(function(w,i){ return it(K[i],i===3?T:Math.round(T*w)); }).join('')
-      +'<div class="it"><span class="thr">'+thr+'</span><span class="pxp'+(/부결/.test(ex)?' no':'')+'">'+ex+'</span></div>';
+    box.innerHTML=KEY.map(function(key,i){ return it(K[i],k[key]); }).join('')
+      +'<div class="it"><span class="thr">'+thr+'</span>'+xp(k.pred)+'</div>';
   }
 
   function pct(v){ return (Math.round(v/M.sharesIssued*10000)/100).toFixed(2)+'%'; }
@@ -2789,14 +3006,14 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     } else {
       nav.className='pnav s'+s;
       if(s===0) out='<span class="pst s0"><span class="d"></span>대기</span>'
-        +'<button class="vbtn ghost" type="button" data-pdoc>'+FILE+'상정문</button>'
+        +'<button class="vbtn ghost" type="button" data-pdoc="0">'+FILE+'상정문</button>'
         +'<button class="vbtn" type="button" data-pgo="1">의안 상정</button>'+LOCKED;
       else if(s===1) out='<span class="pst s1"><span class="d"></span>상정중</span>'
         +'<button class="vbtn dark" type="button" data-pgo="2">투표 시작</button>'+LOCKED;
       else if(s===2) out='<span class="pst s2"><span class="d"></span>투표중</span>'+timer
         +'<button class="vbtn dark" type="button" data-pgo="3">투표 종료</button>'+LOCKED;
       else if(s===3) out='<span class="pst s3"><span class="d"></span>집계중</span>'+timer
-        +'<button class="vbtn ghost" type="button" data-pdoc>'+FILE+'표결문</button>'
+        +'<button class="vbtn ghost" type="button" data-pdoc="1">'+FILE+'표결문</button>'
         +'<button class="vbtn" type="button" data-pgo="2">투표 재개</button>'
         +'<button class="vbtn red" type="button" data-pgo="4">표결 마감</button>';
       else if(said) out='<span class="pst said">공표 완료</span>'+timer+moreHTML();
@@ -2814,7 +3031,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var mo=e.target.closest('[data-pmore]');
     if(mo){ e.stopPropagation(); document.getElementById('pMore').classList.toggle('open'); return; }
     /* 상정문 · 표결문 — 의장용 화면(스크립트)을 연다 */
-    if(e.target.closest('[data-pdoc]')){ window.open('chair-view.html','chairview'); return; }
+    var pd=e.target.closest('[data-pdoc]'); if(pd){ openScript(+pd.dataset.pdoc); return; }
     var d=e.target.closest('[data-pact="declare"]');
     if(d){
       var bar=document.getElementById('agStage');
@@ -2832,7 +3049,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   });
   function renderPoll(){ renderNav(); renderCards(); renderCtrl(); }
   renderPoll(); renderRows();
-  if(window.OC) OC.on(renderCtrl);
+  if(window.OC) OC.on(function(){ renderCtrl(); renderCards(); });
+  if(window.OC) OC.onLive=renderCards;   /* 단계·현장 집계가 바뀌면 KPI 도 같이 */
 
   /* 의안 변경 시 같이 갱신 */
   var sel=window.OC&&OC.select;
@@ -2973,15 +3191,16 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
 <div class="ovl" id="discOvl">
   <div class="dlg" style="width:480px">
     <button class="dlg-x" id="discClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-    <div class="dlg-h"><div class="tt">의결권 행사현황 공개 설정</div><div class="ds">전자주총 참여자 화면에 공개할 범위를 단계로 고릅니다.<br>위 단계를 선택하면 아래 항목이 함께 공개됩니다.</div></div>
+    <div class="dlg-h"><div class="tt">의결권 행사현황 공개 설정</div><div class="ds">전자주총 참여자에게 행사현황 공개 여부를 설정합니다.<br>적용 시 참여자 화면에 즉시 반영됩니다.</div></div>
     <div class="dlg-c">
-      <div class="dsc" id="discOpts">
-        <div class="dscc lock on" data-lv="1"><span class="dscbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="ct">의안별 표결 결과</div><div class="cd">각 의안의 가결 · 부결 결과값 공개</div></div><span class="dscbadge g">필수</span></div>
-        <div class="dscc on" data-lv="2"><span class="dscbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="ct">행사의결권수와 비율</div><div class="cd">행사의결권수 + 찬성 · 반대 · 기권 비율 공개</div></div><span class="dscbadge b">권고</span></div>
-        <div class="dscc" data-lv="3"><span class="dscbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="ct">채널별 상세 내역</div><div class="cd">사전 · 현장 · 온라인 채널별 상세 내역까지 공개</div></div></div>
-      </div>
+      <div><div class="lb">공개 여부</div>
+        <div class="dlg-tabs" id="discTabs"><button type="button" class="on" data-v="pub">공개</button><button type="button" data-v="priv">비공개</button></div></div>
+      <div class="disc-info"><i class="ph ph-info"></i><span id="discInfo"></span></div>
     </div>
-    <div class="dlg-f"><button class="dlg-btn" id="discCancel" type="button">취소</button><button class="dlg-btn dark" id="discOk" type="button">설정 저장</button></div>
+    <div class="dlg-f dly-f">
+      <label class="ckrow" data-ck id="discAgree"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 내용을 확인했으며, 공개 방식을 설정합니다.</label>
+      <button class="dlg-btn" id="discCancel" type="button">취소</button><button class="dlg-btn dark" id="discOk" type="button">설정</button>
+    </div>
   </div>
 </div>
 <script>
@@ -2999,6 +3218,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   function no2(no){ return String(no).replace(/^제/,'').replace(/호$/,''); }
   function dash(){ return '<td class="mut">−</td>'; }
   function n(v){ return '<td>'+cm(v)+'</td>'; }
+  function m(v){ return '<td class="mut">'+cm(v)+'</td>'; }
   /* 채널 셀 — 마우스오버 시 그 채널의 찬성·반대·기권 분해. 아직 안 들어온 채널은 0. */
   function chTd(v,F,A,AB,tot){
     if(!v) return '<td class="mut">0</td>';
@@ -3068,7 +3288,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     return '<tr'+(dim?' class="exdim"':'')+'>'+nameCell(no,nm)
       + n(ATT) + n(v.tot)
       + chTd(cs.pre,v.F,v.A,v.AB,v.tot) + chTd(cs.on,v.F,v.A,v.AB,v.tot) + chTd(cs.onl,v.F,v.A,v.AB,v.tot)
-      + n(v.F) + n(v.A) + n(v.AB) + n(0)
+      + n(v.F) + m(v.A) + m(v.AB) + m(0)
       + '<td>'+pc(v.F,v.tot)+'</td>'
       + resTd(done ? (dim?'폐기':res) : '')
       + infoTd(1+i, 12+i*7, done) + '</tr>';
@@ -3085,8 +3305,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     d.cands.slice().sort(function(a,b){return a.rank-b.rank;}).forEach(function(x,i){
       var cc=chan(x.votes,p), cv=cc.tot;   /* 후보 득표도 같은 진행률로 나뉜다 */
       out.push('<tr'+(dim?' class="exdim"':'')+'>'+nameCell(x.no,x.name)
-        + n(avail) + n(cv) + n(cc.pre) + n(cc.on) + n(cc.onl)
-        + n(cv) + dash() + dash() + dash()
+        + '<td></td><td></td>' + n(cc.pre) + n(cc.on) + n(cc.onl)
+        + '<td colspan="4">'+cm(cv)+'</td>'
         + '<td>'+pc(cv,cs.tot)+'</td>'
         + resTd(done ? (dim?'폐기':(x.elected?'가결':'부결')) : '')
         + infoTd(2+i, 8+i*9, done) + '</tr>');
@@ -3094,14 +3314,14 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     return out.join('');
   }
 
-  var PILL={'제2호':'특별결의','제4호':'집중투표'};
+  var PILL={'제4호':'집중투표'};
   /* 같은 스코프에 공개 설정용 paint 가 따로 있다 — 이름을 겹치지 않게 둔다 */
   function paintRows(){
   var out=[], i=0;
   CX.agenda.forEach(function(a){
     if(a.header){ out.push(grpRow(a.no,a.nm,PILL[a.no])); return; }
     var d=C[a.no]; if(!d) return;
-    var dim=CX.util.discarded(a.no);
+    var dim=!!(window.OC&&OC.decided) && CX.util.discarded(a.no);   /* 표결 전 첫 진입에는 폐기가 없다 */
     if(d.type==='양립불가'){
       out.push(grpRow(a.no,a.nm,'양립불가'));
       d.options.forEach(function(o){ out.push(voteRow(o.no,o.name,o,o.result,false,i++)); });
@@ -3122,19 +3342,20 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     location.href='exercise-detail.html?no='+encodeURIComponent(b.getAttribute('data-go'));
   });
 
-  /* 공개 설정 — 누적 3단계. 1단계는 필수라 해제되지 않는다. */
-  var ov=document.getElementById('discOvl'), opts=document.getElementById('discOpts'), lv=2;
-  function paint(){ opts.querySelectorAll('.dscc').forEach(function(c){ c.classList.toggle('on', +c.dataset.lv<=lv); }); }
+  /* 공개 설정 — 공개 · 비공개 (Figma 9343:124655). 저장한 값만 남고, 취소하면 되돌린다. */
+  var ov=document.getElementById('discOvl'), tabsEl=document.getElementById('discTabs'), saved='pub', cur='pub';
+  var INFO_T={pub:'전자주총 시청페이지에 의안별 표결 결과만 노출되고 채널별 상세 정보는 노출되지 않습니다.',
+              priv:'전자주총 시청페이지에 의결권 행사현황이 노출되지 않습니다.'};
+  function paint(){
+    tabsEl.querySelectorAll('button').forEach(function(b){ b.classList.toggle('on',b.dataset.v===cur); });
+    document.getElementById('discInfo').textContent=INFO_T[cur];
+  }
   function close(){ ov.classList.remove('on'); }
-  document.getElementById('vDisclose').addEventListener('click',function(){ ov.classList.add('on'); });
+  document.getElementById('vDisclose').addEventListener('click',function(){ cur=saved; paint(); ov.classList.add('on'); });
   document.getElementById('discClose').addEventListener('click',close);
   document.getElementById('discCancel').addEventListener('click',close);
-  document.getElementById('discOk').addEventListener('click',close);
-  opts.addEventListener('click',function(e){
-    var c=e.target.closest('.dscc'); if(!c) return;
-    var v=+c.dataset.lv; if(v===1) return;
-    lv=(lv>=v)? v-1 : v; paint();
-  });
+  document.getElementById('discOk').addEventListener('click',function(){ if(this.disabled) return; saved=cur; close(); });
+  tabsEl.addEventListener('click',function(e){ var b=e.target.closest('button[data-v]'); if(!b) return; cur=b.dataset.v; paint(); });
   paint();
 })();
 </script>
@@ -3150,14 +3371,21 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   </div>
 </div>
 <script>
+/* 발언자 음소거 — 실시간 운영 대기열과 질의·발언 관리 대기열이 같은 상태를 본다 */
+function toggleMute(id){
+  var x=null; (window.SPEECHES||[]).forEach(function(y){ if(y.id===id) x=y; }); if(!x) return;
+  x.muted=!x.muted;
+  (window.QAREPAINT||[]).forEach(function(f){ try{ f(); }catch(e){} });
+  if(window.cxToast) cxToast(x.name+' 님의 마이크를 '+(x.muted?'음소거했습니다.':'켰습니다.'));
+}
 (function(){
-  var Q=window.QUESTIONS||[], SALL=window.SPEECHES||[];
-  /* 수정동의는 질의·발언 목록에서 빼고 '수정동의' 탭에서 따로 처리한다.
-     시청 화면의 질의·발언 어느 쪽으로 접수돼도 여기로 모인다(via). st: 접수 · 상정 · 반려 */
-  var S=SALL.filter(function(x){ return x.kind!=='수정동의'; });
-  var A=window.AMENDS=(window.AMENDS||[]).concat(SALL.filter(function(x){ return x.kind==='수정동의'; }).map(function(x){
-    return { id:'A-'+x.id, ag:x.ag, sub:x.sub, name:x.name, t:x.t, sh:x.sh, tm:x.tm, via:'발언', q:x.r, st:'접수' };
-  }));
+  var Q=window.QUESTIONS||[], S=window.SPEECHES||[];
+  /* 수정 동의 — 질의·발언 목록에서 빼고 '수정동의' 탭에서 처리한다(Figma: 수정 동의 분리).
+     발언으로 신청한 건(S, via 발언)은 발언과 같은 대기열·반려 흐름,
+     질의로 접수한 건(Q, via 질의)은 질의와 같은 답변 흐름에 '수정안 표결'이 더해진다. */
+  var AMT=['금액 조정','조건 변경','내용 추가','의제 변경'];
+  S.forEach(function(x,i){ if(x.kind==='수정동의'){ x.amend=true; x.via='발언'; x.amtype=x.amtype||AMT[i%AMT.length]; } });
+  function isQ(x){ return x.via==='질의' || (!x.amend && Q.indexOf(x)>=0); }
   S.forEach(function(x,i){ x.inq=(x.st==='대기'&&i%2===0); x.seq=i; x.qord=i; });
   /* inq: 대기열 등재 여부 · seq: 접수 순서. 대기열은 S 배열 순서를 바꾸므로
      카드 목록은 seq 로 다시 세운다 — 순서 조정이 목록을 흔들지 않는다. */
@@ -3189,11 +3417,9 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   /* 주주 분류 · 보유주식수 — 카드의 유일한 info 배지 */
   function shBadge(x){ return '<span class="cbadge gr">'+x.t+' · '+CX.util.comma(x.sh)+'주</span>'; }
   function stBadge(x){
-    if(qt==='a'){
-      if(x.st==='상정') return '<span class="mbadge done"><span class="d"></span>상정</span>';
-      if(x.st==='반려') return '<span class="mbadge dim"><span class="d"></span>반려</span>';
-      return '<span class="mbadge wait"><span class="d"></span>접수</span>';
-    }
+    /* 수정 동의 질의 — 접수 · 완료 / 수정 동의 발언 — 대기열은 주황 */
+    if(x.amend && isQ(x)) return x.st==='미답변'?'<span class="mbadge wait"><span class="d"></span>접수</span>':'<span class="mbadge done"><span class="d"></span>완료</span>';
+    if(x.amend && x.inq && x.st==='대기') return '<span class="mbadge amber"><span class="d"></span>대기열</span>';
     if(qt==='q') return x.st==='미답변'?'<span class="mbadge wait"><span class="d"></span>미답변</span>':'<span class="mbadge done"><span class="d"></span>답변완료</span>';
     /* 발언 — 접수(회색) · 대기열(블루) · 반려(흐림) · 완료(블루) */
     if(x.st==='반려') return '<span class="mbadge dim"><span class="d"></span>반려</span>';
@@ -3217,7 +3443,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   /* 카드 하단 메타 — 접수 시각과 현재 목록 기준 순번 */
   function metaRow(x){
     var a=list(), i=a.indexOf(x)+1;
-    return '<div class="mc-meta"><span>'+x.tm+'</span><span>'+(qt==='q'?'질의':qt==='a'?'수정동의':'발언')+' '+i+'/'+a.length+'</span></div>';
+    if(x.amend) return '<div class="mc-meta"><span>'+x.tm+'</span><span>수정 동의 '+x.via+'</span></div>';
+    return '<div class="mc-meta"><span>'+x.tm+'</span><span>'+(qt==='q'?'질의':'발언')+' '+i+'/'+a.length+'</span></div>';
   }
   function cardHTML(x){
     var on=(qt==='q'&&(x.id===selId||x.id===editId));
@@ -3242,15 +3469,17 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     else if(x.pre || unitOf(x)!==spAgenda) return false;        /* 의안 필터엔 현장 건만 */
     if(qf==='all'||qf==='queue') return true;
     if(qt==='q') return qf==='open'?(x.st==='미답변'):(x.st!=='미답변');
-    if(qt==='a') return qf==='open'?(x.st==='접수'):(x.st!=='접수');
     return qf==='rej'?(x.st==='반려'):true;
   }
   function list(){
-    var a=(qt==='q'?Q:qt==='a'?A:S).filter(pass);
+    var a=(qt==='q'?Q.filter(function(x){return !x.amend;}):qt==='a'?amAll():S.filter(function(x){return !x.amend;})).filter(pass);
     if(qt==='s') a=a.slice().sort(function(p,q2){ return p.seq-q2.seq; });   /* 전체 목록은 접수 순 */
     return a;
   }
-  function spList(){ return S.filter(pass).slice().sort(function(p,q2){ return p.seq-q2.seq; }); }
+  function spList(){ return S.filter(function(x){return !x.amend;}).filter(pass).slice().sort(function(p,q2){ return p.seq-q2.seq; }); }
+  /* 수정 동의 전체 — 질의 접수분 + 발언 신청분, 접수 시각 순 */
+  function amAll(){ return Q.filter(function(x){return x.amend;}).concat(S.filter(function(x){return x.amend;}))
+    .sort(function(p,q2){ return String(p.tm).localeCompare(String(q2.tm)); }); }
   /* ── 발언 대기열 뷰 ─────────────────────────────────────
      선택된 의안의 대기/완료 발언을 한 화면에서 다룬다.
      순서는 S 배열 자체를 바꿔서 옮긴다(별도 정렬 키를 두지 않는다). */
@@ -3279,7 +3508,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       + '</div>';
   }
   function queueHTML(){
-    var mine=S.filter(function(x){ return unitOf(x)===spAgenda; });
+    var mine=S.filter(function(x){ return unitOf(x)===spAgenda && !!x.amend===(qt==='a'); });
     var wait=qList(spAgenda);
     var done=mine.filter(function(x){ return x.st==='완료'; });
     var HB={
@@ -3305,7 +3534,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
         var btn=on ? '<button class="vqbtn" type="button" data-spend="'+x.id+'">발언 종료</button>'
                    : '<button class="vqbtn go" type="button" data-spstart="'+x.id+'">발언 시작</button>';
         /* 발언 중에만 버튼 옆에 경과 타이머를 둔다. 시작 전에는 아무 숫자도 붙이지 않는다. */
-        var tail=on ? '<span class="vqclock"><span class="d"></span>'+mmss(speakSec)+'</span>' : '';
+        /* 발언 중일 때만 음소거 버튼(Figma 8120:197654: 타이머 앞 고스트 아이콘) — 질의·발언 관리 대기열과 같은 상태(x.muted) */
+        var tail=on ? '<button class="vqmute'+(x.muted?' on':'')+'" type="button" data-mute="'+x.id+'" title="'+(x.muted?'음소거 해제':'음소거')+'"><i class="ph ph-'+(x.muted?'microphone':'microphone-slash')+'"></i></button>'+'<span class="vqclock"><span class="d"></span>'+mmss(speakSec)+'</span>' : '';
         return '<div class="vqitem live'+(open?' open':'')+'"><div class="vqrow">'
              + '<span class="vqno">'+(i+1)+'</span>'
              + '<span class="vqnm clickable" data-open="'+x.id+'">'+x.name+'</span>'
@@ -3334,7 +3564,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   /* 대기열 순번은 qord 로 들고 있는다.
      S 배열 순서에 기대면 카드 목록·필터까지 같이 흔들리고 계산이 흩어진다. */
   function qList(unit){
-    return S.filter(function(y){ return y.inq && y.st==='대기' && unitOf(y)===unit; })
+    /* 발언 탭과 수정 동의 탭은 대기열을 따로 둔다 */
+    return S.filter(function(y){ return y.inq && y.st==='대기' && unitOf(y)===unit && !!y.amend===(qt==='a'); })
             .sort(function(a,b){ return (a.qord||0)-(b.qord||0); });
   }
   function qRenum(unit){ qList(unit).forEach(function(y,i){ y.qord=i+1; }); }
@@ -3413,26 +3644,33 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       +'<div class="mc-q">'+esc(x.r)+'</div>'
       +metaRow(x)+(sel?spActs(x):'')+'</div>';
   }
-  /* 수정동의 카드 — 발언 카드와 같은 틀. 접수 → 상정(수정동의 등록 흐름) / 반려(사유) */
-  function amActs(x){
-    if(x.st==='반려') return spActs(x);          /* 반려 사유 보기·수정은 발언과 같다 */
-    if(x.id===noteId) return reasonEdit(x);
-    if(x.st==='상정') return '<div class="sp-acts end"><span class="mc-q" style="color:#737373">'+(x.upNo?CX.util.chip(x.upNo)+' 의안으로 상정했습니다.':'상정했습니다.')+'</span></div>';
-    return '<div class="sp-acts"><span class="sp-l"></span><span class="sp-l">'
-      + '<button class="mc-btn reject" type="button" data-rjopen>반려</button>'
-      + '<button class="mc-btn dark" type="button" data-amup>수정동의 상정</button></span></div>';
+  /* 수정 동의 카드 — Figma 10592:377515. 뱃지: 수정 동의(주황) · 질의(파랑)/발언(보라) · 개인·보유주식,
+     내용 위에 검증유형. 발언 건은 발언 카드와 같은 버튼(대기열 추가 · 반려),
+     질의 건은 답변 입력 + [수정안 표결] … [취소][답변], 답변 뒤에는 [수정안 표결][의장 송출] … [답변 수정]. */
+  var SEND='<svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>';
+  function amQActs(x){
+    var done=(x.st==='완료'&&x.a&&x.id!==editId);
+    if(done) return '<div class="mc-ansview"><div class="tx">'+esc(x.a)+'</div><div class="mc-meta">답변 : '+x.tm+', '+CX.meeting.operator.name+'</div></div>'
+      +'<div class="sp-acts"><span class="sp-l"><button class="mc-btn dark" type="button" data-amup>수정안 표결</button>'
+      +'<button class="mc-btn'+(x.cast?' on':'')+'" type="button" data-cast="1">'+SEND+(x.cast?'송출 중':'의장 송출')+'</button></span>'
+      +'<button class="mc-btn" type="button" data-edit="1">답변 수정</button></div>';
+    return '<div class="mc-ans am"><textarea class="mc-ta" placeholder="답변 내용을 입력해 주세요">'+esc(x.a||'')+'</textarea>'
+      +'<div class="sp-acts"><button class="mc-btn dark" type="button" data-amup>수정안 표결</button>'
+      +'<span class="sp-l"><button class="mc-btn" data-act="cancel" type="button">취소</button><button class="mc-btn dark" data-act="submit" type="button">답변</button></span></div></div>';
   }
   function amCardHTML(x){
-    var sel=(x.id===selId);
-    return '<div class="mcard sp-click'+(sel?' sel':'')+'" data-id="'+x.id+'">'
-      +'<div class="mc-h"><span class="mc-nm">'+x.name+'</span><span class="mc-st">'+stBadge(x)+'</span></div>'
-      +'<div class="mc-cat"><span class="cbadge amend">'+x.via+' 접수'+(x.amtype?' · '+x.amtype:'')+'</span>'+shBadge(x)+'</div>'
-      +'<div class="mc-q">'+esc(x.q)+'</div>'
-      +metaRow(x)+(sel?amActs(x):'')+'</div>';
+    var q=isQ(x), sel=(x.id===selId||x.id===editId);
+    var st=(x.id===speakingId)?'<span class="mbadge done"><span class="d"></span>발언중</span>':stBadge(x);
+    return '<div class="mcard '+(q?'click':'sp-click')+(sel?' sel':'')+'" data-id="'+x.id+'">'
+      +'<div class="mc-h"><span class="mc-nm">'+x.name+'</span><span class="mc-st">'+st+'</span></div>'
+      +'<div class="mc-cat"><span class="cbadge am">수정 동의</span><span class="cbadge '+(q?'vq':'vs')+'">'+x.via+'</span>'+shBadge(x)+'</div>'
+      +'<div class="mc-vt">검증유형 : '+esc(x.amtype||AMT[0])+'</div>'
+      +'<div class="mc-q">'+esc(q?x.q:x.r)+'</div>'
+      +metaRow(x)+(sel?(q?amQActs(x):spActs(x)):'')+'</div>';
   }
   var QF={q:[['all','전체'],['open','미답변'],['done','답변완료']],
           s:[['all','전체'],['rej','반려'],['queue','대기열']],
-          a:[['all','전체'],['open','미처리'],['done','처리완료']]};
+          a:[['all','전체'],['rej','반려'],['queue','대기열']]};
   function fillQf(){
     var L=QF[qt]||QF.q;
     if(!L.some(function(o){ return o[0]===qf; })) qf='all';
@@ -3445,15 +3683,16 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     fillAgSel(); fillQf();
     var host=document.getElementById('chatList');
     if(qt==='q'){ host.innerHTML=list().map(cardHTML).join('')||EMPTY; }
-    else if(qt==='a'){ host.innerHTML=list().map(amCardHTML).join('')||EMPTY; }
     else if(qf==='queue'){ host.innerHTML=queueHTML(); }
+    else if(qt==='a'){ host.innerHTML=list().map(amCardHTML).join('')||EMPTY; }
     else { host.innerHTML=spList().map(spCardHTML).join('')||EMPTY; }
     /* 대기열 뷰에서만 목록 영역을 꽉 채워 완료 섹션을 하단에 붙인다 */
-    host.parentElement.classList.toggle('fill', qt==='s'&&qf==='queue');
-    document.getElementById('qCnt').textContent=Q.filter(function(x){return x.st==='미답변';}).length;
-    document.getElementById('sCnt').textContent=S.filter(function(x){return x.inq&&x.st==='대기';}).length;
-    /* 수정동의 뱃지 — 지금 보고 있는 의안의 미처리 건수(목록과 같은 기준) */
-    document.getElementById('aCnt').textContent=A.filter(function(x){return x.st==='접수' && unitOf(x)===spAgenda;}).length||'';
+    host.parentElement.classList.toggle('fill', qt!=='q'&&qf==='queue');
+    document.getElementById('qCnt').textContent=Q.filter(function(x){return !x.amend&&x.st==='미답변';}).length;
+    document.getElementById('sCnt').textContent=S.filter(function(x){return !x.amend&&x.inq&&x.st==='대기';}).length;
+    /* 수정 동의 뱃지 — 지금 보고 있는 의안의 미처리 건수(목록과 같은 기준) */
+    document.getElementById('aCnt').textContent=amAll().filter(function(x){
+      return unitOf(x)===spAgenda && (isQ(x)?x.st==='미답변':(x.st==='대기'&&!x.inq)); }).length||'';
   }
   var ovl=document.getElementById('ansOvl'), taD=document.getElementById('ansTa'), pend=null, vis='pub';
   function setVis(v){ vis=v; document.querySelectorAll('#ansVis button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-v')===v);}); }
@@ -3676,6 +3915,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     var c=t.closest('.vqmsg').querySelector('[data-cnt]'); if(c) c.textContent=t.value.length;
   });
   cl.addEventListener('click',function(e){
+    var mu=e.target.closest('[data-mute]'); if(mu){ e.stopPropagation(); toggleMute(mu.dataset.mute); return; }
     var chip=e.target.closest('.mc-chip'); if(chip){ var ta=chip.closest('.mc-ans').querySelector('.mc-ta'); var tt=TPL[+chip.getAttribute('data-tpl')].t; ta.value=tt; ta.focus(); return; }
     var act=e.target.closest('[data-act]'); if(act){ var card=act.closest('.mcard'); var id=card.getAttribute('data-id');
       if(act.getAttribute('data-act')==='submit'){ var ta=card.querySelector('.mc-ta'); openDlg(id, ta.value); return; }
@@ -3695,16 +3935,16 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
       S.forEach(function(x){ if(x.id===cid) x.chair=ta2.value.trim(); });
       openRow=null; render(); return; }
     var au=e.target.closest('[data-amup]'); if(au){ var aid=au.closest('.mcard').getAttribute('data-id');
-      var ax=A.filter(function(x){return x.id===aid;})[0];
-      if(ax&&window.openAmend) openAmend({no:unitOf(ax), who:ax.name, body:ax.q,
-        done:function(no){ ax.st='상정'; ax.upNo=no; render(); if(window.cxToast) cxToast('수정동의를 상정했습니다.'); }});
+      var ax=amAll().filter(function(x){return x.id===aid;})[0];
+      if(ax&&window.openAmend) openAmend({no:unitOf(ax), who:ax.name, body:isQ(ax)?ax.q:ax.r,
+        done:function(no){ ax.upNo=no; render(); if(window.cxToast) cxToast('수정안 표결을 등록했습니다.'); }});
       return; }
     var ne=e.target.closest('[data-noedit]'); if(ne){ noteId=ne.closest('.mcard').getAttribute('data-id'); render(); return; }
     var ro=e.target.closest('[data-rjopen]'); if(ro){ noteId=ro.closest('.mcard').getAttribute('data-id'); render(); return; }
     var nc=e.target.closest('[data-nocancel]'); if(nc){ noteId=null; render(); return; }
     var rs=e.target.closest('[data-rjsave]'); if(rs){ var card=rs.closest('.mcard'), rid=card.getAttribute('data-id');
       var ta=card.querySelector('.mc-ta');
-      (qt==='a'?A:S).forEach(function(x){ if(x.id===rid){ x.reason=ta.value; x.st='반려'; x.inq=false; } });
+      S.forEach(function(x){ if(x.id===rid){ x.reason=ta.value; x.st='반려'; x.inq=false; } });
       if(speakingId===rid) speakingId=null; noteId=null; render(); return; }
     var qi=e.target.closest('[data-qin]'); if(qi){ var iid=qi.closest('.mcard').getAttribute('data-id');
       qAppend(iid); render(); return; }
@@ -3767,7 +4007,45 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   b.addEventListener("click",function(){ v.muted=!v.muted; if(!v.muted){ try{v.play();}catch(_){} } upd(); });
 })();
 </script>
-<script src="conexus.js?v=s3"></script>
+<script>
+/* 사회자 화면 — 발언 대기열을 건드리면(추가 · 제거 · 순서 · 시작 · 종료) 표결 안내로 넘긴다 */
+document.addEventListener('click',function(e){
+  if(!window.cxSync || !e.target.closest) return;
+  if(e.target.closest('[data-qin],[data-qout],[data-qup],[data-qdn],[data-qdel],[data-spstart],[data-spend],.qmqbtn[data-q],[data-fin]'))
+    setTimeout(function(){ cxSync.set({mcq:Date.now()}); },0);
+},true);
+</script>
+<script src="cx-prompter.js?v=d4"></script>
+<script>
+/* 상정문 · 표결문 모달 — 의안 콘트롤에서 연다. 본문은 의장용 화면과 같은 대본(cx-prompter)을 쓴다. */
+(function(){
+  var ovl=document.getElementById('sdOvl'), txt=document.getElementById('sdTxt'), sel=document.getElementById('sdType');
+  var saved={}, fs=18, ag='';
+  function esc(x){ return String(x).replace(/[&<>]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); }
+  function html(s){ return esc(s).replace(//g,'<span class="v">').replace(//g,'</span>'); }
+  function fill(){
+    var i=+sel.value, key=ag+'|'+i;
+    document.getElementById('sdTitle').textContent=ag.replace('제','제 ')+' 의안 '+(i?'표결문':'상정문');
+    txt.innerHTML=saved[key]||html(window.cxScripts?cxScripts.chair(ag)[i].s:'');
+  }
+  function fsz(d){ fs=Math.max(12,Math.min(40,fs+d)); txt.style.fontSize=fs+'px'; document.getElementById('sdFs').textContent=fs; }
+  window.openScript=function(i){ ag=(window.OC&&OC.agenda)||'제1호'; sel.value=String(i); fill(); ovl.classList.add('on'); };
+  function close(){ ovl.classList.remove('on'); }
+  sel.addEventListener('change',fill);
+  document.getElementById('sdClose').onclick=close;
+  ovl.addEventListener('click',function(e){ if(e.target===ovl) close(); });
+  document.getElementById('sdUp').onclick=function(){ fsz(2); };
+  document.getElementById('sdDn').onclick=function(){ fsz(-2); };
+  document.getElementById('sdChair').onclick=function(){ window.open('chair-view.html?ag='+encodeURIComponent(ag),'chairview'); };
+  document.getElementById('sdSave').onclick=function(){ saved[ag+'|'+sel.value]=txt.innerHTML; if(window.cxToast) cxToast('본문을 저장했습니다.'); };
+  document.getElementById('sdPrint').onclick=function(){
+    var w=window.open('','_blank'); if(!w) return;
+    w.document.write('<title>'+esc(document.getElementById('sdTitle').textContent)+'</title><div style="font-family:Pretendard,sans-serif;font-size:'+fs+'px;line-height:1.7;white-space:pre-wrap;padding:24px">'+txt.innerHTML+'</div>');
+    w.document.close(); w.focus(); w.print();
+  };
+})();
+</script>
+<script src="conexus.js?v=s5"></script>
 <script>/* 칸이 열린 뒤에야 내보낼 수 있으므로, 화면을 연 순간의 상태를 여기서 한 번 알린다 */
 if(window.OC&&OC.fire) OC.fire();
 /* 주주PASS 시청 화면에서 올라온 질의를 받아 목록 맨 앞에 얹는다 */
@@ -3786,10 +4064,16 @@ if(window.OC&&OC.fire) OC.fire();
       if(!x || !x.id || seen[x.id]) return;
       seen[x.id]=1;
       var m=MAP[x.ag]||['1',''];
-      /* 수정동의는 질의 목록이 아니라 수정동의 탭으로 */
-      if(x.kind==='수정동의'){
-        (window.AMENDS=window.AMENDS||[]).unshift({id:x.id, ag:m[0], sub:m[1], name:x.name, t:x.t||'개인',
-          sh:x.sh||0, tm:x.tm, via:x.via||'질의', amtype:x.amtype||'', q:x.q, st:'접수'});
+      /* 수정 동의는 질의 목록이 아니라 수정 동의 탭으로 */
+      if(x.kind==='수정동의' && x.via==='발언'){   /* 발언으로 신청 — 발언과 같은 대기열 흐름 */
+        var SP=window.SPEECHES;
+        SP.push({id:x.id, ag:m[0], sub:m[1], name:x.name, t:x.t||'개인', sh:x.sh||0, tm:x.tm, kind:'수정동의',
+          amend:true, via:'발언', amtype:x.amtype||'금액 조정', r:x.q, st:'대기', inq:false, seq:SP.length, qord:0});
+        got++; return;
+      }
+      if(x.kind==='수정동의'){                     /* 질의로 접수 — 답변 흐름 + 수정안 표결 */
+        window.QUESTIONS.unshift({id:x.id, ag:m[0], sub:m[1], name:x.name, t:x.t||'개인', sh:x.sh||0, tm:x.tm,
+          pub:true, st:'미답변', q:x.q, a:null, amend:true, via:'질의', amtype:x.amtype||'금액 조정'});
         got++; return;
       }
       var q=x.q;
@@ -3836,8 +4120,18 @@ if(window.OC&&OC.fire) OC.fire();
   [['btnBeacon', 'bcnOvl'], ['btnNoVote', 'nvOvl'], ['btnNotice', 'ntcOvl']].forEach(function (p) {
     var b = $(p[0]); if (b) b.addEventListener('click', function () { open(p[1]); });
   });
-  var pause = $('btnPause'); if (pause) pause.addEventListener('click', function () { setDly('recess'); open('dlyOvl'); });
-  var cls = $('btnClose'); if (cls) cls.addEventListener('click', function () { open('endOvl'); });
+  var pause = $('btnPause'); if (pause) pause.addEventListener('click', function () { setDly('recess'); $('dlyBody').value = ''; open('dlyOvl'); });
+  /* 표결이 다 끝났으면 확인만, 남은 의안이 있으면 체크까지 받는다 */
+  var cls = $('btnClose'); if (cls) cls.addEventListener('click', function () {
+    var left = (window.CX && CX.votingUnits || []).some(function (no) {
+      return !(window.OC && OC.done && OC.done[no]) && !(CX.util.discarded && CX.util.discarded(no));
+    });
+    $('endD').innerHTML = left
+      ? '표결이 완료되지 않은 의안이 있습니다.<br>접속 중인 주주의 세션이 종료되며, 표결을 진행할 수 없습니다.'
+      : '실시간 중계가 종료되고,<br>접속 중인 주주 화면에 총회 종료가 안내됩니다.';
+    $('endCk').style.display = left ? '' : 'none';
+    open('endOvl');
+  });
   $('endGo').addEventListener('click', function () { window.location.href = 'closing.html'; });
 
   /* 닫기 — X · 취소 · 배경 */
@@ -3865,42 +4159,22 @@ if(window.OC&&OC.fire) OC.fire();
     });
   }
   tabs('bcnTabs');
-  tabs('nvTabs', function (v) {
-    $('nvDs').textContent = v === 'abs'
-      ? '행사하지 않은 의결권을 기권으로 집계합니다.'
-      : '행사하지 않은 주주를 불참으로 처리해 출석 의결권에서 제외합니다.';
-  });
+  tabs('nvTabs', function (v) { $('nvWarn').style.display = v === 'no' ? '' : 'none'; });
 
-  /* 정회 · 휴회 · 연기 — 멈추는 길이만 다르고, 안내하는 자리는 하나다 */
+  /* 정회 · 휴회 · 연기 — 정회·휴회는 재개 시간, 연기는 되돌릴 수 없다는 경고 */
   var DLY = {
-    recess: { tt: '총회 정회', lb: '재개 예정 시각', date: 0,
-      body: '총회를 잠시 정회합니다. 재개 예정 시각에 맞춰 다시 안내드리겠습니다.' },
-    adjourn: { tt: '총회 휴회', lb: '속개 예정 일시', date: 1,
-      warn: '휴회하면 속개 전까지 현장·온라인 투표가 접수되지 않습니다.',
-      body: '오늘 의사일정을 여기서 멈추고 총회를 휴회합니다. 속개 일시에 맞춰 다시 안내드리겠습니다.' },
-    postpone: { tt: '총회 연기', lb: '연기 후 개최 예정일', date: 1,
-      warn: '연기를 안내하면 오늘 접수된 투표는 마감되고 다음 총회에서 다시 행사해야 합니다.',
-      body: '오늘 총회를 연기합니다. 변경된 개최 일시는 공시와 개별 통지로 다시 안내드리겠습니다.' }
+    recess:   { nm: '정회', ck: '위 내용으로, 총회를 정회 합니다.', ok: '정회 시작', toast: '주주총회 정회를 시작합니다.' },
+    adjourn:  { nm: '휴회', ck: '위 내용으로, 총회를 휴회 합니다.', ok: '휴회 시작', toast: '주주총회 휴회를 시작합니다.' },
+    postpone: { nm: '연기', ck: '위 내용을 확인했으며, 총회를 연기 합니다.', ok: '연기 확정', toast: '주주총회 연기를 확정했습니다.', warn: 1 }
   };
-  /* 시·분은 직접 고른다 — 브라우저마다 다른 시간 입력을 쓰지 않는다 */
-  (function () {
-    var hh = $('dlyHh'), mm = $('dlyMm'); if (!hh || !mm) return;
-    var i, o;
-    for (i = 1; i <= 12; i++) { o = document.createElement('option'); o.value = i; o.textContent = i; hh.appendChild(o); }
-    for (i = 0; i < 60; i += 5) {
-      o = document.createElement('option'); o.value = i;
-      o.textContent = (i < 10 ? '0' : '') + i; mm.appendChild(o);
-    }
-    hh.value = 10; mm.value = 30;
-  })();
+  var dlyV = 'recess';
   function setDly(v) {
-    var m = DLY[v]; if (!m) return;
-    $('dlyTt').textContent = m.tt;
-    $('dlyTimeLb').textContent = m.lb;
-    $('dlyDateW').style.display = m.date ? '' : 'none';
-    $('dlyBody').value = m.body;
+    var m = DLY[v]; if (!m) return; dlyV = v;
+    $('dlyTimeF').style.display = m.warn ? 'none' : '';
     $('dlyWarn').style.display = m.warn ? '' : 'none';
-    if (m.warn) $('dlyWarnT').textContent = m.warn;
+    $('dlyCkT').textContent = m.ck;
+    $('dlyOk').textContent = m.ok;
+    $('dlyOk').className = 'dlg-btn ' + (m.warn ? 'red' : 'dark');
     $('dlyTabs').querySelectorAll('button').forEach(function (b) {
       b.classList.toggle('on', b.getAttribute('data-v') === v);
     });
@@ -3908,9 +4182,9 @@ if(window.OC&&OC.fire) OC.fire();
   tabs('dlyTabs', setDly);
   setDly('recess');
   $('dlyOk').addEventListener('click', function () {
-    var t = $('dlyTt').textContent;
+    if (this.disabled) return;
     close('dlyOvl');
-    if (window.cxToast) cxToast(t + ' 안내를 현장 화면과 온라인에 전송했습니다.');
+    if (window.cxToast) cxToast(DLY[dlyV].toast);
   });
 
   /* 공지 — 등록하면 목록 맨 위에 쌓인다 */
@@ -3963,13 +4237,14 @@ if(window.OC&&OC.fire) OC.fire();
     ['nvOvl', '#nvOvl .ckrow', 'nvOk'],
     ['dlyOvl', '#dlyOvl .ckrow', 'dlyOk'],
     ['endOvl', '#endAgree', 'endGo'],
+    ['discOvl', '#discAgree', 'discOk'],
     ['amvOvl', '#amvAgree', 'amvOk'],
     ['bulkOvl', '#bulkAgree', 'bulkOk']
   ];
   GATES.forEach(function (g) {
     var ovl = $(g[0]), chk = document.querySelector(g[1]), btn = $(g[2]);
     if (!ovl || !chk || !btn) return;
-    function sync() { btn.disabled = !chk.classList.contains('on'); }
+    function sync() { btn.disabled = chk.offsetParent !== null && !chk.classList.contains('on'); }
     chk.addEventListener('click', function () { setTimeout(sync, 0); });  /* 토글은 다른 곳에서 한다 */
     /* 팝업이 열릴 때마다 체크를 도로 끈다 — 앞선 확인이 다음 처리까지 따라가면 안 된다 */
     new MutationObserver(function () {
@@ -3996,7 +4271,7 @@ if(window.OC&&OC.fire) OC.fire();
 
   on('nvOk', function () {
     var t = document.querySelector('#nvTabs button.on');
-    say('출석 미투표 주주를 ' + (t ? t.textContent : '기권 처리') + '했습니다.');   /* '기권 처리' · '불참 처리' */
+    say('미행사 의결권 표결 방식을 ' + (t ? t.textContent : '기권 처리') + '로 설정했습니다.');
   });
 
   /* 공지 등록 핸들러가 입력을 비우고 가므로 캡처 단계에서 먼저 읽는다 */
@@ -4005,11 +4280,6 @@ if(window.OC&&OC.fire) OC.fire();
     say(t ? '공지를 전송했습니다.' : '공지 내용을 입력해 주세요.');
   }, true);
 
-  var DLY = { delay: '총회 지연', resume: '총회 속개', end: '총회 종료' };
-  on('dlyOk', function () {
-    var t = document.querySelector('#dlyTabs button.on');
-    say((t ? t.textContent : '정회') + ' 안내를 현장 화면과 온라인에 전송했습니다.');
-  });
 
   on('bulkOk', function () {
     var sc = $('bulkScope'), vt = document.querySelector('#bulkVote button.on');
@@ -4018,7 +4288,7 @@ if(window.OC&&OC.fire) OC.fire();
   });
 
   on('mvOk', function () { say('서면 투표를 등록했습니다.'); });
-  on('discOk', function () { say('질의 공개 설정을 저장했습니다.'); });
+  on('discOk', function () { var t = document.querySelector('#discTabs button.on'); say('의결권 행사현황을 ' + (t ? t.textContent : '공개') + '로 설정했습니다.'); });
   on('ansSubmit', function () { say('답변을 등록했습니다.'); });
   on('hostSave', function () { say('발언 제어 권한을 저장했습니다.'); });
   on('amcOk', function () {

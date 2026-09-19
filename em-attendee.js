@@ -1,4 +1,4 @@
-/* 전자주주총회 관리 · 참가자 현황 — 사전 등록된 참가자 조회 전용
+/* 전자주주총회 관리 · 사전신청 관리 — 사전 등록된 참가자 조회 전용
    주주 탭: 명부 기준(통합 그룹은 펼침), 사전투표·참석 신청·출석·시청을 각각 독립 표시
    비주주 탭: 유형·연락처·소속·질의권·메모 (칩 없음) */
 (function () {
@@ -22,6 +22,7 @@
       apply: apply ? '신청' : '미신청', attend: attend ? '참석' : '미참석', watch: attend || k % 4 === 0,
       att: attend ? r.sh : 0, code: code, revoked: !!code && k % 9 === 4,
       route: code ? (k % 3 ? '직접 신청' : '관리자 등록') : '직접 신청',
+      phone: '010-' + (2000 + (r.i * 37) % 7000) + '-' + ('000' + (r.i * 53 % 10000)).slice(-4),
       email: foreign ? r.nm.toLowerCase().replace(/[^a-z]+/g, '.').replace(/^\.|\.$/g, '') + '@gmail.com' : 'sh' + r.i + '@naver.com'
     };
   }
@@ -37,7 +38,7 @@
       type: types.length > 1 ? '본인·대리인' : types[0], pre: pres.length > 1 ? '중복행사' : pres[0],
       apply: kids.some(function (c) { return c.apply === '신청'; }) ? '신청' : '미신청',
       attend: att === kids.length ? '참석' : att ? '일부참석' : '미참석',
-      watch: kids.some(function (c) { return c.watch; }), code: '', route: kids[0].route, email: '-'
+      watch: kids.some(function (c) { return c.watch; }), code: '', route: kids[0].route, email: '-', phone: kids[0].phone
     };
   });
   var singles = CX.roster.filter(function (r, i) { return !inGroup[r.i] && (i % 6 === 0 || r.fr === '외국인' && i % 3 === 0); }).slice(0, 150).map(person);
@@ -49,7 +50,7 @@
 
   /* ---------- 컬럼 ---------- */
   var COLS = {
-    sh: [['투표권자', 220], ['주주명', 0], ['주주번호', 140], ['참석 유형', 104, 'c'], ['사전투표', 96, 'c'], ['보유주식수', 120, 'n'], ['지분율', 90, 'n'], ['참석주식수', 120, 'n'], ['참석 신청', 96, 'c'], ['출석', 96, 'c'], ['로그인코드', 130], ['등록 경로', 104, 'c']],
+    sh: [['투표권자', 220], ['주주명', 0], ['주주번호', 140], ['참석 유형', 104, 'c'], ['사전투표', 96, 'c'], ['보유주식수', 120, 'n'], ['지분율', 90, 'n'], ['참석주식수', 120, 'n'], ['참석 신청', 96, 'c'], ['출석', 96, 'c'], ['로그인코드', 130], ['휴대폰번호', 140], ['등록 경로', 104, 'c']],
     ns: [['유형', 100, 'c'], ['이름', 140], ['이메일', 220], ['휴대폰번호', 140], ['소속', 0], ['직급', 120], ['시청', 96, 'c'], ['질의권', 90, 'c'], ['메모', 200], ['로그인코드', 130], ['', 44, 'c']]
   };
   var LEFT = { sh: 1, ns: 2 };
@@ -91,7 +92,7 @@
 
   /* ---------- 화면 ---------- */
   root.innerHTML = '<div class="lc">' +
-    '<div class="lc-hd"><h2>참가자 현황</h2><p>사전 신청자를 포함한 전체 참가자 현황을 조회합니다.</p></div>' +
+    '<div class="lc-hd"><h2>사전신청 관리</h2><p>사전 신청자를 포함한 전체 참가자를 조회합니다.</p></div>' +
     '<div class="lc-bar">' +
       '<div class="lc-seg" id="atTabs"><button type="button" class="on" data-t="sh">주주</button><button type="button" data-t="ns">비주주</button></div>' +
       '<div class="lc-chips" id="atChips"></div>' +
@@ -169,7 +170,7 @@
     var b = e.target.closest('.pp'); if (!b || b.classList.contains('dis')) return;
     page = EM.pagerGo(b.dataset.pg, page, Math.max(1, Math.ceil(lastTotal / pageSize))); render();
   });
-  document.getElementById('atDown').addEventListener('click', function () { EM.toast((cur === 'sh' ? '주주' : '비주주') + ' 참가자 현황 ' + rows().length + '건을 엑셀로 다운로드합니다.'); });
+  document.getElementById('atDown').addEventListener('click', function () { EM.toast((cur === 'sh' ? '주주' : '비주주') + ' 사전신청 관리 ' + rows().length + '건을 엑셀로 다운로드합니다.'); });
   tbl.addEventListener('cxsort', function (e) { e.preventDefault(); sortSt = { idx: e.detail.idx, dir: e.detail.dir }; page = 1; render(); });
   tbl.cxFilter = function (pred) { filtPred = pred; page = 1; render(); };
   tbl.cxValues = function (i) { var c = COLS[cur][i][0]; return list().map(function (x) { return txt(x, c); }); };

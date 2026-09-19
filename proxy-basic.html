@@ -163,7 +163,7 @@
   .faq-okb:disabled{opacity:.5;cursor:default}
   .faq-mod{text-align:center;font-size:12px;line-height:16px;color:#737373}
 </style>
-<script src="cx-data.js"></script>
+<script src="cx-data.js?v=2"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -225,11 +225,18 @@
       <div class="grp"><div class="grp-label">의결권 권유 설정</div><div class="nav">
         <a class="nav-item active" href="proxy-basic.html">의결권 권유 설정</a>
       </div></div>
+      <div class="grp"><div class="grp-label">전자주주총회 설정</div><div class="nav">
+        <a class="nav-item" href="electronic-meeting.html?tab=basic">사이트 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=progress">진행 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=design">디자인 설정</a>
+      </div></div>
     </div>
 
     <div class="lnb-content  exp-only" data-tabpanel="pre">
       <div class="grp"><div class="grp-label">전자주주총회 관리</div><div class="nav">
-        <a class="nav-item" href="electronic-meeting.html">전자주주총회 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=logincode">로그인코드 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=attendee">사전 신청 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=preq">사전 질의 관리</a>
       </div></div>
       <div class="grp"><div class="grp-label">사전 의결권 관리</div><div class="nav">
         <a class="nav-item" href="voting-rights.html">사전 의결권 현황</a>
@@ -398,7 +405,7 @@
     var SPEC={proxy:{ext:['pdf'],mb:50,att:false},logo:{ext:['png'],mb:10,att:true},card:{ext:['jpg','jpeg','png','pdf'],mb:10,att:true}};
     var S={sd:'',st:'10:30',ed:'',et:'10:30',proxy:null,logo:null,card:null};
     var saved=null, periodOk=false, pickSlot=null;
-    var LAST=(window.CX&&CX.meeting&&CX.meeting.date)||'2026-03-27';   // 주총 당일 이후 선택 불가
+    var LAST=(window.CX&&CX.meeting&&CX.meeting.date)||'2026-09-29';   // 주총 당일 이후 선택 불가
     function snap(){ return JSON.stringify(S); }
     function dirty(){ return snap()!==(saved||JSON.stringify({sd:'',st:'10:30',ed:'',et:'10:30',proxy:null,logo:null,card:null})); }
     function isView(){ return form.classList.contains('view'); }
@@ -588,6 +595,6 @@
   render();
 })();
 </script>
-<script src="conexus.js?v=s3"></script>
+<script src="conexus.js?v=s5"></script>
 </body>
 </html>

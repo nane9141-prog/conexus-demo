@@ -73,7 +73,7 @@
   body.pre .extbl th:nth-child(12),body.pre .extbl td:nth-child(12),
   body.pre .extbl th:nth-child(13),body.pre .extbl td:nth-child(13){display:none}
 </style>
-<script src="cx-data.js"></script>
+<script src="cx-data.js?v=2"></script>
 </head>
 <body>
 <div class="app collapsed" id="app">   <!-- 현장 제어에서 들어오는 상세 — LNB 접힘이 기본 -->
@@ -135,11 +135,18 @@
       <div class="grp"><div class="grp-label">의결권 권유 설정</div><div class="nav">
         <a class="nav-item" href="proxy-basic.html">의결권 권유 설정</a>
       </div></div>
+      <div class="grp"><div class="grp-label">전자주주총회 설정</div><div class="nav">
+        <a class="nav-item" href="electronic-meeting.html?tab=basic">사이트 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=progress">진행 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=design">디자인 설정</a>
+      </div></div>
     </div>
 
     <div class="lnb-content exp-only" data-tabpanel="pre">
       <div class="grp"><div class="grp-label">전자주주총회 관리</div><div class="nav">
-        <a class="nav-item" href="electronic-meeting.html">전자주주총회 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=logincode">로그인코드 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=attendee">사전 신청 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=preq">사전 질의 관리</a>
       </div></div>
       <div class="grp"><div class="grp-label">사전 의결권 관리</div><div class="nav">
         <a class="nav-item" href="voting-rights.html">사전 의결권 현황</a>
@@ -175,17 +182,17 @@
         <div style="display:flex;align-items:center;gap:8px">
           <a class="crumb" href="onsite-control.html" style="color:#737373;text-decoration:none">주주총회 현장 제어</a>
           <i class="ph ph-caret-right" style="font-size:14px;color:#737373"></i>
-          <span class="crumb">의안 상세 내역</span>
+          <a class="crumb" id="exdMid" href="onsite-control.html#vote" style="color:#737373;text-decoration:none">의결권 행사현황</a>
+          <i class="ph ph-caret-right" id="exdMidSep" style="font-size:14px;color:#737373"></i>
+          <span class="crumb">의안 상세</span>
         </div>
       </div>
       <button class="iconbtn md" title="변경이력"><i class="ph ph-clock-counter-clockwise" style="font-size:16px"></i></button>
     </div>
     <div class="scroll" data-cx-host>
       <div class="exd-head">
-        <button class="exd-back" type="button" onclick="history.back()" aria-label="뒤로"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
         <span class="exd-no" id="exdNo">1</span>
         <span class="exd-t" id="exdNm">재무제표 승인의 건</span>
-        <span class="exd-sep"></span>
         <span class="exd-res pass" id="exdRes">가결</span>
       </div>
       <div class="exd-sub" id="exdSub" hidden>중복 철회된 수는 제공되지 않습니다</div>
@@ -266,7 +273,8 @@
     document.body.classList.add('pre');
     document.getElementById('app').classList.remove('collapsed');   /* 사전 의결권 내역에서 온 상세는 LNB 펼침 유지 */
     document.title='CONEXUS · 의안 상세';
-    var cr=document.querySelectorAll('.topbar .crumb'); cr[0].href=src[0]; cr[0].textContent=src[1]; cr[1].textContent='의안 상세';
+    var cr=document.querySelectorAll('.topbar .crumb'); cr[0].href=src[0]; cr[0].textContent=src[1];
+    document.getElementById('exdMid').remove(); document.getElementById('exdMidSep').remove();
     document.querySelectorAll('.lnb-tabs .t').forEach(function(t){ t.classList.toggle('active',t.dataset.tab==='pre'); });
     document.querySelectorAll('.lnb-content[data-tabpanel]').forEach(function(p){ p.classList.toggle('show',p.dataset.tabpanel==='pre'); });
     document.querySelectorAll('.lnb .nav-item').forEach(function(a){ a.classList.toggle('active',a.getAttribute('href')===src[0]); });
@@ -369,6 +377,6 @@
   }
 })();
 </script>
-<script src="conexus.js?v=s3"></script>
+<script src="conexus.js?v=s5"></script>
 </body>
 </html>

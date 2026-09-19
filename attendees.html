@@ -330,7 +330,7 @@
   .decl-body{flex:1;min-height:0;padding:0 20px 20px;display:flex}
   .decl-text{width:100%;box-sizing:border-box;background:#fafafa;border:1px solid var(--border);border-radius:14px;padding:20px;font-family:inherit;font-size:18px;line-height:28px;color:#0a0a0a;resize:none;outline:none}
 </style>
-<script src="cx-data.js"></script>
+<script src="cx-data.js?v=2"></script>
 <script src="cx-roster.js?v=r7"></script>
 <link rel="stylesheet" href="cx-accordion.css?v=1">
 </head>
@@ -394,11 +394,18 @@
       <div class="grp"><div class="grp-label">의결권 권유 설정</div><div class="nav">
         <a class="nav-item" href="proxy-basic.html">의결권 권유 설정</a>
       </div></div>
+      <div class="grp"><div class="grp-label">전자주주총회 설정</div><div class="nav">
+        <a class="nav-item" href="electronic-meeting.html?tab=basic">사이트 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=progress">진행 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=design">디자인 설정</a>
+      </div></div>
     </div>
 
     <div class="lnb-content  exp-only" data-tabpanel="pre">
       <div class="grp"><div class="grp-label">전자주주총회 관리</div><div class="nav">
-        <a class="nav-item" href="electronic-meeting.html">전자주주총회 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=logincode">로그인코드 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=attendee">사전 신청 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=preq">사전 질의 관리</a>
       </div></div>
       <div class="grp"><div class="grp-label">사전 의결권 관리</div><div class="nav">
         <a class="nav-item" href="voting-rights.html">사전 의결권 현황</a>
@@ -1130,7 +1137,7 @@
       if(reg) fill(x, hold);
       set('asOk', reg?'현장 참석 수정':'현장 참석 등록');
       var md=document.getElementById('asMod'); md.style.display=reg?'':'none';
-      if(reg) md.textContent='마지막 수정 2026-08-28 09:'+('0'+(x.ri%50+5)).slice(-2)+' · 담당자 박지용';
+      if(reg) md.textContent='마지막 수정 2026-09-29 09:'+('0'+(x.ri%50+5)).slice(-2)+' · 담당자 박지용';
       /* 모드 — 등록(현장 참석자 등록 탭) / 조회(현장 참석자 탭: 입력 비활성, 참석 철회·닫기) */
       ov.classList.toggle('view',view); viewX=view?x:null;
       set('asTitle',view?'현장참석자 정보':'현장 참석자 등록');
@@ -1165,6 +1172,6 @@
 })();
 </script>
 
-<script src="conexus.js?v=s3"></script>
+<script src="conexus.js?v=s5"></script>
 </body>
 </html>

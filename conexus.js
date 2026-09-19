@@ -185,7 +185,7 @@
     '찬성': ['for', '<circle cx="12" cy="12" r="9"/>'],
     '반대': ['ag', '<path d="M18 6 6 18M6 6l12 12"/>'],
     '기권': ['ab', '<path d="M5 12h14"/>'],
-    '중립': ['nt', '<rect x="5" y="5" width="14" height="14" rx="2"/>']
+    '중립': ['nt', '<path d="M12 5 20 19H4z"/>']
   };
   function voteHead(th, lb) {
     var v = VOTE[lb.slice(0, 2)];

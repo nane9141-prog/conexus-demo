@@ -194,7 +194,7 @@
   .bulk-lnk i{font-size:14px}
   .viewbtn.dis{color:#a3a3a3;background:#fff;cursor:default;pointer-events:none;opacity:.6}
 </style>
-<script src="cx-data.js"></script>
+<script src="cx-data.js?v=2"></script>
 <link rel="stylesheet" href="cx-accordion.css?v=1">
 </head>
 <body>
@@ -257,11 +257,18 @@
       <div class="grp"><div class="grp-label">의결권 권유 설정</div><div class="nav">
         <a class="nav-item" href="proxy-basic.html">의결권 권유 설정</a>
       </div></div>
+      <div class="grp"><div class="grp-label">전자주주총회 설정</div><div class="nav">
+        <a class="nav-item" href="electronic-meeting.html?tab=basic">사이트 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=progress">진행 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=design">디자인 설정</a>
+      </div></div>
     </div>
 
     <div class="lnb-content show exp-only" data-tabpanel="pre">
       <div class="grp"><div class="grp-label">전자주주총회 관리</div><div class="nav">
-        <a class="nav-item" href="electronic-meeting.html">전자주주총회 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=logincode">로그인코드 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=attendee">사전 신청 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=preq">사전 질의 관리</a>
       </div></div>
       <div class="grp"><div class="grp-label">사전 의결권 관리</div><div class="nav">
         <a class="nav-item" href="voting-rights.html">사전 의결권 현황</a>
@@ -598,6 +605,6 @@
 })();
 </script>
 <!-- 표 정렬은 공통 규칙(conexus.js)이 맡는다 — 화살표 없이 헤더를 누르면 된다 -->
-<script src="conexus.js?v=s3"></script>
+<script src="conexus.js?v=s5"></script>
 </body>
 </html>

@@ -171,7 +171,7 @@
   table.bdt tfoot td{position:sticky;bottom:0;background:#FAFAFA;font-weight:600;height:46px;padding:0 16px;border-top:1px solid #E5E5E5;white-space:nowrap;font-variant-numeric:tabular-nums}
   .btag{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:#f4f4f5;color:#737373;font-size:12px;font-weight:500}
 </style>
-<script src="cx-data.js"></script>
+<script src="cx-data.js?v=2"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -233,11 +233,18 @@
       <div class="grp"><div class="grp-label">의결권 권유 설정</div><div class="nav">
         <a class="nav-item" href="proxy-basic.html">의결권 권유 설정</a>
       </div></div>
+      <div class="grp"><div class="grp-label">전자주주총회 설정</div><div class="nav">
+        <a class="nav-item" href="electronic-meeting.html?tab=basic">사이트 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=progress">진행 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=design">디자인 설정</a>
+      </div></div>
     </div>
 
     <div class="lnb-content show exp-only" data-tabpanel="pre">
       <div class="grp"><div class="grp-label">전자주주총회 관리</div><div class="nav">
-        <a class="nav-item" href="electronic-meeting.html">전자주주총회 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=logincode">로그인코드 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=attendee">사전 신청 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=preq">사전 질의 관리</a>
       </div></div>
       <div class="grp"><div class="grp-label">사전 의결권 관리</div><div class="nav">
         <a class="nav-item" href="voting-rights.html">사전 의결권 현황</a>
@@ -677,6 +684,6 @@
   renderBanner(); renderList();
 })();
 </script>
-<script src="conexus.js?v=s3"></script>
+<script src="conexus.js?v=s5"></script>
 </body>
 </html>

@@ -249,7 +249,7 @@
   .cmp .delta.mut{color:#a3a3a3;font-weight:400}
   .fchk{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:#171717;cursor:pointer}
 </style>
-<script src="cx-data.js"></script>
+<script src="cx-data.js?v=2"></script>
 <script src="cx-roster.js?v=r7"></script>
 <script src="cx-holders.js?v=5"></script>
 <link rel="stylesheet" href="cx-accordion.css?v=1">
@@ -358,11 +358,18 @@
       <div class="grp"><div class="grp-label">의결권 권유 설정</div><div class="nav">
         <a class="nav-item" href="proxy-basic.html">의결권 권유 설정</a>
       </div></div>
+      <div class="grp"><div class="grp-label">전자주주총회 설정</div><div class="nav">
+        <a class="nav-item" href="electronic-meeting.html?tab=basic">사이트 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=progress">진행 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=design">디자인 설정</a>
+      </div></div>
     </div>
 
     <div class="lnb-content show exp-only" data-tabpanel="pre">
       <div class="grp"><div class="grp-label">전자주주총회 관리</div><div class="nav">
-        <a class="nav-item" href="electronic-meeting.html">전자주주총회 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=logincode">로그인코드 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=attendee">사전 신청 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=preq">사전 질의 관리</a>
       </div></div>
       <div class="grp"><div class="grp-label">사전 의결권 관리</div><div class="nav">
         <a class="nav-item" href="voting-rights.html">사전 의결권 현황</a>
@@ -876,7 +883,7 @@
   ov.querySelectorAll("[data-cfm-close]").forEach(function(b){ b.addEventListener("click",closeCfm); });
 })();
 </script>
-<script src="conexus.js?v=s3"></script>
+<script src="conexus.js?v=s5"></script>
 <script>
 /* 해외 주주 내역 삭제 — 확인 알림 후 해외 탭 데이터를 비운다(빈 표 · KPI 0) */
 (function(){

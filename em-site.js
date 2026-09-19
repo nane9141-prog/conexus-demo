@@ -14,7 +14,7 @@
   function item(o) { o.id = ++seq; return o; }
   var LIST = {
     notice: [
-      item({ pin: true, tk: '제10기 정기주주총회 개최 안내', te: 'Notice of the 10th Annual General Meeting', bk: '제10기 정기주주총회를 아래와 같이 개최합니다.\n\n일시: 2026년 3월 27일(금) 오전 10시\n장소: 카카오뱅크 본사 대강당 및 전자주주총회', be: 'The 10th AGM will be held as follows.\n\nDate: March 27, 2026 10:00 KST', s: d(-10), e: d(20) }),
+      item({ pin: true, tk: '제10기 정기주주총회 개최 안내', te: 'Notice of the 10th Annual General Meeting', bk: '제10기 정기주주총회를 아래와 같이 개최합니다.\n\n일시: 2026년 9월 29일(화) 오전 10시\n장소: 카카오뱅크 본사 대강당 및 전자주주총회', be: 'The 10th AGM will be held as follows.\n\nDate: September 29, 2026 10:00 KST', s: d(-10), e: d(20) }),
       item({ tk: '전자투표 행사 기간 안내', te: 'Electronic voting period', bk: '전자투표는 총회 전날 오후 5시까지 행사할 수 있습니다.', be: 'Electronic voting closes at 5 p.m. the day before the meeting.', s: d(-3), e: d(12) }),
       item({ tk: '사전 질의 접수 안내', te: 'Pre-meeting questions', bk: '총회 전 질의를 사이트에서 등록할 수 있습니다.', be: 'You may submit questions before the meeting.', s: d(5), e: d(15) }),
       item({ tk: '주주총회 소집공고 정정 안내', te: 'Correction to the convocation notice', bk: '소집공고 일부 내용이 정정되었습니다.', be: 'Part of the convocation notice has been corrected.', s: d(-40), e: d(-20) }),

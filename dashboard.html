@@ -245,7 +245,7 @@
   .mdel-b .mdc{border:1px solid #E5E5E5;background:#fff;color:#0a0a0a}
   .mdel-b .mdd{border:0;background:#FDECEC;color:#E9081B}
 </style>
-<script src="cx-data.js"></script>
+<script src="cx-data.js?v=2"></script>
 <script src="ag-exercise.js?v=1"></script>
 </head>
 <body>
@@ -308,11 +308,18 @@
       <div class="grp"><div class="grp-label">의결권 권유 설정</div><div class="nav">
         <a class="nav-item" href="proxy-basic.html">의결권 권유 설정</a>
       </div></div>
+      <div class="grp"><div class="grp-label">전자주주총회 설정</div><div class="nav">
+        <a class="nav-item" href="electronic-meeting.html?tab=basic">사이트 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=progress">진행 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=design">디자인 설정</a>
+      </div></div>
     </div>
 
     <div class="lnb-content show exp-only" data-tabpanel="pre">
       <div class="grp"><div class="grp-label">전자주주총회 관리</div><div class="nav">
-        <a class="nav-item" href="electronic-meeting.html">전자주주총회 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=logincode">로그인코드 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=attendee">사전 신청 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=preq">사전 질의 관리</a>
       </div></div>
       <div class="grp"><div class="grp-label">사전 의결권 관리</div><div class="nav">
         <a class="nav-item" href="voting-rights.html">사전 의결권 현황</a>
@@ -356,7 +363,7 @@
         <div class="db-top">
           <div class="db-title-wrap">
             <div class="db-nm"><span class="db-name">제10기 정기주주총회</span><span class="db-badge">D-17</span></div>
-            <div class="db-sub">2026-08-28 (금) 10:00 · 서울 영등포구 국제금융로8길 카카오뱅크 본사 대강당</div>
+            <div class="db-sub">2026-09-29 (화) 10:00 · 서울 영등포구 국제금융로8길 카카오뱅크 본사 대강당</div>
           </div>
           <div class="db-top-r">
             <button class="db-memo-btn" id="memoOpen" type="button">
@@ -423,7 +430,7 @@
                   <div class="d"><span class="lb">자산총액</span><span class="vl">2조원 이상 (54조 8,210억 원)</span></div>
                   <div class="d"><span class="lb">주주명부 기준일</span><span class="vl">2026-06-30</span></div>
                   <div class="d"><span class="lb">주주총회 기수</span><span class="vl">제10기 정기주주총회</span></div>
-                  <div class="d"><span class="lb">주주총회 일시</span><span class="vl">2026-08-28 10:00</span></div>
+                  <div class="d"><span class="lb">주주총회 일시</span><span class="vl">2026-09-29 10:00</span></div>
                   <div class="d"><span class="lb">주주총회 장소</span><span class="vl">서울 영등포구 국제금융로8길 카카오뱅크 본사 대강당</span></div>
                 </div>
               </div>
@@ -870,7 +877,7 @@
   })();
 })();
 </script>
-<script src="conexus.js?v=s3"></script>
+<script src="conexus.js?v=s5"></script>
 <script>
 /* 진행단계 카운트 배지: N/N(전체 완료) → "N/N 완료" + blue(.done) */
 (function(){

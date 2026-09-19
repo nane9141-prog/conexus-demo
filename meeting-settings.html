@@ -1005,7 +1005,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 .chk-row{border-radius:10px}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<script src="cx-data.js"></script>
+<script src="cx-data.js?v=2"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -1068,11 +1068,18 @@ a.nav-item{text-decoration:none;color:var(--fg)}
       <div class="grp"><div class="grp-label">의결권 권유 설정</div><div class="nav">
         <a class="nav-item" href="proxy-basic.html">의결권 권유 설정</a>
       </div></div>
+      <div class="grp"><div class="grp-label">전자주주총회 설정</div><div class="nav">
+        <a class="nav-item" href="electronic-meeting.html?tab=basic">사이트 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=progress">진행 설정</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=design">디자인 설정</a>
+      </div></div>
     </div>
 
     <div class="lnb-content  exp-only" data-tabpanel="pre">
       <div class="grp"><div class="grp-label">전자주주총회 관리</div><div class="nav">
-        <a class="nav-item" href="electronic-meeting.html">전자주주총회 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=logincode">로그인코드 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=attendee">사전 신청 관리</a>
+        <a class="nav-item" href="electronic-meeting.html?tab=preq">사전 질의 관리</a>
       </div></div>
       <div class="grp"><div class="grp-label">사전 의결권 관리</div><div class="nav">
         <a class="nav-item" href="voting-rights.html">사전 의결권 현황</a>
@@ -1169,7 +1176,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   <div id="proxySec" style="display:flex;flex-direction:column;gap:28px">
     <div class="hr"></div>
     <div class="st-section"><div class="sub-h">전자위임장 설정</div>
-      <div class="field" style="gap:10px"><label>대리행사 권유자 유형</label><div class="rad-group" data-radgrp="soltype"><span class="rad on" data-rad data-v="company"><span class="dotc"></span>카카오뱅크 측</span><span class="rad" data-rad data-v="share"><span class="dotc"></span>주주 측</span></div><div class="note-blue hidden" id="solNote">주주 측 권유자는 서류 제출 후 담당자가 직접 등록할 수 있으며, 전자투표/위임 행사 시작 전까지 추가·수정·삭제가 가능합니다.</div></div>
+      <div class="field" style="gap:10px"><label>대리행사 권유자 유형</label><div class="rad-group" data-radgrp="soltype"><span class="rad on" data-rad data-v="company"><span class="dotc"></span>회사 측</span><span class="rad" data-rad data-v="share"><span class="dotc"></span>주주 측</span></div><div class="note-blue hidden" id="solNote">주주 측 권유자는 서류 제출 후 담당자가 직접 등록할 수 있으며, 전자투표/위임 행사 시작 전까지 추가·수정·삭제가 가능합니다.</div></div>
       <div class="field" id="solCompany"><label>대리행사 권유자</label><div class="frow"><input class="inp" value="IR큐더스" disabled><button class="btn-line" id="agentBtn">권유자 대리인 설정</button></div></div>
       <div class="field hidden" id="solShare"><label>대리행사 권유자 설정</label><div class="ig"><input class="inp" id="solInp" placeholder="대리행사 권유자 이름을 입력해 주세요"><button id="solAdd">추가</button></div><div class="sol-box" id="solBox"></div></div>
       <div class="field"><label>권유자 의견 공개</label><div class="sub-help" style="margin:0 0 4px">권유자 의견을 공개하시려면, 먼저 DART에 의결권 대리행사 권유 참고서류를 공시해 주세요.</div><div class="rad-group" data-radgrp="opinion"><span class="rad on" data-rad><span class="dotc"></span>공개</span><span class="rad" data-rad><span class="dotc"></span>비공개</span></div></div>
@@ -1796,6 +1803,6 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 <script>
 document.querySelectorAll('.lnb-tabs .t').forEach(function(t){t.addEventListener('click',function(){var tab=t.dataset.tab;if(!tab)return;document.querySelectorAll('.lnb-tabs .t').forEach(function(x){x.classList.toggle('active',x===t);});document.querySelectorAll('.lnb-content[data-tabpanel]').forEach(function(p){p.classList.toggle('show',p.dataset.tabpanel===tab);});});});
 </script>
-<script src="conexus.js?v=s3"></script>
+<script src="conexus.js?v=s5"></script>
 </body>
 </html>

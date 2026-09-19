@@ -5,7 +5,7 @@
 (function () {
   var root = document.getElementById('pgRoot');
   if (!root || !window.EM) return;
-  var M = (window.CX && CX.meeting) || { date: '2026-03-27' };
+  var M = (window.CX && CX.meeting) || { date: '2026-09-29' };
   var D = M.date, PREV = (function () { var d = new Date(D + 'T00:00:00'); d.setDate(d.getDate() - 1); return d.getFullYear() + '-' + EM.p2(d.getMonth() + 1) + '-' + EM.p2(d.getDate()); })();
 
   function sw(k, on) { return '<button type="button" class="pg-sw' + (on ? ' on' : '') + '" data-pgsw="' + k + '" role="switch" aria-checked="' + !!on + '"></button>'; }
