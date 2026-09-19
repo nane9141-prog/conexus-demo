@@ -89,7 +89,7 @@
   /* 권유 — 목표와 현황을 한 장에서 */
   .gcard{position:relative;display:flex;align-items:flex-start;gap:24px;padding:16px;background:#fff;
     border:1px solid var(--border);box-shadow:0 1px 2px rgba(0,0,0,.05);border-radius:10px;margin-bottom:16px}
-  .gcard .gl{display:flex;flex-direction:column;gap:24px;flex:1 1 0;min-width:0}   /* 목표 및 현황 : 확보 현황 수치 확인 = 1:1 */
+  .gcard .gl{display:flex;flex-direction:column;gap:24px;flex:1 1 0;min-width:0}   /* 목표 및 현황 : (확보 현황 수치 확인 + 원형 차트) = 1:1 */
   .gcard .gt{font-size:18px;line-height:28px;font-weight:600;color:#0a0a0a}
   .gcard .gnote{max-width:414px;font-size:12px;line-height:16px;letter-spacing:-.01em;color:#737373}
   .gsep{width:1px;align-self:stretch;background:var(--border);flex:none}
@@ -105,7 +105,7 @@
   .gbar .t{height:24px;border-radius:4px;background:#f5f5f5;overflow:hidden}
   .gbar .t i{display:block;height:100%;background:linear-gradient(90deg,#82bbff,#0071f3)}
   .gbar .t.ink i{background:linear-gradient(90deg,#737373,#171717)}
-  .gright{display:contents}   /* 수치 확인·원형 차트를 카드의 직접 칸으로 — 목표 및 현황과 같은 비율로 나눈다 */
+  .gright{display:flex;align-items:center;gap:24px;flex:1 1 0;min-width:0}   /* 오른쪽 절반 — 수치 확인과 원형 차트 */
   .gnum{display:flex;flex-direction:column;gap:16px;flex:1 1 0;min-width:0;padding-top:6px}
   .gnum>.k{font-size:14px;line-height:1;font-weight:600;color:#737373}
   .gsum{display:flex;flex-direction:column;gap:8px;padding:15px;background:#fff;border:2px solid #82BBFF;border-radius:8px}   /* Figma: 확보 요약 박스 */
@@ -295,7 +295,7 @@
             fill:{target:'origin',above:'rgba(0,113,243,.08)'}}
         ]},
         options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-          plugins:{legend:{display:false},
+          plugins:{legend:{display:false},filler:{drawTime:'beforeDatasetsDraw'},   /* 누적 수집 면은 막대 뒤로 — 선은 그대로 위 */
             tooltip:{enabled:false,external:extTip}},
           scales:{
             y:{position:'left',ticks:{display:false},grid:{display:false},border:{display:false}},
