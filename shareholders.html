@@ -258,6 +258,12 @@
         .mpag .psel{display:flex;align-items:center;gap:4px;height:28px;padding:0 8px;border:1px solid var(--border);border-radius:6px;background:#fff;font-size:12px;color:#737373}
         .mpag .pctrl{display:flex;align-items:center;gap:8px;color:#737373;font-size:14px}
         .mpag .pnum{font-size:12px;color:#1f1c18;display:flex;align-items:center;gap:6px}
+        .mpag .pgb,.mpag .pgn{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 6px;border:1px solid transparent;border-radius:8px;background:none;font-family:inherit;font-size:12px;color:#171717;cursor:pointer}
+        .mpag .pgb i{font-size:14px;color:#737373}
+        .mpag .pgb:disabled{opacity:.4;cursor:default}
+        .mpag .pgn.on{border-color:var(--border);background:#fff;font-weight:600}
+        .mpag .pgb:not(:disabled):hover,.mpag .pgn:not(.on):hover{background:#F5F5F5}
+        .mpag .pgsz{height:28px;padding:0 6px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;color:#171717;cursor:pointer}
         .mpag .pnum b{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;border:1px solid var(--border);border-radius:6px;background:#fff;font-weight:400}
         /* dialogs */
         .dlg-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:150;display:flex;align-items:center;justify-content:center}
@@ -827,10 +833,29 @@
         }
         document.addEventListener('click',function(e){if(e.target.closest('[data-kchip]')){ST.open=!ST.open;renderCards();}});
 
-        function pagHTML(n,sh){
-          return '<div class="cnt">총 '+fmt(n)+'명 · '+fmt(sh)+'주</div><div class="mpag-r"><div class="psize">페이지당 <span class="psel">20 <i class="ph ph-caret-down"></i></span></div>'
-            +'<div class="pctrl"><i class="ph ph-caret-double-left"></i><i class="ph ph-caret-left"></i><span class="pnum"><b>1</b>/ '+Math.max(1,Math.ceil(n/20))+'</span><i class="ph ph-caret-right"></i><i class="ph ph-caret-double-right"></i></div></div>';
+        /* 페이지네이션 — 표마다 현재 페이지 행만 그린다(명부 전체를 한 번에 그리면 느리다) */
+        var PG={set:{p:1,size:20},merge:{p:1,size:20},confirm:{p:1,size:20}};
+        var RENDER={set:function(){renderSet();},merge:function(){renderMerge();},confirm:function(){renderConfirm();}};
+        function pageOf(key,list){
+          var pg=PG[key], pages=Math.max(1,Math.ceil(list.length/pg.size));
+          if(pg.p>pages) pg.p=pages;
+          return list.slice((pg.p-1)*pg.size,pg.p*pg.size);
         }
+        function pagHTML(key,n,sh,unit){
+          var pg=PG[key], pages=Math.max(1,Math.ceil(n/pg.size)), p=pg.p;
+          var from=Math.max(1,Math.min(p-2,pages-4)), to=Math.min(pages,from+4), nums='';
+          for(var i=from;i<=to;i++) nums+='<button type="button" class="pgn'+(i===p?' on':'')+'" data-go="'+i+'">'+i+'</button>';
+          function nav(ic,go,dis){return '<button type="button" class="pgb" data-go="'+go+'"'+(dis?' disabled':'')+' aria-label="'+ic+'"><i class="ph ph-'+ic+'"></i></button>';}
+          return '<div class="cnt">총 '+fmt(n)+(unit||'명')+' · '+fmt(sh)+'주</div><div class="mpag-r"><div class="psize">페이지당 <select class="pgsz" data-pgsz>'
+            +[20,50,100].map(function(v){return '<option'+(v===pg.size?' selected':'')+'>'+v+'</option>';}).join('')+'</select></div>'
+            +'<div class="pctrl">'+nav('caret-double-left',1,p===1)+nav('caret-left',p-1,p===1)+nums+nav('caret-right',p+1,p===pages)+nav('caret-double-right',pages,p===pages)
+            +'<span class="pnum">'+p+' / '+pages+'</span></div></div>';
+        }
+        document.querySelectorAll('[data-pag]').forEach(function(el){
+          var key=el.getAttribute('data-pag');
+          el.addEventListener('click',function(e){var b=e.target.closest('[data-go]'); if(!b||b.disabled) return; PG[key].p=+b.dataset.go; RENDER[key]();});
+          el.addEventListener('change',function(e){if(!e.target.matches('[data-pgsz]')) return; PG[key].size=+e.target.value; PG[key].p=1; RENDER[key]();});
+        });
         var totalSh=rows.reduce(function(a,x){return a+x.r.sh;},0);
         function cx(id){if(window.cxTable)window.cxTable.apply($(id));}
 
@@ -848,8 +873,9 @@
             +'<td class="c"><button class="tbtn2 set-btn'+(lockBtn?' dis':'')+'">설정</button></td></tr>';
         }
         function renderSet(){
-          $('shBody').innerHTML=rows.map(setRowHTML).join('');
-          document.querySelector('[data-pag="set"]').innerHTML=pagHTML(rows.length,totalSh);
+          var list=$('swUnset').classList.contains('on')?rows.filter(function(x){return !x.voter;}):rows;
+          $('shBody').innerHTML=pageOf('set',list).map(setRowHTML).join('')||'<tr><td colspan="10" style="text-align:center;height:80px">미설정 투표권자가 없습니다.</td></tr>';
+          document.querySelector('[data-pag="set"]').innerHTML=pagHTML('set',list.length,list.reduce(function(a,x){return a+x.r.sh;},0));
           cx('setTbl');
         }
         function updateSetRow(x){
@@ -859,8 +885,8 @@
           n.className=tr.className.replace('row-none','').trim(); if(!x.voter) n.classList.add('row-none');
           tr.parentNode.replaceChild(n,tr);
         }
-        $('swUnset').addEventListener('click',function(){$('swUnset').classList.toggle('on');$('shBody').classList.toggle('only-unset',$('swUnset').classList.contains('on'));});
-        $('swCfUnset').addEventListener('click',function(){$('swCfUnset').classList.toggle('on');$('cfBody').classList.toggle('only-unset',$('swCfUnset').classList.contains('on'));});
+        $('swUnset').addEventListener('click',function(){$('swUnset').classList.toggle('on');PG.set.p=1;renderSet();});
+        $('swCfUnset').addEventListener('click',function(){$('swCfUnset').classList.toggle('on');PG.confirm.p=1;renderConfirm();});
 
         /* 투표권자 설정 sheet */
         var vs={x:null,m:'pick',pick:null,dirty:false};
@@ -913,8 +939,8 @@
         /* ---------- 2. 통합·해제 설정 ---------- */
         function grpLocked(g){return ST.change&&g.members[0].locked;}
         function renderMerge(){
-          var html='';
-          Object.keys(groups).sort(function(a,b){return sum(groups[b])-sum(groups[a]);}).forEach(function(gid){
+          var html='', gids=Object.keys(groups).sort(function(a,b){return sum(groups[b])-sum(groups[a]);});
+          pageOf('merge',gids).forEach(function(gid){
             var g=groups[gid], lead=g.members[0], n=g.members.length, lk=grpLocked(g);
             html+='<tr class="mg-grp" data-g="'+gid+'"><td class="c"><button type="button" class="xp" aria-label="펼치기"><i class="ph ph-caret-down"></i></button></td>'
               +'<td><span class="mbadge '+g.method+'" data-tip="'+(g.method==='auto'?'시스템에 의해 자동으로 통합된 주주입니다.':'담당자가 직접 선택하여 통합한 주주입니다.')+'">'+(g.method==='auto'?'자동':'수동')+' '+n+'건</span></td>'
@@ -931,7 +957,7 @@
           if(!html) html='<tr><td colspan="8" style="text-align:center;height:80px">통합된 주주가 없습니다.</td></tr>';
           $('mgBody').innerHTML=html;
           var n=Object.keys(groups).length,sh=Object.keys(groups).reduce(function(a,g){return a+sum(groups[g]);},0);
-          document.querySelector('[data-pag="merge"]').innerHTML=pagHTML(n,sh);
+          document.querySelector('[data-pag="merge"]').innerHTML=pagHTML('merge',n,sh,'건');
           cx('mgTbl');
         }
         function sum(g){return g.members.reduce(function(a,m){return a+m.r.sh;},0);}
@@ -1072,8 +1098,9 @@
           Object.keys(groups).forEach(function(gid){blocks.push({g:gid,sh:sum(groups[gid])});});
           rows.forEach(function(x){if(!mset[x.k])blocks.push({x:x,sh:x.r.sh});});
           blocks.sort(function(a,b){return b.sh-a.sh;});
+          if($('swCfUnset').classList.contains('on')) blocks=blocks.filter(function(b){return b.x&&!b.x.voter;});
           var html='';
-          blocks.forEach(function(b){
+          pageOf('confirm',blocks).forEach(function(b){
             if(b.g){
               var g=groups[b.g];
               html+='<tr class="cf-grp" data-g="'+b.g+'"><td class="c"><button type="button" class="xp" aria-label="펼치기"><i class="ph ph-caret-down"></i></button></td>'
@@ -1088,8 +1115,8 @@
                 +'<td class="name">'+esc(x.r.nm)+'</td><td class="r dk">'+fmt(x.r.sh)+'</td><td class="r sub">'+pct(x.r.rt)+'</td></tr>';
             }
           });
-          $('cfBody').innerHTML=html;
-          document.querySelector('[data-pag="confirm"]').innerHTML=pagHTML(blocks.length,totalSh);
+          $('cfBody').innerHTML=html||'<tr><td colspan="6" style="text-align:center;height:80px">미설정 투표권자가 없습니다.</td></tr>';
+          document.querySelector('[data-pag="confirm"]').innerHTML=pagHTML('confirm',blocks.length,blocks.reduce(function(a,b){return a+b.sh;},0),'건');
           cx('cfTbl');
         }
         $('cfBody').addEventListener('click',function(e){var tr=e.target.closest('tr.cf-grp');if(tr)toggleGroup($('cfBody'),tr,'cf-child');});
