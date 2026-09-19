@@ -414,11 +414,11 @@
         return;
       }
       if (!st.editing && (L.cast === 'speech' || L.cast === 'amend')) {
-        var lb = L.cast === 'amend' ? '수정 동의 주주' : '발언 주주';
-        var ml = L.cast === 'amend' ? '수정 동의 내용' : '담당자 전달 내용';
+        var lb = L.cast === 'amend' ? '동의 주주' : '발언 주주';
+        var ml = L.cast === 'amend' ? '동의 내용' : '담당자 전달 내용';
         body.innerHTML = sec(lb, L.who, 'who')
           + (L.msg ? sec(ml, L.msg, 'a')
-                   : '<div class="pv-mid"><div class="pv-big">' + (L.cast === 'amend' ? '수정 동의 접수' : '발언 중') + '</div></div>');
+                   : '<div class="pv-mid"><div class="pv-big">' + (L.cast === 'amend' ? '동의 접수' : '발언 중') + '</div></div>');
         return;
       }
       if (!st.editing && L.cast === 'voting') {
@@ -462,10 +462,10 @@
         ['출석률', K.rate || ((M.attendShares / M.sharesIssued * 100).toFixed(1) + '%'),
           cm(M.sharesIssued) + '주 기준'],
         ['전체 출석 주주수', num(M.attendHolders, '명'), '출석의결권 ' + cm(M.attendShares) + '주'],
-        ['현장 참석', num(M.onsiteHolders, '명'), cm(M.onsiteShares) + '주 행사 가능'],
-        ['현장 표결', (K.siteN || 0) + '<span class="sub"> / ' + (K.siteTot || 30) + '</span>',
+        ['현장출석', num(M.onsiteHolders, '명'), cm(M.onsiteShares) + '주 행사 가능'],
+        ['현장표결', (K.siteN || 0) + '<span class="sub"> / ' + (K.siteTot || 60) + '</span>',
           cm(K.siteW || 0) + '주 행사'],
-        ['온라인 참석', num(M.onlineHolders, '명'), cm(M.onlineShares) + '주']
+        ['전자출석', num(M.onlineHolders, '명'), cm(M.onlineShares) + '주']
       ];
       mt.innerHTML = cards.map(function (c) {
         return '<div class="pv-card"><div class="pv-ck">' + c[0] + '</div><div class="pv-cv">' + c[1] + '</div><div class="pv-cs">' + c[2] + '</div></div>';

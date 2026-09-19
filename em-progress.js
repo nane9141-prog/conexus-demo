@@ -54,6 +54,11 @@
       '<div class="pg-row"><div class="pg-f" style="flex:1"><label for="pgSpBy">발언 기준</label>' + sel('pgSpBy', ['의안별', '주총 전체'], 176).replace('width:176px', 'width:100%') + '</div>' +
         unit('pgSpN', '1인당 발언 횟수', '1', '회') + unit('pgSpT', '1회 발언 시간', '3', '분') + '</div>' +
       '<div class="pg-chk">' + chk('spAuth', '질의 취소 시 횟수 차감 제외') + chk('spAuth', '발언신청 삭제 허용', 1) + '</div>', true) +
+    /* 당일 동의 규칙 — 당일 발언 규칙과 같은 구성 */
+    card('amend', '당일 동의 규칙', '총회 당일 주주가 동의를 신청하는 규칙입니다.',
+      '<div class="pg-row"><div class="pg-f" style="flex:1"><label for="pgAmBy">동의 기준</label>' + sel('pgAmBy', ['의안별', '주총 전체'], 176).replace('width:176px', 'width:100%') + '</div>' +
+        unit('pgAmN', '1인당 동의 횟수', '1', '회') + unit('pgAmT', '1회 발언 시간', '3', '분') + '</div>' +
+      '<div class="pg-chk">' + chk('amAuth', '동의 취소 시 횟수 차감 제외') + chk('amAuth', '동의신청 삭제 허용', 1) + '</div>', true) +
     card('cc', 'AI 자막 언어 설정', '라이브 화면에 노출할 AI 실시간 자막 언어를 선택합니다.',
       '<div class="pg-chk">' + chk('cc', '한국어', 1) + chk('cc', '영어', 1) + chk('cc', '일본어') + chk('cc', '중국어') + '</div>') +
     '</div>';
