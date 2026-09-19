@@ -26,6 +26,7 @@
   .rs-date input{position:absolute;inset:0;opacity:0;pointer-events:none}
   /* 표 */
   .ftbl td.dt{cursor:default}
+  .ftbl td.rs-wrap{white-space:normal;word-break:keep-all;line-height:20px;padding-top:12px;padding-bottom:12px}   /* 긴 글은 줄바꿈 — 좁은 화면에서 가로 스크롤 없이 */
   .ftbl .acts .iconb i{font-size:16px;color:#0A0A0A}
   .ftbl .acts .iconb.dim{opacity:.5}
   .rs-detail{white-space:nowrap}
@@ -157,9 +158,9 @@
       <div class="fbox" id="rsBox">
         <div class="fscroll"><table class="ftbl" id="rsTbl"><thead><tr>
           <th class="c" style="width:80px">사용여부</th>
-          <th data-al="l" style="min-width:208px">대상의안</th>
+          <th data-al="l" style="min-width:120px">대상의안</th>
           <th class="c" style="width:119px">적용방식</th>
-          <th data-al="l" style="min-width:280px">상세설정</th>
+          <th data-al="l" style="min-width:160px">상세설정</th>
           <th class="c" style="width:132px">등록방식</th>
           <th class="c" style="width:145px">적용일시</th>
           <th class="c" style="width:144px">해제일시</th>
@@ -341,12 +342,12 @@
     $('rsBody').innerHTML = rows.map(function (r) {
       var dim = r.lock ? ' dim' : '';
       return '<tr><td class="c"><span class="sbadge' + (r.use ? ' b' : '') + '">' + (r.use ? '사용' : '미사용') + '</span></td>'
-        + '<td class="md">' + esc(r.ag) + '</td>'
+        + '<td class="md rs-wrap cx-wrap">' + esc(r.ag) + '</td>'
         + '<td class="c"><span class="sbadge">' + M[r.m].nm + '</span></td>'
-        + '<td class="md rs-detail">' + esc(detailOf(r)) + '</td>'
+        + '<td class="md rs-detail rs-wrap cx-wrap">' + esc(detailOf(r)) + '</td>'
         + '<td class="c"><span class="sbadge' + (r.src ? ' b' : '') + '">' + esc(r.src || '직접등록') + '</span></td>'
-        + '<td class="c mut dt" data-tip="' + r.id + '">' + r.on + '</td>'
-        + '<td class="c mut dt" data-tip="' + r.id + '">' + (r.off || '-') + '</td>'
+        + '<td class="c mut dt rs-wrap cx-wrap" data-tip="' + r.id + '">' + r.on + '</td>'
+        + '<td class="c mut dt rs-wrap cx-wrap" data-tip="' + r.id + '">' + (r.off || '-') + '</td>'
         + '<td><span class="acts">'
         + '<button class="iconb' + dim + '" type="button" title="변경" data-edit="' + r.id + '"><i class="ph ph-pencil-simple"></i></button>'
         + '<button class="iconb' + dim + '" type="button" title="삭제" data-del="' + r.id + '"><i class="ph ph-trash"></i></button>'
@@ -553,6 +554,36 @@
   draw();
 })();
 </script>
-<script src="conexus.js?v=s10"></script>
+<script src="conexus.js?v=s14"></script>
+<script>
+/* LNB 공통 동작 — 설정/사전/당일 탭 전환 · 사이드바 접기 · 주총 선택 (다른 화면과 같은 코드, 이 화면에만 빠져 있었다) */
+  // LNB tab switching (설정/사전/당일)
+  document.querySelectorAll('.lnb-tabs .t').forEach(function(t){
+    t.addEventListener('click',function(){
+      var tab=t.dataset.tab; if(!tab) return;
+      document.querySelectorAll('.lnb-tabs .t').forEach(function(x){x.classList.toggle('active',x===t);});
+      document.querySelectorAll('.lnb-content[data-tabpanel]').forEach(function(p){p.classList.toggle('show',p.dataset.tabpanel===tab);});
+    });
+  });
+  // sidebar collapse
+  var tg=document.getElementById('toggleLnb');
+  if(tg){tg.addEventListener('click',function(){document.getElementById('app').classList.toggle('collapsed');});}
+  // meeting dropdown
+  (function(){
+    var mt=document.getElementById('mtrigger'), mp=document.getElementById('mpop'), ml=document.getElementById('mlist'), mc=document.getElementById('mcurrent');
+    if(!mt||!mp) return;
+    if(ml&&!ml.children.length){
+      ['제10기 정기주주총회','제9기 정기주주총회','제8기 정기주주총회'].forEach(function(t,i){
+        var b=document.createElement('button'); b.className='mitem'+(i===0?' cur':'');
+        b.innerHTML='<span class="dot'+(i===0?'':' gray')+'"></span><span class="mlbl">'+t+'</span>';
+        b.addEventListener('click',function(ev){ev.stopPropagation(); if(mc)mc.textContent=t; ml.querySelectorAll('.mitem').forEach(function(x){x.classList.remove('cur');}); b.classList.add('cur'); mp.classList.add('hidden');});
+        ml.appendChild(b);
+      });
+    }
+    mt.addEventListener('click',function(e){e.stopPropagation(); mp.classList.toggle('hidden');});
+    document.addEventListener('click',function(){mp.classList.add('hidden');});
+    mp.addEventListener('click',function(e){e.stopPropagation();});
+  })();
+</script>
 </body>
 </html>

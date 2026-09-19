@@ -9,6 +9,8 @@
 <style>
 
   .tpedit{display:flex;align-items:flex-start;gap:20px;flex:1;min-height:0}
+  .ftbl td.tp-wrap{white-space:normal;word-break:keep-all;line-height:20px;padding-top:12px;padding-bottom:12px}   /* 긴 글은 줄바꿈 — 좁은 화면에서 가로 스크롤 없이 */
+  .ftbl td.tp-wrap .flink{white-space:normal;text-align:left}
   .tpleft{flex:1;min-width:0;display:flex;flex-direction:column;gap:20px}
   .tprow{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap}
   .tprow .ffield{width:200px;flex:none}
@@ -198,8 +200,8 @@
           <div class="fscroll"><table class="ftbl" id="tpTbl"><thead><tr>
             <th class="c" style="width:80px">구분</th>
             <th class="c" style="width:120px">템플릿 유형</th>
-            <th style="min-width:200px">의안 유형</th>
-            <th style="min-width:265px">제목</th>
+            <th style="min-width:140px">의안 유형</th>
+            <th style="min-width:200px">제목</th>
             <th class="c" style="width:96px">전달 대상</th>
             <th class="c" style="width:82px">변수</th>
             <th class="c" style="width:110px">수정일</th>
@@ -343,8 +345,8 @@
       var cond = [r.ag, r.method].filter(Boolean).join(' · ');
       return '<tr><td class="c"><span class="sbadge' + (r.base ? ' b' : '') + '">' + (r.base ? '기본' : '추가') + '</span></td>'
         + '<td class="c mut">' + r.kind + '</td>'
-        + '<td class="mut">' + (cond ? esc(cond) : '-') + '</td>'
-        + '<td class="md"><button class="flink" type="button" data-edit="' + r.id + '">' + esc(r.nm) + '</button></td>'
+        + '<td class="mut tp-wrap cx-wrap">' + (cond ? esc(cond) : '-') + '</td>'
+        + '<td class="md tp-wrap cx-wrap"><button class="flink" type="button" data-edit="' + r.id + '">' + esc(r.nm) + '</button></td>'
         + '<td class="c mut">' + r.to + '</td>'
         + '<td class="c mut">' + r.vars + '개</td>'
         + '<td class="c mut">' + r.d + '</td>'
@@ -706,6 +708,36 @@
   draw();
 })();
 </script>
-<script src="conexus.js?v=s10"></script>
+<script src="conexus.js?v=s14"></script>
+<script>
+/* LNB 공통 동작 — 설정/사전/당일 탭 전환 · 사이드바 접기 · 주총 선택 (다른 화면과 같은 코드, 이 화면에만 빠져 있었다) */
+  // LNB tab switching (설정/사전/당일)
+  document.querySelectorAll('.lnb-tabs .t').forEach(function(t){
+    t.addEventListener('click',function(){
+      var tab=t.dataset.tab; if(!tab) return;
+      document.querySelectorAll('.lnb-tabs .t').forEach(function(x){x.classList.toggle('active',x===t);});
+      document.querySelectorAll('.lnb-content[data-tabpanel]').forEach(function(p){p.classList.toggle('show',p.dataset.tabpanel===tab);});
+    });
+  });
+  // sidebar collapse
+  var tg=document.getElementById('toggleLnb');
+  if(tg){tg.addEventListener('click',function(){document.getElementById('app').classList.toggle('collapsed');});}
+  // meeting dropdown
+  (function(){
+    var mt=document.getElementById('mtrigger'), mp=document.getElementById('mpop'), ml=document.getElementById('mlist'), mc=document.getElementById('mcurrent');
+    if(!mt||!mp) return;
+    if(ml&&!ml.children.length){
+      ['제10기 정기주주총회','제9기 정기주주총회','제8기 정기주주총회'].forEach(function(t,i){
+        var b=document.createElement('button'); b.className='mitem'+(i===0?' cur':'');
+        b.innerHTML='<span class="dot'+(i===0?'':' gray')+'"></span><span class="mlbl">'+t+'</span>';
+        b.addEventListener('click',function(ev){ev.stopPropagation(); if(mc)mc.textContent=t; ml.querySelectorAll('.mitem').forEach(function(x){x.classList.remove('cur');}); b.classList.add('cur'); mp.classList.add('hidden');});
+        ml.appendChild(b);
+      });
+    }
+    mt.addEventListener('click',function(e){e.stopPropagation(); mp.classList.toggle('hidden');});
+    document.addEventListener('click',function(){mp.classList.add('hidden');});
+    mp.addEventListener('click',function(e){e.stopPropagation();});
+  })();
+</script>
 </body>
 </html>

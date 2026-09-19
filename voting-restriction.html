@@ -92,6 +92,7 @@
     border-radius:var(--r-md);font-size:12px;color:var(--muted-fg);white-space:nowrap}
   .qitem:hover{background:var(--muted);color:var(--fg)}
   .qitem svg{width:14px;height:14px}
+  .qitem,.railbtn,a.nav-item{text-decoration:none}   /* LNB 링크 밑줄 제거 — 이 페이지는 conexus.css 미사용 */
 
   /* collapsed logo mark + icon rail */
   .lnb-mark{display:none;justify-content:center;padding:12px 0 0}
@@ -391,7 +392,16 @@
   .tbtn.off{color:#bdbdbd;border-color:#efefef;background:var(--surface);cursor:default}
   .tbtn.off:hover{background:var(--surface)}
 
-  .tfoot{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--border)}
+  .tfoot{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;border-top:1px solid var(--border);font-size:13px;color:#525252}
+  /* 페이지네이션 — 참석자 관리(at-foot)와 같은 모양: 페이지당 · 처음/이전 · 번호 3개 · 다음/마지막 · 현재/전체 */
+  .at-pg{display:flex;align-items:center;gap:8px}
+  .at-pg .pgs{display:inline-flex;align-items:center;gap:4px}
+  .at-pg .pp{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;box-sizing:border-box;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;color:#525252;font-size:13px}
+  .at-pg .pp i{font-size:16px}
+  .at-pg .pp.cur{background:#171717;color:#fff;border-color:#171717}
+  .at-pg .pp.dis{opacity:.4;cursor:default;pointer-events:none}
+  .at-pg .atpg-tot{margin-left:6px;color:#737373;font-variant-numeric:tabular-nums}
+  .at-pg select{height:30px;font-size:13px}
   .tfoot .cnt{font-size:14px;color:var(--muted-fg)}
   .pager{display:flex;align-items:center;gap:2px}
   .pager .pb{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:var(--r-md);color:var(--muted-fg)}
@@ -959,13 +969,7 @@ table.agtbl td.b{font-weight:600}
             </div>
             <div class="tfoot">
               <span class="cnt tnum">총 82명 · 510,356,025주</span>
-              <div class="pager">
-                <button class="pb"><i class="ph ph-caret-double-left"></i></button>
-                <button class="pb"><i class="ph ph-caret-left"></i></button>
-                <span class="cur">1</span>
-                <button class="pb"><i class="ph ph-caret-right"></i></button>
-                <button class="pb"><i class="ph ph-caret-double-right"></i></button>
-              </div>
+              <div class="at-pg" data-total="82">페이지당 <select><option>20</option><option>50</option><option>100</option></select><span class="pgs"></span></div>
             </div>
           </div>
         </div>
@@ -998,13 +1002,7 @@ table.agtbl td.b{font-weight:600}
               </div>
               <div class="tfoot">
                 <span class="cnt tnum">총 82명 · 510,356,025주</span>
-                <div class="pager">
-                  <button class="pb"><i class="ph ph-caret-double-left"></i></button>
-                  <button class="pb"><i class="ph ph-caret-left"></i></button>
-                  <span class="cur">1</span>
-                  <button class="pb"><i class="ph ph-caret-right"></i></button>
-                  <button class="pb"><i class="ph ph-caret-double-right"></i></button>
-                </div>
+                <div class="at-pg" data-total="82">페이지당 <select><option>20</option><option>50</option><option>100</option></select><span class="pgs"></span></div>
               </div>
             </div>
           </div>
@@ -1644,6 +1642,28 @@ document.querySelectorAll('.lnb-tabs .t').forEach(function(t){t.addEventListener
     });
   })();
 </script>
-<script src="conexus.js?v=s10"></script>
+<script src="conexus.js?v=s14"></script>
+<script>
+/* 표 아래 페이지네이션 — 총 건수와 페이지당 개수로 번호를 그린다(데모: 번호·현재 표시만 바뀐다) */
+document.querySelectorAll('.tfoot .at-pg').forEach(function(box){
+  var total=+box.dataset.total||0, size=20, page=1, sel=box.querySelector('select'), el=box.querySelector('.pgs');
+  function draw(){
+    var pages=Math.max(1,Math.ceil(total/size)); if(page>pages) page=pages;
+    var dP=page<=1?' dis':'', dN=page>=pages?' dis':'';
+    var h='<span class="pp'+dP+'" data-pg="first" aria-label="처음"><i class="ph ph-caret-double-left"></i></span><span class="pp'+dP+'" data-pg="prev" aria-label="이전"><i class="ph ph-caret-left"></i></span>';
+    var a=Math.max(1,page-1), b=Math.min(pages,a+2); a=Math.max(1,b-2);
+    for(var p=a;p<=b;p++) h+='<span class="pp'+(p===page?' cur':'')+'" data-pg="'+p+'">'+p+'</span>';
+    h+='<span class="pp'+dN+'" data-pg="next" aria-label="다음"><i class="ph ph-caret-right"></i></span><span class="pp'+dN+'" data-pg="last" aria-label="마지막"><i class="ph ph-caret-double-right"></i></span>';
+    el.innerHTML=h+'<span class="atpg-tot">'+page+' / '+pages+'</span>';
+    el.dataset.pages=pages;
+  }
+  el.addEventListener('click',function(e){
+    var b=e.target.closest('[data-pg]'); if(!b) return; var v=b.dataset.pg, n=+el.dataset.pages;
+    page=v==='first'?1:v==='prev'?page-1:v==='next'?page+1:v==='last'?n:+v; page=Math.min(n,Math.max(1,page)); draw();
+  });
+  sel.addEventListener('change',function(){ size=+sel.value; page=1; draw(); });
+  draw();
+});
+</script>
 </body>
 </html>

@@ -420,7 +420,8 @@
         th.style.width = rl.flex ? 'auto' : '1%';
         th.style.whiteSpace = 'nowrap';
       }
-      if (!fixed) cells.forEach(function (c) { c.style.whiteSpace = rl.flex ? '' : 'nowrap'; });
+      /* cx-wrap 이 붙은 칸은 페이지가 줄바꿈을 허락한 칸 — 좁을 때 줄바꿈해 가로 스크롤을 막는다 */
+      if (!fixed) cells.forEach(function (c) { c.style.whiteSpace = (rl.flex || c.classList.contains('cx-wrap')) ? '' : 'nowrap'; });
 
       /* 정렬 — 표시는 없다 */
       var grouped = !!tb.querySelector('tr [colspan]');   /* 소계·그룹 줄이 있는 표 */
@@ -480,11 +481,15 @@
      colgroup 등으로 폭을 직접 짜 둔 표(fixed)는 그대로 존중한다. */
   function freezeWidths(t, tbl, fixed) {
     if (fixed) return;
-    var cw = tbl.clientWidth; if (!cw) return;     /* 숨겨진 표는 보일 때 다시 잡는다 */
+    /* 기준 폭은 표를 감싼 칸의 폭 — 표가 이미 넘쳐 있으면 표 자신의 폭은 넘친 값이다 */
+    var box = tbl.parentElement, cw = Math.min(tbl.clientWidth, (box && box.clientWidth) || Infinity);
+    if (!cw) return;     /* 숨겨진 표는 보일 때 다시 잡는다 */
     var ths = t.ths || []; if (!ths.length) return;
     tbl.style.tableLayout = 'auto';                /* 자연 폭 측정 */
     ths.forEach(function (th) { th.style.width = ''; });   /* loop 가 넣은 width:1%(min-content) 제거 → 컨테이너에 맞춘 '자연 분배' 폭으로 잰다 */
-    t.colW = t.colW || [];
+    /* 창이 좁아지면 전에 넓게 잡은 폭을 버리고 다시 잰다 — 남은 폭 때문에 가로 스크롤이 생기지 않게 */
+    if (!t.colW || (t.cw && cw < t.cw)) t.colW = [];
+    t.cw = cw;
     var flex = [], meas = ths.map(function (th, i) {
       var rl = rule(label(th)); flex[i] = !!(rl && rl.flex);
       return th.getBoundingClientRect().width;
@@ -497,11 +502,15 @@
     var flexN = 0, fixedSum = 0;
     ths.forEach(function (th, i) { if (flex[i]) flexN++; else fixedSum += fit[i]; });
     var leftover = cw - fixedSum;
-    ths.forEach(function (th, i) {
-      var w = fit[i];
-      if (flex[i] && flexN) w = Math.max(fit[i], Math.floor(leftover / flexN));
-      th.style.width = w + 'px';
+    var ws = ths.map(function (th, i) {
+      return (flex[i] && flexN) ? Math.max(fit[i], Math.floor(leftover / flexN)) : fit[i];
     });
+    /* 칸마다 올림(ceil)한 1px 미만이 쌓여 표가 몇 px 넘치는 것 — 가장 넓은 칸에서 덜어 낸다 */
+    var over = ws.reduce(function (a, b) { return a + b; }, 0) - cw;
+    if (over > 0 && over <= ths.length) {
+      var wi = ws.indexOf(Math.max.apply(null, ws)); ws[wi] -= over;
+    }
+    ths.forEach(function (th, i) { th.style.width = ws[i] + 'px'; });
     tbl.style.tableLayout = 'fixed';
   }
 
@@ -1045,7 +1054,7 @@ window.cxClock = cxChannel('cx.clock');
   /* 브라우저 탭 아이콘 — 고른 회사의 파비콘(디자인 설정의 파비콘과 같은 이미지) */
   function favicon() {
     var l = document.querySelector('link[rel="icon"]') || document.head.appendChild(document.createElement('link'));
-    l.rel = 'icon'; l.href = KUDOS ? 'fav-kudos.png' : 'fav-kakaobank.png';   /* 탭 전용 정사각형(여백·그림자 없음) */
+    l.rel = 'icon'; l.href = KUDOS ? 'fav-kudos.png?v=2' : 'fav-kakaobank.png?v=2';   /* 탭 전용 정사각형(여백·그림자 없음) */
   }
   function start() {
     picker(); favicon();
