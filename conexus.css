@@ -402,7 +402,7 @@ body{font-family:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-s
   .crumb{font-size:14px;color:var(--fg)}
 
   .scroll{flex:1;overflow-y:auto;scrollbar-gutter:stable}
-  .content{padding:20px;display:flex;flex-direction:column;gap:24px}
+  .content{padding:20px;display:flex;flex-direction:column;gap:16px}
 
   /* title */
   .title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
@@ -964,8 +964,8 @@ th.cx-tight .cx-fbtn.cx-act{opacity:1;pointer-events:auto}
 /* 줄 간격 — 좁게 36px · 넓게 60px (패딩째 조정해야 실제로 바뀐다. 페이지별 td 높이보다 우선하도록 !important) */
 table.cx-rh-s tbody td{height:36px!important;padding-top:2px!important;padding-bottom:2px!important}
 table.cx-rh-l tbody td{height:60px!important;padding-top:16px!important;padding-bottom:16px!important}
-/* 컬럼 헤더 높이 40px 고정 */
-table.cx-t thead th{height:40px!important;padding-top:0!important;padding-bottom:0!important;box-sizing:border-box}
+/* 컬럼 헤더 높이 32px 고정 (전 페이지) */
+table.cx-t thead th{height:32px!important;padding-top:0!important;padding-bottom:0!important;box-sizing:border-box}
 /* 드롭다운으로 펼친 select 는 테두리를 진하게 */
 select.on{border-color:#a3a3a3}
 
@@ -973,3 +973,10 @@ select.on{border-color:#a3a3a3}
 /* 통합 계좌 줄 트리 연결선(의결권 제한 설정 기준) — 펼침 버튼 중심 아래로 세로선 */
 td.tcell{position:relative}
 td.tcell .cv{position:absolute;left:26px;top:0;bottom:0;width:1px;background:#e0e0e0}
+
+/* 투표권자가 맨 앞 칸인 표 — 좌우 스크롤 시 투표권자 칸 고정 (conexus.js 가 table.cx-stk1 을 붙인다).
+   배경은 :where 로 우선순위 0 — 줄 호버·하위 계좌 줄 등 페이지 배경이 있으면 그걸 따른다. */
+table.cx-stk1>*>tr>:first-child{position:sticky;left:0;z-index:1}
+table.cx-stk1>thead>tr>:first-child{z-index:3}
+:where(table.cx-stk1>tbody>tr>td:first-child,table.cx-stk1>tfoot>tr>td:first-child){background:#fff}
+:where(table.cx-stk1>thead>tr>th:first-child){background:#fff}

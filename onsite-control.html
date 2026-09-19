@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 주주총회 현장 제어</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=h2">
+<link rel="stylesheet" href="conexus.css?v=h3">
+<link rel="stylesheet" href="cx-accordion.css?v=1">
 <style>
   *{box-sizing:border-box}
   body{margin:0}
@@ -757,12 +758,9 @@
   .ptitle .sp{margin-left:auto}
   /* 통합기관 아코디언 — 다른 명부 화면과 같은 형태 */
   .pvoter{display:flex;align-items:center;gap:8px;min-width:0}
-  .pchev{width:24px;height:24px;flex:none;padding:0;border:1px solid var(--border);border-radius:9999px;background:#fff;color:#0A0A0A;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
-  .pchev svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
-  .pchev.collapsed svg{transform:rotate(180deg)}
-  .ptag{display:inline-flex;align-items:center;height:20px;padding:0 6px;border-radius:9999px;background:#F5F5F5;color:#737373;font-size:12px;font-weight:500;flex:none}
+  #pTbl td.tcell .cv{left:22px}   /* 계좌 줄 세로선 — 펼침 버튼(20px) 중심 = 칸 여백 12 + 10 */
+  .ptag{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:#f4f4f5;color:#737373;font-size:12px;font-weight:500;flex:none}
   .extbl tr.pchild.off{display:none}
-  .pind{padding-left:44px !important}
   .pload{display:none;align-items:center;gap:8px;margin:8px 12px 0;padding:8px 10px;background:#EEF5FF;border:1px solid #D4E8FF;border-radius:10px;font-size:13px;font-weight:500;color:#0066DF;flex:none}
   .pload.on{display:flex}
   .pspin{width:14px;height:14px;border:2px solid #BBDCFF;border-top-color:#0071F3;border-radius:50%;animation:pspin .7s linear infinite;flex:none}
@@ -2678,7 +2676,6 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
     box.innerHTML=html+cardHTML('전체',T,F,A,B,N,'tot');
   }
 
-  var CHEV='<svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg>';
   function pct(v){ return (Math.round(v/M.sharesIssued*10000)/100).toFixed(2)+'%'; }
   function renderRows(){
     var out=[];
@@ -2688,11 +2685,11 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
         ? '<td class="l"><span class="extip" data-tip="대리인 '+agent+'\n생년월일 1978-0'+(i%9+1)+'-1'+(i%9)+'\n연락처 010-'+(3000+i*37)+'-'+(1000+i*53)+'">'+agent+'</span></td>'
         : '<td class="l mut">−</td>';
       var vcell = kids
-        ? '<td class="l"><div class="pvoter"><button class="pchev" type="button" data-acc="'+i+'">'+CHEV+'</button>'
-          + '<span>'+voter+'</span><span class="ptag">통합 '+kids.length+'건</span></div></td>'
-        : '<td class="l"><div class="pvoter" style="padding-left:32px">'+voter+'</div></td>';
+        ? '<td class="l"><div class="pvoter"><button class="tw-chevron" type="button" data-acc="'+i+'" aria-label="통합 계좌 펼치기"></button>'
+          + '<span>'+voter+'</span></div></td>'
+        : '<td class="l">'+voter+'</td>';
       out.push('<tr data-i="'+i+'">'+vcell
-        +'<td class="l">'+(nm?'<button class="pnm" type="button" data-mv="'+i+'">'+nm+'</button>':'<span class="mut">−</span>')+'</td>'
+        +'<td class="l">'+(kids?'<span class="ptag">통합 '+kids.length+'건</span>':nm?'<button class="pnm" type="button" data-mv="'+i+'">'+nm+'</button>':'<span class="mut">−</span>')+'</td>'
         +agentCell
         +'<td class="c"><span class="pchip'+(app?' b':'')+'">'+(app?'사용':'미사용')+'</span></td>'
         +'<td class="c"><span class="pchip'+(done?' b':'')+'">'+(done?'행사':'미행사')+'</span></td>'
@@ -2703,8 +2700,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
         +'<td class="c"><span class="extip" data-tip="참석처리 '+M.operator.name+'\n'+M.date+' 09:'+(20+i)+'\n참석번호 '+seat+'">'+INFO+'</span></td></tr>');
       (kids||[]).forEach(function(k){
         out.push('<tr class="pchild" data-child="'+i+'">'
-          +'<td class="l pind mut"></td>'
-          +'<td class="l mut">'+k[0]+'</td><td class="l mut">−</td>'
+          +'<td class="l tcell"><span class="cv"></span></td>'
+          +'<td class="l">'+k[0]+'</td><td class="l mut">−</td>'
           +'<td class="c"><span class="pchip'+(app?' b':'')+'">'+(app?'사용':'미사용')+'</span></td>'
           +'<td class="c"><span class="pchip'+(done?' b':'')+'">'+(done?'행사':'미행사')+'</span></td>'
           +'<td>'+cm(k[1])+'</td><td>'+pct(k[1])+'</td>'
@@ -3647,7 +3644,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "이영석", "t": "�
   b.addEventListener("click",function(){ v.muted=!v.muted; if(!v.muted){ try{v.play();}catch(_){} } upd(); });
 })();
 </script>
-<script src="conexus.js?v=sel"></script>
+<script src="conexus.js?v=s2"></script>
 <script>/* 칸이 열린 뒤에야 내보낼 수 있으므로, 화면을 연 순간의 상태를 여기서 한 번 알린다 */
 if(window.OC&&OC.fire) OC.fire();
 /* 주주PASS 시청 화면에서 올라온 질의를 받아 목록 맨 앞에 얹는다 */
@@ -3674,7 +3671,9 @@ if(window.OC&&OC.fire) OC.fire();
     if(got) (window.QAREPAINT||[]).forEach(function(f){ try{ f(); }catch(e){} });
   }
   window.addEventListener('storage',function(e){ if(e.key===CH) take(); });
-  take();
+  /* 시연용 — 시청 화면에서 직접 입력한 질의는 이 화면이 열려 있는 동안만 보인다.
+     새로 열거나 새로고침하면 쌓인 입력분을 비워 기본 데이터(QUESTIONS)만 남긴다. */
+  try{ localStorage.removeItem(CH); }catch(e){}
 })();</script>
 <script>
 /* 총회 제어 드롭다운 — 지연/종료를 한 버튼으로 묶는다.

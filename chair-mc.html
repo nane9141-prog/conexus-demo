@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 의장용/사회자용</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=h2">
+<link rel="stylesheet" href="conexus.css?v=h3">
 <style>
   /* page-local content helpers (LNB styling comes from conexus.css) */
   .scroll{flex:1;overflow-y:auto}
@@ -27,7 +27,7 @@
   .search input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
   .search .ic{width:16px;height:16px;color:var(--muted-fg)}
   .page-title{font-size:20px;font-weight:600;color:#0a0a0a}
-  .page-sub{font-size:13px;color:var(--muted-fg);margin-top:4px}
+  .page-sub{font-size:13px;color:var(--muted-fg);margin-top:6px}
   .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
   .stat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px}
   .stat .k{font-size:12px;color:var(--muted-fg);font-weight:500}
@@ -237,6 +237,6 @@
     var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
   });
 </script>
-<script src="conexus.js?v=sel"></script>
+<script src="conexus.js?v=s2"></script>
 </body>
 </html>

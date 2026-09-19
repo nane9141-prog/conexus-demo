@@ -277,7 +277,7 @@
   .crumb{font-size:14px;color:var(--fg)}
 
   .scroll{flex:1;overflow-y:scroll;scrollbar-gutter:stable}
-  .content{padding:20px;display:flex;flex-direction:column;gap:24px}
+  .content{padding:20px;display:flex;flex-direction:column;gap:16px}
 
   /* title */
   .title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
@@ -478,9 +478,14 @@ table.tbl td{padding:0 16px;height:46px;border-bottom:1px solid var(--border)}
 .tw-chevron.collapsed i{transform:rotate(180deg)}
 .tw-chevron svg{display:none}
 .voter{gap:10px}
-.voter .tag{background:#f5f5f5;color:#0a0a0a}
-tr.child td{background:#fafafa}
-td.tcell .cv{left:23px}
+td .tag{background:#f4f4f5;color:#737373;padding:0 8px}   /* 통합 N건 — 참석자 관리와 같은 모양(주주명 칸) */
+/* 투표권자가 맨 앞 칸인 표 — 좌우 스크롤 시 투표권자 칸 고정 (conexus.css 와 같은 규칙, 이 페이지는 conexus.css 미사용) */
+table.cx-stk1>*>tr>:first-child{position:sticky;left:0;z-index:1}
+table.cx-stk1>thead>tr>:first-child{z-index:3}
+table.cx-t thead th{height:32px!important;padding-top:0!important;padding-bottom:0!important;box-sizing:border-box}   /* 헤더 32px (conexus.css 와 동일) */
+:where(table.cx-stk1>tbody>tr>td:first-child,table.cx-stk1>tfoot>tr>td:first-child){background:#fff}
+:where(table.cx-stk1>thead>tr>th:first-child){background:#fff}
+td.tcell .cv{left:26px}   /* 펼침 버튼 중심 */
 /* 3% 해제 / 제한 버튼 */
 .tbtn{height:28px;border-radius:8px;font-size:12px;padding:0 10px}
 .tbtn.on{background:#f5f5f5;border-color:#a3a3a3}
@@ -851,8 +856,8 @@ table.agtbl td.b{font-weight:600}
                   <td><button class="tbtn" data-exempt data-ex="">해제하기</button></td>
                 </tr>
                 <tr class="grp" data-grp="hti">
-                  <td><div class="voter"><button class="tw-chevron collapsed" data-toggle="hti" title="펼치기/접기"><i class="ph ph-caret-up"></i></button><span class="vname">한국투자신탁운용</span><span class="tag">통합 3건</span></div></td>
-                  <td></td><td></td>
+                  <td><div class="voter"><button class="tw-chevron collapsed" data-toggle="hti" title="펼치기/접기"><i class="ph ph-caret-up"></i></button><span class="vname">한국투자신탁운용</span></div></td>
+                  <td><span class="tag">통합 3건</span></td><td class="sub">378742234</td>
                   <td class="r tnum">273,513</td><td class="r tnum sub">5.14%</td>
                   <td><button class="tbtn on" data-restrict data-type="공익법인(제외)"><i class="ph ph-check"></i>공익법인(제외)</button></td>
                   <td><button class="tbtn on" data-rel data-count="12"><i class="ph ph-check"></i>12명</button></td>
@@ -862,8 +867,8 @@ table.agtbl td.b{font-weight:600}
                 <tr class="child hidden" data-child="hti"><td class="tcell"><span class="cv"></span></td><td>한국투자신탁운용 제 2호</td><td class="sub">378742235</td><td class="r tnum">160,067</td><td class="r tnum sub">5.14%</td><td></td><td></td><td></td></tr>
                 <tr class="child hidden" data-child="hti"><td class="tcell"><span class="cv"></span></td><td>한국투자신탁운용 제 3호</td><td class="sub">378742236</td><td class="r tnum">56,723</td><td class="r tnum sub">5.14%</td><td></td><td></td><td></td></tr>
                 <tr class="grp" data-grp="ktu">
-                  <td><div class="voter"><button class="tw-chevron collapsed" data-toggle="ktu" title="펼치기/접기"><i class="ph ph-caret-up"></i></button><span class="vname">교직원공제회</span><span class="tag">통합 4건</span></div></td>
-                  <td></td><td></td>
+                  <td><div class="voter"><button class="tw-chevron collapsed" data-toggle="ktu" title="펼치기/접기"><i class="ph ph-caret-up"></i></button><span class="vname">교직원공제회</span></div></td>
+                  <td><span class="tag">통합 4건</span></td><td class="sub">441002201</td>
                   <td class="r tnum">433,580</td><td class="r tnum sub">5.14%</td>
                   <td><button class="tbtn on" data-restrict data-type="공익법인(포함)"><i class="ph ph-check"></i>공익법인(포함)</button></td>
                   <td><button class="tbtn on" data-rel data-count="4"><i class="ph ph-check"></i>4명</button></td>
@@ -1635,6 +1640,6 @@ document.querySelectorAll('.lnb-tabs .t').forEach(function(t){t.addEventListener
     });
   })();
 </script>
-<script src="conexus.js?v=sel"></script>
+<script src="conexus.js?v=s2"></script>
 </body>
 </html>

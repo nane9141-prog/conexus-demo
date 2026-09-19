@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 불통일행사 관리</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=h2">
+<link rel="stylesheet" href="conexus.css?v=h3">
 <link rel="stylesheet" href="cx-accordion.css">
 <style>
   /* page-local content helpers (LNB styling comes from conexus.css) */
@@ -29,7 +29,7 @@
   .search .ic{width:16px;height:16px;color:var(--muted-fg)}
   .page-title{font-size:18px;font-weight:600;color:#0a0a0a}
   .content{gap:16px}
-  .page-sub{font-size:13px;color:var(--muted-fg);margin-top:4px}
+  .page-sub{font-size:13px;color:var(--muted-fg);margin-top:6px}
   .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
   .stat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px}
   .stat .k{font-size:12px;color:var(--muted-fg);font-weight:500}
@@ -140,12 +140,9 @@
   #splTbl td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   table.mtbl thead th{font-size:14px;font-weight:500;color:#737373;padding:12px 14px}
   table.mtbl tbody td{height:46px;box-sizing:border-box;padding:0 14px}
-  th.spl-cv,td.spl-cv{padding:0!important;text-align:center}
   th.spl-mo,td.spl-mo{padding:0!important;text-align:center}
-  table.mtbl tr.child td{background:#fafafa}
-  table.mtbl tr.child td.spl-cv{position:relative}
-  table.mtbl tr.child td.spl-cv::before{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:1px solid #e5e5e5}
-  .spl-tag{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:#f5f5f5;color:#171717;font-size:12px;font-weight:500}
+  #splTbl td.tcell .cv{left:24px}   /* 펼침 버튼(20px) 중심 = 칸 여백 14 + 10 */
+  .spl-tag{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:#f4f4f5;color:#737373;font-size:12px;font-weight:500}
   .spl-nm{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
   td.spl-b{font-weight:600}
   .rsn{display:inline-block;vertical-align:middle;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:default}
@@ -312,7 +309,7 @@
           <div class="mchips" id="splChips"></div>
           <div class="mtb-r"><button class="mbtn" id="splReg" type="button"><i class="ph ph-check-square-offset" style="font-size:16px"></i>담당자 등록</button><span data-cx-tools></span></div>
         </div>
-        <div class="mwrap" id="splWrap"><div class="mscroll"><table class="mtbl" id="splTbl"><colgroup><col style="width:44px"><col style="width:200px"><col style="width:150px"><col style="width:96px"><col style="width:116px"><col style="width:120px"><col><col style="width:84px"><col style="width:150px"><col style="width:150px"><col style="width:64px"><col style="width:44px"></colgroup><thead><tr><th class="spl-cv"></th><th>투표권자</th><th>주주명</th><th>주주구분</th><th>보유주식</th><th data-al="c">신청 채널</th><th>신청 사유</th><th>상태</th><th>신청 일시</th><th>처리 일시</th><th data-al="c">서류</th><th class="spl-mo"></th></tr></thead><tbody id="splBody"></tbody></table></div>
+        <div class="mwrap" id="splWrap"><div class="mscroll"><table class="mtbl" id="splTbl"><colgroup><col style="width:244px"><col style="width:150px"><col style="width:96px"><col style="width:116px"><col style="width:120px"><col><col style="width:84px"><col style="width:150px"><col style="width:150px"><col style="width:64px"><col style="width:44px"></colgroup><thead><tr><th>투표권자</th><th>주주명</th><th>주주구분</th><th>보유주식</th><th data-al="c">신청 채널</th><th>신청 사유</th><th>상태</th><th>신청 일시</th><th>처리 일시</th><th data-al="c">서류</th><th class="spl-mo"></th></tr></thead><tbody id="splBody"></tbody></table></div>
         <div class="mfoot"><span id="splCount"></span><div class="mpg"><span class="spl-pl">페이지당 <select id="splSize"><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option></select></span><span id="splPager" class="spl-pager"></span></div></div></div>
         <div class="spl-empty" id="splEmpty" hidden><i class="ph ph-table"></i><div class="t">불통일행사 신청 내역이 없습니다.</div><div class="d">주주가 불통일행사 신청하거나 담당자 수동 등록하면 이곳에 표시됩니다.</div></div>
         </div>
@@ -442,9 +439,9 @@
   /* 칸 번호 → 값 (전체 데이터 기준 정렬 cxsort · 필터 cxFilter/cxValues 용) */
   function val(x,i){
     switch(i){
-      case 1: return x.voter; case 2: return x.kids?'통합 '+x.kids.length+'건':x.name; case 3: return x.gb;
-      case 4: return x.sh; case 5: return x.ch; case 6: return x.rsn; case 7: return x.st;
-      case 8: return x.at; case 9: return x.dt; case 10: return x.doc?'첨부':'';
+      case 0: return x.voter; case 1: return x.kids?'통합 '+x.kids.length+'건':x.name; case 2: return x.gb;
+      case 3: return x.sh; case 4: return x.ch; case 5: return x.rsn; case 6: return x.st;
+      case 7: return x.at; case 8: return x.dt; case 9: return x.doc?'첨부':'';
     }
     return '';
   }
@@ -463,8 +460,9 @@
   function tr(x,child){
     var grp=!!x.kids;
     return '<tr data-k="'+x.k+'"'+(child?' class="child" data-child="'+x.parent.k+'"':'')+'>'
-      +'<td class="spl-cv">'+(grp?'<button class="tw-chevron'+(open[x.k]?'':' collapsed')+'" type="button" data-tog="'+x.k+'" aria-label="통합 계좌 펼치기"></button>':'')+'</td>'
-      +'<td>'+(child?'':esc(x.voter))+'</td>'
+      /* 통합기관 — 참석자 관리와 같은 모양: 투표권자 칸에 펼침 버튼+이름, 계좌 줄은 세로선 */
+      +(child?'<td class="tcell"><span class="cv"></span></td>'
+        :'<td>'+(grp?'<div class="voter"><button class="tw-chevron'+(open[x.k]?'':' collapsed')+'" type="button" data-tog="'+x.k+'" aria-label="통합 계좌 펼치기"></button><span class="vname">'+esc(x.voter)+'</span></div>':esc(x.voter))+'</td>')
       +'<td>'+(grp?'<span class="spl-tag">통합 '+x.kids.length+'건</span>':'<span class="spl-nm">'+esc(x.name)+'</span>')+'</td>'
       +'<td>'+x.gb+'</td><td>'+cm(x.sh)+'</td>'
       +'<td'+(x.ch==='담당자 등록'?' class="spl-b"':'')+'>'+x.ch+'</td>'
@@ -492,7 +490,7 @@
       var h=tr(x,false);
       if(x.kids&&open[x.k]) h+=x.kids.map(function(c){return tr(c,true);}).join('');
       return h;
-    }).join(''):'<tr><td colspan="12" class="spl-none">검색 결과가 없습니다.</td></tr>';
+    }).join(''):'<tr><td colspan="11" class="spl-none">검색 결과가 없습니다.</td></tr>';
     document.getElementById('splCount').textContent='총 '+r.length+'건 · '+cm(r.reduce(function(a,x){return a+x.sh;},0))+'주';
     var dP=page<=1?' dis':'', dN=page>=pages?' dis':'';
     document.getElementById('splPager').innerHTML=
@@ -611,6 +609,6 @@
   render();
 })();
 </script>
-<script src="conexus.js?v=sel"></script>
+<script src="conexus.js?v=s2"></script>
 </body>
 </html>

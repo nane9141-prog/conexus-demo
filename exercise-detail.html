@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 의안 상세 내역</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=h2">
+<link rel="stylesheet" href="conexus.css?v=h3">
 <style>
   .scroll{flex:1;overflow:hidden;display:flex;flex-direction:column;padding:20px}
   .exd-head{display:flex;align-items:center;gap:8px;flex:none}
@@ -19,7 +19,10 @@
   .exd-res.fail{background:#FFF5F7;color:#E9081B}
   .exd-res.drop{background:#F5F5F5;color:#525252}
   .exd-bar{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:12px;flex:none}
-  .exd-search{display:flex;align-items:center;gap:6px;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:10px;background:#fff;width:260px;margin-right:auto}
+  /* 표 위 검색 — 참석자 관리와 같은 모양: 검색 기준 드롭다운 + 검색창 */
+  .exd-find{display:flex;align-items:center;gap:8px;margin-right:auto}
+  .exd-find select{width:128px;height:38px;padding:0 32px 0 12px;border-radius:9px;font-size:14px;background-position:right 12px center;background-size:14px 14px}
+  .exd-search{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;width:300px}
   .exd-search input{flex:1;border:none;outline:none;background:none;font-family:inherit;font-size:14px;letter-spacing:-.01em;color:#171717}
   .exd-search i{color:#737373}
   .xbtn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:10px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;letter-spacing:-.01em;color:#171717;cursor:pointer;white-space:nowrap}
@@ -42,11 +45,9 @@
      아래 셀 글자와 시작점이 어긋난다. */
   .extbl th.fic{padding-right:34px}
   .exfic{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;margin:0;fill:none;stroke:#737373;stroke-width:1.6;stroke-linecap:round;cursor:pointer}
-  .exchip{display:inline-flex;align-items:center;padding:2px 8px;background:#F5F5F5;border-radius:26px;font-size:12px;line-height:16px;font-weight:500;color:#171717}
+  .exchip{display:inline-flex;align-items:center;height:20px;box-sizing:border-box;padding:2px 6px;background:#F5F5F5;border-radius:6px;font-size:12px;line-height:16px;font-weight:500;color:#525252}   /* 행사방식 — 다른 화면 상태 뱃지와 같은 모양 */
   .exchip.b{background:#EEF5FF;color:#0071F3}
   .exi{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-  .exmore{width:28px;height:28px;border:none;background:none;border-radius:8px;color:#737373;cursor:pointer;font-size:16px;line-height:1}
-  .exmore:hover{background:#F5F5F5}
   .extip{position:relative;display:inline-flex;align-items:center;cursor:default}
   .extip:hover::after{content:attr(data-tip);position:absolute;right:calc(100% + 8px);top:50%;transform:translateY(-50%);background:#171717;color:#FAFAFA;font-size:12px;line-height:16px;font-weight:400;padding:6px 12px;border-radius:8px;white-space:pre;z-index:9;pointer-events:none;text-align:left}
   /* 하단 고정 합계 */
@@ -63,7 +64,7 @@
   .tgl.on{background:#171717}
   .tgl::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left .15s}
   .tgl.on::after{left:14px}
-  body.pre .exd-back,body.pre .exd-res,body.pre .exd-search,body.pre #exdDl,body.pre .extbl tfoot{display:none}
+  body.pre .exd-back,body.pre .exd-res,body.pre .exd-find,body.pre #exdDl,body.pre .extbl tfoot{display:none}
   .tgl-wrap[hidden],.exd-sub[hidden]{display:none}
   body.pre .exd-bar{justify-content:flex-end}
   body.pre .exd-no{padding:0;border:none;background:none;font-size:16px;line-height:24px;font-weight:600;color:#0A0A0A}
@@ -75,7 +76,7 @@
 <script src="cx-data.js"></script>
 </head>
 <body>
-<div class="app" id="app">
+<div class="app collapsed" id="app">   <!-- 현장 제어에서 들어오는 상세 — LNB 접힘이 기본 -->
   <aside class="lnb">
     <div class="lnb-head">
       <div class="lnb-brand exp-only">
@@ -189,7 +190,8 @@
       </div>
       <div class="exd-sub" id="exdSub" hidden>중복 철회된 수는 제공되지 않습니다</div>
       <div class="exd-bar">
-        <div class="exd-search"><i class="ph ph-magnifying-glass" style="font-size:16px"></i><input type="text" placeholder="주주명 · 주주번호 검색"></div>
+        <div class="exd-find"><select id="exdQf" aria-label="검색 기준"><option value="0">투표권자</option><option value="1">주주명</option></select>
+          <div class="exd-search"><i class="ph ph-magnifying-glass" style="font-size:16px"></i><input type="text" id="exdQ" placeholder="검색어를 입력하세요"></div></div>
         <label class="tgl-wrap" id="exdDup" hidden><span class="tgl" id="exdDupTgl"></span>중복 수치 포함</label>
         <button class="xbtn" id="exdDl" type="button"><i class="ph ph-download-simple" style="font-size:16px"></i>다운로드</button>
         <span data-cx-tools></span>
@@ -209,7 +211,6 @@
             <th style="width:110px"><span class="exh nt"><svg viewBox="0 0 24 24"><path d="M12 5 20 19H4z"/></svg>중립</span></th>
             <th class="c" style="width:120px">의결권제한</th>
             <th class="c" style="width:120px">의안별 제한</th>
-            <th class="c" style="width:60px">더보기</th>
             <th class="c" style="width:56px">상세</th>
           </tr></thead>
           <tbody id="exdBody"></tbody>
@@ -263,6 +264,7 @@
   if(PRE){
     var src=FROM==='evote'?['evote-records.html','전자투표/위임장 내역']:['paper-records.html','서면투표/위임장 내역'];
     document.body.classList.add('pre');
+    document.getElementById('app').classList.remove('collapsed');   /* 사전 의결권 내역에서 온 상세는 LNB 펼침 유지 */
     document.title='CONEXUS · 의안 상세';
     var cr=document.querySelectorAll('.topbar .crumb'); cr[0].href=src[0]; cr[0].textContent=src[1]; cr[1].textContent='의안 상세';
     document.querySelectorAll('.lnb-tabs .t').forEach(function(t){ t.classList.toggle('active',t.dataset.tab==='pre'); });
@@ -329,7 +331,8 @@
   function paint(){
     var k=(PRE&&document.getElementById('exdDupTgl').classList.contains('on'))?1/(1-DR):1;
     sum={can:0,un:0,ex:0,f:0,a:0,b:0,n:0};
-    document.getElementById('exdBody').innerHTML=ROWS.map(function(r,i){
+    var q=PRE?'':(document.getElementById('exdQ').value||'').trim(), qf=+document.getElementById('exdQf').value;
+    document.getElementById('exdBody').innerHTML=ROWS.filter(function(r){ return !q || r[qf].indexOf(q)>=0; }).map(function(r,i){
       var voter=r[0], nm=r[1], way=PRE?PREWAY[r[2]%2]:WAY[r[2]], can=Math.round(r[3]*k), un=Math.round(r[4]*k), vote=r[5];
       var ex=can-un;
       var f=vote==='찬성'?ex:0, ag=vote==='반대'?ex:0, ab=vote==='기권'?ex:0, nt=vote==='중립'?ex:0;
@@ -341,13 +344,15 @@
         + '<td>'+cm(can)+'</td>' + num(un) + '<td>'+cm(ex)+'</td>'
         + num(f) + num(ag) + num(ab) + num(nt)
         + td(LIMIT[r[2]],'c') + td(AGLIMIT[r[2]],'c')
-        + '<td class="c"><button class="exmore" type="button" title="더보기">⋯</button></td>'
         + '<td class="c"><span class="extip" data-tip="'+tip+'">'+INFO+'</span></td></tr>';
-    }).join('');
+    }).join('') || '<tr><td class="c mut" colspan="13" style="height:120px">검색 결과가 없습니다.</td></tr>';
     /* 사전 상세는 표본 주주 기준 합계(총회 전체 합계 줄은 없음) */
     if(PRE){ document.getElementById('exdCnt').textContent='총 '+ROWS.length+'명 · '+cm(sum.can)+'주'; document.getElementById('exdPages').textContent='1'; }
   }
   paint();
+  /* 표 위 검색 — 투표권자/주주명 */
+  document.getElementById('exdQ').addEventListener('input',paint);
+  document.getElementById('exdQf').addEventListener('change',paint);
   if(PRE) document.getElementById('exdDup').addEventListener('click',function(e){ e.preventDefault(); document.getElementById('exdDupTgl').classList.toggle('on'); paint(); });
 
   /* 합계는 표본이 아니라 총회 전체 기준 */
@@ -356,7 +361,7 @@
     + '<td class="l">합계</td><td class="l">총 '+cm(M.attendHolders)+'명</td><td class="l">전 채널</td>'
     + '<td>'+cm(TCAN)+'</td><td>'+cm(TCAN-TEX)+'</td><td>'+cm(TEX)+'</td>'
     + '<td>'+cm(TF)+'</td><td>'+cm(TA)+'</td><td>'+cm(TB)+'</td><td>0</td>'
-    + '<td class="c">−</td><td class="c">−</td><td class="c"></td><td class="c"></td></tr>';
+    + '<td class="c">−</td><td class="c">−</td><td class="c"></td></tr>';
 
   if(!PRE){
   document.getElementById('exdCnt').textContent='총 '+cm(M.attendHolders)+'명 · '+cm(TCAN)+'주';
@@ -364,6 +369,6 @@
   }
 })();
 </script>
-<script src="conexus.js?v=sel"></script>
+<script src="conexus.js?v=s2"></script>
 </body>
 </html>

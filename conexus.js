@@ -376,6 +376,8 @@
     }
     t.tb = tb;
     t.ths = Array.prototype.slice.call(hrow.cells);
+    /* 투표권자가 맨 앞 칸인 표 — 좌우 스크롤 시 그 칸을 고정(conexus.css .cx-stk1) */
+    tbl.classList.toggle('cx-stk1', /^투표권자/.test(label(t.ths[0])));
     var rows = bodyRows(tb);
 
     t.ths.forEach(function (th, idx) {

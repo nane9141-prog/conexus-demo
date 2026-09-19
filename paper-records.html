@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 서면투표/위임장 내역</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=h2">
+<link rel="stylesheet" href="conexus.css?v=h3">
 <style>
   /* page-local content helpers (LNB styling comes from conexus.css) */
   .scroll{flex:1;overflow-y:auto}
@@ -27,7 +27,7 @@
   .search input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
   .search .ic{width:16px;height:16px;color:var(--muted-fg)}
   .page-title{font-size:20px;font-weight:600;color:#0a0a0a}
-  .page-sub{font-size:13px;color:var(--muted-fg);margin-top:4px}
+  .page-sub{font-size:13px;color:var(--muted-fg);margin-top:6px}
   .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
   .stat{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px}
   .stat .k{font-size:12px;color:var(--muted-fg);font-weight:500}
@@ -168,7 +168,7 @@
   #viewHolder .tw-chevron.collapsed svg{transform:rotate(180deg)}
   #viewHolder .tag{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:#f4f4f5;color:#737373;font-size:12px;font-weight:500}
   #viewHolder tr.child.hidden{display:none}
-  #viewHolder tr.child td{color:#737373}
+  #viewHolder td.tcell .cv{left:18px}   /* 계좌 줄 세로선 — 펼침 버튼 중심(칸 여백 8 + 10) */
   .hopg{display:flex;align-items:center;gap:8px}
   #hoPager{display:inline-flex;align-items:center;gap:4px}
   #hoPager .pp{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 4px;box-sizing:border-box;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;color:#525252;font-size:12px}
@@ -183,11 +183,12 @@
   #viewAgenda tbody td:nth-child(5),#viewHolder td.mi{color:var(--muted-fg)}   /* 미행사의결권 — muted, 막대 없이 수치만 */
   #viewAgenda tbody td:nth-child(2),#viewHolder tbody td:nth-child(2){font-weight:400}   /* 의안명 · 주주명 — 보통 굵기 */
   #viewAgenda tbody td:first-child{color:var(--muted-fg)}   /* 의안번호 */
-  /* 주주 기준 표 — 가로 스크롤 없이: 이름은 104px 말줄임, 칸 좌우 여백 8px */
+  /* 주주 기준 표 — 가로 스크롤 없이: 이름은 칸 폭에 맞춰 말줄임, 칸 좌우 여백 8px */
   #viewHolder th,#viewHolder td{padding-left:8px;padding-right:8px}
-  #viewHolder .hn{display:inline-block;max-width:104px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
+  #viewHolder .hn{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}   /* 칸 폭만큼 쓰고 모자랄 때만 말줄임 */
   #viewHolder th:first-child{width:auto !important}   /* 투표권자 칸이 남는 폭을 가져가 반올림 오차로 생기는 가로 스크롤을 흡수 */
-  #viewHolder td:first-child{overflow:hidden}
+  #viewHolder th:nth-child(2){width:auto !important}   /* 주주명도 남는 폭을 투표권자와 나눠 가짐 — 공간이 있으면 전체 표시 */
+  #viewHolder td:first-child,#viewHolder td:nth-child(2){overflow:hidden}
   #viewAgenda th:first-child{width:80px !important}   /* 의안번호 — 번호만 표기라 좁게(conexus.js 자동 폭 덮어쓰기) */
   .mbar{display:inline-block;width:28px;height:6px;border-radius:3px;background:linear-gradient(90deg,#737373 45%,#e5e5e5 45%);vertical-align:middle;margin-right:6px}
 
@@ -912,7 +913,7 @@
   ov.querySelectorAll("[data-cfm-close]").forEach(function(b){ b.addEventListener("click",closeCfm); });
 })();
 </script>
-<script src="conexus.js?v=sel"></script>
+<script src="conexus.js?v=s2"></script>
 <script>
 /* 내역 삭제 — 범위(파일 등록 · 개별 등록) 선택 → 동의 → 확인 알림 → 삭제 */
 (function(){

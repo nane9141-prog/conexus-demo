@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 집중투표 관리</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=h2">
+<link rel="stylesheet" href="conexus.css?v=h3">
 <link rel="stylesheet" href="cx-accordion.css">
 <style>
   /* page-local content helpers (LNB styling comes from conexus.css) */
@@ -13,7 +13,7 @@
   .ic{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .content{gap:16px}
   .page-title{font-size:18px;font-weight:600;color:#0a0a0a;line-height:1}
-  .page-sub{font-size:14px;color:var(--muted-fg);margin-top:8px;letter-spacing:-.01em}
+  .page-sub{font-size:13px;color:var(--muted-fg);margin-top:6px;letter-spacing:-.01em}
   .mbtn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:10px;background:#fff;font-family:inherit;font-size:14px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap;letter-spacing:-.01em}
   .mbtn.dark{background:#171717;border-color:#171717;color:#fafafa}
   /* 탭 (shadcn tabs · line) */
@@ -22,6 +22,7 @@
   .ct2.on{color:#0a0a0a}.ct2.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#171717}
   /* 분배 방식 배너 */
   .cbanner{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 8px 8px 16px;border:1px solid var(--border);border-radius:8px;background:#fafafa}
+  .cbanner.unset{background:#fff}   /* 분배 방식 미설정 — 흰색 박스 */
   .cb-l{display:flex;align-items:center;gap:8px;min-width:0}
   .cb-l>i{font-size:16px;color:#0a0a0a}
   .cb-t{font-size:14px;font-weight:600;color:#0a0a0a;letter-spacing:-.01em;white-space:nowrap}
@@ -38,9 +39,6 @@
   .cntlink{cursor:pointer;border-radius:4px}
   .cntlink:hover{text-decoration:underline;text-underline-offset:3px}
   .sbadge.p{background:#F5F3FF;color:#7C3AED}
-  .stw{display:inline-flex;align-items:center;gap:4px}
-  .stw>i{font-size:14px;color:#737373}
-  .stw.go .sbadge{cursor:pointer}
   @media(max-width:900px){.cb-d{display:none}}
 
   /* ── 집중투표 표 분배 시트 (Sheet) ── */
@@ -78,6 +76,7 @@
   table.csg tbody td{padding:0 12px;height:42px;border-bottom:1px solid rgba(24,29,31,.15);color:#181D1F;white-space:nowrap;font-variant-numeric:tabular-nums}
   table.csg tbody td.n{text-align:right}table.csg tbody td.c{text-align:center}
   table.csg tbody td.in{padding:0;width:120px}
+  table.csg tbody tr:not(.sum):hover td{background:#FAFAFA}   /* 패널 표 — 마우스 오버 시 행 배경 */
   table.csg tbody tr.foc td{background:#EEF5FF}
   table.csg tbody tr.sum td{background:#FAFAFA;border-bottom:none}
   .cs-in{display:block;width:100%;height:42px;box-sizing:border-box;border:1px solid transparent;background:transparent;padding:0 12px;text-align:right;font-family:inherit;font-size:14px;color:#181D1F;outline:none;font-variant-numeric:tabular-nums}
@@ -167,12 +166,10 @@
   table.bdt th.n,table.bdt td.n{text-align:right}
   table.bdt th.v,table.bdt td.v{border-left:1px solid #E5E5E5}
   table.bdt td{height:46px;padding:0 16px;border-bottom:1px solid #E5E5E5;color:#0a0a0a;white-space:nowrap;font-variant-numeric:tabular-nums}
-  table.bdt td.tg{width:20px;padding:0 0 0 12px}
-  table.bdt tr.child td{background:#FAFAFA}
-  table.bdt tr.child td.tg{border-left:1px solid #E5E5E5;background:#fff}
   table.bdt tr.hidden{display:none}
+  table.bdt tbody td:first-child{font-weight:600}   /* 투표권자 — 다른 명부 표와 같이 굵게 */
   table.bdt tfoot td{position:sticky;bottom:0;background:#FAFAFA;font-weight:600;height:46px;padding:0 16px;border-top:1px solid #E5E5E5;white-space:nowrap;font-variant-numeric:tabular-nums}
-  .btag{display:inline-flex;align-items:center;height:20px;padding:0 6px;border-radius:6px;background:#F5F5F5;color:#0a0a0a;font-size:12px;font-weight:500}
+  .btag{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:#f4f4f5;color:#737373;font-size:12px;font-weight:500}
 </style>
 <script src="cx-data.js"></script>
 </head>
@@ -284,7 +281,7 @@
         <div class="st-head"><div><div class="page-title">집중 투표 관리</div><div class="page-sub">중복 의결권 확정 후 집중투표 의안에 동일하게 찬성한 주주를 그룹별로 표 분배를 할 수 있습니다.</div></div></div>
         <div class="ctabs2"><button class="ct2 on" data-ct="own">자사 표 분배</button><button class="ct2" data-ct="other">자사 외 표 분배</button></div>
         <div class="cbanner"><div class="cb-l"><i class="ph ph-gear"></i><span class="cb-t" id="dmName">분배 방식 설정</span><span class="cb-d" id="dmDesc">분배 방식 선택 후 집중투표 표 분배 가능</span></div><button class="mbtn dark" id="dmBtn">설정</button></div>
-        <div class="mwrap"><table class="mtbl" id="cvTbl"><thead><tr><th>의안번호</th><th>의안명</th><th data-al="c">찬성 의안 번호</th><th>분배 가능 주주</th><th>분배 가능 의결권</th><th>분배 여부</th><th>분배 완료 일시</th></tr></thead><tbody id="cvBody"></tbody></table></div>
+        <div class="mwrap"><table class="mtbl" id="cvTbl"><thead><tr><th>의안번호</th><th>의안명</th><th data-al="c">찬성 의안 번호</th><th>분배 가능 주주</th><th>분배 가능 의결권</th><th>분배 여부</th><th data-al="c">분배 완료 일시</th></tr></thead><tbody id="cvBody"></tbody></table></div>
       </div>
     </div>
   </main>
@@ -352,7 +349,7 @@
     </div>
     <div class="bd-bar"><span class="m" id="bdMethod"></span><span class="r" id="bdState"></span></div>
     <div class="bd-in" id="bdIn"></div>
-    <div class="bd-grid"><table class="bdt" data-nocx><thead id="bdH"></thead><tbody id="bdB"></tbody><tfoot id="bdF"></tfoot></table></div>
+    <div class="bd-grid"><table class="bdt cx-stk1" data-nocx><thead id="bdH"></thead><tbody id="bdB"></tbody><tfoot id="bdF"></tfoot></table></div>
   </div>
 </div>
 <script>
@@ -421,12 +418,12 @@
   var CAND={1:'사내이사 나회장 선임의 건',2:'사내이사 김이사 선임의 건',3:'사내이사 천이사 선임의 건',4:'사내이사 박이사 선임의 건'};
   var NM='집중투표 후보 3인 중 2인 선임의 건';
   function R(no,grp,cnt,votes,st,at){ var r={no:no,nm:NM,grp:grp,cnt:cnt,votes:votes,st:st,at:at||''}; if(st==='done') r.dist={method:'equal',inputs:[],odd:0}; return r; }
-  /* st: done 분배 완료 · todo 미분배 · none 분배 불가 · dup 중복처리 필요 */
+  /* st: done 분배 완료 · todo 미분배 */
   var STATE={
     own:{method:'',rows:[R('3-1',[1],1200,285041,'done','2026-07-27 13:40'),R('3-1',[1,2],400,139182,'todo'),R('3-1',[1,2,4],100,85041,'todo'),R('3-1',[1,3],80,85041,'todo'),R('3-1',[1,4],60,85041,'todo'),
-      R('3-2',[2],50,85041,'todo'),R('3-2',[2,3],1200,185041,'todo'),R('3-2',[2,3,4],2000,0,'none'),R('3-2',[3],100,85041,'dup'),R('3-2',[4],3,5041,'todo')]},
+      R('3-2',[2],50,85041,'todo'),R('3-2',[2,3],1200,185041,'todo'),R('3-2',[4],3,5041,'todo')]},
     other:{method:'',rows:[R('3-1',[1],900,210338,'done','2026-07-27 14:05'),R('3-1',[1,2],320,96540,'todo'),R('3-1',[1,3],150,61208,'todo'),R('3-1',[2],70,44120,'done','2026-07-27 14:12'),
-      R('3-2',[2,3],640,128470,'todo'),R('3-2',[2,4],210,52900,'todo'),R('3-2',[3],90,33015,'dup'),R('3-2',[4],5,7220,'todo')]}
+      R('3-2',[2,3],640,128470,'todo'),R('3-2',[2,4],210,52900,'todo'),R('3-2',[4],5,7220,'todo')]}
   };
   var tab='own';
   function S(){ return STATE[tab]; }
@@ -440,7 +437,7 @@
   /* ---------- 목록 ---------- */
   var tbl=document.getElementById('cvTbl'), body=document.getElementById('cvBody');
   var sortSt=null, filtPred=null;
-  var ST_LB={done:'분배 완료',todo:'미분배',none:'분배 불가',dup:'중복처리 필요'};
+  var ST_LB={done:'분배 완료',todo:'미분배'};
   function cellText(r,i){ return [r.no,r.nm,r.grp.join(', '),fmt(r.cnt),fmt(r.votes),ST_LB[r.st],r.at||'-'][i]; }
   function list(){
     var a=S().rows.filter(function(r){ return !filtPred || filtPred(function(i){return cellText(r,i);}); });
@@ -453,8 +450,6 @@
   }
   function stHtml(st){
     if(st==='done') return '<span class="sbadge b">분배 완료</span>';
-    if(st==='none') return '<span class="stw" title="분배 가능한 주식수가 없습니다"><span class="sbadge r">분배 불가</span><i class="ph ph-info"></i></span>';
-    if(st==='dup') return '<span class="stw go" title="중복 의결권 확정 후 분배가 가능합니다"><span class="sbadge p" data-go>중복처리 필요</span><i class="ph ph-info"></i></span>';
     return '<span class="sbadge">미분배</span>';
   }
   function renderList(){
@@ -469,7 +464,6 @@
   body.addEventListener('click',function(e){
     var tr=e.target.closest('tr[data-i]'); if(!tr) return;
     var r=S().rows[+tr.dataset.i];
-    if(e.target.closest('[data-go]')){ location.href='dup-voting.html'; return; }
     if(e.target.closest('[data-cnt]')){ openDetail(r); return; }
     openSheet(r);
   });
@@ -478,6 +472,7 @@
     document.getElementById('dmName').textContent=m?METHODS[m].name:'분배 방식 설정';
     document.getElementById('dmDesc').textContent=m?(METHODS[m].bd||METHODS[m].card):'분배 방식 선택 후 집중투표 표 분배 가능';
     b.textContent=m?'변경':'설정'; b.classList.toggle('dark',!m);
+    b.closest('.cbanner').classList.toggle('unset',!m);
   }
   document.querySelectorAll('.ct2[data-ct]').forEach(function(b){
     b.addEventListener('click',function(){
@@ -526,8 +521,6 @@
   /* ---------- 표 분배 시트 ---------- */
   var ov=document.getElementById('csOv'), cur=null;
   function openSheet(r){
-    if(r.st==='none'){ cxToast('분배 가능한 주식수가 없습니다.',true); return; }
-    if(r.st==='dup'){ cxToast('중복 의결권 확정 후 분배가 가능합니다.',true); return; }
     var done=r.st==='done';
     if(!done && !S().method){ cxToast('분배 방식 선택 후 집중투표 표 분배 가능',true); return; }
     var m=done?r.dist.method:S().method, k=r.grp.length;
@@ -542,6 +535,12 @@
     document.getElementById('csModi').textContent='마지막 변경 '+(r.at||'2026-07-17 15:58')+' · 박지용';
     renderSheet();
     ov.classList.add('show');
+    focusIn();
+  }
+  /* 입력이 필요한 분배 방식이면 선택된 후보 칸을 활성화(포커스)한 상태로 연다 */
+  function focusIn(){
+    var inp=document.querySelector('#csGb .cs-in[data-j="'+cur.foc+'"]');
+    if(inp) setTimeout(function(){ inp.focus(); },230);   /* 시트가 열리는 전환(.22s)이 끝난 뒤 — 숨김 상태에선 포커스가 안 된다 */
   }
   function remain(){ var r=cur.r; return r.votes-r.cnt*r.grp.length-sum(cur.inputs); }
   function finals(){   /* 최종 반영 의결권 [값들], 단주 */
@@ -592,7 +591,7 @@
   gb.addEventListener('focusout',function(e){ var i=e.target.closest('.cs-in'); if(i){ var v=cur.inputs[+i.dataset.j]; i.value=v?fmt(v):''; } });
   gb.addEventListener('click',function(e){ var b=e.target.closest('[data-odd]'); if(b&&!b.disabled){ cur.odd=+b.dataset.odd; renderSheet(); } });
   document.getElementById('csRight').addEventListener('click',function(e){
-    if(e.target.closest('#csEdit')){ cur.view=false; cur.fromEdit=true; renderSheet(); return; }
+    if(e.target.closest('#csEdit')){ cur.view=false; cur.fromEdit=true; renderSheet(); focusIn(); return; }
     if(e.target.closest('#csRemain')){   /* 숫자 클릭 → 선택한 후보에 남은 의결권 전량 입력 */
       var rm=remain(); if(rm>0){ cur.inputs[cur.foc]+=rm; renderSheet(); var inp=gb.querySelector('.cs-in[data-j="'+cur.foc+'"]'); if(inp) inp.focus(); }
     }
@@ -647,17 +646,18 @@
     }
     function agg(list){ var o={s:0,min:0,cap:0,a:r.grp.map(function(){return 0;}),p:r.grp.map(function(){return 0;})};
       list.forEach(function(x){ o.s+=x.s; o.min+=x.min; o.cap+=x.cap; x.a.forEach(function(v,j){o.a[j]+=v; o.p[j]+=x.p[j];}); }); return o; }
-    document.getElementById('bdH').innerHTML='<tr><th></th><th>투표권자</th><th>주주명</th><th class="n v">행사의결권</th>'+(hasMin?'<th class="n v">최소 보장 의결권</th>':'')
+    document.getElementById('bdH').innerHTML='<tr><th>투표권자</th><th>주주명</th><th class="n v">행사의결권</th>'+(hasMin?'<th class="n v">최소 보장 의결권</th>':'')
       +'<th class="n v">분배 가능 의결권</th>'+r.grp.map(function(g){return '<th class="n v">'+r.no+'-'+g+'</th>';}).join('')+'<th class="n v">합계</th></tr>';
     var html='';
     HOLDERS.forEach(function(h,gi){
-      if(!h.kids){ html+='<tr><td class="tg"></td><td>'+h.v+'</td><td>'+h.n+'</td>'+cells(h)+'</tr>'; return; }
-      html+='<tr><td class="tg"><button class="tw-chevron'+(h.open?'':' collapsed')+'" data-tg="'+gi+'" aria-label="펼치기"></button></td><td>'+h.v+'</td><td><span class="btag">통합 '+h.kids.length+'건</span></td>'+cells(agg(h.kids))+'</tr>';
-      h.kids.forEach(function(x){ html+='<tr class="child'+(h.open?'':' hidden')+'" data-kid="'+gi+'"><td class="tg"></td><td></td><td>'+x.n+'</td>'+cells(x)+'</tr>'; });
+      if(!h.kids){ html+='<tr><td>'+h.v+'</td><td>'+h.n+'</td>'+cells(h)+'</tr>'; return; }
+      /* 통합기관 — 참석자 관리와 같은 모양: 투표권자 칸에 펼침 버튼+이름, 주주명 칸 '통합 N건', 계좌 줄은 세로선 */
+      html+='<tr><td><div class="voter"><button class="tw-chevron'+(h.open?'':' collapsed')+'" data-tg="'+gi+'" aria-label="펼치기"></button><span>'+h.v+'</span></div></td><td><span class="btag">통합 '+h.kids.length+'건</span></td>'+cells(agg(h.kids))+'</tr>';
+      h.kids.forEach(function(x){ html+='<tr class="child'+(h.open?'':' hidden')+'" data-kid="'+gi+'"><td class="tcell"><span class="cv"></span></td><td>'+x.n+'</td>'+cells(x)+'</tr>'; });
     });
     document.getElementById('bdB').innerHTML=html;
     var all=agg(leaves);
-    document.getElementById('bdF').innerHTML='<tr><td>합계</td><td>'+leaves.length+'명</td><td></td>'+cells(all)+'</tr>';
+    document.getElementById('bdF').innerHTML='<tr><td>합계</td><td>'+leaves.length+'명</td>'+cells(all)+'</tr>';
     document.getElementById('bdGrp').textContent=r.grp.join(' · ');
     document.getElementById('bdCnt').textContent='동일 그룹 주주 '+leaves.length+'명';
     document.getElementById('bdMethod').textContent=m?METHODS[m].name:'분배 방식 미설정';
@@ -677,6 +677,6 @@
   renderBanner(); renderList();
 })();
 </script>
-<script src="conexus.js?v=sel"></script>
+<script src="conexus.js?v=s2"></script>
 </body>
 </html>

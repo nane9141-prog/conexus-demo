@@ -31,7 +31,7 @@
     function agg(f) { var s = {}; kids.forEach(function (c) { s[c[f]] = 1; }); return Object.keys(s); }
     var types = agg('type'), pres = agg('pre'), att = kids.filter(function (c) { return c.attend === '참석'; }).length;
     return {
-      k: 'g' + g.id, grp: true, kids: kids, voter: g.voter, name: '통합 ' + kids.length + '건', id: '-', ac: '-',
+      k: 'g' + g.id, grp: true, kids: kids, voter: g.voter, name: '통합 ' + kids.length + '건', id: kids[0].id, ac: '-',   /* 주주번호는 대표(첫) 계좌 — 참석자 관리와 동일 */
       sh: kids.reduce(function (a, c) { return a + c.sh; }, 0), rt: kids.reduce(function (a, c) { return a + c.rt; }, 0),
       att: kids.reduce(function (a, c) { return a + c.att; }, 0),
       type: types.length > 1 ? '본인·대리인' : types[0], pre: pres.length > 1 ? '중복행사' : pres[0],
