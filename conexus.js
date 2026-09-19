@@ -1045,7 +1045,7 @@ window.cxClock = cxChannel('cx.clock');
   /* 브라우저 탭 아이콘 — 고른 회사의 파비콘(디자인 설정의 파비콘과 같은 이미지) */
   function favicon() {
     var l = document.querySelector('link[rel="icon"]') || document.head.appendChild(document.createElement('link'));
-    l.rel = 'icon'; l.href = KUDOS ? 'kudos-favicon.png' : 'favicon-bl.png';
+    l.rel = 'icon'; l.href = KUDOS ? 'fav-kudos.png' : 'fav-kakaobank.png';   /* 탭 전용 정사각형(여백·그림자 없음) */
   }
   function start() {
     picker(); favicon();
