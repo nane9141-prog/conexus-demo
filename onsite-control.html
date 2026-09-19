@@ -704,11 +704,11 @@
   .qmhead .cx-tbtn{width:28px;height:28px}
   .qmhead .sp{margin-left:auto}
   .qmbody{flex:1;min-height:0;display:grid;grid-template-columns:3fr 1fr;gap:8px;padding:8px;background:#F5F5F5}
-  .qmleft{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}   /* 탭 줄(배경 없음)과 표 카드를 나눈다 */
+  .qmleft{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}   /* 탭 줄(배경 없음)과 표 카드를 나눈다 */
   .qmscroll{flex:1;min-height:0;overflow:auto;background:#fff;border:1px solid #E5E5E5;border-radius:8px}
   /* 오른쪽은 답변 패널과 대기열이 함께 쓰는 자리다 — 대기열을 펼치면 그 위를 덮는다 */
-  .qmrside{position:relative;min-width:0;display:flex;flex-direction:column;gap:8px}
-  .qmright{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;padding:16px;background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:auto}
+  .qmrside{position:relative;min-width:0;display:flex;flex-direction:column;gap:0;background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:hidden}   /* 오른쪽 패널 한 장 — 대기열 바도 이 안에 */
+  .qmright{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;padding:16px;background:transparent;border:none;border-radius:0;overflow:auto}
   /* 시청자 관리에는 오른쪽 패널이 없다 */
   .qmbody.solo{grid-template-columns:1fr}
   .qmbody.solo .qmrside{display:none}
@@ -770,13 +770,14 @@
   .qmacts{display:flex;justify-content:flex-end;gap:8px}
   .qmempty{display:flex;align-items:center;justify-content:center;height:100%;color:#a3a3a3;font-size:13px}
   /* 발언 대기열 아코디언 */
-  .qmacc{flex:none;border:1px solid #E5E5E5;border-radius:10px;background:#fff;overflow:hidden}
+  .qmacc{flex:none;margin:0 16px 16px;border:none;border-radius:8px;background:transparent}
   /* 펼치면 오른쪽 자리를 통째로 쓴다 */
-  .qmacc.on{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;z-index:5;box-shadow:0 1px 2px rgba(0,0,0,.05)}
-  .qmacc.on .qmacc-h{border-radius:0}
-  .qmacc.on .qmacc-b{flex:1;min-height:0;overflow:auto}
-  .qmacc.on #qmAccTgl svg{transform:rotate(180deg)}
-  .qmacc-h{display:flex;align-items:center;gap:8px;padding:6px;background:#171717;color:#FAFAFA}
+  .qmacc.on{position:absolute;left:0;right:0;top:0;bottom:0;margin:0;padding:16px 16px 0;display:flex;flex-direction:column;z-index:5;background:#fff}
+  .qmacc.on .qmacc-h{border-radius:8px}
+  .qmacc.on .qmacc-b{flex:1;min-height:0;overflow:auto;padding:16px 0}
+  .qmacc:not(.on) #qmAccTgl svg{transform:rotate(180deg)}   /* 접힘 ⌃ · 펼침 ⌄ */
+  .qmacc-h{display:flex;align-items:center;gap:8px;height:36px;box-sizing:border-box;padding:0 8px;border-radius:8px;background:#151419;color:#FAFAFA}
+  .qmacc-h .cnt{margin-left:-2px;font-size:14px;font-weight:600;letter-spacing:-.01em;color:#FAFAFA}
   .qmacc-h .t{font-size:14px;font-weight:600;letter-spacing:-.01em}
   .qmacc-h .d{width:1px;height:12px;background:rgba(255,255,255,.2)}
   .qmacc-h .t.mut{color:#A3A3A3}
@@ -795,10 +796,26 @@
   .qmacc-h button:hover{background:rgba(255,255,255,.1)}
   .qmacc-h svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
   .qmacc-b{display:none;flex-direction:column;gap:8px;padding:12px}
+  .qmacc-end{margin-top:auto;display:flex;flex-direction:column;gap:8px;padding-top:16px}   /* 종료는 맨 아래 */
+  .qmqrow.wait{background:#FAFAFA}
+  .qmqrow.fin{background:#FAFAFA}
+  .qmqgrip{color:#A3A3A3;font-size:14px;display:inline-flex;cursor:grab}
+  .qmqic{width:24px;height:24px;flex:none;display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:6px;background:none;color:#525252;cursor:pointer}
+  .qmqic:hover{background:#F0F0F0}
+  .qmqic i{font-size:16px}
+  .qmqend{height:24px;padding:0 8px;border:none;border-radius:6px;background:#FDF4F5;font-family:inherit;font-size:12px;font-weight:600;color:#E9081B;cursor:pointer}
+  .qmqtm{font-size:12px;color:#737373;font-variant-numeric:tabular-nums}
+  .qmqta{border:1px solid #E5E5E5;border-radius:10px;background:#fff}
+  .qmqta:focus-within{border-color:#A3A3A3}
+  .qmqta textarea{display:block;width:100%;box-sizing:border-box;min-height:64px;padding:8px 10px;border:none;outline:none;background:none;resize:none;font-family:inherit;font-size:14px;line-height:20px;color:#0A0A0A}
+  .qmqta textarea::placeholder{color:#737373}
+  .qmqta .cnt{padding:8px 10px;font-size:14px;color:#737373}
+  .qmqfoot .warn{display:inline-flex;align-items:center;gap:4px;color:#E9081B}
+  .qmqfoot .warn i{font-size:16px}
   .qmacc.on .qmacc-b{display:flex}
   .qmqrow{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #E5E5E5;border-radius:10px;background:#FAFAFA}
-  .qmqrow.live{background:#fff;border-color:#E9081B}
-  .qmqrow.live .qmqnm{color:#E9081B}
+  .qmqrow.live{background:#fff;border-color:transparent}
+  .qmqrow.live .qmqnm{color:#0A0A0A}
   /* 지금 말하고 있는 사람 — 붉은 점으로 알린다 */
   .qmqlive{display:inline-flex;align-items:center;gap:4px;font-size:12px;line-height:16px;
     font-weight:600;color:#E9081B}
@@ -806,7 +823,7 @@
     animation:qmblink 1.2s infinite}
   @keyframes qmblink{50%{opacity:.25}}
   .qmqno{width:20px;height:20px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;background:rgba(255,255,255,.8);border:1px solid #E5E5E5;font-size:12px;color:#171717}
-  .qmqrow.live .qmqno{background:#E9081B;border-color:#E9081B;color:#FAFAFA}
+  .qmqrow.live .qmqno{background:#171717;border-color:#171717;color:#FAFAFA}
   .qmqnm{font-size:14px;font-weight:500;letter-spacing:-.01em;color:#171717}
   .qmqag{font-size:12px;font-weight:500;color:#737373}
   .qmqrow .sp{margin-left:auto}
@@ -1463,11 +1480,9 @@
                 <div class="qmacc" id="qmAcc" style="display:none">
                   <div class="qmacc-h">
                     <button type="button" id="qmAccTgl" title="펼치기"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
-                    <span class="t" id="qmAccAg">제1호 의안</span>
+                    <span class="t" id="qmAccAg">제 1호 의안</span>
                     <span class="d"></span>
-                    <span class="t" id="qmAccN">발언 대기열 0명</span>
-                    <span class="d"></span>
-                    <span class="t mut" id="qmAccD">완료 0명</span>
+                    <span class="t mut" id="qmAccN">발언 대기열</span><b class="cnt" id="qmAccC">0/0</b>
                     <span class="sp"></span>
                     <button type="button" id="qmAccPrev"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
                     <button type="button" id="qmAccNext"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
@@ -2481,7 +2496,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
         +'<td>'+(ans?'<span class="qmdot blue"><i></i>답변완료</span>':'<span class="qmdot"><i></i>미답변</span>')+'</td>'
         +'<td class="c"><span class="extip" data-tip="'+tip+'">'+INFO+'</span></td></tr>';
     }).join('');
-    acc.style.display = (mode==='s'||mode==='a') ? 'block' : 'none';   /* 하단 대기열 바 — 발언 · 동의 */
+    acc.style.display = (mode==='s'||mode==='a') ? '' : 'none';   /* block 을 박으면 펼침(flex) 배치가 깨진다 */   /* 하단 대기열 바 — 발언 · 동의 */
     document.querySelector('.qmbody').classList.toggle('solo', mode==='v');
     if(!selId || !list.some(function(x){return (x.id||'')===selId;})) selId=(list[0]&&list[0].id)||null;
     paint();
@@ -2538,51 +2553,50 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   }
 
   /* 발언 대기열 아코디언 */
-  var accAg='제1호', accPick=null, done=[];
+  var accAg='제1호', accPick, done=[];
   var MSG=CX.chairTags;          /* 실시간 운영 탭의 의장 전달 태그와 같다 */
   function byId(id){ var f=null; SPEECHES.forEach(function(x){ if(x.id===id) f=x; }); return f; }
-  function qrow(x,i,live,pick){
-    return '<div class="qmqrow'+(live?' live':'')+(pick?' pick':'')+'" data-pick="'+x.id+'">'
-      +'<span class="qmqno">'+(i+1)+'</span><span class="qmqnm">'+esc(x.name)+'</span>'
-      +'<span class="qmqag">'+agOf(x)+'</span><span class="sp"></span>'
-      +(live?'<span class="qmqlive"><i></i>발언 중</span>':'')
-      +(live?'<button class="vqmute'+(x.muted?' on':'')+'" type="button" data-mute="'+x.id+'" title="'+(x.muted?'음소거 해제':'음소거')+'"><i class="ph ph-'+(x.muted?'microphone':'microphone-slash')+'"></i></button>':'')
-      +(live?'<button class="qmqbtn" data-fin="'+x.id+'" type="button">발언 종료</button>':'')
-      +'<button class="qmqbtn rm" data-q="'+x.id+'" type="button">제거</button></div>';
+  var ENDAT={};   /* 종료 시각 */
+  function hm(){ var d=new Date(); return (d.getHours()<10?'0':'')+d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes(); }
+  /* 발언 중(맨 앞) — 검정 테두리 카드, 음소거 · 발언 종료, 펼치면 의장 전달 메시지 */
+  function liveCard(x, open){
+    return '<div class="qmqcard on">'
+      +'<div class="qmqrow live" data-pick="'+x.id+'"><span class="qmqno">'+(done.length+1)+'</span><span class="qmqnm">'+esc(x.name)+'</span><span class="sp"></span>'
+      +'<button class="qmqic'+(x.muted?' on':'')+'" type="button" data-mute="'+x.id+'" title="'+(x.muted?'음소거 해제':'음소거')+'"><i class="ph ph-'+(x.muted?'microphone':'microphone-slash')+'"></i></button>'
+      +'<button class="qmqend" type="button" data-fin="'+x.id+'">발언 종료</button></div>'
+      +(open?'<div class="qmqmsg"><div class="h">의장 전달 메시지 작성</div>'
+        +'<div class="qmqta"><textarea id="qmQTa" maxlength="280" placeholder="메시지를 입력해 주세요">'+esc(x.chair||'')+'</textarea><div class="cnt"><span data-qcnt>'+(x.chair||'').length+'</span>/280</div></div>'
+        +'<div class="qmqfoot"><span class="warn"><i class="ph ph-warning-circle"></i>발언 진행시 의장 화면에 표시 됩니다.</span><span class="sp"></span>'
+        +'<button class="dlg-btn dark" data-send type="button" style="height:28px">저장</button></div></div>':'')
+      +'</div>';
+  }
+  /* 대기 — 회색 카드: 끌기 손잡이 · 순번 · 이름 · 위/아래 · 삭제 */
+  function waitRow(x, n){
+    return '<div class="qmqrow wait"><span class="qmqgrip"><i class="ph ph-dots-six-vertical"></i></span><span class="qmqno">'+n+'</span><span class="qmqnm">'+esc(x.name)+'</span><span class="sp"></span>'
+      +'<button class="qmqic" type="button" data-qmv="'+x.id+'" data-d="-1" title="위로"><i class="ph ph-arrow-up"></i></button>'
+      +'<button class="qmqic" type="button" data-qmv="'+x.id+'" data-d="1" title="아래로"><i class="ph ph-arrow-down"></i></button>'
+      +'<button class="qmqic" type="button" data-q="'+x.id+'" title="대기열에서 삭제"><i class="ph ph-trash"></i></button></div>';
   }
   function renderAcc(){
     var items=queue.map(byId).filter(Boolean), fin=done.map(byId).filter(Boolean);
-    document.getElementById('qmAccAg').textContent=accAg+' 의안';
-    document.getElementById('qmAccN').textContent=(mode==='a'?'동의':'발언')+' 대기열 '+items.length+'명';
-    document.getElementById('qmAccD').textContent='완료 '+fin.length+'명';
-    if(accPick && queue.indexOf(accPick)<0) accPick=null;
-    var html='<div class="qmacc-lb">대기<b>'+items.length+'</b></div>';
-    html += items.length
-      ? items.map(function(x,i){
-          var open=(x.id===accPick);
-          var row='<div class="qmqcard'+(open?' on':'')+'">'+qrow(x,i,i===0,open);
-          if(open){
-            row+='<div class="qmqmsg"><div class="h">의장 전달 메시지 작성</div>'
-              +'<div class="qmchips">'+MSG.map(function(t,i){
-                  return '<button class="qmchip" data-msg="'+i+'" type="button">'+t.l+'</button>';
-                }).join('')+'</div>'
-              +'<textarea class="qmta" id="qmQTa" style="min-height:64px" placeholder="의장 화면에 띄울 내용을 입력하세요."></textarea>'
-              +'<div class="qmqfoot"><svg viewBox="0 0 24 24" style="width:16px;height:16px;flex:none;fill:none;stroke:#171717;stroke-width:1.4"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5"/><circle cx="12" cy="16.4" r=".8" fill="#171717" stroke="none"/></svg>'
-              +'발언 진행시 의장 화면에 표시 됩니다.<span class="sp"></span>'
-              +'<button class="dlg-btn dark" data-send type="button" style="height:28px">전송</button></div></div>';
-          }
-          return row+'</div>';
-        }).join('')
-      : '<div style="color:#a3a3a3;font-size:13px;padding:12px;text-align:center">대기열이 비어 있습니다. 목록에서 추가하세요.</div>';
-    if(fin.length){
-      html+='<div class="qmacc-lb" style="margin-top:8px">완료<b>'+fin.length+'</b></div>'
-        + fin.map(function(x,i){
-            return '<div class="qmqrow" style="opacity:.6"><span class="qmqno">'+(i+1)+'</span>'
-              +'<span class="qmqnm">'+esc(x.name)+'</span><span class="qmqag">'+agOf(x)+'</span>'
-              +'<span class="sp"></span><span class="qmqag">발언 완료</span></div>';
-          }).join('');
+    var tot=items.length+fin.length;
+    document.getElementById('qmAccAg').textContent=CX.util.chip(accAg)+' 의안';
+    document.getElementById('qmAccN').textContent=(mode==='a'?'동의':'발언')+' 대기열';
+    document.getElementById('qmAccC').textContent=(fin.length+(items.length?1:0))+'/'+tot;
+    if(accPick===undefined || (accPick && queue.indexOf(accPick)<0)) accPick=items[0]?items[0].id:null;
+    var html='';
+    if(items.length){
+      html+='<div class="qmacc-lb">대기<b>'+items.length+'명</b></div>';
+      html+=liveCard(items[0], accPick===items[0].id);
+      html+=items.slice(1).map(function(x,i){ return waitRow(x, fin.length+i+2); }).join('');
     }
-    /* 대기·완료 모두 없으면 섹션 없이 질의 목록과 같은 빈 상태 */
+    if(fin.length){
+      html+='<div class="qmacc-end"><div class="qmacc-lb">종료<b>'+fin.length+'명</b></div>'
+        + fin.map(function(x,i){
+            return '<div class="qmqrow fin"><span class="qmqno">'+(i+1)+'</span><span class="qmqnm">'+esc(x.name)+'</span><span class="sp"></span><span class="qmqtm">'+(ENDAT[x.id]||'')+'</span></div>';
+          }).join('')+'</div>';
+    }
+    /* 대기·종료 모두 없으면 질의 목록과 같은 빈 상태 */
     if(!items.length && !fin.length) html='<div class="chat-empty">확인할 내용이 없습니다.</div>';
     document.getElementById('qmAccB').innerHTML=html;
   }
@@ -2631,22 +2645,29 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     var mu=e.target.closest('[data-mute]'); if(mu){ e.stopPropagation(); toggleMute(mu.dataset.mute); renderAcc(); return; }
     var rm=e.target.closest('[data-q]'); if(rm){ toggleQ(rm.dataset.q); return; }
     var fin=e.target.closest('[data-fin]');
-    if(fin){ var id=fin.dataset.fin; queue=queue.filter(function(x){return x!==id;}); done.push(id);
+    var mv=e.target.closest('[data-qmv]');
+    if(mv){ e.stopPropagation(); var qi=queue.indexOf(mv.dataset.qmv), qj=qi+(+mv.dataset.d);
+      if(qi>0 && qj>0 && qj<queue.length){ var tq=queue[qi]; queue[qi]=queue[qj]; queue[qj]=tq; renderAcc(); } return; }
+    if(fin){ var id=fin.dataset.fin; queue=queue.filter(function(x){return x!==id;}); done.push(id); ENDAT[id]=hm(); accPick=undefined;
       if(window.cxSync) cxSync.set({cast:null, msg:''});
       renderAcc(); render(); if(window.cxToast) cxToast('발언을 종료했습니다.'); return; }
     var chip=e.target.closest('[data-msg]');
     if(chip){ var ta=document.getElementById('qmQTa');
       if(ta){ ta.value=MSG[+chip.getAttribute('data-msg')].t; ta.focus(); } return; }
     if(e.target.closest('[data-send]')){
-      var t=document.getElementById('qmQTa');
+      var t=document.getElementById('qmQTa'), lx=byId(queue[0]);
+      if(lx && t) lx.chair=t.value.trim();
       if(t && t.value.trim() && window.cxSync) cxSync.set({msg:t.value.trim()});
-      if(window.cxToast) cxToast((t&&t.value.trim())?'의장 화면에 메시지를 전달했습니다.':'전달할 내용을 입력해 주세요.');
+      if(window.cxToast) cxToast((t&&t.value.trim())?'의장 전달 메시지를 저장했습니다.':'메시지를 입력해 주세요.');
       return;
     }
     var pk=e.target.closest('[data-pick]');
     if(pk){ accPick=(accPick===pk.dataset.pick)?null:pk.dataset.pick; renderAcc(); }
   });
 
+  document.getElementById('qmAccB').addEventListener('input',function(e){
+    if(e.target.id!=='qmQTa') return; var c=this.querySelector('[data-qcnt]'); if(c) c.textContent=e.target.value.length;
+  });
   function toggleQ(id){
     var i=queue.indexOf(id);
     if(i>=0) queue.splice(i,1); else queue.push(id);
