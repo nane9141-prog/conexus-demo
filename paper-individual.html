@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 서면투표/위임 개별 등록</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=h1">
+<link rel="stylesheet" href="conexus.css?v=h2">
 <style>
   /* page-local content helpers (LNB styling comes from conexus.css) */
   .scroll{flex:1;overflow-y:auto}
@@ -314,8 +314,7 @@
   .kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;box-sizing:border-box;background:#f5f5f5;border-radius:6px;font-size:12px;font-weight:500;color:#737373;line-height:16px}
   /* 검색: 검색 기준(주주명/투표권자) + 입력 — 한 덩어리 */
   .hsgrp{display:flex;align-items:center;width:348px}
-  .hsgrp .cx-sel{height:32px !important;font-size:14px !important;font-weight:500;color:#0a0a0a;padding:0 10px;gap:6px;border:1px solid #e5e5e5;border-radius:10px 0 0 10px;background:#fff}
-  .hsgrp .cx-sel svg{width:16px;height:16px;stroke:#0a0a0a}
+  .hsgrp select{height:32px;font-size:14px;font-weight:500;color:#0a0a0a;padding:0 32px 0 10px;border:1px solid #e5e5e5;border-radius:10px 0 0 10px;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") no-repeat right 12px center/14px 14px}
   .hsearch{display:flex;align-items:center;gap:6px;flex:1;min-width:0;height:32px;box-sizing:border-box;padding:0 10px;border:1px solid #e5e5e5;border-left:none;border-radius:0 10px 10px 0;background:#fff}
   .hsearch svg{width:16px;height:16px;stroke:#737373;fill:none;stroke-width:1.5;flex:none}
   .hsearch input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;min-width:0;background:none;color:#171717}
@@ -756,8 +755,7 @@
   })();
 
 </script>
-<script src="conexus.js?v=fww"></script>
-<script>if(window.cxSelect)cxSelect(document.getElementById('shMode'));</script>
+<script src="conexus.js?v=sel"></script>
 <div class="toast" id="toast"></div>
 <script>(function(){var t=document.getElementById("toast"),tt;window.showToast=function(m,err){if(window.cxToast)return cxToast(m,err);if(!t)return;t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(function(){t.classList.remove("show");},2000);};})();</script>
 </body>

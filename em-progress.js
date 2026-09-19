@@ -160,11 +160,6 @@
   document.addEventListener('click', function (e) { if (pkBtn && !e.target.closest('.pk-pop')) closePk(); });
   window.addEventListener('scroll', function (e) { if (pkBtn && !pop.contains(e.target)) closePk(); }, true);
 
-  function selects() {
-    if (!window.cxSelect) return;
-    root.querySelectorAll('select').forEach(function (s) { cxSelect(s); s.nextSibling.style.width = s.style.width; });
-  }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', selects); else selects();
 
   validate();
 })();

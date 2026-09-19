@@ -361,7 +361,11 @@
     var hrow = headRow(tbl), tb = tbl.tBodies[0];
     if (!hrow || !tb) return;
     var t = tbl.__cx;
-    if (!t) { t = tbl.__cx = { tbl: tbl, tb: tb, filters: {}, draft: {}, rowh: 0 }; }
+    if (!t) {
+      /* 줄 간격 기본값은 '좁게' */
+      t = tbl.__cx = { tbl: tbl, tb: tb, filters: {}, draft: {}, rowh: 36 };
+      tbl.classList.add('cx-t', 'cx-rh-s');
+    }
     /* colgroup 으로 칸 너비를 직접 적어 둔 표 — 너비를 다시 쓰면 칸이 무너진다 */
     var fixed = getComputedStyle(tbl).tableLayout === 'fixed';
     /* 너비를 적어 두지도 않고 fixed 로 둔 표는 칸이 균등분할된다 —
@@ -638,42 +642,46 @@
     });
   }
 
-  /* 페이지당 선택 — 시스템 select 대신 필터 메뉴와 같은 드롭다운.
-     select 는 숨겨 값의 원본으로 두고, 고르면 change 를 보내 페이지 코드가 그대로 동작한다. */
-  function pageSelect(sel) {
-    if (sel.__cxs) return;
-    sel.__cxs = 1;
-    var b = document.createElement('button');
-    b.type = 'button'; b.className = 'cx-sel';
-    var h = sel.offsetHeight, cs = getComputedStyle(sel);
-    if (h) b.style.height = h + 'px';
-    b.style.fontSize = cs.fontSize;
-    function paint() { var o = sel.options[sel.selectedIndex]; b.innerHTML = '<span>' + esc(o ? o.text : '') + '</span>' + CHEV; }
-    paint();
-    sel.style.display = 'none';
-    sel.parentNode.insertBefore(b, sel.nextSibling);
-    sel.addEventListener('change', paint);
-    b.addEventListener('click', function (e) {
-      e.stopPropagation();
-      show(b, Array.prototype.map.call(sel.options, function (o) {
-        return '<button class="it' + (o.selected ? ' on' : '') + '" type="button" data-v="' + esc(o.value) + '">'
-          + '<span class="tx">' + esc(o.text) + '</span>' + CHECK + '</button>';
-      }).join(''), function (m) {
-        m.style.width = m.style.minWidth = Math.max(b.offsetWidth, 72) + 'px';
-        m.addEventListener('click', function (ev) {
-          var it = ev.target.closest('[data-v]'); if (!it) return;
-          sel.value = it.getAttribute('data-v');
-          sel.dispatchEvent(new Event('change', { bubbles: true }));
-          hide();
-        });
+  /* 드롭다운 — 모든 select 의 펼침 목록을 시스템 목록 대신 필터 메뉴와 같은 모양으로.
+     select 자체(닫힌 상자)는 그대로 두고 펼치는 순간만 가로챈다. 값·옵션·change 는 원래 select 그대로라
+     페이지 코드가 나중에 옵션을 바꾸거나 값을 넣어도 따로 맞출 게 없다. */
+  function openSel(sel) {
+    show(sel, Array.prototype.map.call(sel.options, function (o) {
+      if (o.hidden) return '';
+      return '<button class="it' + (o.selected ? ' on' : '') + '" type="button" data-i="' + o.index + '"'
+        + (o.disabled ? ' disabled style="opacity:.5;cursor:default"' : '') + '>'
+        + '<span class="tx">' + esc(o.text) + '</span>' + CHECK + '</button>';
+    }).join(''), function (m) {
+      m.style.width = 'auto'; m.style.minWidth = Math.max(sel.offsetWidth, 72) + 'px';
+      m.addEventListener('click', function (ev) {
+        var it = ev.target.closest('[data-i]'); if (!it || it.disabled) return;
+        var i = +it.getAttribute('data-i');
+        hide(); sel.focus();
+        if (sel.selectedIndex === i) return;
+        sel.selectedIndex = i;
+        sel.dispatchEvent(new Event('input', { bubbles: true }));
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
       });
     });
   }
+  function selOf(e) {
+    var s = e.target && e.target.closest ? e.target.closest('select') : null;
+    return s && !s.disabled && !s.multiple && !(s.size > 1) ? s : null;
+  }
+  document.addEventListener('mousedown', function (e) {
+    var s = selOf(e); if (!s || e.button !== 0) return;
+    e.preventDefault(); s.focus(); openSel(s);
+  }, true);
+  /* 문서 click 이 메뉴를 닫으므로 select 를 누른 click 은 문서까지 올라가지 않게 */
+  document.addEventListener('click', function (e) { if (selOf(e)) e.stopPropagation(); }, true);
+  document.addEventListener('keydown', function (e) {
+    var s = selOf(e); if (!s) return;
+    if (e.key === ' ' || e.key === 'Enter' || e.key === 'F4' || (e.altKey && /Arrow(Down|Up)/.test(e.key))) { e.preventDefault(); openSel(s); }
+    else if (e.key === 'Escape' || e.key === 'Tab') hide();
+  }, true);
+  function pageSelect() {}   /* 예전 호출부 호환 — 이제 모든 select 가 위 공통 처리를 탄다 */
   function run() {
     Array.prototype.forEach.call(document.querySelectorAll('table'), apply);
-    Array.prototype.forEach.call(document.querySelectorAll('select'), function (s) {
-      if (s.parentElement && /페이지당/.test(s.parentElement.textContent)) pageSelect(s);
-    });
   }
   window.cxTable = { apply: apply, run: run };
   window.cxSelect = pageSelect;   /* 다른 화면의 select 도 같은 드롭다운으로 */

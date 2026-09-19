@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 주주명부 설정</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=h1">
+<link rel="stylesheet" href="conexus.css?v=h2">
 <style>
   /* page-local content helpers (LNB styling comes from conexus.css) */
   .scroll{flex:1;overflow-y:auto}
@@ -189,6 +189,8 @@
         .icard .k .ph-info,.icard .k2 .ph-info{font-size:16px;color:#737373;font-weight:400;cursor:default}
         .icard .v{font-size:20px;font-weight:700;color:#0a0a0a;text-align:right;line-height:28px}
         .icard .v.red{color:var(--red600)}
+        .icard.unset .v{cursor:pointer}
+        .icard.unset .v:hover{text-decoration:underline}
         .icard.big{justify-content:space-between;min-height:120px}
         .kchip{height:24px;padding:0 8px;border:1px solid var(--border);border-radius:6px;background:#fff;font-size:12px;font-weight:500;color:#0a0a0a;cursor:pointer;font-family:inherit}
         .kchip:hover{background:var(--muted)}
@@ -872,6 +874,11 @@
           if(st&&st.dir){
             var d=(st.dir==='desc'||st.dir<0)?-1:1;
             list=list.slice().sort(function(a,b){
+              /* 투표권자 칸: '미설정'은 오름차순 맨 앞 · 내림차순 맨 뒤 (가나다 사이에 묻히지 않게) */
+              if(st.idx===VOTER_COL[key]){
+                var ua=colText(key,a,st.idx)==='미설정', ub=colText(key,b,st.idx)==='미설정';
+                if(ua!==ub) return (ua?-1:1)*d;
+              }
               var na=colNum(key,a,st.idx), nb=colNum(key,b,st.idx);
               if(na!=null&&nb!=null) return (na-nb)*d;
               return String(colText(key,a,st.idx)).localeCompare(String(colText(key,b,st.idx)),'ko')*d;
@@ -879,6 +886,16 @@
           }
           return list;
         }
+        var VOTER_COL={set:8,merge:2,confirm:2};
+        /* 요약 카드의 미설정 투표권자 숫자 → 그 탭 표를 투표권자 오름차순(미설정 먼저)으로 */
+        document.addEventListener('click',function(e){
+          var v=e.target.closest('.icard.unset .v'); if(!v) return;
+          var key=v.closest('[data-cards]').getAttribute('data-cards')==='set'?'set':'confirm';
+          var tbl=$(key==='set'?'setTbl':'cfTbl'), idx=VOTER_COL[key];
+          if(tbl.__cx) tbl.__cx.ths.forEach(function(th,i){th.__d=i===idx?1:0;});
+          SORT[key]={idx:idx,dir:1}; PG[key].p=1; RENDER[key]();
+          tbl.scrollIntoView({behavior:'smooth',block:'start'});
+        });
         function hookTbl(key,id,all){
           var t=$(id);
           t.addEventListener('cxsort',function(e){e.preventDefault();SORT[key]={idx:e.detail.idx,dir:e.detail.dir};PG[key].p=1;RENDER[key]();});
@@ -1285,6 +1302,6 @@
     var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
   });
 </script>
-<script src="conexus.js?v=fww"></script>
+<script src="conexus.js?v=sel"></script>
 </body>
 </html>

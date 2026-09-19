@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 참석자 관리</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=h1">
+<link rel="stylesheet" href="conexus.css?v=h2">
 <style>
   /* page-local content helpers (LNB styling comes from conexus.css) */
   .scroll{flex:1;overflow-y:auto}
@@ -238,7 +238,7 @@
   .at-tb-l{display:flex;align-items:center;gap:8px}
   .selbox{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;font-size:14px;color:#0a0a0a;cursor:pointer}
   .selbox svg{width:15px;height:15px;fill:none;stroke:#737373;stroke-width:2}
-  .at-tb .cx-sel{width:128px;border-radius:9px;padding:0 10px 0 12px;font-size:14px}   /* 검색 기준 드롭다운 */
+  .at-tb select.selbox{display:inline-block;width:128px;padding:0 32px 0 12px;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") no-repeat right 12px center/14px 14px}   /* 검색 기준 드롭다운 */
   .search2{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:#fff;min-width:300px}
   .search2 svg{width:16px;height:16px;fill:none;stroke:#737373;stroke-width:2}
   .search2 input{border:none;outline:none;font-size:14px;font-family:inherit;flex:1;background:none}
@@ -798,7 +798,6 @@
     cur=t.dataset.at; page=1; document.querySelectorAll('.at-tab').forEach(function(x){x.classList.toggle('on',x===t);}); document.querySelectorAll('.regonly').forEach(function(b){b.style.display=(cur==='reg')?'':'none';}); syncChips(); render(); }); });
   document.getElementById('atSearch').addEventListener('input',function(){ page=1; render(); });
   document.getElementById('atQf').addEventListener('change',function(){ page=1; render(); });
-  document.addEventListener('DOMContentLoaded',function(){ if(window.cxSelect) cxSelect(document.getElementById('atQf')); });
   document.getElementById('atChips').addEventListener('click',function(e){ var b=e.target.closest('.at-chip'); if(!b) return; chip=b.dataset.chip; this.querySelectorAll('.at-chip').forEach(function(x){ x.classList.toggle('on',x===b); }); page=1; render(); });
   /* 비주주 정보 패널(조회) — 현장 참석자 탭에서 비주주 행 클릭 */
   var nvX=null, nv=document.getElementById('nvDlg');
@@ -1166,6 +1165,6 @@
 })();
 </script>
 
-<script src="conexus.js?v=fww"></script>
+<script src="conexus.js?v=sel"></script>
 </body>
 </html>
