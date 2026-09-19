@@ -1096,6 +1096,9 @@
   .rst.pass{background:#EEF5FF;color:#0071F3}
   .rst.fail{background:#FEE2E2;color:#DC2626}
   .rst.drop{background:#F5F5F5;color:#A3A3A3}
+  .rst.hold{background:#FDF4F5;color:#E9081B}   /* 동의에 걸린 원안 — 보류 */
+  #agTree .arow.dropped{opacity:.5}              /* 동의 가결로 폐기된 원안 — 카드 전체 50% */
+  #agTree .atypes .tp.amd{color:#EA580C}        /* 동의 카드 — 주황 */
   .rst.wd{background:#F5F5F5;color:#737373}
   /* === 중앙 진행 의안 헤더(카드형) + 예상 배지 === */
   .cag-acat{display:flex;align-items:center;gap:8px}
@@ -2191,13 +2194,21 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   function repaintList(){
     document.querySelectorAll('#agTree .arow.selnode').forEach(function(card){
       var no=card.dataset.no, ast=card.querySelector('.astatus'); if(!ast) return;
+      if(card.dataset.heldBy){
+        var drop=keptRes(card.dataset.heldBy)==='가결';
+        card.classList.toggle('dropped',drop);
+        ast.innerHTML=drop?'<span class="rst drop">폐기</span>':'<span class="rst hold">보류</span>';
+        return;
+      }
       var pb=persistBadge(no);
       if(pb!=null){ ast.innerHTML=pb; return; }
       ast.innerHTML=listBadge(card,no);
     });
   }
+  OC.repaint=function(){ repaintList(); };
   function updateLeft(){
     var node=document.querySelector('#agTree .selnode.sel'); if(!node) return;
+    if(node.dataset.heldBy){ repaintList(); return; }
     var ast=node.querySelector('.astatus'); if(!ast) return;
     ast.innerHTML=listBadge(node,node.dataset.no);
   }
@@ -2855,23 +2866,21 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   });
   document.getElementById('amcOk').addEventListener('click',function(){ close(o3); applyAmend(draft); if(onDone){ var f=onDone; onDone=null; f(draft.no); } });
 
-  /* 좌측 의안 리스트 반영 — 원안(제N-1호) · 수정안(제N-2호)으로 가른다 */
+  /* 좌측 의안 리스트 반영 — 표결 기준 카드로(Figma).
+     원안 카드는 그대로 두고 '보류', 바로 아래에 같은 번호의 동의 카드를 새 표결 단위로 둔다.
+     동의가 가결되면 원안은 '폐기'(카드 전체 50%). 동의 카드는 원안의 표결 정보를 그대로 쓴다. */
   function applyAmend(a){
-    var card=document.querySelector('#agTree .selnode[data-no="'+a.no+'"]');
-    if(!card || card.classList.contains('amended')) return;
-    card.classList.add('amended');
-    var base=a.no.replace(/호$/,'');
+    var card=document.querySelector('#agTree .arow.selnode[data-no="'+a.no+'"]');
+    if(!card || card.dataset.heldBy) return;
+    var amNo=a.no+'·동의';
+    if(CX.center[a.no]) { var c={}; for(var k in CX.center[a.no]) c[k]=CX.center[a.no][k]; c.name='[동의] '+a.title; CX.center[amNo]=c; }
+    card.dataset.heldBy=amNo;
     var types=card.querySelector('.atypes');
-    if(types) types.insertAdjacentHTML('beforeend','<span class="atsep">·</span><span class="tp amd">동의</span>');
-    else card.querySelector('.acat').insertAdjacentHTML('afterend','<div class="atypes"><span class="tp amd">동의</span></div>');
-    var nm=card.querySelector('.acat .anm');
-    var sub=card.querySelector('.asub');
-    var kids='<div class="achild selnode" data-no="'+base+'-1호"><div class="acat"><span class="ano">'+CX.util.chip(base+'-1호')
-      +'</span><span class="anm">'+(nm?nm.textContent:'')+' (원안)</span><span class="achip b">원안</span></div></div>'
-      +'<div class="achild selnode" data-no="'+base+'-2호"><div class="acat"><span class="ano">'+CX.util.chip(base+'-2호')
-      +'</span><span class="anm">[동의] '+a.title+'</span><span class="achip v">수정</span></div></div>';
-    if(sub) sub.insertAdjacentHTML('afterbegin',kids);
-    else card.insertAdjacentHTML('beforeend','<div class="asub">'+kids+'</div>');
+    var tline=(types?types.innerHTML+'<span class="atsep">·</span>':'')+'<span class="tp amd">동의</span>';
+    card.insertAdjacentHTML('afterend','<div class="arow selnode amcard" data-no="'+amNo+'"><div class="acat"><span class="ano">'+CX.util.chip(a.no)
+      +'</span><span class="anm">[동의] '+esc2(a.title)+'</span><span class="astatus"></span></div><div class="atypes">'+tline+'</div></div>');
+    var nc=card.nextElementSibling; if(nc) nc.click();   /* 동의 카드로 넘어가 바로 상정·표결 */
+    if(window.OC && OC.repaint) OC.repaint();
   }
   window.applyAmend=applyAmend;
 })();
