@@ -56,6 +56,21 @@
   .exd-foot .pg{display:flex;align-items:center;gap:8px;color:#737373;font-weight:500}
   .exd-foot .pg select,.exd-foot .pg input{height:24px;border:1px solid var(--border);border-radius:6px;background:#fff;font-family:inherit;font-size:12px;color:#0a0a0a;padding:0 6px}
   .exd-foot .pg input{width:36px;text-align:center}
+  /* 사전 의결권(전자/서면 내역)에서 들어온 의안 상세 — ?from=evote|paper */
+  .exd-sub{margin-top:4px;font-size:12px;line-height:16px;color:#737373;flex:none}
+  .tgl-wrap{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#171717;cursor:pointer;user-select:none}
+  .tgl{width:28px;height:16px;border-radius:9999px;background:#e5e5e5;position:relative;flex:none;transition:background .15s}
+  .tgl.on{background:#171717}
+  .tgl::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left .15s}
+  .tgl.on::after{left:14px}
+  body.pre .exd-back,body.pre .exd-res,body.pre .exd-search,body.pre #exdDl,body.pre .extbl tfoot{display:none}
+  .tgl-wrap[hidden],.exd-sub[hidden]{display:none}
+  body.pre .exd-bar{justify-content:flex-end}
+  body.pre .exd-no{padding:0;border:none;background:none;font-size:16px;line-height:24px;font-weight:600;color:#0A0A0A}
+  body.pre .extbl{min-width:1100px}
+  body.pre .extbl th:nth-child(11),body.pre .extbl td:nth-child(11),
+  body.pre .extbl th:nth-child(12),body.pre .extbl td:nth-child(12),
+  body.pre .extbl th:nth-child(13),body.pre .extbl td:nth-child(13){display:none}
 </style>
 <script src="cx-data.js"></script>
 </head>
@@ -172,9 +187,11 @@
         <span class="exd-sep"></span>
         <span class="exd-res pass" id="exdRes">가결</span>
       </div>
+      <div class="exd-sub" id="exdSub" hidden>중복 철회된 수는 제공되지 않습니다</div>
       <div class="exd-bar">
         <div class="exd-search"><i class="ph ph-magnifying-glass" style="font-size:16px"></i><input type="text" placeholder="주주명 · 주주번호 검색"></div>
-        <button class="xbtn" type="button"><i class="ph ph-download-simple" style="font-size:16px"></i>다운로드</button>
+        <label class="tgl-wrap" id="exdDup" hidden><span class="tgl" id="exdDupTgl"></span>중복 수치 포함</label>
+        <button class="xbtn" id="exdDl" type="button"><i class="ph ph-download-simple" style="font-size:16px"></i>다운로드</button>
         <span data-cx-tools></span>
       </div>
       <div class="exd-grid">
@@ -240,7 +257,21 @@
 /* 의안 상세 — 주주별 행사 내역. 의안/합계는 CX(SSOT), 개별 행은 시연용 표본. */
 (function(){
   var M=CX.meeting, cm=CX.util.comma;
-  var no=new URLSearchParams(location.search).get('no')||'제1호';
+  var Q=new URLSearchParams(location.search), no=Q.get('no')||'제1호';
+  /* 사전 의결권 내역(전자/서면)에서 들어오면 Figma [공통] 상세 정보 형태로 — 없으면 현장 제어 화면 그대로 */
+  var FROM=Q.get('from'), PRE=(FROM==='evote'||FROM==='paper'), TAB=Q.get('tab')||'';
+  if(PRE){
+    var src=FROM==='evote'?['evote-records.html','전자투표/위임장 내역']:['paper-records.html','서면투표/위임장 내역'];
+    document.body.classList.add('pre');
+    document.title='CONEXUS · 의안 상세';
+    var cr=document.querySelectorAll('.topbar .crumb'); cr[0].href=src[0]; cr[0].textContent=src[1]; cr[1].textContent='의안 상세';
+    document.querySelectorAll('.lnb-tabs .t').forEach(function(t){ t.classList.toggle('active',t.dataset.tab==='pre'); });
+    document.querySelectorAll('.lnb-content[data-tabpanel]').forEach(function(p){ p.classList.toggle('show',p.dataset.tabpanel==='pre'); });
+    document.querySelectorAll('.lnb .nav-item').forEach(function(a){ a.classList.toggle('active',a.getAttribute('href')===src[0]); });
+    document.getElementById('exdSub').hidden=false;
+    document.getElementById('exdDup').hidden=false;
+    if(Q.get('dup')==='1') document.getElementById('exdDupTgl').classList.add('on');
+  }
 
   /* 표결 단위(또는 후보) 하나를 찾는다 */
   function find(no){
@@ -261,7 +292,7 @@
     var iR=sp?1/3:1/4, aR=sp?2/3:1/2;
     return (D['for']/M.sharesIssued>=iR && base && D['for']/base>=aR)?'가결':'부결';
   }
-  document.getElementById('exdNo').textContent=String(no).replace(/^제/,'').replace(/호$/,'');
+  document.getElementById('exdNo').textContent=PRE?no+' 의안':String(no).replace(/^제/,'').replace(/호$/,'');
   document.getElementById('exdNm').textContent=A.nm;
   var rv=verdict(), re=document.getElementById('exdRes');
   re.textContent=rv; re.className='exd-res '+(rv==='가결'?'pass':rv==='부결'?'fail':'drop');
@@ -291,23 +322,33 @@
   function num(v){ return v? '<td>'+cm(v)+'</td>' : '<td class="mut">0</td>'; }
   var INFO='<svg class="exi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="7.6" r=".9" fill="#737373" stroke="none"/></svg>';
 
-  var sum={can:0,un:0,ex:0,f:0,a:0,b:0,n:0};
-  var html=ROWS.map(function(r,i){
-    var voter=r[0], nm=r[1], way=WAY[r[2]], can=r[3], un=r[4], vote=r[5];
-    var ex=can-un;
-    var f=vote==='찬성'?ex:0, ag=vote==='반대'?ex:0, ab=vote==='기권'?ex:0, nt=vote==='중립'?ex:0;
-    if(vote==='미행사'){ f=ag=ab=nt=0; }
-    sum.can+=can; sum.un+=un; sum.ex+=ex; sum.f+=f; sum.a+=ag; sum.b+=ab; sum.n+=nt;
-    var tip='행사 '+M.date+' 10:'+(12+i%40)+':'+(10+i)+'\n처리 '+M.operator.name+'\n채널 '+way;
-    return '<tr>'
-      + td(voter,'l') + td(nm,'l') + td('<span class="exchip'+(r[2]<2?' b':'')+'">'+way+'</span>','l')
-      + '<td>'+cm(can)+'</td>' + num(un) + '<td>'+cm(ex)+'</td>'
-      + num(f) + num(ag) + num(ab) + num(nt)
-      + td(LIMIT[r[2]],'c') + td(AGLIMIT[r[2]],'c')
-      + '<td class="c"><button class="exmore" type="button" title="더보기">⋯</button></td>'
-      + '<td class="c"><span class="extip" data-tip="'+tip+'">'+INFO+'</span></td></tr>';
-  }).join('');
-  document.getElementById('exdBody').innerHTML=html;
+  /* 사전 의결권 상세 — 행사방식은 들어온 내역의 채널 */
+  var PREWAY=FROM==='evote'?['전자투표','전자위임']:/서면투표/.test(TAB)?['서면투표','서면투표']:['서면위임','서면위임'];
+  var DR=0.021;   /* 중복 수치 포함 가산 비율 — 내역 화면과 같은 값 */
+  var sum;
+  function paint(){
+    var k=(PRE&&document.getElementById('exdDupTgl').classList.contains('on'))?1/(1-DR):1;
+    sum={can:0,un:0,ex:0,f:0,a:0,b:0,n:0};
+    document.getElementById('exdBody').innerHTML=ROWS.map(function(r,i){
+      var voter=r[0], nm=r[1], way=PRE?PREWAY[r[2]%2]:WAY[r[2]], can=Math.round(r[3]*k), un=Math.round(r[4]*k), vote=r[5];
+      var ex=can-un;
+      var f=vote==='찬성'?ex:0, ag=vote==='반대'?ex:0, ab=vote==='기권'?ex:0, nt=vote==='중립'?ex:0;
+      if(vote==='미행사'){ f=ag=ab=nt=0; }
+      sum.can+=can; sum.un+=un; sum.ex+=ex; sum.f+=f; sum.a+=ag; sum.b+=ab; sum.n+=nt;
+      var tip=PRE?'행사일시 2026-03-'+(10+i%10)+' 09:'+(30+i):'행사 '+M.date+' 10:'+(12+i%40)+':'+(10+i)+'\n처리 '+M.operator.name+'\n채널 '+way;
+      return '<tr>'
+        + td(voter,'l') + td(nm,'l') + td(PRE?way:'<span class="exchip'+(r[2]<2?' b':'')+'">'+way+'</span>','l')
+        + '<td>'+cm(can)+'</td>' + num(un) + '<td>'+cm(ex)+'</td>'
+        + num(f) + num(ag) + num(ab) + num(nt)
+        + td(LIMIT[r[2]],'c') + td(AGLIMIT[r[2]],'c')
+        + '<td class="c"><button class="exmore" type="button" title="더보기">⋯</button></td>'
+        + '<td class="c"><span class="extip" data-tip="'+tip+'">'+INFO+'</span></td></tr>';
+    }).join('');
+    /* 사전 상세는 표본 주주 기준 합계(총회 전체 합계 줄은 없음) */
+    if(PRE){ document.getElementById('exdCnt').textContent='총 '+ROWS.length+'명 · '+cm(sum.can)+'주'; document.getElementById('exdPages').textContent='1'; }
+  }
+  paint();
+  if(PRE) document.getElementById('exdDup').addEventListener('click',function(e){ e.preventDefault(); document.getElementById('exdDupTgl').classList.toggle('on'); paint(); });
 
   /* 합계는 표본이 아니라 총회 전체 기준 */
   var TF=D['for'], TA=D.against, TB=D.abs, TEX=TF+TA+TB, TCAN=M.attendShares;
@@ -317,8 +358,10 @@
     + '<td>'+cm(TF)+'</td><td>'+cm(TA)+'</td><td>'+cm(TB)+'</td><td>0</td>'
     + '<td class="c">−</td><td class="c">−</td><td class="c"></td><td class="c"></td></tr>';
 
+  if(!PRE){
   document.getElementById('exdCnt').textContent='총 '+cm(M.attendHolders)+'명 · '+cm(TCAN)+'주';
   document.getElementById('exdPages').textContent=cm(Math.ceil(M.attendHolders/50));
+  }
 })();
 </script>
 <script src="conexus.js?v=fww"></script>

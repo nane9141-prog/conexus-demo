@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CONEXUS · 전자투표/위임 내역</title>
+<title>CONEXUS · 전자투표/위임장 내역</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 <link rel="stylesheet" href="conexus.css?v=h1">
 <style>
@@ -252,6 +252,50 @@
 <script src="cx-roster.js?v=r6"></script>
 <script src="cx-holders.js?v=5"></script>
 <link rel="stylesheet" href="cx-accordion.css?v=1">
+<style>
+  /* Figma 반영 — KPI 링크 · 확정 전 상태 · 업로드 잠금 · 업로드 중 · 알림 */
+  .evk .kc .lblrow{display:flex;justify-content:space-between;align-items:center}
+  .evk .kc .klink{display:inline-flex;align-items:center;gap:2px;font-size:12px;font-weight:500;color:#171717;text-decoration:none}
+  .evk .kc .klink:hover{text-decoration:underline}
+  .evk .kc .val.pend{color:#737373}
+  .btn-primary:disabled{background:#a3a3a3;cursor:not-allowed}
+  .tbtn:disabled{opacity:.5;cursor:not-allowed}
+  .tbtn:disabled:hover{background:#F5F5F5;border-color:#F5F5F5}
+  .lockbar{display:none;align-items:center;gap:8px;padding:12px 16px;margin:12px 0 8px;background:#FFF1F2;border:1px solid #FECDD3;border-radius:10px;color:#E9081B;font-size:14px;line-height:20px}
+  .lockbar.show{display:flex}
+  .lockbar .lt{flex:1}
+  .lockbar .lt b{font-weight:500}
+  @keyframes cxspin{to{transform:rotate(360deg)}}
+  .spin{display:inline-block;animation:cxspin 1s linear infinite}
+  .lockbar .spin{font-size:24px}
+  #viewAgenda tbody tr:not(.grp-h){cursor:pointer}
+  #agPager{display:inline-flex;align-items:center;gap:4px}
+  #agPager .pp{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 4px;box-sizing:border-box;border:1px solid var(--border);border-radius:8px;background:#fff;color:#525252;font-size:12px}
+  #agPager .pp i{font-size:14px}
+  #agPager .pp.cur{background:#171717;color:#fff;border-color:#171717}
+  #agPager .pp.dis{opacity:.4}
+  #agPager .pgtot2{margin-left:6px;color:#737373}
+  .vlist.two li{white-space:normal}
+  .upl-row ul{margin:0;padding-left:16px}
+  .lnk2{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 8px;border:none;background:none;border-radius:8px;font-size:12px;font-weight:500;color:#171717;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .lnk2:hover{background:#f5f5f5}
+  .upcap{font-size:12px;color:#737373;margin-top:8px}
+  #evStep3{position:relative}
+  .upbusy{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(255,255,255,.82);font-size:14px;font-weight:500;color:#0a0a0a}
+  .upbusy.show{display:flex}
+  .upbusy .sb{width:32px;height:32px;border-radius:8px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:20px}
+  .btn-dark .spin{font-size:16px;margin-right:4px}
+  .btn-dark.busy,.btn-dark.busy:disabled{background:#a3a3a3;opacity:1}
+  .btn-out:disabled{opacity:.5;cursor:not-allowed}
+  .btn-dng:disabled{opacity:.5;cursor:not-allowed}
+  .dlr{width:100%;min-height:144px;box-sizing:border-box;padding:12px;border:1px solid #e5e5e5;border-radius:10px;font:inherit;font-size:14px;color:#171717;resize:vertical;outline:none}
+  .dlr:focus{border-color:#a3a3a3}
+  .dlcap{font-size:12px;color:#737373;margin-top:8px}
+  .adlg .am.gray{background:#f5f5f5;color:#171717}
+  .adlg .fchk{font-size:14px;text-align:left}
+  .cfm-org{display:inline-flex;align-self:flex-start;align-items:center;gap:4px;height:24px;padding:0 8px;border:1px solid var(--border);border-radius:6px;font-size:12px}
+  .cfm-org span{color:#737373}.cfm-org b{font-weight:600;color:#0a0a0a}
+</style>
 </head>
 <body>
 <div class="app" id="app">
@@ -351,7 +395,7 @@
         <button class="iconbtn sm" id="toggleLnb" title="사이드바"><i class="ph ph-sidebar-simple" style="font-size:16px"></i></button>
         <span class="vsep"></span>
         <div style="display:flex;align-items:center;gap:8px">
-          <span class="crumb">전자투표/위임 내역</span>
+          <span class="crumb">전자투표/위임장 내역</span>
         </div>
       </div>
       <button class="iconbtn md" title="변경이력"><i class="ph ph-clock-counter-clockwise" style="font-size:16px"></i></button>
@@ -360,11 +404,12 @@
       <div class="content" style="width:100%">
         <!-- 상단 타이틀 + 확정하기 -->
         <div class="ev-head">
-          <div><div class="ev-title"><div class="page-title">전자투표/위임 내역</div><div class="ev-org" id="evOrg"><span>전자투표관리기관</span><b>IR큐더스</b></div></div><div class="page-sub">전자투표·위임장 접수 현황과 주주별 행사 내역을 조회 · 관리합니다.</div></div>
+          <div><div class="ev-title"><div class="page-title">전자투표/위임장 내역</div><div class="ev-org" id="evOrg"><span>전자투표관리기관</span><b>IR큐더스</b></div></div><div class="page-sub">전자투표·위임장 접수 현황과 주주별 행사 내역을 조회 · 관리합니다.</div></div>
           <span class="spacer"></span>
-          <button class="btn-primary" id="btnConfirm" style="display:inline-flex"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>확정하기</button>
+          <button class="btn-primary" id="btnConfirm" style="display:inline-flex">확정</button>
         </div>
 
+        <div class="lockbar" id="lockBar"><i class="ph ph-warning-circle" style="font-size:16px;align-self:flex-start;margin-top:2px"></i><div class="lt"><b>다른 담당자가 서면투표(자사 외) 파일을 업로드하는 중입니다.</b><br>박지용 대리 · 등록 취소 또는 최종 등록 완료 시까지 다른 채널 업로드가 제한됩니다.</div><i class="ph ph-spinner spin"></i></div>
         <!-- EMPTY 상태 — 처음 진입은 파일 등록된 상태(FILLED)로 시작 -->
         <div id="evEmpty" style="display:none">
           <div class="evbar">
@@ -372,9 +417,9 @@
             <div class="hbtns"><button class="tbtn js-upload"><i class="ph ph-upload-simple" style="font-size:16px"></i>파일 등록</button></div>
           </div>
           <div class="ev-empty">
-            <i class="ph ph-file" style="font-size:28px;color:var(--muted-fg);margin-bottom:20px"></i>
-            <div class="e1">등록된 내용이 없습니다.</div>
-            <div class="e2">의결권 행사 내역을 추가해 주세요.</div>
+            <i class="ph ph-file-dashed" style="font-size:24px;color:var(--muted-fg);margin-bottom:12px"></i>
+            <div class="e1">등록된 내역이 없습니다.</div>
+            <div class="e2">전자투표/위임장 서비스를 통해 투표를 완료한 정보를<br>파일 업로드 후 확인할 수 있습니다.</div>
           </div>
         </div>
 
@@ -391,8 +436,8 @@
           <div class="evk">
             <div class="kc"><div class="lbl">행사 의결권</div><div class="val" id="kpiEx">150,000,000주</div><div class="sub" id="kpiExSub">14,000명 · 발행주식총수 대비 31.5%</div></div>
             <div class="kc"><div class="lbl">중복 의결권</div><div class="val" id="kpiDup">3,150,000주</div><div class="sub" id="kpiDupSub">0명</div></div>
-            <div class="kc"><div class="lbl">중복 미처리</div><div class="val red" id="kpiDupUn">105,000주</div><div class="sub" id="kpiDupUnSub">0명</div></div>
-            <div class="kc"><div class="lbl">확정 의결권</div><div class="val blue" id="kpiConf">149,895,000주</div><div class="sub" id="kpiConfSub">0명</div></div>
+            <div class="kc"><div class="lblrow"><div class="lbl">중복 미처리</div><a class="klink" href="dup-voting.html">중복 의결권 관리<i class="ph ph-caret-right" style="font-size:14px"></i></a></div><div class="val red" id="kpiDupUn">105,000주</div><div class="sub" id="kpiDupUnSub">0명</div></div>
+            <div class="kc"><div class="lbl">확정 의결권</div><div class="val pend" id="kpiConf">미확정</div><div class="sub" id="kpiConfSub">-</div></div>
           </div>
           <div class="toolbar" style="margin-bottom:12px">
             <div class="seg" id="viewSeg">
@@ -409,30 +454,34 @@
           <!-- 의안 기준 -->
           <div class="tbl-wrap" id="viewAgenda">
             <table class="tbl" data-nosort>
-              <thead><tr><th>의안번호</th><th>의안명</th><th class="num">총행사가능의결권</th><th class="num">행사의결권</th><th class="num">미행사의결권</th><th class="num"><span class="hh"><svg class="hicon for" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></th><th class="num"><span class="hh"><svg class="hicon against" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></th><th class="num"><span class="hh"><svg class="hicon abs" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</span></th><th class="num"><span class="hh"><svg class="hicon neu" viewBox="0 0 24 24"><path d="M12 5 4 19h16z"/></svg>중립</span></th></tr></thead>
+              <thead><tr><th>의안번호</th><th>의안명</th><th class="num">총 행사가능의결권</th><th class="num">행사가능의결권</th><th class="num">미행사의결권</th><th class="num">행사의결권</th><th class="num"><span class="hh"><svg class="hicon for" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>찬성</span></th><th class="num"><span class="hh"><svg class="hicon against" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>반대</span></th><th class="num"><span class="hh"><svg class="hicon abs" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>기권</span></th><th class="num"><span class="hh"><svg class="hicon neu" viewBox="0 0 24 24"><path d="M12 5 4 19h16z"/></svg>중립</span></th></tr></thead>
               <tbody>
-                  <tr><td>1</td><td>재무제표 승인의 건</td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">0</td><td class="num">241,800,000</td><td class="num">58,200,000</td><td class="num">0</td><td class="num">0</td></tr>
-                  <tr class="grp-h"><td>2</td><td>정관 일부 변경의 건</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
-                  <tr><td>2-1</td><td>집중투표제 배제 조항 삭제의 건(정관 제37조 제3항)</td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">0</td><td class="num">214,000,000</td><td class="num">84,000,000</td><td class="num">2,000,000</td><td class="num">0</td></tr>
-                  <tr><td>2-2</td><td>전자주주총회 도입 관련 변경(정관 제26조 제2항)</td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">0</td><td class="num">206,000,000</td><td class="num">92,000,000</td><td class="num">2,000,000</td><td class="num">0</td></tr>
-                  <tr><td>3</td><td>선임 이사 수 결정의 건 <span class="cvb">양립불가</span></td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">0</td><td class="num">241,800,000</td><td class="num">58,200,000</td><td class="num">0</td><td class="num">0</td></tr>
-                  <tr class="sub"><td>3-1</td><td>집중투표 4인 중 2인 선임의 건(회사제안)</td><td class="num"></td><td class="num">300,000,000</td><td class="num"></td><td class="num">241,800,000</td><td class="num">58,200,000</td><td class="num">0</td><td class="num">0</td></tr>
-                  <tr class="sub"><td>3-2</td><td>집중투표 5인 중 2인 선임의 건(주주제안)</td><td class="num"></td><td class="num">300,000,000</td><td class="num"></td><td class="num">118,000,000</td><td class="num">182,000,000</td><td class="num">0</td><td class="num">0</td></tr>
-                  <tr class="grp-h"><td>4</td><td>집중투표에 의한 이사 선임의 건</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
-                  <tr><td>4-1</td><td>집중투표 4인 중 2인 선임의 건(회사제안) <span class="cvb">집중투표</span></td><td class="num">471,661,174</td><td class="num">23,000,000</td><td class="num">277,000,000</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-1-1</td><td>사외이사 후보 김도현</td><td class="num"></td><td class="num">10,240,000</td><td class="num"></td><td class="num">10,240,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-1-2</td><td>사외이사 후보 이수진</td><td class="num"></td><td class="num">4,320,000</td><td class="num"></td><td class="num">4,320,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-1-3</td><td>사외이사 후보 박준영</td><td class="num"></td><td class="num">7,180,000</td><td class="num"></td><td class="num">7,180,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-1-4</td><td>사외이사 후보 최민서</td><td class="num"></td><td class="num">1,260,000</td><td class="num"></td><td class="num">1,260,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
-                  <tr><td>4-2</td><td>집중투표 5인 중 2인 선임의 건(주주제안) <span class="cvb">집중투표</span></td><td class="num">471,661,174</td><td class="num">23,340,000</td><td class="num">276,660,000</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-2-1</td><td>사외이사 후보 정우성</td><td class="num"></td><td class="num">9,850,000</td><td class="num"></td><td class="num">9,850,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-2-2</td><td>사외이사 후보 한지민</td><td class="num"></td><td class="num">6,420,000</td><td class="num"></td><td class="num">6,420,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-2-3</td><td>사외이사 후보 오세훈</td><td class="num"></td><td class="num">3,980,000</td><td class="num"></td><td class="num">3,980,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-2-4</td><td>사외이사 후보 강가람</td><td class="num"></td><td class="num">2,110,000</td><td class="num"></td><td class="num">2,110,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
-                  <tr class="sub"><td>4-2-5</td><td>사외이사 후보 윤서연</td><td class="num"></td><td class="num">980,000</td><td class="num"></td><td class="num">980,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr><td>1</td><td>재무제표 승인의 건</td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">0</td><td class="num">300,000,000</td><td class="num">241,800,000</td><td class="num">58,200,000</td><td class="num">0</td><td class="num">0</td></tr>
+                  <tr class="grp-h"><td>2</td><td>정관 일부 변경의 건</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr><td>2-1</td><td>집중투표제 배제 조항 삭제의 건(정관 제37조 제3항)</td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">0</td><td class="num">300,000,000</td><td class="num">214,000,000</td><td class="num">84,000,000</td><td class="num">2,000,000</td><td class="num">0</td></tr>
+                  <tr><td>2-2</td><td>전자주주총회 도입 관련 변경(정관 제26조 제2항)</td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">0</td><td class="num">300,000,000</td><td class="num">206,000,000</td><td class="num">92,000,000</td><td class="num">2,000,000</td><td class="num">0</td></tr>
+                  <tr><td>3</td><td>선임 이사 수 결정의 건 <span class="cvb">양립불가</span></td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">0</td><td class="num">300,000,000</td><td class="num">241,800,000</td><td class="num">58,200,000</td><td class="num">0</td><td class="num">0</td></tr>
+                  <tr class="sub"><td>3-1</td><td>집중투표 4인 중 2인 선임의 건(회사제안)</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num">300,000,000</td><td class="num">241,800,000</td><td class="num">58,200,000</td><td class="num">0</td><td class="num">0</td></tr>
+                  <tr class="sub"><td>3-2</td><td>집중투표 5인 중 2인 선임의 건(주주제안)</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num">300,000,000</td><td class="num">118,000,000</td><td class="num">182,000,000</td><td class="num">0</td><td class="num">0</td></tr>
+                  <tr class="grp-h"><td>4</td><td>집중투표에 의한 이사 선임의 건</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr><td>4-1</td><td>집중투표 4인 중 2인 선임의 건(회사제안) <span class="cvb">집중투표</span></td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">277,000,000</td><td class="num">23,000,000</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-1-1</td><td>사외이사 후보 김도현</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num">10,240,000</td><td class="num">10,240,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-1-2</td><td>사외이사 후보 이수진</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num">4,320,000</td><td class="num">4,320,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-1-3</td><td>사외이사 후보 박준영</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num">7,180,000</td><td class="num">7,180,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-1-4</td><td>사외이사 후보 최민서</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num">1,260,000</td><td class="num">1,260,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr><td>4-2</td><td>집중투표 5인 중 2인 선임의 건(주주제안) <span class="cvb">집중투표</span></td><td class="num">471,661,174</td><td class="num">300,000,000</td><td class="num">276,660,000</td><td class="num">23,340,000</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-2-1</td><td>사외이사 후보 정우성</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num">9,850,000</td><td class="num">9,850,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-2-2</td><td>사외이사 후보 한지민</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num">6,420,000</td><td class="num">6,420,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-2-3</td><td>사외이사 후보 오세훈</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num">3,980,000</td><td class="num">3,980,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-2-4</td><td>사외이사 후보 강가람</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num">2,110,000</td><td class="num">2,110,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+                  <tr class="sub"><td>4-2-5</td><td>사외이사 후보 윤서연</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num">980,000</td><td class="num">980,000</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
               </tbody>
             </table>
             <div class="pg-empty">표시할 데이터가 없습니다</div>
+            <div class="pgfoot">
+              <span class="pgtot">총 <b id="agTotal">0</b>명 · <b id="agShares">0</b>주</span>
+              <div class="hopg">페이지당 <select><option>20</option><option>50</option><option>100</option></select><div id="agPager"><span class="pp dis"><i class="ph ph-caret-double-left"></i></span><span class="pp dis"><i class="ph ph-caret-left"></i></span><span class="pp cur">1</span><span class="pp dis"><i class="ph ph-caret-right"></i></span><span class="pp dis"><i class="ph ph-caret-double-right"></i></span><span class="pgtot2">1 / 1</span></div></div>
+            </div>
           </div>
 
           <!-- 주주 기준 -->
@@ -454,7 +503,7 @@
           <div class="dlg" role="dialog" aria-modal="true">
             <button class="dlg-x" id="dlgX"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
             <div class="dlg-h">
-              <div class="t">전자투표/위임 내역 등록</div>
+              <div class="t">전자투표/위임장 업로드</div>
               <div class="d" id="dlgDesc">업로드 전 적용되는 필수 검증 로직을 확인하세요.</div>
               <div class="stepper">
                 <span class="sd on" data-s="1"><span class="sn">1</span>검증 로직</span><span class="sar">›</span>
@@ -476,7 +525,7 @@
                     <li>의안별 의결권 제한 주주(특별이해관계자/기타) 검증</li>
                     <li>일부선임 의안에 선임 이사 수보다 찬성한 의안이 많은지 검증</li>
                     <li>양립불가 의안에 중복 찬성 여부 검증</li>
-                    <li>개인이지만 중립 투표한 주주</li>
+                    <li>개인 주주가 중립 투표했는지 검증</li>
                     <li>현장 참석자로 등록된 주주</li>
                   </ul>
                   <div class="vdiv"></div>
@@ -489,18 +538,18 @@
                   <div class="vnote"><i class="ph ph-info" style="font-size:16px"></i><div><div class="vt">합산 3%에 해당하는 주주가 주주총회에 참석한 여부에 따라 합산 3%룰이 적용됩니다.</div></div></div>
                   <div class="vdiv"></div>
                   <div class="vh">집중투표 필수 검증 로직*</div>
-                  <ul class="vlist"><li>찬성 외 영역에 특수문자 입력 여부 / 찬·반·기·중 주식수 입력 여부 검증</li></ul>
+                  <ul class="vlist two"><li>찬성 외 영역에 특수문자 입력 여부 검증</li><li>찬성 영역에 특수문자 입력되어 있지만 찬/반/기/중에 주식수 입력 여부 검증</li></ul>
                   <div class="vnote"><i class="ph ph-info" style="font-size:16px"></i><div><div class="vt">집중투표 의향이 있는 후보자의 찬성란에 표시문자 1개를 입력해 주세요.</div><div class="vs">예: V, O, ✓, ★</div></div></div>
                   <div class="vnote"><i class="ph ph-info" style="font-size:16px"></i><div><div class="vt">찬성 의안에 숫자를 입력한 경우 집중투표 분배 주주에서 제외됩니다.</div></div></div>
                   <div class="vdiv"></div>
                   <div class="vh">양립 불가 필수 검증 로직*</div>
                   <ul class="vlist"><li>양립불가로 설정된 의안 내 중복 찬성 여부</li></ul>
                 </div>
-                <div class="slabel">선택 검증 로직*</div>
+                <div class="slabel">선택 검증 로직</div>
                 <div class="ckwrap">
-                  <div class="ckitem on" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="cl">중복 의결권 자동 병합</div><div class="cd">동일 주주의 중복 행사분을 자동으로 병합합니다.</div></div></div>
-                  <div class="ckitem" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="cl">합산 3% 자동 계산 반영</div><div class="cd">합산 3% 대상 주주를 의결권 계산에 자동 반영합니다.</div></div></div>
-                  <div class="ckitem" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="cl">현장 참석 예정자 사전행사 제외</div><div class="cd">현장 참석 등록 주주의 사전 행사분을 제외합니다.</div></div></div>
+                  <div class="ckitem on" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="cl">일부 행사 여부 검증</div><div class="cd">행사가능의결권 중 일부만 행사한 주주가 있는지 검증</div></div></div>
+                  <div class="ckitem" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="cl">통합기관 전 계좌 행사 여부 검증</div><div class="cd">통합기관이 보유한 계좌 중 일부가 미행사되었는지 검증</div></div></div>
+                  <div class="ckitem" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="cl">사전 미승인 불통일행사 허용</div><div class="cd">사전 신청 및 승인 여부와 관계없이 입력된 불통일행사한 그대로 업로드 가능</div></div></div>
                 </div>
               </div>
 
@@ -513,18 +562,19 @@
                 <div class="fld">
                   <div class="upl-lb">엑셀 파일 업로드</div>
                   <div class="upl-row">
-                    <div class="desc">첨부된 양식으로 전자투표/위임 내역 작성 후 업로드<br>엑셀 파일 암호 해제 필수 (미해제 시 업로드 불가)</div>
-                    <button class="lnk">양식 다운로드</button>
+                    <div class="desc"><ul><li>첨부된 양식으로 전자투표/위임장 내역 작성 후 업로드</li><li>엑셀 파일 암호 해제 필수 (미해제 시 업로드 불가)</li></ul></div>
+                    <button class="lnk2" type="button" onclick="window.cxToast&&cxToast('양식을 다운로드했습니다.')"><i class="ph ph-download-simple" style="font-size:16px"></i>양식 다운로드</button>
                   </div>
                   <div class="drop" id="dropZone">
                     <div class="dt">파일을 선택하거나 끌어다 놓으세요.</div>
-                    <button class="pick" id="btnPick">선택</button>
+                    <button class="pick" id="btnPick">파일 선택</button>
                   </div>
                   <div class="attach" id="attachCard" style="display:none">
                     <div class="fx"><i class="ph ph-file" style="font-size:16px"></i></div>
                     <div class="meta"><div class="fn">전자투표_위임내역_제10기.xlsx</div><div class="fs">xlsx · 248KB</div></div>
                     <button class="rm" id="attachRm"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
                   </div>
+                  <div class="upcap">파일 업로드: xlsx (최대 350mb)</div>
                 </div>
               </div>
 
@@ -539,6 +589,7 @@
                     <tr><td>행사의결권</td><td class="old">1,241,000</td><td>3,247,000</td><td class="delta">+2,180,000</td></tr>
                   </tbody>
                 </table>
+                <div class="upbusy" id="upBusy"><span class="sb"><i class="ph ph-spinner spin"></i></span>파일을 업로드하는 중입니다.</div>
               </div>
             </div>
             <div class="dlg-f" style="align-items:center">
@@ -622,15 +673,15 @@
       ttl.textContent=vf?'검증 정보 수정':TTL; stepper.style.display=vf?'none':''; submit.textContent=vf?'저장':'등록하기';
       if(vf){ desc.textContent='업로드 전 적용되는 필수 검증 로직을 수정하세요.'; cancel.style.display='inline-flex'; prev.style.display=next.style.display=agree.style.display='none'; submit.style.display='inline-flex'; submit.disabled=false; return; }
       document.querySelectorAll('.stepper .sd').forEach(function(d){ d.classList.toggle('on', +d.dataset.s<=step); });
-      cancel.style.display=(step===1||step===3)?'inline-flex':'none';
-      prev.style.display=(step===2)?'inline-flex':'none';
+      cancel.style.display='inline-flex'; prev.style.display='none';
+      next.textContent=step===1?'설정하고 다음':'업로드';
       next.style.display=(step<3)?'inline-flex':'none';
       submit.style.display=(step===3)?'inline-flex':'none';
       agree.style.display=(step===3)?'inline-flex':'none';
       if(step===2){ next.disabled=!attached; } else { next.disabled=false; }
       if(step===3){ submit.disabled=!agree.classList.contains('on'); }
     }
-    function reset(){ step=1; attached=false; agree.classList.remove('on'); drop.style.display='flex'; att.style.display='none'; render(); }
+    function reset(){ busy(false); step=1; attached=false; agree.classList.remove('on'); drop.style.display='flex'; att.style.display='none'; render(); }
     function openDlg(){
       reset();
       /* 해외 주주 업로드에는 전자투표관리기관 선택이 없다 */
@@ -642,10 +693,11 @@
     var cks=function(){ return document.querySelectorAll('#evStep1 .ckitem[data-ck]'); };
     function openVerify(){ mode='verify'; reset(); ckSnap=[].map.call(cks(),function(c){ return c.classList.contains('on'); }); ov.classList.add('show'); }
     function cancelDlg(){ if(mode==='verify') [].forEach.call(cks(),function(c,i){ c.classList.toggle('on',ckSnap[i]); }); closeDlg(); }
+    function busy(on){ document.getElementById('upBusy').classList.toggle('show',on); submit.classList.toggle('busy',on); cancel.disabled=on; if(on){ submit.disabled=true; submit.innerHTML='<i class="ph ph-spinner spin"></i>등록하기'; } }
     function attach(){ attached=true; drop.style.display='none'; att.style.display='flex'; render(); }
     document.querySelectorAll('.js-upload').forEach(function(b){b.addEventListener('click', openDlg);});
     document.querySelectorAll('.js-verify').forEach(function(b){b.addEventListener('click', openVerify);});
-    document.getElementById('dlgX').addEventListener('click', cancelDlg);
+    document.getElementById('dlgX').addEventListener('click', function(){ if(!cancel.disabled) cancelDlg(); });
     cancel.addEventListener('click', cancelDlg);
     pick.addEventListener('click', function(e){ e.stopPropagation(); attach(); });
     drop.addEventListener('click', attach);
@@ -656,10 +708,17 @@
     document.querySelectorAll('#evStep1 .ckitem[data-ck]').forEach(function(c){ c.addEventListener('click', function(){ c.classList.toggle('on'); }); });
     submit.addEventListener('click', function(){
       if(mode==='verify'){ closeDlg(); if(window.cxToast) cxToast('검증 정보를 저장했습니다.'); return; }
+      if(submit.classList.contains('busy')) return;
+      /* 업로드 중(Figma) → 완료. ?uperr=1 이면 현장 참석자 오류 알림 */
+      busy(true);
+      setTimeout(function(){
       closeDlg();
+      if(new URLSearchParams(location.search).get('uperr')==='1'){ document.getElementById('upErrOv').classList.add('show'); return; }
+      if(window.cxToast) cxToast('내역을 등록했습니다.');
       document.getElementById('evEmpty').style.display='none';
       document.getElementById('evFilled').style.display='block';
       document.getElementById('btnConfirm').style.display='inline-flex';
+      }, 1600);
     });
     // 내역 탭 전환
     document.querySelectorAll('.evtabs').forEach(function(g){
@@ -701,7 +760,7 @@
     function num(x){return parseInt((x||'').replace(/[^0-9]/g,''),10)||0;}
     function fmt(n){return n.toLocaleString('en-US');}
     function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
-    var SCOLS=[3,5,6,7,8];
+    var SCOLS=[3,5,6,7,8,9];   /* 행사가능 · 행사 · 찬 · 반 · 기 · 중 (4 = 미행사는 총 - 행사로 계산) */
     var agBody=document.querySelector('#viewAgenda tbody');
     if(agBody){ agBody.querySelectorAll('tr').forEach(function(tr){
       var tds=tr.children;
@@ -723,11 +782,15 @@
         var tds=tr.children;
         SCOLS.forEach(function(i){ var td=tds[i]; if(td&&td.hasAttribute('data-b')) td.textContent=fmt(Math.round((+td.getAttribute('data-b'))*f)); });
         /* 미행사 = 총행사가능의결권 - 행사한 의결권 */
-        if(tds[4]&&tds[3]&&tds[3].hasAttribute('data-b')&&tds[2]&&tds[2].hasAttribute('data-tot'))
-          tds[4].textContent=fmt((+tds[2].getAttribute('data-tot')) - Math.round((+tds[3].getAttribute('data-b'))*f));
+        if(tds[4]&&tds[5]&&tds[5].hasAttribute('data-b')&&tds[2]&&tds[2].hasAttribute('data-tot'))
+          tds[4].textContent=fmt((+tds[2].getAttribute('data-tot')) - Math.round((+tds[5].getAttribute('data-b'))*f));
       }); }
       if(hoBody){ var hf = on ? 1/(1-DR) : 1; hoBody.querySelectorAll('td[data-b]').forEach(function(td){ td.textContent=fmt(Math.round((+td.getAttribute('data-b'))*hf)); }); }
     }
+    /* 확정 의결권 — 확정 전에는 '미확정 / -', 확정 후 수치 · 주주수 */
+    var CONF={v:'-',s:'-'};
+    function paintConf(){ var on=!!window.evConfirmed, v=document.getElementById('kpiConf'); if(!v) return; v.textContent=on?CONF.v:'미확정'; v.className='val '+(on?'blue':'pend'); set('kpiConfSub',on?CONF.s:'-'); }
+    window.evPaintConf=paintConf;
     function setCnt(el){
       if(!el) return;
       var cnt=el.dataset.cnt||'0', shr=num(el.dataset.shr);
@@ -736,7 +799,9 @@
       /* 카드 서브는 모두 주주수 — 중복·미처리 주주는 데모 비율(중복 = 행사 주주의 10%, 미처리 = 중복의 20%) */
       var nEx=num(cnt), nDup=dup?Math.max(1,Math.round(nEx*0.1)):0, nUn=dupUn?Math.max(1,Math.round(nDup*0.2)):0;
       set('kpiEx',fmt(shr)+'주'); set('kpiExSub',cnt+'명');
-      set('kpiDup',fmt(dup)+'주'); set('kpiDupUn',fmt(dupUn)+'주'); set('kpiDupUnSub',fmt(nUn)+'명'); set('kpiConf',fmt(conf)+'주'); set('kpiDupSub',fmt(nDup)+'명'); set('kpiConfSub',fmt(nEx-nUn)+'명');
+      set('kpiDup',fmt(dup)+'주'); set('kpiDupUn',fmt(dupUn)+'주'); set('kpiDupUnSub',fmt(nUn)+'명'); set('kpiDupSub',fmt(nDup)+'명');
+      CONF={v:fmt(conf)+'주',s:fmt(nEx-nUn)+'명'}; paintConf();
+      set('agTotal',cnt); set('agShares',fmt(shr));
       var empty=(shr===0);
       ['viewAgenda','viewHolder'].forEach(function(id){var w=document.getElementById(id);if(w)w.classList.toggle('novot',empty);});
       if(empty){ set('pgInd','0 / 0'); var p=document.getElementById('pgPrev'),n=document.getElementById('pgNext'); if(p)p.disabled=true; if(n)n.disabled=true; }
@@ -752,16 +817,35 @@
   <div class="adlg" role="alertdialog" aria-modal="true">
     <div class="ah"><div class="am"><i class="ph ph-trash"></i></div>
       <div><div class="at">전자투표/위임 내역을 삭제하시겠습니까?</div><div class="ad">삭제된 데이터는 복구할 수 없습니다.</div></div>
-      <div class="ai"><span>해외 주주</span><b id="evDelCnt">0명</b></div></div>
+      <div class="ai"><span>해외 주주 내역</span><b id="evDelCnt">0주</b></div></div>
     <div class="af"><button class="btn-out" data-evdel-x>취소</button><button class="btn-dng" id="evDelDo">삭제하기</button></div>
   </div>
 </div>
+<!-- 의결권 내역 다운로드 — 사유 입력 -->
+<div class="dlg-ov" id="dlrOv"><div class="dlg" role="dialog" aria-modal="true">
+  <button class="dlg-x" data-dlr-x aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="dlg-h"><div class="t">의결권 내역 다운로드</div><div class="d">재업로드 가능한 양식으로 주주별 행사내역을 다운로드 할 수 있습니다.</div></div>
+  <div class="dlg-c"><div><textarea class="dlr" id="dlrTxt" placeholder="사유를 입력해 주세요"></textarea><div class="dlcap">개인정보가 포함된 파일입니다. 다운로드 사유를 입력해 주세요</div></div></div>
+  <div class="dlg-f"><button class="btn-out" data-dlr-x>취소</button><button class="btn-dark" id="dlrOk" disabled>다운로드</button></div>
+</div></div>
+<!-- 확정 취소 확인 -->
+<div class="dlg-ov" id="uncfmOv"><div class="adlg" role="alertdialog" aria-modal="true">
+  <div class="ah"><div class="am"><i class="ph ph-arrow-u-up-left"></i></div>
+    <div><div class="at">전자투표/위임장 내역<br>확정을 취소하시겠습니까?</div><div class="ad">확정 취소 즉시 전자투표/위임장 데이터 변경이 가능하며, 파일 재업로드 시 중복 위임장 처리 및 집중투표 표 분배를 다시 진행해야 합니다.</div></div>
+    <label class="fchk" id="uncfmChk"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>재작업이 필요할 수 있음을 확인했습니다.</label></div>
+  <div class="af"><button class="btn-out" data-uncfm-x>닫기</button><button class="btn-dng" id="uncfmOk" disabled>확정 취소</button></div>
+</div></div>
+<!-- 업로드 오류 알림 (시연: ?uperr=1) -->
+<div class="dlg-ov" id="upErrOv"><div class="adlg" role="alertdialog" aria-modal="true">
+  <div class="ah"><div class="am gray"><i class="ph ph-warning-circle"></i></div><div><div class="at">데이터 등록 및 변경을 할 수 없습니다.</div><div class="ad">이미 현장 참석자로 등록된 주주 입니다.</div></div></div>
+  <div class="af"><button class="btn-dark" data-uperr-x>확인</button></div>
+</div></div>
 <div class="dlg-ov" id="cfmOv">
   <div class="dlg cfm">
-    <div class="dlg-h"><div class="t">전자투표 · 전자위임 내역을 확정 하시겠습니까?</div><div class="d">아래 수치를 확인한 뒤 확정을 완료하세요.</div><button class="dlg-x" data-cfm-close><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="dlg-h"><div class="t">전자투표/위임장 내역을 확정 하시겠습니까?</div><div class="d">아래 수치를 확인한 뒤 확정을 완료하세요.</div><button class="dlg-x" data-cfm-close><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
     <div class="dlg-c">
+      <div class="cfm-org"><span>전자투표 관리기관</span><b id="cfmOrg">IR큐더스</b></div>
       <table class="cfm-tbl" data-nocx><thead><tr><th class="l">내용</th><th>국내</th><th>해외</th></tr></thead><tbody><tr><td class="l">의안수</td><td>12</td><td>12</td></tr><tr><td class="l">주주수</td><td>4,820</td><td>1,180</td></tr><tr><td class="l">행사가능의결권</td><td>96,300,000</td><td>24,100,000</td></tr><tr><td class="l">행사의결권</td><td>94,500,000</td><td>23,700,000</td></tr></tbody></table>
-      <div class="cfm-note"><i class="ph ph-info" style="font-size:16px"></i>중복 행사한 주주가 8명 있습니다. 확정 후 '중복 의결권 관리' 화면에서 처리해주세요.</div>
     </div>
     <div class="cfm-foot">
       <label class="cfm-chk on" id="cfmChk"><span class="cb"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 내용을 확인했으며, 내역을 확정합니다.</label>
@@ -778,10 +862,16 @@
   function closeCfm(){ ov.classList.remove("show"); }
   function setConfirmed(v){ confirmed=v;
     if(v){ btn.className="btn-confirmed"; btn.innerHTML='<i class="ph ph-arrow-u-up-left" style="font-size:16px"></i>확정 취소'; }
-    else { btn.className="btn-primary"; btn.innerHTML='<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>확정하기'; } }
-  btn.addEventListener("click",function(){ if(confirmed){ setConfirmed(false); } else { ov.classList.add("show"); } });
+    else { btn.className="btn-primary"; btn.textContent='확정'; }
+    window.evConfirmed=v; if(window.evPaintConf) evPaintConf(); }
+  btn.addEventListener("click",function(){ if(btn.disabled) return; if(confirmed){ uchk.classList.remove("on"); uok.disabled=true; un.classList.add("show"); } else { ov.classList.add("show"); } });
+  /* 확정 취소 — 재작업 확인 후 되돌린다 */
+  var un=document.getElementById("uncfmOv"), uchk=document.getElementById("uncfmChk"), uok=document.getElementById("uncfmOk");
+  uchk.addEventListener("click",function(){ uchk.classList.toggle("on"); uok.disabled=!uchk.classList.contains("on"); });
+  un.addEventListener("click",function(e){ if(e.target.closest("[data-uncfm-x]")) un.classList.remove("show"); });
+  uok.addEventListener("click",function(){ if(uok.disabled) return; un.classList.remove("show"); setConfirmed(false); if(window.cxToast) cxToast("확정을 취소했습니다."); });
   chk.addEventListener("click",function(){ chk.classList.toggle("on"); ok.disabled=!chk.classList.contains("on"); });
-  ok.addEventListener("click",function(){ if(!chk.classList.contains("on")) return; closeCfm(); setConfirmed(true); });
+  ok.addEventListener("click",function(){ if(!chk.classList.contains("on")) return; closeCfm(); setConfirmed(true); if(window.cxToast) cxToast("내역을 확정했습니다."); });
   ov.querySelectorAll("[data-cfm-close]").forEach(function(b){ b.addEventListener("click",closeCfm); });
 })();
 </script>
@@ -792,13 +882,40 @@
   var al=document.getElementById('evDelAlert');
   function tab(){ return document.querySelector('#evFilled .evtab.active'); }
   document.getElementById('evDelBtn').addEventListener('click',function(){
-    document.getElementById('evDelCnt').textContent=(tab().dataset.cnt||'0')+'명'; al.classList.add('show');
+    document.getElementById('evDelCnt').textContent=(tab().dataset.shr||'0')+'주'; al.classList.add('show');
   });
   al.addEventListener('click',function(e){ if(e.target.closest('[data-evdel-x]')) al.classList.remove('show'); });
   document.getElementById('evDelDo').addEventListener('click',function(){
     var t=tab(); al.classList.remove('show');
     t.dataset.cnt='0'; t.dataset.shr='0'; t.click();
     if(window.cxToast) cxToast('해외 주주 내역을 삭제했습니다.');
+  });
+})();
+</script>
+<script>
+/* Figma 반영 — 다운로드 사유 · 업로드 잠금(?lock=1) · 의안 상세 이동 */
+(function(){
+  var q=new URLSearchParams(location.search);
+  /* 다운로드 → 사유 입력 후 다운로드 */
+  var dov=document.getElementById('dlrOv'), dtx=document.getElementById('dlrTxt'), dok=document.getElementById('dlrOk');
+  document.querySelectorAll('.dlbtn').forEach(function(b){ b.addEventListener('click',function(){ dtx.value=''; dok.disabled=true; dov.classList.add('show'); dtx.focus(); }); });
+  dtx.addEventListener('input',function(){ dok.disabled=!dtx.value.trim(); });
+  dov.addEventListener('click',function(e){ if(e.target.closest('[data-dlr-x]')) dov.classList.remove('show'); });
+  dok.addEventListener('click',function(){ if(dok.disabled) return; dov.classList.remove('show'); if(window.cxToast) cxToast('의결권 내역을 다운로드했습니다.'); });
+  document.getElementById('upErrOv').addEventListener('click',function(e){ if(e.target.closest('[data-uperr-x]')) this.classList.remove('show'); });
+  if(q.get('empty')==='1'){ document.getElementById('evFilled').style.display='none'; document.getElementById('evEmpty').style.display='block'; document.getElementById('btnConfirm').style.display='none'; }
+  /* 업로드 잠금 — 다른 담당자가 업로드 중이면 파일 등록 · 확정을 막는다 */
+  if(q.get('lock')==='1'){
+    document.getElementById('lockBar').classList.add('show');
+    document.querySelectorAll('.js-upload').forEach(function(b){ b.disabled=true; });
+    document.getElementById('btnConfirm').disabled=true;
+  }
+  /* 의안 행 → 의안 상세 */
+  var ab=document.querySelector('#viewAgenda tbody');
+  ab.addEventListener('click',function(e){
+    var tr=e.target.closest('tr'); if(!tr||tr.classList.contains('grp-h')) return;
+    var no=tr.children[0].textContent.trim(), tab=document.querySelector('#evFilled .evtab.active'), dt=document.getElementById('dupTgl');
+    location.href='exercise-detail.html?from=evote&no='+encodeURIComponent('제'+no+'호')+'&tab='+encodeURIComponent(tab?tab.textContent.trim():'')+(dt&&dt.classList.contains('on')?'&dup=1':'');
   });
 })();
 </script>
