@@ -1174,7 +1174,16 @@
 </style>
 <script src="cx-data.js?v=6"></script>
 <script src="cx-roster.js?v=r7"></script>
-<script src="cx-attendees.js?v=1"></script>
+<script src="cx-attendees.js?v=2"></script>
+<script>
+/* 저장된 진행 상황(cx.oc)과 현장 참석 인원 — 화면을 그리기 전에 읽어 둔다.
+   복원이 끝나기 전에는 저장하지 않는다(처음 그리는 기본 상태가 저장값을 덮지 않게). */
+(function(){
+  try{ window.__ocSaved=JSON.parse(localStorage.getItem('cx.oc')||'null'); }catch(e){ window.__ocSaved=null; }
+  window.__ocRestoring=!!window.__ocSaved;
+  if(CX.attCounts){ var c=CX.attCounts(); CX.meeting.onsiteHolders=c.sh; CX.meeting.onsiteNonsh=c.ns; CX.meeting.attendHolders=c.sh+CX.meeting.onlineHolders; }
+})();
+</script>
 </head>
 <body>
 <div class="oc app collapsed" id="app">
@@ -1319,7 +1328,7 @@
         <div class="oc-mc"><div class="k">의안 진행 <span class="stbadge blue" id="mAgSt"><span class="d"></span>진행 중</span></div><div class="v"><span><b id="mAgNo">0</b> / <span id="mAgTot">8</span></span></div><div class="s" id="mAgSub"></div></div>
         <div class="oc-mc"><div class="k">출석률</div><div class="v" id="mAttendRate">00%</div><div class="s"><span data-cx="meeting.sharesIssued">476,211,964</span>주 기준</div></div>
         <div class="oc-mc"><div class="k">전체 출석 주주수</div><div class="v"><span data-cx="meeting.attendHolders">300,000</span><span class="sub">명</span></div><div class="s">출석의결권 <span data-cx="meeting.attendShares">300,000,000</span>주</div></div>
-        <div class="oc-mc"><div class="k">현장출석</div><div class="v"><span data-cx="meeting.onsiteHolders">60</span><span class="sub">명</span></div><div class="s"><span data-cx="meeting.onsiteShares">3,120,000</span>주 행사 가능</div></div>
+        <div class="oc-mc"><div class="k">현장출석</div><div class="v"><span id="mOnsite" data-cx="meeting.onsiteHolders">60</span><span class="sub">명</span></div><div class="s"><span data-cx="meeting.onsiteShares">3,120,000</span>주 행사 가능<span id="mNonsh"></span></div></div>
         <div class="oc-mc"><div class="k">현장표결</div><div class="v"><span><b id="mSiteN">0</b> / <span id="mSiteTot">8</span></span></div><div class="s"><span id="mSiteW">0</span>주 행사</div></div>
         <div class="oc-mc"><div class="k">전자출석</div><div class="v"><span id="mOnline" data-cx="meeting.onlineHolders">100,000</span><span class="sub">명</span><svg class="spark" viewBox="0 0 80 22" preserveAspectRatio="none"><polyline fill="none" stroke="#0071f3" stroke-width="2" points="0,18 12,15 24,16 36,10 48,12 60,6 72,7 80,3"/></svg></div><div class="s"><span data-cx="meeting.onlineShares">296,880,000</span>주</div></div>
       </div>
@@ -1738,6 +1747,20 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   /* 시청 화면(주주PASS)이 같은 지점을 보도록 시계와 영상 위치를 함께 내보낸다.
      보낸 시각(tAt)을 같이 실어야 받는 쪽에서 그동안 흐른 만큼 더할 수 있다. */
   var vid=document.getElementById('pipVid');
+  /* 저장된 시계 — 총회를 이미 시작했으면 '총회 시작' 버튼 없이 그 시각부터 이어 간다 */
+  (function(){
+    var c={}; try{ c=JSON.parse(localStorage.getItem('cx.clock')||'{}'); }catch(e){}   /* conexus.js(cxClock)는 이 뒤에 불러오므로 직접 읽는다 */
+    if(!(c.at && (c.run || c.t>0))) return;
+    t=Math.floor(c.t+(c.run?(Date.now()-c.at)/1000:0)); running=!!c.run; window.__ocStarted=true;
+    document.getElementById('ocStart').style.display='none'; document.getElementById('ocTimerW').style.display='';
+    var ivb=document.querySelector('.ivid'); if(ivb) ivb.classList.remove('pre');
+    var ivp=document.getElementById('ividPre'); if(ivp) ivp.remove();
+    if(vid){
+      var go=function(){ if(vid.duration) vid.currentTime=((c.vt||0)+(c.vpaused?0:(Date.now()-c.at)/1000))%vid.duration; if(!c.vpaused){ var pr=vid.play(); if(pr&&pr.catch) pr.catch(function(){}); } };
+      if(vid.readyState>=1) go(); else vid.addEventListener('loadedmetadata',go,{once:true});
+    }
+    paint();
+  })();
   function castClock(){
     if(!window.cxClock) return;
     cxClock.set({ t:t, run:running, at:Date.now(),
@@ -1899,6 +1922,11 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   }
   OC.fire=function(){
     OC.hooks.forEach(function(f){ try{ f(); }catch(e){} });
+    /* 진행 상황 저장 — 새로 열어도 이어서(총회 종료 시 초기화) */
+    if(!window.__ocRestoring){
+      try{ localStorage.setItem('cx.oc', JSON.stringify({agenda:OC.agenda, stage:(OC.loading?3:OC.stage), done:OC.done, res:OC.res,
+        decided:OC.decided, amends:window.__amends||[], ts:Date.now()})); }catch(e){}
+    }
     /* 의장·사회자 화면은 이 신호만 보고 따라 넘어간다 */
     if(window.cxSync) cxSync.set({ag:OC.agenda, stage:(OC.loading?2:OC.stage), sec:voteSec,
       cast:null, done:resMap(), kpi:kpiNow()});
@@ -2869,9 +2897,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   /* 좌측 의안 리스트 반영 — 표결 기준 카드로(Figma).
      원안 카드는 그대로 두고 '보류', 바로 아래에 같은 번호의 동의 카드를 새 표결 단위로 둔다.
      동의가 가결되면 원안은 '폐기'(카드 전체 50%). 동의 카드는 원안의 표결 정보를 그대로 쓴다. */
-  function applyAmend(a){
+  function applyAmend(a, silent){
     var card=document.querySelector('#agTree .arow.selnode[data-no="'+a.no+'"]');
     if(!card || card.dataset.heldBy) return;
+    window.__amends=(window.__amends||[]).concat([{no:a.no,title:a.title}]);
     var amNo=a.no+'·동의';
     if(CX.center[a.no]) { var c={}; for(var k in CX.center[a.no]) c[k]=CX.center[a.no][k]; c.name='[동의] '+a.title; CX.center[amNo]=c; }
     card.dataset.heldBy=amNo;
@@ -2879,10 +2908,35 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     var tline=(types?types.innerHTML+'<span class="atsep">·</span>':'')+'<span class="tp amd">동의</span>';
     card.insertAdjacentHTML('afterend','<div class="arow selnode amcard" data-no="'+amNo+'"><div class="acat"><span class="ano">'+CX.util.chip(a.no)
       +'</span><span class="anm">[동의] '+esc2(a.title)+'</span><span class="astatus"></span></div><div class="atypes">'+tline+'</div></div>');
-    var nc=card.nextElementSibling; if(nc) nc.click();   /* 동의 카드로 넘어가 바로 상정·표결 */
+    var nc=card.nextElementSibling; if(nc && !silent) nc.click();   /* 동의 카드로 넘어가 바로 상정·표결 */
     if(window.OC && OC.repaint) OC.repaint();
   }
   window.applyAmend=applyAmend;
+  function paintOnsite(){
+    if(!CX.attCounts) return;
+    var c=CX.attCounts(); CX.meeting.onsiteHolders=c.sh; CX.meeting.onsiteNonsh=c.ns; CX.meeting.attendHolders=c.sh+CX.meeting.onlineHolders;
+    var e=document.getElementById('mOnsite'); if(e) e.textContent=cm(c.sh);
+    var n=document.getElementById('mNonsh'); if(n) n.textContent=c.ns?' · 비주주 '+c.ns+'명':'';
+    document.querySelectorAll('[data-cx="meeting.attendHolders"]').forEach(function(x){ x.textContent=cm(CX.meeting.attendHolders); });
+    if(window.OC) OC.__att=null;
+  }
+  paintOnsite();
+  window.addEventListener('storage',function(e){ if(e.key===(CX.ATT_KEY||'cx.att')) paintOnsite(); });
+  /* 저장된 진행 상황 복원 — 결과·마감 표시 → 동의 카드 → 보고 있던 의안과 단계 */
+  (function(){
+    var sv=window.__ocSaved; if(!sv || !window.OC){ window.__ocRestoring=false; return; }
+    OC.done=sv.done||{}; OC.res=sv.res||{}; OC.decided=sv.decided||null;
+    (sv.amends||[]).forEach(function(a){ applyAmend(a,true); });
+    var node=document.querySelector('#agTree .selnode[data-no="'+sv.agenda+'"]');
+    if(node){
+      document.querySelectorAll('#agTree .selnode.sel').forEach(function(x){ x.classList.remove('sel'); });
+      node.classList.add('sel'); OC.select(sv.agenda);
+      if(!OC.res[sv.agenda] && sv.stage>0 && sv.stage<4) OC.go(sv.stage);
+    }
+    window.__ocRestoring=false;
+    if(OC.repaint) OC.repaint();
+    OC.fire();
+  })();
 })();
 </script>
 <div class="ovl" id="bulkOvl">
@@ -4162,7 +4216,7 @@ document.addEventListener('click',function(e){
   };
 })();
 </script>
-<script src="conexus.js?v=s14"></script>
+<script src="conexus.js?v=s15"></script>
 <script>/* 칸이 열린 뒤에야 내보낼 수 있으므로, 화면을 연 순간의 상태를 여기서 한 번 알린다 */
 if(window.OC&&OC.fire) OC.fire();
 /* 주주PASS 시청 화면에서 올라온 질의 · 발언 · 동의를 받아 각 목록에 얹는다 */
@@ -4206,9 +4260,8 @@ if(window.OC&&OC.fire) OC.fire();
     if(got) (window.QAREPAINT||[]).forEach(function(f){ try{ f(); }catch(e){} });
   }
   window.addEventListener('storage',function(e){ if(e.key===CH) take(); });
-  /* 시연용 — 시청 화면에서 직접 입력한 질의는 이 화면이 열려 있는 동안만 보인다.
-     새로 열거나 새로고침하면 쌓인 입력분을 비워 기본 데이터(QUESTIONS)만 남긴다. */
-  try{ localStorage.removeItem(CH); }catch(e){}
+  /* 시청 화면에서 접수된 질의 · 발언 · 동의는 새로 열어도 그대로 다시 받는다 — 총회 종료 시 초기화 */
+  take();
 })();</script>
 <script>
 /* 총회 제어 드롭다운 — 지연/종료를 한 버튼으로 묶는다.
@@ -4254,7 +4307,7 @@ if(window.OC&&OC.fire) OC.fire();
     $('endCk').style.display = left ? '' : 'none';
     open('endOvl');
   });
-  $('endGo').addEventListener('click', function () { window.location.href = 'closing.html'; });
+  $('endGo').addEventListener('click', function () { if (window.CX && CX.resetMeeting) CX.resetMeeting(); window.location.href = 'closing.html'; });   /* 총회 종료 — 진행 상황 · 참석 등록 · 접수분 초기화 */
 
   /* 닫기 — X · 취소 · 배경 */
   document.addEventListener('click', function (e) {

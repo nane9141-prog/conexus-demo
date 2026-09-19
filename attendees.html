@@ -332,7 +332,7 @@
 </style>
 <script src="cx-data.js?v=6"></script>
 <script src="cx-roster.js?v=r7"></script>
-<script src="cx-attendees.js?v=1"></script>
+<script src="cx-attendees.js?v=2"></script>
 <link rel="stylesheet" href="cx-accordion.css?v=1">
 </head>
 <body>
@@ -706,6 +706,8 @@
   function render(){
     /* 현장 참석자 탭 숫자 — 참석 중인 주주(비주주 참관인 제외) */
     var sc=document.getElementById('atSiteCnt'); if(sc) sc.textContent=D.filter(function(x){ return !x.nonsh && x.site!=='미참석'; }).length;
+    /* 등록·철회·비주주 추가를 저장 — 현장 제어가 같은 명단을 읽는다(총회 종료 시 초기화) */
+    if(CX.saveAttendees) CX.saveAttendees(D);
     var head=document.getElementById('atHead'), body=document.getElementById('atBody');
     var cols=COLS[ck()];
     /* 헤더·콜그룹은 탭(비주주 칩 포함)이 바뀔 때만 다시 그린다 — 검색마다 다시 그리면 conexus 필터 아이콘이 사라졌다 붙어 흔들린다 */
@@ -1122,6 +1124,6 @@
 })();
 </script>
 
-<script src="conexus.js?v=s14"></script>
+<script src="conexus.js?v=s15"></script>
 </body>
 </html>

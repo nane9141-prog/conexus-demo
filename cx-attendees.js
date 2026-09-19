@@ -25,7 +25,7 @@
       var o={proxy:(site!=='미참석'&&site!=='참관'&&r.i%4===1)?PXN[r.i%6]:'-', ac:r.ac, voter:(i%150===75)?'-':r.nm, name:r.nm, no:no, pre:pre, hold:r.sh,
         attend:site==='일부 참석'?Math.round(r.sh*0.6):0, ratio:r.rt.toFixed(2)+'%', site:site, app:app,
         code:code, evote:(i%3===1?'미참석':'참석'), limit:lim, ag:(lim!=='-'&&i%2)?AG[i%AG.length]:null};
-      o.ri=r.i; o.key=o.voter+o.name+o.no;
+      o.ri=r.i; o.key=o.voter+o.name+o.no+'#'+r.i;   /* 같은 이름·주주번호(마스킹)가 있어 명부 순번까지 붙인다 */
       return o;
     });
     /* 통합기관(cx-roster rosterGroups): 대표 1줄 + 계좌 줄(접힘). 대표 줄 상태값은 최대 보유 계좌 기준 */
@@ -52,8 +52,39 @@
     [['정다은','임직원','KVIDIA 경영지원팀','010-2381-4410','daeun.jung@kvidia.co.kr','주주총회 운영 지원'],
      ['오민석','기자','한국경제신문 증권부','010-5527-1093','minsuk.oh@hankyung.com','취재 목적 참관'],
      ['최하린','변호사','법무법인 세종','010-9142-6678','harin.choi@shinkim.com','총회 진행 법률 자문']].forEach(function(n){ rows.push(nonSh.apply(null,n)); });
+    return applySaved(rows);
+  }
+  /* 현장 참석 등록 저장 — 참석자 관리에서 등록·철회·비주주 추가한 결과를 브라우저에 남긴다(cx.att).
+     현장 제어도 같은 값을 읽는다. 주주총회 현장 제어에서 '총회 종료'를 누르면 지운다(CX.resetMeeting). */
+  var KEY = 'cx.att';
+  function saved() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } }
+  function applySaved(rows) {
+    var sv = saved(); if (!sv) return rows;
+    var on = sv.on || {};
+    rows.forEach(function (x) {
+      if (x.nonsh) return;
+      var v = on[x.key];
+      if (v) { x.site = v[0]; x.app = v[1]; x.proxy = v[2]; if (x.site === '일부 참석' && !x.attend) x.attend = Math.round(x.hold * 0.6); }
+      else if (x.site !== '미참석') { x.site = '미참석'; x.app = '미사용'; x.proxy = '-'; x.attend = 0; (x.members || []).forEach(function (m) { m.attend = 0; }); }
+    });
+    if (sv.ns) rows = rows.filter(function (x) { return !x.nonsh; }).concat(sv.ns);
     return rows;
+  }
+  function save(D) {
+    var on = {};
+    D.forEach(function (x) { if (!x.nonsh && x.site !== '미참석') on[x.key] = [x.site, x.app, x.proxy]; });
+    var ns = D.filter(function (x) { return x.nonsh; });
+    try { localStorage.setItem(KEY, JSON.stringify({ on: on, ns: ns, ts: Date.now() })); } catch (e) {}
+  }
+  /* 현장 참석 인원 — 주주(sh) · 비주주(ns) */
+  function counts(D) {
+    D = D || build();
+    return { sh: D.filter(function (x) { return !x.nonsh && x.site !== '미참석'; }).length,
+             ns: D.filter(function (x) { return x.nonsh; }).length };
   }
   CX.attNonSh = nonSh;
   CX.buildAttendees = build;
+  CX.saveAttendees = save;
+  CX.attCounts = counts;
+  CX.ATT_KEY = KEY;
 })();

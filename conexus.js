@@ -869,6 +869,12 @@ function cxChannel(K) {
   };
 }
 window.cxSync = cxChannel('cx.live');
+/* 총회 진행 저장값 초기화 — 현장 제어 '총회 종료'에서 부른다.
+   진행 상황(cx.oc) · 현장 참석 등록(cx.att) · 시청 화면 접수분(cx.qna) · 시계(cx.clock) · 송출(cx.live) · 대시보드 상태 */
+window.CX = window.CX || {};
+CX.resetMeeting = function () {
+  ['cx.oc', 'cx.att', 'cx.qna', 'cx.clock', 'cx.live', 'cxDayState'].forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
+};
 window.cxClock = cxChannel('cx.clock');
 
 /* 날짜 입력 — 브라우저 기본 달력 대신 공통 달력(.cal · conexus.css)을 띄운다.
