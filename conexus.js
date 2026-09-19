@@ -1000,7 +1000,7 @@ window.cxClock = cxChannel('cx.clock');
    큐더스전자는 카카오뱅크 화면·데이터를 그대로 쓰고, 화면의 회사명과 생중계 영상만 바꾼다. */
 (function () {
   var CO = [['kakaobank', '카카오뱅크'], ['kudoselectric', '큐더스전자']];
-  var key = 'kakaobank'; try { key = localStorage.getItem('cx.co') || 'kakaobank'; } catch (e) {}
+  var key = 'kudoselectric'; try { key = localStorage.getItem('cx.co') || 'kudoselectric'; } catch (e) {}   /* 기본은 큐더스전자 */
   var KUDOS = (key === 'kudoselectric');
   function swapText(root) {
     var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), n;
@@ -1016,7 +1016,6 @@ window.cxClock = cxChannel('cx.clock');
     document.querySelectorAll('.lnb-org').forEach(function (el) {
       if (el.__co) return; el.__co = 1;
       el.style.cursor = 'pointer'; el.title = '회사 전환';
-      el.insertAdjacentHTML('beforeend', '<i class="ph ph-caret-down" style="font-size:12px;margin-left:4px;color:var(--muted-fg)"></i>');
       el.addEventListener('click', function (e) {
         e.stopPropagation();
         var pop = document.getElementById('cxCoPop');
