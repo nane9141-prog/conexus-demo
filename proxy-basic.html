@@ -222,8 +222,8 @@
         <a class="nav-item" href="meeting-settings.html">주주총회 설정</a>
         <a class="nav-item" href="voting-restriction.html">의결권제한 설정</a>
       </div></div>
-      <div class="grp"><div class="grp-label">의결권 대행 권유 설정</div><div class="nav">
-        <a class="nav-item active" href="proxy-basic.html">의결권 대행 권유 설정</a>
+      <div class="grp"><div class="grp-label">의결권 권유 설정</div><div class="nav">
+        <a class="nav-item active" href="proxy-basic.html">의결권 권유 설정</a>
       </div></div>
     </div>
 
@@ -454,8 +454,8 @@
     fileIn.addEventListener('change',function(){
       var f=fileIn.files&&fileIn.files[0]; if(!f||!pickSlot) return;
       var spec=SPEC[pickSlot], ext=(f.name.split('.').pop()||'').toLowerCase();
-      if(spec.ext.indexOf(ext)<0){ cxToast('지원하지 않는 파일 형식입니다.'); return; }
-      if(f.size>spec.mb*1048576){ cxToast('파일 용량이 '+spec.mb+'mb를 초과했습니다.'); return; }
+      if(spec.ext.indexOf(ext)<0){ cxToast('지원하지 않는 파일 형식입니다.', true); return; }
+      if(f.size>spec.mb*1048576){ cxToast('파일 용량이 '+spec.mb+'mb를 초과했습니다.', true); return; }
       S[pickSlot]={name:f.name,size:f.size,ext:ext==='jpeg'?'jpg':ext,url:ext==='pdf'?'':URL.createObjectURL(f)};   // 새 파일 등록 시 이전 파일 대체
       render();
     });
@@ -588,6 +588,6 @@
   render();
 })();
 </script>
-<script src="conexus.js?v=fwu"></script>
+<script src="conexus.js?v=fww"></script>
 </body>
 </html>

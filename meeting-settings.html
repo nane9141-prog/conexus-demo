@@ -1059,8 +1059,8 @@ a.nav-item{text-decoration:none;color:var(--fg)}
         <a class="nav-item active" href="meeting-settings.html">주주총회 설정</a>
         <a class="nav-item" href="voting-restriction.html">의결권제한 설정</a>
       </div></div>
-      <div class="grp"><div class="grp-label">의결권 대행 권유 설정</div><div class="nav">
-        <a class="nav-item" href="proxy-basic.html">의결권 대행 권유 설정</a>
+      <div class="grp"><div class="grp-label">의결권 권유 설정</div><div class="nav">
+        <a class="nav-item" href="proxy-basic.html">의결권 권유 설정</a>
       </div></div>
     </div>
 
@@ -1322,7 +1322,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 
   /* 토스트 — Figma: 연회색 카드, 오류는 빨간 아이콘 */
   let toastT;
-  function showToast(m,err){const t=$('#toast');t.className='toast'+(err?' err':'');t.innerHTML=(err?'<i class="ph ph-warning-circle ti"></i>':'')+'<span>'+esc(m)+'</span>';void t.offsetWidth;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2200);}
+  function showToast(m,err){ if(window.cxToast) cxToast(m,err); }   /* 공통 토스트(Figma 스타일)로 통일 */
   const ERR_REQ='입력하지 않은 항목이 있습니다. 확인 후 다시 저장해 주세요.';
 
   /* 알림 다이얼로그 (취소/확인 버튼으로만 닫힘) */
@@ -1786,6 +1786,6 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 <script>
 document.querySelectorAll('.lnb-tabs .t').forEach(function(t){t.addEventListener('click',function(){var tab=t.dataset.tab;if(!tab)return;document.querySelectorAll('.lnb-tabs .t').forEach(function(x){x.classList.toggle('active',x===t);});document.querySelectorAll('.lnb-content[data-tabpanel]').forEach(function(p){p.classList.toggle('show',p.dataset.tabpanel===tab);});});});
 </script>
-<script src="conexus.js?v=fwu"></script>
+<script src="conexus.js?v=fww"></script>
 </body>
 </html>

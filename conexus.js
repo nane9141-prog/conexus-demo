@@ -43,13 +43,16 @@
 /* CONEXUS 공통 토스트: 저장/불러오기/등록/발급/반영 등 커밋 버튼 클릭 후 노출 */
 (function(){
   var st=document.createElement('style');
-  st.textContent='.cx-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(10px);background:#171717;color:#fff;font-size:14px;font-weight:500;padding:11px 18px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.22);opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:4000;white-space:nowrap}.cx-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}';
+  st.textContent='.cx-toast{position:fixed;right:24px;bottom:24px;display:flex;align-items:center;gap:8px;max-width:calc(100vw - 48px);box-sizing:border-box;padding:12px 16px;background:#F5F5F5;color:#0A0A0A;border:1px solid #E5E5E5;border-radius:10px;font-size:14px;line-height:20px;font-weight:500;letter-spacing:-.01em;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .18s,transform .18s;z-index:4000;white-space:nowrap}.cx-toast.show{opacity:1;transform:none}.cx-toast.err{background:#FDF4F5;border-color:#F8D4D8}.cx-toast .ti{color:#E9081B;font-size:18px;flex:none}';
   (document.head||document.documentElement).appendChild(st);
   var el=null,timer=null,last=0;
-  function toast(msg){
+  /* cxToast(문구, 오류여부) — 오류면 연빨강 배경 + 경고 아이콘 (Figma 토스트) */
+  function toast(msg,err){
     var now=Date.now(); if(now-last<500) return; last=now;
-    if(!el){ el=document.createElement('div'); el.className='cx-toast'; (document.body||document.documentElement).appendChild(el); }
-    el.textContent=msg||'저장되었습니다.';
+    if(!el){ el=document.createElement('div'); (document.body||document.documentElement).appendChild(el); }
+    el.className='cx-toast'+(err?' err':'');
+    el.innerHTML=(err?'<i class="ph ph-warning-circle ti"></i>':'')+'<span></span>';
+    el.lastChild.textContent=msg||'저장되었습니다.';
     el.classList.add('show');
     clearTimeout(timer); timer=setTimeout(function(){ el.classList.remove('show'); },1900);
   }

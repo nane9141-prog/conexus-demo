@@ -690,8 +690,8 @@ table.agtbl td.b{font-weight:600}
         <a class="nav-item" href="meeting-settings.html">주주총회 설정</a>
         <a class="nav-item active" href="voting-restriction.html">의결권제한 설정</a>
       </div></div>
-      <div class="grp"><div class="grp-label">의결권 대행 권유 설정</div><div class="nav">
-        <a class="nav-item" href="proxy-basic.html">의결권 대행 권유 설정</a>
+      <div class="grp"><div class="grp-label">의결권 권유 설정</div><div class="nav">
+        <a class="nav-item" href="proxy-basic.html">의결권 권유 설정</a>
       </div></div>
     </div>
 
@@ -1206,7 +1206,7 @@ table.agtbl td.b{font-weight:600}
 
   // toast helper (페이지 토스트 — 공통 cxToast 중복 방지)
   let toastT;
-  function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  function showToast(msg,err){ if(window.cxToast) cxToast(msg,err); }   /* 공통 토스트(Figma 스타일)로 통일 */
     clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2000);}
 
   // ===== 총회 선택 드롭다운 =====
@@ -1635,6 +1635,6 @@ document.querySelectorAll('.lnb-tabs .t').forEach(function(t){t.addEventListener
     });
   })();
 </script>
-<script src="conexus.js?v=fwu"></script>
+<script src="conexus.js?v=fww"></script>
 </body>
 </html>
