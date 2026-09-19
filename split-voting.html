@@ -6,6 +6,7 @@
 <title>CONEXUS · 불통일행사 관리</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 <link rel="stylesheet" href="conexus.css?v=h1">
+<link rel="stylesheet" href="cx-accordion.css">
 <style>
   /* page-local content helpers (LNB styling comes from conexus.css) */
   .scroll{flex:1;overflow-y:auto}
@@ -122,6 +123,81 @@
   .splmenu-item{display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:8px;font-size:14px;color:#0A0A0A;cursor:pointer}
   .splmenu-item:hover{background:#fafafa}
   .splmenu-item i{font-size:16px;color:#0A0A0A;flex:none}
+  .splmenu-empty{padding:4px 6px;font-size:13px;color:#a3a3a3}
+  /* ── Figma 불통일행사 관리 [PC1-1] ── */
+  .content{gap:20px;letter-spacing:-.01em}
+  .spl-body{display:flex;flex-direction:column;gap:12px}
+  .spl-confirm{height:32px;padding:0 10px;border:1px solid #171717;border-radius:10px;background:#171717;color:#FAFAFA;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;flex:none}
+  .mchips{gap:6px;flex-wrap:wrap}
+  .mchip{height:28px;padding:0 6px 0 10px;gap:4px;font-size:12px;color:#0a0a0a;border-color:#e5e5e5}
+  .mchip .c{height:20px;min-width:20px;justify-content:center;padding:0 4px;background:#f5f5f5;color:#171717;font-size:12px;font-weight:500}
+  .mchip.on{background:#0a0a0a;border-color:#0a0a0a;color:#fafafa}
+  .mchip.on .c{background:#27272a;color:#fafafa}
+  .mbtn{height:32px;padding:0 10px;font-size:14px}
+  .mwrap[hidden],.spl-empty[hidden]{display:none}
+  .mscroll{overflow-x:auto}
+  #splTbl{table-layout:fixed;min-width:1240px}
+  #splTbl td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  table.mtbl thead th{font-size:14px;font-weight:500;color:#737373;padding:12px 14px}
+  table.mtbl tbody td{height:46px;box-sizing:border-box;padding:0 14px}
+  th.spl-cv,td.spl-cv{padding:0!important;text-align:center}
+  th.spl-mo,td.spl-mo{padding:0!important;text-align:center}
+  table.mtbl tr.child td{background:#fafafa}
+  table.mtbl tr.child td.spl-cv{position:relative}
+  table.mtbl tr.child td.spl-cv::before{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:1px solid #e5e5e5}
+  .spl-tag{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;background:#f5f5f5;color:#171717;font-size:12px;font-weight:500}
+  .spl-nm{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
+  td.spl-b{font-weight:600}
+  .rsn{display:inline-block;vertical-align:middle;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:default}
+  .mst{gap:4px;font-size:12px;font-weight:500}
+  .mst .d{width:6px;height:6px}
+  .mst.recv{color:#0a0a0a}.mst.recv .d{background:#525252}
+  .mst.ok{color:#0071F3}.mst.ok .d{background:#0071F3}
+  .mst.no{color:#E9081B}.mst.no .d{background:#E9081B}
+  .spl-doc,.spl-more{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:none;border-radius:6px;background:none;color:#525252;cursor:pointer;padding:0}
+  .spl-doc:hover,.spl-more:hover{background:#f5f5f5}
+  .spl-doc i,.spl-more i{font-size:16px}
+  td.spl-none{height:120px!important;text-align:center!important;color:#737373}
+  .mfoot{font-size:12px;color:#0a0a0a}
+  .mpg{gap:16px}
+  .spl-pl{display:inline-flex;align-items:center;gap:8px;color:#737373}
+  .spl-pager{display:inline-flex;align-items:center;gap:4px}
+  .spl-pager .pp{min-width:28px;height:28px;padding:0;border:none;background:none;color:#0a0a0a}
+  .spl-pager .pp:hover{background:#f5f5f5}
+  .spl-pager .pp.dis{color:#d4d4d4;cursor:default;background:none}
+  .spl-pager .pp i{font-size:16px}
+  .spl-cur{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 4px;border:1px solid #e5e5e5;border-radius:6px;font-size:12px}
+  .spl-tot{padding:0 4px;font-size:12px}
+  .spl-empty{min-height:360px;border:1px dashed #e5e5e5;border-radius:10px;background:#fafafa;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center}
+  .spl-empty i{font-size:24px;color:#525252;margin-bottom:8px}
+  .spl-empty .t{font-size:12px;font-weight:600;color:#404040}
+  .spl-empty .d{font-size:12px;color:#737373}
+  /* 신청 사유 툴팁 (Tooltip · Side=Bottom) */
+  .spl-tip{position:fixed;z-index:1100;max-width:384px;box-sizing:border-box;padding:6px 12px;border-radius:8px;background:#171717;color:#FAFAFA;font-size:12px;line-height:16px;letter-spacing:-.01em;pointer-events:none;display:none}
+  .spl-tip.show{display:block}
+  .spl-tip::before{content:"";position:absolute;top:-4px;left:var(--ax,50%);width:10px;height:10px;margin-left:-5px;background:#171717;border-radius:2px;transform:rotate(45deg)}
+  /* 승인 · 거절 팝업 */
+  .sdlg-c [hidden],.sdlg-f [hidden]{display:none!important}
+  .spl-info{border:1px solid #e5e5e5;border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:12px}
+  .spl-kv{display:flex;flex-direction:column;gap:6px}
+  .spl-ln{display:flex;align-items:center;gap:12px;min-width:0}
+  .spl-it{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;min-width:0}
+  .spl-it.fl{flex:0 1 auto}
+  .spl-it:not(.fl){flex:none}
+  .spl-it .k{font-size:12px;font-weight:500;color:#737373;flex:none}
+  .spl-it .v{font-size:14px;line-height:20px;color:#171717;overflow:hidden;text-overflow:ellipsis}
+  .spl-sep{width:1px;height:14px;background:#e5e5e5;flex:none}
+  .spl-sep.s{height:10px}
+  .spl-hr{height:1px;background:#e5e5e5}
+  .spl-rs{display:flex;flex-direction:column;gap:8px}
+  .spl-rs .k{font-size:12px;font-weight:500;color:#737373}
+  .spl-rs .v{font-size:14px;line-height:20px;color:#171717}
+  .sdlg-ta{min-height:120px}
+  .sdlg-alert{align-items:flex-start;padding:8px 10px;line-height:20px}
+  .sdlg-alert i{margin-top:2px}
+  .sdlg-chk .cb{width:16px;height:16px;border:1px solid #d4d4d4;border-radius:4px}
+  .sdlg-chk .cb i{font-size:12px}
+  .sdlg-btn{padding:0 10px}
 </style>
 <script src="cx-data.js"></script>
 </head>
@@ -230,13 +306,16 @@
     </div>
     <div class="scroll">
       <div class="content" style="width:100%">
-        <div class="st-head"><div><div class="page-title">불통일행사 관리</div><div class="page-sub">불통일행사를 신청한 주주를 등록하고 승인 · 미승인을 처리합니다.</div></div></div>
+        <div class="st-head"><div><div class="page-title">불통일행사 관리</div><div class="page-sub">불통일행사를 신청한 주주를 등록하고 승인 · 미승인을 처리합니다.</div></div><button class="spl-confirm" id="splConfirm" type="button">확정</button></div>
+        <div class="spl-body">
         <div class="mtb">
-          <div class="mchips" id="splChips"><button class="mchip on" data-st="전체">전체 <span class="c">10</span></button><button class="mchip" data-st="접수">접수 <span class="c">3</span></button><button class="mchip" data-st="승인">승인 <span class="c">5</span></button><button class="mchip" data-st="거절">거절 <span class="c">2</span></button></div>
-          <div class="mtb-r"><button class="mbtn"><i class="ph ph-pencil-simple" style="font-size:16px"></i>개별등록</button><span data-cx-tools></span></div>
+          <div class="mchips" id="splChips"></div>
+          <div class="mtb-r"><button class="mbtn" id="splReg" type="button"><i class="ph ph-check-square-offset" style="font-size:16px"></i>담당자 등록</button><span data-cx-tools></span></div>
         </div>
-        <div class="mwrap"><div class="mscroll"><table class="mtbl"><thead><tr><th>상태</th><th class="c">주주구분</th><th>주주명</th><th class="n">보유주식수</th><th>신청사유</th><th class="c">신청방식</th><th>신청일시</th><th>승인일시</th><th></th></tr></thead><tbody><tr><td><span class="mst recv"><span class="d"></span>접수</span></td><td class="c">개인</td><td>김영수</td><td class="n">67,000</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td class="c">주주패스</td><td>2026-07-15 13:40</td><td class="mmut">-</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst recv"><span class="d"></span>접수</span></td><td class="c">개인</td><td>박선화</td><td class="n">345,804</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td class="c">주주패스</td><td>2026-07-15 13:40</td><td class="mmut">-</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst recv"><span class="d"></span>접수</span></td><td class="c">개인</td><td>천이영</td><td class="n">345,804</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td class="c">주주패스</td><td>2026-07-15 13:40</td><td class="mmut">-</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td class="c">개인</td><td>박민영</td><td class="n">3,345,804</td><td class="rsn">해외 기관투자자 위임으로 계좌별 상이한 의결권 행사가 필요합니다.</td><td class="c">개별등록</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td class="c">개인</td><td>우리사주조합장(이유정)</td><td class="n">800,000</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td class="c">주주패스</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td class="c">개인</td><td>김이나</td><td class="n">800,000</td><td class="rsn">펀드별 의결권 행사 방침에 따라 불통일행사가 필요합니다.</td><td class="c">주주패스</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td class="c">개인</td><td>김미경</td><td class="n">800,000</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td class="c">주주패스</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst ok"><span class="d"></span>승인</span></td><td class="c">기관</td><td>삼성자산운용</td><td class="n">800,000</td><td class="rsn">조합원 의사 취합 결과 통일행사로 전환하여 미승인 처리되었습니다.</td><td class="c">주주패스</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst no"><span class="d"></span>거절</span></td><td class="c">기관</td><td>현대차증권운용</td><td class="n">800,000</td><td class="rsn">복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.</td><td class="c">주주패스</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr><tr><td><span class="mst no"><span class="d"></span>거절</span></td><td class="c">외국인</td><td>케이시</td><td class="n">800,000</td><td class="rsn">해외 기관투자자 위임으로 계좌별 상이한 의결권 행사가 필요합니다.</td><td class="c">주주패스</td><td>2026-07-15 13:40</td><td>2026-07-27 13:40</td><td class="c mmut splh" data-splh style="cursor:pointer">⋮</td></tr></tbody></table></div>
-        <div class="mfoot"><span>총 10건 · 510,356,025주</span><div class="mpg">페이지당 20 <span class="pp">|&lt;</span><span class="pp">&lt;</span><span class="pp cur">1</span><span class="mmut">/ 30</span><span class="pp">&gt;</span><span class="pp">&gt;|</span></div></div></div>
+        <div class="mwrap" id="splWrap"><div class="mscroll"><table class="mtbl" id="splTbl"><colgroup><col style="width:44px"><col style="width:200px"><col style="width:150px"><col style="width:96px"><col style="width:116px"><col style="width:120px"><col><col style="width:84px"><col style="width:150px"><col style="width:150px"><col style="width:64px"><col style="width:44px"></colgroup><thead><tr><th class="spl-cv"></th><th>투표권자</th><th>주주명</th><th>주주구분</th><th>보유주식</th><th data-al="c">신청 채널</th><th>신청 사유</th><th>상태</th><th>신청 일시</th><th>처리 일시</th><th data-al="c">서류</th><th class="spl-mo"></th></tr></thead><tbody id="splBody"></tbody></table></div>
+        <div class="mfoot"><span id="splCount"></span><div class="mpg"><span class="spl-pl">페이지당 <select id="splSize"><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option></select></span><span id="splPager" class="spl-pager"></span></div></div></div>
+        <div class="spl-empty" id="splEmpty" hidden><i class="ph ph-table"></i><div class="t">불통일행사 신청 내역이 없습니다.</div><div class="d">주주가 불통일행사 신청하거나 담당자 수동 등록하면 이곳에 표시됩니다.</div></div>
+        </div>
       </div>
     </div>
   </main>
@@ -289,137 +368,247 @@
     var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
   });
 </script>
-<div class="splmenu" id="splMenu">
-  <div class="splmenu-label">상태 변경</div>
-  <div class="splmenu-item" data-act="ok"><i class="ph ph-check-circle"></i>승인</div>
-  <div class="splmenu-item" data-act="no"><i class="ph ph-x-circle"></i>거절</div>
-</div>
+<div class="splmenu" id="splMenu"></div>
+<div class="spl-tip" id="splTip"></div>
 <div class="sdlg-ov" id="splDlg">
   <div class="sdlg">
-    <div class="sdlg-h"><div class="t" id="splTitle">불통일행사 처리</div><div class="d" id="splDesc">선택한 주주의 불통일행사 신청 내용을 확인하고 처리합니다.</div><button class="sdlg-x" data-spl-close type="button"><i class="ph ph-x"></i></button></div>
+    <div class="sdlg-h"><div class="t" id="splTitle">불통일행사 승인</div><div class="d" id="splDesc">확정 후에는 불통일행사 여부를 되돌릴 수 없습니다.</div><button class="sdlg-x" data-spl-close type="button"><i class="ph ph-x"></i></button></div>
     <div class="sdlg-c">
-      <div class="sdlg-info"><div class="sdlg-nm" id="splNm">-</div><div class="sdlg-meta"><span><span class="k">주주구분</span><b id="splGubun">-</b></span><span><span class="k">보유주식수</span><b id="splHold">-</b></span><span><span class="k">신청방식</span><b id="splWay">-</b></span></div></div>
-      <div class="sdlg-fld"><label id="splRsnLbl">신청 사유</label><textarea class="sdlg-ta" id="splRsn" readonly style="background:#fafafa"></textarea></div>
-      <div class="sdlg-fld" id="splMemoFld"><label id="splMemoLbl">사유 입력 (선택)</label><textarea class="sdlg-ta" id="splMemo" placeholder="사유를 입력해 주세요 (선택)"></textarea></div>
+      <div class="spl-info">
+        <div class="spl-kv">
+          <div class="spl-ln"><span class="spl-it fl"><span class="k">주주명</span><span class="v" id="splNm">-</span></span><span class="spl-sep"></span><span class="spl-it fl"><span class="k">투표권자</span><span class="v" id="splVoter">-</span></span><span class="spl-sep s"></span><span class="spl-it"><span class="k">주주번호</span><span class="v" id="splNo">-</span></span></div>
+          <div class="spl-ln"><span class="spl-it"><span class="k">실질계좌번호</span><span class="v" id="splAcct">-</span></span></div>
+          <div class="spl-ln"><span class="spl-it"><span class="k">보유주식</span><span class="v" id="splHold">-</span></span><span class="spl-sep s"></span><span class="spl-it"><span class="k">의결권 제한</span><span class="v" id="splLimit">-</span></span></div>
+        </div>
+        <div class="spl-hr"></div>
+        <div class="spl-rs"><span class="k">신청 사유</span><div class="v" id="splRsn"></div></div>
+      </div>
+      <div class="sdlg-fld" id="splMemoFld"><label for="splMemo" id="splMemoLbl">거절 사유 입력</label><textarea class="sdlg-ta" id="splMemo" maxlength="200" placeholder="사유를 200자 이내로 입력하세요"></textarea></div>
+      <div class="sdlg-alert" id="splAlert"><i class="ph ph-warning-circle"></i><span>통합주주는 모든 보유계좌에 불통일행사가 일괄처리 및 즉시 반영됩니다.</span></div>
     </div>
-    <div class="sdlg-f"><span style="flex:1"></span><button class="sdlg-btn cancel" data-spl-close type="button">취소</button><button class="sdlg-btn ok" id="splOk" type="button">승인</button></div>
+    <div class="sdlg-f"><div class="sdlg-chk" id="splChk" role="checkbox" aria-checked="false" tabindex="0"><span class="cb"><i class="ph ph-check"></i></span><span id="splChkT">유의사항을 확인했으며, 신청을 승인 합니다.</span></div><span id="splSp" style="flex:1" hidden></span><button class="sdlg-btn cancel" data-spl-close type="button">취소</button><button class="sdlg-btn ok" id="splOk" type="button" disabled>승인</button></div>
   </div>
 </div>
 <script>
 (function(){
-  var menu=document.getElementById("splMenu");
-  var body=document.querySelector(".mtbl tbody");
-  var ov=document.getElementById("splDlg");
-  if(!menu||!body||!ov) return;
-  var ok=document.getElementById("splOk");
-  var title=document.getElementById("splTitle"), desc=document.getElementById("splDesc");
-  var rsn=document.getElementById("splRsn"), memoFld=document.getElementById("splMemoFld"), memo=document.getElementById("splMemo");
-  var mode=null, targetRow=null, curRow=null;
+  /* ---------- 데이터 (데모용) ---------- */
+  var R1='복수 펀드 계좌의 상이한 운용 전략에 따른 분리 행사가 필요합니다.',
+      R2='해외 기관투자자 위임으로 계좌별 상이한 의결권 행사가 필요하여 불통일행사를 신청합니다.',
+      R3='펀드별 의결권 행사 방침에 따라 불통일행사가 필요합니다.',
+      R4='조합원 의사 취합 결과 계좌별 분리 행사가 필요합니다.';
+  var AT='2026-07-15 13:40', DT='2026-07-27 13:40', seq=0;
+  function mk(o){
+    seq++;
+    var x={k:seq,voter:o.voter||o.name,name:o.name,gb:o.gb||'개인',sh:o.sh,ch:o.ch||'주주패스',rsn:o.rsn||R1,st:o.st||'접수',
+      at:AT,dt:(o.st&&o.st!=='접수')?DT:'-',doc:!!o.doc,memo:o.memo||'',
+      no:String(3600000+seq*137).slice(-7),acct:'000950060402000010'+String(100259136+seq*911).slice(-11),kids:null};
+    if(o.kids){
+      x.kids=o.kids.map(function(c){ c.gb=c.gb||x.gb; var y=mk(c); y.voter=x.voter; y.parent=x; return y; });
+      x.sh=x.kids.reduce(function(a,c){return a+c.sh;},0);
+    }
+    return x;
+  }
+  var D=[
+    mk({name:'CITIGROUP',sh:67000,doc:1}),
+    mk({name:'BARCLAYS CAPITAL',sh:345804}),
+    mk({name:'우리사주조합장(이유정)',sh:345804,ch:'전자주주총회',doc:1}),
+    mk({name:'한국교직원공제회',gb:'기관',ch:'담당자 등록',rsn:R2,kids:[
+      {name:'TMF(대신퀀트11호)',sh:800000,ch:'담당자 등록'},
+      {name:'트러스톤1 (계좌합산용)',sh:800000,rsn:R3},
+      {name:'트러스톤2 (계좌합산용)',sh:800000}]}),
+    mk({name:'국민연금공단',gb:'기관',rsn:R4,st:'승인',doc:1,kids:[
+      {name:'국민연금(주식1)',sh:1200000,st:'승인'},
+      {name:'국민연금(주식2)',sh:950000,st:'승인'},
+      {name:'국민연금(위탁)',sh:640000,st:'승인'}]}),
+    mk({name:'삼성자산운용',gb:'기관',sh:800000,ch:'담당자 등록',st:'거절',doc:1,memo:'통합행사로 처리합니다.'}),
+    mk({name:'이지안',gb:'외국인',sh:800000,rsn:R2,st:'거절',doc:1,memo:'증빙 서류가 확인되지 않습니다.'})
+  ];
+  var NM=['김영수','박선화','천이영','박민영','김이나','김미경','이서윤','정하늘','최민준','한지우','윤서연','장도윤','오하린','신유찬','권나은','황시우','송예린','임주원','조은호','배수아'],
+      INST=['미래에셋자산운용','KB자산운용','BLACKROCK FUND','한화자산운용','VANGUARD TOTAL','신한자산운용','NORGES BANK','NH-Amundi자산운용'],
+      STS=['접수','승인','승인','거절','승인'], CHS=['주주패스','주주패스','전자주주총회','담당자 등록'], RS=[R1,R2,R3,R4];
+  for(var i=0;i<34;i++){
+    var inst=i%4===3, nm=inst?INST[(i>>2)%INST.length]:NM[i%NM.length], st=STS[i%STS.length];
+    D.push(mk({name:nm,gb:inst?(/^[A-Z]{3}/.test(nm)?'외국인':'기관'):'개인',sh:(i*73129%900+12)*1000+(i*37%1000),
+      ch:CHS[i%CHS.length],rsn:RS[i%RS.length],st:st,doc:i%3===0,memo:st==='거절'?'통합행사로 처리합니다.':''}));
+  }
+  if(/[?&]empty=1/.test(location.search)) D=[];   /* 빈 화면 확인용 */
 
-  // ----- 더보기 드롭다운 -----
-  function close(){ menu.classList.remove("show"); }
-  function buildMenu(row){
-    var status=row.querySelectorAll("td")[0].textContent.trim();
-    if(status==="접수"){
-      menu.innerHTML='<div class="splmenu-label">불통일행사 처리</div>'
-        +'<div class="splmenu-item" data-act="approve"><i class="ph ph-check-circle"></i>승인</div>'
-        +'<div class="splmenu-item" data-act="reject"><i class="ph ph-x-circle"></i>거절</div>';
-    } else {
-      menu.innerHTML='<div class="splmenu-label">사유 관리</div>'
-        +'<div class="splmenu-item" data-act="edit"><i class="ph ph-note-pencil"></i>사유 수정</div>';
+  /* ---------- 표 ---------- */
+  var tbl=document.getElementById('splTbl'), body=document.getElementById('splBody');
+  var chip='전체', page=1, size=20, sortSt=null, filtPred=null, open={}, lastPages=1;
+  if(D[3]) open[D[3].k]=1;   /* Figma: 첫 통합 기관은 펼친 상태 */
+  function cm(n){ return Number(n).toLocaleString('ko-KR'); }
+  function esc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
+  /* 칸 번호 → 값 (전체 데이터 기준 정렬 cxsort · 필터 cxFilter/cxValues 용) */
+  function val(x,i){
+    switch(i){
+      case 1: return x.voter; case 2: return x.kids?'통합 '+x.kids.length+'건':x.name; case 3: return x.gb;
+      case 4: return x.sh; case 5: return x.ch; case 6: return x.rsn; case 7: return x.st;
+      case 8: return x.at; case 9: return x.dt; case 10: return x.doc?'첨부':'';
     }
+    return '';
   }
-  body.addEventListener("click",function(e){
-    var h=e.target.closest("td[data-splh]"); if(!h) return;
-    e.stopPropagation();
-    curRow=h.closest("tr");
-    buildMenu(curRow);
-    menu.classList.add("show");
-    var r=h.getBoundingClientRect(), mh=menu.offsetHeight, mw=menu.offsetWidth||144;
-    var left=r.right-mw; if(left<8) left=8;
-    var top=r.bottom+4; if(top+mh>window.innerHeight) top=r.top-mh-4;
-    menu.style.left=left+"px"; menu.style.top=top+"px";
-  });
-  menu.addEventListener("click",function(e){
-    e.stopPropagation();
-    var it=e.target.closest(".splmenu-item"); if(!it||!curRow) return;
-    close();
-    openDialog(it.dataset.act, curRow);
-  });
-  document.addEventListener("click",close);
-  window.addEventListener("scroll",close,true);
-  window.addEventListener("resize",close);
+  function rows(){
+    var r=D.slice();
+    if(chip!=='전체') r=r.filter(function(x){return x.st===chip;});
+    if(filtPred) r=r.filter(function(x){return filtPred(function(i){return String(val(x,i));});});
+    if(sortSt&&sortSt.dir){
+      var i=sortSt.idx, d=sortSt.dir<0?-1:1;
+      r.sort(function(a,b){ var va=val(a,i), vb=val(b,i);
+        return (typeof va==='number'?va-vb:String(va).localeCompare(String(vb),'ko'))*d; });
+    }
+    return r;
+  }
+  var ST={'접수':'recv','승인':'ok','거절':'no'};
+  function tr(x,child){
+    var grp=!!x.kids;
+    return '<tr data-k="'+x.k+'"'+(child?' class="child" data-child="'+x.parent.k+'"':'')+'>'
+      +'<td class="spl-cv">'+(grp?'<button class="tw-chevron'+(open[x.k]?'':' collapsed')+'" type="button" data-tog="'+x.k+'" aria-label="통합 계좌 펼치기"></button>':'')+'</td>'
+      +'<td>'+(child?'':esc(x.voter))+'</td>'
+      +'<td>'+(grp?'<span class="spl-tag">통합 '+x.kids.length+'건</span>':'<span class="spl-nm">'+esc(x.name)+'</span>')+'</td>'
+      +'<td>'+x.gb+'</td><td>'+cm(x.sh)+'</td>'
+      +'<td'+(x.ch==='담당자 등록'?' class="spl-b"':'')+'>'+x.ch+'</td>'
+      +'<td><span class="rsn" data-tip="'+esc(x.rsn)+'">'+esc(x.rsn)+'</span></td>'
+      +'<td><span class="mst '+ST[x.st]+'"><span class="d"></span>'+x.st+'</span></td>'
+      +'<td>'+x.at+'</td><td>'+x.dt+'</td>'
+      +'<td>'+(x.doc?'<button class="spl-doc" type="button" title="증빙 서류"><i class="ph ph-file-text"></i></button>':'')+'</td>'
+      +'<td class="spl-mo"><button class="spl-more" type="button" data-more aria-label="더보기"><i class="ph ph-dots-three-vertical"></i></button></td></tr>';
+  }
+  function chips(){
+    var n={'전체':D.length};
+    ['접수','승인','거절'].forEach(function(s){ n[s]=D.filter(function(x){return x.st===s;}).length; });
+    document.getElementById('splChips').innerHTML=['전체','접수','승인','거절'].map(function(s){
+      return '<button class="mchip'+(s===chip?' on':'')+'" type="button" data-st="'+s+'">'+s+'<span class="c">'+n[s]+'</span></button>';
+    }).join('');
+  }
+  function render(){
+    chips();
+    var r=rows(), empty=!D.length;
+    document.getElementById('splWrap').hidden=empty;
+    document.getElementById('splEmpty').hidden=!empty;
+    var pages=Math.max(1,Math.ceil(r.length/size)); if(page>pages) page=pages; lastPages=pages;
+    var pg=r.slice((page-1)*size,page*size);
+    body.innerHTML=pg.length?pg.map(function(x){
+      var h=tr(x,false);
+      if(x.kids&&open[x.k]) h+=x.kids.map(function(c){return tr(c,true);}).join('');
+      return h;
+    }).join(''):'<tr><td colspan="12" class="spl-none">검색 결과가 없습니다.</td></tr>';
+    document.getElementById('splCount').textContent='총 '+r.length+'건 · '+cm(r.reduce(function(a,x){return a+x.sh;},0))+'주';
+    var dP=page<=1?' dis':'', dN=page>=pages?' dis':'';
+    document.getElementById('splPager').innerHTML=
+      '<span class="pp'+dP+'" data-pg="first" aria-label="처음"><i class="ph ph-caret-line-left"></i></span>'
+      +'<span class="pp'+dP+'" data-pg="prev" aria-label="이전"><i class="ph ph-caret-left"></i></span>'
+      +'<span class="spl-cur">'+page+'</span><span class="spl-tot">/ '+pages+'</span>'
+      +'<span class="pp'+dN+'" data-pg="next" aria-label="다음"><i class="ph ph-caret-right"></i></span>'
+      +'<span class="pp'+dN+'" data-pg="last" aria-label="마지막"><i class="ph ph-caret-line-right"></i></span>';
+  }
+  function byK(k){
+    k=+k;
+    for(var i=0;i<D.length;i++){
+      if(D[i].k===k) return D[i];
+      if(D[i].kids) for(var j=0;j<D[i].kids.length;j++) if(D[i].kids[j].k===k) return D[i].kids[j];
+    }
+    return null;
+  }
 
-  // ----- 처리/사유수정 팝업 -----
-  function openDialog(m,row){
-    mode=m; targetRow=row;
-    var tds=row.querySelectorAll("td");
-    document.getElementById("splNm").textContent=tds[2].textContent.trim();
-    document.getElementById("splGubun").textContent=tds[1].textContent.trim();
-    document.getElementById("splHold").textContent=tds[3].textContent.trim()+"주";
-    document.getElementById("splWay").textContent=tds[5].textContent.trim();
-    rsn.value=tds[4].textContent.trim();
-    if(memo) memo.value="";
-    var mlbl=document.getElementById("splMemoLbl");
-    rsn.setAttribute("readonly","readonly"); rsn.style.background="#fafafa";
-    memoFld.style.display="";
-    if(m==="edit"){
-      title.textContent="처리 사유 수정";
-      desc.textContent="신청 사유를 확인하고 담당자 승인·거절 사유를 수정합니다.";
-      if(mlbl) mlbl.textContent="처리 사유 (승인·거절 사유)";
-      if(memo){ memo.value=(row.dataset.memo||""); memo.placeholder="담당자 승인·거절 사유를 입력해 주세요"; }
-      ok.textContent="저장";
-    } else {
-      var isA=(m==="approve");
-      title.textContent=isA?"불통일행사 승인":"불통일행사 거절";
-      desc.textContent="선택한 주주의 불통일행사 신청 내용을 확인하고 "+(isA?"승인":"거절")+" 처리합니다.";
-      if(mlbl) mlbl.textContent="사유 입력 (선택)";
-      if(memo) memo.placeholder="사유를 입력해 주세요 (선택)";
-      ok.textContent=isA?"승인":"거절";
-    }
-    ov.classList.add("show");
-  }
-  ov.addEventListener("click",function(e){ if(e.target.closest("[data-spl-close]")) ov.classList.remove("show"); });
-  ok.addEventListener("click",function(){
-    if(targetRow){
-      var td0=targetRow.querySelector("td");
-      function stampAppt(){ var t7=targetRow.cells[7]; if(t7){ t7.className=""; t7.textContent="2026-07-27 13:40"; } }
-      if(mode==="approve"){ td0.innerHTML='<span class="mst ok"><span class="d"></span>승인</span>'; stampAppt(); }
-      else if(mode==="reject"){ td0.innerHTML='<span class="mst no"><span class="d"></span>거절</span>'; stampAppt(); }
-      else if(mode==="edit"){ targetRow.dataset.memo=(memo?memo.value.trim():""); }
-    }
-    ov.classList.remove("show");
+  tbl.addEventListener('cxsort',function(e){ e.preventDefault(); sortSt={idx:e.detail.idx,dir:e.detail.dir}; page=1; render(); });
+  tbl.cxFilter=function(pred){ filtPred=pred; page=1; render(); };
+  tbl.cxValues=function(i){ return D.map(function(x){return String(val(x,i));}); };
+
+  document.getElementById('splChips').addEventListener('click',function(e){
+    var b=e.target.closest('[data-st]'); if(!b) return; chip=b.dataset.st; page=1; render();
   });
-})();
-</script>
-<script>
-(function(){
-  var chips=document.getElementById('splChips'); var tb=document.querySelector('.mtbl tbody');
-  if(chips&&tb){
-    chips.addEventListener('click',function(e){
-      var b=e.target.closest('.mchip'); if(!b) return;
-      chips.querySelectorAll('.mchip').forEach(function(x){x.classList.toggle('on',x===b);});
-      var st=b.dataset.st;
-      tb.querySelectorAll('tr').forEach(function(tr){
-        var s0=(tr.cells[0]&&tr.cells[0].textContent||'').trim();
-        tr.classList.toggle('filtered-out', st!=='전체' && s0!==st);
-      });
-    });
+  document.getElementById('splSize').addEventListener('change',function(){ size=parseInt(this.value,10)||20; page=1; render(); });
+  document.getElementById('splPager').addEventListener('click',function(e){
+    var b=e.target.closest('.pp'); if(!b||b.classList.contains('dis')) return;
+    var v=b.dataset.pg; page=v==='first'?1:v==='prev'?page-1:v==='next'?page+1:lastPages; render();
+  });
+  body.addEventListener('click',function(e){
+    var t=e.target.closest('[data-tog]'); if(t){ open[t.dataset.tog]=!open[t.dataset.tog]; render(); return; }
+    var m=e.target.closest('[data-more]'); if(m){ e.stopPropagation(); openMenu(m); }
+  });
+
+  /* ---------- 신청 사유 툴팁 ---------- */
+  var tip=document.getElementById('splTip');
+  body.addEventListener('mouseover',function(e){
+    var s=e.target.closest('.rsn[data-tip]'); if(!s) return;
+    tip.textContent=s.dataset.tip; tip.classList.add('show');
+    var r=s.getBoundingClientRect(), w=tip.offsetWidth;
+    var left=Math.max(8,Math.min(r.left+r.width/2-w/2,window.innerWidth-w-8));
+    tip.style.left=left+'px'; tip.style.top=(r.bottom+8)+'px';
+    tip.style.setProperty('--ax',(r.left+r.width/2-left)+'px');
+  });
+  body.addEventListener('mouseout',function(e){ if(e.target.closest('.rsn[data-tip]')) tip.classList.remove('show'); });
+  window.addEventListener('scroll',function(){ tip.classList.remove('show'); },true);
+
+  /* ---------- 더보기 메뉴 ---------- */
+  var menu=document.getElementById('splMenu'), cur=null;
+  function closeMenu(){ menu.classList.remove('show'); }
+  function openMenu(btn){
+    cur=byK(btn.closest('tr').dataset.k); if(!cur) return;
+    var h='<div class="splmenu-label">불통일행사 처리</div>';
+    if(cur.st==='접수') h+='<div class="splmenu-item" data-act="approve"><i class="ph ph-check-circle"></i>승인</div><div class="splmenu-item" data-act="reject"><i class="ph ph-x-circle"></i>거절</div>';
+    else if(cur.st==='거절') h+='<div class="splmenu-item" data-act="edit"><i class="ph ph-pencil-simple-line"></i>사유 변경</div>';
+    else h+='<div class="splmenu-empty">승인 완료된 신청입니다.</div>';
+    menu.innerHTML=h; menu.classList.add('show');
+    var r=btn.getBoundingClientRect(), mh=menu.offsetHeight, mw=menu.offsetWidth||144;
+    var left=Math.max(8,r.right-mw), top=r.bottom+4; if(top+mh>window.innerHeight) top=r.top-mh-4;
+    menu.style.left=left+'px'; menu.style.top=top+'px';
   }
-})();
-</script>
-<script>
-(function(){
-  function setTips(){
-    document.querySelectorAll(".mtbl td.rsn").forEach(function(td){
-      var t=td.textContent.trim();
-      if(t) td.setAttribute("title", t); else td.removeAttribute("title");
-      td.style.cursor="help";
-    });
+  menu.addEventListener('click',function(e){
+    e.stopPropagation();
+    var it=e.target.closest('.splmenu-item'); if(!it||!cur) return;
+    closeMenu(); openDialog(it.dataset.act,cur);
+  });
+  document.addEventListener('click',closeMenu);
+  window.addEventListener('scroll',closeMenu,true);
+  window.addEventListener('resize',closeMenu);
+
+  /* ---------- 승인 · 거절 · 사유 변경 팝업 ---------- */
+  var ov=document.getElementById('splDlg'), ok=document.getElementById('splOk'), chk=document.getElementById('splChk'),
+      memo=document.getElementById('splMemo'), mode=null, target=null;
+  function $(id){ return document.getElementById(id); }
+  function setChk(on){ chk.classList.toggle('on',on); chk.setAttribute('aria-checked',on?'true':'false'); ok.disabled=(mode!=='edit')&&!on; }
+  function openDialog(m,x){
+    mode=m; target=x;
+    var edit=m==='edit', rej=m==='reject';
+    $('splNm').textContent=x.name; $('splVoter').textContent=x.voter; $('splNo').textContent=x.no;
+    $('splAcct').textContent=x.acct; $('splHold').textContent=cm(x.sh); $('splLimit').textContent='-';
+    $('splRsn').textContent=x.rsn;
+    $('splTitle').textContent=edit?'거절 사유 변경':rej?'불통일행사 거절':'불통일행사 승인';
+    $('splDesc').textContent=edit?'불통일행사 거절 사유를 변경합니다.':'확정 후에는 불통일행사 여부를 되돌릴 수 없습니다.';
+    $('splMemoFld').hidden=!(rej||edit);
+    $('splMemoLbl').textContent=edit?'거절 사유':'거절 사유 입력';
+    memo.value=edit?x.memo:'';
+    $('splAlert').hidden=edit;
+    chk.hidden=edit; $('splSp').hidden=!edit;
+    $('splChkT').textContent='유의사항을 확인했으며, 신청을 '+(rej?'거절':'승인')+' 합니다.';
+    ok.textContent=edit?'저장':rej?'거절':'승인';
+    setChk(false);
+    ov.classList.add('show');
   }
-  setTips();
-  setTimeout(setTips,300);
-  window.addEventListener("resize",setTips);
+  chk.addEventListener('click',function(){ setChk(!chk.classList.contains('on')); });
+  chk.addEventListener('keydown',function(e){ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); chk.click(); } });
+  ov.addEventListener('click',function(e){ if(e.target.closest('[data-spl-close]')) ov.classList.remove('show'); });
+  ok.addEventListener('click',function(){
+    if(ok.disabled||!target) return;
+    if(mode==='edit'){
+      target.memo=memo.value.trim(); ov.classList.remove('show'); render();
+      cxToast('불통일행사 등록 사유를 수정했습니다.'); return;
+    }
+    var st=mode==='approve'?'승인':'거절', m=memo.value.trim();
+    /* 통합주주는 아직 접수 상태인 모든 보유계좌에 일괄 반영 */
+    [target].concat(target.kids||[]).forEach(function(y){
+      if(y!==target&&y.st!=='접수') return;
+      y.st=st; y.dt=DT; if(st==='거절') y.memo=m;
+    });
+    ov.classList.remove('show'); render();
+    cxToast(st==='승인'?'불통일행사 신청을 승인했습니다.':'불통일행사 신청을 거절했습니다.');
+  });
+
+  document.getElementById('splConfirm').addEventListener('click',function(){ cxToast('불통일행사 처리 내역을 확정했습니다.'); });
+
+  render();
 })();
 </script>
 <script src="conexus.js?v=fww"></script>
