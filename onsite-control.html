@@ -366,8 +366,8 @@
   .vqitem.over{border-color:#0A0A0A}
   /* 발언 타이머 */
   .vqclock{display:inline-flex;align-items:center;gap:4px;flex:none;font-size:12px;font-weight:600;
-    color:#0071F3;font-variant-numeric:tabular-nums}
-  .vqclock .d{width:6px;height:6px;border-radius:50%;background:#0071F3;animation:otblink 1.3s ease-in-out infinite}
+    color:#0A0A0A;font-variant-numeric:tabular-nums}
+  .vqclock .d{width:6px;height:6px;border-radius:50%;background:#0A0A0A;animation:otblink 1.3s ease-in-out infinite}
   /* 호스트 알림 바 상태 */
   .vqhost.mute{background:#FAFAFA;border-color:var(--border)}
   .vqhost.mute .t{color:#737373}
@@ -3396,6 +3396,10 @@ function toggleMute(id){
      질의로 접수한 건(Q, via 질의)은 질의와 같은 답변 흐름에 '수정안 표결'이 더해진다. */
   var AMT=['금액 조정','조건 변경','내용 추가','의제 변경'];
   S.forEach(function(x,i){ if(x.kind==='수정동의'){ x.amend=true; x.via='발언'; x.amtype=x.amtype||AMT[i%AMT.length]; } });
+  /* 질의로 접수된 수정 동의 표본 — 제1호(배당) */
+  (function(){ var b=Q.filter(function(x){return x.id==='Q1-05';})[0]; if(!b||Q.some(function(x){return x.id==='QA-01';})) return;
+    Q.push({id:'QA-01', ag:'1', sub:'', name:b.name, t:b.t, sh:b.sh, tm:'09:14', pub:true, st:'미답변',
+      q:'결산배당을 주당 750원에서 800원으로 상향하는 수정안을 제안합니다.', a:null, amend:true, via:'질의', amtype:'금액 조정'}); })();
   function isQ(x){ return x.via==='질의' || (!x.amend && Q.indexOf(x)>=0); }
   S.forEach(function(x,i){ x.inq=(x.st==='대기'&&i%2===0); x.seq=i; x.qord=i; });
   /* inq: 대기열 등재 여부 · seq: 접수 순서. 대기열은 S 배열 순서를 바꾸므로
@@ -3547,10 +3551,12 @@ function toggleMute(id){
         /* 발언 중에만 버튼 옆에 경과 타이머를 둔다. 시작 전에는 아무 숫자도 붙이지 않는다. */
         /* 발언 중일 때만 음소거 버튼(Figma 8120:197654: 타이머 앞 고스트 아이콘) — 질의·발언 관리 대기열과 같은 상태(x.muted) */
         var tail=on ? '<button class="vqmute'+(x.muted?' on':'')+'" type="button" data-mute="'+x.id+'" title="'+(x.muted?'음소거 해제':'음소거')+'"><i class="ph ph-'+(x.muted?'microphone':'microphone-slash')+'"></i></button>'+'<span class="vqclock"><span class="d"></span>'+mmss(speakSec)+'</span>' : '';
+        /* 수정 동의 발언 중 — 발언 종료 왼쪽에 수정안 표결(primary) */
+        var amv=(on && x.amend) ? '<button class="vqbtn go" type="button" data-amvote="'+x.id+'">수정안 표결</button>' : '';
         return '<div class="vqitem live'+(open?' open':'')+'"><div class="vqrow">'
              + '<span class="vqno">'+(i+1)+'</span>'
              + '<span class="vqnm clickable" data-open="'+x.id+'">'+x.name+'</span>'
-             + tail+btn+'</div>'+body+'</div>';
+             + tail+amv+btn+'</div>'+body+'</div>';
       }
       return '<div class="vqitem'+(open?' open':'')+'" data-row="'+x.id+'"><div class="vqrow">'
            + '<span class="vqdrag" data-grip>'+IC.grip+'</span>'
@@ -3774,8 +3780,12 @@ function toggleMute(id){
         return '<button class="menuitem" type="button" data-i="'+i+'">'+o[1]+'</button>';
       }).join('');
       pop.classList.remove('hidden');
-      var r=btn.getBoundingClientRect(), top=r.bottom+6;
-      if(top+pop.offsetHeight>window.innerHeight-8) top=Math.max(8, r.top-6-pop.offsetHeight);
+      /* 항목이 많아도 화면 안에 들도록 — 아래·위 중 넓은 쪽에 붙이고, 그 높이를 넘으면 목록 안에서 스크롤 */
+      pop.style.maxHeight=''; pop.style.overflowY='auto';
+      var r=btn.getBoundingClientRect(), below=window.innerHeight-r.bottom-14, above=r.top-14;
+      var room=(pop.offsetHeight<=below||below>=above)?below:above;
+      pop.style.maxHeight=Math.max(120,room)+'px';
+      var top=(room===below)?r.bottom+6:Math.max(8, r.top-6-pop.offsetHeight);
       pop.style.left=Math.max(8, Math.min(r.left, window.innerWidth-pop.offsetWidth-8))+'px';
       pop.style.top=top+'px';
       pop.style.minWidth=Math.max(120, r.width)+'px';
@@ -3784,6 +3794,8 @@ function toggleMute(id){
         e.stopPropagation(); hide(); pick(items[+it.getAttribute('data-i')][0]);
       };
     }
+    /* 목록이 스크롤되면 버튼과 떨어지므로 닫는다 */
+    document.addEventListener('scroll',function(e){ if(!pop.contains(e.target)) hide(); },true);
     document.addEventListener('click',function(e){
       var b=e.target.closest('[data-pop]');
       if(!b){ hide(); return; }
@@ -3947,6 +3959,11 @@ function toggleMute(id){
       var ta2=cs.closest('.vqbody').querySelector('[data-chair]');
       S.forEach(function(x){ if(x.id===cid) x.chair=ta2.value.trim(); });
       openRow=null; render(); return; }
+    var avt=e.target.closest('[data-amvote]'); if(avt){ var vid_=avt.getAttribute('data-amvote');
+      var vx=amAll().filter(function(x){return x.id===vid_;})[0];
+      if(vx&&window.openAmend) openAmend({no:unitOf(vx), who:vx.name, body:vx.r,
+        done:function(no){ vx.upNo=no; render(); if(window.cxToast) cxToast('수정안 표결을 등록했습니다.'); }});
+      return; }
     var au=e.target.closest('[data-amup]'); if(au){ var aid=au.closest('.mcard').getAttribute('data-id');
       var ax=amAll().filter(function(x){return x.id===aid;})[0];
       if(ax&&window.openAmend) openAmend({no:unitOf(ax), who:ax.name, body:isQ(ax)?ax.q:ax.r,
