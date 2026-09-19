@@ -2556,14 +2556,31 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   var accAg='제1호', accPick, done=[];
   var MSG=CX.chairTags;          /* 실시간 운영 탭의 의장 전달 태그와 같다 */
   function byId(id){ var f=null; SPEECHES.forEach(function(x){ if(x.id===id) f=x; }); return f; }
-  var ENDAT={};   /* 종료 시각 */
+  var ENDAT={};   /* 발언 시간(종료 시 기록) */
+  /* 발언 진행 — 실시간 운영과 같다: 맨 앞은 '발언 시작' 전까지 대기, 시작하면 음소거 · 경과 시간 · 발언 종료 */
+  var qmSpeaking=null, qmSec=0, qmTick=null;
+  function mmss2(n){ var m=Math.floor(n/60), v=n%60; return (m<10?'0':'')+m+':'+(v<10?'0':'')+v; }
+  function qmStart(id){
+    var x=byId(id); if(!x) return;
+    qmSpeaking=id; qmSec=0;
+    if(window.cxSync) cxSync.set({cast:(x.kind==='수정동의'?'amend':'speech'), who:x.name+' · '+x.t+' · '+cm(x.sh)+'주', msg:''});
+    if(qmTick) clearInterval(qmTick);
+    qmTick=setInterval(function(){ qmSec++; var el=document.getElementById('qmClock'); if(el) el.innerHTML='<span class="d"></span>'+mmss2(qmSec); },1000);
+    renderAcc();
+  }
+  function qmStop(){ if(qmTick){ clearInterval(qmTick); qmTick=null; } var t=qmSec; qmSec=0; qmSpeaking=null; return t; }
   function hm(){ var d=new Date(); return (d.getHours()<10?'0':'')+d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes(); }
   /* 발언 중(맨 앞) — 검정 테두리 카드, 음소거 · 발언 종료, 펼치면 의장 전달 메시지 */
   function liveCard(x, open){
     return '<div class="qmqcard on">'
       +'<div class="qmqrow live" data-pick="'+x.id+'"><span class="qmqno">'+(done.length+1)+'</span><span class="qmqnm">'+esc(x.name)+'</span><span class="sp"></span>'
-      +'<button class="qmqic'+(x.muted?' on':'')+'" type="button" data-mute="'+x.id+'" title="'+(x.muted?'음소거 해제':'음소거')+'"><i class="ph ph-'+(x.muted?'microphone':'microphone-slash')+'"></i></button>'
-      +'<button class="qmqend" type="button" data-fin="'+x.id+'">발언 종료</button></div>'
+      +(x.id===qmSpeaking
+        ? '<button class="qmqic'+(x.muted?' on':'')+'" type="button" data-mute="'+x.id+'" title="'+(x.muted?'음소거 해제':'음소거')+'"><i class="ph ph-'+(x.muted?'microphone':'microphone-slash')+'"></i></button>'
+          +'<span class="vqclock" id="qmClock"><span class="d"></span>'+mmss2(qmSec)+'</span>'
+          +(x.amend?'<button class="vqbtn go" type="button" data-amvq="'+x.id+'">수정안 표결</button>':'')
+          +'<button class="qmqend" type="button" data-fin="'+x.id+'">발언 종료</button>'
+        : '<button class="vqbtn go" type="button" data-qmstart="'+x.id+'">발언 시작</button>')
+      +'</div>'
       +(open?'<div class="qmqmsg"><div class="h">의장 전달 메시지 작성</div>'
         +'<div class="qmqta"><textarea id="qmQTa" maxlength="280" placeholder="메시지를 입력해 주세요">'+esc(x.chair||'')+'</textarea><div class="cnt"><span data-qcnt>'+(x.chair||'').length+'</span>/280</div></div>'
         +'<div class="qmqfoot"><span class="warn"><i class="ph ph-warning-circle"></i>발언 진행시 의장 화면에 표시 됩니다.</span><span class="sp"></span>'
@@ -2648,7 +2665,12 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     var mv=e.target.closest('[data-qmv]');
     if(mv){ e.stopPropagation(); var qi=queue.indexOf(mv.dataset.qmv), qj=qi+(+mv.dataset.d);
       if(qi>0 && qj>0 && qj<queue.length){ var tq=queue[qi]; queue[qi]=queue[qj]; queue[qj]=tq; renderAcc(); } return; }
-    if(fin){ var id=fin.dataset.fin; queue=queue.filter(function(x){return x!==id;}); done.push(id); ENDAT[id]=hm(); accPick=undefined;
+    var st0=e.target.closest('[data-qmstart]'); if(st0){ e.stopPropagation(); qmStart(st0.dataset.qmstart); return; }
+    var amq=e.target.closest('[data-amvq]');
+    if(amq){ e.stopPropagation(); var ax=byId(amq.dataset.amvq);
+      if(ax && window.openAmend) openAmend({no:'제'+(ax.sub||ax.ag)+'호', who:ax.name, body:ax.r||ax.q, lock:true, amtype:ax.amtype, sh:ax.sh});
+      return; }
+    if(fin){ var id=fin.dataset.fin; var dur=(id===qmSpeaking)?qmStop():0; queue=queue.filter(function(x){return x!==id;}); done.push(id); ENDAT[id]=mmss2(dur); accPick=undefined;
       if(window.cxSync) cxSync.set({cast:null, msg:''});
       renderAcc(); render(); if(window.cxToast) cxToast('발언을 종료했습니다.'); return; }
     var chip=e.target.closest('[data-msg]');
