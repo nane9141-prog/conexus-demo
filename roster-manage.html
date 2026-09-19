@@ -5,46 +5,116 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONEXUS · 주주명부 관리</title>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="conexus.css?v=h1">
+<link rel="stylesheet" href="conexus.css?v=h2">
 <style>
+  /* ── 목록 ─────────────────────────────────────────────────────────── */
+  [hidden]{display:none!important}
+  #rmTbl tbody tr.go{cursor:pointer}
+  #rmTbl .iconb[disabled]{opacity:.4;cursor:default;background:none}
+  .rmempty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:320px;
+    background:#FAFAFA;border:1px dashed #E5E5E5;border-radius:14px;text-align:center}
+  .rmempty i{font-size:24px;color:#525252;margin-bottom:8px}
+  .rmempty b{font-size:12px;line-height:16px;font-weight:600;color:#404040}
+  .rmempty span{font-size:12px;line-height:16px;color:#737373}
+  .falert.red{background:#FDF4F5;border-color:#FBD5D8;color:#E9081B}
+  .falert i{font-size:16px;flex:none}
 
-  .rmcards{display:flex;align-items:stretch;gap:12px}
+  /* ── 상세 ─────────────────────────────────────────────────────────── */
+  .rmcards{display:flex;align-items:flex-start;gap:12px}
   .rmsum{flex:1;min-width:0;display:flex;background:#FAFAFA;border:1px solid #E5E5E5;border-radius:14px}
-  .rmsum .cell{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:8px;padding:16px}
+  .rmsum .cell{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;padding:16px}
   .rmsum .cell+.cell{border-left:1px solid #E5E5E5}
   .rmsum .k{display:flex;align-items:center;gap:8px;font-size:14px;line-height:20px;font-weight:500;letter-spacing:-.01em;color:#737373}
-  .rmsum .k .sp{margin-left:auto}
   .rmsum .v{font-size:18px;line-height:28px;font-weight:700;color:#0A0A0A;text-align:right;font-variant-numeric:tabular-nums}
-  .rmcards>*{min-height:106px}
+  .rmsum .brk{display:none;flex-direction:column;gap:4px;padding:8px 12px;background:#F5F5F5;border-radius:8px}
+  .rmcards.open .brk{display:flex}
+  .rmsum .brk .r{display:flex;justify-content:space-between;gap:8px;font-size:12px;line-height:16px;color:#525252}
+  .rmsum .brk .r b{font-weight:500;color:#0A0A0A;font-variant-numeric:tabular-nums}
+  .rmsum,.rmlink{min-height:106px}
   .rmlink{box-sizing:border-box;width:400px;flex:none;display:flex;flex-direction:column;justify-content:space-between;
     gap:8px;padding:16px;background:#FAFAFA;border:1px solid #E5E5E5;border-radius:14px}
-  .rmlink .top{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:24px}
   .rmlink .h{font-size:14px;line-height:20px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A}
   .rmlink .b{display:flex;align-items:center;gap:8px}
   .rmlink .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
   .rmlink .nm{font-size:16px;line-height:24px;font-weight:700;letter-spacing:-.01em;color:#737373;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .rmlink .nm.on{color:#0A0A0A}
-  .rmlink .stg{font-size:12px;line-height:16px;color:#171717}
-  /* 연결을 끊는 버튼은 붉게 — 카드 안에서 한 번 더 확인을 받는다 */
-  .rmfree{height:24px;padding:0 10px;border:0;border-radius:8px;background:rgba(220,38,38,.1);
-    font-family:inherit;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#E9081B;cursor:pointer}
-  .rmfree[hidden]{display:none}
-  .fbtn[disabled]{opacity:.5;cursor:default}
-  /* 회색 정보 상자 — 해제 전 무엇이 걸려 있는지 보여 준다 */
+  .rmlink .stg{display:flex;align-items:center;gap:4px;font-size:12px;line-height:16px;color:#525252}
+  .rmlink .stg:empty{display:none}
+  .rmlink .stg i{font-size:12px;color:#737373}
+  /* 안내 말풍선 — 비활성 버튼은 마우스 이벤트가 없어 감싼 span 에 단다 */
+  [data-tip]{position:relative}
+  [data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+    z-index:30;white-space:nowrap;padding:6px 12px;border-radius:8px;background:#171717;color:#FAFAFA;
+    font-size:12px;line-height:16px;font-weight:400;letter-spacing:-.01em;pointer-events:none}
+  .rmtipw{display:inline-flex}
+  .rmtipw[data-tip]:hover::after{left:auto;right:0;transform:none}
+  /* 주주명 호버 — 주주번호·실질계좌·주소 */
+  #rmRows td[data-nm]{cursor:default}
+  .rmntip{position:fixed;z-index:1200;display:none;flex-direction:column;gap:6px;padding:10px 12px;background:#fff;
+    border:1px solid #E5E5E5;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.08);pointer-events:none}
+  .rmntip.on{display:flex}
+  .rmntip .t{font-size:12px;line-height:16px;font-weight:600;color:#0A0A0A}
+  .rmntip .g{display:grid;grid-template-columns:auto auto;gap:2px 12px;font-size:12px;line-height:16px;color:#0A0A0A}
+  .rmntip .g span:nth-child(odd){color:#737373}
+  /* 재업로드 필요 — 양식 불일치 */
+  .rmerr{display:flex;flex-direction:column;gap:16px;padding:16px 16px 20px;border:1px solid #E5E5E5;border-radius:14px}
+  .rmerr .hd{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:16px;line-height:24px;font-weight:600;color:#0A0A0A}
+  .rmerr table{width:100%;border-collapse:collapse;font-size:14px;line-height:20px;color:#0A0A0A}
+  .rmerr th{text-align:left;font-weight:500;padding:8px;border-bottom:1px solid #E5E5E5}
+  .rmerr td{padding:6px 8px;border-bottom:1px solid #F0F0F0}
+  .rmerr tr:last-child td{border-bottom:0}
+
+  /* ── 모달 ─────────────────────────────────────────────────────────── */
+  .rmdlg{box-sizing:border-box;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;display:flex;flex-direction:column;max-height:calc(100vh - 32px)}
+  .rmdlg .dh{display:flex;flex-direction:column;gap:8px;padding:16px}
+  .rmdlg .dh .tt{display:flex;align-items:center;justify-content:space-between;font-size:16px;line-height:16px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A}
+  .rmdlg .dh .ds{font-size:14px;line-height:20px;letter-spacing:-.01em;color:#737373}
+  .rmdlg .dh .x{border:0;background:none;padding:0;cursor:pointer;color:#737373;display:inline-flex}
+  .rmdlg .db{display:flex;flex-direction:column;gap:16px;padding:0 16px 8px;overflow:auto}
+  .rmdlg .df{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px 16px}
+  .rmdlg .df.eq .fbtn{flex:1}
+  .rmdlg .fbtn.dark[disabled]{opacity:1;background:#8A8A8A;border-color:#8A8A8A;color:#E5E5E5}
+  .fradio.plain{flex-direction:row;gap:24px}
+  .fradio.plain label{padding:0;border:0;background:none;align-items:center}
+  .fradio.plain label.on{background:none}
+  .fradio.plain label.on .dot{background:#fff;border:4px solid #171717}
+  .fradio.plain label.on .dot::after{display:none}
+  .fradio.plain .tx b{font-weight:500}
+  /* 명의개서대리인 */
+  .rmag{display:flex;gap:8px}
+  .rmag button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:16px 4px;
+    border:1px solid #E5E5E5;border-radius:10px;background:#fff;font-family:inherit;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer}
+  .rmag button.on{background:rgba(23,23,23,.05);border-color:#B9B9B9}
+  .rmag img{width:20px;height:20px;border-radius:50%}
+  .rmdl{align-self:flex-start;display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border:0;border-radius:8px;background:none;
+    font-family:inherit;font-size:12px;font-weight:500;color:#0A0A0A;cursor:pointer}
+  .rmdl:hover{background:#F5F5F5}
+  .rmdrop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px 24px;background:#FAFAFA;
+    border:1px dashed #E5E5E5;border-radius:14px;text-align:center;cursor:pointer}
+  .rmdrop.over{border-color:#171717}
+  .rmdrop .dt{font-size:12px;color:#737373}
+  .rmfile{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #E5E5E5;border-radius:14px}
+  .rmfile .fx{display:flex;padding:8px;border-radius:8px;background:#F5F5F5;font-size:16px}
+  .rmfile .m{flex:1;min-width:0;display:flex;flex-direction:column}
+  .rmfile .fn{font-size:14px;line-height:20px;font-weight:500;color:#0A0A0A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rmfile .fs{font-size:12px;line-height:16px;color:#737373}
+  .rmfile button{border:0;background:none;padding:0;cursor:pointer;display:inline-flex;font-size:14px;color:#0A0A0A}
+  .rmcap{font-size:12px;line-height:12px;color:#737373}
+  /* 확인형 모달 — 회색 아이콘 */
+  .adlg-ic.gray{background:#F5F5F5}
+  .adlg-ic i{font-size:24px;color:#E9081B}
+  .adlg-ic.gray i{color:#0A0A0A}
+  .adlg-ic .spin{display:inline-block;animation:rmspin 1s linear infinite}
+  @keyframes rmspin{to{transform:rotate(360deg)}}
+  .adlg-d b{font-weight:400;color:#0A0A0A}
+  .adlg-f button.dark{border-color:#171717;background:#171717;color:#FAFAFA}
+  /* 회색 정보 상자 */
   .rmbox{display:flex;flex-direction:column;gap:4px;width:100%;box-sizing:border-box;padding:8px;background:#F5F5F5;border-radius:8px}
   .rmbox .r{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px;line-height:20px;letter-spacing:-.01em;color:#0A0A0A}
   .rmbox .r b{font-weight:600;text-align:right}
-  /* 주주총회 생성 내역 고르기 */
-  .rmpick{display:flex;flex-direction:column;gap:4px;max-height:220px;overflow:auto;padding:4px;border:1px solid #E5E5E5;border-radius:10px}
-  .rmpick button{display:flex;flex-direction:column;gap:2px;padding:8px 6px;border:none;border-radius:8px;background:none;font-family:inherit;text-align:left;cursor:pointer}
-  .rmpick button:hover{background:#F5F5F5}
-  .rmpick button.on{background:rgba(23,23,23,.05)}
-  .rmpick .t{font-size:14px;line-height:20px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A}
-  .rmpick .d{font-size:12px;line-height:16px;letter-spacing:-.01em;color:#0071F3}
-  .rmrow{display:flex;gap:16px}
-  .rmrow .fradio{flex:1;flex-direction:row;gap:16px}
-  .rmrow .fradio label{flex:1;align-items:center;padding:8px 10px}
-  @media(max-width:1200px){.rmcards{flex-direction:column}.rmlink{width:auto}}
+  .rmbox .r b small{font-size:14px;font-weight:400;margin-left:4px}
+  .rmbox.c{align-items:center;text-align:center;font-size:14px;line-height:20px;color:#737373}
+  @media(max-width:1200px){.rmcards{flex-direction:column;align-items:stretch}.rmlink{width:auto}}
 </style>
 <script src="cx-data.js"></script>
 <script src="cx-roster.js?v=r7"></script>
@@ -146,131 +216,201 @@
       <div class="left">
         <button class="iconbtn sm" id="toggleLnb" title="사이드바"><i class="ph ph-sidebar-simple" style="font-size:16px"></i></button>
         <span class="vsep"></span>
-        <div style="display:flex;align-items:center;gap:8px"><span class="crumb">주주명부 관리</span></div>
+        <div style="display:flex;align-items:center;gap:8px" id="rmCrumb"><span class="crumb">주주명부 관리</span></div>
       </div>
       <button class="iconbtn md" title="변경이력"><i class="ph ph-clock-counter-clockwise" style="font-size:16px"></i></button>
     </div>
     <div class="mgscroll">
       <!-- 목록 -->
-      <section id="rmList" data-cx-host style="display:flex;flex-direction:column;gap:20px">
+      <section id="rmList" data-cx-host style="display:flex;flex-direction:column;gap:16px">
         <div class="phead">
-          <div class="l"><h1>주주명부 관리</h1>
-            <div class="sub">주주명부를 등록하면 주주총회에 연결해 사용할 수 있습니다. 확정된 명부는 삭제할 수 없습니다.</div></div>
-          <div class="acts"><span data-cx-tools></span><button class="fbtn dark" type="button" id="rmAdd">주주명부 추가</button></div>
+          <div class="l"><h1>주주명부 관리</h1></div>
+          <div class="acts"><span data-cx-tools></span><button class="fbtn dark" type="button" id="rmAdd">주주명부 등록</button></div>
         </div>
-        <div class="fbox">
+        <div class="falert" id="rmPending" hidden><i class="ph ph-warning-circle"></i><div><b id="rmPendingT">주주명부 1개 등록 중</b>업로드가 완료되면 이메일로 안내해 드립니다.</div></div>
+        <div class="fbox" id="rmTblBox">
           <div class="fscroll"><table class="ftbl" id="rmTbl"><thead><tr>
-            <th class="c" style="width:80px">상태</th>
-            <th style="min-width:214px">명부명</th>
-            <th class="r" style="width:176px">총 주식수</th>
-            <th class="r" style="width:176px">총 주주수</th>
-            <th class="c" style="width:176px">기준일</th>
-            <th class="c" style="width:103px">등록일</th>
-            <th class="c" style="width:145px">등록자</th>
+            <th class="c" data-sort style="width:100px">상태</th>
+            <th data-sort>주주명부기준일</th>
+            <th class="r" data-sort style="width:160px">총 주식수</th>
+            <th class="r" data-sort style="width:160px">총 주주수</th>
+            <th class="c" data-sort data-al="c" style="width:200px">주주총회 연결</th>
+            <th class="c" data-sort style="width:120px">등록자</th>
+            <th class="c" data-sort style="width:160px">등록일시</th>
             <th style="width:64px"></th>
           </tr></thead><tbody id="rmBody"></tbody></table></div>
-          <div class="fpage"><span class="cnt" id="rmCnt"></span>
-            <span class="grp">페이지당 <select><option>15</option><option>30</option><option>50</option></select></span>
-            <span class="nav"><button type="button"><svg viewBox="0 0 24 24"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg></button>
-              <button type="button"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
-              <input value="1"><span>/ 1</span>
-              <button type="button"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
-              <button type="button"><svg viewBox="0 0 24 24"><path d="m13 17 5-5-5-5"/><path d="m6 17 5-5-5-5"/></svg></button></span>
-          </div>
         </div>
+        <div class="rmempty" id="rmEmpty" hidden><i class="ph ph-address-book"></i><b>등록된 주주명부가 없습니다</b><span>주주명부를 등록하고 주주총회를 준비해 보세요</span></div>
       </section>
 
       <!-- 상세 -->
       <section id="rmDetail" data-cx-host style="display:none;flex-direction:column;gap:20px">
-        <div style="display:flex;flex-direction:column;gap:4px">
-          <div class="phead">
-            <div class="l"><div class="ttl"><h1>주주명부 상세</h1><span class="pill b" id="rmState">연결됨</span></div></div>
-            <div class="acts"><span data-cx-tools></span><button class="fbtn red" type="button" id="rmDel">명부 삭제</button></div>
-          </div>
-          <div class="phead"><div class="l"><div class="sub" id="rmBase">주주명부 기준일 2026-01-31</div></div></div>
+        <div class="phead">
+          <div class="l"><div class="ttl" style="display:flex;align-items:center;gap:8px"><h1>주주명부 상세</h1><span class="pill b" id="rmState">업로드완료</span></div>
+            <div class="sub" id="rmBase">주주명부 기준일 2026-01-31</div></div>
+          <div class="acts"><span data-cx-tools></span><span class="rmtipw" id="rmDelW"><button class="fbtn red" type="button" id="rmDel">주주명부 삭제</button></span></div>
         </div>
 
-        <div class="rmcards">
+        <div class="rmcards" id="rmCards">
           <div class="rmsum">
-            <div class="cell"><div class="k">총 주식수<span class="sp"></span><button class="fbtn sm" type="button">발행주식 상세보기</button></div>
-              <div class="v" id="rmShares">0</div></div>
-            <div class="cell"><div class="k">총 주주수<span class="sp"></span><button class="fbtn sm" type="button">주주 구성 보기</button></div>
-              <div class="v" id="rmHolders">0</div></div>
+            <div class="cell"><div class="k">총 주식수<button class="fbtn sm" type="button" data-brk>보통/우선주 열기</button></div>
+              <div class="v" id="rmShares">0</div><div class="brk" id="rmSharesBrk"></div></div>
+            <div class="cell"><div class="k">총 주주수<button class="fbtn sm" type="button" data-brk>보통/우선주 열기</button></div>
+              <div class="v" id="rmHolders">0</div><div class="brk" id="rmHoldersBrk"></div></div>
           </div>
           <div class="rmlink">
-            <div class="top"><div class="h">주주총회 연결</div>
-              <button class="rmfree" type="button" id="rmFree" hidden>명부 연결해제</button></div>
+            <div class="h">주주총회 연결</div>
             <div class="b">
               <div class="t"><div class="nm on" id="rmMeeting">제10기 정기주주총회</div>
                 <div class="stg" id="rmStage"></div></div>
-              <button class="fbtn" type="button" id="rmUnlink"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round"><path d="M9.5 14.5 6.8 17.2a3.8 3.8 0 0 1-5.4-5.4l2.7-2.7M14.5 9.5l2.7-2.7a3.8 3.8 0 0 1 5.4 5.4l-2.7 2.7"/><path d="M4 4 2.5 2.5M20 20l1.5 1.5"/></svg>연결해제</button>
+              <span class="rmtipw" id="rmUnlinkW"><button class="fbtn" type="button" id="rmUnlink"><i class="ph ph-link-break" style="font-size:16px"></i><span>연결해제</span></button></span>
             </div>
           </div>
         </div>
 
         <div class="fbox">
           <div class="fscroll"><table class="ftbl"><thead><tr>
-            <th class="c" style="width:80px">구분</th>
-            <th class="c" style="width:110px">유형</th>
-            <th style="min-width:240px">주주명</th>
-            <th class="c" style="width:120px">주주번호</th>
-            <th class="r" style="width:120px">주식수</th>
+            <th class="c" style="width:90px">주식종류</th>
+            <th class="c" style="width:110px">주주구분</th>
+            <th style="min-width:220px">주주명</th>
+            <th style="min-width:120px">주주번호</th>
+            <th class="r" style="width:120px">보유주식</th>
             <th class="r" style="width:80px">지분율</th>
-            <th style="min-width:181px">주소</th>
-            <th style="min-width:181px">명의개서 대리인</th>
+            <th style="min-width:160px">운용기관</th>
+            <th style="min-width:160px">자금제공기관</th>
           </tr></thead><tbody id="rmRows"></tbody></table></div>
           <div class="fpage"><span class="cnt" id="rmFoot"></span>
-            <span class="grp">페이지당 <select><option>15</option><option>30</option><option>50</option></select></span>
+            <span class="grp">페이지당 <select><option>20</option><option>50</option><option>100</option></select></span>
             <span class="nav"><button type="button"><svg viewBox="0 0 24 24"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg></button>
               <button type="button"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
-              <input value="1"><span>/ 30</span>
+              <input value="1"><span id="rmPages">/ 1</span>
               <button type="button"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
               <button type="button"><svg viewBox="0 0 24 24"><path d="m13 17 5-5-5-5"/><path d="m6 17 5-5-5-5"/></svg></button></span>
           </div>
         </div>
       </section>
+
+      <!-- 재업로드 필요 -->
+      <section id="rmErr" style="display:none;flex-direction:column;gap:16px">
+        <div class="phead">
+          <div class="l"><div style="display:flex;align-items:center;gap:8px"><h1 id="rmErrBase">2026-03-15</h1><span class="sbadge r">재업로드 필요</span></div></div>
+          <div class="acts"><button class="fbtn red" type="button" id="rmErrDel">주주명부 삭제</button></div>
+        </div>
+        <div class="falert red"><i class="ph ph-warning-circle"></i><div><b style="font-weight:500">데이터가 올바르지 않습니다</b>상세내역에서 시트와 행별 오류 원인을 확인 후, 올바르게 수정하여 다시 업로드해 주세요</div></div>
+        <div class="rmerr">
+          <div class="hd">주주명부 양식 불일치 데이터<button class="fbtn dark" type="button" id="rmReup">주주명부 재업로드</button></div>
+          <table data-nocx><thead><tr><th style="width:120px">시트명</th><th style="width:120px">행</th><th>양식 불일치 내역</th></tr></thead>
+            <tbody><tr><td>시트 1</td><td>15</td><td>주주명 값이 존재하지 않음</td></tr>
+              <tr><td>시트 1</td><td>24</td><td>실명번호(주민번호)가 존재하지 않음</td></tr>
+              <tr><td>시트 2</td><td>32</td><td>내외국인 구분값이 존재하지 않음</td></tr></tbody></table>
+        </div>
+      </section>
     </div>
   </main>
 
+  <div class="rmntip" id="rmNameTip"></div>
+
+  <!-- 주주명부 등록 -->
+  <div class="ovl" id="rmUpOvl">
+    <div class="rmdlg" style="width:480px">
+      <div class="dh"><div class="tt">주주명부 등록</div></div>
+      <div class="db">
+        <div class="ffield"><div class="lb">주주명부 기준일</div>
+          <input class="finp" id="rmUpDate" type="date" placeholder="날짜 선택"></div>
+        <div class="ffield"><div class="lb">명의개서대리인</div>
+          <div class="rmag" id="rmUpAg">
+            <button type="button" data-v="한국예탁결제원"><img alt="" src="data:image/png;base64,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">한국예탁결제원</button>
+            <button type="button" data-v="KB 국민은행"><img alt="" src="data:image/png;base64,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">KB 국민은행</button>
+            <button type="button" data-v="KEB 하나은행"><img alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAFBElEQVR42u2YTWxUVRTHf+fe+2Y6/YC2U6pSUFQEP4C6wiqaGDUaY1wYFy7cuHRh3Lk0hmhMjAslxrhSgyF+LNyYkKhRIy4UibFUAvKlFChYaKczznTem3nz3j0uZkAjFWGopTHczdu8e/K795z/+bjCm1uURbwMi3xdAbwCeFHGFIwqMo823fzBKT6wIAKJB9VFBCjgA8eK6SpLawnjfTnCrANV9HK72CgYY3jlk/2Mbvmen177jhe++BXtcBivlzcGrVd8h+XuwwWe2zGOqFLNOB7ZP0VfMcI7g/wLoxXBGdMeoLQMWBGMyNzBL8KSWoIo1J0htsLKUp0lYQM15+6Rv0GlcUwShu0BqippvU5ar+MbDVQVaRl3xiDW4GLPjrUDfH7zAMsrMfko4e2RFRy/upsgUaT1rzMGI4J6TxrXSaIQ0pRNK6/l2Y0jOJE5heX+6ebUezozGe5ddT2pV8YrZY7PVgjrdZIkaRoTAREqgeWhJ9fx0IEClazj25v6IYrx3oP+RdHW0dfZyXB+gPtWrOSxG1azLp/ny4njvDU2ihHBXxBg66Tv3f8gj9+4GgCvym9hlfFymYOlIgdKJcbLZSajkJlajdk04bvlgxhVVsWeDmvpzWYZzOW4rqeHNUv7uK2/n9vyeQZznQCU45hnv/maN3b/iFh74WlGVcEIt/b3k3iPVyVjLUNd3Qx1dbPpmuXn7Em8xycpHkWNIWi5da710/Q0W/fvY+v+fRQqZSTb8Y/paE5AI0KapLw6+iPv3PcAAA3vkdZNNt2gCE3xnA36zNxAU1HE3pkC35w8wefHjrLz1CRpvQZBBpvrJPX+4hJ1qorJZnl3zxg9gePlkU10BcF500WqyqkwZDIMORnOcqhUYu9MgZ+LRQ6VikxVq9BogLUQBLhcJ6nqeeGaejhPw2pE8LUaNy1bxtPrh9mQHyBKEqZrEdNRxG9hyGRYZd/MDJNhlbr3lGo1qM42BRRkml9rEWuxIqgq/iIqjPxbR22NIW00IEmap1cPXv9UcSPmntVreGbDMOvzA3iFXacn2bJ7lLHTpwiyWZI0bbvkyYW0/KaVqH2rUxEEa4S4Xuf5kbvYvHHknD3VJOGJT7ez/fAhTDaLb7N5uKBS51XPqjlVRVHqtRp3DK1g88YRUlUaf4mlOE3pco73H3yYod4+NEkwIgtXi0UE0pSnbr4VbR0gMIa9xRmOVMpkrCX2niWZDM8MD6ONxsICelVwjrW9vQjgjOGrExNs2LaV2z/Yxp5CgcAYFLjzqmvAuf/Wxee7SW3F5fbxI/gkoTw7y4eHD7ZiFXLWgWn+t2CARgSShD2FAiJCqspQdzcighhDoRad/bcY1yD1zbBYSBdLEPDG2ChTUYQVoRLHKKBAxthWrYGfZ4qQpm3HoGsb0DkOzhS44+OP2JAf4LNjR7HZLGkUMZjLne2Kvj450XTxQs8k2rrFI8UiR6anIMjgbHNoumHpUhQ4HYXsODEBLmi2XgstElXFOIfNdiAiJN4jmQy39PUjwMe/HKZUKeOca/sGL3loOpO8z+TGoZ4e1vT20fCe18d2I7b9FDOvg/sZZW8cvIou53jxh10cOj2JyWQWB2DT555HV13PVycmeGnnt9hsR9uxN+8vC6n3kO3g+V07ORWGqDF4aT9BzzugtkbQid9/B2PA2kuG+09et8S5pmAW1dvM3weuK++DVwD/R4B/AFSQaLSCr91lAAAAAElFTkSuQmCC">KEB 하나은행</button>
+          </div>
+          <button class="rmdl" type="button" id="rmUpDl" hidden><i class="ph ph-download-simple" style="font-size:12px"></i><span></span></button>
+        </div>
+        <div class="ffield"><div class="lb">주주명부 원본파일 등록</div>
+          <div class="rmdrop" id="rmUpDrop"><div class="dt">파일을 선택하거나 끌어다 놓으세요.</div><button class="fbtn sm" type="button">파일 선택</button></div>
+          <div class="rmfile" id="rmUpFile" hidden><span class="fx"><i class="ph ph-file"></i></span>
+            <div class="m"><div class="fn" id="rmUpFn">file-name.xlsx</div><div class="fs" id="rmUpFs">xlsx・12KB</div></div>
+            <button type="button" id="rmUpRm" title="파일 삭제"><i class="ph ph-x"></i></button></div>
+          <input type="file" id="rmUpInp" accept=".xlsx" hidden>
+          <div class="rmcap">파일 업로드: xlsx (최대 350mb)</div>
+        </div>
+        <div class="falert" style="align-items:center"><i class="ph ph-warning-circle"></i><div>주주명부 원본의 암호를 해제하여 업로드해 주세요.</div></div>
+      </div>
+      <div class="df"><button class="fbtn" type="button" data-close>취소</button><button class="fbtn dark" type="button" id="rmUpOk" disabled>주주명부 등록</button></div>
+    </div>
+  </div>
+
+  <!-- 주주명부 불러오는 중 -->
+  <div class="ovl" id="rmLoadOvl">
+    <div class="adlg">
+      <div class="adlg-h">
+        <div class="adlg-ic gray"><i class="ph ph-circle-notch spin"></i></div>
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div class="adlg-t">주주명부 불러오는 중</div>
+          <div class="adlg-d">팝업을 닫아도 업로드는 진행됩니다.</div>
+        </div>
+      </div>
+      <div class="adlg-f"><button type="button" data-close>닫기</button></div>
+    </div>
+  </div>
+
+  <!-- 분류중 -->
+  <div class="ovl" id="rmClsOvl">
+    <div class="adlg">
+      <div class="adlg-h">
+        <div class="adlg-ic gray"><i class="ph ph-hourglass-simple"></i></div>
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div class="adlg-t">주주명부 기관 데이터 분류 중</div>
+          <div class="adlg-d">영업일 기준 1~2일 소요되며, 완료 시 이메일로 안내해 드립니다. 분류 중에도 기본 설정이 가능합니다.</div>
+        </div>
+      </div>
+      <div class="adlg-f"><button type="button" data-close>취소</button><button type="button" class="dark" id="rmClsGo">주주총회 기본 설정</button></div>
+    </div>
+  </div>
+
   <!-- 주주총회 연결 -->
   <div class="ovl" id="rmLinkOvl">
-    <div class="rsheet-dlg" style="box-sizing:border-box;width:384px;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:14px;display:flex;flex-direction:column">
-      <div style="display:flex;flex-direction:column;gap:8px;padding:16px">
-        <div style="font-size:16px;line-height:16px;font-weight:600;letter-spacing:-.01em;color:#0A0A0A">주주총회 연결</div>
-        <div style="font-size:14px;line-height:20px;letter-spacing:-.01em;color:#737373">이 주주명부를 기준으로 의결권을 계산할 주주총회를 정합니다.</div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:24px;padding:0 16px 8px;max-height:60vh;overflow:auto">
+    <div class="rmdlg" style="width:384px">
+      <div class="dh"><div class="tt">주주총회 연결</div><div class="ds">주주명부를 사용할 주주총회를 선택해주세요</div></div>
+      <div class="db" style="gap:24px">
         <div class="ffield"><div class="lb">연결방법</div>
-          <div class="fradio" id="rmWay" style="flex-direction:row;gap:16px">
+          <div class="fradio plain" id="rmWay">
             <label class="on" data-v="new"><span class="dot"></span><span class="tx"><b>새 주주총회 생성</b></span></label>
             <label data-v="pick"><span class="dot"></span><span class="tx"><b>생성내역 선택</b></span></label>
           </div></div>
 
-        <div id="rmNewBox" style="display:flex;flex-direction:column;gap:16px">
-          <div class="ffield"><div class="lb">생성유형</div>
-            <div class="fradio" id="rmType" style="flex-direction:row;gap:16px">
-              <label class="on" data-v="real"><span class="dot"></span><span class="tx"><b>주주총회</b></span></label>
-              <label data-v="test"><span class="dot"></span><span class="tx"><b>테스트 주주총회</b></span></label>
+        <div id="rmNewBox" style="display:flex;flex-direction:column;gap:24px">
+          <div class="ffield"><div class="lb">주주총회 생성방법</div>
+            <div class="fradio plain" id="rmType">
+              <label class="on" data-v="real"><span class="dot"></span><span class="tx"><b>주주총회 생성</b></span></label>
+              <label data-v="test"><span class="dot"></span><span class="tx"><b>테스트용 생성</b></span></label>
             </div></div>
           <div class="ffield"><div class="lb">주총 구분</div>
-            <div class="fradio" id="rmKind" style="flex-direction:row;gap:16px">
+            <div class="fradio plain" id="rmKind">
               <label class="on" data-v="정기"><span class="dot"></span><span class="tx"><b>정기 주주총회</b></span></label>
               <label data-v="임시"><span class="dot"></span><span class="tx"><b>임시 주주총회</b></span></label>
             </div></div>
-          <div class="ffield"><div class="lb" id="rmNoLb">주총기수</div>
-            <input class="finp" id="rmNo" type="text" placeholder="숫자만 입력해 주세요" inputmode="numeric">
-            <div style="font-size:12px;line-height:16px;color:#737373">주총 구분과 기수는 주주총회 설정에서 다시 바꿀 수 있습니다.</div>
-          </div>
+          <div class="ffield" style="margin-top:-16px"><div class="lb" id="rmNoLb">주총 기수</div>
+            <input class="finp" id="rmNo" type="text" placeholder="숫자만 입력" inputmode="numeric"></div>
         </div>
 
         <div class="ffield" id="rmPickBox" style="display:none"><div class="lb">주주총회 생성내역</div>
-          <div class="rmpick" id="rmPick"></div>
+          <select class="finp" id="rmPick"></select>
         </div>
       </div>
-      <div style="display:flex;gap:8px;padding:12px 16px 16px">
-        <button class="fbtn" type="button" id="rmLinkCancel" style="flex:1;height:32px">취소</button>
-        <button class="fbtn dark" type="button" id="rmLinkOk" style="flex:1;height:32px">주주총회 연결</button>
+      <div class="df eq">
+        <button class="fbtn" type="button" data-close>취소</button>
+        <button class="fbtn dark" type="button" id="rmLinkOk">주주총회 연결</button>
       </div>
+    </div>
+  </div>
+
+  <!-- 주주총회 연결 완료 -->
+  <div class="ovl" id="rmDoneOvl">
+    <div class="rmdlg" style="width:480px">
+      <div class="dh"><div class="tt">주주총회 연결 완료<button class="x" type="button" data-close title="닫기"><i class="ph ph-x" style="font-size:16px"></i></button></div>
+        <div class="ds">총 주식수와 총 주주수가 일치하는지 확인해 주세요.</div></div>
+      <div class="db"><div class="rmbox" id="rmDoneBox" style="padding:12px"></div></div>
+      <div class="df"><button class="fbtn dark" type="button" id="rmDoneOk">확인</button></div>
     </div>
   </div>
 
@@ -278,19 +418,33 @@
   <div class="ovl" id="rmFreeOvl">
     <div class="adlg">
       <div class="adlg-h">
-        <div class="adlg-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5"/><circle cx="12" cy="16.4" r=".8" fill="#E9081B" stroke="none"/></svg></div>
+        <div class="adlg-ic"><i class="ph ph-warning-circle"></i></div>
         <div style="display:flex;flex-direction:column;gap:6px;width:100%">
-          <div class="adlg-t">주주명부 연결을 해제할까요?</div>
-          <div class="adlg-d" style="color:#0A0A0A">해제 시 주주별 의결권 계산 내역이 초기화됩니다. 해제 후 동일 명부를 다시 연결할 수 있습니다.</div>
+          <div class="adlg-t">주주총회 연결을 해제하시겠습니까?</div>
+          <div class="adlg-d"><b>설정된 주주별 의결권 계산 내역 (합산 3%제한 등)이 초기화 됩니다.</b> 해제 후 동일 명부로 다시 연결할 수 있습니다.</div>
         </div>
         <div class="rmbox">
           <div class="r"><span>연결서비스</span><b>주주총회</b></div>
           <div class="r"><span>주주명부 기준일</span><b id="rmFreeBase">2026-01-31</b></div>
           <div class="r"><span>연결대상</span><b id="rmFreeTo">제10기 정기주주총회</b></div>
         </div>
-        <label class="fchk" id="rmFreeChk"><span class="bx"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 안내를 확인했습니다.</label>
+        <label class="fchk" id="rmFreeChk"><span class="bx"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 내용을 확인했으며, 연결을 해제합니다.</label>
       </div>
-      <div class="adlg-f"><button type="button" id="rmFreeCancel">취소</button><button type="button" class="danger" id="rmFreeOk">연결 해제</button></div>
+      <div class="adlg-f"><button type="button" data-close>취소</button><button type="button" class="danger" id="rmFreeOk">주주총회 연결해제</button></div>
+    </div>
+  </div>
+
+  <!-- 삭제 확인 -->
+  <div class="ovl" id="rmDelOvl">
+    <div class="adlg">
+      <div class="adlg-h">
+        <div class="adlg-ic"><i class="ph ph-trash"></i></div>
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%">
+          <div class="adlg-t">주주명부를 삭제하시겠습니까?</div>
+          <div class="adlg-d">삭제된 데이터는 복구할 수 없습니다.</div>
+        </div>
+      </div>
+      <div class="adlg-f"><button type="button" data-close>취소</button><button type="button" class="danger" id="rmDelOk">삭제</button></div>
     </div>
   </div>
 
@@ -298,13 +452,14 @@
   <div class="ovl" id="rmNoDelOvl">
     <div class="adlg">
       <div class="adlg-h">
-        <div class="adlg-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5"/><circle cx="12" cy="16.4" r=".8" fill="#E9081B" stroke="none"/></svg></div>
+        <div class="adlg-ic"><i class="ph ph-warning-circle"></i></div>
         <div style="display:flex;flex-direction:column;gap:6px;width:100%">
           <div class="adlg-t">주주명부를 삭제할 수 없습니다</div>
-          <div class="adlg-d" id="rmNoDelDesc">주주총회에 연결된 명부입니다. 연결을 해제한 뒤 삭제해 주세요.</div>
+          <div class="adlg-d"><b id="rmNoDelTo">제10기 정기주주총회</b>에 연결되어 있습니다.<br>주주총회 연결 해제 후 다시 시도해 주세요.</div>
         </div>
+        <div class="rmbox c">전자투표 위임장 서비스 시작 전까지만<br>주주총회 연결을 해제할 수 있습니다.</div>
       </div>
-      <div class="adlg-f"><button type="button" id="rmNoDelOk">확인</button></div>
+      <div class="adlg-f"><button type="button" class="danger" data-close>확인</button></div>
     </div>
   </div>
 </div>
@@ -312,201 +467,248 @@
 /* 주주명부 관리 — 목록/상세 한 화면. ?id 가 있으면 상세를 편다. */
 (function () {
   var M = (window.CX && CX.meeting) || {};
-  var cm = (window.CX && CX.util && CX.util.comma) || function (n) { return String(n); };
+  var cm = (window.CX && CX.util && CX.util.comma) || function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); };
+  var RS = (window.CX && CX.rosterSummary) || {};
+  var ME = '강하나';
+  function $(id) { return document.getElementById(id); }
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  function open(o) { o.classList.add('on'); }
+  function close(o) { o.classList.remove('on'); }
+  function today() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+  function now() { var d = new Date(); return today() + ' ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
 
-  /* 명부 목록 — 확정된 한 건이 이번 총회에 물려 있다 */
+  /* 명부 상태: 대기중 · 업로드중 · 재업로드 필요 · 분류중 · 업로드완료. 최신 등록이 위 */
   var LIST = [
-    { id: 'R-2026-01', st: '연결됨', nm: '제10기 정기주주총회 기준 주주명부', stage: 'set',
-      meeting: '제10기 정기주주총회',
-      sh: (window.CX&&CX.rosterSummary?CX.rosterSummary.shares:471661174), ho: (window.CX&&CX.rosterSummary?CX.rosterSummary.total:893), base: '2026-01-31', reg: '2026-02-02', by: '강하나' },
-    { id: 'R-2025-08', st: '연결됨', nm: '2025년 8월 임시주주총회 기준 주주명부', stage: 'end',
-      meeting: '2025년 8월 임시주주총회',
-      sh: 468902110, ho: 221400, base: '2025-07-31', reg: '2025-08-04', by: '박지용' },
-    { id: 'R-2025-01', st: '확정', nm: '제9기 정기주주총회 기준 주주명부',
-      sh: 461330500, ho: 208700, base: '2025-01-31', reg: '2025-02-03', by: '강하나' },
-    { id: 'R-2024-12', st: '검증중', nm: '2024년 12월 기준 주주명부(가등록)',
-      sh: 455120000, ho: 199200, base: '2024-12-31', reg: '2025-01-08', by: '이수민' },
-    { id: 'R-2024-07', st: '검증 실패', nm: '2024년 7월 임시주주총회 기준 주주명부',
-      sh: 0, ho: 0, base: '2024-06-30', reg: '2024-07-02', by: '이수민' }
+    { id: 'R-2026-04', st: '대기중', base: '2026-04-16', reg: '2026-04-16 17:41', by: '전수현' },
+    { id: 'R-2026-03', st: '재업로드 필요', base: '2026-03-15', reg: '2026-03-16 09:12', by: '이수민' },
+    { id: 'R-2026-02', st: '분류중', base: '2026-01-31', seq: 2, sh: RS.shares || 471661174, ho: RS.total || 897, reg: '2026-02-10 11:20', by: '이수민' },
+    { id: 'R-2026-01', st: '업로드완료', base: '2026-01-31', seq: 1, stage: 'set',
+      meeting: M.name || '제10기 정기주주총회',
+      sh: RS.shares || 471661174, ho: RS.total || 897, reg: '2026-02-02 14:05', by: ME },
+    { id: 'R-2025-08', st: '업로드완료', base: '2025-07-31', stage: 'end',
+      meeting: '2025년 8월 임시주주총회', sh: 468902110, ho: 221400, reg: '2025-08-04 10:31', by: '박지용' },
+    { id: 'R-2025-01', st: '업로드완료', base: '2025-01-31', sh: 461330500, ho: 208700, reg: '2025-02-03 16:47', by: ME }
   ];
-  var TONE = { '연결됨': 'b', '확정': '', '검증중': 'a', '검증 실패': 'r' };
+  var TONE = { '대기중': '', '업로드중': '', '재업로드 필요': 'r', '분류중': 'a', '업로드완료': 'b' };
+  function baseOf(r) { return r.base + (r.seq ? '(' + r.seq + ')' : ''); }
+  function byId(id) { return LIST.filter(function (x) { return x.id === id; })[0]; }
+  /* 연결 해제는 설정 단계에서만 — 그 뒤로는 의결권 계산이 이미 걸려 있다 */
+  function locked(r) { return !!r.meeting && r.stage !== 'set'; }
+  var LOCK_TIP = '전자투표·위임장 서비스 시작 전까지만 연결을 해제할 수 있습니다.';
 
-  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
-
-  /* 서비스 진행 단계 — 이름과 지금 무엇을 하는 중인지 */
+  /* 서비스 진행 단계 — 연결 카드 보조문구 */
   var STAGE = {
-    set:   ['주주총회 설정 중', '기본 정보·서비스 설정 진행 중'],
-    evote: ['전자투표/위임장 진행 중', '전자투표 시작 후 마감 전'],
-    vend:  ['전자투표/위임 마감', '전자투표 종료, 현장 준비 중'],
-    site:  ['현장투표 진행 중', '주총 당일 현장 운영 중'],
-    fix:   ['결과 확정', '집계 완료, 결과 확정 처리'],
-    end:   ['주총 종료', '모든 절차 완료']
+    set: '기본 정보·서비스 설정 진행 중', evote: '전자투표 시작 후 마감 전', vend: '전자투표 종료, 현장 준비 중',
+    site: '주총 당일 현장 운영 중', fix: '집계 완료, 결과 확정 처리', end: '모든 절차 완료'
   };
   /* LNB 에서 만든 주주총회 — 생성 최신순 */
   var MEETINGS = [
-    { no: '제10기 정기주주총회', kind: '정기', linked: '제10기 정기주주총회 기준 주주명부' },
-    { no: '2025년 8월 임시주주총회', kind: '임시', linked: '2025년 8월 임시주주총회 기준 주주명부' },
-    { no: '제9기 정기주주총회', kind: '정기', linked: '' },
-    { no: '제9기 테스트 주주총회', kind: '테스트', linked: '' }
+    { no: M.name || '제10기 정기주주총회' },
+    { no: '제10기 정기주주총회', test: true },
+    { no: '2025년 8월 임시주주총회' },
+    { no: '제9기 정기주주총회' }
   ];
-  var cur = null;
+  var cur = null, pending = 0;
 
+  /* ── 목록 ─────────────────────────────────────────────────────────── */
+  var TRASH = '<svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/></svg>';
   function drawList() {
-    document.getElementById('rmBody').innerHTML = LIST.map(function (r) {
-      return '<tr><td class="c"><span class="sbadge ' + (TONE[r.st] || '') + '">' + r.st + '</span></td>'
-        + '<td class="md"><button class="flink" type="button" data-go="' + r.id + '">' + esc(r.nm) + '</button></td>'
-        + '<td class="r mut">' + (r.sh ? cm(r.sh) : '−') + '</td>'
-        + '<td class="r mut">' + (r.ho ? cm(r.ho) : '−') + '</td>'
-        + '<td class="c mut">' + r.base + '</td>'
-        + '<td class="c mut">' + r.reg + '</td>'
-        + '<td class="c mut">' + r.by + '</td>'
-        + '<td><span class="acts"><button class="iconb" type="button" title="삭제" data-del="' + r.id + '">'
-        + '<svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/></svg>'
-        + '</button></span></td></tr>';
+    $('rmBody').innerHTML = LIST.map(function (r) {
+      var go = r.st === '업로드완료' || r.st === '분류중' || r.st === '재업로드 필요';
+      var num = r.sh != null;
+      return '<tr' + (go ? ' class="go"' : '') + ' data-go="' + r.id + '"><td class="c"><span class="sbadge ' + TONE[r.st] + '">' + r.st + '</span></td>'
+        + '<td>' + baseOf(r) + '</td>'
+        + '<td class="r">' + (num ? cm(r.sh) : '-') + '</td>'
+        + '<td class="r">' + (num ? cm(r.ho) : '-') + '</td>'
+        + '<td class="c">' + (r.meeting ? esc(r.meeting) : '-') + '</td>'
+        + '<td class="c">' + r.by + '</td>'
+        + '<td class="c">' + r.reg + '</td>'
+        + '<td><span class="acts"><button class="iconb" type="button" title="삭제" data-del="' + r.id + '"'
+        + (locked(r) ? ' disabled' : '') + '>' + TRASH + '</button></span></td></tr>';
     }).join('');
-    document.getElementById('rmCnt').textContent = '총 ' + LIST.length + '건';
+    $('rmTblBox').hidden = !LIST.length;
+    $('rmEmpty').hidden = !!LIST.length;
+    $('rmAdd').textContent = LIST.length ? '주주명부 등록' : '주주명부 등록하기';
+    $('rmPending').hidden = !pending;
+    $('rmPendingT').textContent = '주주명부 ' + pending + '개 등록 중';
   }
 
-  /* 상세 표본 — 주주 구성을 보여 주는 14행 */
-  var KIND = ['개인', '법인', '기관', '외국인'];
-  var GUBUN = ['보통주', '우선주'];
-  var NAMES = ['국민연금공단', '김명준', '미래에셋증권(쿼드자산운용-신한은행)', '블랙록펀드', '이나리',
-    '삼성자산운용', '한국투자증권', '교직원공제회', '정하윤', '우정사업본부',
-    '신한자산운용', '최길준', 'KB자산운용', '오세훈'];
-  var ADDR = ['서울특별시 중구 세종대로', '서울특별시 영등포구 여의대로', '경기도 성남시 분당구 판교로',
-    '부산광역시 해운대구 센텀중앙로', '서울특별시 강남구 테헤란로'];
-  var AGENT = ['한국예탁결제원', '국민은행 증권대행부', '하나은행 신탁부'];
+  /* ── 상세 ─────────────────────────────────────────────────────────── */
+  /* 주주번호 — '-' 없이 생년월일+성별 / 사업자번호 */
+  function holderNo(id) { return /^\d{6}-\d/.test(id) ? id.slice(0, 6) + id.charAt(7) : id.replace(/-/g, ''); }
+  /* 운용기관 — 기관 명의의 괄호 안 운용사 */
+  function fundOf(x) {
+    var m = x.gb === '기관' && /\(([^)]*(자산운용|투자자문|운용))[^)]*\)/.exec(x.nm);
+    return m ? m[1] : '-';
+  }
+  function breakdown(el, rows) {
+    el.innerHTML = rows.filter(function (r) { return r[1] > 0; }).map(function (r) {
+      return '<div class="r"><span>' + r[0] + '</span><b>' + cm(r[1]) + '</b></div>';
+    }).join('');
+  }
+  function kinds(r) {
+    /* 우선주가 없는 명부는 보통주만 */
+    var sh = { c: r.sh, p: 0 }, ho = { c: r.ho, p: 0 };
+    if (r.id === 'R-2026-01' && window.CX && CX.roster) {
+      sh = { c: 0, p: 0 }; ho = { c: 0, p: 0 };
+      CX.roster.forEach(function (x) { var k = x.st === '우선주' ? 'p' : 'c'; sh[k] += x.sh; ho[k]++; });
+    }
+    return { sh: sh, ho: ho };
+  }
 
   function drawDetail(r) {
-    document.getElementById('rmState').textContent = r.st;
-    document.getElementById('rmState').className = 'pill' + (r.st === '연결됨' ? ' b' : '');
-    document.getElementById('rmBase').textContent = '주주명부 기준일 ' + r.base;
-    document.getElementById('rmShares').textContent = cm(r.sh);
-    document.getElementById('rmHolders').textContent = cm(r.ho);
-    var linked = (r.st === '연결됨');
-    var nm = document.getElementById('rmMeeting');
-    nm.textContent = linked ? (r.meeting || M.name || '제10기 정기주주총회') : '연결된 주주총회 없음';
-    nm.className = 'nm' + (linked ? ' on' : '');
-    /* 연결 해제는 설정 단계에서만 — 그 뒤로는 의결권 계산이 이미 걸려 있다 */
-    var st = STAGE[r.stage] || STAGE.set, canFree = linked && r.stage === 'set';
-    var btn = document.getElementById('rmUnlink');
-    btn.lastChild.nodeValue = linked ? '연결해제' : '주주총회 연결';
-    btn.disabled = linked && !canFree;
-    btn.title = btn.disabled ? '주주총회 설정 단계에서만 명부 연결을 해제할 수 있습니다.' : '';
-    document.getElementById('rmStage').textContent = linked
-      ? st[1]
-      : '연결하면 이 명부를 기준으로 의결권이 계산됩니다.';
     cur = r;
+    $('rmBase').textContent = '주주명부 기준일 ' + r.base;
+    $('rmShares').textContent = cm(r.sh);
+    $('rmHolders').textContent = cm(r.ho);
+    var k = kinds(r);
+    breakdown($('rmSharesBrk'), [['보통주', k.sh.c], ['우선주', k.sh.p]]);
+    breakdown($('rmHoldersBrk'), [['보통주', k.ho.c], ['우선주', k.ho.p]]);
+
+    var linked = !!r.meeting, lock = locked(r);
+    var nm = $('rmMeeting');
+    nm.textContent = linked ? r.meeting : '연결된 주주총회 없음';
+    nm.className = 'nm' + (linked ? ' on' : '');
+    $('rmStage').innerHTML = linked
+      ? esc(STAGE[r.stage] || STAGE.set) + (lock ? '<i class="ph ph-info" data-tip="' + LOCK_TIP + '"></i>' : '')
+      : (r.freed ? '명부해제 · ' + esc(r.freed) : '');
+    var btn = $('rmUnlink');
+    btn.querySelector('i').className = 'ph ' + (linked ? 'ph-link-break' : 'ph-link');
+    btn.querySelector('i').style.display = linked ? '' : 'none';
+    btn.querySelector('span').textContent = linked ? '연결해제' : '주주총회 연결';
+    btn.disabled = lock;
+    $('rmDel').disabled = lock;
+    ['rmUnlinkW', 'rmDelW'].forEach(function (w) {
+      if (lock) $(w).setAttribute('data-tip', LOCK_TIP); else $(w).removeAttribute('data-tip');
+    });
 
     var rows = [];
     if (window.CX && CX.roster && CX.roster.length) {
-      var raddr = CX.rosterAddr || '-';
-      CX.roster.slice().sort(function (a2, b2) { return b2.sh - a2.sh; }).forEach(function (x, i) {
+      CX.roster.slice().sort(function (a, b) { return b.sh - a.sh; }).forEach(function (x) {
+        var fund = fundOf(x);
         rows.push('<tr><td class="c"><span class="sbadge">' + x.st + '</span></td>'
-          + '<td class="c"><span class="sbadge">' + (x.gb === '법인' ? '일반법인' : x.gb) + (x.fr === '외국인' ? '·외국인' : '') + '</span></td>'
-          + '<td class="md">' + esc(x.nm) + '</td>'
-          + '<td class="c mut">' + x.id + '</td>'
+          + '<td class="c"><span class="sbadge">' + (x.gb === '법인' ? '일반법인' : x.gb) + '</span></td>'
+          + '<td class="md" data-nm="' + x.i + '">' + esc(x.nm) + '</td>'
+          + '<td>' + holderNo(x.id) + '</td>'
           + '<td class="r">' + cm(x.sh) + '</td>'
-          + '<td class="r mut">' + x.rt.toFixed(2) + '%</td>'
-          + '<td class="mut">' + raddr + '</td>'
-          + '<td class="mut">' + AGENT[i % AGENT.length] + '</td></tr>');
-      });
-    } else {
-      var tot = r.sh || 1;
-      NAMES.forEach(function (n, i) {
-        var sh = Math.round(tot * (0.09 - i * 0.0055));
-        if (sh < 1000) sh = 1000 + i * 137;
-        rows.push('<tr><td class="c"><span class="sbadge">' + GUBUN[i % 5 === 4 ? 1 : 0] + '</span></td>'
-          + '<td class="c"><span class="sbadge">' + KIND[i % 4] + '</span></td>'
-          + '<td class="md">' + esc(n) + '</td>'
-          + '<td class="c mut">' + ('00' + (1001 + i * 7)).slice(-6) + '</td>'
-          + '<td class="r">' + cm(sh) + '</td>'
-          + '<td class="r mut">' + (sh / tot * 100).toFixed(2) + '%</td>'
-          + '<td class="mut">' + ADDR[i % ADDR.length] + '</td>'
-          + '<td class="mut">' + AGENT[i % AGENT.length] + '</td></tr>');
+          + '<td class="r">' + x.rt.toFixed(2) + '%</td>'
+          + '<td class="mut">' + esc(fund) + '</td>'
+          + '<td class="mut">-</td></tr>');
       });
     }
-    document.getElementById('rmRows').innerHTML = rows.join('');
-    document.getElementById('rmFoot').textContent = '총 ' + cm(r.ho) + '명 · ' + cm(r.sh) + '주';
+    $('rmRows').innerHTML = rows.join('');
+    $('rmFoot').textContent = '총 ' + cm(r.ho) + '명 · ' + cm(r.sh) + '주';
+    $('rmPages').textContent = '/ ' + Math.max(1, Math.ceil(r.ho / 20));
   }
 
+  /* 주주명 호버 — 주주번호 · 실질 계좌번호 · 주소 */
+  var tip = $('rmNameTip'), byI = {};
+  ((window.CX && CX.roster) || []).forEach(function (x) { byI[x.i] = x; });
+  $('rmRows').addEventListener('mouseover', function (e) {
+    var td = e.target.closest('td[data-nm]'); if (!td) { tip.classList.remove('on'); return; }
+    var x = byI[td.getAttribute('data-nm')]; if (!x) return;
+    tip.innerHTML = '<div class="t">' + esc(x.nm) + '</div><div class="g">'
+      + '<span>주주번호</span><span>' + esc(x.id) + '</span>'
+      + '<span>실질 계좌번호</span><span>' + esc(x.ac || '-') + '</span>'
+      + '<span>주소</span><span>' + esc((CX && CX.rosterAddr) || '-') + '</span></div>';
+    var b = td.getBoundingClientRect();
+    tip.style.left = b.left + 'px'; tip.style.top = (b.bottom + 4) + 'px';
+    tip.classList.add('on');
+  });
+  $('rmRows').addEventListener('mouseleave', function () { tip.classList.remove('on'); });
+  document.querySelector('.mgscroll').addEventListener('scroll', function () { tip.classList.remove('on'); }, true);
+
+  /* 보통/우선주 — 두 카드가 함께 열리고 닫힌다 */
+  $('rmCards').addEventListener('click', function (e) {
+    if (!e.target.closest('[data-brk]')) return;
+    var on = $('rmCards').classList.toggle('open');
+    $('rmCards').querySelectorAll('[data-brk]').forEach(function (b) { b.textContent = '보통/우선주 ' + (on ? '접기' : '열기'); });
+  });
+
+  var CRUMB_SEP = '<i class="ph ph-caret-right" style="font-size:14px;color:var(--muted-fg)"></i>';
   function show(id) {
-    var r = LIST.filter(function (x) { return x.id === id; })[0];
-    var list = document.getElementById('rmList'), det = document.getElementById('rmDetail');
-    if (r) { drawDetail(r); list.style.display = 'none'; det.style.display = 'flex'; }
-    else { list.style.display = 'flex'; det.style.display = 'none'; }
+    var r = byId(id);
+    var view = !r ? 'list' : (r.st === '업로드완료' ? 'det' : (r.st === '재업로드 필요' ? 'err' : 'list'));
+    $('rmList').style.display = view === 'list' ? 'flex' : 'none';
+    $('rmDetail').style.display = view === 'det' ? 'flex' : 'none';
+    $('rmErr').style.display = view === 'err' ? 'flex' : 'none';
+    if (view === 'det') drawDetail(r);
+    if (view === 'err') { cur = r; $('rmErrBase').textContent = r.base; }
+    $('rmCrumb').innerHTML = view === 'list' ? '<span class="crumb">주주명부 관리</span>'
+      : '<a class="crumb" href="roster-manage.html" id="rmBack" style="color:var(--muted-fg);text-decoration:none">주주명부 관리</a>' + CRUMB_SEP + '<span class="crumb">주주명부 상세</span>';
   }
+  function go(id) { history.pushState(null, '', id ? '?id=' + id : location.pathname); show(id); }
+  $('rmCrumb').addEventListener('click', function (e) { if (e.target.closest('#rmBack')) { e.preventDefault(); go(null); } });
 
   drawList();
-  document.getElementById('rmTbl').addEventListener('click', function (e) {
-    var g = e.target.closest('[data-go]');
-    if (g) { history.pushState(null, '', '?id=' + g.getAttribute('data-go')); show(g.getAttribute('data-go')); return; }
+  $('rmBody').addEventListener('click', function (e) {
     var d = e.target.closest('[data-del]');
-    if (d) {
-      var row = LIST.filter(function (x) { return x.id === d.getAttribute('data-del'); })[0];
-      if (row && row.st === '연결됨') {
-        document.getElementById('rmNoDelDesc').textContent = '주주총회에 연결된 명부입니다. 연결을 해제한 뒤 삭제해 주세요.';
-      } else {
-        document.getElementById('rmNoDelDesc').textContent = '확정된 주주명부는 삭제할 수 없습니다.';
-      }
-      document.getElementById('rmNoDelOvl').classList.add('on');
-    }
+    if (d) { if (!d.disabled) askDelete(byId(d.getAttribute('data-del'))); return; }
+    var tr = e.target.closest('tr.go'); if (!tr) return;
+    var r = byId(tr.getAttribute('data-go'));
+    if (r.st === '분류중') { open($('rmClsOvl')); return; }
+    go(r.id);
   });
-  function $(id) { return document.getElementById(id); }
-  function open(o) { o.classList.add('on'); }
-  function close(o) { o.classList.remove('on'); }
+  $('rmClsGo').addEventListener('click', function () { location.href = 'meeting-settings.html'; });
 
-  /* 연결된 명부는 지울 수 없다 — 무엇을 먼저 해야 하는지 알려 준다 */
-  $('rmDel').addEventListener('click', function () {
-    if (cur && cur.st === '연결됨') { open($('rmNoDelOvl')); return; }
-    history.pushState(null, '', location.pathname); show(null);
+  /* 모달 공통 — [data-close] 는 자기 모달을 닫는다 */
+  document.addEventListener('click', function (e) {
+    var c = e.target.closest('[data-close]'); if (c) close(c.closest('.ovl'));
+  });
+
+  /* ── 삭제 ─────────────────────────────────────────────────────────── */
+  var delTarget = null;
+  /* 연결된 명부는 지울 수 없다 — 어디에 걸려 있는지와 먼저 할 일을 알려 준다 */
+  function askDelete(r) {
+    if (!r) return;
+    delTarget = r;
+    if (r.meeting) { $('rmNoDelTo').textContent = r.meeting; open($('rmNoDelOvl')); return; }
+    open($('rmDelOvl'));
+  }
+  $('rmDel').addEventListener('click', function () { askDelete(cur); });
+  $('rmErrDel').addEventListener('click', function () { askDelete(cur); });
+  $('rmDelOk').addEventListener('click', function () {
+    close($('rmDelOvl'));
+    LIST = LIST.filter(function (x) { return x !== delTarget; });
+    drawList();
+    if (location.search) go(null);
     if (window.cxToast) cxToast('주주명부를 삭제했습니다.');
   });
-  $('rmNoDelOk').addEventListener('click', function () { close($('rmNoDelOvl')); });
 
   /* ── 연결 해제 ─────────────────────────────────────────────────────── */
   var freeOk = $('rmFreeOk'), freeChk = $('rmFreeChk');
   function syncFree() { freeOk.disabled = !freeChk.classList.contains('on'); }
   freeChk.addEventListener('click', function () { freeChk.classList.toggle('on'); syncFree(); });
-  $('rmFreeCancel').addEventListener('click', function () { close($('rmFreeOvl')); });
   freeOk.addEventListener('click', function () {
     close($('rmFreeOvl'));
-    if (cur) { cur.st = '확정'; cur.meeting = ''; drawList(); drawDetail(cur); }
+    if (cur) { cur.meeting = ''; cur.stage = ''; cur.freed = today() + ' · ' + ME; drawList(); drawDetail(cur); }
     if (window.cxToast) cxToast('주주총회 연결을 해제했습니다.');
   });
 
   /* ── 연결 ─────────────────────────────────────────────────────────── */
-  var pickSel = null;
+  function linkedRoster(no) { return LIST.filter(function (x) { return x.meeting === no; })[0]; }
   function drawPick() {
-    $('rmPick').innerHTML = MEETINGS.map(function (m, i) {
-      return '<button type="button" data-m="' + i + '"' + (pickSel === i ? ' class="on"' : '') + '>'
-        + '<span class="t">' + m.no + '</span>'
-        + (m.linked ? '<span class="d">연결됨 · ' + m.linked + '</span>' : '') + '</button>';
+    $('rmPick').innerHTML = '<option value="" hidden selected>주주총회 선택</option>' + MEETINGS.map(function (m, i) {
+      var r = !m.test && linkedRoster(m.no);
+      /* 명부가 물린 주총은 어느 명부인지 보여 주고 고르지 못하게 */
+      return '<option value="' + i + '"' + (r ? ' disabled' : '') + '>' + (m.test ? 'test  ' : '') + esc(m.no)
+        + (r ? '  ·  ' + baseOf(r) + ' 연결됨' : '') + '</option>';
     }).join('');
   }
   function radio(box, v) {
     box.querySelectorAll('label').forEach(function (l) { l.classList.toggle('on', l.dataset.v === v); });
   }
-  function pickedValue(box) {
-    var on = box.querySelector('label.on'); return on ? on.dataset.v : '';
-  }
+  function picked(box) { var on = box.querySelector('label.on'); return on ? on.dataset.v : ''; }
   function syncLink() {
-    var way = pickedValue($('rmWay'));
+    var way = picked($('rmWay')), kind = picked($('rmKind')), test = picked($('rmType')) === 'test';
     $('rmNewBox').style.display = way === 'new' ? 'flex' : 'none';
     $('rmPickBox').style.display = way === 'pick' ? 'flex' : 'none';
-    var ok;
-    if (way === 'pick') { ok = pickSel !== null; }
-    else {
-      /* 임시 주주총회는 기수를 적지 않아도 된다 */
-      var kind = pickedValue($('rmKind'));
-      ok = kind === '임시' || $('rmNo').value.trim() !== '';
-    }
+    /* 임시 주주총회는 기수를 적지 않아도 된다 */
+    var ok = way === 'pick' ? $('rmPick').value !== '' : (kind === '임시' || $('rmNo').value.trim() !== '');
     $('rmLinkOk').disabled = !ok;
-    $('rmLinkOk').style.opacity = ok ? '' : '.5';
+    $('rmNoLb').textContent = '주총 기수' + (kind === '임시' ? ' (선택)' : '');
     /* 테스트 주총은 기수에 한글도 쓴다 */
-    var test = pickedValue($('rmType')) === 'test';
-    $('rmNoLb').textContent = '주총기수' + (pickedValue($('rmKind')) === '임시' ? ' (선택)' : '');
-    $('rmNo').placeholder = test ? '예) 9 또는 사전리허설' : '숫자만 입력해 주세요';
+    $('rmNo').placeholder = test ? '주총 기수 입력' : '숫자만 입력';
     $('rmNo').inputMode = test ? 'text' : 'numeric';
   }
   ['rmWay', 'rmType', 'rmKind'].forEach(function (id) {
@@ -516,50 +718,109 @@
     });
   });
   $('rmNo').addEventListener('input', function () {
-    if (pickedValue($('rmType')) !== 'test') this.value = this.value.replace(/[^0-9]/g, '');
+    if (picked($('rmType')) !== 'test') this.value = this.value.replace(/[^0-9]/g, '');
     syncLink();
   });
-  $('rmPick').addEventListener('click', function (e) {
-    var b = e.target.closest('[data-m]'); if (!b) return;
-    pickSel = +b.dataset.m; drawPick(); syncLink();
-  });
-  $('rmLinkCancel').addEventListener('click', function () { close($('rmLinkOvl')); });
+  $('rmPick').addEventListener('change', syncLink);
   $('rmLinkOk').addEventListener('click', function () {
-    if ($('rmLinkOk').disabled) return;
+    if (this.disabled || !cur) return;
     var name;
-    if (pickedValue($('rmWay')) === 'pick') { name = MEETINGS[pickSel].no; }
+    if (picked($('rmWay')) === 'pick') { name = MEETINGS[+$('rmPick').value].no; }
     else {
-      var no = $('rmNo').value.trim(), kind = pickedValue($('rmKind'));
-      var head = pickedValue($('rmType')) === 'test' ? '테스트 ' : '';
-      name = head + (no ? '제' + no + '기 ' : '') + kind + '주주총회';
+      var no = $('rmNo').value.trim(), test = picked($('rmType')) === 'test';
+      name = (test ? '테스트 ' : '') + (no ? '제' + no + '기 ' : '') + picked($('rmKind')) + '주주총회';
+      MEETINGS.unshift({ no: name, test: test });
     }
     close($('rmLinkOvl'));
-    if (cur) { cur.st = '연결됨'; cur.stage = 'set'; cur.meeting = name; drawList(); drawDetail(cur); }
-    if (window.cxToast) cxToast(name + '에 주주명부를 연결했습니다.');
+    cur.meeting = name; cur.stage = 'set'; cur.freed = '';
+    drawList(); drawDetail(cur);
+    /* 연결 완료 — 총 주식수·주주수 확인 (우선주가 없으면 그 줄은 뺀다) */
+    var k = kinds(cur);
+    $('rmDoneBox').innerHTML = [['총 주식수 (보통주)', k.sh.c, '주'], ['총 주식수 (우선주)', k.sh.p, '주'], ['총 주주수', cur.ho, '명']]
+      .filter(function (r, i) { return i !== 1 || r[1] > 0; })
+      .map(function (r) { return '<div class="r"><span>' + r[0] + '</span><b>' + cm(r[1]) + '<small>' + r[2] + '</small></b></div>'; }).join('');
+    open($('rmDoneOvl'));
   });
+  /* 확인 → 주주명부 확정 화면으로 */
+  $('rmDoneOk').addEventListener('click', function () { location.href = 'shareholders.html'; });
 
   $('rmUnlink').addEventListener('click', function () {
-    if (this.disabled) return;
-    if (cur && cur.st === '연결됨') {
+    if (this.disabled || !cur) return;
+    if (cur.meeting) {
       $('rmFreeBase').textContent = cur.base;
-      $('rmFreeTo').textContent = cur.meeting || (M.name || '제10기 정기주주총회');
+      $('rmFreeTo').textContent = cur.meeting;
       freeChk.classList.remove('on'); syncFree();
       open($('rmFreeOvl'));
     } else {
-      pickSel = null; radio($('rmWay'), 'new'); radio($('rmType'), 'real'); radio($('rmKind'), '정기');
+      radio($('rmWay'), 'new'); radio($('rmType'), 'real'); radio($('rmKind'), '정기');
       $('rmNo').value = ''; drawPick(); syncLink();
       open($('rmLinkOvl'));
     }
   });
-  window.addEventListener('popstate', function () {
-    show(new URLSearchParams(location.search).get('id'));
+
+  /* ── 주주명부 등록 ─────────────────────────────────────────────────── */
+  var up = { ag: '', file: null }, reup = null;
+  function syncUp() { $('rmUpOk').disabled = !($('rmUpDate').value && up.ag && up.file); }
+  function setFile(f) {
+    if (f && !/\.xlsx$/i.test(f.name)) { if (window.cxToast) cxToast('xlsx 파일만 업로드할 수 있습니다.', true); return; }
+    up.file = f || null;
+    $('rmUpDrop').hidden = !!f; $('rmUpFile').hidden = !f;
+    if (f) { $('rmUpFn').textContent = f.name; $('rmUpFs').textContent = 'xlsx・' + Math.max(1, Math.round(f.size / 1024)) + 'KB'; }
+    syncUp();
+  }
+  function openUp(target) {
+    reup = target || null;
+    up = { ag: '', file: null };
+    $('rmUpDate').value = '';
+    $('rmUpAg').querySelectorAll('button').forEach(function (b) { b.classList.remove('on'); });
+    $('rmUpDl').hidden = true; $('rmUpInp').value = '';
+    setFile(null); open($('rmUpOvl'));
+  }
+  $('rmAdd').addEventListener('click', function () { openUp(); });
+  $('rmReup').addEventListener('click', function () { openUp(cur); });
+  $('rmUpDate').addEventListener('input', syncUp);
+  $('rmUpAg').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    up.ag = b.dataset.v;
+    $('rmUpAg').querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+    $('rmUpDl').hidden = false; $('rmUpDl').querySelector('span').textContent = up.ag + ' 양식 다운로드';
+    syncUp();
   });
-  document.getElementById('rmAdd').addEventListener('click', function () {
-    location.href = 'shareholders.html';
+  $('rmUpDl').addEventListener('click', function () { if (window.cxToast) cxToast(up.ag + ' 양식을 다운로드했습니다.'); });
+  var drop = $('rmUpDrop');
+  drop.addEventListener('click', function () { $('rmUpInp').click(); });
+  $('rmUpInp').addEventListener('change', function () { setFile(this.files[0]); });
+  drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('over'); });
+  drop.addEventListener('dragleave', function () { drop.classList.remove('over'); });
+  drop.addEventListener('drop', function (e) { e.preventDefault(); drop.classList.remove('over'); setFile(e.dataTransfer.files[0]); });
+  $('rmUpRm').addEventListener('click', function () { $('rmUpInp').value = ''; setFile(null); });
+  $('rmUpOk').addEventListener('click', function () {
+    if (this.disabled) return;
+    var base = $('rmUpDate').value;
+    /* 같은 기준일로 다시 올리면 기준일 옆에 순번 — 지워도 남은 번호는 그대로 */
+    var same = LIST.filter(function (x) { return x.base === base; });
+    var seq = 0;
+    if (same.length) {
+      same.forEach(function (x) { if (!x.seq) x.seq = 1; seq = Math.max(seq, x.seq); });
+      seq++;
+    }
+    var r = { id: 'R-' + Date.now(), st: '업로드중', base: base, seq: seq || undefined, reg: now(), by: ME };
+    LIST.unshift(r); pending++;
+    /* 재업로드 — 실패한 명부를 새 업로드로 바꾼다 */
+    if (reup) { LIST = LIST.filter(function (x) { return x !== reup; }); go(null); }
+    drawList();
+    close($('rmUpOvl')); open($('rmLoadOvl'));
+    /* 업로드가 끝나면 기관 분류로 넘어간다 */
+    setTimeout(function () {
+      r.st = '분류중'; r.sh = RS.shares || 471661174; r.ho = RS.total || 897;
+      pending = Math.max(0, pending - 1); drawList();
+    }, 6000);
   });
+
+  window.addEventListener('popstate', function () { show(new URLSearchParams(location.search).get('id')); });
   show(new URLSearchParams(location.search).get('id'));
 })();
 </script>
-<script src="conexus.js?v=fww"></script>
+<script src="conexus.js?v=sel"></script>
 </body>
 </html>
