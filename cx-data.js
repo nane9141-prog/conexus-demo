@@ -38,6 +38,11 @@
     quorum: { normalIssued: '1/4', normalAttend: '1/2', specialIssued: '1/3', specialAttend: '2/3' }
   };
 
+  /* 회사 — 카카오뱅크 데이터를 그대로 쓰고 이름·장소만 바꾼다(LNB 회사명을 눌러 전환, conexus.js) */
+  var CO_KEY = (function () { try { return localStorage.getItem('cx.co') || 'kakaobank'; } catch (e) { return 'kakaobank'; } })();
+  if (CO_KEY === 'kudoselectric') { meeting.org = '큐더스전자'; meeting.place = '서울 강남구 큐더스전자 본사 대강당'; }
+  meeting.coKey = CO_KEY;
+
   /* ---------- 2) 투표 채널 (출석의결권 분해) ---------- */
   var channels = [
     { key: 'pre',    nm: '사전투표',   w: 240000000 },

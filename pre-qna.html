@@ -36,7 +36,7 @@
   .card{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px}
   @media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}.fgrid.c3,.fgrid.c2{grid-template-columns:1fr}}
 </style>
-<script src="cx-data.js?v=2"></script>
+<script src="cx-data.js?v=3"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -208,6 +208,6 @@
     var st=e.target.closest('.subtab'); if(st){var wrap=st.closest('.subtabs');wrap.querySelectorAll('.subtab').forEach(function(x){x.classList.toggle('active',x===st);});var key=st.dataset.sub;var host=wrap.parentElement;host.querySelectorAll('[data-subpanel]').forEach(function(p){p.classList.toggle('active',p.dataset.subpanel===key);});}
   });
 </script>
-<script src="conexus.js?v=s5"></script>
+<script src="conexus.js?v=s7"></script>
 </body>
 </html>

@@ -995,3 +995,59 @@ window.cxClock = cxChannel('cx.clock');
   function start() { mark(); new MutationObserver(later).observe(document.body, { childList: true, subtree: true }); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
+
+/* 회사 전환 — LNB 회사명을 누르면 카카오뱅크 / 큐더스전자를 고른다(localStorage cx.co).
+   큐더스전자는 카카오뱅크 화면·데이터를 그대로 쓰고, 화면의 회사명과 생중계 영상만 바꾼다. */
+(function () {
+  var CO = [['kakaobank', '카카오뱅크'], ['kudoselectric', '큐더스전자']];
+  var key = 'kakaobank'; try { key = localStorage.getItem('cx.co') || 'kakaobank'; } catch (e) {}
+  var KUDOS = (key === 'kudoselectric');
+  function swapText(root) {
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), n;
+    while ((n = w.nextNode())) if (n.nodeValue.indexOf('카카오뱅크') >= 0 && !(n.parentNode && n.parentNode.closest && n.parentNode.closest('#cxCoPop')))
+      n.nodeValue = n.nodeValue.replace(/카카오뱅크/g, '큐더스전자');
+  }
+  function swapMedia(root) {
+    (root.querySelectorAll ? root.querySelectorAll('video[src*="kakaobank.mp4"]') : []).forEach(function (v) {
+      v.setAttribute('src', v.getAttribute('src').replace('kakaobank.mp4', 'kudoselectric-live.mp4'));
+    });
+  }
+  function picker() {
+    document.querySelectorAll('.lnb-org').forEach(function (el) {
+      if (el.__co) return; el.__co = 1;
+      el.style.cursor = 'pointer'; el.title = '회사 전환';
+      el.insertAdjacentHTML('beforeend', '<i class="ph ph-caret-down" style="font-size:12px;margin-left:4px;color:var(--muted-fg)"></i>');
+      el.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var pop = document.getElementById('cxCoPop');
+        if (!pop) { pop = document.createElement('div'); pop.id = 'cxCoPop'; pop.className = 'menupop hidden'; document.body.appendChild(pop);
+          document.addEventListener('click', function () { pop.classList.add('hidden'); }); }
+        pop.innerHTML = CO.map(function (c) { return '<button class="menuitem" type="button" data-co="' + c[0] + '">' + c[1] + (c[0] === key ? ' ✓' : '') + '</button>'; }).join('');
+        pop.onclick = function (ev) {
+          var b = ev.target.closest('[data-co]'); if (!b) return;
+          try { localStorage.setItem('cx.co', b.getAttribute('data-co')); } catch (x) {}
+          location.reload();
+        };
+        var r = el.getBoundingClientRect();
+        pop.style.left = r.left + 'px'; pop.style.top = (r.bottom + 6) + 'px';
+        pop.classList.toggle('hidden');
+      });
+    });
+  }
+  function start() {
+    picker();
+    if (!KUDOS) return;
+    document.title = document.title.replace(/카카오뱅크/g, '큐더스전자');
+    swapText(document.body); swapMedia(document);
+    new MutationObserver(function (ms) {
+      ms.forEach(function (m) {
+        if (m.type === 'characterData') { if (m.target.nodeValue.indexOf('카카오뱅크') >= 0) swapText(m.target.parentNode || m.target); return; }
+        m.addedNodes.forEach(function (n) {
+          if (n.nodeType === 3) { if (n.parentNode) swapText(n.parentNode); }
+          else if (n.nodeType === 1) { swapText(n); swapMedia(n); }
+        });
+      });
+    }).observe(document.body, { childList: true, subtree: true, characterData: true });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();

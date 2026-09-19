@@ -42,7 +42,8 @@
   .ocg{display:flex;align-items:center;gap:8px}
   .tsep{width:1px;height:20px;background:var(--border)}
   .ocb{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 8px;border:1px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0a0a0a;cursor:pointer;white-space:nowrap;text-decoration:none}
-  .ocb.pri{background:#171717;border-color:#171717;color:#FAFAFA}
+  .ocb.pri,.ocb.pri:hover{background:#171717;border-color:#171717;color:#FAFAFA}
+  .ocb.pri:hover{opacity:.9}
   .ocb svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.6}
   .ocb:hover{background:#fafafa}
   .ocb.gray{background:#f5f5f5;border-color:transparent}
@@ -1134,7 +1135,7 @@
   .chtab{height:24px;padding:0 10px;border:none;background:none;border-radius:6px;font-family:inherit;font-size:12px;font-weight:600;color:#737373;cursor:pointer}
   .chtab.on{background:#F5F5F5;color:#0a0a0a}
 </style>
-<script src="cx-data.js?v=2"></script>
+<script src="cx-data.js?v=3"></script>
 </head>
 <body>
 <div class="oc app collapsed" id="app">
@@ -4076,7 +4077,7 @@ document.addEventListener('click',function(e){
   };
 })();
 </script>
-<script src="conexus.js?v=s5"></script>
+<script src="conexus.js?v=s7"></script>
 <script>/* 칸이 열린 뒤에야 내보낼 수 있으므로, 화면을 연 순간의 상태를 여기서 한 번 알린다 */
 if(window.OC&&OC.fire) OC.fire();
 /* 주주PASS 시청 화면에서 올라온 질의를 받아 목록 맨 앞에 얹는다 */
