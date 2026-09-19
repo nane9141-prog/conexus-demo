@@ -115,8 +115,28 @@
     if (e.target.name === 'pgOpen') $('pgOpenAt').style.display = e.target.value === 'now' ? 'none' : '';
     touch();
   });
+  /* 당일 질의 · 발언 · 동의 규칙 — 저장하면 시청 화면(주주PASS)이 같은 횟수로 받는다(cx.rules) */
+  function num(id, d) { var v = parseInt(($(id) || {}).value, 10); return v > 0 ? v : d; }
+  function saveRules() {
+    var r = { ask: { on: on('ask'), n: num('pgAskN', 3) }, speak: { on: on('speak'), n: num('pgSpN', 1), t: num('pgSpT', 3) },
+              amend: { on: on('amend'), n: num('pgAmN', 1), t: num('pgAmT', 3) }, ts: Date.now() };
+    try { localStorage.setItem('cx.rules', JSON.stringify(r)); } catch (e) {}
+  }
+  (function restoreRules() {
+    var r = null; try { r = JSON.parse(localStorage.getItem('cx.rules') || 'null'); } catch (e) {}
+    if (!r) return;
+    [['ask', 'pgAskN'], ['speak', 'pgSpN'], ['amend', 'pgAmN']].forEach(function (k) {
+      var v = r[k[0]]; if (!v) return;
+      if ($(k[1]) && v.n) $(k[1]).value = v.n;
+      var sw = root.querySelector('[data-pgsw="' + k[0] + '"]');
+      if (sw && v.on === false) { sw.classList.remove('on'); sw.setAttribute('aria-checked', false); sw.closest('.pg-card').classList.add('off'); }
+    });
+    if (r.speak && r.speak.t && $('pgSpT')) $('pgSpT').value = r.speak.t;
+    if (r.amend && r.amend.t && $('pgAmT')) $('pgAmT').value = r.amend.t;
+  })();
   save.addEventListener('click', function () {
     if (!validate()) return;
+    saveRules();
     EM.setDirty('progress', false); EM.markDone('progress'); EM.toast('저장되었습니다');
   });
   /* ---------- 날짜 피커 (DS Calendar 규격: 셀 28 · nav 28 · 오늘 muted · 선택 primary) ---------- */

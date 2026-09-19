@@ -136,7 +136,7 @@
   .mbtn{height:32px;padding:0 10px;font-size:14px}
   .mwrap[hidden],.spl-empty[hidden]{display:none}
   .mscroll{overflow-x:auto}
-  #splTbl{table-layout:fixed;min-width:1240px}
+  #splTbl{table-layout:fixed}   /* 폭은 cxFitCols 가 영역에 맞춘다 */
   #splTbl td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   table.mtbl thead th{font-size:14px;font-weight:500;color:#737373;padding:12px 14px}
   table.mtbl tbody td{height:46px;box-sizing:border-box;padding:0 14px}
@@ -612,6 +612,7 @@
   render();
 })();
 </script>
-<script src="conexus.js?v=s15"></script>
+<script src="conexus.js?v=s20"></script>
+<script>(function(){ function fit(){ if(window.cxFitCols) cxFitCols(document.getElementById('splTbl')); } window.addEventListener('load',fit); window.addEventListener('resize',fit); setTimeout(fit,300); })();</script>
 </body>
 </html>

@@ -758,7 +758,10 @@
       return b;
     }
     function paint(el) {
-      var o = el.__ovs, ch = el.clientHeight, cw = el.clientWidth, sh = el.scrollHeight, sw = el.scrollWidth;
+      var o = el.__ovs;
+      /* 막대 자신이 넘침으로 잡히지 않게 — 숨긴 채로 재고 필요한 것만 다시 보인다 */
+      o.x.style.display = 'none'; o.y.style.display = 'none';
+      var ch = el.clientHeight, cw = el.clientWidth, sh = el.scrollHeight, sw = el.scrollWidth;
       var y = sh > ch + 1, x = sw > cw + 1;
       o.y.style.display = y ? '' : 'none'; o.x.style.display = x ? '' : 'none';
       if (y) { var h = Math.max(24, ch * ch / sh), t = el.scrollTop * (ch - h) / (sh - ch);
@@ -766,6 +769,7 @@
       if (x) { var w = Math.max(24, cw * cw / sw), l = el.scrollLeft * (cw - w) / (sw - cw);
         o.x.style.width = w + 'px'; o.x.style.left = (el.scrollLeft + l) + 'px'; o.x.style.top = (el.scrollTop + ch - 8) + 'px'; }
     }
+    window.cxOvsPaint = function (el) { if (el && el.__ovs) paint(el); };   /* 폭을 바꾼 뒤 막대를 다시 잰다 */
     function adopt(el) {
       if (el.__ovs || SKIP[el.tagName] || el.closest('[data-nocx-sb]')) return;
       var cs = getComputedStyle(el);
@@ -869,6 +873,18 @@ function cxChannel(K) {
   };
 }
 window.cxSync = cxChannel('cx.live');
+/* 표 가로 스크롤 방지 — colgroup 에 적은 폭의 합이 감싼 칸보다 넓을 때만 비율대로 줄인다.
+   원래 폭은 data-w 에 남겨 두어 창을 넓히면 다시 원래대로. 칸 글자는 페이지 CSS 의 말줄임을 따른다. */
+window.cxFitCols = function (tbl) {
+  if (!tbl) return;
+  var cg = tbl.querySelector('colgroup'); if (!cg) return;
+  var cols = Array.prototype.slice.call(cg.children);
+  cols.forEach(function (c) { if (!c.dataset.w) c.dataset.w = parseFloat(c.style.width) || 0; });
+  var sum = cols.reduce(function (s, c) { return s + (+c.dataset.w); }, 0), avail = tbl.parentElement ? tbl.parentElement.clientWidth - 8 : 0;   /* 테두리·소수점 몫 */
+  var k = (avail && sum > avail) ? avail / sum : 1;
+  cols.forEach(function (c) { c.style.width = Math.floor(c.dataset.w * k) + 'px'; });
+  if (window.cxOvsPaint) cxOvsPaint(tbl.parentElement);
+};
 /* 총회 진행 저장값 초기화 — 현장 제어 '총회 종료'에서 부른다.
    진행 상황(cx.oc) · 현장 참석 등록(cx.att) · 시청 화면 접수분(cx.qna) · 시계(cx.clock) · 송출(cx.live) · 대시보드 상태 */
 window.CX = window.CX || {};

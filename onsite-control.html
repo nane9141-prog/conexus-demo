@@ -799,7 +799,9 @@
   .qmacc-end{margin-top:auto;display:flex;flex-direction:column;gap:8px;padding-top:16px}   /* 종료는 맨 아래 */
   .qmqrow.wait{background:#FAFAFA}
   .qmqrow.fin{background:#FAFAFA}
-  .qmqgrip{color:#A3A3A3;font-size:14px;display:inline-flex;cursor:grab}
+  .qmqgrip{color:#A3A3A3;font-size:14px;display:inline-flex;cursor:grab;touch-action:none}
+  .qmqrow.wait.dragging{opacity:.5}
+  .qmqrow.wait.over{border-color:#171717;background:#fff}
   .qmqic{width:24px;height:24px;flex:none;display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:6px;background:none;color:#525252;cursor:pointer}
   .qmqic:hover{background:#F0F0F0}
   .qmqic i{font-size:16px}
@@ -2238,10 +2240,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     document.querySelectorAll('#agTree .arow.selnode').forEach(function(card){
       var no=card.dataset.no, ast=card.querySelector('.astatus'); if(!ast) return;
       if(card.dataset.heldBy){
-        var drop=keptRes(card.dataset.heldBy)==='가결';
+        var ar=keptRes(card.dataset.heldBy), drop=(ar==='가결');
         card.classList.toggle('dropped',drop);
-        ast.innerHTML=drop?'<span class="rst drop">폐기</span>':'<span class="rst hold">보류</span>';
-        return;
+        /* 동의 가결 → 원안 폐기 · 동의 부결 → 원안은 다시 표결 대기(아래 일반 표시로) */
+        if(ar!=='부결'){ ast.innerHTML=drop?'<span class="rst drop">폐기</span>':'<span class="rst hold">보류</span>'; return; }
       }
       var pb=persistBadge(no);
       if(pb!=null){ ast.innerHTML=pb; return; }
@@ -2251,7 +2253,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   OC.repaint=function(){ repaintList(); };
   function updateLeft(){
     var node=document.querySelector('#agTree .selnode.sel'); if(!node) return;
-    if(node.dataset.heldBy){ repaintList(); return; }
+    if(node.dataset.heldBy && keptRes(node.dataset.heldBy)!=='부결'){ repaintList(); return; }
     var ast=node.querySelector('.astatus'); if(!ast) return;
     ast.innerHTML=listBadge(node,node.dataset.no);
   }
@@ -2582,7 +2584,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   }
   /* 대기 — 회색 카드: 끌기 손잡이 · 순번 · 이름 · 위/아래 · 삭제 */
   function waitRow(x, n){
-    return '<div class="qmqrow wait"><span class="qmqgrip"><i class="ph ph-dots-six-vertical"></i></span><span class="qmqno">'+n+'</span><span class="qmqnm">'+esc(x.name)+'</span><span class="sp"></span>'
+    return '<div class="qmqrow wait" data-qrow="'+x.id+'" data-qi="'+(n-1-LIVEN+1)+'"><span class="qmqgrip" data-qgrip><i class="ph ph-dots-six-vertical"></i></span><span class="qmqno">'+n+'</span><span class="qmqnm">'+esc(x.name)+'</span><span class="sp"></span>'
       +'<button class="qmqic" type="button" data-qmv="'+x.id+'" data-d="-1" title="위로"><i class="ph ph-arrow-up"></i></button>'
       +'<button class="qmqic" type="button" data-qmv="'+x.id+'" data-d="1" title="아래로"><i class="ph ph-arrow-down"></i></button>'
       +'<button class="qmqic" type="button" data-q="'+x.id+'" title="대기열에서 삭제"><i class="ph ph-trash"></i></button></div>';
@@ -2680,6 +2682,28 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     if(pk){ accPick=(accPick===pk.dataset.pick)?null:pk.dataset.pick; renderAcc(); }
   });
 
+  /* 끌어서 순서 바꾸기 — 손잡이에서만 잡힌다. 놓은 줄의 자리로 옮긴다 */
+  (function(){
+    var box=document.getElementById('qmAccB'), drag=null;
+    function rows(){ return Array.prototype.slice.call(box.querySelectorAll('.qmqrow.wait[data-qrow]')); }
+    box.addEventListener('pointerdown',function(e){
+      if(e.button) return; var g=e.target.closest('[data-qgrip]'); if(!g) return;
+      var row=g.closest('[data-qrow]'); if(!row) return;
+      e.preventDefault(); drag={id:row.dataset.qrow, row:row, mark:null};
+      row.classList.add('dragging'); try{ g.setPointerCapture(e.pointerId); }catch(_){}
+    });
+    box.addEventListener('pointermove',function(e){
+      if(!drag) return; var mark=null;
+      rows().forEach(function(r){ r.classList.remove('over'); var b=r.getBoundingClientRect(); if(e.clientY>=b.top&&e.clientY<=b.bottom) mark=r; });
+      if(mark && mark!==drag.row) mark.classList.add('over'); drag.mark=mark;
+    });
+    function end(){
+      if(!drag) return; var d=drag; drag=null;
+      rows().forEach(function(r){ r.classList.remove('over','dragging'); });
+      if(d.mark && d.mark!==d.row && window.SPQ) SPQ.pos(d.id, +d.mark.dataset.qi);
+    }
+    box.addEventListener('pointerup',end); box.addEventListener('pointercancel',end);
+  })();
   document.getElementById('qmAccB').addEventListener('input',function(e){
     if(e.target.id!=='qmQTa') return; var c=this.querySelector('[data-qcnt]'); if(c) c.textContent=e.target.value.length;
   });
@@ -4121,6 +4145,7 @@ function toggleMute(id){
     remove:function(id){ S.forEach(function(x){ if(x.id===id){ x.inq=false; delete x.chair; } });
       if(speakingId===id){ speakingId=null; stopSpeak(); } if(openRow===id) openRow=null; render(); },
     move:function(id,d){ qmove(id,d); render(); },
+    pos:function(id,idx){ qReorder(id,idx); render(); },   /* idx(0부터) 자리로 — 발언 중인 맨 앞은 그대로 */
     start:function(id){ startSpeak(id); },
     end:function(id){ var it=S.filter(function(x){ return x.id===id; })[0];
       if(it){ it.st='완료'; if(speakingId===id) it.dur=speakSec; }
@@ -4285,7 +4310,7 @@ document.addEventListener('click',function(e){
   };
 })();
 </script>
-<script src="conexus.js?v=s15"></script>
+<script src="conexus.js?v=s20"></script>
 <script>/* 칸이 열린 뒤에야 내보낼 수 있으므로, 화면을 연 순간의 상태를 여기서 한 번 알린다 */
 if(window.OC&&OC.fire) OC.fire();
 /* 주주PASS 시청 화면에서 올라온 질의 · 발언 · 동의를 받아 각 목록에 얹는다 */

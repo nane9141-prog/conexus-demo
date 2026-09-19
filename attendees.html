@@ -266,6 +266,7 @@
   .atwrap{margin-top:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#fff}
   .atscroll{overflow:auto;max-height:calc(100vh - 340px)}
   table.attbl{width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed}
+  table.attbl td{overflow:hidden;text-overflow:ellipsis}
   table.attbl thead th{position:sticky;top:0;background:#fafafa;z-index:1;height:44px;padding:0 14px;text-align:left;font-weight:600;color:var(--muted-fg);font-size:12px;white-space:nowrap;border-bottom:1px solid var(--border);vertical-align:middle}
   table.attbl thead th.n{text-align:right}
   table.attbl tbody td{padding:12px 14px;border-bottom:1px solid #f0f0f0;color:#0a0a0a;white-space:nowrap}
@@ -714,6 +715,7 @@
     if(headTab!==ck()){
       var cg=document.getElementById('atCols');
       if(cg) cg.innerHTML=cols.map(function(c){return '<col style="width:'+(c==='투표권자'?220:(c===''?48:(CW[c]||100)))+'px">';}).join('');
+      if(cg) setTimeout(function(){ if(window.cxFitCols) cxFitCols(cg.parentElement); },0);   /* 영역보다 넓으면 줄여 맞춤 — 가로 스크롤 없이 */
       head.innerHTML='<tr>'+cols.map(function(c){return '<th'+cls(c)+'>'+c+'</th>';}).join('')+'</tr>';
       headTab=ck(); sortSt=null; filtPred=null;
       var tb=document.querySelector('table.attbl'); if(tb.__cx){ tb.__cx.filters={}; tb.__cx.draft={}; }   /* 탭이 바뀌면 컬럼 필터도 초기화 */
@@ -1124,6 +1126,7 @@
 })();
 </script>
 
-<script src="conexus.js?v=s15"></script>
+<script src="conexus.js?v=s20"></script>
+<script>(function(){ function fit(){ var t=document.querySelector('table.attbl'); if(t&&window.cxFitCols) cxFitCols(t); } window.addEventListener('resize',fit); window.addEventListener('load',fit); })();</script>
 </body>
 </html>

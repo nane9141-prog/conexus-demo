@@ -29,8 +29,8 @@
   .xbtn.ic{padding:0;width:34px;justify-content:center;border-radius:8px}
   .exd-grid{flex:1;min-height:0;margin-top:12px;border:1px solid #E5E5E5;border-radius:8px;background:#fff;display:flex;flex-direction:column;overflow:hidden}
   .exd-scroll{flex:1;min-height:0;overflow:auto}
-  .extbl{width:100%;min-width:1420px;border-collapse:separate;border-spacing:0;font-size:14px;letter-spacing:-.01em}
-  .extbl th,.extbl td{height:46px;padding:0 16px;white-space:nowrap;text-align:right;border-right:1px solid rgba(24,29,31,.12);border-bottom:1px solid #E5E5E5;background:#fff}
+  .extbl{width:100%;border-collapse:separate;border-spacing:0;font-size:14px;letter-spacing:-.01em}
+  .extbl th,.extbl td{height:46px;padding:0 12px;white-space:nowrap;text-align:right;border-right:1px solid rgba(24,29,31,.12);border-bottom:1px solid #E5E5E5;background:#fff}
   .extbl th{height:48px;position:sticky;top:0;z-index:2;background:#FAFAFA;font-weight:500;color:#737373}
   .extbl th.fic{position:relative}
   .extbl th:last-child,.extbl td:last-child{border-right:none}
@@ -68,7 +68,8 @@
   .tgl-wrap[hidden],.exd-sub[hidden]{display:none}
   body.pre .exd-bar{justify-content:flex-end}
   body.pre .exd-no{padding:0;border:none;background:none;font-size:16px;line-height:24px;font-weight:600;color:#0A0A0A}
-  body.pre .extbl{min-width:1100px}
+  .extbl th{white-space:normal!important;line-height:16px}   /* 긴 헤더(행사가능의결권 등)는 두 줄로 */
+  .extbl td:nth-child(1),.extbl td:nth-child(2){white-space:normal!important;word-break:normal;overflow-wrap:anywhere;line-height:18px;padding-top:6px;padding-bottom:6px}   /* 긴 이름은 줄바꿈 — 가로 스크롤 없이 */
   body.pre .extbl th:nth-child(11),body.pre .extbl td:nth-child(11),
   body.pre .extbl th:nth-child(12),body.pre .extbl td:nth-child(12),
   body.pre .extbl th:nth-child(13),body.pre .extbl td:nth-child(13){display:none}
@@ -373,6 +374,6 @@
   }
 })();
 </script>
-<script src="conexus.js?v=s15"></script>
+<script src="conexus.js?v=s20"></script>
 </body>
 </html>
