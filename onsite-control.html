@@ -695,7 +695,7 @@
   /* 질의 · 발언 관리 */
   .qmwrap{padding:0;height:100%;display:flex;flex-direction:column;overflow:hidden;background:transparent;border:none;box-shadow:none}
   /* 탭 줄 — 왼쪽 표 카드 안 맨 위(Figma): 높이 40 · 안쪽 3px · 아래 1px 선, 선택 탭은 2px 검정 밑줄 */
-  .qmhead{display:flex;align-items:stretch;gap:0;box-sizing:border-box;height:40px;padding:3px 12px 0 3px;border-bottom:1px solid #E5E5E5;flex:none;background:#fff}
+  .qmhead{display:flex;align-items:stretch;gap:0;box-sizing:border-box;height:40px;padding:3px 12px 0 3px;border-bottom:1px solid #E5E5E5;flex:none;background:transparent}
   .qmhead button[data-qm]{height:auto;margin-bottom:-1px;padding:4px 12px;border:none;background:none;border-bottom:2px solid transparent;font-family:inherit;font-size:14px;line-height:20px;font-weight:500;letter-spacing:-.01em;color:#737373;cursor:pointer}
   .qmhead button[data-qm].on{color:#0A0A0A;border-bottom-color:#171717}
   /* 오른쪽 — 다운로드 · 표 도구(28px) */
@@ -704,8 +704,8 @@
   .qmhead .cx-tbtn{width:28px;height:28px}
   .qmhead .sp{margin-left:auto}
   .qmbody{flex:1;min-height:0;display:grid;grid-template-columns:3fr 1fr;gap:8px;padding:8px;background:#F5F5F5}
-  .qmleft{flex:1;min-width:0;display:flex;flex-direction:column;background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:hidden}
-  .qmscroll{flex:1;min-height:0;overflow:auto}
+  .qmleft{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}   /* 탭 줄(배경 없음)과 표 카드를 나눈다 */
+  .qmscroll{flex:1;min-height:0;overflow:auto;background:#fff;border:1px solid #E5E5E5;border-radius:8px}
   /* 오른쪽은 답변 패널과 대기열이 함께 쓰는 자리다 — 대기열을 펼치면 그 위를 덮는다 */
   .qmrside{position:relative;min-width:0;display:flex;flex-direction:column;gap:8px}
   .qmright{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;padding:16px;background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:auto}
@@ -2396,7 +2396,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   }
   /* 발언 상태 — 대기열과 발언 중은 실시간 운영이 보는 그 순서를 그대로 읽는다 */
   function spDot(id, x){
-    if(x && x.st==='반려') return '<span class="qmdot" style="opacity:.5"><i></i>반려</span>';
+    if(x && x.st==='반려') return '<span class="qmdot"><i></i>반려</span>';
     if(done.indexOf(id)>=0) return '<span class="qmdot done"><i></i>완료</span>';
     var i=queue.indexOf(id);
     if(i===0) return '<span class="qmdot red"><i></i>발언 중</span>';
@@ -2463,9 +2463,9 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
       }
       if(mode==='s'){
         var inQ=queue.indexOf(id)>=0;
-        var act = x.st==='반려' ? '<span class="qmdot" style="opacity:.5">−</span>'
+        var act = x.st==='반려' ? '<span class="qmdot">−</span>'
           : '<button class="qmqbtn'+(inQ?' rm':'')+'" data-q="'+id+'" type="button">'+(inQ?'제거':'추가')+'</button>';
-        return '<tr data-id="'+id+'"'+(x.st==='반려'?' class="off"':'')+'>'+base
+        return '<tr data-id="'+id+'"'+'>'+base
           +'<td class="txt">'+esc(x.r)+'</td><td class="c">'+spDot(id,x)+'</td>'
           +'<td class="c">'+act+'</td></tr>';
       }
