@@ -140,11 +140,29 @@
 
   /* ── 팝오버 한 장을 돌려 쓴다 ─────────────────────────────────────── */
   var pop = null, popOwner = null;
+  /* conexus.css 를 쓰지 않는 화면(의결권제한 설정 · 주주총회 설정 등)에서도 목록이 제 모양으로 보이게 —
+     이미 스타일이 있으면(position:fixed) 아무것도 하지 않는다. conexus.css 의 .cxmenu 규칙과 같은 값. */
+  function menuCss() {
+    if (getComputedStyle(pop).position === 'fixed') return;
+    var st = document.createElement('style');
+    st.textContent = '.cxmenu{position:fixed;z-index:3000;box-sizing:border-box;width:144px;min-width:144px;max-height:70vh;overflow:auto;display:none;flex-direction:column;gap:6px;padding:4px;background:#fff;border:1px solid rgba(10,10,10,.1);border-radius:10px;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1)}'
+      + '.cxmenu.on{display:flex}'
+      + '.cxmenu .it{display:flex;align-items:center;gap:6px;width:100%;box-sizing:border-box;padding:4px 32px 4px 6px;border:none;border-radius:8px;background:none;position:relative;font-family:inherit;font-size:14px;line-height:20px;letter-spacing:-.01em;color:#0A0A0A;text-align:left;cursor:pointer}'
+      + '.cxmenu .it:hover{background:#F5F5F5}'
+      + '.cxmenu .it .tx{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+      + '.cxmenu .it .ck{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:16px;height:16px;display:none}'
+      + '.cxmenu .it.on .ck{display:block}'
+      + '.cxmenu .it .ck svg{width:16px;height:16px;fill:none;stroke:#0A0A0A;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}'
+      + '.cxmenu .lb{display:flex;align-items:center;padding:4px 6px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#737373}'
+      + '.cxmenu hr{width:calc(100% + 8px);margin:4px -4px;border:none;border-top:1px solid #E5E5E5}';
+    document.head.appendChild(st);
+  }
   function menu() {
     if (!pop) {
       pop = document.createElement('div');
       pop.className = 'cxmenu';
       document.body.appendChild(pop);
+      menuCss();
       pop.addEventListener('click', function (e) { e.stopPropagation(); });
       document.addEventListener('click', hide);
       window.addEventListener('resize', hide);
