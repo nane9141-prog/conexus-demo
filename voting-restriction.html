@@ -401,7 +401,8 @@
   .at-pg .pp.cur{background:#171717;color:#fff;border-color:#171717}
   .at-pg .pp.dis{opacity:.4;cursor:default;pointer-events:none}
   .at-pg .atpg-tot{margin-left:6px;color:#737373;font-variant-numeric:tabular-nums}
-  .at-pg select{height:30px;font-size:13px}
+  /* 페이지당 상자 — 참석자 관리(attendees.html)와 같은 모양 */
+  .at-pg select{height:30px;box-sizing:border-box;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;color:#0a0a0a;cursor:pointer;padding:0 28px 0 10px;-webkit-appearance:none;appearance:none;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2'><path d='m6 9 6 6 6-6'/></svg>") no-repeat right 8px center/14px}
   .tfoot .cnt{font-size:14px;color:var(--muted-fg)}
   .pager{display:flex;align-items:center;gap:2px}
   .pager .pb{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:var(--r-md);color:var(--muted-fg)}
@@ -1667,11 +1668,13 @@ document.querySelectorAll('.tfoot .at-pg').forEach(function(box){
   var foot=box.closest('.tfoot'), tbl=foot.closest('.tbl-wrap').querySelector('table'), body=tbl.tBodies[0];
   var cnt=foot.querySelector('.cnt'), isAg=tbl.classList.contains('agtbl');
   var size=20, page=1, sel=box.querySelector('select'), el=box.querySelector('.pgs');
-  /* 주주 줄만(딸린 줄 빼고) 모으고, 각 줄에 딸린 줄을 묶어 둔다 */
+  /* 주주(또는 의안) 줄만 모으고, 딸린 줄(하위 의안·통합기관 소속)은 윗줄에 묶는다.
+     칩·검색으로 걸러진 줄(filtered-out)은 세지도, 자리도 차지하지 않는다 */
   function groups(){
     var g=[];
     Array.prototype.forEach.call(body.rows,function(r){
-      if(r.classList.contains('sub') && g.length) g[g.length-1].push(r); else g.push([r]);
+      if((r.classList.contains('sub')||r.classList.contains('child')) && g.length) g[g.length-1].push(r);
+      else if(!r.classList.contains('filtered-out')) g.push([r]);
     });
     return g;
   }
@@ -1695,7 +1698,8 @@ document.querySelectorAll('.tfoot .at-pg').forEach(function(box){
     page=v==='first'?1:v==='prev'?page-1:v==='next'?page+1:v==='last'?n:+v; page=Math.min(n,Math.max(1,page)); draw();
   });
   sel.addEventListener('change',function(){ size=+sel.value; page=1; draw(); });
-  new MutationObserver(function(){ draw(); }).observe(body,{childList:true});   /* 의안 표는 다시 그려지므로 그때마다 맞춘다 */
+  /* 의안 표는 다시 그려지고, 주주 표는 칩·검색으로 줄이 걸러지므로 그때마다 맞춘다(우리는 style 만 건드려서 되돌이 없음) */
+  new MutationObserver(function(){ draw(); }).observe(body,{childList:true,subtree:true,attributeFilter:['class']});
   draw();
 });
 </script>
