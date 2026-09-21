@@ -291,7 +291,7 @@
 
   /* stat toggle */
   .seg{display:inline-flex;padding:3px;background:var(--muted);border-radius:var(--r-lg);height:32px;width:max-content}
-  .seg .s{display:flex;align-items:center;padding:0 12px;border-radius:var(--r-md);font-size:14px;font-weight:500;color:var(--muted-fg)}
+  .seg .s{display:flex;align-items:center;padding:0 12px;border-radius:var(--r-md);font-size:14px;font-weight:500;color:var(--muted-fg);cursor:pointer}
   .seg .s.active{background:var(--surface);color:var(--fg);box-shadow:var(--shadow-sm)}
 
   /* stat cards */
@@ -1163,7 +1163,11 @@ table.agtbl td.b{font-weight:600}
   <div class="xdlg">
     <div class="xdlg-hd"><span>3% 제한 해제</span><button class="iconbtn sm" id="xdlgX" title="닫기"><i class="ph ph-x" style="font-size:16px"></i></button></div>
     <label class="field-label">해제 사유 선택<span class="req">*</span></label>
-    <div class="fsel full"><select id="xdlgSel" required><option value="" disabled selected hidden>해제 사유를 선택해 주세요</option><option>ADR</option><option>우리사주조합</option></select><i class="ph ph-caret-down"></i></div>
+    <button class="field-select" id="xdlgSel" style="height:40px"><span id="xdlgLbl" style="color:var(--muted-fg)">해제 사유를 선택해 주세요</span><i class="ph ph-caret-down" style="font-size:14px;color:#737373"></i></button>
+    <div class="rtype-list hidden" id="xdlgList">
+      <button class="ropt-row" data-x="ADR"><span class="rlbl2">ADR</span><i class="ph ph-check rchk2"></i></button>
+      <button class="ropt-row" data-x="우리사주조합"><span class="rlbl2">우리사주조합</span><i class="ph ph-check rchk2"></i></button>
+    </div>
     <div class="xdlg-ft"><button class="btn-o" id="xdlgCancel">취소</button><button class="btn-d" id="xdlgOk" disabled>3% 제한 해제하기</button></div>
   </div>
 </div>
@@ -1444,18 +1448,27 @@ table.agtbl td.b{font-weight:600}
 
   // ===== 3% 제한 해제 (해제 사유: 우리사주조합 / ADR) · 원복 =====
   const xdlgOv=document.getElementById('xdlgOv'),xSel=document.getElementById('xdlgSel'),xOk=document.getElementById('xdlgOk');
-  let xTarget=null;
-  function closeX(){xdlgOv.classList.add('hidden');}
-  xSel.addEventListener('change',()=>{xOk.disabled=!xSel.value;});
+  const xList=document.getElementById('xdlgList'),xLbl=document.getElementById('xdlgLbl');
+  let xTarget=null,xVal='';
+  function closeX(){xdlgOv.classList.add('hidden');xList.classList.add('hidden');}
+  function setX(v){
+    xVal=v;xOk.disabled=!v;
+    xLbl.textContent=v||'해제 사유를 선택해 주세요';xLbl.style.color=v?'#0a0a0a':'var(--muted-fg)';
+    xList.querySelectorAll('.ropt-row').forEach(o=>o.classList.toggle('sel',o.dataset.x===v));
+  }
+  xSel.addEventListener('click',e=>{e.stopPropagation();xList.classList.toggle('hidden');});
+  xList.addEventListener('click',e=>{const o=e.target.closest('[data-x]');if(!o)return;e.stopPropagation();setX(o.dataset.x);xList.classList.add('hidden');});
+  xdlgOv.addEventListener('click',()=>xList.classList.add('hidden'));
+  xdlgOv.querySelector('.xdlg').addEventListener('click',e=>e.stopPropagation());
   document.getElementById('xdlgX').addEventListener('click',closeX);
   document.getElementById('xdlgCancel').addEventListener('click',closeX);
-  xOk.addEventListener('click',()=>{xTarget.dataset.ex=xSel.value;setBtn(xTarget,xSel.value,true);closeX();});
+  xOk.addEventListener('click',()=>{xTarget.dataset.ex=xVal;setBtn(xTarget,xVal,true);closeX();});
   document.querySelectorAll('.tbtn[data-exempt]').forEach(btn=>btn.addEventListener('click',e=>{
     e.stopPropagation();xTarget=btn;
     if(btn.dataset.ex){
       confirmDlg({title:'3% 제한 해제를 취소하시겠어요?',name:rowName(btn),desc:'3%룰이 다시 적용됩니다.',meta:'2026-02-10 · 김담당님이 제한 해제함',ok:'다시 제한',
         onOk:()=>{btn.dataset.ex='';setBtn(btn,'해제하기',false);}});
-    }else{xSel.value='';xOk.disabled=true;xdlgOv.classList.remove('hidden');}
+    }else{setX('');xList.classList.add('hidden');xdlgOv.classList.remove('hidden');}
   }));
 
   // ===== 이전 설정 불러오기 =====
@@ -1478,16 +1491,20 @@ document.querySelectorAll('.lnb-tabs .t').forEach(function(t){t.addEventListener
   (function(){
     // 의안 목록 (lv: 들여쓰기 단계, lim: 제한의결권, n: 설정된 제한 주주 수, btn: 제한 설정 필요 여부)
     const AG=[
+      /* 의안 번호·이름은 주주총회 설정 › 의안 설정(meeting-settings.html)의 의안 목록과 같은 순서·번호를 쓴다 */
       {no:'1',name:'제13기 재무제표 및 연결재무제표 승인의 건',res:'보통결의',lv:0,lim:10503,btn:1,preset:1},
       {no:'2',name:'정관 일부 변경의 건',res:'특별결의',lv:0,lim:350040,btn:0},
+      {no:'2-1',name:'정관 일부 변경의 건 (집중투표제 도입을 위한 배제 조항 삭제)',res:'특별결의',lv:1,lim:350040,btn:1},
+      {no:'2-2',name:'정관 일부 변경의 건 (배당 기준일 이사회 결정)',res:'특별결의',lv:1,lim:350040,btn:0},
       {no:'3',name:'감사위원회 위원 선임의 건',res:'보통결의',lv:0,lim:350040,btn:1,preset:1},
-      {no:'3-2',name:'사외이사인 감사위원회 위원 선임의 건',res:'보통결의',tag:'집중투표',lv:1,lim:350040,btn:0},
-      {no:'3-2-1',name:'사외이사인 감사위원회 위원 김수지 선임의 건',res:'보통결의',tag:'집중투표',lv:2,lim:273090,btn:1,preset:2},
-      {no:'3-3',name:'사외이사가 아닌 감사위원회 위원 이영호 선임의 건',res:'보통결의',tag:'양립불가',lv:1,lim:273090,btn:1},
-      {no:'4',name:'감사 선임의 건',res:'보통결의',lv:0,lim:350040,btn:0},
-      {no:'5',name:'이사 선임의 건',res:'보통결의',lv:0,lim:450040,btn:1},
-      {no:'5-3',name:'사외이사 후보 박민수 선임의 건',res:'보통결의',tag:'양립불가',lv:1,lim:273090,btn:1},
-      {no:'6',name:'이사 보수한도 승인의 건',res:'보통결의',lv:0,lim:10503,btn:1}
+      {no:'3-1',name:'사외이사인 감사위원회 위원 선임의 건',res:'보통결의',tag:'집중투표',lv:1,lim:350040,btn:0},
+      {no:'3-1-1',name:'사외이사인 감사위원회 위원 김수지 선임의 건',res:'보통결의',tag:'집중투표',lv:2,lim:273090,btn:1,preset:2},
+      {no:'3-2',name:'사외이사가 아닌 감사위원회 위원 이영호 선임의 건',res:'보통결의',tag:'양립불가',lv:1,lim:273090,btn:1},
+      {no:'4',name:'이사 선임의 건',res:'특별결의',lv:0,lim:450040,btn:1},
+      {no:'4-1',name:'사외이사 후보 박민수 선임의 건',res:'보통결의',tag:'양립불가',lv:1,lim:273090,btn:1},
+      {no:'4-2',name:'사외이사 후보 이서준 선임의 건',res:'보통결의',lv:1,lim:273090,btn:0},
+      {no:'4-3',name:'사외이사 후보 정하늘 선임의 건',res:'보통결의',lv:1,lim:273090,btn:1},
+      {no:'5',name:'이사 보수한도 승인의 건',res:'보통결의',lv:0,lim:10503,btn:1}
     ];
     const VS=231831, CAP=6954;
     // 연동(시스템 자동 산출) 제한 주주 — [이름, 사유, 보유, 제한]
@@ -1644,11 +1661,27 @@ document.querySelectorAll('.lnb-tabs .t').forEach(function(t){t.addEventListener
 </script>
 <script src="conexus.js?v=s20"></script>
 <script>
-/* 표 아래 페이지네이션 — 총 건수와 페이지당 개수로 번호를 그린다(데모: 번호·현재 표시만 바뀐다) */
+/* 표 아래 페이지네이션 — 표에 실제로 있는 줄을 페이지당 개수만큼 잘라서 보여 준다.
+   딸린 줄(tr.sub)은 윗줄을 따라간다. 왼쪽 건수도 실제 줄 수에 맞춘다. */
 document.querySelectorAll('.tfoot .at-pg').forEach(function(box){
-  var total=+box.dataset.total||0, size=20, page=1, sel=box.querySelector('select'), el=box.querySelector('.pgs');
+  var foot=box.closest('.tfoot'), tbl=foot.closest('.tbl-wrap').querySelector('table'), body=tbl.tBodies[0];
+  var cnt=foot.querySelector('.cnt'), isAg=tbl.classList.contains('agtbl');
+  var size=20, page=1, sel=box.querySelector('select'), el=box.querySelector('.pgs');
+  /* 주주 줄만(딸린 줄 빼고) 모으고, 각 줄에 딸린 줄을 묶어 둔다 */
+  function groups(){
+    var g=[];
+    Array.prototype.forEach.call(body.rows,function(r){
+      if(r.classList.contains('sub') && g.length) g[g.length-1].push(r); else g.push([r]);
+    });
+    return g;
+  }
+  function num(r){ var c=r.querySelector('td.r.tnum,td.n'); return c?+c.textContent.replace(/[^\d]/g,'')||0:0; }
   function draw(){
-    var pages=Math.max(1,Math.ceil(total/size)); if(page>pages) page=pages;
+    var g=groups(), total=g.length, pages=Math.max(1,Math.ceil(total/size)); if(page>pages) page=pages;
+    var from=(page-1)*size, to=from+size;
+    g.forEach(function(rows,i){ var on=i>=from&&i<to; rows.forEach(function(r){ r.style.display=on?'':'none'; }); });
+    if(cnt) cnt.textContent = isAg ? '총 '+total+'건'
+      : '총 '+total+'명 · '+g.reduce(function(s,rows){return s+num(rows[0]);},0).toLocaleString()+'주';
     var dP=page<=1?' dis':'', dN=page>=pages?' dis':'';
     var h='<span class="pp'+dP+'" data-pg="first" aria-label="처음"><i class="ph ph-caret-double-left"></i></span><span class="pp'+dP+'" data-pg="prev" aria-label="이전"><i class="ph ph-caret-left"></i></span>';
     var a=Math.max(1,page-1), b=Math.min(pages,a+2); a=Math.max(1,b-2);
@@ -1662,6 +1695,7 @@ document.querySelectorAll('.tfoot .at-pg').forEach(function(box){
     page=v==='first'?1:v==='prev'?page-1:v==='next'?page+1:v==='last'?n:+v; page=Math.min(n,Math.max(1,page)); draw();
   });
   sel.addEventListener('change',function(){ size=+sel.value; page=1; draw(); });
+  new MutationObserver(function(){ draw(); }).observe(body,{childList:true});   /* 의안 표는 다시 그려지므로 그때마다 맞춘다 */
   draw();
 });
 </script>
