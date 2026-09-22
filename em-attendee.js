@@ -44,7 +44,8 @@
   var singles = CX.roster.filter(function (r, i) { return !inGroup[r.i] && (i % 6 === 0 || r.fr === '외국인' && i % 3 === 0); }).slice(0, 150).map(person);
   /* 동명이인 박성용 4명 — 사전 참석 신청 내역 확인용으로 항상 표에 올린다.
      주주번호가 다른 별개 주주이고, 첫 번째(사전 미행사)만 미신청·미참석이다. */
-  var PSY_K = [3, 0, 2, 4];   /* person(k) 규칙: k%7===3 → 미신청, k%5===1 → 미참석 */
+  var PSY_K = [1, 3, 3, 3];   /* person(k) 규칙: k%7===3 → 미신청, k%5===1 → 미참석
+                                 1,200주(첫 번째)만 참석 신청, 나머지 셋은 미신청 */
   var psyHave = {}; singles.forEach(function (p) { psyHave[p.k] = 1; });
   var psy = CX.roster.filter(function (r) { return r.nm === '박성용' && !inGroup[r.i]; })
     .map(function (r, j) { return person(r, PSY_K[j % PSY_K.length]); })
