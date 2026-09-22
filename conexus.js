@@ -1139,3 +1139,64 @@ window.cxClock = cxChannel('cx.clock');
     setTimeout(function () { d.row.removeEventListener('click', blk, true); }, 0);
   });
 })();
+
+/* ── 우측 슬라이드 패널 — 왼쪽 막대를 마우스로 끌어 폭을 조절한다 ──────── */
+(function () {
+  var SEL = '.sheet,.assheet';
+  var st = document.createElement('style');
+  st.textContent =
+    '.cx-rsz{position:absolute;left:0;top:0;bottom:0;width:14px;z-index:6;cursor:ew-resize;touch-action:none;' +
+      'display:flex;align-items:center;justify-content:center}' +
+    '.cx-rsz::before{content:"";width:4px;height:120px;border-radius:9999px;background:#E5E5E5;transition:background .12s}' +
+    '.cx-rsz:hover::before,.cx-rsz.on::before{background:#A3A3A3}' +
+    '.assheet>.as-grip{display:none}' +
+    'body.cx-rszing{cursor:ew-resize;user-select:none}';
+  (document.head || document.documentElement).appendChild(st);
+
+  function attach(p) {
+    if (p.__cxRsz) return; p.__cxRsz = 1;
+    if (getComputedStyle(p).position === 'static') p.style.position = 'relative';
+    var h = document.createElement('div');
+    h.className = 'cx-rsz'; h.setAttribute('aria-hidden', 'true'); h.title = '드래그하여 폭 조절';
+    p.insertBefore(h, p.firstChild);
+    h.addEventListener('pointerdown', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      var x0 = e.clientX, w0 = p.getBoundingClientRect().width;
+      var min = 360, max = Math.min(window.innerWidth - 80, 1200);
+      h.classList.add('on'); document.body.classList.add('cx-rszing');
+      try { h.setPointerCapture(e.pointerId); } catch (err) {}
+      function mv(ev) {
+        var w = Math.max(min, Math.min(max, w0 - (ev.clientX - x0)));
+        p.style.width = w + 'px'; p.style.maxWidth = 'none';
+      }
+      function up() {
+        h.classList.remove('on'); document.body.classList.remove('cx-rszing');
+        h.removeEventListener('pointermove', mv);
+        h.removeEventListener('pointerup', up); h.removeEventListener('pointercancel', up);
+      }
+      h.addEventListener('pointermove', mv);
+      h.addEventListener('pointerup', up); h.addEventListener('pointercancel', up);
+    });
+  }
+  function scan() { document.querySelectorAll(SEL).forEach(attach); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scan); else scan();
+  setTimeout(scan, 600); setTimeout(scan, 2000);   /* 나중에 그려지는 패널도 잡는다 */
+})();
+
+/* ── 설정 화면 — 스크롤해도 상단 타이틀·버튼 줄은 붙어 있게 ─────────────── */
+(function () {
+  var st = document.createElement('style');
+  st.textContent =
+    '.st-head{position:sticky;top:0;z-index:20;background:var(--bg,#fafafa);padding:12px 0 12px;margin-top:-12px}' +
+    '.lc-hd{position:sticky;top:0;z-index:21;background:var(--bg,#fafafa);padding-top:12px;margin-top:-12px}' +
+    '.lc-bar{position:sticky;top:var(--lcbar-top,72px);z-index:20;background:var(--bg,#fafafa);padding:4px 0}';
+  (document.head || document.documentElement).appendChild(st);
+  function sync() {
+    document.querySelectorAll('.lc').forEach(function (lc) {
+      var hd = lc.querySelector('.lc-hd'); if (!hd) return;
+      lc.style.setProperty('--lcbar-top', (hd.offsetHeight + 12) + 'px');
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', sync); else sync();
+  setTimeout(sync, 600); window.addEventListener('resize', sync);
+})();
