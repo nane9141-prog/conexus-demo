@@ -967,6 +967,13 @@
   .disc-info{display:flex;align-items:flex-start;gap:8px;font-size:14px;font-weight:500;line-height:20px;color:#171717}
   .disc-info i{font-size:16px;margin-top:2px;flex:none}
   .palert{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#FFF1F2;border:1px solid #FECDD3;border-radius:10px;font-size:14px;font-weight:500;color:#E9081B}
+  .palert.info{align-items:flex-start;background:#FAFAFA;border-color:#E5E5E5;color:#525252;font-weight:400;line-height:20px}
+  .palert.info svg{stroke:#737373;margin-top:2px}
+  .dlg-hint{font-size:12px;line-height:16px;letter-spacing:-.01em;color:#737373}
+  .ckrow.sm{margin-right:0;font-size:13px;color:#525252}
+  .ckrow.sm .ckbox{width:14px;height:14px}
+  .dly-tabs{width:100%}
+  .dly-tabs button{flex:1;padding:0 6px}
   .palert svg{width:16px;height:16px;flex:none;fill:none;stroke:#E9081B;stroke-width:1.4;stroke-linecap:round}
   .prad{display:flex;flex-direction:column;gap:8px}
   .prad label{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border:1px solid #E5E5E5;border-radius:10px;cursor:pointer;font-size:14px;color:#0A0A0A}
@@ -1591,31 +1598,70 @@
   </div>
 </div>
 
-<!-- 총회 지연 — 정회 · 휴회 · 연기 (Figma 4214:225447) -->
+<!-- 총회 지연 — 연기 · 속행 · 정회 · 휴회 (연기·속행은 보통결의 표결을 새로 만든다) -->
 <div class="ovl" id="dlyOvl">
-  <div class="dlg">
+  <div class="dlg" style="width:480px">
     <button class="dlg-x" id="dlyClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-    <div class="dlg-h"><div class="tt">총회 지연</div><div class="ds">총회 진행을 정회 · 휴회 · 연기할 수 있습니다. 처리 방식을 선택하세요.</div></div>
+    <div class="dlg-h"><div class="tt">총회 지연</div><div class="ds">총회 진행을 연기 · 속행 · 정회 · 휴회할 수 있습니다. 처리 방식을 선택하세요.</div></div>
     <div class="dlg-c">
       <div class="dlg-tabs dly-tabs" id="dlyTabs">
-        <button type="button" class="on" data-v="recess">정회</button>
+        <button type="button" class="on" data-v="postpone">연기</button>
+        <button type="button" data-v="continue">속행</button>
+        <button type="button" data-v="recess">정회</button>
         <button type="button" data-v="adjourn">휴회</button>
-        <button type="button" data-v="postpone">연기</button>
       </div>
-      <div class="dlg-field" id="dlyTimeF">
-        <div class="lb">재개 예정 시간</div>
-        <div class="dlg-time"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg><input id="dlyTime" type="text" value="10:30:00" autocomplete="off"></div>
+      <div class="palert info" id="dlyInfo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg><span></span></div>
+      <div class="dlg-field" id="dlyWhenF">
+        <div class="lb" id="dlyWhenLb">재개 일자 · 시간</div>
+        <div class="dlg-when">
+          <div class="dlg-time"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17M8 3.5v3M16 3.5v3"/></svg><input id="dlyDate" type="date"></div>
+          <div class="dlg-time"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg><input id="dlyTime" type="text" value="10:30:00" autocomplete="off"></div>
+        </div>
+        <label class="ckrow sm" data-ck id="dlyTbd"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>재개 일자를 지정하지 않습니다.</label>
+      </div>
+      <div id="dlyVoteF" style="display:flex;flex-direction:column;gap:16px">
+        <div class="dlg-field">
+          <div class="lb">표결 의안명</div>
+          <input class="dlg-inp" id="dlyTitle" type="text" placeholder="의안명을 입력하세요.">
+        </div>
+        <div class="dlg-field">
+          <div class="lb">내용</div>
+          <div class="am-tbox"><textarea id="dlyDesc2" maxlength="280" placeholder="의안 내용을 입력하세요."></textarea><div class="cnt">0/280</div></div>
+        </div>
       </div>
       <div class="dlg-field">
         <div class="lb">사유 입력</div>
-        <textarea class="dlg-ta" id="dlyBody" style="min-height:137px;resize:none" placeholder="사유를 입력 하세요."></textarea>
+        <div class="am-tbox"><textarea id="dlyBody" maxlength="280" placeholder="사유를 입력 하세요."></textarea><div class="cnt">0/280</div></div>
+        <div class="dlg-hint">해당 사유입력 건은 실시간 공지와 함께 전자출석 주주에게 문자로 발송됩니다.</div>
       </div>
-      <div class="palert" id="dlyWarn" style="display:none"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>총회를 연기하면 되돌릴 수 없습니다. 진행 중인 안건 표결이 종료 됩니다.</div>
+      <div class="palert" id="dlyWarn" style="display:none"><span></span></div>
     </div>
     <div class="dlg-f dly-f">
       <label class="ckrow" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span id="dlyCkT">위 내용으로, 총회를 정회 합니다.</span></label>
       <button class="dlg-btn" type="button" data-close="dlyOvl">취소</button>
       <button class="dlg-btn dark" type="button" id="dlyOk">정회 시작</button>
+    </div>
+  </div>
+</div>
+
+<!-- 총회 지연 2단계 — 동의 표결 처리 내용 확인 후 표결 진행 -->
+<div class="ovl" id="dlyvOvl">
+  <div class="dlg" style="width:480px">
+    <button class="dlg-x" id="dlyvClose" type="button"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="dlg-h"><div class="tt">동의 표결 처리</div><div class="ds">총회 지연 안건을 새 표결로 상정합니다. 처리 전 영향 범위를 확인하세요.</div></div>
+    <div class="dlg-c">
+      <div style="display:flex;flex-direction:column;gap:8px"><div class="amvtop" id="dlyvWho"></div></div>
+      <div class="palert"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg><span id="dlyvAlert"></span></div>
+      <div class="amcards">
+        <div class="amcard"><div class="k">표결 대상 주주</div><div class="v" id="dlyvHolders">0명</div></div>
+        <div class="amcard"><div class="k">행사 가능 의결권</div><div class="v" id="dlyvShares">0 주</div></div>
+      </div>
+      <div class="amnote" id="dlyvNote"></div>
+    </div>
+    <div class="dlg-f">
+      <label class="ckrow" id="dlyvAgree"><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>위 안내를 확인했으며 표결을 진행합니다.</label>
+      <button class="dlg-btn" id="dlyvCancel" type="button">취소</button>
+      <button class="dlg-btn dark" id="dlyvOk" type="button">표결 진행</button>
     </div>
   </div>
 </div>
@@ -4434,31 +4480,159 @@ if(window.OC&&OC.fire) OC.fire();
   tabs('bcnTabs');
   tabs('nvTabs', function (v) { $('nvWarn').style.display = v === 'no' ? '' : 'none'; });
 
-  /* 정회 · 휴회 · 연기 — 정회·휴회는 재개 시간, 연기는 되돌릴 수 없다는 경고 */
+  /* 총회 지연 — 연기 · 속행 · 정회 · 휴회.
+     연기·속행은 의장 단독으로 못 정하고 보통결의 표결을 새로 만들어 물어야 한다(수정안 표결과 같은 절차).
+     정회·휴회는 재개 시간을 정해 멈추기만 하므로 표결 없이 바로 처리한다. */
   var DLY = {
-    recess:   { nm: '정회', ck: '위 내용으로, 총회를 정회 합니다.', ok: '정회 시작', toast: '주주총회 정회를 시작합니다.' },
-    adjourn:  { nm: '휴회', ck: '위 내용으로, 총회를 휴회 합니다.', ok: '휴회 시작', toast: '주주총회 휴회를 시작합니다.' },
-    postpone: { nm: '연기', ck: '위 내용을 확인했으며, 총회를 연기 합니다.', ok: '연기 확정', toast: '주주총회 연기를 확정했습니다.', warn: 1 }
+    postpone: { nm: '연기', vote: 1, tbd: 1, warn: 1,
+      info: '1호 의안 표결 전에만 가능합니다. 연기하면 새로운 주주총회로 다시 열리며, 이번 총회의 사전 의결권행사는 모두 무효가 됩니다.',
+      warnT: '총회를 연기하면 되돌릴 수 없습니다. 진행 중인 안건 표결이 종료 됩니다.',
+      title: '주주총회 연기의 건', body: '금일 주주총회를 연기하고, 추후 새로 소집하는 주주총회에서 의안을 다시 상정하는 건.',
+      alert: '연기가 가결되면 이번 총회의 사전 의결권행사는 모두 무효 처리됩니다.',
+      note: ['사전 의결권 무효: 새로운 주주총회로 다시 열리므로 사전 의결권행사 내역은 효력을 잃습니다.',
+             '상정 제한: 1호 의안 표결이 시작된 뒤에는 연기를 상정할 수 없습니다.'],
+      ck: '위 내용을 확인했으며, 연기 표결을 상정합니다.', ok: '다음', toast: '연기 표결을 상정했습니다.' },
+    'continue': { nm: '속행', vote: 1, tbd: 1,
+      info: '지금까지 표결을 마감한 의안은 그대로 유효하고, 이후 의안 진행만 종료합니다. 같은 주주총회로 다시 열립니다.',
+      title: '주주총회 속행의 건', body: '금일 의사를 여기서 마치고, 남은 의안은 속행 기일에 이어서 진행하는 건.',
+      alert: '마감한 의안의 표결 결과는 유지되고, 남은 의안은 속행 기일로 넘어갑니다.',
+      note: ['표결 결과 유지: 이미 표결을 마감한 의안의 결과는 그대로 유효합니다.',
+             '사전 의결권 유효: 같은 주주총회이므로 사전 의결권행사 내역은 그대로 유효합니다.'],
+      ck: '위 내용을 확인했으며, 속행 표결을 상정합니다.', ok: '다음', toast: '속행 표결을 상정했습니다.' },
+    recess:   { nm: '정회', when: 1,
+      info: '재개 예정 시간을 정하고 총회를 잠시 멈춥니다. 같은 주주총회로 이어집니다.',
+      ck: '위 내용으로, 총회를 정회 합니다.', ok: '정회 시작', toast: '주주총회 정회를 시작합니다.' },
+    adjourn:  { nm: '휴회', when: 1,
+      info: '재개 예정 시간을 정하고 총회를 잠시 멈춥니다.',
+      ck: '위 내용으로, 총회를 휴회 합니다.', ok: '휴회 시작', toast: '주주총회 휴회를 시작합니다.' }
   };
-  var dlyV = 'recess';
+  var dlyV = 'postpone';
+  /* 연기는 제1호 표결이 시작되기 전에만 상정할 수 있다 */
+  function canPostpone() {
+    var oc = window.OC; if (!oc) return true;
+    if (oc.res && oc.res['제1호']) return false;
+    return !(oc.agenda === '제1호' && oc.stage >= 2);
+  }
+  function dlyTbdOn() { var e = $('dlyTbd'); return !!(e && e.classList.contains('on')); }
   function setDly(v) {
     var m = DLY[v]; if (!m) return; dlyV = v;
-    $('dlyTimeF').style.display = m.warn ? 'none' : '';
+    $('dlyInfo').querySelector('span').textContent = m.info || '';
+    $('dlyWhenF').style.display = '';
+    $('dlyWhenLb').textContent = m.vote ? '재개 일자 · 시간 (선택)' : '재개 예정 일자 · 시간';
+    $('dlyTbd').style.display = m.tbd ? '' : 'none';
+    if (!m.tbd) $('dlyTbd').classList.remove('on');
+    $('dlyVoteF').style.display = m.vote ? '' : 'none';
+    if (m.vote) { $('dlyTitle').value = m.title || ''; $('dlyDesc2').value = m.body || ''; }
     $('dlyWarn').style.display = m.warn ? '' : 'none';
+    if (m.warn) $('dlyWarn').querySelector('span').textContent = m.warnT || '';
+    /* 표결로 가는 건(연기·속행)은 다음 화면에서 한 번 더 확인하므로 여기서는 체크가 필요 없다 */
+    var ck = document.querySelector('#dlyOvl .dlg-f .ckrow');
+    ck.style.display = m.vote ? 'none' : '';
     $('dlyCkT').textContent = m.ck;
     $('dlyOk').textContent = m.ok;
     $('dlyOk').className = 'dlg-btn ' + (m.warn ? 'red' : 'dark');
     $('dlyTabs').querySelectorAll('button').forEach(function (b) {
       b.classList.toggle('on', b.getAttribute('data-v') === v);
     });
+    dlyWhenSync();
+    if (v === 'postpone' && !canPostpone()) {
+      $('dlyInfo').querySelector('span').textContent = '제1호 의안 표결이 이미 시작되어 연기를 상정할 수 없습니다.';
+      dlyBlocked = true;
+    } else dlyBlocked = false;
+    ck.classList.remove('on');
+    dlyOkSync();
   }
+  var dlyBlocked = false;
+  /* 표결 건은 다음 화면에서 확인 · 정회/휴회는 하단 동의 체크를 켜야 열린다 */
+  function dlyOkSync() {
+    var m = DLY[dlyV], ck = document.querySelector('#dlyOvl .dlg-f .ckrow');
+    $('dlyOk').disabled = dlyBlocked || (!m.vote && !ck.classList.contains('on'));
+  }
+  document.querySelector('#dlyOvl .dlg-f .ckrow').addEventListener('click', function () { setTimeout(dlyOkSync, 0); });
+  function dlyWhenSync() {
+    var off = dlyTbdOn();
+    $('dlyDate').disabled = off; $('dlyTime').disabled = off;
+    $('dlyDate').parentNode.style.opacity = off ? '.5' : '';
+    $('dlyTime').parentNode.style.opacity = off ? '.5' : '';
+  }
+  $('dlyTbd').addEventListener('click', function () { setTimeout(dlyWhenSync, 0); });
+  /* 글자 수 0/280 */
+  $('dlyOvl').addEventListener('input', function (e) {
+    var box = e.target.closest && e.target.closest('.am-tbox');
+    if (box) box.querySelector('.cnt').textContent = box.querySelector('textarea').value.length + '/280';
+  });
   tabs('dlyTabs', setDly);
-  setDly('recess');
+  (function () {
+    var d = new Date(); d.setDate(d.getDate() + 7);
+    $('dlyDate').value = d.toISOString().slice(0, 10);
+  })();
+  setDly('postpone');
+  /* 팝업을 다시 열 때마다 연기 가능 여부를 다시 본다 */
+  new MutationObserver(function () { if ($('dlyOvl').classList.contains('on')) setDly(dlyV); })
+    .observe($('dlyOvl'), { attributes: true, attributeFilter: ['class'] });
+
+  var dlyDraft = null;
   $('dlyOk').addEventListener('click', function () {
     if (this.disabled) return;
+    var m = DLY[dlyV];
+    if (!m.vote) { close('dlyOvl'); if (window.cxToast) cxToast(m.toast); return; }
+    dlyDraft = {
+      v: dlyV, nm: m.nm,
+      title: ($('dlyTitle').value.trim() || m.title),
+      body: $('dlyDesc2').value.trim(),
+      why: $('dlyBody').value.trim(),
+      when: dlyTbdOn() ? '미정' : (($('dlyDate').value || '') + ' ' + ($('dlyTime').value || '')).trim()
+    };
     close('dlyOvl');
-    if (window.cxToast) cxToast(DLY[dlyV].toast);
+    var M = (window.CX && CX.meeting) || {}, cm = (window.CX && CX.util.comma) || function (n) { return n; };
+    $('dlyvWho').innerHTML =
+      '<div class="amrow"><div class="amf"><b>처리 방식</b>' + m.nm + '</div>'
+      + '<span class="amsep"></span><div class="amf"><b>의안 종류</b>보통결의</div>'
+      + '<span class="amsep"></span><div class="amf"><b>재개 일시</b>' + (dlyDraft.when || '미정') + '</div></div>'
+      + '<div class="amf amt"><b>표결 의안명</b>' + esc(dlyDraft.title) + '</div>'
+      + (dlyDraft.body ? '<div class="amf amb"><b>내용</b><span>' + esc(dlyDraft.body) + '</span></div>' : '')
+      + (dlyDraft.why ? '<div class="amf amb"><b>사유</b><span>' + esc(dlyDraft.why) + '</span></div>' : '');
+    $('dlyvAlert').textContent = m.alert || '';
+    $('dlyvHolders').textContent = cm(M.attendHolders || 0) + '명';
+    $('dlyvShares').textContent = cm(M.sharesVoting || 0) + ' 주';
+    $('dlyvNote').innerHTML =
+      '<div class="h"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>표결 진행 안내</div>'
+      + '<p>' + m.nm + ' 의안이 의안 목록 맨 위에 상정되고, 나머지 의안은 모두 보류 상태가 됩니다.</p>'
+      + m.note.map(function (t) { return '<p>' + t + '</p>'; }).join('')
+      + '<hr><div class="h"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>실시간 공지 · 문자 발송</div>'
+      + '<p>입력한 사유는 실시간 공지와 함께 전자출석 주주에게 문자로 발송됩니다.</p>';
+    $('dlyvOvl').classList.add('on');
   });
+  $('dlyvAgree').addEventListener('click', function () { this.classList.toggle('on'); });
+  ['dlyvClose', 'dlyvCancel'].forEach(function (id) {
+    $(id).addEventListener('click', function () { close('dlyvOvl'); });
+  });
+  $('dlyvOk').addEventListener('click', function () {
+    if (this.disabled || !dlyDraft) return;
+    close('dlyvOvl');
+    applyDelayVote(dlyDraft);
+    if (window.cxToast) cxToast(DLY[dlyDraft.v].toast);
+  });
+  /* 지연 의안을 표결 단위로 만들어 목록 맨 위에 올리고, 나머지 의안은 모두 보류로 묶는다 */
+  function applyDelayVote(d) {
+    var tree = document.getElementById('agTree'); if (!tree || !window.CX) return;
+    var no = '제0호 · ' + d.nm;
+    if (CX.center['제1호']) {
+      var c = {}; for (var k in CX.center['제1호']) c[k] = CX.center['제1호'][k];
+      c.cat = no; c.type = '보통결의'; c.name = d.title; c.thrLabel = '출석의결권 1/2';
+      c.for = 0; c.against = 0; c.abs = 0; c.expect = '';
+      CX.center[no] = c;
+    }
+    tree.querySelectorAll('.arow.selnode').forEach(function (card) {
+      if (!card.dataset.heldBy) card.dataset.heldBy = no;   /* 보류 — 지연 의안 결과가 날 때까지 */
+    });
+    tree.insertAdjacentHTML('afterbegin',
+      '<div class="arow selnode amcard" data-no="' + no + '"><div class="acat"><span class="ano">긴급</span>'
+      + '<span class="anm">[' + d.nm + '] ' + esc(d.title) + '</span><span class="astatus"></span></div>'
+      + '<div class="atypes"><span class="tp">보통결의</span><span class="atsep">·</span><span class="tp amd">' + d.nm + '</span></div></div>');
+    var nc = tree.firstElementChild; if (nc) nc.click();
+    if (window.OC && OC.repaint) OC.repaint();
+  }
 
   /* 공지 관리 — 등록하면 목록 맨 위에 쌓인다. 연필은 위 입력칸으로 불러와 '수정', 휴지통은 그 줄에서 취소/삭제를 한 번 더 묻는다. */
   var NTC = [
@@ -4524,7 +4698,7 @@ if(window.OC&&OC.fire) OC.fire();
   /* ── 동의 체크 ↔ 최종 버튼 ─────────────────────────────────────────── */
   var GATES = [
     ['nvOvl', '#nvOvl .ckrow', 'nvOk'],
-    ['dlyOvl', '#dlyOvl .ckrow', 'dlyOk'],
+    ['dlyvOvl', '#dlyvAgree', 'dlyvOk'],
     ['endOvl', '#endAgree', 'endGo'],
     ['discOvl', '#discAgree', 'discOk'],
     ['amvOvl', '#amvAgree', 'amvOk'],
