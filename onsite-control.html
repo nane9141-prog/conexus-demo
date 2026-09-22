@@ -4521,7 +4521,7 @@ if(window.OC&&OC.fire) OC.fire();
     $('dlyWhenLb').textContent = m.vote ? '재개 일자 · 시간 (선택)' : '재개 예정 일자 · 시간';
     $('dlyTbd').style.display = m.tbd ? '' : 'none';
     if (!m.tbd) $('dlyTbd').classList.remove('on');
-    $('dlyVoteF').style.display = m.vote ? '' : 'none';
+    $('dlyVoteF').style.display = m.vote ? 'flex' : 'none';
     if (m.vote) { $('dlyTitle').value = m.title || ''; $('dlyDesc2').value = m.body || ''; }
     $('dlyWarn').style.display = m.warn ? '' : 'none';
     if (m.warn) $('dlyWarn').querySelector('span').textContent = m.warnT || '';
