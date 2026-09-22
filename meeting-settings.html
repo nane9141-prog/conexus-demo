@@ -1532,21 +1532,24 @@ a.nav-item{text-decoration:none;color:var(--fg)}
       N('a22','정관 변경','특별결의','전자주주총회 도입 관련 변경(정관 제26조 제2항)','Amendment for the Introduction of Electronic General Meetings (Article 26(2))')]),
     N('a3','이사선임','보통결의','선임 이사 수 결정의 건','Determination of the Number of Directors to be Elected',[
       N('a31','이사선임','보통결의','집중투표 4인 중 2인 선임의 건(회사제안)','Election of 2 of 4 Candidates by Cumulative Voting (Company Proposal)'),
-      N('a32','이사선임','보통결의','집중투표 5인 중 2인 선임의 건(주주제안)','Election of 2 of 5 Candidates by Cumulative Voting (Shareholder Proposal)')],['양립불가']),
+      N('a32','이사선임','보통결의','집중투표 5인 중 2인 선임의 건(주주제안)','Election of 2 of 5 Candidates by Cumulative Voting (Shareholder Proposal)')]),
     N('a4','이사선임','보통결의','집중투표에 의한 이사 선임의 건','Election of Directors by Cumulative Voting',[
       N('a41','이사선임','보통결의','집중투표 4인 중 2인 선임의 건(회사제안)','Election of 2 of 4 Candidates by Cumulative Voting (Company Proposal)',[
         N('a411','이사선임','보통결의','사외이사 후보 김도현','Outside Director Candidate Do-hyun Kim'),
         N('a412','이사선임','보통결의','사외이사 후보 이수진','Outside Director Candidate Su-jin Lee'),
         N('a413','이사선임','보통결의','사외이사 후보 박준영','Outside Director Candidate Jun-young Park'),
-        N('a414','이사선임','보통결의','사외이사 후보 최민서','Outside Director Candidate Min-seo Choi')],['집중투표']),
+        N('a414','이사선임','보통결의','사외이사 후보 최민서','Outside Director Candidate Min-seo Choi')]),
       N('a42','이사선임','보통결의','집중투표 5인 중 2인 선임의 건(주주제안)','Election of 2 of 5 Candidates by Cumulative Voting (Shareholder Proposal)',[
         N('a421','이사선임','보통결의','사외이사 후보 정우성','Outside Director Candidate Woo-sung Jung'),
         N('a422','이사선임','보통결의','사외이사 후보 한지민','Outside Director Candidate Ji-min Han'),
         N('a423','이사선임','보통결의','사외이사 후보 오세훈','Outside Director Candidate Se-hoon Oh'),
         N('a424','이사선임','보통결의','사외이사 후보 강가람','Outside Director Candidate Ga-ram Kang'),
-        N('a425','이사선임','보통결의','사외이사 후보 윤서연','Outside Director Candidate Seo-yeon Yoon')],['집중투표'])])
+        N('a425','이사선임','보통결의','사외이사 후보 윤서연','Outside Director Candidate Seo-yeon Yoon')])])
   ];
-  const DETAIL={a2:{votetype:'양립불가',progress:'개별투표'},a4:{votetype:'집중투표',directors:2,progress:'개별투표'}};
+  /* 투표 방식 — 제3호는 양립불가, 제4-1·4-2호는 집중투표(현장 제어와 동일) */
+  const DETAIL={a3:{votetype:'양립불가',progress:'개별투표'},
+    a41:{votetype:'집중투표',directors:2,progress:'개별투표'},
+    a42:{votetype:'집중투표',directors:2,progress:'개별투표'}};
   const detailOf=id=>DETAIL[id]||(DETAIL[id]={votetype:'일반투표',progress:'개별투표',directors:0});
   let agSeq=1;
   function renumber(list,prefix){(list||AGS).forEach((n,i)=>{n.no=(prefix?prefix+'-':'')+(i+1);renumber(n.sub,n.no);});}
