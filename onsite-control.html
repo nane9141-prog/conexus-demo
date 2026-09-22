@@ -969,6 +969,20 @@
   .palert{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#FFF1F2;border:1px solid #FECDD3;border-radius:10px;font-size:14px;font-weight:500;color:#E9081B}
   .palert.info{align-items:flex-start;background:#FAFAFA;border-color:#E5E5E5;color:#525252;font-weight:400;line-height:20px}
   .palert.info svg{stroke:#737373;margin-top:2px}
+  /* Alert — Figma Shadcn Nova (26:160) : Default · Destructive · info */
+  .alrt{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #E5E5E5;border-radius:10px;background:#fff}
+  .alrt .fx{display:flex;flex:1 0 0;gap:8px;align-items:flex-start;min-width:0}
+  .alrt .ai{display:flex;align-items:flex-start;padding-top:2px;flex:none}
+  .alrt .ai svg{width:16px;height:16px;flex:none;fill:none;stroke:#0A0A0A;stroke-width:1.5;stroke-linecap:round}
+  .alrt .ab{display:flex;flex:1 0 0;flex-direction:column;gap:2px;min-width:0;line-height:20px;letter-spacing:-.14px}
+  .alrt .at{font-size:14px;font-weight:500;color:#0A0A0A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .alrt .ad{font-size:14px;font-weight:400;color:#737373}
+  .alrt.info{background:#EEF5FF;border-color:#D4E8FF}
+  .alrt.info .ai svg{stroke:#0071F3}
+  .alrt.info .at,.alrt.info .ad{color:#0071F3}
+  .alrt.destructive{background:#FFF1F2;border-color:#FECDD3}
+  .alrt.destructive .ai svg{stroke:#E9081B}
+  .alrt.destructive .at,.alrt.destructive .ad{color:#E9081B}
   .dlg-hint{font-size:12px;line-height:16px;letter-spacing:-.01em;color:#737373}
   .ckrow.sm{margin-right:0;font-size:13px;color:#525252}
   .ckrow.sm .ckbox{width:14px;height:14px}
@@ -1610,7 +1624,7 @@
         <button type="button" data-v="recess">정회</button>
         <button type="button" data-v="adjourn">휴회</button>
       </div>
-      <div class="palert info" id="dlyInfo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg><span></span></div>
+      <div class="alrt info" id="dlyInfo"><div class="fx"><span class="ai"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg></span><div class="ab"><div class="at"></div><div class="ad"></div></div></div></div>
       <div class="dlg-field" id="dlyWhenF">
         <div class="lb" id="dlyWhenLb">재개 일자 · 시간</div>
         <div class="dlg-when">
@@ -1634,7 +1648,7 @@
         <div class="am-tbox"><textarea id="dlyBody" maxlength="280" placeholder="사유를 입력 하세요."></textarea><div class="cnt">0/280</div></div>
         <div class="dlg-hint">해당 사유입력 건은 실시간 공지와 함께 전자출석 주주에게 문자로 발송됩니다.</div>
       </div>
-      <div class="palert" id="dlyWarn" style="display:none"><span></span></div>
+      <div class="alrt destructive" id="dlyWarn" style="display:none"><div class="fx"><span class="ai"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg></span><div class="ab"><div class="at"></div><div class="ad"></div></div></div></div>
     </div>
     <div class="dlg-f dly-f">
       <label class="ckrow" data-ck><span class="ckbox"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span id="dlyCkT">위 내용으로, 총회를 정회 합니다.</span></label>
@@ -1651,7 +1665,7 @@
     <div class="dlg-h"><div class="tt">동의 표결 처리</div><div class="ds">총회 지연 안건을 새 표결로 상정합니다. 처리 전 영향 범위를 확인하세요.</div></div>
     <div class="dlg-c">
       <div style="display:flex;flex-direction:column;gap:8px"><div class="amvtop" id="dlyvWho"></div></div>
-      <div class="palert"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg><span id="dlyvAlert"></span></div>
+      <div class="alrt destructive" id="dlyvAlertBox"><div class="fx"><span class="ai"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg></span><div class="ab"><div class="at">표결 전 확인</div><div class="ad" id="dlyvAlert"></div></div></div></div>
       <div class="amcards">
         <div class="amcard"><div class="k">표결 대상 주주</div><div class="v" id="dlyvHolders">0명</div></div>
         <div class="amcard"><div class="k">행사 가능 의결권</div><div class="v" id="dlyvShares">0 주</div></div>
@@ -4485,14 +4499,16 @@ if(window.OC&&OC.fire) OC.fire();
      정회·휴회는 재개 시간을 정해 멈추기만 하므로 표결 없이 바로 처리한다. */
   var DLY = {
     postpone: { nm: '연기', vote: 1, tbd: 1, warn: 1,
+      infoT: '연기 상정 조건',
       info: '1호 의안 표결 전에만 가능합니다. 연기하면 새로운 주주총회로 다시 열리며, 이번 총회의 사전 의결권행사는 모두 무효가 됩니다.',
-      warnT: '총회를 연기하면 되돌릴 수 없습니다. 진행 중인 안건 표결이 종료 됩니다.',
+      warnT: '되돌릴 수 없는 처리', warnD: '총회를 연기하면 진행 중인 안건 표결이 종료되며, 되돌릴 수 없습니다.',
       title: '주주총회 연기의 건', body: '금일 주주총회를 연기하고, 추후 새로 소집하는 주주총회에서 의안을 다시 상정하는 건.',
       alert: '연기가 가결되면 이번 총회의 사전 의결권행사는 모두 무효 처리됩니다.',
       note: ['사전 의결권 무효: 새로운 주주총회로 다시 열리므로 사전 의결권행사 내역은 효력을 잃습니다.',
              '상정 제한: 1호 의안 표결이 시작된 뒤에는 연기를 상정할 수 없습니다.'],
       ck: '위 내용을 확인했으며, 연기 표결을 상정합니다.', ok: '다음', toast: '연기 표결을 상정했습니다.' },
     'continue': { nm: '속행', vote: 1, tbd: 1,
+      infoT: '속행 처리 범위',
       info: '지금까지 표결을 마감한 의안은 그대로 유효하고, 이후 의안 진행만 종료합니다. 같은 주주총회로 다시 열립니다.',
       title: '주주총회 속행의 건', body: '금일 의사를 여기서 마치고, 남은 의안은 속행 기일에 이어서 진행하는 건.',
       alert: '마감한 의안의 표결 결과는 유지되고, 남은 의안은 속행 기일로 넘어갑니다.',
@@ -4500,9 +4516,11 @@ if(window.OC&&OC.fire) OC.fire();
              '사전 의결권 유효: 같은 주주총회이므로 사전 의결권행사 내역은 그대로 유효합니다.'],
       ck: '위 내용을 확인했으며, 속행 표결을 상정합니다.', ok: '다음', toast: '속행 표결을 상정했습니다.' },
     recess:   { nm: '정회', when: 1,
+      infoT: '정회 안내',
       info: '재개 예정 시간을 정하고 총회를 잠시 멈춥니다. 같은 주주총회로 이어집니다.',
       ck: '위 내용으로, 총회를 정회 합니다.', ok: '정회 시작', toast: '주주총회 정회를 시작합니다.' },
     adjourn:  { nm: '휴회', when: 1,
+      infoT: '휴회 안내',
       info: '재개 예정 시간을 정하고 총회를 잠시 멈춥니다.',
       ck: '위 내용으로, 총회를 휴회 합니다.', ok: '휴회 시작', toast: '주주총회 휴회를 시작합니다.' }
   };
@@ -4514,9 +4532,18 @@ if(window.OC&&OC.fire) OC.fire();
     return !(oc.agenda === '제1호' && oc.stage >= 2);
   }
   function dlyTbdOn() { var e = $('dlyTbd'); return !!(e && e.classList.contains('on')); }
+  /* Alert(제목 + 설명) 한 번에 채우기 */
+  function alertSet(id, t, d) {
+    var box = $(id); if (!box) return;
+    box.querySelector('.at').textContent = t;
+    box.querySelector('.ad').textContent = d;
+    box.querySelector('.at').style.display = t ? '' : 'none';
+    box.querySelector('.ad').style.display = d ? '' : 'none';
+  }
   function setDly(v) {
     var m = DLY[v]; if (!m) return; dlyV = v;
-    $('dlyInfo').querySelector('span').textContent = m.info || '';
+    $('dlyInfo').className = 'alrt info';
+    alertSet('dlyInfo', m.infoT || '', m.info || '');
     $('dlyWhenF').style.display = '';
     $('dlyWhenLb').textContent = m.vote ? '재개 일자 · 시간 (선택)' : '재개 예정 일자 · 시간';
     $('dlyTbd').style.display = m.tbd ? '' : 'none';
@@ -4524,7 +4551,7 @@ if(window.OC&&OC.fire) OC.fire();
     $('dlyVoteF').style.display = m.vote ? 'flex' : 'none';
     if (m.vote) { $('dlyTitle').value = m.title || ''; $('dlyDesc2').value = m.body || ''; }
     $('dlyWarn').style.display = m.warn ? '' : 'none';
-    if (m.warn) $('dlyWarn').querySelector('span').textContent = m.warnT || '';
+    if (m.warn) alertSet('dlyWarn', m.warnT || '', m.warnD || '');
     /* 표결로 가는 건(연기·속행)은 다음 화면에서 한 번 더 확인하므로 여기서는 체크가 필요 없다 */
     var ck = document.querySelector('#dlyOvl .dlg-f .ckrow');
     ck.style.display = m.vote ? 'none' : '';
@@ -4536,7 +4563,8 @@ if(window.OC&&OC.fire) OC.fire();
     });
     dlyWhenSync();
     if (v === 'postpone' && !canPostpone()) {
-      $('dlyInfo').querySelector('span').textContent = '제1호 의안 표결이 이미 시작되어 연기를 상정할 수 없습니다.';
+      alertSet('dlyInfo', '연기 상정 불가', '제1호 의안 표결이 이미 시작되어 연기를 상정할 수 없습니다.');
+      $('dlyInfo').className = 'alrt destructive';
       dlyBlocked = true;
     } else dlyBlocked = false;
     ck.classList.remove('on');
