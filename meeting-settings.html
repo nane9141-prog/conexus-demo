@@ -1391,6 +1391,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   function switchTab(id,force){
     if(id===curTab)return;
     if(!force&&dirty[curTab]){openAlert(Object.assign({},DIRTY_ALERT,{onCancel:()=>{dirty[curTab]=false;switchTab(id,true);}}));return;}
+    if(curTab==='link'&&typeof pruneLinks==='function')pruneLinks();   /* 저장하지 않고 나가면 비어 있는 규칙 행은 지운다 */
     curTab=id;
     $$('.st-item').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));
     $$('.st-tab').forEach(p=>p.classList.toggle('active',p.dataset.panel===id));
@@ -1702,6 +1703,13 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     renderAgendaTagsOnly();
   }
   function renderAgendaTagsOnly(){if(curTab!=='agenda')return;renderAgenda();}
+  /* 저장하지 않고 탭을 옮기면 — 조건·연계의안·처리방법이 하나도 없는 규칙 행과
+     기준의안을 고르지 않은 그룹은 남겨 두지 않는다 */
+  function pruneLinks(){
+    LINKS.forEach(g=>{ g.rules=(g.rules||[]).filter(r=>r.cond||r.target||r.how); g.rules.forEach(r=>{ delete r.err; }); });
+    LINKS=LINKS.filter(g=>g.base);
+    renderLinks();
+  }
   function baseOptions(){const used={};LINKS.forEach(g=>{if(g.base)used[g.base]=1;g.rules.forEach(r=>{if(r.target)used[r.target]=1;});});return flat().filter(x=>!used[x.n.id]).map(x=>({v:x.n.id,label:agLabel(x.n)}));}
   function targetOptions(g,ri){
     const anc=ancestors(g.base);
