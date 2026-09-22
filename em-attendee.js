@@ -89,8 +89,8 @@
     /* 참석 신청: 신청 blue · 미신청 info 50% / 출석: 참석 blue · 일부참석 info · 미참석 info 50% */
     /* 비주주 시청·질의권도 같은 규칙: 시청·부여 blue · 미시청·미부여 info 50% */
     if (c === '참석 신청' || c === '출석' || c === '시청' || c === '질의권') {
-      var t0 = val(x, c), dot = (c === '시청' || c === '질의권') ? '' : '<i></i>';   /* 비주주 시청·질의권은 점 없이 글자만 */
-      return '<span class="lc-b ' + ({ '신청': 'blue', '참석': 'blue', '시청': 'blue', '부여': 'blue', '일부참석': 'gray' }[t0] || 'gray off') + '">' + dot + t0 + '</span>';
+      var t0 = val(x, c);   /* 상태 뱃지 — 점 없이 글자만 */
+      return '<span class="lc-b ' + ({ '신청': 'blue', '참석': 'blue', '시청': 'blue', '부여': 'blue', '일부참석': 'gray' }[t0] || 'gray off') + '">' + t0 + '</span>';
     }
     if (MUTED[c] && x[MUTED[c]]) return '<span class="mu">' + esc(x[MUTED[c]]) + '</span>';
     if (c === '등록 경로') return '<span class="mu">' + esc(x.route) + '</span>';
