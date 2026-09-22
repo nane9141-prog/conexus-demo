@@ -21,7 +21,7 @@
       type: k % 6 === 2 ? '대리인' : '본인', pre: preOf(r),
       apply: apply ? '신청' : '미신청', attend: attend ? '참석' : '미참석', watch: attend || k % 4 === 0,
       att: attend ? r.sh : 0, code: code, revoked: !!code && k % 9 === 4,
-      route: code ? (k % 3 ? '직접 신청' : '관리자 등록') : '직접 신청',
+      route: code ? (k % 3 ? '주주 신청' : '관리자 등록') : '주주 신청',
       phone: '010-' + (2000 + (r.i * 37) % 7000) + '-' + ('000' + (r.i * 53 % 10000)).slice(-4),
       email: foreign ? r.nm.toLowerCase().replace(/[^a-z]+/g, '.').replace(/^\.|\.$/g, '') + '@gmail.com' : 'sh' + r.i + '@naver.com'
     };
