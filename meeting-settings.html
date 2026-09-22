@@ -1524,20 +1524,27 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   function applyType(n,t){n.type=t;n.method=methodOf(t);const on=R3_TYPES.indexOf(t)>=0,has=n.tags.indexOf('3% 제한')>=0;
     if(on&&!has){n.tags.push('3% 제한');n.r3auto=true;} else if(!on&&has&&n.r3auto){n.tags=n.tags.filter(x=>x!=='3% 제한');n.r3auto=false;}}
   const N=(id,type,method,ko,en,sub,tags)=>({id,type,method,ko,en,sub:sub||[],tags:tags||[]});
+  /* 현장 제어(cx-data.js CX.agenda)와 같은 의안 구성 — 번호는 renumber() 가 매긴다 */
   let AGS=[
-    N('a1','재무제표 승인','보통결의','제13기 재무제표 및 연결재무제표 승인의 건','Approval of Financial Statements and Consolidated Financial Statements for the 13th Fiscal Year'),
+    N('a1','재무제표 승인','보통결의','재무제표 승인의 건','Approval of Financial Statements'),
     N('a2','정관 변경','특별결의','정관 일부 변경의 건','Partial Amendments to the Articles of Incorporation',[
-      N('a21','정관변경(집중투표 배제 및 해지)','특별결의','정관 일부 변경의 건 (집중투표제 도입을 위한 배제 조항 삭제)','Partial Amendments to the Articles of Incorporation (Adoption of Cumulative Voting System)',[],['3% 제한']),
-      N('a22','정관 변경','특별결의','정관 일부 변경의 건 (배당 기준일 이사회 결정)','Partial Amendments to the Articles of Incorporation (Record Date Determined by the Board)',[],['3% 제한'])],['3% 제한']),
-    N('a3','감사위원회 감사위원 선임(일반)','보통결의','감사위원회 위원 선임의 건','Appointment of Audit Committee Member',[
-      N('a31','감사위원회 감사위원 선임(일반)','보통결의','사외이사인 감사위원회 위원 선임의 건','Appointment of Outside Director as Audit Committee Member',[
-        N('a311','감사위원회 감사위원 선임(일반)','보통결의','사외이사인 감사위원회 위원 김수지 선임의 건','Appointment of Outside Director Su-ji Kim as Audit Committee Member')]),
-      N('a32','감사위원회 감사위원 선임(일반)','보통결의','사외이사가 아닌 감사위원회 위원 이영호 선임의 건','Appointment of Non-Outside Director Young-ho Lee as Audit Committee Member')]),
-    N('a4','이사선임','특별결의','이사 선임의 건','Appointment of Directors',[
-      N('a41','이사선임','보통결의','사외이사 후보 박민수 선임의 건','Appointment of Min-soo Park as Outside Director'),
-      N('a42','이사선임','보통결의','사외이사 후보 이서준 선임의 건','Appointment of Seo-jun Lee as Outside Director'),
-      N('a43','이사선임','보통결의','사외이사 후보 정하늘 선임의 건','Appointment of Ha-neul Jung as Outside Director')]),
-    N('a5','이사 보수한도 승인','보통결의','이사 보수한도 승인의 건','Approval of Remuneration Limit for Directors')
+      N('a21','정관변경(집중투표 배제 및 해지)','특별결의','집중투표제 배제 조항 삭제의 건(정관 제37조 제3항)','Deletion of the Cumulative Voting Exclusion Clause (Article 37(3))',[],['3% 제한']),
+      N('a22','정관 변경','특별결의','전자주주총회 도입 관련 변경(정관 제26조 제2항)','Amendment for the Introduction of Electronic General Meetings (Article 26(2))')]),
+    N('a3','이사선임','보통결의','선임 이사 수 결정의 건','Determination of the Number of Directors to be Elected',[
+      N('a31','이사선임','보통결의','집중투표 4인 중 2인 선임의 건(회사제안)','Election of 2 of 4 Candidates by Cumulative Voting (Company Proposal)'),
+      N('a32','이사선임','보통결의','집중투표 5인 중 2인 선임의 건(주주제안)','Election of 2 of 5 Candidates by Cumulative Voting (Shareholder Proposal)')],['양립불가']),
+    N('a4','이사선임','보통결의','집중투표에 의한 이사 선임의 건','Election of Directors by Cumulative Voting',[
+      N('a41','이사선임','보통결의','집중투표 4인 중 2인 선임의 건(회사제안)','Election of 2 of 4 Candidates by Cumulative Voting (Company Proposal)',[
+        N('a411','이사선임','보통결의','사외이사 후보 김도현','Outside Director Candidate Do-hyun Kim'),
+        N('a412','이사선임','보통결의','사외이사 후보 이수진','Outside Director Candidate Su-jin Lee'),
+        N('a413','이사선임','보통결의','사외이사 후보 박준영','Outside Director Candidate Jun-young Park'),
+        N('a414','이사선임','보통결의','사외이사 후보 최민서','Outside Director Candidate Min-seo Choi')],['집중투표']),
+      N('a42','이사선임','보통결의','집중투표 5인 중 2인 선임의 건(주주제안)','Election of 2 of 5 Candidates by Cumulative Voting (Shareholder Proposal)',[
+        N('a421','이사선임','보통결의','사외이사 후보 정우성','Outside Director Candidate Woo-sung Jung'),
+        N('a422','이사선임','보통결의','사외이사 후보 한지민','Outside Director Candidate Ji-min Han'),
+        N('a423','이사선임','보통결의','사외이사 후보 오세훈','Outside Director Candidate Se-hoon Oh'),
+        N('a424','이사선임','보통결의','사외이사 후보 강가람','Outside Director Candidate Ga-ram Kang'),
+        N('a425','이사선임','보통결의','사외이사 후보 윤서연','Outside Director Candidate Seo-yeon Yoon')],['집중투표'])])
   ];
   const DETAIL={a2:{votetype:'양립불가',progress:'개별투표'},a4:{votetype:'집중투표',directors:2,progress:'개별투표'}};
   const detailOf=id=>DETAIL[id]||(DETAIL[id]={votetype:'일반투표',progress:'개별투표',directors:0});
@@ -1683,10 +1690,10 @@ a.nav-item{text-decoration:none;color:var(--fg)}
   });
 
   /* ===== 의안 연계 설정 ===== */
+  /* 제3호(양립불가) 결과에 따라 제4-1호·제4-2호 중 하나가 폐기된다 — 현장 제어와 같은 규칙 */
   let LINKS=[
-    {id:'g1',base:'a2',rules:[{cond:'가결 시',target:'a3',how:'폐기'},{cond:'부결 시',target:'a21',how:'폐기'}]},
-    {id:'g2',base:'a4',rules:[{cond:'가결 시',target:'a41',how:'폐기'}]},
-    {id:'g3',base:'a5',rules:[{cond:'부결 시',target:'a311',how:'폐기'}]}];
+    {id:'g1',base:'a31',rules:[{cond:'가결 시',target:'a42',how:'폐기'}]},
+    {id:'g2',base:'a32',rules:[{cond:'가결 시',target:'a41',how:'폐기'}]}];
   let lkSeq=1;
   const lkWrap=$('#lkWrap'),lkTip=$('#lkTip');
   const agById=id=>{const f=findAg(id);return f&&f.node;};
