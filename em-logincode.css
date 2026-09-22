@@ -12,8 +12,10 @@
 .lc-search i{font-size:16px;color:#737373}
 .lc-search input{flex:1;min-width:0;border:none;outline:none;font-family:inherit;font-size:14px;letter-spacing:-.01em;color:#0A0A0A;background:none}
 .lc-search input::placeholder{color:#737373}
-.lc-chips{flex:1;display:flex;flex-wrap:wrap;gap:4px;min-width:0}
-.lc-chip{display:inline-flex;align-items:center;gap:4px;height:28px;box-sizing:border-box;padding:4px 6px 4px 10px;border:1px solid #E5E5E5;border-radius:9999px;background:#fff;font-family:inherit;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer;white-space:nowrap}
+.lc-chips{flex:1;display:flex;flex-wrap:nowrap;gap:4px;min-width:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none;cursor:grab;user-select:none;-webkit-overflow-scrolling:touch}
+.lc-chips::-webkit-scrollbar{display:none}
+.lc-chips.dragging{cursor:grabbing}
+.lc-chip{flex:none;display:inline-flex;align-items:center;gap:4px;height:28px;box-sizing:border-box;padding:4px 6px 4px 10px;border:1px solid #E5E5E5;border-radius:9999px;background:#fff;font-family:inherit;font-size:12px;line-height:16px;font-weight:500;letter-spacing:-.01em;color:#0A0A0A;cursor:pointer;white-space:nowrap}
 .lc-chip .c{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;box-sizing:border-box;padding:0 4px;border-radius:9999px;background:#F5F5F5;color:#171717}
 .lc-chip.on{background:#0A0A0A;border-color:#0A0A0A;color:#FAFAFA}
 .lc-chip.on .c{background:#27272A;color:#FAFAFA}

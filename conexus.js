@@ -1114,3 +1114,28 @@ window.cxClock = cxChannel('cx.clock');
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
+
+/* ── 칩 줄(.lc-chips) ─ 좁아져도 한 줄을 유지하고, 마우스 드래그로 좌우 스크롤 ── */
+(function () {
+  var D = null;
+  document.addEventListener('pointerdown', function (e) {
+    var row = e.target && e.target.closest && e.target.closest('.lc-chips');
+    if (!row || row.scrollWidth <= row.clientWidth + 1) return;
+    D = { row: row, x: e.clientX, sl: row.scrollLeft, moved: 0 };
+  });
+  document.addEventListener('pointermove', function (e) {
+    if (!D) return;
+    var dx = e.clientX - D.x;
+    if (!D.moved && Math.abs(dx) > 3) { D.moved = 1; D.row.classList.add('dragging'); }
+    if (D.moved) { D.row.scrollLeft = D.sl - dx; e.preventDefault(); }
+  }, { passive: false });
+  document.addEventListener('pointerup', function () {
+    if (!D) return;
+    var d = D; D = null; d.row.classList.remove('dragging');
+    if (!d.moved) return;
+    /* 드래그로 끝난 제스처는 칩 클릭(필터 토글)으로 이어지지 않게 한 번만 삼킨다 */
+    var blk = function (ev) { ev.stopPropagation(); ev.preventDefault(); };
+    d.row.addEventListener('click', blk, true);
+    setTimeout(function () { d.row.removeEventListener('click', blk, true); }, 0);
+  });
+})();
