@@ -4266,8 +4266,10 @@ function toggleMute(id){
 (function(){ var v=document.getElementById("pipVid"), b=document.getElementById("pipMute"); if(!v||!b) return;
   function upd(){ b.innerHTML="<i class=\"ph "+(v.muted?"ph-speaker-simple-x":"ph-speaker-simple-high")+"\"></i>"; b.title=v.muted?"음소거 해제":"음소거"; }
   function tryPlay(){ if(!window.__ocStarted) return;   /* 영상은 총회 시작 후에만 */
-    v.muted=false; var p=v.play(); if(p&&p.catch){ p.catch(function(){}); } upd(); }
-  v.muted=false; tryPlay();
+    var p=v.play(); if(p&&p.catch){ p.catch(function(){}); } upd(); }
+  v.muted=true; upd();                          /* 음소거로 시작 — 아이콘도 같은 상태로 */
+  v.addEventListener("volumechange",upd);       /* 어디서 음소거를 바꿔도 아이콘이 따라간다 */
+  tryPlay();
   function once(){ tryPlay(); document.removeEventListener("pointerdown",once); document.removeEventListener("keydown",once); }
   document.addEventListener("pointerdown",once); document.addEventListener("keydown",once);
   b.addEventListener("click",function(){ v.muted=!v.muted; if(!v.muted){ try{v.play();}catch(_){} } upd(); });
