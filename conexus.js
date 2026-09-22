@@ -1191,12 +1191,17 @@ window.cxClock = cxChannel('cx.clock');
     '.lc-hd{position:sticky;top:0;z-index:21;background:var(--bg,#fafafa);padding-top:12px;margin-top:-12px}' +
     '.lc-bar{position:sticky;top:var(--lcbar-top,72px);z-index:20;background:var(--bg,#fafafa);padding:4px 0}';
   (document.head || document.documentElement).appendChild(st);
+  var RO = window.ResizeObserver ? new ResizeObserver(sync) : null, seen = [];
   function sync() {
     document.querySelectorAll('.lc').forEach(function (lc) {
       var hd = lc.querySelector('.lc-hd'); if (!hd) return;
-      lc.style.setProperty('--lcbar-top', (hd.offsetHeight + 12) + 'px');
+      if (RO && seen.indexOf(hd) < 0) { seen.push(hd); RO.observe(hd); }
+      var h = hd.offsetHeight;            /* 탭이 숨겨져 있으면 0 — 보일 때 다시 잰다 */
+      if (h) lc.style.setProperty('--lcbar-top', (h + 12) + 'px');
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', sync); else sync();
-  setTimeout(sync, 600); window.addEventListener('resize', sync);
+  setTimeout(sync, 600); setTimeout(sync, 2000);
+  window.addEventListener('resize', sync);
+  document.addEventListener('click', function () { setTimeout(sync, 60); }, true);
 })();
