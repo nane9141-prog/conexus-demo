@@ -89,7 +89,7 @@
   .selopt svg{width:15px;height:15px;opacity:0}
   .selopt.sel svg{opacity:1}
   /* 의안 종류 — 묶음 제목과 검색을 얹는다 */
-  .selpop.grouped{width:254px;max-height:420px;overflow:auto;display:flex;flex-direction:column;gap:2px}
+  .selpop.grouped{width:254px;max-height:420px;overflow:auto;scrollbar-width:none;-ms-overflow-style:none;display:flex;flex-direction:column;gap:2px}
   .selsrch{box-sizing:border-box;display:flex;align-items:center;gap:6px;height:32px;margin:0 0 4px;padding:0 10px;
     border:1px solid var(--border);border-radius:10px;background:#fff;position:sticky;top:0;z-index:1}
   .selsrch svg{width:16px;height:16px;flex:none;fill:none;stroke:#737373;stroke-width:1.5;stroke-linecap:round}
@@ -892,7 +892,8 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 .selopt.dis:hover{background:none}
 .selopt .bdg{display:inline-flex;align-items:center;height:20px;padding:0 6px;margin-left:6px;border-radius:4px;background:var(--muted);color:#404040;font-size:11px;font-weight:500}
 .selopt .bdg.red{background:var(--red50);color:var(--red600)}
-.selpop{max-height:360px;overflow:auto}
+.selpop{max-height:360px;overflow:auto;scrollbar-width:none;-ms-overflow-style:none}   /* 목록이 길어도 시스템 스크롤바는 감춘다 — 페이지 스크롤과 겹쳐 두 줄로 보인다 */
+.selpop::-webkit-scrollbar{width:0;height:0;display:none}
 /* 의안 종류 드롭다운 — 항목이 줄바꿈되지 않게 가장 긴 이름에 맞춰 넓힌다(최소 254px) */
 .selpop.grouped{width:auto;min-width:254px;max-width:calc(100vw - 16px)}
 .selpop.grouped .selopt .sc{white-space:nowrap}
@@ -1007,7 +1008,7 @@ a.nav-item{text-decoration:none;color:var(--fg)}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 <script src="cx-data.js?v=6"></script>
-<link rel="stylesheet" href="cx-checkbox.css?v=1">
+<link rel="stylesheet" href="cx-checkbox.css?v=2">
 </head>
 <body>
 <div class="app" id="app">
