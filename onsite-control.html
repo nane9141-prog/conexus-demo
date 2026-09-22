@@ -723,7 +723,7 @@
   .vwvia.off{background:#EDE9FE;color:#5B21B6}
   .vwbtn{height:24px;padding:0 8px;border:none;border-radius:8px;background:rgba(220,38,38,.1);font-family:inherit;font-size:12px;font-weight:500;color:#E9081B;cursor:pointer}
   .vwbtn.undo{background:#fff;border:1px solid #E5E5E5;color:#0A0A0A}
-  .qmtbl .vwcol{min-width:124px}   /* 발언 조치 · 퇴장 명령 — 버튼이 들어갈 만큼 같은 폭으로 */
+  .qmtbl .vwcol{min-width:120px}   /* 발언 조치 · 퇴장 명령 — 버튼이 들어갈 만큼 같은 폭으로 */
   .vwact{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border:1px solid #E5E5E5;border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0A0A0A;cursor:pointer;white-space:nowrap}
   .vwact i{font-size:14px}
   .vwact.out{border-color:transparent;background:rgba(220,38,38,.1);color:#E9081B}
@@ -2361,10 +2361,10 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     q:'<tr><th class="c" style="width:90px">의안</th><th style="width:160px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th>질의 내용</th><th class="c" style="width:110px">접수시간</th><th style="width:96px">공개</th><th style="width:110px">상태</th><th class="c" style="width:56px">상세</th></tr>',
     s:'<tr><th class="c" style="width:90px">의안</th><th style="width:160px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th>신청 내용</th><th class="c" style="width:110px">상태</th><th class="c" style="width:110px">대기열</th></tr>',
     a:'<tr><th class="c" style="width:90px">의안</th><th style="width:160px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th>수정 내용</th><th class="c" style="width:96px">방식</th><th class="c" style="width:110px">검증유형</th><th class="c" style="width:110px">접수시간</th><th class="c" style="width:110px">상태</th></tr>',
-    v:'<tr><th>투표권자</th><th>주주번호</th><th class="r">보유주식수</th><th class="c">의결권 행사</th>'
-      +'<th class="c">질의</th><th class="c">발언</th>'
-      +'<th class="c">접속시각</th><th class="c">퇴장시각</th>'
-      +'<th class="c vwcol">발언 조치</th><th class="c vwcol">퇴장 명령</th></tr>'
+    v:'<tr><th>투표권자</th><th style="width:92px">주주번호</th><th class="r" style="width:100px">보유주식수</th><th class="c" style="width:88px">의결권 행사</th>'
+      +'<th class="c" style="width:76px">질의</th><th class="c" style="width:84px">발언</th>'
+      +'<th class="c" style="width:74px">접속시각</th><th class="c" style="width:74px">퇴장시각</th>'
+      +'<th class="c vwcol" style="width:120px">발언 조치</th><th class="c vwcol" style="width:120px">퇴장 명령</th></tr>'
   };
   var INFO='<svg class="exi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="7.6" r=".9" fill="#737373" stroke="none"/></svg>';
   /* 시청자 — 총회에 접속한 참여자 표본.
@@ -2446,7 +2446,6 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     (function(){
       var tbl=head.closest('table'), cg=tbl.querySelector('colgroup');
       if(cg) cg.remove();
-      if(mode==='v'){ tbl.style.tableLayout=''; return; }
       cg=document.createElement('colgroup');
       cg.innerHTML=[].map.call(head.querySelectorAll('th'),function(th){
         return th.style.width ? '<col style="width:'+th.style.width+'">' : '<col>';
