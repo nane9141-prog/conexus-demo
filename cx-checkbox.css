@@ -1,0 +1,46 @@
+/* ===== Checkbox — Figma Shadcn Nova (node 46:112) =====================
+ * 16×16 · radius 4 · border 1px
+ *   off      : bg #fff, border var(--border,#e5e5e5) #e5e5e5
+ *   on       : bg/border var(--ink,#171717) #171717 + 흰색 체크 14px
+ *   focus    : ring 0 0 0 3px rgba(163,163,163,.5)
+ *   pressed  : opacity 60% / disabled : 상자 50%, 라벨 70%
+ * 라벨 14px/500 -0.14px, 설명 12px/16px -0.12px, 간격 8px(라벨-설명 6px)
+ */
+:root{
+  --cb-size:16px;
+  --cb-ring:0 0 0 3px rgba(163,163,163,.5);
+  --cb-check:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+}
+input[type="checkbox"]{
+  -webkit-appearance:none;appearance:none;
+  width:var(--cb-size);height:var(--cb-size);flex:none;margin:0;
+  border:1px solid var(--border,#e5e5e5);border-radius:4px;background:#fff;
+  cursor:pointer;position:relative;vertical-align:middle;
+  transition:background-color .12s,border-color .12s,box-shadow .12s;
+}
+input[type="checkbox"]:checked{
+  background-color:var(--ink,#171717);border-color:var(--ink,#171717);
+  background-image:var(--cb-check);background-repeat:no-repeat;
+  background-position:center;background-size:14px 14px;
+}
+input[type="checkbox"]:focus-visible{outline:none;border-color:#a3a3a3;box-shadow:var(--cb-ring)}
+input[type="checkbox"]:checked:focus-visible{border-color:var(--ink,#171717)}
+input[type="checkbox"]:active:not(:disabled){opacity:.6}
+input[type="checkbox"]:disabled{opacity:.5;cursor:default}
+/* 커스텀 박스(스팬으로 그린 체크박스)도 같은 규격으로 */
+.cbx .box,.chk,.sdlg-chk .cb{
+  width:var(--cb-size);height:var(--cb-size);border:1px solid var(--border,#e5e5e5);
+  border-radius:4px;background:#fff;flex:none;
+  display:flex;align-items:center;justify-content:center;
+  transition:background-color .12s,border-color .12s,box-shadow .12s;
+}
+.cbx .box svg,.chk svg{width:14px;height:14px;color:#fff;opacity:0}
+.cbx .box i,.sdlg-chk .cb i{font-size:12px;color:#fff;opacity:0}
+.cbx.on .box,.chk-row.on .chk,.sdlg-chk.on .cb{background:var(--ink,#171717);border-color:var(--ink,#171717)}
+.cbx.on .box svg,.chk-row.on .chk svg,.cbx.on .box i,.sdlg-chk.on .cb i{opacity:1}
+.cbx:focus-visible .box,.sdlg-chk:focus-visible .cb,.chk-row:focus-visible .chk{box-shadow:var(--cb-ring);border-color:#a3a3a3}
+/* 라벨·설명 타이포 */
+.cbx,.sdlg-chk{gap:8px;font-size:14px;font-weight:500;letter-spacing:-0.14px;color:#0a0a0a}
+.chk-row{gap:8px}
+.chk-row .ct{font-size:14px;font-weight:500;letter-spacing:-0.14px;line-height:1;color:#0a0a0a}
+.chk-row .cd{font-size:12px;line-height:16px;letter-spacing:-0.12px;color:var(--muted-fg,#737373);margin-top:6px}
