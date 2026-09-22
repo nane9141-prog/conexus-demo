@@ -42,6 +42,14 @@
     };
   });
   var singles = CX.roster.filter(function (r, i) { return !inGroup[r.i] && (i % 6 === 0 || r.fr === '외국인' && i % 3 === 0); }).slice(0, 150).map(person);
+  /* 동명이인 박성용 4명 — 사전 참석 신청 내역 확인용으로 항상 표에 올린다.
+     주주번호가 다른 별개 주주이고, 첫 번째(사전 미행사)만 미신청·미참석이다. */
+  var PSY_K = [3, 0, 2, 4];   /* person(k) 규칙: k%7===3 → 미신청, k%5===1 → 미참석 */
+  var psyHave = {}; singles.forEach(function (p) { psyHave[p.k] = 1; });
+  var psy = CX.roster.filter(function (r) { return r.nm === '박성용' && !inGroup[r.i]; })
+    .map(function (r, j) { return person(r, PSY_K[j % PSY_K.length]); })
+    .filter(function (p) { return !psyHave[p.k]; });
+  singles = psy.concat(singles);
   var SH = groups.concat(singles);
   var NSK = ['임직원', '언론/기자', '감사인', '변호사', '외국인', '기타'];
   var NS = [['김하늘', '삼일회계법인', '회계사', '감사인', '외부감사인 참관'], ['이준호', '법무법인 세종', '변호사', '변호사', '법률 자문 · 의사진행 검토'], ['박민지', '한국예탁결제원', '', '기타', ''], ['정우성', '연합뉴스', '기자', '언론/기자', '취재 — 총회 종료 후 기사 송고 예정'], ['최서윤', '카카오뱅크', 'IR팀 매니저', '임직원', '사내 참관'], ['한지훈', '대신경제연구소', '연구원', '기타', '의결권 자문사 참관'], ['Michael Grant', 'ISS', 'Analyst', '외국인', ''], ['윤가람', '카카오뱅크', '대리', '임직원', '현장 지원']].map(function (n, i) {
