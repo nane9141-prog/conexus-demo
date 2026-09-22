@@ -1754,7 +1754,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     window.__ocStarted=true; try{ localStorage.removeItem('cx.ended'); }catch(e){}   /* 새 총회 — 종료 표시 지움 */
     var ivb=document.querySelector('.ivid'); if(ivb) ivb.classList.remove('pre');
     var ivp=document.getElementById('ividPre'); if(ivp) ivp.remove();
-    if(vid){ vid.currentTime=0; vid.muted=false; var pr=vid.play(); if(pr&&pr.catch) pr.catch(function(){}); }
+    if(vid){ vid.currentTime=0; vid.muted=true; var pr=vid.play(); if(pr&&pr.catch) pr.catch(function(){}); }   /* 음소거 상태로 재생 */
     castClock();
     if(window.cxToast) cxToast('주주총회를 시작했습니다.');
   });
@@ -2362,7 +2362,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     a:'<tr><th class="c" style="width:90px">의안</th><th style="width:160px">투표권자</th><th class="r" style="width:120px">보유주식수</th><th>수정 내용</th><th class="c" style="width:96px">방식</th><th class="c" style="width:110px">검증유형</th><th class="c" style="width:110px">접수시간</th><th class="c" style="width:110px">상태</th></tr>',
     v:'<tr><th>투표권자</th><th>주주번호</th><th class="r">보유주식수</th><th class="c">의결권 행사</th>'
       +'<th class="c">질의</th><th class="c">발언</th>'
-      +'<th class="c">접속시각</th><th class="c">퇴장시각</th><th class="c">발언 조치</th><th class="c">퇴장 명령</th></tr>'
+      +'<th class="c">접속시각</th><th class="c">퇴장시각</th>'
+      +'<th class="c" style="width:120px">발언 조치</th><th class="c" style="width:120px">퇴장 명령</th></tr>'
   };
   var INFO='<svg class="exi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="7.6" r=".9" fill="#737373" stroke="none"/></svg>';
   /* 시청자 — 총회에 접속한 참여자 표본.
@@ -3695,13 +3696,13 @@ function toggleMute(id){
   }
   function list(){
     var a=(qt==='q'?Q.filter(function(x){return !x.amend;}):qt==='a'?amAll():S.filter(function(x){return !x.amend;})).filter(pass);
-    if(qt==='s') a=a.slice().sort(function(p,q2){ return p.seq-q2.seq; });   /* 전체 목록은 접수 순 */
+    if(qt==='s') a=a.slice().sort(function(p,q2){ return q2.seq-p.seq; });   /* 전체 목록은 최신순 */
     return a;
   }
-  function spList(){ return S.filter(function(x){return !x.amend;}).filter(pass).slice().sort(function(p,q2){ return p.seq-q2.seq; }); }
-  /* 동의 전체 — 질의 접수분 + 발언 신청분, 접수 시각 순 */
+  function spList(){ return S.filter(function(x){return !x.amend;}).filter(pass).slice().sort(function(p,q2){ return q2.seq-p.seq; }); }   /* 최신순 */
+  /* 동의 전체 — 질의 접수분 + 발언 신청분, 최신순 */
   function amAll(){ return Q.filter(function(x){return x.amend;}).concat(S.filter(function(x){return x.amend;}))
-    .sort(function(p,q2){ return String(p.tm).localeCompare(String(q2.tm)); }); }
+    .sort(function(p,q2){ return String(q2.tm).localeCompare(String(p.tm)); }); }
   /* ── 발언 대기열 뷰 ─────────────────────────────────────
      선택된 의안의 대기/완료 발언을 한 화면에서 다룬다.
      순서는 S 배열 자체를 바꿔서 옮긴다(별도 정렬 키를 두지 않는다). */
@@ -4310,7 +4311,7 @@ document.addEventListener('click',function(e){
   };
 })();
 </script>
-<script src="conexus.js?v=s21"></script>
+<script src="conexus.js?v=fwd"></script>
 <script>/* 칸이 열린 뒤에야 내보낼 수 있으므로, 화면을 연 순간의 상태를 여기서 한 번 알린다 */
 if(window.OC&&OC.fire) OC.fire();
 /* 주주PASS 시청 화면에서 올라온 질의 · 발언 · 동의를 받아 각 목록에 얹는다 */
