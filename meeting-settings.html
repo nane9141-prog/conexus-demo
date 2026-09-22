@@ -1436,6 +1436,19 @@ a.nav-item{text-decoration:none;color:var(--fg)}
       +'<div class="att-files'+(el.dataset.v?' v':'')+'">'+slot('국문',1)+slot('영문',el.dataset.v?1:2)+'</div>';
   }
   function fmtSize(b){return b>=1048576?(b/1048576).toFixed(1)+'MB':Math.max(1,Math.round(b/1024))+'KB';}
+  /* 올린 파일 이름은 실제 파일명 대신 문서 내용에 맞춘 이름으로 보여 준다 */
+  const ATT_EN={'소집 공고문':'Notice_of_General_Meeting','감사보고서':'Audit_Report','사업보고서':'Annual_Report',
+    '주주서한':'Letter_to_Shareholders','위임장 양식':'Proxy_Form','전자위임장 참고서류':'E_Proxy_Reference',
+    '의안 참고 자료':'Agenda_Reference'};
+  function attFileName(att,lang,ext){
+    const M=(window.CX&&CX.meeting)||{};
+    const y=String(M.date||'').slice(0,4)||String(new Date().getFullYear());
+    const doc=att.dataset.att||'첨부파일';
+    const base= lang==='영문'
+      ? y+'_'+(ATT_EN[doc]||doc.replace(/\s+/g,'_'))
+      : y+'_'+(M.name?String(M.name).replace(/\s+/g,'')+'_':'')+doc.replace(/\s+/g,'');
+    return base+'.'+(ext||'pdf');
+  }
   $$('.att').forEach(el=>{if(el.dataset.init)FILES.set(el,{'국문':{name:'2025_감사보고서.pdf',size:'12KB'},'영문':{name:'2025_Audit_Report.pdf',size:'12KB'}});renderAtt(el);});
   const fileInput=$('#fileInput');let uplTarget=null;
   document.addEventListener('click',e=>{
@@ -1448,7 +1461,9 @@ a.nav-item{text-decoration:none;color:var(--fg)}
     const ext=(file.name.split('.').pop()||'').toLowerCase(),ok=att.dataset.ext?[att.dataset.ext]:['pdf','xlsx','xls','docx'];
     if(ok.indexOf(ext)<0){showToast(att.dataset.ext?'지원하지 않는 파일 형식입니다. (PDF만 가능)':'지원하지 않는 파일 형식입니다. (PDF, XLSX, XLS, DOCX만 가능)',true);return;}
     if(file.size>50*1048576){showToast('파일 용량이 50MB를 초과했습니다.',true);return;}
-    const f=FILES.get(att)||{};f[uplTarget.lang]={name:file.name,size:fmtSize(file.size)};FILES.set(att,f);renderAtt(att);markDirty();
+    const f=FILES.get(att)||{};
+    f[uplTarget.lang]={name:attFileName(att,uplTarget.lang,ext),size:fmtSize(file.size)};
+    FILES.set(att,f);renderAtt(att);markDirty();
   });
 
   /* ===== 전자투표/전자위임 설정 ===== */
