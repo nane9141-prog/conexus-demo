@@ -81,12 +81,19 @@
   .ty-tbl td{padding:13px 8px;border-bottom:1px solid #f0f0f0;text-align:right;font-variant-numeric:tabular-nums;color:#0a0a0a}
   .ty-tbl td.l{text-align:left}.ty-tbl td.c{text-align:center}
   .ty-tbl td.muted{color:#c4c4c4}
+  /* 주주별 결과 — 칸을 고정해 넓은 화면에서는 가로 스크롤이 생기지 않게 한다 */
+  table#holderTbl{table-layout:fixed;min-width:1030px}
+  #holderTbl td.l{overflow:hidden;text-overflow:ellipsis}
+  #holderTbl thead th{padding-left:6px;padding-right:6px}
+  #holderTbl td{padding-left:6px;padding-right:6px}
   .ty-tbl tbody tr:last-child td{border-bottom:none}
   .ty-tbl tbody tr:hover td{background:#fafafa}
   .ty-tbl .nm{color:#0a0a0a}
   .ty-tbl .sub{color:#737373}
   .ty-tbl tr.off td{opacity:.5}
-  .ty-foot{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;border-top:1px solid var(--border);font-size:13px;color:#525252}
+  .ty-tblwrap.hasfoot{border-bottom:0;border-radius:12px 12px 0 0}
+  .ty-foot{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;font-size:13px;color:#525252;
+    border:1px solid var(--border);border-radius:0 0 12px 12px;background:#fff}   /* 표와 한 상자로 붙인다 */
   .ty-foot .at-pg{display:flex;align-items:center;gap:8px}
   .ty-foot .pgs{display:inline-flex;align-items:center;gap:4px}
   .ty-foot .pp{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;box-sizing:border-box;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;color:#525252}
@@ -411,14 +418,10 @@
               <span data-cx-tools></span>
             </div>
           </div>
-          <div class="ty-tblwrap">
+          <div class="ty-tblwrap hasfoot">
             <table class="ty-tbl" id="holderTbl">
-              <thead><tr>
-                <th class="l">투표권자</th><th class="l">주주명</th><th class="l">행사방식</th>
-                <th>행사가능의결권</th><th>미행사의결권</th><th>행사의결권</th>
-                <th class="c">의결권 제한</th><th class="c">의안별 제한</th>
-                <th class="c">제1호 의안</th><th class="c">제2호 의안</th><th class="c">제3호 의안</th>
-              </tr></thead>
+              <colgroup id="hlCols"></colgroup>
+              <thead><tr id="hlHead"></tr></thead>
               <tbody id="hlBody"></tbody>
             </table>
           </div>
@@ -706,8 +709,26 @@
     {vt:'홍*동',nm:'홍*동',ch:'pwt',hold:1200,rst:0,av:1200,sh:'-',ar:'-',v:['찬성','기권','찬성']}
   ];
   var curHl='all';
+  /* 의안 칸은 표결 단위(CX.votingUnits) 전체 — 3개만 두면 나머지 의안이 빠진다 */
+  function hlUnits(){ return (CX.votingUnits||[]).slice(); }
+  function hlBuildHead(){
+    var u=hlUnits(), th=document.getElementById('hlHead'), cg=document.getElementById('hlCols');
+    if(!th||!cg) return;
+    th.innerHTML='<th class="l">투표권자</th><th class="l">주주명</th><th class="l">행사방식</th>'
+      +'<th>행사가능<br>의결권</th><th>미행사<br>의결권</th><th>행사<br>의결권</th>'
+      +'<th class="c">의결권<br>제한</th><th class="c">의안별<br>제한</th>'
+      +u.map(function(no){ return '<th class="c">'+no+'</th>'; }).join('');
+    cg.innerHTML='<col style="width:112px"><col style="width:120px"><col style="width:92px">'
+      +'<col style="width:84px"><col style="width:74px"><col style="width:84px">'
+      +'<col style="width:64px"><col style="width:72px">'
+      +u.map(function(){ return '<col style="width:'+Math.max(56, Math.floor(336/Math.max(1,u.length)))+'px">'; }).join('');
+  }
   function hlRender(){
     var body=document.getElementById('hlBody'); if(!body) return; body.innerHTML='';
+    hlBuildHead();
+    var U=hlUnits();
+    /* 예시 데이터는 3건만 들고 있다 — 나머지 의안은 같은 성향으로 채운다 */
+    HOLD.forEach(function(h){ while(h.v.length<U.length) h.v.push(h.v[h.v.length%3]); });
     var L=HOLD.filter(function(h){ return curHl==='all' || h.ch===curHl; });
     var pages=Math.max(1,Math.ceil(L.length/HL.size)); if(HL.p>pages) HL.p=pages;
     hlFoot(L, pages);
@@ -717,7 +738,7 @@
       body.insertAdjacentHTML('beforeend','<tr><td class="l nm">'+h.vt+'</td><td class="l sub">'+h.nm+'</td><td class="l sub">'+chLabel(h.ch)+'</td>'+
         '<td>'+fmt(h.av)+'</td><td'+(un?'':' class="muted"')+'>'+fmt(un)+'</td><td>'+fmt(ex)+'</td>'+
         '<td class="'+shc+'">'+h.sh+'</td><td class="'+arc+'">'+(h.ar==='-'?h.ar:'<span class="tag">'+h.ar+'</span>')+'</td>'+
-        '<td class="c">'+opv(h.v[0])+'</td><td class="c">'+opv(h.v[1])+'</td><td class="c">'+opv(h.v[2])+'</td></tr>');
+        U.map(function(_,i){ return '<td class="c">'+opv(h.v[i])+'</td>'; }).join('')+'</tr>');
     });
   }
   /* 주주별 결과 페이지네이션 — 참석자 관리 표와 같은 모양 */
