@@ -4439,7 +4439,7 @@ if(window.OC&&OC.fire) OC.fire();
   [['btnBeacon', 'bcnOvl'], ['btnNoVote', 'nvOvl'], ['btnNotice', 'ntcOvl']].forEach(function (p) {
     var b = $(p[0]); if (b) b.addEventListener('click', function () { open(p[1]); });
   });
-  var pause = $('btnPause'); if (pause) pause.addEventListener('click', function () { setDly('recess'); $('dlyBody').value = ''; open('dlyOvl'); });
+  var pause = $('btnPause'); if (pause) pause.addEventListener('click', function () { setDly('postpone'); $('dlyBody').value = ''; open('dlyOvl'); });
   /* 표결이 다 끝났으면 확인만, 남은 의안이 있으면 체크까지 받는다 */
   var cls = $('btnClose'); if (cls) cls.addEventListener('click', function () {
     var left = (window.CX && CX.votingUnits || []).some(function (no) {
