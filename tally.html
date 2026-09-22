@@ -710,36 +710,73 @@
     {vt:'홍*동',nm:'홍*동',ch:'pwt',hold:1200,rst:0,av:1200,sh:'-',ar:'-',v:['찬성','기권','찬성']}
   ];
   var curHl='all';
-  /* 의안 칸은 표결 단위(CX.votingUnits) 전체 — 3개만 두면 나머지 의안이 빠진다 */
+  /* 의안 칸 — 표결 단위(CX.votingUnits) 전체.
+   * 집중투표는 찬반이 아니라 후보에게 표를 나눠 주는 방식이라, 후보 번호(제4-1-1호…)로
+   * 칸을 펼치고 득표 의결권 수를 적는다. 폐기된 집중투표는 펼치지 않는다. */
   function hlUnits(){ return (CX.votingUnits||[]).slice(); }
+  function hlSeats(d){ var m=/중\s*(\d+)\s*인/.exec(d.name||''); return m?+m[1]:1; }
+  function hlCols(){
+    var out=[];
+    hlUnits().forEach(function(no,ui){
+      var d=(CX.center||{})[no]||{};
+      if(d.type==='집중투표' && d.cands && d.cands.length && !dropped(no)){
+        d.cands.slice().sort(function(x,y){ return String(x.no).localeCompare(String(y.no),'ko'); })
+          .forEach(function(c,ci){ out.push({lb:c.no, ui:ui, cum:true, ci:ci, n:d.cands.length, seats:hlSeats(d)}); });
+        return;
+      }
+      out.push({lb:no, ui:ui, cum:false});
+    });
+    return out;
+  }
+  /* 주주가 가진 집중투표 표(행사 의결권 × 선임 인원)를 후보에게 배분한 결과.
+   * 데모 데이터라 주주·의안 번호로 고정된 배분 패턴을 쓴다. null 이면 미행사. */
+  function hlCum(h, hi, c){
+    var seed=(hi*7+c.ui*13)%11; if(seed===3) return null;
+    var n=c.n, w=new Array(n), i, tot=0, pat=seed%4;
+    for(i=0;i<n;i++) w[i]=0;
+    if(pat===0){ w[seed%n]=1; }
+    else if(pat===1){ w[seed%n]+=1; w[(seed+2)%n]+=1; }
+    else if(pat===2){ w[seed%n]+=60; w[(seed+1)%n]+=25; w[(seed+3)%n]+=15; }
+    else { for(i=0;i<n;i++) w[i]=1; }
+    for(i=0;i<n;i++) tot+=w[i]; if(!tot){ w[0]=1; tot=1; }
+    var pool=(h.ex==null?h.av:h.ex)*c.seats;
+    return Math.floor(pool*w[c.ci]/tot);
+  }
   function hlBuildHead(){
-    var u=hlUnits(), th=document.getElementById('hlHead'), cg=document.getElementById('hlCols');
+    var C=hlCols(), th=document.getElementById('hlHead'), cg=document.getElementById('hlCols');
     if(!th||!cg) return;
     th.innerHTML='<th class="l">투표권자</th><th class="l">주주명</th><th class="l">행사방식</th>'
       +'<th>행사가능<br>의결권</th><th>미행사<br>의결권</th><th>행사<br>의결권</th>'
       +'<th class="c">의결권<br>제한</th><th class="c">의안별<br>제한</th>'
-      +u.map(function(no){ return '<th class="c">'+no+'</th>'; }).join('');
-    cg.innerHTML='<col style="width:112px"><col style="width:120px"><col style="width:92px">'
-      +'<col style="width:84px"><col style="width:74px"><col style="width:84px">'
-      +'<col style="width:64px"><col style="width:72px">'
-      +u.map(function(){ return '<col style="width:'+Math.max(56, Math.floor(336/Math.max(1,u.length)))+'px">'; }).join('');
+      +C.map(function(c){ return '<th class="'+(c.cum?'':'c')+'">'+c.lb+'</th>'; }).join('');
+    cg.innerHTML='<col style="width:104px"><col style="width:112px"><col style="width:86px">'
+      +'<col style="width:80px"><col style="width:70px"><col style="width:80px">'
+      +'<col style="width:60px"><col style="width:66px">'
+      +C.map(function(c){ return '<col style="width:'+(c.cum?82:62)+'px">'; }).join('');
+    var tbl=document.getElementById('holderTbl');
+    if(tbl) tbl.style.minWidth=(658+C.reduce(function(s,c){ return s+(c.cum?82:62); },0))+'px';
   }
   function hlRender(){
     var body=document.getElementById('hlBody'); if(!body) return; body.innerHTML='';
     hlBuildHead();
-    var U=hlUnits();
+    var U=hlUnits(), C=hlCols();
     /* 예시 데이터는 3건만 들고 있다 — 나머지 의안은 같은 성향으로 채운다 */
     HOLD.forEach(function(h){ while(h.v.length<U.length) h.v.push(h.v[h.v.length%3]); });
     var L=HOLD.filter(function(h){ return curHl==='all' || h.ch===curHl; });
     var pages=Math.max(1,Math.ceil(L.length/HL.size)); if(HL.p>pages) HL.p=pages;
     hlFoot(L, pages);
     L.slice((HL.p-1)*HL.size, HL.p*HL.size).forEach(function(h){
+      var hi=HOLD.indexOf(h);
       var shc = h.sh==='-'?'c muted':'c sub', arc = h.ar==='-'?'c muted':'c sub';
       var ex=(h.ex==null?h.av:h.ex), un=h.av-ex;
       body.insertAdjacentHTML('beforeend','<tr><td class="l nm">'+h.vt+'</td><td class="l sub">'+h.nm+'</td><td class="l sub">'+chLabel(h.ch)+'</td>'+
         '<td>'+fmt(h.av)+'</td><td'+(un?'':' class="muted"')+'>'+fmt(un)+'</td><td>'+fmt(ex)+'</td>'+
         '<td class="'+shc+'">'+h.sh+'</td><td class="'+arc+'">'+(h.ar==='-'?h.ar:'<span class="tag">'+h.ar+'</span>')+'</td>'+
-        U.map(function(_,i){ return '<td class="c">'+opv(h.v[i])+'</td>'; }).join('')+'</tr>');
+        C.map(function(c){
+          if(!c.cum) return '<td class="c">'+opv(h.v[c.ui])+'</td>';
+          var v=hlCum(h,hi,c);
+          return v==null||!v ? '<td class="muted">-</td>' : '<td>'+fmt(v)+'</td>';
+        }).join('')+'</tr>');
     });
   }
   /* 주주별 결과 페이지네이션 — 참석자 관리 표와 같은 모양 */
