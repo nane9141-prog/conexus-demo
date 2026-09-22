@@ -708,8 +708,9 @@
   }
   function chipCounts(){ document.querySelectorAll('#atChips .at-chip').forEach(function(b){ var k=b.dataset.chip; b.querySelector('b').textContent=base().filter(function(x){ return chipHit(x,k); }).length; }); }
   function render(){
-    /* 현장 참석자 탭 숫자 — 참석 중인 주주(비주주 참관인 제외) */
-    var sc=document.getElementById('atSiteCnt'); if(sc) sc.textContent=D.filter(function(x){ return !x.nonsh && x.site!=='미참석'; }).length;
+    /* 현장 참석자 탭 숫자 — 참석 중인 주주 + 비주주(참관인) */
+    var sc=document.getElementById('atSiteCnt');
+    if(sc) sc.textContent=D.filter(function(x){ return x.nonsh || x.site!=='미참석'; }).length;
     /* 등록·철회·비주주 추가를 저장 — 현장 제어가 같은 명단을 읽는다(총회 종료 시 초기화) */
     if(CX.saveAttendees) CX.saveAttendees(D);
     var head=document.getElementById('atHead'), body=document.getElementById('atBody');
