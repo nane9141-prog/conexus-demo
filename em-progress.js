@@ -43,7 +43,7 @@
       '<div class="pg-row">' + unit('pgPqN', '질의 횟수', '3', '회') + unit('pgPqL', '작성 분량', '1,000', '자') + '</div>' +
       '<div class="pg-row">' + inp('pgPqNote', '사전질의 주의사항 (선택)', '', '주주에게 안내할 주의사항을 입력해 주세요') + '</div><div class="pg-hr"></div>' +
       '<div class="pg-f"><span class="pg-lb">주주 권한 설정</span><div class="pg-chk">' + chk('pqAuth', '질의 수정 허용', 1) + chk('pqAuth', '질의 삭제 허용', 1) + '</div></div>' +
-      '<div class="pg-f"><span class="pg-lb">관리자 알림 설정</span><div class="pg-chk">' + chk('pqNoti', '신규 질의 등록 시 알림 받기', 1) + '</div><div class="pg-row">' + inp('pgPqMail', '수신 이메일', 'ir@kakaobank.com', 'name@example.com') + inp('pgPqTel', '수신 휴대폰번호', '010-2345-6789', '010-0000-0000') + '</div></div>', true) +
+      '<div class="pg-f"><span class="pg-lb">관리자 알림 설정</span><div class="pg-chk">' + chk('pqNoti', '신규 질의 등록 시 알림 받기', 1) + '</div><div class="pg-row">' + inp('pgPqMail', '수신 이메일', 'ir@kudoselectric.com', 'name@example.com') + inp('pgPqTel', '수신 휴대폰번호', '010-2345-6789', '010-0000-0000') + '</div></div>', true) +
     card('ask', '당일 질의 규칙', '전자주주총회 진행 중 텍스트 질의 등록 시 적용되는 제한 규칙을 설정합니다.',
       '<div class="pg-f"><label for="pgAskBy">질의 기준</label>' + sel('pgAskBy', ['의안별', '주총 전체'], 200) + '</div>' +
       '<div class="pg-chk">' + chk('askOnlyCur', '진행 중인 의안에만 질의 허용', 1) + '</div>' +
