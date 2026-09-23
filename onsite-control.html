@@ -729,8 +729,11 @@
   .qmtbl .vwcol{min-width:120px}   /* 발언 조치 · 퇴장 명령 — 버튼이 들어갈 만큼 같은 폭으로 */
   /* 전자출석현황 페이지 바 — 접속자가 많아 한 번에 20명씩 본다 */
   .vwfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:none;
-    height:48px;padding:0 16px;border-top:1px solid #E5E5E5;background:#fff;
-    border-radius:0 0 10px 10px;font-size:13px;color:#525252}
+    height:48px;padding:0 16px;background:#fff;font-size:13px;color:#525252;
+    border:1px solid #E5E5E5;border-top:0;border-radius:0 0 8px 8px}
+  /* 표와 한 덩어리로 — 표 상자의 아래 테두리를 없애고 바로 붙인다 */
+  .qmscroll.hasfoot{border-bottom:0;border-radius:8px 8px 0 0}
+  .qmscroll.hasfoot + .vwfoot{margin-top:-10px}
   .vwfoot .pg{display:flex;align-items:center;gap:4px}
   .vwfoot .pg button{min-width:28px;height:28px;padding:0 6px;border:1px solid transparent;border-radius:8px;
     background:none;font-family:inherit;font-size:13px;color:#525252;cursor:pointer}
@@ -2508,6 +2511,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   }
   function vwFoot(){
     var el=document.getElementById('vwFoot'); if(!el) return;
+    var box=document.querySelector('.qmscroll');
+    if(box) box.classList.toggle('hasfoot', mode==='v');
     if(mode!=='v'){ el.style.display='none'; return; }
     el.style.display='flex';
     var pages=Math.max(1,Math.ceil(VW_TOTAL/VW.size)), p=VW.p;
