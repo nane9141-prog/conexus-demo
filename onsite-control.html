@@ -650,6 +650,9 @@
   .amvtop{display:flex;flex-direction:column;gap:8px}
   .amvtop .amf.amt,.amvtop .amf.amb{white-space:normal;align-items:flex-start}
   .amvtop .amf b{flex:none;min-width:52px}
+  #dlyvWho .amf b{min-width:72px}   /* 표결 의안명 · 내용 · 사유 라벨 폭 맞춤 */
+  #dlyvWho .amf.amt,#dlyvWho .amf.amb{align-items:flex-start}
+  #dlyvWho .amf.amt b,#dlyvWho .amf.amb b{line-height:20px}
   .amvtop .amf.amb span{color:#525252;line-height:20px}
   /* 제안 주주 — 고르면 투표권자 · 주주번호 · 보유주식 카드(Figma), 카드에서 연 경우엔 X 없이 고정 */
   .am-pick{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid #E5E5E5;border-radius:10px;background:#FAFAFA}
@@ -2130,13 +2133,17 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   function siteNow(){ return siteClosed() ? SITE_TOT : OC.siteN; }
   function siteWNow(){ return siteClosed() ? Math.round(CX.channels[1].w*0.875) : OC.siteW; }
   function onlNow(){ return siteClosed() ? CX.channels[2].w : OC.onlW; }
+  /* 총회 지연처럼 현장에서 새로 만든 의안은 사전투표가 없다 */
+  function noPre(){ var d=CX.center[OC.agenda]; return !!(d && d.nopre); }
   function chanRows(){
     var pre=CX.channels[0].w, onsite=CX.channels[1].w, online=CX.channels[2].w, st=OC.stage;
     var paperShare=(st>=4?1:0.6);                 /* 집계중엔 현장 서면이 일부만 들어온다 */
     /* full = 그 채널이 마감 때 갖게 될 행사 의결권. w 와의 차이가 아직 안 들어온 미행사분이다. */
-    return [
+    var preRows = noPre() ? [] : [
       { nm:'전자투표 (사전)', w:Math.round(pre*0.8), full:Math.round(pre*0.8), ready:true, badge:CHFIX },
-      { nm:'서면투표 (사전)', w:Math.round(pre*0.2), full:Math.round(pre*0.2), ready:true, badge:CHFIX },
+      { nm:'서면투표 (사전)', w:Math.round(pre*0.2), full:Math.round(pre*0.2), ready:true, badge:CHFIX }
+    ];
+    return preRows.concat([
       { nm:'현장표결',     w:siteWNow(),          full:Math.round(onsite*0.875), ready:st>=2,
         /* 집계에 들어가면 전원 집계 — 숫자는 그대로 두고 파란 배지로 바뀐다 */
         badge: '<span class="chst '+(st>=3?'fix':'info')+'">'+siteNow()+'/'+SITE_TOT+'</span>' },
@@ -2144,7 +2151,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
         badge: st>=4 ? CHFIX : (st>=3 ? CHUNF : CHNON) },
       { nm:'전자표결',     w:onlNow(),            full:online, ready:st>=2,
         badge: st>=3 ? CHFIX : (st>=2 ? CHUNF : CHNON) }
-    ];
+    ]);
   }
   /* 아직 안 들어온 의결권 — 채널이 마감 때 갖게 될 양에서 지금 값을 뺀다 */
   function chanUnexercised(){
@@ -2153,19 +2160,19 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     },0);
   }
   function chanChannels(F,A,AB){
-    var chans=chanRows();
+    var chans=chanRows(), pn=noPre()?0:2;
     /* 사전 두 채널은 총회 전에 닫힌 표라 단계가 바뀌어도 값이 변하지 않는다.
        현장·온라인만 표결이 열린 뒤 차오른다. */
-    var f=0.8+0.2*liveFrac(), preR=f?0.8/f:1;
+    var f=0.8+0.2*liveFrac(), preR=pn?(f?0.8/f:1):0;
     var pre={f:F*preR, a:A*preR, ab:AB*preR};
     var live={f:F-pre.f, a:A-pre.a, ab:AB-pre.ab};
-    var preBase=chans[0].w+chans[1].w || 1;
-    var liveBase=chans.slice(2).reduce(function(a,c){return a+(c.ready?c.w:0);},0) || 1;
+    var preBase=(pn?chans[0].w+chans[1].w:0) || 1;
+    var liveBase=chans.slice(pn).reduce(function(a,c){return a+(c.ready?c.w:0);},0) || 1;
     var sum={w:0,f:0,a:0,ab:0};
     /* 미행사분은 칸마다 적지 않고 헤더에 한 번만 총량으로 보여준다 */
     function wcell(w){ return '<td>'+comma(w)+'</td>'; }
     var rows=chans.map(function(c,i){
-      var early=(i<2), src=early?pre:live;
+      var early=(i<pn), src=early?pre:live;
       var sh=early ? (c.w/preBase) : (c.ready?(c.w/liveBase):0);
       var w=c.ready?c.w:0, cf=Math.round(src.f*sh), ca=Math.round(src.a*sh), cab=Math.round(src.ab*sh);
       sum.w+=w; sum.f+=cf; sum.a+=ca; sum.ab+=cab;
@@ -2369,6 +2376,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     if(cp){
       if(gone) cp.innerHTML='<span class="rst drop">폐기</span>';
       else if(!single) cp.innerHTML='';
+      else if(d.nopre && OC.stage<4) cp.innerHTML='';   /* 지연 의안 — 사전 집계가 없어 예상 판정을 두지 않는다 */
       else { var res=predOf(d); cp.innerHTML=OC.stage>=4?opinionBadge(res):predBadge(res); }
     }
     var box=document.getElementById('cVizBox');
@@ -4648,7 +4656,7 @@ if(window.OC&&OC.fire) OC.fire();
     if (CX.center['제1호']) {
       var c = {}; for (var k in CX.center['제1호']) c[k] = CX.center['제1호'][k];
       c.cat = no; c.type = '보통결의'; c.name = d.title; c.thrLabel = '출석의결권 1/2';
-      c.for = 0; c.against = 0; c.abs = 0; c.expect = '';
+      c.for = 0; c.against = 0; c.abs = 0; c.expect = ''; c.nopre = true;   /* 사전 채널·예상 판정 없음 */
       CX.center[no] = c;
     }
     tree.querySelectorAll('.arow.selnode').forEach(function (card) {
