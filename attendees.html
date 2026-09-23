@@ -1051,23 +1051,48 @@
     function pvMode(){ return pv.querySelector('[data-pv].on').dataset.pv; }
     /* 고른 처리 방법에 맞춰 확인 문구와 버튼 라벨을 바꾼다 */
     function pvSet(m){
-      var keep=(m==='keep');
+      var keep=(m==='keep'), apply=(pvKind==='apply');
       document.getElementById('pvChkT').textContent = keep
         ? '위 내용을 확인했으며, 행사내역을 유지합니다.'
-        : '위 내용을 확인했으며, 사전내역을 철회합니다.';
-      pvOk.textContent = keep ? '행사내역 유지' : '철회 후 현장참석';
+        : (apply ? '위 내용을 확인했으며, 사전 신청을 철회합니다.'
+                 : '위 내용을 확인했으며, 사전내역을 철회합니다.');
+      pvOk.textContent = keep ? '행사내역 유지' : (apply ? '현장참석' : '철회 후 현장참석');
     }
-    function pvOpen(tr, x){
-      pvTr=tr;
-      var tt=document.getElementById('pvTitle'); tt.textContent=x.voter+'님의 사전의결권'; tt.appendChild(document.createElement('br')); tt.appendChild(document.createTextNode('행사내역이 존재합니다'));
+    /* kind: 'pre' 사전의결권 행사내역 · 'apply' 사전 참석 신청 내역 */
+    var pvKind='pre';
+    function pvOpen(tr, x, kind){
+      pvTr=tr; pvKind=kind||'pre';
+      var apply=(pvKind==='apply');
+      var tt=document.getElementById('pvTitle');
+      tt.textContent = x.voter + (apply ? '님의 사전 참석' : '님의 사전의결권');
+      tt.appendChild(document.createElement('br'));
+      tt.appendChild(document.createTextNode(apply ? '신청 내역이 존재합니다' : '행사내역이 존재합니다'));
       var dd=document.getElementById('pvDesc'), CHO=CX.PRE_CH||[];
-      var ch=x.pre.slice().sort(function(a,b){ return CHO.indexOf(a)-CHO.indexOf(b); }).join(', ');
       dd.innerHTML='<span class="ch"></span>';
-      dd.firstChild.textContent=ch+' ';
-      dd.appendChild(document.createTextNode('행사내역이 있습니다.'));
+      if(apply){
+        dd.firstChild.textContent='사전 참석 신청 ';
+        dd.appendChild(document.createTextNode('내역이 있습니다.'));
+      }else{
+        dd.firstChild.textContent=x.pre.slice().sort(function(a,b){ return CHO.indexOf(a)-CHO.indexOf(b); }).join(', ')+' ';
+        dd.appendChild(document.createTextNode('행사내역이 있습니다.'));
+      }
       dd.appendChild(document.createElement('br'));
       dd.appendChild(document.createTextNode('참석처리 방법을 선택해 주세요.'));
-      pv.querySelectorAll('[data-pv]').forEach(function(c,i){ c.classList.toggle('on',i===0); });
+      /* 참석 신청 건은 '철회 후 현장참석' 한 가지만 고를 수 있다 */
+      var opts=pv.querySelectorAll('[data-pv]');
+      opts.forEach(function(c,i){
+        c.classList.toggle('on',i===0);
+        if(c.dataset.pv==='keep') c.style.display = apply ? 'none' : '';
+      });
+      if(apply){
+        var o0=opts[0];
+        o0.querySelector('b').textContent='신청 철회 후 참석';
+        o0.querySelector('span').textContent='사전 참석 신청을 철회하고 현장에서 참석 처리';
+      }else{
+        var o1=opts[0];
+        o1.querySelector('b').textContent='철회 후 현장참석';
+        o1.querySelector('span').textContent='행사내역 철회 후 현장에서 다시 투표';
+      }
       pvChk.classList.remove('on'); pvOk.disabled=true; pvSet('withdraw');
       pv.classList.add('show');
     }
@@ -1093,7 +1118,10 @@
       var tr=e.target.closest('tr'); if(!tr||tr.classList.contains('atchild')) return;
       var px=curRows[+tr.dataset.k]; if(px&&px.nonsh){ if(view) nvOpen(px); return; }
       if(view && (!px || px.site==='미참석')) return;          /* 조회는 현장 참석 등록된 주주만 */
-      if(!view && !pvPass && px && px.pre.length && px.site==='미참석' && !e.target.closest('.tw-chevron')){ pvOpen(tr, px); return; }
+      if(!view && !pvPass && px && px.site==='미참석' && !e.target.closest('.tw-chevron')){
+        if(px.pre.length){ pvOpen(tr, px, 'pre'); return; }
+        if(px.apply==='신청'){ pvOpen(tr, px, 'apply'); return; }   /* 사전 참석 신청만 있는 경우 */
+      }
       if(e.target.closest('.tw-chevron')) return;
       var tds=tr.querySelectorAll('td'); if(tds.length<3) return;
       var nmT=tds[1].querySelector('[data-nm]'), hold=+tr.dataset.hold||0, gx=curRows[+tr.dataset.k];
