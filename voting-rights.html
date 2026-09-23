@@ -252,6 +252,9 @@
   /* 칸이 많은 표 — 화면이 좁아지면 가로로 스크롤한다(칸이 눌리지 않게) */
   .tbl-wrap.xscroll{overflow-x:auto;overflow-y:hidden}
   .tbl-wrap.xscroll>table{min-width:980px}
+  /* 공통 규칙이 좁은 화면에서 표 틀에 min-width 를 걸어 페이지가 통째로 밀린다 —
+     이 카드는 카드 안에서만 가로로 스크롤되게 예외로 둔다 */
+  @media (max-width:1100px){ .tbl-wrap.xscroll{min-width:0} }
   .solfoot .pgr{display:flex;align-items:center;gap:12px;color:#1f1c18}
   .solfoot .pgr i{font-size:16px;color:#a3a3a3}
   @media(max-width:1200px){.vr-kpi.c5{grid-template-columns:repeat(3,1fr)}}
