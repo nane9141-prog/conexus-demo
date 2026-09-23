@@ -1187,7 +1187,7 @@ window.cxClock = cxChannel('cx.clock');
 (function () {
   var st = document.createElement('style');
   st.textContent =
-    '.st-head{position:sticky;top:0;z-index:20}' +
+    '.st-head,.ev-head{position:sticky;top:0;z-index:20}' +
     '.lc-hd{position:sticky;top:0;z-index:21}' +
     '.lc-bar{position:sticky;top:var(--lcbar-top,72px);z-index:20}';
   (document.head || document.documentElement).appendChild(st);
