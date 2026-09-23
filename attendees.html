@@ -1076,8 +1076,7 @@
         dd.firstChild.textContent=x.pre.slice().sort(function(a,b){ return CHO.indexOf(a)-CHO.indexOf(b); }).join(', ')+' ';
         dd.appendChild(document.createTextNode('행사내역이 있습니다.'));
       }
-      dd.appendChild(document.createElement('br'));
-      dd.appendChild(document.createTextNode('참석처리 방법을 선택해 주세요.'));
+      dd.appendChild(document.createTextNode(' 참석처리 방법을 선택해 주세요.'));   /* 한 문단으로 — 강제 줄바꿈 없음 */
       /* 참석 신청 건은 '철회 후 현장참석' 한 가지만 고를 수 있다 */
       var opts=pv.querySelectorAll('[data-pv]');
       opts.forEach(function(c,i){
