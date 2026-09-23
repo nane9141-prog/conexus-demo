@@ -727,6 +727,19 @@
   .vwbtn{height:24px;padding:0 8px;border:none;border-radius:8px;background:rgba(220,38,38,.1);font-family:inherit;font-size:12px;font-weight:500;color:#E9081B;cursor:pointer}
   .vwbtn.undo{background:#fff;border:1px solid #E5E5E5;color:#0A0A0A}
   .qmtbl .vwcol{min-width:120px}   /* 발언 조치 · 퇴장 명령 — 버튼이 들어갈 만큼 같은 폭으로 */
+  /* 전자출석현황 페이지 바 — 접속자가 많아 한 번에 20명씩 본다 */
+  .vwfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:none;
+    height:48px;padding:0 16px;border-top:1px solid #E5E5E5;background:#fff;
+    border-radius:0 0 10px 10px;font-size:13px;color:#525252}
+  .vwfoot .pg{display:flex;align-items:center;gap:4px}
+  .vwfoot .pg button{min-width:28px;height:28px;padding:0 6px;border:1px solid transparent;border-radius:8px;
+    background:none;font-family:inherit;font-size:13px;color:#525252;cursor:pointer}
+  .vwfoot .pg button:hover:not(:disabled){background:#F5F5F5}
+  .vwfoot .pg button.on{background:#171717;border-color:#171717;color:#fff;font-weight:600}
+  .vwfoot .pg button:disabled{color:#C4C4C4;cursor:default}
+  .vwfoot .sz{display:flex;align-items:center;gap:6px}
+  .vwfoot select{height:28px;border:1px solid #E5E5E5;border-radius:8px;background:#fff;
+    font-family:inherit;font-size:13px;color:#171717;padding:0 6px}
   .vwact{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border:1px solid #E5E5E5;border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;color:#0A0A0A;cursor:pointer;white-space:nowrap}
   .vwact i{font-size:14px}
   .vwact.out{border-color:transparent;background:rgba(220,38,38,.1);color:#E9081B}
@@ -1502,6 +1515,7 @@
                   <span data-cx-tools></span>
                 </div>
                 <div class="qmscroll"><table class="qmtbl"><thead id="qmHead"></thead><tbody id="qmBody"></tbody></table></div>
+                <div class="vwfoot" id="vwFoot" style="display:none"></div>
               </div>
               <div class="qmrside" id="qmSide">
                 <div class="qmright" id="qmPane"></div>
@@ -2443,23 +2457,87 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   /* 시청자 — 총회에 접속한 참여자 표본.
      권한이 없는 줄(참관인 · 사전 행사분)은 카운트 대신 '불가'로 둔다. */
   var AGN=CX.agenda.filter(function(a){return !a.header;}).length||8;
-  var VIEWERS=QUESTIONS.slice(0,16).map(function(x,i){
-    var watcher=(i%7===5), pre=(i%7===3);            /* 참관인 · 사전 의결권 행사 */
-    var via=(i%3===2)?'현장':'온라인';
+  /* 전자출석 주주 — 접속자가 10만 명이라 전부 만들어 두지 않고, 보는 쪽만 그때그때 만든다.
+     같은 번호는 늘 같은 사람이 되도록 순번에서 값을 뽑는다. */
+  var VW_TOTAL=(CX.meeting&&CX.meeting.onlineHolders)||100000;
+  var VW_NAMES=(CX.roster||[]).map(function(r){ return r.nm; });
+  if(!VW_NAMES.length) VW_NAMES=['김민준','이서연','박지호','최유나','정도윤','한예린','오세영','윤가람'];
+  var VW_SEED=QUESTIONS.slice(0,16);
+  function vwAt(i){
+    if(i<VW_SEED.length){
+      var x=VW_SEED[i];
+      var watcher=(i%7===5), pre=(i%7===3);
+      return {
+        id:'V'+i, name:x.name, t:x.t, sh:x.sh,
+        proxy:(i%5===1)?'대리 '+['김우진','정하늘','오세영','윤가람'][i%4]:'',
+        no:(8100200+i*37)+'',
+        vote:(watcher||pre)?null:Math.min(AGN,(i%AGN)+1)+'/'+AGN,
+        q:watcher?null:(i%5)+'/5',
+        sp:watcher?null:(i%4)+'/3',
+        why:watcher?'참관인':(pre?'사전 행사':''),
+        via:(i%3===2)?'현장':'온라인',
+        inTm:'09:'+(i<8?'0':'')+(2+i)+'',
+        outTm:(i%6===4)?('09:'+(30+i)):'',
+        lim:(i%9===7)
+      };
+    }
+    var n=VW_NAMES[i%VW_NAMES.length];
+    var watcher=(i%23===5), pre=(i%17===3);
+    var sh=200+((i*7919)%48000);
+    var mm=(i%60), hh=9+Math.floor((i%180)/60);
+    function p2(v){ return (v<10?'0':'')+v; }
     return {
-      id:'V'+i, name:x.name, t:x.t, sh:x.sh,
-      proxy:(i%5===1)?'대리 '+['김우진','정하늘','오세영','윤가람'][i%4]:'',
+      id:'V'+i, name:n, t:(i%9===0?'법인':'개인'), sh:sh,
+      proxy:(i%37===1)?'대리 '+VW_NAMES[(i*13)%VW_NAMES.length]:'',
       no:(8100200+i*37)+'',
-      vote: (watcher||pre) ? null : Math.min(AGN,(i%AGN)+1)+'/'+AGN,
-      q:    watcher ? null : (i%5)+'/5',
-      sp:   watcher ? null : (i%4)+'/3',
-      why:  watcher?'참관인':(pre?'사전 행사':''),
-      via:via,
-      inTm:'09:'+(i<8?'0':'')+(2+i)+'',
-      outTm:(i%6===4)?('09:'+(30+i)):'',
-      lim:(i%9===7)
+      vote:(watcher||pre)?null:Math.min(AGN,(i%AGN)+1)+'/'+AGN,
+      q:watcher?null:(i%5)+'/5',
+      sp:watcher?null:(i%4)+'/3',
+      why:watcher?'참관인':(pre?'사전 행사':''),
+      via:(i%3===2)?'현장':'온라인',
+      inTm:p2(hh)+':'+p2(mm),
+      outTm:(i%29===4)?(p2(hh)+':'+p2((mm+18)%60)):'',
+      lim:(i%41===7)
     };
-  });
+  }
+  var VW={p:1,size:20};
+  function vwPage(){
+    var start=(VW.p-1)*VW.size, out=[];
+    for(var i=start;i<Math.min(VW_TOTAL,start+VW.size);i++) out.push(vwAt(i));
+    return out;
+  }
+  function vwFoot(){
+    var el=document.getElementById('vwFoot'); if(!el) return;
+    if(mode!=='v'){ el.style.display='none'; return; }
+    el.style.display='flex';
+    var pages=Math.max(1,Math.ceil(VW_TOTAL/VW.size)), p=VW.p;
+    var a=Math.max(1,p-2), b=Math.min(pages,a+4); a=Math.max(1,b-4);
+    var n='';
+    for(var i=a;i<=b;i++) n+='<button type="button" class="'+(i===p?'on':'')+'" data-vp="'+i+'">'+i+'</button>';
+    el.innerHTML='<span>총 '+cm(VW_TOTAL)+'명 · '+cm((p-1)*VW.size+1)+'–'+cm(Math.min(VW_TOTAL,p*VW.size))+'</span>'
+      +'<span class="pg">'
+      +'<button type="button" data-vp="first"'+(p<=1?' disabled':'')+'>«</button>'
+      +'<button type="button" data-vp="prev"'+(p<=1?' disabled':'')+'>‹</button>'+n
+      +'<button type="button" data-vp="next"'+(p>=pages?' disabled':'')+'>›</button>'
+      +'<button type="button" data-vp="last"'+(p>=pages?' disabled':'')+'>»</button></span>'
+      +'<span class="sz">페이지당 <select id="vwSize">'
+      +[20,50,100].map(function(v){ return '<option'+(v===VW.size?' selected':'')+'>'+v+'</option>'; }).join('')
+      +'</select></span>';
+    el.dataset.pages=pages;
+  }
+  (function(){
+    var el=document.getElementById('vwFoot'); if(!el) return;
+    el.addEventListener('click',function(e){
+      var b=e.target.closest('[data-vp]'); if(!b||b.disabled) return;
+      var v=b.dataset.vp, pages=+el.dataset.pages||1;
+      VW.p = v==='first'?1 : v==='prev'?Math.max(1,VW.p-1) : v==='next'?Math.min(pages,VW.p+1) : v==='last'?pages : +v;
+      render();
+    });
+    el.addEventListener('change',function(e){
+      if(e.target.id!=='vwSize') return;
+      VW.size=+e.target.value; VW.p=1; render();
+    });
+  })();
 
   /* 밖에서 질의가 들어오면 이 화면도 다시 그린다 */
   (window.QAREPAINT=window.QAREPAINT||[]).push(function(){ render(); renderAcc(); });
@@ -2476,7 +2554,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     if(mode==='s') return SPEECHES.filter(function(x){ return !amd(x); });
     if(mode==='a') return QUESTIONS.filter(amd).concat(SPEECHES.filter(amd))
       .sort(function(p,q2){ return String(p.tm).localeCompare(String(q2.tm)); });
-    return VIEWERS;
+    return vwPage();
   }
   /* 동의 상태 — 질의 · 발언 탭과 같은 표시: 접수(회색) · 완료(질의 파랑 / 발언 회청) · 반려(회색, 흐리지 않음) */
   function amDot(x){
@@ -2574,6 +2652,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     acc.style.display = (mode==='s'||mode==='a') ? '' : 'none';   /* block 을 박으면 펼침(flex) 배치가 깨진다 */   /* 하단 대기열 바 — 발언 · 동의 */
     document.querySelector('.qmbody').classList.toggle('solo', mode==='v');
     if(!selId || !list.some(function(x){return (x.id||'')===selId;})) selId=(list[0]&&list[0].id)||null;
+    vwFoot();
     paint();
     if(mode==='s'||mode==='a') renderAcc();
   }
@@ -2718,11 +2797,11 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     var o=e.target.closest('[data-out],[data-unban]');
     if(o&&!o.disabled){ e.stopPropagation();
       var ban=o.hasAttribute('data-out'), vid=o.getAttribute(ban?'data-out':'data-unban'), v=null;
-      VIEWERS.forEach(function(x){ if(x.id===vid) v=x; }); if(!v) return;
+      v=vwAt(+String(vid).slice(1)); if(!v) return;
       vwAsk(v, ban); return; }
     var b=e.target.closest('[data-lim]'); if(!b||b.disabled) return;
     e.stopPropagation();
-    var v=null; VIEWERS.forEach(function(x){ if(x.id===b.dataset.lim) v=x; });
+    var v=vwAt(+String(b.dataset.lim).slice(1));
     if(!v) return;
     v.lim=!v.lim; render();
     if(window.cxToast) cxToast(v.name+' 님의 발언 권한을 '+(v.lim?'제한했습니다.':'복구했습니다.'));
