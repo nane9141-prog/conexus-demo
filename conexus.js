@@ -1187,9 +1187,9 @@ window.cxClock = cxChannel('cx.clock');
 (function () {
   var st = document.createElement('style');
   st.textContent =
-    '.st-head{position:sticky;top:0;z-index:20;background:var(--bg,#fafafa);padding:12px 0 12px;margin-top:-12px}' +
-    '.lc-hd{position:sticky;top:0;z-index:21;background:var(--bg,#fafafa);padding-top:12px;margin-top:-12px}' +
-    '.lc-bar{position:sticky;top:var(--lcbar-top,72px);z-index:20;background:var(--bg,#fafafa);padding:4px 0}';
+    '.st-head{position:sticky;top:0;z-index:20}' +
+    '.lc-hd{position:sticky;top:0;z-index:21}' +
+    '.lc-bar{position:sticky;top:var(--lcbar-top,72px);z-index:20}';
   (document.head || document.documentElement).appendChild(st);
   var RO = window.ResizeObserver ? new ResizeObserver(sync) : null, seen = [];
   function sync() {
@@ -1197,7 +1197,7 @@ window.cxClock = cxChannel('cx.clock');
       var hd = lc.querySelector('.lc-hd'); if (!hd) return;
       if (RO && seen.indexOf(hd) < 0) { seen.push(hd); RO.observe(hd); }
       var h = hd.offsetHeight;            /* 탭이 숨겨져 있으면 0 — 보일 때 다시 잰다 */
-      if (h) lc.style.setProperty('--lcbar-top', (h + 12) + 'px');
+      if (h) lc.style.setProperty('--lcbar-top', h + 'px');
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', sync); else sync();
