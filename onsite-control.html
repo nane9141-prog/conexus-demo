@@ -4667,6 +4667,9 @@ if(window.OC&&OC.fire) OC.fire();
       + '<span class="anm">[' + d.nm + '] ' + esc(d.title) + '</span><span class="astatus"></span></div>'
       + '<div class="atypes"><span class="tp">보통결의</span><span class="atsep">·</span><span class="tp amd">' + d.nm + '</span></div></div>');
     var nc = tree.firstElementChild; if (nc) nc.click();
+    /* 시청 화면에 긴급 표결로 띄운다 — 주주는 표결 전까지 닫을 수 없다 */
+    if (window.cxSync) cxSync.set({ urgent: { no: no, nm: '[' + d.nm + '] ' + d.title, type: '보통결의',
+      body: d.body || '', why: d.why || '' } });
     if (window.OC && OC.repaint) OC.repaint();
   }
 
