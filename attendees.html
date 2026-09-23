@@ -334,8 +334,8 @@
   .decl-text{width:100%;box-sizing:border-box;background:#fafafa;border:1px solid var(--border);border-radius:14px;padding:20px;font-family:inherit;font-size:18px;line-height:28px;color:#0a0a0a;resize:none;outline:none}
 </style>
 <script src="cx-data.js?v=6"></script>
-<script src="cx-roster.js?v=r8"></script>
-<script src="cx-attendees.js?v=2"></script>
+<script src="cx-roster.js?v=r9"></script>
+<script src="cx-attendees.js?v=a2"></script>
 <link rel="stylesheet" href="cx-accordion.css?v=1">
 <link rel="stylesheet" href="cx-checkbox.css?v=2">
 </head>
@@ -587,6 +587,7 @@
   var SITE_C={'참석':'blue','일부 참석':'gray','미참석':'off','철회 후 참석':'purple','참관':'purple'};
   function siteB(s){ return '<span class="atb '+(SITE_C[s]||'gray')+'">'+s+'</span>'; }
   function evB(e){ return '<span class="atb '+(e==='참석'?'blue':'off')+'">'+e+'</span>'; }
+  function apB(a){ a=a||'미신청'; return '<span class="atb '+(a==='신청'?'blue':'off')+'">'+a+'</span>'; }
   /* 전자주총 탭의 참석주식수는 온라인 출석 기준 */
   function attOf(x){ return cur==='evote'?(x.evote==='참석'?x.hold:0):x.attend; }
   function appB(a){ return '<span class="atb '+(a==='사용'?'blue':a==='미사용'?'off':'gray')+'">'+a+'</span>'; }
@@ -618,7 +619,7 @@
     }).join('');
   }
   /* 세 탭 공통 항목 */
-  var C=['투표권자','주주명','주주번호','사전투표','보유주식','지분율','참석주식수','현장 참석','앱 사용','의결권 제한','의안별 제한'];
+  var C=['투표권자','주주명','주주번호','사전투표','참석 신청','보유주식','지분율','참석주식수','현장 참석','앱 사용','의결권 제한','의안별 제한'];
   /* 현장 참석자 탭 — 주주번호 오른쪽 '대리인', 맨 뒤 더보기(⋯). 헤더가 빈 칸은 표 도구가 정렬·필터를 달지 않는다 */
   var CA=C.slice(0,3).concat(['대리인']).concat(C.slice(3)).concat(['']);
   /* 전자주총 참석자 탭 — 온라인 출석 기준 */
@@ -627,7 +628,7 @@
   var CN=['비주주 구분','참석자명','소속','전화번호','이메일','메모'];
   var COLS={reg:C,evote:CE,all:CA,non:CN};
   function ck(){ return (cur==='all'&&chip==='non')?'non':cur; }
-  var NUMC=['보유주식','보유주식수','지분율','참석주식수'], CENC=['비주주 구분','사전투표','현장 참석','앱 사용','의결권 제한','의안별 제한','출석',''];
+  var NUMC=['보유주식','보유주식수','지분율','참석주식수'], CENC=['비주주 구분','사전투표','참석 신청','현장 참석','앱 사용','의결권 제한','의안별 제한','출석',''];
   function cls(c){ return NUMC.indexOf(c)>=0?' class="n"':(CENC.indexOf(c)>=0?' class="c"':''); }
   function cellHTML(x,c,gid,k){
     if(c==='보유주식수') c='보유주식';
@@ -638,6 +639,7 @@
       case '주주번호': return x.no;
       case '대리인': return (x.proxy&&x.proxy!=='-')?x.proxy:mu('-');
       case '사전투표': return preB(x.pre);
+      case '참석 신청': return apB(x.apply);
       case '보유주식': return cm(x.hold);
       case '지분율': return x.ratio;
       case '참석주식수': return attOf(x)?cm(attOf(x)):mu('-');
@@ -692,7 +694,7 @@
       var r=(typeof p==='number'&&typeof q==='number')?p-q:String(p).localeCompare(String(q),'ko');
       return r?d*r:a._o-b._o; });
   }
-  var CW={'출석':90,'보유주식수':120,'대리인':96,'주주명':140,'주주번호':140,'사전투표':116,'현장 참석':110,'앱 사용':84,'보유주식':110,'지분율':72,'참석주식수':104,'의결권 제한':150,'의안별 제한':92,'비주주 구분':110,'참석자명':120,'소속':180,'전화번호':140,'이메일':220,'메모':240};
+  var CW={'출석':90,'보유주식수':120,'대리인':96,'주주명':140,'주주번호':140,'사전투표':116,'참석 신청':100,'현장 참석':110,'앱 사용':84,'보유주식':110,'지분율':72,'참석주식수':104,'의결권 제한':150,'의안별 제한':92,'비주주 구분':110,'참석자명':120,'소속':180,'전화번호':140,'이메일':220,'메모':240};
   /* 검색은 항상 전체 데이터(D) 기준. reg 탭은 검색 전엔 목록을 감춘다(null 반환) */
   /* 칩은 단일 선택 — 전체(기본) · 주주 · 비주주 */
   var chip='all';

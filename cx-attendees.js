@@ -3,7 +3,7 @@
    현장 참석자: site !== '미참석' · 전자주총 참석자: evote === '참석' · 비주주 참관인: nonsh */
 (function () {
   var CX = window.CX = window.CX || {};
-  function nonSh(nm,kind,org,phone,mail,memo){ return {nonsh:1, kind:kind, org:org||'-', phone:phone||'-', mail:mail||'-', memo:memo||'', proxy:'-', voter:nm, name:nm, no:'-', pre:[], hold:0, attend:0, ratio:'0.00%', site:'참관', app:'미사용', evote:'미참석', limit:'-', ag:null, key:nm+kind}; }
+  function nonSh(nm,kind,org,phone,mail,memo){ return {nonsh:1, kind:kind, org:org||'-', phone:phone||'-', mail:mail||'-', memo:memo||'', proxy:'-', voter:nm, name:nm, no:'-', pre:[], apply:'신청', hold:0, attend:0, ratio:'0.00%', site:'참관', app:'미사용', evote:'미참석', limit:'-', ag:null, key:nm+kind}; }
   function build(){
     var R=(window.CX&&CX.roster)?CX.roster:[];
     /* 사전투표: 미행사(기본) · 단일 채널 7종 · 중복행사(채널 2개 이상) */
@@ -24,7 +24,8 @@
       var PXN=['김민준','이서연','박지호','최유나','정도윤','한예린'];
       var o={proxy:(site!=='미참석'&&site!=='참관'&&r.i%4===1)?PXN[r.i%6]:'-', ac:r.ac, voter:(i%150===75)?'-':r.nm, name:r.nm, no:no, pre:pre, hold:r.sh,
         attend:site==='일부 참석'?Math.round(r.sh*0.6):0, ratio:r.rt.toFixed(2)+'%', site:site, app:app,
-        code:code, evote:(i%3===1?'미참석':'참석'), limit:lim, ag:(lim!=='-'&&i%2)?AG[i%AG.length]:null};
+        code:code, evote:(i%3===1?'미참석':'참석'), limit:lim, ag:(lim!=='-'&&i%2)?AG[i%AG.length]:null,
+        apply:(r.ap || (site==='미참석' ? '미신청' : '신청'))};   /* 사전 참석 신청 여부 */
       o.ri=r.i; o.key=o.voter+o.name+o.no+'#'+r.i;   /* 같은 이름·주주번호(마스킹)가 있어 명부 순번까지 붙인다 */
       return o;
     });
