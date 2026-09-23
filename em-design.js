@@ -100,7 +100,7 @@
   if (pvBtn) {
     pvBtn.innerHTML = '<i class="ph ph-eye" style="font-size:16px"></i>디자인 미리보기';
     pvBtn.addEventListener('click', function () {
-      var cols = dp.querySelectorAll('.dc-colors input[data-color]'), main = cols[0] ? cols[0].value : '#4521E6';
+      var cols = dp.querySelectorAll('.dc-colors input[data-color]'), main = cols[0] ? cols[0].value : '#004E2B';
       var logo = dp.querySelector('.imgblk .ib-prev .pimg'), ban = [].filter.call(dp.querySelectorAll('.imgblk'), function (b) { return /배너 이미지 \(PC\)/.test(b.textContent); })[0];
       var banImg = ban && ban.querySelector('.pimg'), headOn = document.getElementById('dzHead') && document.getElementById('dzHead').classList.contains('on');
       var hc = headBlk ? headBlk.querySelector('input[data-color]').value : '#000000';
