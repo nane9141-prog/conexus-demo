@@ -249,6 +249,9 @@
   .agcard .db-tblc{border:none;border-radius:0;box-shadow:none}
   /* 실시간 주주 확보 현황 — 회사 권고와 다른 표기 칸 (Figma 756:25068) */
   .tbl td.c.diff{background:#FFF1DD}
+  /* 칸이 많은 표 — 화면이 좁아지면 가로로 스크롤한다(칸이 눌리지 않게) */
+  .tbl-wrap.xscroll{overflow-x:auto;overflow-y:hidden}
+  .tbl-wrap.xscroll>table{min-width:980px}
   .solfoot .pgr{display:flex;align-items:center;gap:12px;color:#1f1c18}
   .solfoot .pgr i{font-size:16px;color:#a3a3a3}
   @media(max-width:1200px){.vr-kpi.c5{grid-template-columns:repeat(3,1fr)}}
@@ -660,7 +663,7 @@
               <div class="h">실시간 주주 확보 현황</div>
               <button class="gdl" type="button"><svg viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16"/></svg>다운로드</button>
             </div>
-            <div class="tbl-wrap" style="border:none;border-top:1px solid var(--border);border-radius:0">
+            <div class="tbl-wrap xscroll" style="border:none;border-top:1px solid var(--border);border-radius:0">
               <table class="tbl agex" id="vrHolderTbl">
                 <thead><tr><th>수집일시</th><th>주주명</th><th class="num">보유주식수</th><th class="c">생년월일</th><th class="num">나이</th><th class="c">1</th><th class="c">2-1</th><th class="c">2-2</th><th class="c">3</th><th class="num">4-1</th><th class="num">4-2</th></tr></thead>
                 <tbody>
