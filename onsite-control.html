@@ -727,10 +727,21 @@
   .vwbtn{height:24px;padding:0 8px;border:none;border-radius:8px;background:rgba(220,38,38,.1);font-family:inherit;font-size:12px;font-weight:500;color:#E9081B;cursor:pointer}
   .vwbtn.undo{background:#fff;border:1px solid #E5E5E5;color:#0A0A0A}
   .qmtbl .vwcol{min-width:120px}   /* 발언 조치 · 퇴장 명령 — 버튼이 들어갈 만큼 같은 폭으로 */
-  /* 전자출석 현황 페이지 바 — 접속자가 많아 한 번에 20명씩 본다 */
+  /* 전자출석 현황 페이지 바 — 참석자 관리 표와 같은 구성 */
   .vwfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:none;
-    height:48px;padding:0 16px;background:#fff;font-size:13px;color:#525252;
+    height:56px;padding:0 16px;background:#fff;font-size:13px;color:#737373;
     border:1px solid #E5E5E5;border-top:0;border-radius:0 0 8px 8px}
+  .vwfoot .at-pg{display:flex;align-items:center;gap:8px}
+  .vwfoot .pgs{display:inline-flex;align-items:center;gap:4px}
+  .vwfoot .pp{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;
+    border:1px solid #E5E5E5;border-radius:8px;background:#fff;cursor:pointer;color:#525252}
+  .vwfoot .pp i{font-size:16px}
+  .vwfoot .pp.cur{background:#171717;color:#fff;border-color:#171717}
+  .vwfoot .pp.dis{opacity:.4;cursor:default;pointer-events:none}
+  .vwfoot .atpg-tot{margin-left:6px;color:#737373;font-variant-numeric:tabular-nums}
+  .vwfoot select{height:30px;border:1px solid #E5E5E5;border-radius:8px;font-family:inherit;font-size:13px;
+    color:#0a0a0a;cursor:pointer;padding:0 28px 0 10px;-webkit-appearance:none;appearance:none;
+    background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2'><path d='m6 9 6 6 6-6'/></svg>") no-repeat right 8px center/14px}
   /* 표와 한 덩어리로 — 표 상자의 아래 테두리를 없애고 바로 붙인다 */
   .qmscroll.hasfoot{border-bottom:0;border-radius:8px 8px 0 0}
   .qmscroll.hasfoot + .vwfoot{margin-top:-10px}
@@ -2516,24 +2527,27 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     if(mode!=='v'){ el.style.display='none'; return; }
     el.style.display='flex';
     var pages=Math.max(1,Math.ceil(VW_TOTAL/VW.size)), p=VW.p;
-    var a=Math.max(1,p-2), b=Math.min(pages,a+4); a=Math.max(1,b-4);
+    if(p>pages){ p=VW.p=pages; }
+    var dP=(p<=1?' dis':''), dN=(p>=pages?' dis':'');
+    var a=Math.max(1,p-1), b=Math.min(pages,a+2); a=Math.max(1,b-2);   /* 번호는 3개만 */
     var n='';
-    for(var i=a;i<=b;i++) n+='<button type="button" class="'+(i===p?'on':'')+'" data-vp="'+i+'">'+i+'</button>';
-    el.innerHTML='<span>총 '+cm(VW_TOTAL)+'명 · '+cm((p-1)*VW.size+1)+'–'+cm(Math.min(VW_TOTAL,p*VW.size))+'</span>'
-      +'<span class="pg">'
-      +'<button type="button" data-vp="first"'+(p<=1?' disabled':'')+'>«</button>'
-      +'<button type="button" data-vp="prev"'+(p<=1?' disabled':'')+'>‹</button>'+n
-      +'<button type="button" data-vp="next"'+(p>=pages?' disabled':'')+'>›</button>'
-      +'<button type="button" data-vp="last"'+(p>=pages?' disabled':'')+'>»</button></span>'
-      +'<span class="sz">페이지당 <select id="vwSize">'
+    for(var i=a;i<=b;i++) n+='<span class="pp'+(i===p?' cur':'')+'" data-vp="'+i+'">'+i+'</span>';
+    el.innerHTML='<span>총 '+cm(VW_TOTAL)+'명</span>'
+      +'<div class="at-pg">페이지당 <select id="vwSize">'
       +[20,50,100].map(function(v){ return '<option'+(v===VW.size?' selected':'')+'>'+v+'</option>'; }).join('')
-      +'</select></span>';
+      +'</select>'
+      +'<span class="pgs">'
+      +'<span class="pp'+dP+'" data-vp="first" aria-label="처음"><i class="ph ph-caret-double-left"></i></span>'
+      +'<span class="pp'+dP+'" data-vp="prev" aria-label="이전"><i class="ph ph-caret-left"></i></span>'+n
+      +'<span class="pp'+dN+'" data-vp="next" aria-label="다음"><i class="ph ph-caret-right"></i></span>'
+      +'<span class="pp'+dN+'" data-vp="last" aria-label="마지막"><i class="ph ph-caret-double-right"></i></span>'
+      +'<span class="atpg-tot">'+p+' / '+cm(pages)+'</span></span></div>';
     el.dataset.pages=pages;
   }
   (function(){
     var el=document.getElementById('vwFoot'); if(!el) return;
     el.addEventListener('click',function(e){
-      var b=e.target.closest('[data-vp]'); if(!b||b.disabled) return;
+      var b=e.target.closest('[data-vp]'); if(!b||b.classList.contains('dis')) return;
       var v=b.dataset.vp, pages=+el.dataset.pages||1;
       VW.p = v==='first'?1 : v==='prev'?Math.max(1,VW.p-1) : v==='next'?Math.min(pages,VW.p+1) : v==='last'?pages : +v;
       render();
