@@ -1086,12 +1086,12 @@
       });
       if(apply){
         var o0=opts[0];
-        o0.querySelector('b').textContent='신청 철회 후 참석';
-        o0.querySelector('span').textContent='사전 참석 신청을 철회하고 현장에서 참석 처리';
+        o0.querySelector('.as-rc b').textContent='신청 철회 후 참석';
+        o0.querySelector('.as-rc span').textContent='사전 참석 신청을 철회하고 현장에서 참석 처리';
       }else{
         var o1=opts[0];
-        o1.querySelector('b').textContent='철회 후 현장참석';
-        o1.querySelector('span').textContent='행사내역 철회 후 현장에서 다시 투표';
+        o1.querySelector('.as-rc b').textContent='철회 후 현장참석';
+        o1.querySelector('.as-rc span').textContent='행사내역 철회 후 현장에서 다시 투표';
       }
       pvChk.classList.remove('on'); pvOk.disabled=true; pvSet('withdraw');
       pv.classList.add('show');
