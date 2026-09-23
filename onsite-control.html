@@ -1877,6 +1877,8 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
   var DOTS='<i class="ph ph-dots-three-vertical" style="font-size:16px"></i>';
   var CK='<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM10.6 16 6.8 12.2l1.4-1.4 2.4 2.4 5-5 1.4 1.4z"/></svg>';
   var CENTER=CX.center;
+  /* 새로고침하면 지연 의안은 사라지므로 시청 화면의 긴급 표결도 함께 내린다 */
+  if(window.cxSync) cxSync.set({urgent:null});
   /* 컨트롤 바는 늘 두 자리다. 왼쪽은 지금 할 일, 오른쪽은 표결 마감 —
      마감할 수 없는 동안에는 자리만 지키고 눌리지 않는다. */
   var LOCK={t:'표결 마감',c:'dark',dis:1};
@@ -2041,7 +2043,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
      하나라도 미달이면 부결 예상. (그래프의 두 기준선과 같은 계산) */
   function predOf(d){
     if(!d || d['for']==null) return '가결';
-    var incPre=OC.preEx?0:1, lf=liveFrac(), f=incPre*0.8+0.2*lf;
+    var incPre=OC.preEx?0:1, lf=liveFrac(), f=(d&&d.nopre)?1:(incPre*0.8+0.2*lf);
     var F=d['for']*f;
     var present=d['for']+d.against+d.abs, base=OC.preEx?present*0.2:present;
     var ISSUED=CX.meeting.sharesIssued, special=(d.thrLabel||'').indexOf('2/3')>=0;
@@ -2049,7 +2051,7 @@ var SPEECHES=[{"id": "S1-01", "ag": "1", "sub": "", "name": "서준서", "t": "�
     return (F/ISSUED>=iR && base && F/base>=aR) ? '가결' : '부결';
   }
   function vizNormal(d){
-    var incPre=OC.preEx?0:1, lf=liveFrac(), f=incPre*0.8+0.2*lf;
+    var incPre=OC.preEx?0:1, lf=liveFrac(), f=(d&&d.nopre)?1:(incPre*0.8+0.2*lf);
     var F=d['for']*f;
     var present=d['for']+d.against+d.abs, base=OC.preEx?present*0.2:present;
     var ISSUED=476211964, special=d.thrLabel.indexOf('2/3')>=0;
@@ -4656,7 +4658,10 @@ if(window.OC&&OC.fire) OC.fire();
     if (CX.center['제1호']) {
       var c = {}; for (var k in CX.center['제1호']) c[k] = CX.center['제1호'][k];
       c.cat = no; c.type = '보통결의'; c.name = d.title; c.thrLabel = '출석의결권 1/2';
-      c.for = 0; c.against = 0; c.abs = 0; c.expect = ''; c.nopre = true;   /* 사전 채널·예상 판정 없음 */
+      /* 가결 시나리오 — 현장·전자표결만으로 의결정족수를 넘긴다 */
+      var att = (CX.meeting && CX.meeting.attendShares) || 300000000;
+      c.for = Math.round(att * 0.78); c.against = Math.round(att * 0.20);
+      c.abs = att - c['for'] - c.against; c.expect = ''; c.nopre = true;   /* 사전 채널·예상 판정 없음 */
       CX.center[no] = c;
     }
     tree.querySelectorAll('.arow.selnode').forEach(function (card) {
